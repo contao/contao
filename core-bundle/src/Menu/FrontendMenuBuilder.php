@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Menu;
 
 use Contao\CoreBundle\Event\FrontendMenuEvent;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -24,7 +25,6 @@ use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
-use Knp\Menu\MenuItem;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,20 +40,30 @@ class FrontendMenuBuilder
     private EventDispatcherInterface $dispatcher;
     private Connection $connection;
     private PageRegistry $pageRegistry;
+    /**
+     * @var Adapter<PageModel>
+     */
+    private Adapter $pageModelAdapter;
     private TokenChecker $tokenChecker;
     private Security $security;
     private LoggerInterface $logger;
+    private Database $database;
 
-    public function __construct(FactoryInterface $factory, RequestStack $requestStack, EventDispatcherInterface $dispatcher, Connection $connection, PageRegistry $pageRegistry, TokenChecker $tokenChecker, Security $security, LoggerInterface $logger)
+    /**
+     * @param Adapter<PageModel> $pageModelAdapter
+     */
+    public function __construct(FactoryInterface $factory, RequestStack $requestStack, EventDispatcherInterface $dispatcher, Connection $connection, PageRegistry $pageRegistry, Adapter $pageModelAdapter, TokenChecker $tokenChecker, Security $security, LoggerInterface $logger, Database $database)
     {
         $this->factory = $factory;
         $this->requestStack = $requestStack;
         $this->dispatcher = $dispatcher;
         $this->connection = $connection;
         $this->pageRegistry = $pageRegistry;
+        $this->pageModelAdapter = $pageModelAdapter;
         $this->tokenChecker = $tokenChecker;
         $this->security = $security;
         $this->logger = $logger;
+        $this->database = $database;
     }
 
     public function getMenu(ItemInterface $root, int $pid, int $level = 1, string $host = null, array $options = []): ItemInterface
@@ -76,6 +86,7 @@ class FrontendMenuBuilder
 
         $isMember = $this->security->isGranted('ROLE_MEMBER');
 
+        /** @var PageModel $page */
         foreach ($pages as ['page' => $page, 'hasSubpages' => $hasSubpages]) {
             // Skip hidden sitemap pages
             if ($options['isSitemap'] && 'map_never' === $page->sitemap) {
@@ -84,7 +95,7 @@ class FrontendMenuBuilder
 
             $page->loadDetails();
 
-            $item = new MenuItem($page->title, $this->factory);
+            $item = $this->factory->createItem($page->title);
 
             // Override the domain (see #3765)
             if (null !== $host) {
@@ -115,12 +126,12 @@ class FrontendMenuBuilder
                 $nextLevel = $level + 1;
                 $this->getMenu($item, (int) $page->id, $nextLevel, $host, $options);
 
-                $childRecords = Database::getInstance()->getChildRecords($page->id, 'tl_page');
+                $childRecords = $this->database->getChildRecords($page->id, 'tl_page');
 
                 if (
-                    !$options['showLevel']
-                    || $nextLevel > $options['showLevel']
-                    || (!$options['hardLimit'] && (($requestPage->id === $page->id) || \in_array($requestPage->id, $childRecords, false)))
+                    $options['showLevel']
+                    && $options['showLevel'] < $nextLevel
+                    && ($options['hardLimit'] || $requestPage->id === $page->id && !\in_array($requestPage->id, $childRecords, false))
                 ) {
                     $item->setDisplayChildren(false);
                 }
@@ -156,7 +167,7 @@ class FrontendMenuBuilder
     private function findPagesByIds(array $pageIds): ?array
     {
         // Get all active pages and also include root pages if the language is added to the URL (see #72)
-        $pages = PageModel::findPublishedRegularByIds($pageIds, ['includeRoot' => true]);
+        $pages = $this->pageModelAdapter->findPublishedRegularByIds($pageIds, ['includeRoot' => true]);
 
         if (null === $pages) {
             return null;
@@ -167,7 +178,7 @@ class FrontendMenuBuilder
                 'page' => $page,
                 'hasSubpages' => false,
             ],
-            iterator_to_array($pages)
+            $pages instanceof \Traversable ? iterator_to_array($pages) : $pages
         );
     }
 
@@ -190,15 +201,12 @@ class FrontendMenuBuilder
         }
 
         // Load models into the registry with a single query
-        PageModel::findMultipleByIds(array_map(static fn ($row) => $row['id'], $pages));
+        $this->pageModelAdapter->findMultipleByIds(array_map(static fn ($row) => $row['id'], $pages));
 
-        return array_map(
-            static fn (array $row): array => [
-                'page' => PageModel::findByPk($row['id']),
-                'hasSubpages' => (bool) $row['hasSubpages'],
-            ],
-            $pages
-        );
+        return array_map(fn (array $row): array => [
+            'page' => $this->pageModelAdapter->findByPk($row['id']),
+            'hasSubpages' => (bool) $row['hasSubpages'],
+        ], $pages);
     }
 
     private function generateUri(PageModel $pageModel, ItemInterface $menuItem): ?string
@@ -222,9 +230,9 @@ class FrontendMenuBuilder
 
         if ('forward' === $pageModel->type) {
             if ($pageModel->jumpTo) {
-                $jumpTo = PageModel::findPublishedById($pageModel->jumpTo);
+                $jumpTo = $this->pageModelAdapter->findPublishedById($pageModel->jumpTo);
             } else {
-                $jumpTo = PageModel::findFirstPublishedRegularByPid($pageModel->id);
+                $jumpTo = $this->pageModelAdapter->findFirstPublishedRegularByPid($pageModel->id);
             }
 
             // Hide the link if the target page is invisible
@@ -253,20 +261,21 @@ class FrontendMenuBuilder
         }
     }
 
-    private function populateMenuItem(MenuItem $item, Request $request, PageModel $page, ?string $href, array $options = []): void
+    private function populateMenuItem(ItemInterface $item, Request $request, PageModel $page, ?string $href, array $options = []): void
     {
         /** @var PageModel|null $requestPage */
         $requestPage = $request->attributes->get('pageModel');
 
         $extra = $page->row();
-        $isTrail = \in_array($page->id, $requestPage->trail, false);
+        $isTrail = $requestPage && \in_array($page->id, $requestPage->trail, false);
 
         $item->setUri($href);
 
         // Use the path without query string to check for active pages (see #480)
         $path = ltrim($request->getPathInfo(), '/');
 
-        $isActive = $href === $path
+        $isActive = $requestPage
+            && $href === $path
             && !($options['isSitemap'] ?? false)
             && (($requestPage->id === $page->id) || ('forward' === $page->type && $requestPage->id === $page->jumpTo));
 
@@ -317,12 +326,12 @@ class FrontendMenuBuilder
         $item->setExtra('pageModel', $page);
     }
 
-    private function getCssClasses(ItemInterface $item, PageModel $page, PageModel $requestPage, bool $isActive, bool $isTrail): array
+    private function getCssClasses(ItemInterface $item, PageModel $page, ?PageModel $requestPage, bool $isActive, bool $isTrail): array
     {
         $classes = [];
 
         $hasSubmenu = $item->hasChildren() && $item->getDisplayChildren();
-        $isForward = 'forward' === $page->type && $requestPage->id === $page->jumpTo;
+        $isForward = $requestPage && 'forward' === $page->type && $requestPage->id === $page->jumpTo;
 
         if ($hasSubmenu) {
             $classes[] = 'submenu';
@@ -337,7 +346,7 @@ class FrontendMenuBuilder
         }
 
         // Mark pages on the same level (see #2419)
-        if (!$isActive && $page->pid === $requestPage->pid) {
+        if ($requestPage && !$isActive && $page->pid === $requestPage->pid) {
             $classes[] = 'sibling';
         }
 

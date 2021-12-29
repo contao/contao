@@ -387,9 +387,11 @@ services:
             - '@event_dispatcher'
             - '@database_connection'
             - '@contao.routing.page_registry'
+            - "@=service('contao.framework').getAdapter('Contao\\\\PageModel')"
             - '@contao.security.token_checker'
             - '@security.helper'
             - '@logger'
+            - "@=service('contao.framework').createInstance('Contao\\\\Database')"
         public: true
 
     contao.model_argument_resolver:
