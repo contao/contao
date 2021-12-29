@@ -150,8 +150,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         $magick = new $magickClass();
 
         if (\is_callable([$magick, 'setResolution'])) {
-            // Default to retina resolution
-            $resolution = 72 * 2;
+            $resolution = 72;
             $magick->setResolution($resolution, $resolution);
 
             if (
