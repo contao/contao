@@ -1554,19 +1554,13 @@ abstract class DataContainer extends Backend
 	 * @param array  $row   The data record
 	 * @param string $table The name of the data container
 	 */
-	public static function generateRecordLabel($row, $table): string
+	public static function generateRecordLabel(array $row, string $table): string
 	{
-		$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'] ?? array('id');
+		$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
 
 		// Label
 		foreach ($showFields as $k=>$v)
 		{
-			// Decrypt the value
-			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
-			{
-				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
-			}
-
 			if (strpos($v, ':') !== false)
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);

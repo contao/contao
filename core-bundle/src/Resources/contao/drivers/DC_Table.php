@@ -3940,15 +3940,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '<a href="' . $this->addToUrl('ptg=' . $id) . '" title="' . StringUtil::specialchars($alt) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleStructure(this,\'' . $node . '_' . $id . '\',' . $level . ',' . ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? '') . ')">' . Image::getHtml($img, '', 'style="margin-right:2px"') . '</a>';
 		}
 
-<<<<<<< HEAD
-		$label = $this->getLabel($objRow->row(), $table);
+		$label = parent::generateRecordLabel($objRow->row(), $table);
 
 		// Check either the ID (tree mode or parent table) or the parent ID (child table)
 		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($objRow->pid, $this->visibleRootTrails);
-=======
-		$label = parent::generateRecordLabel($objRow->row(), $table);
-		$isVisibleRootTrailPage = \in_array($id, $this->visibleRootTrails);
->>>>>>> 4372dae25 (rename method and move to DataContainer as static)
 
 		// Call the label_callback ($row, $label, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
