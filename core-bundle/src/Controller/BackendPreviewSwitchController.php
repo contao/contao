@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\Date;
@@ -23,7 +24,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Error\Error as TwigError;
 
@@ -44,11 +44,10 @@ class BackendPreviewSwitchController
     private Connection $connection;
     private Security $security;
     private TwigEnvironment $twig;
-    private CsrfTokenManagerInterface $tokenManager;
-    private string $csrfTokenName;
+    private ContaoCsrfTokenManager $tokenManager;
     private RouterInterface $router;
 
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName)
+    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager)
     {
         $this->previewAuthenticator = $previewAuthenticator;
         $this->tokenChecker = $tokenChecker;
@@ -57,7 +56,6 @@ class BackendPreviewSwitchController
         $this->twig = $twig;
         $this->router = $router;
         $this->tokenManager = $tokenManager;
-        $this->csrfTokenName = $csrfTokenName;
     }
 
     /**
@@ -100,7 +98,7 @@ class BackendPreviewSwitchController
             return $this->twig->render(
                 '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
                 [
-                    'request_token' => $this->tokenManager->getToken($this->csrfTokenName)->getValue(),
+                    'request_token' => $this->tokenManager->getDefaultTokenValue(),
                     'action' => $this->router->generate('contao_backend_switch'),
                     'canSwitchUser' => $canSwitchUser,
                     'user' => $frontendUsername,
