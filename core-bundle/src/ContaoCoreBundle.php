@@ -30,6 +30,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\SchemaServiceProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
@@ -122,6 +123,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
         $container->addCompilerPass(new ConfigureFilesystemPass());
         $container->addCompilerPass(new AddInsertTagsPass());
+        $container->addCompilerPass(new SchemaServiceProviderPass());
     }
 
     public static function getVersion(): string

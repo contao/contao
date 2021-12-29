@@ -144,4 +144,65 @@ class ArrayUtil
 
 		return implode(', ', $result);
 	}
+
+	public static function get($data, $path, $default = null, bool $throw = false)
+	{
+		$parts = \is_array($path) ? $path : static::pathToArray($path);
+		$trail = array();
+
+		foreach ($parts as $part)
+		{
+			$trail[] = $part;
+
+			if (!isset($data[$part]))
+			{
+				if ($throw)
+				{
+					throw new \InvalidArgumentException(sprintf('Path %s is invalid at %s', $path, implode('.', $trail)));
+				}
+
+				return $default;
+			}
+
+			$data = $data[$part];
+		}
+
+		return $data ?? $default;
+	}
+
+	public static function set($data, $path, $value, bool $overwrite = true)
+	{
+		$parts = \is_array($path) ? $path : static::pathToArray($path);
+		$part = array_shift($parts);
+
+		if ($parts)
+		{
+			if (!isset($data[$part]))
+			{
+				$data[$part] = array();
+			}
+
+			$data[$part] = static::set($data[$part], $parts, $value, $overwrite);
+		}
+		elseif ($overwrite || !isset($data[$part]))
+		{
+			$data[$part] = $value;
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Split a dot notation path into chunks allowing escaped dots (\.) and backslashes (\\)
+	 *
+	 * @param string $path
+	 *
+	 * @return array<string>
+	 */
+	public static function pathToArray(string $path): array
+	{
+		preg_match_all('/(?:\\\\[\\\\.]|[^.])++/', $path, $matches);
+
+		return preg_replace('/\\\\([\\\\.])/', '$1', $matches[0]);
+	}
 }

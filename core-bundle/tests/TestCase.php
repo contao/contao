@@ -17,12 +17,18 @@ use Contao\CoreBundle\Routing\Matcher\FrontendMatcher;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 abstract class TestCase extends ContaoTestCase
 {
+    public function getDcaMockBuilder(): DcaMockBuilder
+    {
+        return new DcaMockBuilder($this, $this->mockContaoFramework(), $this->createMock(Container::class));
+    }
+
     protected function getFixturesDir(): string
     {
         return __DIR__.\DIRECTORY_SEPARATOR.'Fixtures';

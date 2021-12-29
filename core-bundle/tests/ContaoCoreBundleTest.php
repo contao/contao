@@ -30,6 +30,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\SchemaServiceProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
@@ -76,6 +77,7 @@ class ContaoCoreBundleTest extends TestCase
             LoggerChannelPass::class,
             ConfigureFilesystemPass::class,
             AddInsertTagsPass::class,
+            SchemaServiceProviderPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);

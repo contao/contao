@@ -52,6 +52,7 @@ services:
         class: Contao\CoreBundle\Command\DebugDcaCommand
         arguments:
             - '@contao.framework'
+            - '@contao.dca.configuration_provider'
 
     contao.command.debug_fragments:
         class: Contao\CoreBundle\Command\DebugFragmentsCommand

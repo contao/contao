@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
+use Contao\CoreBundle\Dca\Schema\Dca;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
@@ -1755,6 +1756,11 @@ abstract class DataContainer extends Backend
 		}
 
 		return sprintf($label, $value);
+	}
+
+	protected function getDca(string $resource): Dca
+	{
+		return System::getContainer()->get('contao.dca.factory')->get($resource);
 	}
 
 	/**
