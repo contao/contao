@@ -70,7 +70,7 @@ class FrontendMenuBuilderTest extends TestCase
             'groups' => [179],
             'robots' => '',
             'published' => true,
-            'sitemap' => '',
+            'sitemap' => 'map_always',
             'trail' => [1],
         ],
         [
@@ -449,11 +449,16 @@ class FrontendMenuBuilderTest extends TestCase
         // Assert root item exists
         $this->assertSame('root', $tree->getName());
 
-        // Assert item are added to the tree
+        // Assert items are added to the tree
         $this->assertNotNull($tree->getChild('Home'));
 
-        // Assert sitemap-hidden pages are skipped
+        // Assert "map_never" pages are skipped
         $this->assertNull($tree->getChild('Sitemap'));
+
+        // Assert protected pages are not shown unless they are configured with "map_always"
+        $item = $tree->getChild('Member area');
+        $this->assertNotNull($item);
+        $this->assertTrue(\in_array('protected', explode(' ', $item->getExtra('class')), true));
     }
 
     public function testBuildsCustomNav(): void
