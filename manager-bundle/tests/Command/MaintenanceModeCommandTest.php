@@ -50,7 +50,7 @@ class MaintenanceModeCommandTest extends TestCase
             $params['--templateVars'] = $customTemplateVars;
         }
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $twig, $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $twig, [], $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute($params);
@@ -67,7 +67,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->with('/path/to/var/maintenance.html')
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['state' => 'disable']);
@@ -85,7 +85,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->willReturn(true)
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
@@ -103,7 +103,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->willReturn(false)
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
@@ -121,7 +121,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->willReturn(false)
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['--format' => 'json']);
@@ -129,6 +129,63 @@ class MaintenanceModeCommandTest extends TestCase
         $json = json_decode($commandTester->getDisplay(true), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame(['enabled' => false, 'maintenanceFilePath' => '/path/to/var/maintenance.html'], $json);
+    }
+
+    public function testAliasesLexikMaintenanceCommands(): void
+    {
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $this->getFilesystemMock());
+
+        $this->assertContains('lexik:maintenance:lock', $command->getAliases());
+        $this->assertContains('lexik:maintenance:unlock', $command->getAliases());
+    }
+
+    public function testDoesNotAliasLexikMaintenanceCommandsIfBundleIsInstalled(): void
+    {
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), ['LexikMaintenanceBundle'], $this->getFilesystemMock());
+
+        $this->assertNotContains('lexik:maintenance:lock', $command->getAliases());
+        $this->assertNotContains('lexik:maintenance:unlock', $command->getAliases());
+    }
+
+    public function testHandlesLexikMaintenanceLock(): void
+    {
+        $twig = $this->getTwigMock();
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->willReturn('parsed-template')
+        ;
+
+        $filesystem = $this->getFilesystemMock();
+        $filesystem
+            ->expects($this->once())
+            ->method('dumpFile')
+            ->with('/path/to/var/maintenance.html', 'parsed-template')
+        ;
+
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $twig, [], $filesystem);
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['lexik:maintenance:lock']);
+
+        $this->assertStringContainsString('[OK] Maintenance mode enabled', $commandTester->getDisplay(true));
+    }
+
+    public function testHandlesLexikMaintenanceUnlock(): void
+    {
+        $filesystem = $this->getFilesystemMock();
+        $filesystem
+            ->expects($this->once())
+            ->method('remove')
+            ->with('/path/to/var/maintenance.html')
+        ;
+
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $filesystem);
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['lexik:maintenance:unlock']);
+
+        $this->assertStringContainsString('[OK] Maintenance mode disabled', $commandTester->getDisplay(true));
     }
 
     public function enableProvider(): \Generator

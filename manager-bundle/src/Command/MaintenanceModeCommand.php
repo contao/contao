@@ -28,12 +28,14 @@ class MaintenanceModeCommand extends Command
 {
     private string $maintenanceFilePath;
     private Environment $twig;
+    private array $bundles;
     private Filesystem $filesystem;
 
-    public function __construct(string $maintenanceFilePath, Environment $twig, Filesystem $filesystem = null)
+    public function __construct(string $maintenanceFilePath, Environment $twig, array $bundles, Filesystem $filesystem = null)
     {
         $this->maintenanceFilePath = $maintenanceFilePath;
         $this->twig = $twig;
+        $this->bundles = $bundles;
         $this->filesystem = $filesystem ?? new Filesystem();
 
         parent::__construct();
@@ -43,13 +45,16 @@ class MaintenanceModeCommand extends Command
     {
         $this
             ->setName('contao:maintenance-mode')
-            ->setAliases(['lexik:maintenance:lock', 'lexik:maintenance:unlock'])
             ->addArgument('state', InputArgument::OPTIONAL, 'Use "enable" to enable and "disable" to disable the maintenance mode. If the state is already the desired one, nothing happens. You can also use "on" and "off".')
             ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'Allows to take a different Twig template name when enabling the maintenance mode.', '@ContaoCore/Error/service_unavailable.html.twig')
             ->addOption('templateVars', null, InputOption::VALUE_OPTIONAL, 'Add custom template variables to the Twig template when enabling the maintenance mode (provide as JSON).', '{}')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
             ->setDescription('Changes the state of the system maintenance mode.')
         ;
+
+        if (!\in_array('LexikMaintenanceBundle', $this->bundles, true)) {
+            $this->setAliases(['lexik:maintenance:lock', 'lexik:maintenance:unlock']);
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -57,8 +62,10 @@ class MaintenanceModeCommand extends Command
         $state = $input->getArgument('state');
 
         if ('lexik:maintenance:lock' === $input->getFirstArgument()) {
+            trigger_deprecation('contao/core-bundle', '4.13', 'Using "lexik:maintenance:lock" command is deprecated. Use "contao:maintenance-mode enable" instead.');
             $state = 'enable';
         } elseif ('lexik:maintenance:unlock' === $input->getFirstArgument()) {
+            trigger_deprecation('contao/core-bundle', '4.13', 'Using "lexik:maintenance:unlock" command is deprecated. Use "contao:maintenance-mode disable" instead.');
             $state = 'disable';
         }
 
