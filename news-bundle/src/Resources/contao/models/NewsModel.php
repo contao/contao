@@ -245,7 +245,7 @@ class NewsModel extends Model
 		}
 
 		// Never return unpublished elements in the back end, so they don't end up in the RSS feed
-		if (!BE_USER_LOGGED_IN || TL_MODE == 'BE')
+		if (!static::isPreviewMode($arrOptions) || TL_MODE == 'BE')
 		{
 			$time = Date::floorToMinute();
 			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";

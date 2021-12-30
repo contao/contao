@@ -11,6 +11,17 @@ The `$GLOBALS['TL_AUTO_ITEM']` variable has been deprecated and will be removed
 together with the `useAutoItem` setting in Contao 5.0. Using auto items can no
 longer be disabled then.
 
+## BE_USER_LOGGED_IN
+
+The constant `BE_USER_LOGGED_IN` has been deprecated and will be removed in
+Contao 5.0. It was historically used to preview unpublished elements in the
+front end. Use the token checker service to check the separate cases instead:
+
+```php
+$hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+$showUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+```
+
 ## FE_USER_LOGGED_IN
 
 The constant `FE_USER_LOGGED_IN` has been deprecated and will be removed in
