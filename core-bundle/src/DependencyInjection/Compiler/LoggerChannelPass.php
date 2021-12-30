@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\Monolog\SystemLogger;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -26,14 +25,14 @@ use Symfony\Component\DependencyInjection\Reference;
 class LoggerChannelPass implements CompilerPassInterface
 {
     public const LEGACY_ACTIONS = [
-        'error',
         'access',
-        'general',
-        'files',
-        'cron',
-        'forms',
-        'email',
         'configuration',
+        'cron',
+        'email',
+        'error',
+        'files',
+        'forms',
+        'general',
     ];
 
     private array $loggers = [];
@@ -42,26 +41,6 @@ class LoggerChannelPass implements CompilerPassInterface
     {
         if (!$container->hasDefinition('monolog.logger')) {
             return;
-        }
-
-        if ($container->hasParameter('contao.monolog.default_channels')) {
-            foreach ($container->getParameter('contao.monolog.default_channels') as $action) {
-                $id = 'monolog.logger.contao.'.$action;
-
-                $logger = clone $container->getDefinition('monolog.logger');
-                $logger->replaceArgument(0, 'contao.'.$action);
-
-                $container->setDefinition(
-                    $id,
-                    (new Definition(SystemLogger::class, [$logger, $this->transformContaoAction($action)]))
-                        // Public service for legacy use without dependency injection
-                        ->setPublic(true)
-                );
-
-                $container->registerAliasForArgument($id, LoggerInterface::class, 'contao.'.$action.'.logger');
-
-                $this->loggers[] = $id;
-            }
         }
 
         foreach ($container->getDefinitions() as $id => $definition) {

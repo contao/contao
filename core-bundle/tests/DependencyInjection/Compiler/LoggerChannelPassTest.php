@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 use Contao\CoreBundle\DependencyInjection\Compiler\LoggerChannelPass;
 use Contao\CoreBundle\Monolog\SystemLogger;
 use Contao\CoreBundle\Tests\TestCase;
-use Monolog\Logger;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -72,31 +71,6 @@ class LoggerChannelPassTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao._logger.contao.dummy_service'));
     }
 
-    public function testDefinesLoggersForConfiguredDefaultActions(): void
-    {
-        $container = new ContainerBuilder();
-        $container->setDefinition('monolog.logger', new Definition(Logger::class, ['app']));
-        $container->setParameter('contao.monolog.default_channels', ['foo']);
-
-        $pass = new LoggerChannelPass();
-        $pass->process($container);
-
-        $this->assertTrue($container->hasDefinition('monolog.logger.contao.foo'));
-
-        $logger = $container->getDefinition('monolog.logger.contao.foo');
-
-        $this->assertTrue($logger->isPublic());
-
-        $this->assertSame(SystemLogger::class, $logger->getClass());
-        $this->assertSame('foo', $logger->getArgument(1));
-
-        $inner = $logger->getArgument(0);
-
-        $this->assertInstanceOf(Definition::class, $inner);
-        $this->assertSame(Logger::class, $inner->getClass());
-        $this->assertSame('contao.foo', $inner->getArgument(0));
-    }
-
     /**
      * @dataProvider legacyActionNamesProvider
      */
@@ -119,29 +93,6 @@ class LoggerChannelPassTest extends TestCase
 
         $this->assertSame($transformed, $decorator->getArgument(1), 'The action name should be transformed.');
         $this->assertSame('contao.'.$action, $logger->getArgument(0), 'The channel name should not be transformed.');
-    }
-
-    /**
-     * @dataProvider legacyActionNamesProvider
-     */
-    public function testTransformsLegacyActionNamesForConfiguredDefaultActions(string $action, string $transformed): void
-    {
-        $container = new ContainerBuilder();
-        $container->setDefinition('monolog.logger', new Definition(Logger::class, ['app']));
-        $container->setParameter('contao.monolog.default_channels', [$action]);
-
-        $pass = new LoggerChannelPass();
-        $pass->process($container);
-
-        $this->assertTrue($container->hasDefinition('monolog.logger.contao.'.$action));
-
-        $logger = $container->getDefinition('monolog.logger.contao.'.$action);
-        $this->assertSame($transformed, $logger->getArgument(1), 'The action name should be transformed.');
-
-        $inner = $logger->getArgument(0);
-
-        $this->assertInstanceOf(Definition::class, $inner);
-        $this->assertSame('contao.'.$action, $inner->getArgument(0), 'The channel name should not be transformed.');
     }
 
     public function legacyActionNamesProvider(): array

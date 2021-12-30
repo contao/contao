@@ -18,6 +18,7 @@ use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Bundle\MonologBundle\DependencyInjection\MonologExtension;
 use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -526,23 +527,32 @@ class ContaoCoreExtensionTest extends TestCase
         ];
     }
 
-    public function testConfiguresTheMonologChannelActions(): void
+    public function testPrependsMonologConfigurationWithActionChannels(): void
     {
+        $channels = [
+            'contao.access',
+            'contao.configuration',
+            'contao.cron',
+            'contao.email',
+            'contao.error',
+            'contao.files',
+            'contao.forms',
+            'contao.general',
+        ];
+
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.project_dir' => Path::normalize($this->getTempDir()),
-                'kernel.charset' => 'UTF-8',
             ])
         );
-
-        $container->setParameter('kernel.bundles', ['MonologBundle' => 'Foo']);
+        $container->registerExtension(new MonologExtension());
 
         $extension = new ContaoCoreExtension();
-        $extension->load([], $container);
+        $extension->prepend($container);
 
-        $actions = $container->getParameter('contao.monolog.default_channels');
+        $config = $container->getExtensionConfig('monolog');
 
-        $this->assertSame(['access', 'configuration', 'cron', 'email', 'error', 'files', 'forms', 'general'], $actions);
+        $this->assertSame($channels, $config[0]['channels'] ?? [], 'The channels have not been configured.');
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder
