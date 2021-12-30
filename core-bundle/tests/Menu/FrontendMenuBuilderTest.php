@@ -447,19 +447,13 @@ class FrontendMenuBuilderTest extends TestCase
 
     public function testEmptyMenu(): void
     {
-        // Configure "Imprint" page as current page
-        $requestPage = $this->createMock(PageModel::class);
-        $requestPage
-            ->method('__get')
-            ->willReturnCallback(static fn (string $property) => self::PAGES[array_search(8, array_column(self::PAGES, 'id'), true)][$property] ?? null)
-        ;
-
         $menuFactory = new MenuFactory();
         $root = $menuFactory->createItem('root');
 
         $menuBuilder = new FrontendMenuBuilder(
             $menuFactory,
-            $this->mockRequestStack($requestPage),
+            $this->mockRequestStack(),
+            // Assert that the event is definitely dispatched
             $this->mockEventDispatcher(),
             $this->mockConnection([]),
             $this->mockPageRegistry(),
@@ -470,11 +464,9 @@ class FrontendMenuBuilderTest extends TestCase
             $this->mockDatabase()
         );
 
-        // Configure to show only one level and no pages above
-        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, 1, null, ['showLevel' => 1]);
+        $tree = $menuBuilder->getMenu($root, self::ROOT_ID);
 
         // Assert that no items are generated
-        // We already asserted that the event dispatcher was called
         $this->assertSame('root', $tree->getName());
         $this->assertFalse($tree->hasChildren());
     }
