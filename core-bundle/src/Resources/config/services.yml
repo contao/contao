@@ -371,15 +371,6 @@ services:
             - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
             - { name: knp_menu.menu_builder, method: buildHeaderMenu, alias: be_header_menu }
 
-    contao.menu.matcher:
-        class: Knp\Menu\Matcher\Matcher
-
-    contao.menu.renderer:
-        class: Knp\Menu\Renderer\ListRenderer
-        public: true
-        arguments:
-            - '@contao.menu.matcher'
-
     contao.menu.frontend_builder:
         class: Contao\CoreBundle\Menu\FrontendMenuBuilder
         arguments:
@@ -394,6 +385,15 @@ services:
             - '@logger'
             - '@=service("contao.framework").createInstance("Contao\\Database")'
         public: true
+
+    contao.menu.matcher:
+        class: Knp\Menu\Matcher\Matcher
+
+    contao.menu.renderer:
+        class: Knp\Menu\Renderer\ListRenderer
+        public: true
+        arguments:
+            - '@contao.menu.matcher'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
