@@ -27,10 +27,12 @@ class RootPageDependentModuleController extends AbstractFrontendModuleController
         /** @var PageModel $pageModel */
         $pageModel = $this->getPageModel();
 
+        $controller = $this->container->get('contao.framework')->getAdapter(Controller::class);
+
         $modules = StringUtil::deserialize($model->rootPageDependentModules);
 
         if (\is_array($modules) && \array_key_exists($pageModel->rootId, $modules)) {
-            $template->module = Controller::getFrontendModule($modules[$pageModel->rootId]);
+            $template->module = $controller->getFrontendModule($modules[$pageModel->rootId]);
         }
 
         return $template->getResponse();
