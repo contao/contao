@@ -68,7 +68,7 @@
         "phpunit/phpunit": "^8.5",
         "symfony/phpunit-bridge": "^5.4"
     },
-    "conflicts": {
+    "conflict": {
         "contao/maintenance-bundle-deprecated": "*",
         "lexik/maintenance-bundle": "*"
     },
