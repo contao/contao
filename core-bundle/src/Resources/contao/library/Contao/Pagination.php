@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+
 /**
  * Provide methods to render a pagination menu.
  *
@@ -293,6 +295,15 @@ class Pagination
 
 		$objTemplate->class = 'pagination-' . $this->strParameter;
 		$objTemplate->pagination = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagination']);
+
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+
+		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+		{
+			/** @var HtmlHeadBag $htmlHeadBag */
+			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+			$htmlHeadBag->setTitle(sprintf($htmlHeadBag->getTitle(), ' - ' . sprintf($GLOBALS['TL_LANG']['MSC']['totalPages'], $this->intPage, $this->intTotalPages)));
+		}
 
 		// Adding rel="prev" and rel="next" links is not possible
 		// anymore with unique variable names (see #3515 and #4141)

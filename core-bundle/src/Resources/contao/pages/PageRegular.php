@@ -215,6 +215,7 @@ class PageRegular extends Frontend
 			}
 		}
 
+		/** @var HtmlHeadBag $headBag */
 		$headBag = $this->responseContext->get(HtmlHeadBag::class);
 
 		// Set the page title and description AFTER the modules have been generated
