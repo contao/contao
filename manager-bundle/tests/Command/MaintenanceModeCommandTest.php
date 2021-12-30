@@ -14,12 +14,15 @@ namespace Contao\ManagerBundle\Tests\Command;
 
 use Contao\ManagerBundle\Command\MaintenanceModeCommand;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
 
 class MaintenanceModeCommandTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @dataProvider enableProvider
      */
@@ -149,6 +152,8 @@ class MaintenanceModeCommandTest extends TestCase
 
     public function testHandlesLexikMaintenanceLock(): void
     {
+        $this->expectDeprecation('Since contao/manager-bundle 4.13: Using "lexik:maintenance:lock" command is deprecated. Use "contao:maintenance-mode enable" instead.');
+
         $twig = $this->getTwigMock();
         $twig
             ->expects($this->once())
@@ -173,6 +178,8 @@ class MaintenanceModeCommandTest extends TestCase
 
     public function testHandlesLexikMaintenanceUnlock(): void
     {
+        $this->expectDeprecation('Since contao/manager-bundle 4.13: Using "lexik:maintenance:unlock" command is deprecated. Use "contao:maintenance-mode disable" instead.');
+
         $filesystem = $this->getFilesystemMock();
         $filesystem
             ->expects($this->once())
