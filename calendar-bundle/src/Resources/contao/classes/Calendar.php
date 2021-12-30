@@ -144,6 +144,12 @@ class Calendar extends Frontend
 		{
 			while ($objArticle->next())
 			{
+				// Never add unpublished elements to the RSS feeds
+				if (!$objArticle->published || ($objArticle->start && $objArticle->start > $time) || ($objArticle->stop && $objArticle->stop <= $time))
+				{
+					continue;
+				}
+
 				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
 
 				// No jumpTo page set (see #4784)
