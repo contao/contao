@@ -44,7 +44,7 @@ class UserListCommand extends Command
         $this
             ->addOption('column', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The columns display in the table')
             ->addOption('admins', null, InputOption::VALUE_NONE, 'Return only admins')
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format', 'text')
             ->setDescription('Lists Contao back end users.')
         ;
     }
@@ -61,8 +61,7 @@ class UserListCommand extends Command
         $columns = $input->getOption('column');
 
         switch ($input->getOption('format')) {
-            case 'txt':
-            case 'text': // Backwards compatibility
+            case 'text':
                 if (0 === $users->count()) {
                     $io->note('No accounts found.');
 
