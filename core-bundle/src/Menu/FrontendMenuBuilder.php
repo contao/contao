@@ -121,27 +121,26 @@ class FrontendMenuBuilder
                 continue;
             }
 
-            // Check whether there will be subpages
-            if ($hasSubpages) {
-                $nextLevel = $level + 1;
-                $this->getMenu($item, (int) $page->id, $nextLevel, $host, $options);
-
-                $childRecords = $this->database->getChildRecords($page->id, 'tl_page');
-
-                if (
-                    $options['showLevel'] && $options['showLevel'] < $nextLevel
-                    && ($options['hardLimit'] || !$currentPage || ($currentPage->id === $page->id && !\in_array($currentPage->id, $childRecords, false)))
-                ) {
-                    $item->setDisplayChildren(false);
-                }
-            }
-
             if (null === $href = $this->generateUri($page, $item)) {
                 continue;
             }
 
-            $this->populateMenuItem($item, $request, $page, $href, $options);
+            $nextLevel = $level + 1;
+            $currentPageIsChild = $currentPage && ($currentPage->id === $page->id || \in_array($currentPage->id, $this->database->getChildRecords($page->id, 'tl_page'), false));
+            $displayChildren = !$options['showLevel']
+                               || $options['showLevel'] >= $nextLevel
+                               || (!$options['hardLimit'] && $currentPageIsChild);
+            $hasSubmenu = $hasSubpages && $displayChildren;
+
+            $this->populateMenuItem($item, $request, $page, $href, $hasSubmenu, $options);
             $root->addChild($item);
+
+            if (!$hasSubpages) {
+                continue;
+            }
+
+            $this->getMenu($item, (int) $page->id, $nextLevel, $host, $options);
+            $item->setDisplayChildren($displayChildren);
         }
 
         $menuEvent = new FrontendMenuEvent($this->factory, $root, $pid, $level, $options);
@@ -260,7 +259,7 @@ class FrontendMenuBuilder
         }
     }
 
-    private function populateMenuItem(ItemInterface $item, Request $request, PageModel $page, ?string $href, array $options = []): void
+    private function populateMenuItem(ItemInterface $item, Request $request, PageModel $page, ?string $href, bool $hasSubmenu, array $options = []): void
     {
         /** @var PageModel|null $currentPage */
         $currentPage = $request->attributes->get('pageModel');
@@ -282,7 +281,7 @@ class FrontendMenuBuilder
 
         $extra['isActive'] = $isActive;
         $extra['isTrail'] = $isActive ? false : $isTrail;
-        $extra['class'] = $this->getCssClass($item, $page, $currentPage, $isActive, $isTrail);
+        $extra['class'] = $this->getCssClass($page, $currentPage, $isActive, $isTrail, $hasSubmenu);
         $extra['title'] = StringUtil::specialchars($page->title, true);
         $extra['pageTitle'] = StringUtil::specialchars($page->pageTitle, true);
         $extra['description'] = str_replace(["\n", "\r"], [' ', ''], (string) $page->description);
@@ -325,11 +324,10 @@ class FrontendMenuBuilder
         $item->setExtra('pageModel', $page);
     }
 
-    private function getCssClass(ItemInterface $item, PageModel $page, ?PageModel $currentPage, bool $isActive, bool $isTrail): string
+    private function getCssClass(PageModel $page, ?PageModel $currentPage, bool $isActive, bool $isTrail, bool $hasSubmenu): string
     {
         $classes = [];
 
-        $hasSubmenu = $item->hasChildren() && $item->getDisplayChildren();
         $isForward = $currentPage && 'forward' === $page->type && $currentPage->id === $page->jumpTo;
 
         if ($hasSubmenu) {
