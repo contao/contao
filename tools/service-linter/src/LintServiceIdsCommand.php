@@ -19,6 +19,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
+use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 
 class LintServiceIdsCommand extends Command
 {
@@ -51,8 +53,8 @@ class LintServiceIdsCommand extends Command
      * derive the service ID from the class name.
      */
     private static array $generalServiceClasses = [
-        'Contao\CoreBundle\Config\ResourceFinder',
-        'Contao\CoreBundle\Csrf\MemoryTokenStorage',
+        ResourceFinder::class,
+        MemoryTokenStorage::class,
     ];
 
     private static array $exceptions = [
@@ -122,9 +124,34 @@ class LintServiceIdsCommand extends Command
                 continue;
             }
 
+            $serviceIds = [];
+
             foreach ($yaml['services'] as $serviceId => $config) {
-                if ('_' === $serviceId[0] || !isset($config['class'])) {
+                if ('_' === $serviceId[0]) {
                     continue;
+                }
+
+                if (
+                    !\is_string($config) // autowiring aliases
+                    && !isset($config['alias'])
+                    && false !== strpos($serviceId, '\\')
+                    && 'Controller' !== substr($serviceId, -10)
+                ) {
+                    $hasError = true;
+
+                    $io->warning(sprintf(
+                        'The %s service defined in the %s file uses a FQCN as service ID, which is only allowed for controllers.',
+                        $serviceId,
+                        $file->getRelativePathname(),
+                    ));
+                }
+
+                if (!isset($config['class'])) {
+                    continue;
+                }
+
+                if (!isset($config['deprecated'])) {
+                    $serviceIds[] = $serviceId;
                 }
 
                 if (\in_array($config['class'], $ignoreClasses, true)) {
@@ -146,6 +173,17 @@ class LintServiceIdsCommand extends Command
                         $serviceId
                     ));
                 }
+            }
+
+            $sortedIds = $serviceIds;
+            usort($sortedIds, 'strnatcasecmp');
+            $sortedIds = array_values($sortedIds);
+
+            if ($serviceIds !== $sortedIds) {
+                $hasError = true;
+
+                $io->warning(sprintf('The services in the %s file are not sorted correctly.', $file->getRelativePathname()));
+                $io->writeln((new \Diff($serviceIds, $sortedIds))->render(new \Diff_Renderer_Text_Unified()));
             }
         }
 

@@ -85,9 +85,6 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         $this->usedTokens = [];
     }
 
-    /**
-     * @throws \LogicException
-     */
     private function assertInitialized(): void
     {
         if (null === $this->tokens) {

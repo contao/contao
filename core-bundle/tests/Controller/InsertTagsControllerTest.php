@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -20,17 +21,14 @@ class InsertTagsControllerTest extends TestCase
 {
     public function testRendersNonCacheableInsertTag(): void
     {
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->method('initialize')
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->method('replaceInline')
+            ->with('{{request_token}}')
+            ->willReturn('3858f62230ac3c915f300c664312c63f')
         ;
 
-        $framework
-            ->method('createInstance')
-            ->willReturn($this->mockConfiguredAdapter(['replace' => '3858f62230ac3c915f300c664312c63f']))
-        ;
-
-        $controller = new InsertTagsController($framework);
+        $controller = new InsertTagsController($insertTagParser);
         $response = $controller->renderAction(new Request(), '{{request_token}}');
 
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
@@ -41,7 +39,7 @@ class InsertTagsControllerTest extends TestCase
         $request = new Request();
         $request->query->set('clientCache', '300');
 
-        $controller = new InsertTagsController($framework);
+        $controller = new InsertTagsController($insertTagParser);
         $response = $controller->renderAction($request, '{{request_token}}');
 
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));

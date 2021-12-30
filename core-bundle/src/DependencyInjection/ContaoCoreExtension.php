@@ -25,8 +25,6 @@ use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
-use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -129,16 +127,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
-        ;
-
-        $container
-            ->registerForAutoconfiguration(DynamicRouteInterface::class)
-            ->addTag('contao.page')
-        ;
-
-        $container
-            ->registerForAutoconfiguration(ContentCompositionInterface::class)
-            ->addTag('contao.page')
         ;
 
         $container->registerAttributeForAutoconfiguration(
@@ -380,10 +368,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             return;
         }
 
+        if (!$container->hasDefinition('contao.doctrine.backup.retention_policy')) {
+            return;
+        }
+
+        $retentionPolicy = $container->getDefinition('contao.doctrine.backup.retention_policy');
+        $retentionPolicy->setArgument(0, $config['backup']['keep_max']);
+        $retentionPolicy->setArgument(1, $config['backup']['keep_intervals']);
+
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
-        $dbDumper->replaceArgument(2, $config['backup']['directory']);
-        $dbDumper->replaceArgument(3, $config['backup']['ignore_tables']);
-        $dbDumper->replaceArgument(4, $config['backup']['keep_max']);
+        $dbDumper->setArgument(2, $config['backup']['directory']);
+        $dbDumper->setArgument(3, $config['backup']['ignore_tables']);
     }
 
     private function handleFallbackPreviewProvider(array $config, ContainerBuilder $container): void

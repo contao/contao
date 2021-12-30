@@ -63,9 +63,6 @@ class AddCronJobsPass implements CompilerPassInterface
         }
     }
 
-    /**
-     * @throws InvalidDefinitionException
-     */
     private function getMethod(array $attributes, string $class, string $serviceId): ?string
     {
         $ref = new \ReflectionClass($class);
