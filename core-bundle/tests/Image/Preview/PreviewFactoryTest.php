@@ -21,6 +21,9 @@ use Contao\CoreBundle\Image\Preview\PreviewProviderInterface;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\Image;
+use Contao\Image\PictureConfiguration;
+use Contao\Image\PictureConfigurationItem;
+use Contao\Image\ResizeConfiguration;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
@@ -125,6 +128,96 @@ class PreviewFactoryTest extends TestCase
         $this->expectException(MissingPreviewProviderException::class);
 
         $factory->createPreviews($sourcePath, 128);
+    }
+
+    /**
+     * @dataProvider getImageSizes
+     *
+     * @param int|string|array|ResizeConfiguration|PictureConfiguration|null $size
+     */
+    public function testGetPreviewSizeFromImageSize($size, int $expectedSize, string $defaultDensities = ''): void
+    {
+        $factory = $this->createFactoryWithExampleProvider();
+        $factory->setDefaultDensities($defaultDensities);
+
+        $this->assertSame(
+            $expectedSize,
+            $factory->getPreviewSizeFromImageSize($size),
+        );
+
+        if (\is_array($size)) {
+            $this->assertSame(
+                $expectedSize,
+                $factory->getPreviewSizeFromImageSize($size),
+            );
+        }
+    }
+
+    public function getImageSizes(): \Generator
+    {
+        yield [null, 0];
+        yield [[], 0];
+        yield [[0, 0, 'crop'], 0];
+        yield [[100, 0, 'crop'], 100];
+        yield [[0, 100, 'crop'], 100];
+        yield [[200, 100, 'crop'], 200];
+        yield [[200, 100, 'box'], 200];
+        yield [[200, 100, 'left_top'], 200];
+        yield [[200, 100, 'crop'], 400, '2x'];
+        yield [[200, 100, 'crop'], 300, '1.5x'];
+        yield [[200, 100, 'crop'], 500, '500w'];
+        yield [[200, 100, 'crop'], 240, '50w, 40w, 1.2x'];
+
+        yield [
+            (new ResizeConfiguration())
+                ->setWidth(123)
+                ->setHeight(456),
+            456,
+        ];
+
+        yield [
+            (new PictureConfiguration())
+                ->setSize(
+                    (new PictureConfigurationItem())
+                        ->setDensities('1.5x')
+                        ->setResizeConfig(
+                            (new ResizeConfiguration())
+                                ->setWidth(123)
+                                ->setHeight(456)
+                        )
+                ),
+            684,
+        ];
+
+        yield [
+            (new PictureConfiguration())
+                ->setSize(
+                    (new PictureConfigurationItem())
+                        ->setDensities('1.5x')
+                        ->setResizeConfig(
+                            (new ResizeConfiguration())
+                                ->setWidth(123)
+                                ->setHeight(123)
+                        )
+                )
+                ->setSizeItems([
+                    (new PictureConfigurationItem())
+                        ->setDensities('543w, 1.2x')
+                        ->setResizeConfig(
+                            (new ResizeConfiguration())
+                                ->setWidth(100)
+                                ->setHeight(150)
+                        ),
+                    (new PictureConfigurationItem())
+                        ->setDensities('432w, 1.2x')
+                        ->setResizeConfig(
+                            (new ResizeConfiguration())
+                                ->setWidth(100)
+                                ->setHeight(150)
+                        ),
+                ]),
+            543,
+        ];
     }
 
     private function createFactoryWithExampleProvider(): PreviewFactory

@@ -292,9 +292,9 @@ class PreviewFactory
                 $previewSize = max(
                     $previewSize,
                     $this->getPreviewSizeFromWidthHeightDensities(
-                        $size->getSize()->getResizeConfig()->getWidth(),
-                        $size->getSize()->getResizeConfig()->getHeight(),
-                        $size->getSize()->getDensities(),
+                        $sizeItem->getResizeConfig()->getWidth(),
+                        $sizeItem->getResizeConfig()->getHeight(),
+                        $sizeItem->getDensities(),
                     ),
                 );
             }
@@ -308,6 +308,8 @@ class PreviewFactory
         if (!\is_array($size)) {
             $size = [0, 0, $size];
         }
+
+        $size += [0, 0, 'crop'];
 
         if ($predefinedSize = $this->predefinedSizes[$size[2] ?? null] ?? null) {
             $previewSize = $this->getPreviewSizeFromWidthHeightDensities(
@@ -476,18 +478,23 @@ class PreviewFactory
 
     private function getPreviewSizeFromWidthHeightDensities(int $width, int $height, string $densities): int
     {
-        $dimensions = [$width, $height];
-        $scaleFactors = [1];
+        $widthDescriptor = 0;
+        $scaleFactor = 1;
 
         foreach (explode(',', $densities) as $density) {
             if ('w' === substr(trim($density), -1)) {
-                $dimensions[] = (int) $density;
+                $widthDescriptor = max($widthDescriptor, (int) $density);
             } else {
-                $scaleFactors[] = (float) $density;
+                $scaleFactor = max($scaleFactor, (float) $density);
             }
         }
 
-        return (int) round(max(...$dimensions) * max(...$scaleFactors));
+        return (int) round(
+            max(
+                max($width, $height) * $scaleFactor,
+                $widthDescriptor,
+            )
+        );
     }
 
     private function createCachePath(string $path, int $size, array $previewOptions): string
