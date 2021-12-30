@@ -224,16 +224,6 @@ services:
             # and must be lower than the one of the CsrfTokenCookieSubscriber listener (defaults to -832)
             - { name: kernel.event_listener, priority: -896 }
 
-    contao.listener.menu.backend_logout:
-        class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
-        arguments:
-            - '@security.helper'
-            - '@router'
-            - '@security.logout_url_generator'
-            - '@translator'
-        tags:
-            - kernel.event_listener
-
     contao.listener.menu.backend:
         class: Contao\CoreBundle\EventListener\Menu\BackendMenuListener
         arguments:
@@ -245,6 +235,16 @@ services:
         tags:
             # Make sure this listener comes before the other ones adding to its tree
             - { name: kernel.event_listener, priority: 10 }
+
+    contao.listener.menu.backend_logout:
+        class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@security.logout_url_generator'
+            - '@translator'
+        tags:
+            - kernel.event_listener
 
     contao.listener.menu.backend_preview:
         class: Contao\CoreBundle\EventListener\Menu\BackendPreviewListener
@@ -427,13 +427,13 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.widget.http_url:
-        class: Contao\CoreBundle\EventListener\Widget\HttpUrlListener
+    contao.listener.widget.custom_rgxp:
+        class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener
         arguments:
             - '@translator'
 
-    contao.listener.widget.custom_rgxp:
-        class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener
+    contao.listener.widget.http_url:
+        class: Contao\CoreBundle\EventListener\Widget\HttpUrlListener
         arguments:
             - '@translator'
 
