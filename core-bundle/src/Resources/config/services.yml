@@ -235,6 +235,11 @@ services:
             - '%kernel.project_dir%/%contao.upload_path%'
             - '@?logger'
 
+    contao.image.fallback_preview_provider:
+        class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider
+        tags:
+            - { name: contao.preview_provider, priority: -1024 }
+
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
 
@@ -243,6 +248,13 @@ services:
 
     contao.image.imagine.imagick:
         class: Imagine\Imagick\Imagine
+
+    contao.image.imagine_preview_provider:
+        class: Contao\CoreBundle\Image\Preview\ImaginePreviewProvider
+        arguments:
+            - '@contao.image.imagine'
+        tags:
+            - { name: contao.preview_provider, priority: 0 }
 
     contao.image.imagine_svg:
         class: Contao\ImagineSvg\Imagine
@@ -287,18 +299,6 @@ services:
             - '%contao.image.valid_extensions%'
             - '%contao.image.preview.default_size%'
             - '%contao.image.preview.max_size%'
-
-    contao.image.fallback_preview_provider:
-        class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider
-        tags:
-            - { name: contao.preview_provider, priority: -1024 }
-
-    contao.image.imagine_preview_provider:
-        class: Contao\CoreBundle\Image\Preview\ImaginePreviewProvider
-        arguments:
-            - '@contao.image.imagine'
-        tags:
-            - { name: contao.preview_provider, priority: 0 }
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator
