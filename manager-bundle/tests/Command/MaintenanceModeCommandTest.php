@@ -75,6 +75,62 @@ class MaintenanceModeCommandTest extends TestCase
         $this->assertStringContainsString('[OK] Maintenance mode disabled', $commandTester->getDisplay(true));
     }
 
+    public function testOutputIfEnabled(): void
+    {
+        $filesystem = $this->getFilesystemMock();
+        $filesystem
+            ->expects($this->once())
+            ->method('exists')
+            ->with('/path/to/var/maintenance.html')
+            ->willReturn(true)
+        ;
+
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $this->assertStringContainsString(' ! [NOTE] Maintenance mode is enabled.', $commandTester->getDisplay(true));
+    }
+
+    public function testOutputIfDisabled(): void
+    {
+        $filesystem = $this->getFilesystemMock();
+        $filesystem
+            ->expects($this->once())
+            ->method('exists')
+            ->with('/path/to/var/maintenance.html')
+            ->willReturn(false)
+        ;
+
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $this->assertStringContainsString(' [INFO] Maintenance mode is disabled.', $commandTester->getDisplay(true));
+    }
+
+    public function testOutputWithJsonFormat(): void
+    {
+        $filesystem = $this->getFilesystemMock();
+        $filesystem
+            ->expects($this->once())
+            ->method('exists')
+            ->with('/path/to/var/maintenance.html')
+            ->willReturn(false)
+        ;
+
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute(['--format' => 'json']);
+
+        $json = json_decode($commandTester->getDisplay(true), true, 512, JSON_THROW_ON_ERROR);
+
+        $this->assertSame(['enabled' => false, 'maintenanceFilePath' => '/path/to/var/maintenance.html'], $json);
+    }
+
     public function enableProvider(): \Generator
     {
         yield 'Test defaults' => [
