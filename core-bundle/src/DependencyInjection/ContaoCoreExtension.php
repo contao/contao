@@ -119,6 +119,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleTokenCheckerConfig($config, $container);
         $this->handleLegacyRouting($config, $configs, $container, $loader);
         $this->handleBackup($config, $container);
+        $this->handleFallbackPreviewProvider($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -383,6 +384,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $dbDumper->replaceArgument(2, $config['backup']['directory']);
         $dbDumper->replaceArgument(3, $config['backup']['ignore_tables']);
         $dbDumper->replaceArgument(4, $config['backup']['keep_max']);
+    }
+
+    private function handleFallbackPreviewProvider(array $config, ContainerBuilder $container): void
+    {
+        if (
+            $config['image']['preview']['fallbacks']
+            || !$container->hasDefinition('contao.image.fallback_preview_provider')
+        ) {
+            return;
+        }
+
+        $container->removeDefinition('contao.image.fallback_preview_provider');
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void

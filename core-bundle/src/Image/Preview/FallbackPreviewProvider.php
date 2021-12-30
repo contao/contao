@@ -22,7 +22,7 @@ class FallbackPreviewProvider implements PreviewProviderInterface
         return 0;
     }
 
-    public function supports(string $path, string $fileHeader = ''): bool
+    public function supports(string $path, string $fileHeader = '', array $options = []): bool
     {
         return true;
     }

@@ -16,7 +16,7 @@ interface PreviewProviderInterface
 {
     public function getFileHeaderSize(): int;
 
-    public function supports(string $path, string $fileHeader = ''): bool;
+    public function supports(string $path, string $fileHeader = '', array $options = []): bool;
 
     /**
      * @param int      $size               Minimal size the preview image should

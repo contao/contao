@@ -39,7 +39,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         return 0;
     }
 
-    public function supports(string $path, string $fileHeader = ''): bool
+    public function supports(string $path, string $fileHeader = '', array $options = []): bool
     {
         $format = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 

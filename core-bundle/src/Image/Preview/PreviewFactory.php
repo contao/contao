@@ -124,7 +124,7 @@ class PreviewFactory
         $targetPathCallback = fn (int $page) => $targetPath.$this->getPageSuffix($page);
 
         foreach ($this->previewProviders as $provider) {
-            if ($provider->supports($path, $header)) {
+            if ($provider->supports($path, $header, $previewOptions)) {
                 try {
                     $previews = $provider->generatePreviews(
                         $path,
