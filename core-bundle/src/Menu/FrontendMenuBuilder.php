@@ -81,8 +81,8 @@ class FrontendMenuBuilder
         }
 
         $request = $this->requestStack->getCurrentRequest();
-        /** @var PageModel|null $requestPage */
-        $requestPage = $request->attributes->get('pageModel');
+        /** @var PageModel|null $currentPage */
+        $currentPage = $request->attributes->get('pageModel');
 
         $isMember = $this->security->isGranted('ROLE_MEMBER');
 
@@ -130,7 +130,7 @@ class FrontendMenuBuilder
 
                 if (
                     $options['showLevel'] && $options['showLevel'] < $nextLevel
-                    && ($options['hardLimit'] || !$requestPage || ($requestPage->id === $page->id && !\in_array($requestPage->id, $childRecords, false)))
+                    && ($options['hardLimit'] || !$currentPage || ($currentPage->id === $page->id && !\in_array($currentPage->id, $childRecords, false)))
                 ) {
                     $item->setDisplayChildren(false);
                 }
@@ -262,27 +262,27 @@ class FrontendMenuBuilder
 
     private function populateMenuItem(ItemInterface $item, Request $request, PageModel $page, ?string $href, array $options = []): void
     {
-        /** @var PageModel|null $requestPage */
-        $requestPage = $request->attributes->get('pageModel');
+        /** @var PageModel|null $currentPage */
+        $currentPage = $request->attributes->get('pageModel');
 
         $extra = $page->row();
-        $isTrail = $requestPage && \in_array($page->id, $requestPage->trail, false);
+        $isTrail = $currentPage && \in_array($page->id, $currentPage->trail, false);
 
         $item->setUri($href);
 
         // Use the path without query string to check for active pages (see #480)
         $path = ltrim($request->getPathInfo(), '/');
 
-        $isActive = $requestPage
+        $isActive = $currentPage
             && $href === $path
             && !($options['isSitemap'] ?? false)
-            && (($requestPage->id === $page->id) || ('forward' === $page->type && $requestPage->id === $page->jumpTo));
+            && (($currentPage->id === $page->id) || ('forward' === $page->type && $currentPage->id === $page->jumpTo));
 
         $item->setCurrent($isActive);
 
         $extra['isActive'] = $isActive;
         $extra['isTrail'] = $isActive ? false : $isTrail;
-        $extra['class'] = trim(implode(' ', $this->getCssClasses($item, $page, $requestPage, $isActive, $isTrail)));
+        $extra['class'] = $this->getCssClass($item, $page, $currentPage, $isActive, $isTrail);
         $extra['title'] = StringUtil::specialchars($page->title, true);
         $extra['pageTitle'] = StringUtil::specialchars($page->pageTitle, true);
         $extra['description'] = str_replace(["\n", "\r"], [' ', ''], (string) $page->description);
@@ -325,12 +325,12 @@ class FrontendMenuBuilder
         $item->setExtra('pageModel', $page);
     }
 
-    private function getCssClasses(ItemInterface $item, PageModel $page, ?PageModel $requestPage, bool $isActive, bool $isTrail): array
+    private function getCssClass(ItemInterface $item, PageModel $page, ?PageModel $currentPage, bool $isActive, bool $isTrail): string
     {
         $classes = [];
 
         $hasSubmenu = $item->hasChildren() && $item->getDisplayChildren();
-        $isForward = $requestPage && 'forward' === $page->type && $requestPage->id === $page->jumpTo;
+        $isForward = $currentPage && 'forward' === $page->type && $currentPage->id === $page->jumpTo;
 
         if ($hasSubmenu) {
             $classes[] = 'submenu';
@@ -345,7 +345,7 @@ class FrontendMenuBuilder
         }
 
         // Mark pages on the same level (see #2419)
-        if ($requestPage && !$isActive && $page->pid === $requestPage->pid) {
+        if ($currentPage && !$isActive && $page->pid === $currentPage->pid) {
             $classes[] = 'sibling';
         }
 
@@ -361,6 +361,6 @@ class FrontendMenuBuilder
             $classes[] = 'active';
         }
 
-        return $classes;
+        return trim(implode(' ', $classes));
     }
 }

@@ -324,6 +324,7 @@ class FrontendMenuBuilderTest extends TestCase
         $this->assertTrue($item->getExtra('isActive'));
         $this->assertTrue($item->isCurrent());
         $this->assertTrue(\in_array('active', explode(' ', $item->getExtra('class')), true));
+        $this->assertFalse(\in_array('sibling', explode(' ', $item->getExtra('class')), true));
 
         // Assert "sibling" css class is added to non-active pages on the same level
         $item = $tree->getChild('Home');
@@ -490,16 +491,15 @@ class FrontendMenuBuilderTest extends TestCase
 
     public function mockDatabase(): Database
     {
-        $getChildRecords = static fn (array $ids) => array_filter(self::PAGES, static fn (array $page) => \in_array($page['pid'], $ids, true));
-
         $database = $this->createMock(Database::class);
         $database
             ->method('getChildRecords')
             ->willReturnCallback(
-                static function ($ids, string $table) use ($getChildRecords): array {
+                static function ($ids, string $table): array {
                     $ids = (array) $ids;
-
                     $childRecords = [];
+
+                    $getChildRecords = static fn (array $ids) => array_filter(self::PAGES, static fn (array $page) => \in_array($page['pid'], $ids, true));
 
                     do {
                         $ids = array_column($getChildRecords($ids), 'id');
