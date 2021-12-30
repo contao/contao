@@ -74,6 +74,19 @@ class FrontendMenuBuilderTest extends TestCase
             'trail' => [1],
         ],
         [
+            'id' => 13,
+            'pid' => 1,
+            'type' => 'regular',
+            'title' => 'VIP Member area',
+            'pageTitle' => 'VIP Member area',
+            'alias' => 'vip-member-area',
+            'protected' => true,
+            'groups' => [180],
+            'robots' => '',
+            'published' => true,
+            'trail' => [1],
+        ],
+        [
             'id' => 4,
             'pid' => 1,
             'type' => 'regular',
@@ -197,6 +210,7 @@ class FrontendMenuBuilderTest extends TestCase
 
         // Assert protected pages are hidden
         $this->assertNull($tree->getChild('Member area'));
+        $this->assertNull($tree->getChild('VIP Member area'));
 
         // Assert redirect pages have mailto addresses encoded
         $this->assertSame(StringUtil::encodeEmail('mailto:me@example.org'), $tree->getChild('Write me')->getUri());
@@ -259,7 +273,9 @@ class FrontendMenuBuilderTest extends TestCase
         // Configure showProtected=true
         $tree = $menuBuilder->getMenu($root, self::ROOT_ID, 1, null, ['showProtected' => true]);
 
-        // Assert protected page is added to the menu
+        // Assert protected pages are added to the menu
+        $this->assertNotNull($tree->getChild('VIP Member area'));
+
         $item = $tree->getChild('Member area');
         $this->assertNotNull($item);
         $this->assertTrue(\in_array('protected', explode(' ', $item->getExtra('class')), true));
@@ -290,6 +306,9 @@ class FrontendMenuBuilderTest extends TestCase
         $item = $tree->getChild('Member area');
         $this->assertNotNull($item);
         $this->assertTrue(\in_array('protected', explode(' ', $item->getExtra('class')), true));
+
+        // Assert protected page is hidden if in wrong member group
+        $this->assertNull($tree->getChild('VIP Member area'));
     }
 
     public function testMarksActivePage(): void
@@ -550,6 +569,7 @@ class FrontendMenuBuilderTest extends TestCase
             ->willReturnMap([
                 ['ROLE_MEMBER', null, $isMember],
                 [ContaoCorePermissions::MEMBER_IN_GROUPS, [179], $isGrantedProtected],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [180], false],
             ])
         ;
 
