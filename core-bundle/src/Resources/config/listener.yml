@@ -116,6 +116,19 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.listener.data_container.root_page_dependent_module:
+        class: Contao\CoreBundle\EventListener\DataContainer\RootPageDependentModuleListener
+        public: true
+        arguments:
+            - '@database_connection'
+            - '@translator'
+            - '@contao.routing.scope_matcher'
+            - '@request_stack'
+            - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
+            - '%contao.csrf_token_name%'
+        tags:
+            - { name: contao.hook, hook: loadDataContainer }
+
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:
@@ -436,19 +449,6 @@ services:
         class: Contao\CoreBundle\EventListener\Widget\HttpUrlListener
         arguments:
             - '@translator'
-
-    contao.listener.data_container.root_page_dependent_module:
-        class: Contao\CoreBundle\EventListener\DataContainer\RootPageDependentModuleListener
-        public: true
-        arguments:
-            - '@database_connection'
-            - '@translator'
-            - '@contao.routing.scope_matcher'
-            - '@request_stack'
-            - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
-            - '%contao.csrf_token_name%'
-        tags:
-            - { name: contao.hook, hook: loadDataContainer }
 
     # Backwards compatibility
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
