@@ -129,9 +129,8 @@ class FrontendMenuBuilder
                 $childRecords = $this->database->getChildRecords($page->id, 'tl_page');
 
                 if (
-                    $options['showLevel']
-                    && $options['showLevel'] < $nextLevel
-                    && ($options['hardLimit'] || $requestPage->id === $page->id && !\in_array($requestPage->id, $childRecords, false))
+                    $options['showLevel'] && $options['showLevel'] < $nextLevel
+                    && ($options['hardLimit'] || !$requestPage || ($requestPage->id === $page->id && !\in_array($requestPage->id, $childRecords, false)))
                 ) {
                     $item->setDisplayChildren(false);
                 }
