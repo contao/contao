@@ -445,6 +445,40 @@ class FrontendMenuBuilderTest extends TestCase
         $this->assertTrue($item->getDisplayChildren());
     }
 
+    public function testEmptyMenu(): void
+    {
+        // Configure "Imprint" page as current page
+        $requestPage = $this->createMock(PageModel::class);
+        $requestPage
+            ->method('__get')
+            ->willReturnCallback(static fn (string $property) => self::PAGES[array_search(8, array_column(self::PAGES, 'id'), true)][$property] ?? null)
+        ;
+
+        $menuFactory = new MenuFactory();
+        $root = $menuFactory->createItem('root');
+
+        $menuBuilder = new FrontendMenuBuilder(
+            $menuFactory,
+            $this->mockRequestStack($requestPage),
+            $this->mockEventDispatcher(),
+            $this->mockConnection([]),
+            $this->mockPageRegistry(),
+            $this->mockPageModelAdapter(),
+            $this->mockTokenChecker(),
+            $this->mockSecurity(),
+            $this->createMock(LoggerInterface::class),
+            $this->mockDatabase()
+        );
+
+        // Configure to show only one level and no pages above
+        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, 1, null, ['showLevel' => 1]);
+
+        // Assert that no items are generated
+        // We already asserted that the event dispatcher was called
+        $this->assertSame('root', $tree->getName());
+        $this->assertFalse($tree->hasChildren());
+    }
+
     public function testBuildsSitemap(): void
     {
         $menuFactory = new MenuFactory();
@@ -621,7 +655,7 @@ class FrontendMenuBuilderTest extends TestCase
         return $pageRegistry;
     }
 
-    private function mockConnection(): Connection
+    private function mockConnection(array $pages = null): Connection
     {
         $pagesByPid = static fn (int $pid) => array_map(
             static fn (array $page) => [
@@ -632,11 +666,19 @@ class FrontendMenuBuilderTest extends TestCase
         );
 
         $result = $this->createMock(Result::class);
-        $result
-            ->method('fetchAllAssociative')
-            // Find the pages by root IDs on consecutive calls
-            ->willReturnOnConsecutiveCalls($pagesByPid(1), $pagesByPid(4), $pagesByPid(8))
+
+        if (null !== $pages) {
+            $result
+                ->method('fetchAllAssociative')
+                ->willReturn($pages)
         ;
+        } else {
+            // Find the pages by root IDs on consecutive calls
+            $result
+                ->method('fetchAllAssociative')
+                ->willReturnOnConsecutiveCalls($pagesByPid(1), $pagesByPid(4), $pagesByPid(8))
+            ;
+        }
 
         $connection = $this->createMock(Connection::class);
         $connection

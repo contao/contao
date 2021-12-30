@@ -76,9 +76,7 @@ class FrontendMenuBuilder
             'isSitemap' => false,
         ], $options);
 
-        if (null === ($pages = $this->getPages($pid, $options))) {
-            return $root;
-        }
+        $pages = $this->getPages($pid, $options);
 
         $request = $this->requestStack->getCurrentRequest();
         /** @var PageModel|null $currentPage */
@@ -149,7 +147,7 @@ class FrontendMenuBuilder
         return $root;
     }
 
-    private function getPages(int $pid, array $options): ?array
+    private function getPages(int $pid, array $options): array
     {
         // Custom page choice like, e.g., for the custom navigation module
         if (0 === $pid && $options['pages']) {
@@ -160,15 +158,15 @@ class FrontendMenuBuilder
     }
 
     /**
-     * @return array<array{page:PageModel,hasSubpages:bool}>|null
+     * @return array<array{page:PageModel,hasSubpages:bool}>
      */
-    private function findPagesByIds(array $pageIds): ?array
+    private function findPagesByIds(array $pageIds): array
     {
         // Get all active pages and also include root pages if the language is added to the URL (see #72)
         $pages = $this->pageModelAdapter->findPublishedRegularByIds($pageIds, ['includeRoot' => true]);
 
         if (null === $pages) {
-            return null;
+            return [];
         }
 
         return array_map(
@@ -181,9 +179,9 @@ class FrontendMenuBuilder
     }
 
     /**
-     * @return array<array{page:PageModel,hasSubpages:bool}>|null
+     * @return array<array{page:PageModel,hasSubpages:bool}>
      */
-    private function findPagesByPid(int $pid, bool $showHidden = false, bool $isSitemap = false): ?array
+    private function findPagesByPid(int $pid, bool $showHidden = false, bool $isSitemap = false): array
     {
         $time = Date::floorToMinute();
         $blnBeUserLoggedIn = $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode();
@@ -195,7 +193,7 @@ class FrontendMenuBuilder
         ;
 
         if (\count($pages) < 1) {
-            return null;
+            return [];
         }
 
         // Load models into the registry with a single query
