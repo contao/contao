@@ -68,6 +68,10 @@
         "phpunit/phpunit": "^8.5",
         "symfony/phpunit-bridge": "^5.4"
     },
+    "conflicts": {
+        "contao/maintenance-bundle-deprecated": "*",
+        "lexik/maintenance-bundle": "*"
+    },
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files"
     },

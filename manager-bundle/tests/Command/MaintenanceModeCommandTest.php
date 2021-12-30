@@ -53,7 +53,7 @@ class MaintenanceModeCommandTest extends TestCase
             $params['--templateVars'] = $customTemplateVars;
         }
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $twig, [], $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $twig, $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute($params);
@@ -70,7 +70,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->with('/path/to/var/maintenance.html')
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['state' => 'disable']);
@@ -88,7 +88,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->willReturn(true)
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
@@ -106,7 +106,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->willReturn(false)
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
@@ -124,7 +124,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->willReturn(false)
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['--format' => 'json']);
@@ -134,22 +134,9 @@ class MaintenanceModeCommandTest extends TestCase
         $this->assertSame(['enabled' => false, 'maintenanceFilePath' => '/path/to/var/maintenance.html'], $json);
     }
 
-    public function testAliasesLexikMaintenanceCommands(): void
-    {
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $this->getFilesystemMock());
-
-        $this->assertContains('lexik:maintenance:lock', $command->getAliases());
-        $this->assertContains('lexik:maintenance:unlock', $command->getAliases());
-    }
-
-    public function testDoesNotAliasLexikMaintenanceCommandsIfBundleIsInstalled(): void
-    {
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), ['LexikMaintenanceBundle'], $this->getFilesystemMock());
-
-        $this->assertNotContains('lexik:maintenance:lock', $command->getAliases());
-        $this->assertNotContains('lexik:maintenance:unlock', $command->getAliases());
-    }
-
+    /**
+     * @group legacy
+     */
     public function testHandlesLexikMaintenanceLock(): void
     {
         $this->expectDeprecation('Since contao/manager-bundle 4.13: Using "lexik:maintenance:lock" command is deprecated. Use "contao:maintenance-mode enable" instead.');
@@ -168,7 +155,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->with('/path/to/var/maintenance.html', 'parsed-template')
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $twig, [], $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $twig, $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['lexik:maintenance:lock']);
@@ -176,6 +163,9 @@ class MaintenanceModeCommandTest extends TestCase
         $this->assertStringContainsString('[OK] Maintenance mode enabled', $commandTester->getDisplay(true));
     }
 
+    /**
+     * @group legacy
+     */
     public function testHandlesLexikMaintenanceUnlock(): void
     {
         $this->expectDeprecation('Since contao/manager-bundle 4.13: Using "lexik:maintenance:unlock" command is deprecated. Use "contao:maintenance-mode disable" instead.');
@@ -187,7 +177,7 @@ class MaintenanceModeCommandTest extends TestCase
             ->with('/path/to/var/maintenance.html')
         ;
 
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), [], $filesystem);
+        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
 
         $commandTester = new CommandTester($command);
         $commandTester->execute(['lexik:maintenance:unlock']);

@@ -155,9 +155,11 @@
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",
         "contao/core": "*",
+        "contao/maintenance-bundle-deprecated": "*",
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/annotations": "<1.9",
         "doctrine/cache": "<1.10",
+        "lexik/maintenance-bundle": "*",
         "nikic/php-parser": "4.7.0",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2",
