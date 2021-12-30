@@ -237,7 +237,7 @@ class FrontendMenuBuilder
             // Hide the link if the target page is invisible
             if (
                 !$jumpTo instanceof PageModel
-                || (!$jumpTo->loadDetails()->isPublic && !$this->tokenChecker->hasBackendUser())
+                || (!$jumpTo->loadDetails()->isPublic && !$this->tokenChecker->isPreviewMode())
             ) {
                 $menuItem->setDisplay(false);
             }
