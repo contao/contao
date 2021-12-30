@@ -115,7 +115,7 @@ class FrontendMenuBuilder
             // PageModel->groups is an array after calling loadDetails()
             if (
                 $page->protected && !$options['showProtected']
-                && (!($options['isSitemap'] ?? false) || 'map_always' !== $page->sitemap)
+                && (!$options['isSitemap'] || 'map_always' !== $page->sitemap)
                 && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $page->groups)
             ) {
                 continue;
