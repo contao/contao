@@ -61,8 +61,11 @@ class UserListCommand extends Command
         $columns = $input->getOption('column');
 
         switch ($input->getOption('format')) {
-            case 'txt':
             case 'text': // Backwards compatibility
+                trigger_deprecation('contao/core-bundle', '4.13', 'Using --format=text is deprecated and will be removed in Contao 5. Use --format=txt instead.');
+                // no break!
+
+            case 'txt':
                 if (0 === $users->count()) {
                     $io->note('No accounts found.');
 
