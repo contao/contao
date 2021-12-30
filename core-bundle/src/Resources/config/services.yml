@@ -133,6 +133,7 @@ services:
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
+            - '@contao.security.token_checker'
             - '%contao.legacy_routing%'
             - '%kernel.project_dir%'
             - '%contao.prepend_locale%'
