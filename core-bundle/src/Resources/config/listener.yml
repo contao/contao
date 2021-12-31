@@ -81,7 +81,7 @@ services:
             - '@database_connection'
             - '@translator'
 
-    contao.listener.data_container.overwrite_form_config:
+    contao.listener.data_container.overwrite_form_settings:
         class: Contao\CoreBundle\EventListener\DataContainer\OverwriteFormSettingsListener
         arguments:
             - '@contao.framework'
