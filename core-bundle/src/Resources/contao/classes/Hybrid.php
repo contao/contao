@@ -300,7 +300,7 @@ abstract class Hybrid extends Frontend
 
 	private function overwriteConfigFromParent(): void
 	{
-		if ($this->objParent->form_overwriteSettings ?? false)
+		if ($this->objParent->formSettings ?? false)
 		{
 			// Overwrite form configuration
 			foreach ($this->objParent->row() as $key => $value)

@@ -54,14 +54,14 @@ class OverwriteFormSettingsListenerTest extends TestCase
         ];
 
         $GLOBALS['TL_DCA'][$table] = [
-            '__selector__' => ['form_overwriteSettings'],
-            'subpalettes' => ['form_overwriteSettings' => ''],
+            '__selector__' => ['formSettings'],
+            'subpalettes' => ['formSettings' => ''],
             'fields' => [],
         ];
 
         $expectedTable = [
-            '__selector__' => ['form_overwriteSettings'],
-            'subpalettes' => ['form_overwriteSettings' => 'form_recipient'],
+            '__selector__' => ['formSettings'],
+            'subpalettes' => ['formSettings' => 'form_recipient'],
             'fields' => [
                 'form_recipient' => [
                     'eval' => ['formOverwritable' => true, 'mandatory' => false],
