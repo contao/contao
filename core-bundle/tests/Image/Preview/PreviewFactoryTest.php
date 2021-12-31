@@ -21,6 +21,8 @@ use Contao\CoreBundle\Image\Preview\PreviewProviderInterface;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\Image;
+use Contao\Image\ImageInterface;
+use Contao\Image\Picture;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
@@ -28,7 +30,6 @@ use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
-use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -276,6 +277,78 @@ class PreviewFactoryTest extends TestCase
         ];
     }
 
+    public function testCreatePreviewImage(): void
+    {
+        $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+
+        $factory = $this->createFactoryWithExampleProvider();
+
+        $preview = $factory->createPreviewImage($sourcePath);
+
+        $this->assertFileExists($preview->getPath());
+
+        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        $this->expectException(MissingPreviewProviderException::class);
+
+        $factory->createPreviewImage($sourcePath, [200, 200, 'box']);
+    }
+
+    public function testCreatePreviewImages(): void
+    {
+        $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+
+        $factory = $this->createFactoryWithExampleProvider();
+
+        $previews = $factory->createPreviewImages($sourcePath);
+
+        foreach ($previews as $preview) {
+            $this->assertFileExists($preview->getPath());
+        }
+
+        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        $this->expectException(MissingPreviewProviderException::class);
+
+        $factory->createPreviewImages($sourcePath, [200, 200, 'box']);
+    }
+
+    public function testCreatePreviewPicture(): void
+    {
+        $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+
+        $factory = $this->createFactoryWithExampleProvider();
+
+        $preview = $factory->createPreviewPicture($sourcePath);
+
+        $this->assertFileExists($preview->getImg()['src']->getPath());
+
+        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        $this->expectException(MissingPreviewProviderException::class);
+
+        $factory->createPreviewPicture($sourcePath, [200, 200, 'box']);
+    }
+
+    public function testCreatePreviewPictures(): void
+    {
+        $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+
+        $factory = $this->createFactoryWithExampleProvider();
+
+        $previews = $factory->createPreviewPictures($sourcePath);
+
+        foreach ($previews as $preview) {
+            $this->assertFileExists($preview->getImg()['src']->getPath());
+        }
+
+        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+        $this->expectException(MissingPreviewProviderException::class);
+
+        $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
+    }
+
     private function createFactoryWithExampleProvider(ContaoFramework $framework = null): PreviewFactory
     {
         $pdfProvider = new class() implements PreviewProviderInterface {
@@ -318,10 +391,24 @@ class PreviewFactoryTest extends TestCase
             )
         ;
 
+        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory
+            ->method('create')
+            ->willReturnCallback(
+                function ($path) {
+                    if (!$path instanceof ImageInterface) {
+                        $path = new Image($path, $this->createMock(ImagineInterface::class));
+                    }
+
+                    return new Picture(['src' => $path, 'srcset' => [[$path, '1x']]], []);
+                }
+            )
+        ;
+
         return new PreviewFactory(
             [$pdfProvider],
             $imageFactory,
-            $this->createMock(PictureFactoryInterface::class),
+            $pictureFactory,
             $this->createMock(Studio::class),
             $framework ?? $this->createMock(ContaoFramework::class),
             'not so secret ;)',
