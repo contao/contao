@@ -13,6 +13,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -155,7 +156,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -163,7 +164,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -180,7 +181,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -188,7 +189,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -287,7 +288,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -429,7 +430,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'inputUnit',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem', 'vw', 'vh'),
 			'eval'                    => array('includeBlankOption'=>true, 'rgxp'=>'digit', 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -473,7 +474,7 @@ class tl_layout extends Backend
 			return;
 		}
 
-		if (!$this->User->hasAccess('layout', 'themes'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the page layout module.');
 		}

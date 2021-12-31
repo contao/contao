@@ -280,7 +280,7 @@ class Result
 	 *
 	 * @param integer $intOffset The field offset
 	 *
-	 * @return array An array with the column information
+	 * @return mixed The field value
 	 */
 	public function fetchField($intOffset=0)
 	{

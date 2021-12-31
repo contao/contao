@@ -1,0 +1,45 @@
+events:
+    contao.backend_menu_build:
+        return_type: void
+        arguments:
+            event: Contao\CoreBundle\Event\MenuEvent
+
+    contao.generate_symlinks:
+        return_type: void
+        arguments:
+            event: Contao\CoreBundle\Event\GenerateSymlinksEvent
+
+    contao.image_sizes_all:
+        return_type: void
+        arguments:
+            event: Contao\CoreBundle\Event\ImageSizesEvent
+
+    contao.image_sizes_user:
+        return_type: void
+        arguments:
+            event: Contao\CoreBundle\Event\ImageSizesEvent
+
+    contao.preview_url_create:
+        return_type: void
+        arguments:
+            event: Contao\CoreBundle\Event\PreviewUrlCreateEvent
+
+    contao.preview_url_convert:
+        return_type: void
+        arguments:
+            event: Contao\CoreBundle\Event\PreviewUrlConvertEvent
+
+    contao.robots_txt:
+        return_type: void
+        arguments:
+            event: Contao\CoreBundle\Event\RobotsTxtEvent
+
+    contao.slug_valid_characters:
+        return_type: void
+        arguments:
+            event: Contao\CoreBundle\Event\SlugValidCharactersEvent
+
+    Contao\CoreBundle\Event\FilterPageTypeEvent:
+        return_type: void
+        arguments:
+            event: Contao\CoreBundle\Event\FilterPageTypeEvent

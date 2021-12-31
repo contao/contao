@@ -25,8 +25,8 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\TemplateLoader;
 use Contao\Validator;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Webmozart\PathUtil\Path;
 
 System::loadLanguageFile('tl_files');
 
@@ -203,7 +203,7 @@ class tl_templates extends Backend
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		// Currently selected folder does not exist
+		// The currently selected folder does not exist
 		if (!is_dir($projectDir . '/' . $strNode))
 		{
 			$objSessionBag->set('tl_templates_node', '');
@@ -406,7 +406,7 @@ class tl_templates extends Backend
 		$strCompareName = null;
 		$strComparePath = null;
 
-		// By default it's the original template to compare against
+		// By default, it's the original template to compare against
 		if ($blnOverridesAnotherTpl)
 		{
 			$strCompareName = $strName;
@@ -419,7 +419,7 @@ class tl_templates extends Backend
 		}
 		else
 		{
-			// Try to find the base template by strippig suffixes
+			// Try to find the base template by stripping suffixes
 			while (strpos($strName, '_') !== false)
 			{
 				$strName = substr($strName, 0, strrpos($strName, '_'));

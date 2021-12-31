@@ -520,15 +520,13 @@ class PageCandidatesTest extends TestCase
      */
     private function mockConnection(QueryBuilder $queryBuilder = null): Connection
     {
+        $queryBuilder ??= $this->createMock(QueryBuilder::class);
+
         $result = $this->createMock(Result::class);
         $result
             ->method('fetchFirstColumn')
             ->willReturn([15])
         ;
-
-        if (null === $queryBuilder) {
-            $queryBuilder = $this->createMock(QueryBuilder::class);
-        }
 
         $queryBuilder
             ->expects($this->once())

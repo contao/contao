@@ -10,9 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\OptIn\OptIn;
-use Contao\CoreBundle\Util\SimpleTokenParser;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Front end module "lost password".
@@ -185,8 +183,7 @@ class ModulePassword extends Module
 	 */
 	protected function setNewPassword()
 	{
-		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 
 		// Find an unconfirmed token with only one related record
 		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
@@ -247,7 +244,6 @@ class ModulePassword extends Module
 		$objWidget->rowClassConfirm = 'row_1 odd';
 		$this->Template->rowLast = 'row_2 row_last even';
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
 		// Validate the field
@@ -316,8 +312,7 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
+		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('pw', $objMember->email, array('tl_member'=>array($objMember->id)));
 
 		// Prepare the simple token data
@@ -329,10 +324,10 @@ class ModulePassword extends Module
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get(SimpleTokenParser::class)->parse($this->reg_password, $arrData)
+			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_password, $arrData)
 		);
 
-		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, TL_ACCESS);
+		$this->log('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')', __METHOD__, ContaoContext::ACCESS);
 
 		// Check whether there is a jumpTo page
 		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

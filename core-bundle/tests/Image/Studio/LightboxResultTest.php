@@ -16,20 +16,21 @@ use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Image\ImageInterface;
 use Contao\Image\ResizeOptions;
 use Contao\LayoutModel;
 use Contao\PageModel;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 
 class LightboxResultTest extends TestCase
 {
     /**
+     * @param ImageInterface|string|null $resource
+     *
      * @dataProvider provideInvalidConfigurations
      */
     public function testCanOnlyBeConstructedWithEitherAResourceOrAnUrl($resource, ?string $url): void
     {
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
 
         $this->expectException(\InvalidArgumentException::class);
@@ -50,7 +51,6 @@ class LightboxResultTest extends TestCase
         $size = [100, 200, 'crop'];
         $layoutId = 1;
 
-        /** @var MockObject&LayoutModel $layoutModel */
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->lightboxSize = serialize($size);
 
@@ -63,16 +63,13 @@ class LightboxResultTest extends TestCase
 
         $framework = $this->mockContaoFramework([LayoutModel::class => $layoutModelAdapter]);
 
-        /** @var MockObject&PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->layout = $layoutId;
 
         $GLOBALS['objPage'] = $pageModel;
 
-        /** @var MockObject&ImageResult $image */
         $image = $this->createMock(ImageResult::class);
 
-        /** @var MockObject&Studio $studio */
         $studio = $this->createMock(Studio::class);
         $studio
             ->expects($this->once())
@@ -81,14 +78,13 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->expects($this->exactly(2))
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
-                [Studio::class, $studio],
+                ['contao.image.studio', $studio],
             ])
         ;
 
@@ -102,7 +98,6 @@ class LightboxResultTest extends TestCase
         $resource = 'foo/bar.png';
         $layoutId = 1;
 
-        /** @var MockObject&LayoutModel $layoutModel */
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->lightboxSize = '';
 
@@ -115,16 +110,13 @@ class LightboxResultTest extends TestCase
 
         $framework = $this->mockContaoFramework([LayoutModel::class => $layoutModelAdapter]);
 
-        /** @var MockObject&PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->layout = $layoutId;
 
         $GLOBALS['objPage'] = $pageModel;
 
-        /** @var MockObject&ImageResult $image */
         $image = $this->createMock(ImageResult::class);
 
-        /** @var MockObject&Studio $studio */
         $studio = $this->createMock(Studio::class);
         $studio
             ->expects($this->once())
@@ -133,14 +125,13 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->expects($this->exactly(2))
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
-                [Studio::class, $studio],
+                ['contao.image.studio', $studio],
             ])
         ;
 
@@ -153,11 +144,8 @@ class LightboxResultTest extends TestCase
     {
         $resource = 'foo/bar.png';
         $framework = $this->mockContaoFramework();
-
-        /** @var MockObject&ImageResult $image */
         $image = $this->createMock(ImageResult::class);
 
-        /** @var MockObject&Studio $studio */
         $studio = $this->createMock(Studio::class);
         $studio
             ->expects($this->once())
@@ -166,14 +154,13 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $locator
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('get')
             ->willReturnMap([
                 ['contao.framework', $framework],
-                [Studio::class, $studio],
+                ['contao.image.studio', $studio],
             ])
         ;
 
@@ -185,11 +172,8 @@ class LightboxResultTest extends TestCase
     {
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
-
-        /** @var MockObject&Studio ImageResult */
         $image = $this->createMock(ImageResult::class);
 
-        /** @var MockObject&Studio $studio */
         $studio = $this->createMock(Studio::class);
         $studio
             ->expects($this->once())
@@ -198,12 +182,11 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->expects($this->once())
             ->method('get')
-            ->with(Studio::class)
+            ->with('contao.image.studio')
             ->willReturn($studio)
         ;
 
@@ -214,7 +197,6 @@ class LightboxResultTest extends TestCase
 
     public function testHasNoImage(): void
     {
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
@@ -225,11 +207,8 @@ class LightboxResultTest extends TestCase
     {
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
-
-        /** @var MockObject&ImageResult $image */
         $image = $this->createMock(ImageResult::class);
 
-        /** @var MockObject&Studio $studio */
         $studio = $this->createMock(Studio::class);
         $studio
             ->expects($this->once())
@@ -238,12 +217,11 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->expects($this->once())
             ->method('get')
-            ->with(Studio::class)
+            ->with('contao.image.studio')
             ->willReturn($studio)
         ;
 
@@ -254,7 +232,6 @@ class LightboxResultTest extends TestCase
 
     public function testGetImageThrowsIfNoImageWasSet(): void
     {
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
@@ -268,7 +245,6 @@ class LightboxResultTest extends TestCase
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
 
-        /** @var MockObject&ImageResult $image */
         $image = $this->createMock(ImageResult::class);
         $image
             ->expects($this->once())
@@ -276,7 +252,6 @@ class LightboxResultTest extends TestCase
             ->willReturn('foobar.png')
         ;
 
-        /** @var MockObject&Studio $studio */
         $studio = $this->createMock(Studio::class);
         $studio
             ->expects($this->once())
@@ -285,12 +260,11 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->expects($this->once())
             ->method('get')
-            ->with(Studio::class)
+            ->with('contao.image.studio')
             ->willReturn($studio)
         ;
 
@@ -301,7 +275,6 @@ class LightboxResultTest extends TestCase
 
     public function testGetLinkHrefForUrl(): void
     {
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
@@ -310,7 +283,6 @@ class LightboxResultTest extends TestCase
 
     public function testGetGroupIdentifierIfExplicitlySet(): void
     {
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar', null, '12345');
 
@@ -319,7 +291,6 @@ class LightboxResultTest extends TestCase
 
     public function testGroupIdentifierIsEmptyIfNotExplicitlySet(): void
     {
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $lightboxResult = new LightboxResult($locator, null, 'foo://bar');
 
@@ -331,11 +302,8 @@ class LightboxResultTest extends TestCase
         $resource = 'foo/bar.png';
         $size = [100, 200, 'crop'];
         $resizeOptions = new ResizeOptions();
-
-        /** @var MockObject&ImageResult $image */
         $image = $this->createMock(ImageResult::class);
 
-        /** @var MockObject&Studio $studio */
         $studio = $this->createMock(Studio::class);
         $studio
             ->expects($this->once())
@@ -344,12 +312,11 @@ class LightboxResultTest extends TestCase
             ->willReturn($image)
         ;
 
-        /** @var MockObject&ContainerInterface $locator */
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->expects($this->once())
             ->method('get')
-            ->with(Studio::class)
+            ->with('contao.image.studio')
             ->willReturn($studio)
         ;
 

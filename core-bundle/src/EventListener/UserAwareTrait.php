@@ -22,10 +22,7 @@ trigger_deprecation('contao/core-bundle', '4.3', 'Using the "Contao\CoreBundle\E
  */
 trait UserAwareTrait
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
+    protected TokenStorageInterface $tokenStorage;
 
     public function setTokenStorage(TokenStorageInterface $tokenStorage): void
     {

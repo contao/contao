@@ -34,8 +34,6 @@ class PreviewUrlCreateListener
 
     /**
      * Adds the calendar ID to the front end preview URL.
-     *
-     * @throws \RuntimeException
      */
     public function __invoke(PreviewUrlCreateEvent $event): void
     {
@@ -79,9 +77,6 @@ class PreviewUrlCreateListener
      */
     private function getEventModel($id): ?CalendarEventsModel
     {
-        /** @var CalendarEventsModel $adapter */
-        $adapter = $this->framework->getAdapter(CalendarEventsModel::class);
-
-        return $adapter->findByPk($id);
+        return $this->framework->getAdapter(CalendarEventsModel::class)->findByPk($id);
     }
 }

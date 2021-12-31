@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
@@ -139,7 +140,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'inputType'               => 'text',
 			'exclude'                 => true,
 			'search'                  => true,
-			'flag'                    => 1,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NULL"
 		),
@@ -201,7 +202,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'inputType'               => 'checkboxWizard',
 			'options_callback'        => array('tl_image_size', 'getFormats'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
 			'exclude'                 => true,
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "varchar(1024) NOT NULL default ''"
@@ -251,7 +251,7 @@ class tl_image_size extends Backend
 			return;
 		}
 
-		if (!$this->User->hasAccess('image_sizes', 'themes'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the image sizes module.');
 		}
@@ -293,7 +293,6 @@ class tl_image_size extends Backend
 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
-
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))
@@ -384,7 +383,7 @@ class tl_image_size extends Backend
 	 */
 	public function editHeader($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->canEditFieldsOf('tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -434,7 +433,19 @@ class tl_image_size extends Backend
 			);
 		}
 
-		return array_values(array_unique($formats));
+		$options = array();
+		$formats = array_values(array_unique($formats));
+
+		foreach ($formats as $format)
+		{
+			list($first) = explode(';', $format);
+			list($from, $to) = explode(':', $first);
+			$chunks = array_values(array_diff(explode(',', $to), array($from)));
+
+			$options[$format] = strtoupper($from) . ' → ' . strtoupper($chunks[0]);
+		}
+
+		return $options;
 	}
 
 	/**

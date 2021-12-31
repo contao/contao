@@ -331,8 +331,14 @@ class Folder extends System
 			return;
 		}
 
+		// Check if .public is a directory (see #3465)
+		if (is_dir($this->strRootDir . '/' . $this->strFolder . '/.public'))
+		{
+			throw new \RuntimeException(sprintf('Cannot protect folder "%s" because it contains a directory called ".public"', $this->strFolder));
+		}
+
 		// Check if the .public file exists
-		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.public'))
+		if (!is_file($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
 			throw new \RuntimeException(sprintf('Cannot protect folder "%s" because one of its parent folders is public', $this->strFolder));
 		}
@@ -345,7 +351,13 @@ class Folder extends System
 	 */
 	public function unprotect()
 	{
-		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.public'))
+		// Check if .public is a directory (see #3465)
+		if (is_dir($this->strRootDir . '/' . $this->strFolder . '/.public'))
+		{
+			throw new \RuntimeException(sprintf('Cannot unprotect folder "%s" because it contains a directory called ".public"', $this->strFolder));
+		}
+
+		if (!is_file($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
 			System::getContainer()->get('filesystem')->touch($this->strRootDir . '/' . $this->strFolder . '/.public');
 		}
@@ -362,7 +374,7 @@ class Folder extends System
 
 		do
 		{
-			if (file_exists($this->strRootDir . '/' . $path . '/.public'))
+			if (is_file($this->strRootDir . '/' . $path . '/.public'))
 			{
 				return true;
 			}
@@ -556,8 +568,6 @@ class Folder extends System
 	 */
 	public static function scan($strFolder, $blnUncached=false): array
 	{
-		static::$arrScanCache;
-
 		// Add a trailing slash
 		if (substr($strFolder, -1, 1) != '/')
 		{
@@ -565,9 +575,9 @@ class Folder extends System
 		}
 
 		// Load from cache
-		if (!$blnUncached && isset($arrScanCache[$strFolder]))
+		if (!$blnUncached && isset(self::$arrScanCache[$strFolder]))
 		{
-			return $arrScanCache[$strFolder];
+			return self::$arrScanCache[$strFolder];
 		}
 
 		$arrReturn = array();
@@ -586,7 +596,7 @@ class Folder extends System
 		// Cache the result
 		if (!$blnUncached)
 		{
-			$arrScanCache[$strFolder] = $arrReturn;
+			self::$arrScanCache[$strFolder] = $arrReturn;
 		}
 
 		return $arrReturn;

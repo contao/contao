@@ -18,6 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 
+/**
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0; use
+ *             the Symfony\Component\Security\Http\Event\LogoutEvent event instead
+ */
 class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
 {
     private ScopeMatcher $scopeMatcher;
@@ -38,15 +42,15 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
             return $this->httpUtils->createRedirectResponse($request, 'contao_backend_login');
         }
 
-        if ($targetUrl = $request->request->get('_target_path')) {
+        if ($targetUrl = (string) $request->request->get('_target_path')) {
             return $this->httpUtils->createRedirectResponse($request, $targetUrl);
         }
 
-        if ($targetUrl = $request->query->get('redirect')) {
+        if ($targetUrl = (string) $request->query->get('redirect')) {
             return $this->httpUtils->createRedirectResponse($request, $targetUrl);
         }
 
-        if ($targetUrl = $request->headers->get('Referer')) {
+        if ($targetUrl = (string) $request->headers->get('Referer')) {
             return $this->httpUtils->createRedirectResponse($request, $targetUrl);
         }
 

@@ -110,7 +110,6 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private function getNewsArchiveId($id): ?int
     {
-        /** @var NewsModel $newsAdapter */
         $newsAdapter = $this->framework->getAdapter(NewsModel::class);
 
         if (!($newsModel = $newsAdapter->findById($id)) instanceof NewsModel) {

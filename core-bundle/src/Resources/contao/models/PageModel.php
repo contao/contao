@@ -11,15 +11,15 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -46,9 +46,13 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string                 $staticPlugins
  * @property string|boolean         $fallback
  * @property string|boolean         $disableLanguageRedirect
+ * @property string|boolean         $maintenanceMode
  * @property string|null            $favicon
  * @property string|null            $robotsTxt
  * @property string                 $mailerTransport
+ * @property string|integer         $enableCanonical
+ * @property string                 $canonicalLink
+ * @property string                 $canonicalKeepParams
  * @property string                 $adminEmail
  * @property string                 $dateFormat
  * @property string                 $timeFormat
@@ -140,6 +144,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByFavicon($val, array $opt=array())
  * @method static PageModel|null findOneByRobotsTxt($val, array $opt=array())
  * @method static PageModel|null findOneByMailerTransport($val, array $opt=array())
+ * @method static PageModel|null findOneByEnableCanonical($val, array $opt=array())
+ * @method static PageModel|null findOneByCanonicalLink($val, array $opt=array())
+ * @method static PageModel|null findOneByCanonicalKeepParams($val, array $opt=array())
  * @method static PageModel|null findOneByAdminEmail($val, array $opt=array())
  * @method static PageModel|null findOneByDateFormat($val, array $opt=array())
  * @method static PageModel|null findOneByTimeFormat($val, array $opt=array())
@@ -196,6 +203,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByFavicon($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRobotsTxt($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByMailerTransport($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByEnableCanonical($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCanonicalLink($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByCanonicalKeepParams($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAdminEmail($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByDateFormat($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByTimeFormat($val, array $opt=array())
@@ -256,6 +266,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByFavicon($val, array $opt=array())
  * @method static integer countByRobotsTxt($val, array $opt=array())
  * @method static integer countByMailerTransport($val, array $opt=array())
+ * @method static integer countByEnableCanonical($val, array $opt=array())
+ * @method static integer countByCanonicalLink($val, array $opt=array())
+ * @method static integer countByCanonicalKeepParams($val, array $opt=array())
  * @method static integer countByAdminEmail($val, array $opt=array())
  * @method static integer countByDateFormat($val, array $opt=array())
  * @method static integer countByTimeFormat($val, array $opt=array())
@@ -312,8 +325,7 @@ class PageModel extends Model
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
 
-			/** @var ResponseContext|null $responseContext */
-			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 			if (!$responseContext)
 			{
@@ -326,15 +338,16 @@ class PageModel extends Model
 			{
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
+				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 				switch ($strKey)
 				{
 					case 'pageTitle':
-						$htmlHeadBag->setTitle(StringUtil::inputEncodedToPlainText($varValue ?? ''));
+						$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'description':
-						$htmlHeadBag->setMetaDescription(StringUtil::inputEncodedToPlainText($varValue ?? ''));
+						$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($varValue ?? ''));
 						break;
 
 					case 'robots':
@@ -477,7 +490,8 @@ class PageModel extends Model
 	public static function findFirstPublishedByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
+		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type NOT IN ('" . implode("', '", $unroutableTypes) . "')");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -518,6 +532,34 @@ class PageModel extends Model
 		}
 
 		return static::findOneBy($arrColumns, $intPid, $arrOptions);
+	}
+
+	/**
+	 * Find the first published page by its type and parent ID
+	 *
+	 * @param string  $strType    The page type
+	 * @param integer $intPid     The parent page's ID
+	 * @param array   $arrOptions An optional options array
+	 *
+	 * @return PageModel|null The model or null if there is no published regular page
+	 */
+	public static function findFirstPublishedByTypeAndPid($strType, $intPid, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.pid=? AND $t.type=?");
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+		}
+
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = "$t.sorting";
+		}
+
+		return static::findOneBy($arrColumns, array($intPid, $strType), $arrOptions);
 	}
 
 	/**
@@ -679,14 +721,15 @@ class PageModel extends Model
 	 */
 	public static function findPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false)
 	{
-		@trigger_error('Using PageModel::findPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use PageModel::findPublishedByPid() instead and filter the guests pages yourself.', E_USER_DEPRECATED);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using PageModel::findPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use PageModel::findPublishedByPid() instead and filter the guests pages yourself.');
 
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
 		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
 		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
 
-		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type!='error_401' AND p2.type!='error_403' AND p2.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type!='error_401' AND p1.type!='error_403' AND p1.type!='error_404'" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
 											  ->execute($intPid);
 
 		if ($objSubpages->numRows < 1)
@@ -713,7 +756,8 @@ class PageModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
+		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type NOT IN ('" . implode("', '", $unroutableTypes) . "')");
 
 		if (empty($arrOptions['includeRoot']))
 		{
@@ -755,7 +799,8 @@ class PageModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
+		$arrColumns = array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.type NOT IN ('" . implode("', '", $unroutableTypes) . "')");
 
 		if (empty($arrOptions['includeRoot']))
 		{
@@ -792,7 +837,8 @@ class PageModel extends Model
 	public static function findPublishedRegularByPid($intPid, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
+		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type NOT IN ('" . implode("', '", $unroutableTypes) . "')");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -824,7 +870,8 @@ class PageModel extends Model
 		trigger_deprecation('contao/core-bundle', '4.12', 'Using PageModel::findPublishedRegularWithoutGuestsByPid() has been deprecated and will no longer work in Contao 5.0. Use PageModel::findPublishedRegularByPid() instead.');
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type!='error_401' AND $t.type!='error_403' AND $t.type!='error_404'");
+		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
+		$arrColumns = array("$t.pid=? AND $t.type!='root' AND $t.type NOT IN ('" . implode("', '", $unroutableTypes) . "')");
 
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
@@ -851,7 +898,7 @@ class PageModel extends Model
 	 * @param string $strHost    The hostname
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return PageModel|Model|null The model or null if there is not fallback page
+	 * @return PageModel|Model|null The model or null if there is no fallback page
 	 */
 	public static function findPublishedFallbackByHostname($strHost, array $arrOptions=array())
 	{
@@ -1157,7 +1204,9 @@ class PageModel extends Model
 			$this->twoFactorJumpTo = $objParentPage->twoFactorJumpTo;
 			$this->useFolderUrl = $objParentPage->useFolderUrl;
 			$this->mailerTransport = $objParentPage->mailerTransport;
+			$this->enableCanonical = $objParentPage->enableCanonical;
 			$this->useAutoItem = Config::get('useAutoItem');
+			$this->maintenanceMode = $objParentPage->maintenanceMode;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time));
@@ -1188,7 +1237,7 @@ class PageModel extends Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, TL_ERROR);
+			System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, ContaoContext::ERROR);
 
 			throw new NoRootPageFoundException('No root page found');
 		}
@@ -1242,7 +1291,9 @@ class PageModel extends Model
 	 * @param string $strParams    An optional string of URL parameters
 	 * @param string $strForceLang Force a certain language
 	 *
-	 * @return string An URL that can be used in the front end
+	 * @throws RouteNotFoundException
+	 *
+	 * @return string A URL that can be used in the front end
 	 */
 	public function getFrontendUrl($strParams=null, $strForceLang=null)
 	{
@@ -1283,6 +1334,8 @@ class PageModel extends Model
 	 *
 	 * @param string $strParams An optional string of URL parameters
 	 *
+	 * @throws RouteNotFoundException
+	 *
 	 * @return string An absolute URL that can be used in the front end
 	 */
 	public function getAbsoluteUrl($strParams=null)
@@ -1299,6 +1352,8 @@ class PageModel extends Model
 	 * Generate the front end preview URL
 	 *
 	 * @param string $strParams An optional string of URL parameters
+	 *
+	 * @throws RouteNotFoundException
 	 *
 	 * @return string The front end preview URL
 	 */

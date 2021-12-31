@@ -76,7 +76,6 @@ class LegacyMatcher implements RequestMatcherInterface
                 throw new ResourceNotFoundException('Locale is missing');
             }
 
-            /** @var Input $input */
             $input = $this->framework->getAdapter(Input::class);
             $input->setGet('language', $locale);
         }
@@ -102,7 +101,6 @@ class LegacyMatcher implements RequestMatcherInterface
             return [$page->alias];
         }
 
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $fragments = [...[$page->alias], ...explode('/', substr($parameters, 1))];
 
@@ -116,7 +114,6 @@ class LegacyMatcher implements RequestMatcherInterface
 
     private function createFragmentsFromPath(string $pathInfo): array
     {
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
         $fragments = explode('/', $pathInfo);
 
@@ -130,7 +127,6 @@ class LegacyMatcher implements RequestMatcherInterface
 
     private function executeLegacyHook(array $fragments): array
     {
-        /** @var System $system */
         $system = $this->framework->getAdapter(System::class);
 
         foreach ($GLOBALS['TL_HOOKS']['getPageIdFromUrl'] as $callback) {
@@ -147,7 +143,6 @@ class LegacyMatcher implements RequestMatcherInterface
 
     private function createPathFromFragments(array $fragments, ?string $locale): string
     {
-        /** @var Config $config */
         $config = $this->framework->getAdapter(Config::class);
 
         if (isset($fragments[1]) && 'auto_item' === $fragments[1] && $config->get('useAutoItem')) {

@@ -14,16 +14,17 @@ namespace Contao\CoreBundle\DataCollector;
 
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Util\PackageUtil;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use Webmozart\PathUtil\Path;
 
 /**
  * @internal
@@ -32,13 +33,15 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 {
     use FrameworkAwareTrait;
 
+    private TokenChecker $tokenChecker;
     private bool $legacyRouting;
     private string $projectDir;
     private bool $prependLocale;
     private string $urlSuffix;
 
-    public function __construct(bool $legacyRouting, string $projectDir, bool $prependLocale, string $urlSuffix)
+    public function __construct(TokenChecker $tokenChecker, bool $legacyRouting, string $projectDir, bool $prependLocale, string $urlSuffix)
     {
+        $this->tokenChecker = $tokenChecker;
         $this->legacyRouting = $legacyRouting;
         $this->projectDir = $projectDir;
         $this->prependLocale = $prependLocale;
@@ -165,7 +168,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             'framework' => $framework,
             'models' => $modelCount,
             'frontend' => isset($GLOBALS['objPage']),
-            'preview' => \defined('BE_USER_LOGGED_IN') && true === BE_USER_LOGGED_IN,
+            'preview' => $this->tokenChecker->isPreviewMode(),
             'layout' => $this->getLayoutName(),
             'template' => $this->getTemplateName(),
             'legacy_routing' => $this->legacyRouting,
@@ -181,7 +184,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
                 continue;
             }
 
-            /** @var System $systemAdapter */
             $systemAdapter = $this->framework->getAdapter(System::class);
 
             foreach ($GLOBALS['TL_HOOKS'][$name] as $callback) {
@@ -244,9 +246,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         /** @var PageModel $objPage */
         $objPage = $GLOBALS['objPage'];
 
-        /** @var LayoutModel $layout */
-        $layout = $this->framework->getAdapter(LayoutModel::class);
-
-        return $layout->findByPk($objPage->layoutId);
+        return $this->framework->getAdapter(LayoutModel::class)->findByPk($objPage->layoutId);
     }
 }

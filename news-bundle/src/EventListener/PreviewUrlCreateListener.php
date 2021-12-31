@@ -34,8 +34,6 @@ class PreviewUrlCreateListener
 
     /**
      * Adds the news ID to the front end preview URL.
-     *
-     * @throws \RuntimeException
      */
     public function __invoke(PreviewUrlCreateEvent $event): void
     {
@@ -79,9 +77,6 @@ class PreviewUrlCreateListener
      */
     private function getNewsModel($id): ?NewsModel
     {
-        /** @var NewsModel $adapter */
-        $adapter = $this->framework->getAdapter(NewsModel::class);
-
-        return $adapter->findByPk($id);
+        return $this->framework->getAdapter(NewsModel::class)->findByPk($id);
     }
 }

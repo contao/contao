@@ -57,15 +57,19 @@ class PageRegistry
         $config = $this->routeConfigs[$type] ?? new RouteConfig();
         $defaults = $config->getDefaults();
         $requirements = $config->getRequirements();
+        $options = $config->getOptions();
         $path = $config->getPath();
 
-        if (null === $path) {
+        if (false === $path) {
+            $path = '';
+            $options['compiler_class'] = UnroutablePageRouteCompiler::class;
+        } elseif (null === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
             $defaults['parameters'] = '';
             $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+?)?';
         }
 
-        $route = new PageRoute($pageModel, $path, $defaults, $requirements, $config->getOptions(), $config->getMethods());
+        $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());
 
         if (null !== $config->getUrlSuffix()) {
             $route->setUrlSuffix($config->getUrlSuffix());
@@ -169,6 +173,38 @@ class PageRegistry
     public function keys(): array
     {
         return array_keys($this->routeConfigs);
+    }
+
+    /**
+     * Checks whether this is a routable page type (see #3415).
+     */
+    public function isRoutable(PageModel $page): bool
+    {
+        $type = $page->type;
+
+        // Any legacy page without route config is routable by default
+        if (!isset($this->routeConfigs[$type])) {
+            return true;
+        }
+
+        // Check if page controller is routable
+        return false !== $this->routeConfigs[$type]->getPath();
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getUnroutableTypes(): array
+    {
+        $types = [];
+
+        foreach ($this->routeConfigs as $type => $config) {
+            if (false === $config->getPath()) {
+                $types[] = $type;
+            }
+        }
+
+        return $types;
     }
 
     private function initializePrefixAndSuffix(): void

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
@@ -27,16 +28,12 @@ use Symfony\Component\Routing\RouteCollection;
 
 class Route404Provider extends AbstractPageRouteProvider
 {
-    private PageRegistry $pageRegistry;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_404_provider" service instead
      */
     public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
     {
-        parent::__construct($framework, $candidates);
-
-        $this->pageRegistry = $pageRegistry;
+        parent::__construct($framework, $candidates, $pageRegistry);
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
@@ -69,9 +66,8 @@ class Route404Provider extends AbstractPageRouteProvider
             throw new RouteNotFoundException('Route name does not match a page ID');
         }
 
-        /** @var PageModel $pageModel */
-        $pageModel = $this->framework->getAdapter(PageModel::class);
-        $page = $pageModel->findByPk($ids[0]);
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+        $page = $pageAdapter->findByPk($ids[0]);
 
         if (null === $page) {
             throw new RouteNotFoundException(sprintf('Page ID "%s" not found', $ids[0]));
@@ -80,7 +76,10 @@ class Route404Provider extends AbstractPageRouteProvider
         $routes = [];
 
         $this->addNotFoundRoutesForPage($page, $routes);
-        $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), null, $routes);
+
+        if ($this->pageRegistry->isRoutable($page)) {
+            $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), null, $routes);
+        }
 
         if (!\array_key_exists($name, $routes)) {
             throw new RouteNotFoundException('Route "'.$name.'" not found');
@@ -93,7 +92,6 @@ class Route404Provider extends AbstractPageRouteProvider
     {
         $this->framework->initialize(true);
 
-        /** @var PageModel $pageAdapter */
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
         if (null === $names) {
@@ -112,7 +110,10 @@ class Route404Provider extends AbstractPageRouteProvider
 
         foreach ($pages as $page) {
             $this->addNotFoundRoutesForPage($page, $routes);
-            $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), null, $routes);
+
+            if ($this->pageRegistry->isRoutable($page)) {
+                $this->addLocaleRedirectRoute($this->pageRegistry->getRoute($page), null, $routes);
+            }
         }
 
         $this->sortRoutes($routes);
@@ -124,7 +125,6 @@ class Route404Provider extends AbstractPageRouteProvider
     {
         $this->framework->initialize(true);
 
-        /** @var PageModel $pageModel */
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findByType('error_404');
 
@@ -147,7 +147,15 @@ class Route404Provider extends AbstractPageRouteProvider
             return;
         }
 
-        $page->loadDetails();
+        try {
+            $page->loadDetails();
+
+            if (!$page->rootId) {
+                return;
+            }
+        } catch (NoRootPageFoundException $e) {
+            return;
+        }
 
         $defaults = [
             '_token_check' => true,

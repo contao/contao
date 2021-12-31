@@ -254,7 +254,7 @@ class File extends System
 					}
 					else
 					{
-						$imageFactory = System::getContainer()->get('contao.image.image_factory');
+						$imageFactory = System::getContainer()->get('contao.image.factory');
 
 						try
 						{
@@ -349,13 +349,13 @@ class File extends System
 				return $this->arrImageViewSize;
 
 			case 'viewWidth':
-				// Store in variable as empty() calls __isset() which is not implemented and thus alway true
+				// Store in variable as empty() calls __isset() which is not implemented and thus always true
 				$imageViewSize = $this->imageViewSize;
 
 				return !empty($imageViewSize) ? $imageViewSize[0] : null;
 
 			case 'viewHeight':
-				// Store in variable as empty() calls __isset() which is not implemented and thus alway true
+				// Store in variable as empty() calls __isset() which is not implemented and thus always true
 				$imageViewSize = $this->imageViewSize;
 
 				return !empty($imageViewSize) ? $imageViewSize[1] : null;
@@ -587,11 +587,11 @@ class File extends System
 		{
 			try
 			{
-				$image = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . $this->strFile);
+				$image = System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . $this->strFile);
 
 				if ($image instanceof DeferredImageInterface)
 				{
-					System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
+					System::getContainer()->get('contao.image.legacy_resizer')->resizeDeferredImage($image);
 
 					return true;
 				}
@@ -757,7 +757,7 @@ class File extends System
 		}
 
 		System::getContainer()
-			->get('contao.image.image_factory')
+			->get('contao.image.factory')
 			->create($this->strRootDir . '/' . $this->strFile, array($width, $height, $mode), $this->strRootDir . '/' . $this->strFile)
 		;
 

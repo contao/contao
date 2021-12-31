@@ -353,7 +353,7 @@ abstract class Events extends Module
 			};
 		}
 
-		// Get todays start and end timestamp
+		// Get today's start and end timestamp
 		if ($this->intTodayBegin === null)
 		{
 			$this->intTodayBegin = strtotime('00:00:00');
@@ -490,10 +490,12 @@ abstract class Events extends Module
 	 */
 	public static function getSchemaOrgData(CalendarEventsModel $objEvent): array
 	{
+		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
+
 		$jsonLd = array(
 			'@type' => 'Event',
 			'identifier' => '#/schema/events/' . $objEvent->id,
-			'name' => StringUtil::inputEncodedToPlainText($objEvent->title),
+			'name' => $htmlDecoder->inputEncodedToPlainText($objEvent->title),
 			'url' => self::generateEventUrl($objEvent),
 			'startDate' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->startTime) : date('Y-m-d', $objEvent->startTime)
 		);
@@ -507,14 +509,14 @@ abstract class Events extends Module
 		{
 			$jsonLd['location'] = array(
 				'@type' => 'Place',
-				'name' => StringUtil::inputEncodedToPlainText($objEvent->location)
+				'name' => $htmlDecoder->inputEncodedToPlainText($objEvent->location)
 			);
 
 			if ($objEvent->address)
 			{
 				$jsonLd['location']['address'] = array(
 					'@type' => 'PostalAddress',
-					'description' => StringUtil::inputEncodedToPlainText($objEvent->address)
+					'description' => $htmlDecoder->inputEncodedToPlainText($objEvent->address)
 				);
 			}
 		}
@@ -523,7 +525,7 @@ abstract class Events extends Module
 	}
 
 	/**
-	 * Return the begin and end timestamp and an error message as array
+	 * Return the beginning and end timestamp and an error message as array
 	 *
 	 * @param Date   $objDate
 	 * @param string $strFormat

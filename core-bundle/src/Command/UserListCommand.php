@@ -44,7 +44,7 @@ class UserListCommand extends Command
         $this
             ->addOption('column', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The columns display in the table')
             ->addOption('admins', null, InputOption::VALUE_NONE, 'Return only admins')
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format', 'text')
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json)', 'txt')
             ->setDescription('Lists Contao back end users.')
         ;
     }
@@ -62,7 +62,11 @@ class UserListCommand extends Command
 
         switch ($input->getOption('format')) {
             case 'text':
-                if (null === $users) {
+                trigger_deprecation('contao/core-bundle', '4.13', 'Using --format=text is deprecated and will be removed in Contao 5. Use --format=txt instead.');
+                // no break
+
+            case 'txt':
+                if (0 === $users->count()) {
                     $io->note('No accounts found.');
 
                     return 0;
@@ -86,11 +90,10 @@ class UserListCommand extends Command
         return 0;
     }
 
-    private function getUsers(bool $onlyAdmins = false): ?Collection
+    private function getUsers(bool $onlyAdmins = false): Collection
     {
         $this->framework->initialize();
 
-        /** @var UserModel $userModel */
         $userModel = $this->framework->getAdapter(UserModel::class);
 
         if ($onlyAdmins) {

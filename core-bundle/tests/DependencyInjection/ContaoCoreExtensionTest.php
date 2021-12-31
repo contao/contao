@@ -13,22 +13,22 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\Security\Http\Firewall;
-use Webmozart\PathUtil\Path;
 
 class ContaoCoreExtensionTest extends TestCase
 {
@@ -176,7 +176,7 @@ class ContaoCoreExtensionTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $services = ['contao.image.image_sizes', 'contao.image.image_factory', 'contao.image.picture_factory'];
+        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory'];
 
         $extension = new ContaoCoreExtension();
         $extension->load([], $container);
@@ -232,7 +232,7 @@ class ContaoCoreExtensionTest extends TestCase
             $this->assertTrue($container->getDefinition($service)->hasMethodCall('setPredefinedSizes'));
         }
 
-        $methodCalls = $container->getDefinition('contao.image.image_sizes')->getMethodCalls();
+        $methodCalls = $container->getDefinition('contao.image.sizes')->getMethodCalls();
 
         $this->assertSame('setPredefinedSizes', $methodCalls[0][0]);
 
@@ -286,6 +286,7 @@ class ContaoCoreExtensionTest extends TestCase
                 }
             }
 
+            unset($value);
             ksort($array);
         };
 
@@ -316,10 +317,60 @@ class ContaoCoreExtensionTest extends TestCase
             $container
         );
 
-        $definition = $container->getDefinition('contao.crawl.escargot_factory');
+        $definition = $container->getDefinition('contao.crawl.escargot.factory');
 
         $this->assertSame(['https://example.com'], $definition->getArgument(2));
         $this->assertSame(['proxy' => 'http://localhost:7080'], $definition->getArgument(3));
+    }
+
+    public function testConfiguresTheBackupManagerCorrectly(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $container);
+
+        $definition = $container->getDefinition('contao.doctrine.backup_manager');
+
+        $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
+        $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
+        $this->assertSame('%kernel.project_dir%/var/backups', $definition->getArgument(2));
+        $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(3));
+        $this->assertEquals(new Reference('contao.doctrine.backup.retention_policy'), $definition->getArgument(4));
+
+        $retentionPolicyDefinition = $container->getDefinition('contao.doctrine.backup.retention_policy');
+
+        $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
+        $this->assertSame(5, $retentionPolicyDefinition->getArgument(0));
+        $this->assertSame(['1D', '7D', '14D', '1M'], $retentionPolicyDefinition->getArgument(1));
+
+        $extension->load(
+            [
+                'contao' => [
+                    'backup' => [
+                        'directory' => 'somewhere/else',
+                        'ignore_tables' => ['foobar'],
+                        'keep_max' => 10,
+                        'keep_intervals' => ['1D', '2D', '7D', '14D', '1M', '1Y'],
+                    ],
+                ],
+            ],
+            $container
+        );
+
+        $definition = $container->getDefinition('contao.doctrine.backup_manager');
+
+        $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
+        $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
+        $this->assertSame('somewhere/else', $definition->getArgument(2));
+        $this->assertSame(['foobar'], $definition->getArgument(3));
+        $this->assertEquals(new Reference('contao.doctrine.backup.retention_policy'), $definition->getArgument(4));
+
+        $retentionPolicyDefinition = $container->getDefinition('contao.doctrine.backup.retention_policy');
+
+        $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
+        $this->assertSame(10, $retentionPolicyDefinition->getArgument(0));
+        $this->assertSame(['1D', '2D', '7D', '14D', '1M', '1Y'], $retentionPolicyDefinition->getArgument(1));
     }
 
     public function testRegistersTheDefaultSearchIndexer(): void
@@ -342,9 +393,9 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $this->assertArrayHasKey(IndexerInterface::class, $container->getAutoconfiguredInstanceof());
-        $this->assertTrue($container->hasDefinition('contao.search.indexer.default'));
+        $this->assertTrue($container->hasDefinition('contao.search.default_indexer'));
 
-        $definition = $container->getDefinition('contao.search.indexer.default');
+        $definition = $container->getDefinition('contao.search.default_indexer');
 
         $this->assertTrue($definition->getArgument(2));
     }
@@ -369,7 +420,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Should still have the interface registered for autoconfiguration
         $this->assertArrayHasKey(IndexerInterface::class, $container->getAutoconfiguredInstanceof());
-        $this->assertFalse($container->hasDefinition('contao.search.indexer.default'));
+        $this->assertFalse($container->hasDefinition('contao.search.default_indexer'));
     }
 
     public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void
@@ -499,25 +550,15 @@ class ContaoCoreExtensionTest extends TestCase
             ])
         );
 
-        if (null === $params) {
-            $params = [
-                'contao' => [
-                    'encryption_key' => 'foobar',
-                    'localconfig' => ['foo' => 'bar'],
-                ],
-            ];
-        }
+        $params ??= [
+            'contao' => [
+                'encryption_key' => 'foobar',
+                'localconfig' => ['foo' => 'bar'],
+            ],
+        ];
 
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
-
-        // To find out whether we need to run the ResolvePrivatesPass, we take
-        // a private service and check the isPublic() return value. In Symfony
-        // 4.4, it will be "true", whereas in Symfony 5, it will be "false".
-        if (true === $container->findDefinition('contao.routing.page_router')->isPublic()) {
-            $pass = new ResolvePrivatesPass();
-            $pass->process($container);
-        }
 
         return $container;
     }

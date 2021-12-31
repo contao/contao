@@ -374,6 +374,12 @@
       <trans-unit id="tl_module.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
       </trans-unit>
+      <trans-unit id="tl_module.data.0">
+        <source>Template data</source>
+      </trans-unit>
+      <trans-unit id="tl_module.data.1">
+        <source>These values are available as &lt;code&gt;$this->data&lt;/code&gt; in the template.</source>
+      </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
       </trans-unit>

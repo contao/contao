@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
@@ -19,7 +20,7 @@ use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
@@ -116,6 +117,8 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
                 ->append($this->addBackendNode())
+                ->append($this->addInsertTagsNode())
+                ->append($this->addBackupNode())
             ->end()
         ;
 
@@ -560,6 +563,73 @@ class Configuration implements ConfigurationInterface
                     ->info('Configures the title of the badge in the back end.')
                     ->example('develop')
                     ->defaultValue('')
+                ->end()
+                ->scalarNode('route_prefix')
+                    ->info('Defines the path of the Contao backend.')
+                    ->validate()
+                        ->ifTrue(static fn (string $prefix) => 1 !== preg_match('/^\/\S*[^\/]$/', $prefix))
+                        ->thenInvalid('The backend path must begin but not end with a slash. Invalid path configured: %s')
+                    ->end()
+                    ->example('/admin')
+                    ->defaultValue('/contao')
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addInsertTagsNode(): NodeDefinition
+    {
+        return (new TreeBuilder('insert_tags'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_tags')
+                    ->info('A list of allowed insert tags.')
+                    ->example(['*_url', 'request_token'])
+                    ->scalarPrototype()->end()
+                    ->defaultValue(['*'])
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addBackupNode(): NodeDefinition
+    {
+        return (new TreeBuilder('backup'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('directory')
+                    ->info('The directory the backups are stored in.')
+                    ->defaultValue('%kernel.project_dir%/var/backups')
+                ->end()
+                ->arrayNode('ignore_tables')
+                    ->info('These tables are ignored by default when creating and restoring backups.')
+                    ->defaultValue(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'])
+                    ->scalarPrototype()->end()
+                ->end()
+                ->integerNode('keep_max')
+                    ->info('The maximum number of backups to keep. Use 0 to keep all the backups forever.')
+                    ->defaultValue(5)
+                ->end()
+                ->arrayNode('keep_intervals')
+                    ->info('The latest backup plus the oldest of every configured interval will be kept. Intervals have to be specified as documented in https://www.php.net/manual/en/dateinterval.construct.php without the P prefix.')
+                    ->defaultValue(['1D', '7D', '14D', '1M'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $intervals) {
+                                try {
+                                    RetentionPolicy::validateAndSortIntervals($intervals);
+                                } catch (\Exception $e) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        )
+                    ->thenInvalid('%s')
+                    ->end()
+                    ->scalarPrototype()->end()
                 ->end()
             ->end()
         ;

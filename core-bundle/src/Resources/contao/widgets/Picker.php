@@ -205,7 +205,7 @@ class Picker extends Widget
         e.preventDefault();
         Backend.openModalSelector({
           "id": "tl_listing",
-          "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0]) . ',
+          "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0] ?? '') . ',
           "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
           "callback": function(table, value) {
             new Request.Contao({
@@ -256,7 +256,6 @@ class Picker extends Widget
 					$dc->id = $objRows->id;
 					$dc->activeRecord = $objRows;
 
-					$arrSet[] = $objRows->id;
 					$arrValues[$objRows->id] = $this->renderLabel($objRows->row(), $dc);
 				}
 			}
@@ -273,9 +272,9 @@ class Picker extends Widget
 
 	protected function renderLabel(array $arrRow, DataContainer $dc)
 	{
-		$mode = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? 1;
+		$mode = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? DataContainer::MODE_SORTED;
 
-		if ($mode === 4)
+		if ($mode === DataContainer::MODE_PARENT)
 		{
 			$callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
 
@@ -308,13 +307,13 @@ class Picker extends Widget
 
 				$labelValues[$k] = $objRef->numRows ? $objRef->$strField : '';
 			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['flag'], array(5, 6, 7, 8, 9, 10)))
+			elseif (\in_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['flag'] ?? null, array(DataContainer::SORT_DAY_ASC, DataContainer::SORT_DAY_DESC, DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_YEAR_ASC, DataContainer::SORT_YEAR_DESC)))
 			{
-				if ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp'] == 'date')
+				if (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
 				{
 					$labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('dateFormat'), $arrRow[$v]) : '-';
 				}
-				elseif ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp'] == 'time')
+				elseif (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp'] ?? null) == 'time')
 				{
 					$labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('timeFormat'), $arrRow[$v]) : '-';
 				}
@@ -323,7 +322,7 @@ class Picker extends Widget
 					$labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('datimFormat'), $arrRow[$v]) : '-';
 				}
 			}
-			elseif ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isBoolean'] || ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['multiple']))
+			elseif (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['multiple'] ?? null)))
 			{
 				$labelValues[$k] = $arrRow[$v] ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
 			}
@@ -346,7 +345,7 @@ class Picker extends Widget
 				{
 					$labelValues[$k] = \is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]]) ? $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]][0] : $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]];
 				}
-				elseif (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isAssociative'] || array_is_assoc($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'])) && isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]]))
+				elseif ((($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'] ?? null)) && isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]]))
 				{
 					$labelValues[$k] = $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]];
 				}
@@ -363,7 +362,7 @@ class Picker extends Widget
 		{
 			$this->import($labelConfig['label_callback'][0]);
 
-			if (\in_array($mode, array(5, 6)))
+			if (\in_array($mode, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)))
 			{
 				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, '', false, null);
 			}
@@ -373,7 +372,7 @@ class Picker extends Widget
 
 		if (\is_callable($labelConfig['label_callback'] ?? null))
 		{
-			if (\in_array($mode, array(5, 6)))
+			if (\in_array($mode, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)))
 			{
 				return $labelConfig['label_callback']($arrRow, $label, $dc, '', false, null);
 			}

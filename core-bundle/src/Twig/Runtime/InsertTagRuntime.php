@@ -12,34 +12,34 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Runtime;
 
-use Contao\CoreBundle\Twig\Interop\ChunkedText;
-use Contao\InsertTags;
+use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class InsertTagRuntime implements RuntimeExtensionInterface
 {
-    private InsertTags $insertTags;
+    private InsertTagParser $insertTagParser;
 
     /**
      * @internal
      */
-    public function __construct(InsertTags $insertTags = null)
+    public function __construct(InsertTagParser $insertTagParser)
     {
-        $this->insertTags = $insertTags ?? new InsertTags();
+        $this->insertTagParser = $insertTagParser;
     }
 
     public function renderInsertTag(string $insertTag): string
     {
-        return $this->replaceInsertTags('{{'.$insertTag.'}}');
+        return $this->insertTagParser->render($insertTag);
     }
 
     public function replaceInsertTags(string $text): string
     {
-        return $this->insertTags->replace($text, false);
+        return $this->insertTagParser->replaceInline($text);
     }
 
     public function replaceInsertTagsChunkedRaw(string $text): ChunkedText
     {
-        return $this->insertTags->replace($text, false, true);
+        return $this->insertTagParser->replaceChunked($text);
     }
 }

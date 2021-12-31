@@ -12,7 +12,7 @@
         <p class="error"><?= $this->message ?></p>
       <?php endif; ?>
       <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formId ?>">
-      <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+      <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
       <input type="hidden" name="_target_path" value="<?= $this->targetPath ?>">
       <input type="hidden" name="_always_use_target_path" value="<?= $this->forceTargetPath ?>">
       <?php if ($this->logout): ?>

@@ -24,7 +24,7 @@ class AddNativeTransportFactoryPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if ($container->hasDefinition('mailer.transport_factory.native') || !class_exists(NativeTransportFactory::class)) {
+        if (!class_exists(NativeTransportFactory::class) || $container->hasDefinition('mailer.transport_factory.native')) {
             return;
         }
 

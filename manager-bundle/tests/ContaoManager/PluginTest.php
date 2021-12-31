@@ -23,9 +23,7 @@ use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\DBAL\Connection;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
-use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -76,7 +74,7 @@ class PluginTest extends ContaoTestCase
         /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(13, $bundles);
+        $this->assertCount(12, $bundles);
 
         $this->assertSame(FrameworkBundle::class, $bundles[0]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
@@ -102,35 +100,31 @@ class PluginTest extends ContaoTestCase
         $this->assertSame([], $bundles[5]->getReplace());
         $this->assertSame([], $bundles[5]->getLoadAfter());
 
-        $this->assertSame(LexikMaintenanceBundle::class, $bundles[6]->getName());
+        $this->assertSame(NelmioCorsBundle::class, $bundles[6]->getName());
         $this->assertSame([], $bundles[6]->getReplace());
         $this->assertSame([], $bundles[6]->getLoadAfter());
 
-        $this->assertSame(NelmioCorsBundle::class, $bundles[7]->getName());
+        $this->assertSame(NelmioSecurityBundle::class, $bundles[7]->getName());
         $this->assertSame([], $bundles[7]->getReplace());
         $this->assertSame([], $bundles[7]->getLoadAfter());
 
-        $this->assertSame(NelmioSecurityBundle::class, $bundles[8]->getName());
+        $this->assertSame(FOSHttpCacheBundle::class, $bundles[8]->getName());
         $this->assertSame([], $bundles[8]->getReplace());
         $this->assertSame([], $bundles[8]->getLoadAfter());
 
-        $this->assertSame(FOSHttpCacheBundle::class, $bundles[9]->getName());
+        $this->assertSame(ContaoManagerBundle::class, $bundles[9]->getName());
         $this->assertSame([], $bundles[9]->getReplace());
-        $this->assertSame([], $bundles[9]->getLoadAfter());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[9]->getLoadAfter());
 
-        $this->assertSame(ContaoManagerBundle::class, $bundles[10]->getName());
+        $this->assertSame(DebugBundle::class, $bundles[10]->getName());
         $this->assertSame([], $bundles[10]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[10]->getLoadAfter());
+        $this->assertSame([], $bundles[10]->getLoadAfter());
+        $this->assertFalse($bundles[10]->loadInProduction());
 
-        $this->assertSame(DebugBundle::class, $bundles[11]->getName());
+        $this->assertSame(WebProfilerBundle::class, $bundles[11]->getName());
         $this->assertSame([], $bundles[11]->getReplace());
         $this->assertSame([], $bundles[11]->getLoadAfter());
         $this->assertFalse($bundles[11]->loadInProduction());
-
-        $this->assertSame(WebProfilerBundle::class, $bundles[12]->getName());
-        $this->assertSame([], $bundles[12]->getReplace());
-        $this->assertSame([], $bundles[12]->getLoadAfter());
-        $this->assertFalse($bundles[12]->loadInProduction());
     }
 
     public function testRegistersModuleBundles(): void
@@ -145,15 +139,13 @@ class PluginTest extends ContaoTestCase
         $parser
             ->expects($this->atLeastOnce())
             ->method('parse')
-            ->willReturnCallback(
-                static fn ($resource): array => [$resource]
-            )
+            ->willReturnCallback(static fn ($resource): array => [$resource])
         ;
 
         $plugin = new Plugin();
         $configs = $plugin->getBundles($parser);
 
-        $this->assertCount(15, $configs);
+        $this->assertCount(14, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
@@ -290,6 +282,14 @@ class PluginTest extends ContaoTestCase
         $this->assertSame(
             [
                 'dot-env' => [
+                    'APP_SECRET',
+                    'APP_ENV',
+                    'COOKIE_WHITELIST',
+                    'DATABASE_URL',
+                    'DISABLE_HTTP_CACHE',
+                    'MAILER_URL',
+                    'MAILER_DSN',
+                    'TRACE_LEVEL',
                     'TRUSTED_PROXIES',
                     'TRUSTED_HOSTS',
                 ],
@@ -434,7 +434,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame('mysqli://root:foobar@localhost:3306/contao_test', $bag['env(DATABASE_URL)']);
     }
 
-    public function testAddsTheDefaultServerVersionAndPdoOptions(): void
+    public function testAddsThePdoOptions(): void
     {
         $extensionConfigs = [
             [
@@ -451,15 +451,6 @@ class PluginTest extends ContaoTestCase
         $expect = array_merge(
             $extensionConfigs,
             [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'server_version' => '5.5',
-                            ],
-                        ],
-                    ],
-                ],
                 [
                     'dbal' => [
                         'connections' => [
@@ -495,23 +486,10 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = [
-            ...$extensionConfigs,
-            ...[[
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ]],
-        ];
-
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
-        $this->assertSame($expect, $extensionConfig);
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
     public function testDoesNotAddDefaultPdoOptionsIfUrlIsMysqli(): void
@@ -530,20 +508,7 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
-            [[
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ]]
-        );
-
-        // Adjust the error reporting to suppress mysqli warnings
+        // Adjust the error_reporting to suppress mysqli warnings
         $er = error_reporting();
         error_reporting($er ^ E_WARNING ^ E_DEPRECATED);
 
@@ -552,7 +517,7 @@ class PluginTest extends ContaoTestCase
 
         error_reporting($er);
 
-        $this->assertSame($expect, $extensionConfig);
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
     public function testDoesNotOverrideThePdoMultiStatementsOption(): void
@@ -572,23 +537,10 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = [
-            ...$extensionConfigs,
-            ...[[
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'server_version' => '5.5',
-                        ],
-                    ],
-                ],
-            ]],
-        ];
-
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
-        $this->assertSame($expect, $extensionConfig);
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
     public function testUpdatesTheMailerTransport(): void
@@ -902,59 +854,9 @@ class PluginTest extends ContaoTestCase
         yield['foo://localhost'];
     }
 
-    public function testRetrievesTheConnectionParametersFromTheConfiguration(): void
-    {
-        $container = new PluginContainerBuilder($this->createMock(PluginLoader::class), []);
-        $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app');
-
-        $extensionConfigs = [
-            [
-                'dbal' => [
-                    'connections' => [
-                        'default' => [
-                            'url' => '%env(DATABASE_URL)%',
-                            'password' => '@foobar',
-                        ],
-                    ],
-                ],
-            ],
-        ];
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('connect')
-        ;
-
-        $connection
-            ->expects($this->once())
-            ->method('close')
-        ;
-
-        $dbalConnectionFactory = function ($params) use ($connection) {
-            $this->assertSame(
-                [
-                    'url' => 'mysql://root:%%40foobar@localhost:3306/database',
-                    'password' => '@foobar',
-                ],
-                $params
-            );
-
-            return $connection;
-        };
-
-        $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = 'mysql://root:%%40foobar@localhost:3306/database';
-
-        $plugin = new Plugin($dbalConnectionFactory);
-        $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container);
-    }
-
     public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void
     {
-        $plugin = new Plugin(
-            fn () => $this->createMock(Connection::class)
-        );
-
+        $plugin = new Plugin();
         $extensionConfig = $plugin->getExtensionConfig('doctrine', [], $this->getContainer());
 
         // Ignore the DBAL entry
@@ -1019,9 +921,7 @@ class PluginTest extends ContaoTestCase
             );
         }
 
-        $plugin = new Plugin(
-            fn () => $this->createMock(Connection::class)
-        );
+        $plugin = new Plugin();
 
         $container = $this->getContainer();
         $container->setParameter('kernel.project_dir', __DIR__.'/../Fixtures/app-with-entities');
