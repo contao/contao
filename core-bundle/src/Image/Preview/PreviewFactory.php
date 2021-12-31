@@ -41,6 +41,7 @@ class PreviewFactory
     private PictureFactoryInterface $pictureFactory;
     private Studio $imageStudio;
     private ContaoFramework $framework;
+    private string $secret;
     private string $cacheDir;
     private array $validImageExtensions;
     private string $defaultDensities = '';
@@ -51,13 +52,14 @@ class PreviewFactory
     /**
      * @param iterable<int,PreviewProviderInterface> $previewProviders
      */
-    public function __construct(iterable $previewProviders, ImageFactoryInterface $imageFactory, PictureFactoryInterface $pictureFactory, Studio $imageStudio, ContaoFramework $framework, string $cacheDir, array $validImageExtensions, int $defaultSize, int $maxSize)
+    public function __construct(iterable $previewProviders, ImageFactoryInterface $imageFactory, PictureFactoryInterface $pictureFactory, Studio $imageStudio, ContaoFramework $framework, string $secret, string $cacheDir, array $validImageExtensions, int $defaultSize, int $maxSize)
     {
         $this->previewProviders = $previewProviders;
         $this->imageFactory = $imageFactory;
         $this->pictureFactory = $pictureFactory;
         $this->imageStudio = $imageStudio;
         $this->framework = $framework;
+        $this->secret = $secret;
         $this->cacheDir = $cacheDir;
         $this->validImageExtensions = $validImageExtensions;
         $this->defaultSize = $defaultSize;
@@ -509,10 +511,11 @@ class PreviewFactory
             ...array_values($previewOptions),
         ];
 
-        $hash = substr(md5(implode('|', $hashData)), 0, 9);
-        $pathinfo = pathinfo($path);
+        $hash = hash_hmac('sha256', md5(implode('|', $hashData)), $this->secret, true);
+        $hash = substr(strtr(base64_encode($hash), '+/', '-_'), 0, 11);
+        $name = pathinfo($path, PATHINFO_FILENAME);
 
-        return Path::join($hash[0], $pathinfo['filename'].'-'.substr($hash, 1));
+        return strtolower($hash[0])."/$name-".substr($hash, 1);
     }
 
     private function getPageSuffix(int $page): string

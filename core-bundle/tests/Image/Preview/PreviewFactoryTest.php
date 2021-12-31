@@ -51,6 +51,7 @@ class PreviewFactoryTest extends TestCase
             $this->createMock(PictureFactoryInterface::class),
             $this->createMock(Studio::class),
             $this->createMock(ContaoFramework::class),
+            'not so secret ;)',
             Path::join($this->getTempDir(), 'assets/previews'),
             ['png'],
             128,
@@ -76,7 +77,7 @@ class PreviewFactoryTest extends TestCase
         $this->assertFileExists($preview->getPath());
         $this->assertSame(128, $preview->getDimensions()->getSize()->getWidth());
         $this->assertSame(256, $preview->getDimensions()->getSize()->getHeight());
-        $this->assertRegExp('(/[0-9a-z]/foo-[0-9a-z]{8}\.png$)', $preview->getPath());
+        $this->assertRegExp('(/[0-9a-z_-]/foo-[0-9a-zA-Z_-]{10}\.png$)', $preview->getPath());
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
         $this->expectException(MissingPreviewProviderException::class);
@@ -99,7 +100,7 @@ class PreviewFactoryTest extends TestCase
             $this->assertFileExists($preview->getPath());
             $this->assertSame(256, $preview->getDimensions()->getSize()->getWidth());
             $this->assertSame(512, $preview->getDimensions()->getSize()->getHeight());
-            $this->assertRegExp('(/[0-9a-z]/foo-[0-9a-z]{8}(-\d)?\.png$)', $preview->getPath());
+            $this->assertRegExp('(/[0-9a-z_-]/foo-[0-9a-zA-Z_-]{10}(-\d)?\.png$)', $preview->getPath());
         }
 
         $lastPagePath = substr($previews[0]->getPath(), 0, -4).'-last.png';
@@ -117,7 +118,7 @@ class PreviewFactoryTest extends TestCase
             $this->assertFileExists($preview->getPath());
             $this->assertSame(499, $preview->getDimensions()->getSize()->getWidth());
             $this->assertSame(998, $preview->getDimensions()->getSize()->getHeight());
-            $this->assertRegExp('(/[0-9a-z]/foo-[0-9a-z]{8}-\d\.png$)', $preview->getPath());
+            $this->assertRegExp('(/[0-9a-z_-]/foo-[0-9a-zA-Z_-]{10}-\d\.png$)', $preview->getPath());
         }
 
         $previews = $factory->createPreviews($sourcePath, 128, 9999, 4);
@@ -268,6 +269,7 @@ class PreviewFactoryTest extends TestCase
             $this->createMock(PictureFactoryInterface::class),
             $this->createMock(Studio::class),
             $this->createMock(ContaoFramework::class),
+            'not so secret ;)',
             Path::join($this->getTempDir(), 'assets/previews'),
             ['png'],
             128,

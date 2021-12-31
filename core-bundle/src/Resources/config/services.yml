@@ -302,6 +302,7 @@ services:
             - '@contao.image.picture_factory'
             - '@contao.image.studio'
             - '@contao.framework'
+            - '%kernel.secret%'
             - '%contao.image.preview.target_dir%'
             - '%contao.image.valid_extensions%'
             - '%contao.image.preview.default_size%'
