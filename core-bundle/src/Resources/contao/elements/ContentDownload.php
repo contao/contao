@@ -190,7 +190,7 @@ class ContentDownload extends ContentElement
 					$builder->setLightboxResourceOrUrl($lightboxPreviews[$index]);
 				}
 
-				$previews[$index] = $builder->build()->getLegacyTemplateData();
+				$previews[$index] = $builder->build();
 			}
 
 			return $previews;

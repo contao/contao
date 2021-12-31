@@ -4,7 +4,7 @@
 
   <?php if ($this->previews): ?>
     <?php foreach ($this->previews as $preview): ?>
-      <?php $this->insert('image', $preview) ?>
+      <?php $this->insert('image', $preview->getLegacyTemplateData()) ?>
     <?php endforeach ?>
   <?php endif ?>
 
