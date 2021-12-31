@@ -133,7 +133,11 @@ class FrontendMenuBuilder
             $this->populateMenuItem($item, $request, $page, $href, $hasSubmenu, $options);
             $root->addChild($item);
 
+            // Allow modifying empty submenu nodes
             if (!$hasSubpages) {
+                $menuEvent = new FrontendMenuEvent($this->factory, $item, (int) $page->id, $nextLevel, $options);
+                $this->dispatcher->dispatch($menuEvent);
+
                 continue;
             }
 

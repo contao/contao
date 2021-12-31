@@ -445,17 +445,31 @@ class FrontendMenuBuilderTest extends TestCase
         $this->assertTrue($item->getDisplayChildren());
     }
 
-    public function testEmptyMenu(): void
+    public function testEmptyMenus(): void
     {
         $menuFactory = new MenuFactory();
         $root = $menuFactory->createItem('root');
 
+        $pages = [
+            [
+                'id' => 4,
+                'hasSubpages' => false,
+            ],
+        ];
+
+        // Assert event dispatcher is called twice, once per root node
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->exactly(2))
+            ->method('dispatch')
+            ->with($this->isInstanceOf(FrontendMenuEvent::class))
+        ;
+
         $menuBuilder = new FrontendMenuBuilder(
             $menuFactory,
             $this->mockRequestStack(),
-            // Assert that the event is definitely dispatched
-            $this->mockEventDispatcher(),
-            $this->mockConnection([]),
+            $eventDispatcher,
+            $this->mockConnection($pages),
             $this->mockPageRegistry(),
             $this->mockPageModelAdapter(),
             $this->mockTokenChecker(),
@@ -466,9 +480,10 @@ class FrontendMenuBuilderTest extends TestCase
 
         $tree = $menuBuilder->getMenu($root, self::ROOT_ID);
 
-        // Assert that no items are generated
+        // Assert that no items are generated for the first level
         $this->assertSame('root', $tree->getName());
-        $this->assertFalse($tree->hasChildren());
+        $this->assertTrue($tree->hasChildren());
+        $this->assertFalse($tree->getFirstChild()->hasChildren());
     }
 
     public function testBuildsSitemap(): void
@@ -649,7 +664,7 @@ class FrontendMenuBuilderTest extends TestCase
 
     private function mockConnection(array $pages = null): Connection
     {
-        $pagesByPid = static fn (int $pid) => array_map(
+        $pagesByPid = static fn (int $pid): array => array_map(
             static fn (array $page) => [
                 'id' => $page['id'],
                 'hasSubpages' => \in_array($page['id'], array_column(self::PAGES, 'pid'), true),
@@ -663,7 +678,7 @@ class FrontendMenuBuilderTest extends TestCase
             $result
                 ->method('fetchAllAssociative')
                 ->willReturn($pages)
-        ;
+            ;
         } else {
             // Find the pages by root IDs on consecutive calls
             $result
