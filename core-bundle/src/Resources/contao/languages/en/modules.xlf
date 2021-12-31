@@ -96,7 +96,7 @@
         <source>Preview Links</source>
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
-        <source>Create preview links to the website front end.</source>
+        <source>Manage preview links to the front end.</source>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>

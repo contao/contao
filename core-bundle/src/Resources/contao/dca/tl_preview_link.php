@@ -69,7 +69,6 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			(
 				'icon'                => 'visible.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
-				//'button_callback'     => array('tl_member', 'toggleIcon')
 			),
 			'show' => array
 			(
