@@ -60,6 +60,10 @@ class OverwriteFormSettingsListener
     /**
      * This `load_callback` gets the field value from the parent form.
      * It is registered dynamically in `$this->addOverwritableFields()`.
+     *
+     * @param mixed $varValue
+     *
+     * @return mixed
      */
     public function getPlaceholderFromForm($varValue, DataContainer $dc)
     {
