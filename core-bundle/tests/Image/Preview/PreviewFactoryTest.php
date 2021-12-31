@@ -24,6 +24,8 @@ use Contao\Image\Image;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
+use Contao\ImageSizeItemModel;
+use Contao\ImageSizeModel;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
@@ -138,8 +140,55 @@ class PreviewFactoryTest extends TestCase
      */
     public function testGetPreviewSizeFromImageSize($size, int $expectedSize, string $defaultDensities = ''): void
     {
-        $factory = $this->createFactoryWithExampleProvider();
+        $imageSizeModel = (new \ReflectionClass(ImageSizeModel::class))->newInstanceWithoutConstructor();
+        $imageSizeModel->setRow([
+            'id' => 456,
+            'width' => 20,
+            'height' => 50,
+            'densities' => '1x, 2x, 120w',
+        ]);
+
+        $imageSizeItemModel = (new \ReflectionClass(ImageSizeItemModel::class))->newInstanceWithoutConstructor();
+        $imageSizeItemModel->setRow([
+            'pid' => 456,
+            'width' => 789,
+            'height' => 123,
+            'densities' => '0.5x',
+        ]);
+
+        $imageSizeAdapter = $this->mockAdapter(['findByPk']);
+        $imageSizeAdapter
+            ->method('findByPk')
+            ->willReturn($imageSizeModel)
+        ;
+
+        $imageSizeItemAdapter = $this->mockAdapter(['findVisibleByPid']);
+        $imageSizeItemAdapter
+            ->method('findVisibleByPid')
+            ->willReturn([$imageSizeItemModel])
+        ;
+
+        $framework = $this->mockContaoFramework([
+            ImageSizeModel::class => $imageSizeAdapter,
+            ImageSizeItemModel::class => $imageSizeItemAdapter,
+        ]);
+
+        $factory = $this->createFactoryWithExampleProvider($framework);
         $factory->setDefaultDensities($defaultDensities);
+        $factory->setPredefinedSizes([
+            '_predefined' => [
+                'width' => 20,
+                'height' => 50,
+                'densities' => '1x, 2x, 120w',
+                'items' => [
+                    [
+                        'width' => 50,
+                        'height' => 123,
+                        'densities' => '0.5x',
+                    ],
+                ],
+            ],
+        ]);
 
         $this->assertSame(
             $expectedSize,
@@ -168,6 +217,12 @@ class PreviewFactoryTest extends TestCase
         yield [[200, 100, 'crop'], 300, '1.5x'];
         yield [[200, 100, 'crop'], 500, '500w'];
         yield [[200, 100, 'crop'], 240, '50w, 40w, 1.2x'];
+        yield ['_predefined', 123];
+        yield [[0, 0, '_predefined'], 123];
+        yield [[500, 500, '_predefined'], 123];
+        yield [456, 789];
+        yield [[0, 0, 456], 789];
+        yield [[500, 500, 456], 789];
 
         yield [
             (new ResizeConfiguration())
@@ -221,7 +276,7 @@ class PreviewFactoryTest extends TestCase
         ];
     }
 
-    private function createFactoryWithExampleProvider(): PreviewFactory
+    private function createFactoryWithExampleProvider(ContaoFramework $framework = null): PreviewFactory
     {
         $pdfProvider = new class() implements PreviewProviderInterface {
             public function getFileHeaderSize(): int
@@ -268,7 +323,7 @@ class PreviewFactoryTest extends TestCase
             $imageFactory,
             $this->createMock(PictureFactoryInterface::class),
             $this->createMock(Studio::class),
-            $this->createMock(ContaoFramework::class),
+            $framework ?? $this->createMock(ContaoFramework::class),
             'not so secret ;)',
             Path::join($this->getTempDir(), 'assets/previews'),
             ['png'],
