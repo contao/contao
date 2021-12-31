@@ -23,13 +23,13 @@ class ContaoCsrfTokenManager extends CsrfTokenManager
 {
     private RequestStack $requestStack;
     private string $csrfCookiePrefix;
-    private ?string $frontendTokenName;
+    private ?string $defaultTokenName;
 
-    public function __construct(RequestStack $requestStack, string $csrfCookiePrefix, TokenGeneratorInterface $generator = null, TokenStorageInterface $storage = null, $namespace = null, string $frontendTokenName = null)
+    public function __construct(RequestStack $requestStack, string $csrfCookiePrefix, TokenGeneratorInterface $generator = null, TokenStorageInterface $storage = null, $namespace = null, string $defaultTokenName = null)
     {
         $this->requestStack = $requestStack;
         $this->csrfCookiePrefix = $csrfCookiePrefix;
-        $this->frontendTokenName = $frontendTokenName;
+        $this->defaultTokenName = $defaultTokenName;
 
         parent::__construct($generator, $storage, $namespace);
     }
@@ -63,12 +63,12 @@ class ContaoCsrfTokenManager extends CsrfTokenManager
         ;
     }
 
-    public function getFrontendTokenValue(): string
+    public function getDefaultTokenValue(): string
     {
-        if (null === $this->frontendTokenName) {
-            throw new \RuntimeException('The Contao CSRF token manager was not initialized with a frontend token name.');
+        if (null === $this->defaultTokenName) {
+            throw new \RuntimeException('The Contao CSRF token manager was not initialized with a default token name.');
         }
 
-        return $this->getToken($this->frontendTokenName)->getValue();
+        return $this->getToken($this->defaultTokenName)->getValue();
     }
 }
