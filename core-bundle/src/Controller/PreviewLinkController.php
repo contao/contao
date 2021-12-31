@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @internal
  */
-class FrontendPreviewController
+class PreviewLinkController
 {
     private FrontendPreviewAuthenticator $previewAuthenticator;
     private UriSigner $uriSigner;
@@ -41,7 +41,7 @@ class FrontendPreviewController
     }
 
     /**
-     * @Route("/_contao/preview/{id}", name="contao_frontend_preview", requirements={"id"="\d+"})
+     * @Route("/_contao/preview/{id}", name="contao_preview_link", requirements={"id"="\d+"})
      */
     public function __invoke(Request $request, int $id): Response
     {
@@ -50,7 +50,7 @@ class FrontendPreviewController
         }
 
         $link = $this->connection->fetchAssociative(
-            "SELECT * FROM tl_preview WHERE id=? AND published='1' AND validUntil>UNIX_TIMESTAMP()",
+            "SELECT * FROM tl_preview_link WHERE id=? AND published='1' AND expiresAt>UNIX_TIMESTAMP()",
             [$id]
         );
 

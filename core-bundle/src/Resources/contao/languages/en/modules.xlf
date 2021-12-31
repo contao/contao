@@ -92,10 +92,10 @@
       <trans-unit id="MOD.settings.1">
         <source>Adjust the Contao configuration</source>
       </trans-unit>
-      <trans-unit id="MOD.preview.0">
+      <trans-unit id="MOD.preview_link.0">
         <source>Preview Links</source>
       </trans-unit>
-      <trans-unit id="MOD.preview.1">
+      <trans-unit id="MOD.preview_link.1">
         <source>Create preview links to the website front end.</source>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">

@@ -10,7 +10,7 @@
 
 use Contao\DataContainer;
 
-$GLOBALS['TL_DCA']['tl_preview'] = array
+$GLOBALS['TL_DCA']['tl_preview_link'] = array
 (
 	// Config
 	'config' => array
@@ -18,27 +18,13 @@ $GLOBALS['TL_DCA']['tl_preview'] = array
 		'dataContainer'               => 'Table',
 		'enableVersioning'            => true,
 		'notCreatable'                => true,
-		'onload_callback' => [function () {
-			if ('create' === Input::get('act') && Input::get('url')) {
-				$GLOBALS['TL_DCA']['tl_preview']['config']['notCreatable'] = false;
-				$GLOBALS['TL_DCA']['tl_preview']['fields']['url']['default'] = Input::get('url');
-				$GLOBALS['TL_DCA']['tl_preview']['fields']['dateAdded']['default'] = time();
-			}
-		}],
-		'onsubmit_callback' => array
-		(
-			function (DataContainer $dc) {
-				Database::getInstance()->prepare(
-					"UPDATE tl_preview SET validUntil=UNIX_TIMESTAMP(DATE_ADD(FROM_UNIXTIME(dateAdded), INTERVAL expires DAY)) WHERE id=?"
-				)->execute($dc->id);
-			}
-		),
+		'notCopyable'                 => true,
 		'sql' => array
 		(
 			'keys' => array
 			(
 				'id' => 'primary',
-				'id,published,validUntil' => 'index'
+				'id,published,expiresAt' => 'index'
 			)
 		)
 	),
@@ -49,12 +35,12 @@ $GLOBALS['TL_DCA']['tl_preview'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
-			'fields'                  => array('dateAdded'),
+			'fields'                  => array('createdAt'),
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
 		'label' => array
 		(
-			'fields'                  => array('url', 'showUnpublished', 'validUntil'),
+			'fields'                  => array('url', 'showUnpublished', 'expiresAt'),
 			'showColumns'             => true,
 		),
 		'global_operations' => array
@@ -68,27 +54,10 @@ $GLOBALS['TL_DCA']['tl_preview'] = array
 		),
 		'operations' => array
 		(
-			'share' => array
-			(
-				'icon'                => 'edit.svg',
-				'button_callback' => static function (array $row) {
-					/** @var \Symfony\Component\DependencyInjection\Container $container */
-					$container = System::getContainer();
-					$link = $container->get('router')->generate('contao_frontend_preview', ['id' => $row['id']], \Symfony\Component\Routing\Generator\UrlGeneratorInterface::ABSOLUTE_URL);
-					$link = $container->get('uri_signer')->sign($link);
-
-					return '<a href="'.$link.'">Link</a>';
-				},
-			),
 			'edit' => array
 			(
 				'href'                => 'act=edit',
 				'icon'                => 'edit.svg'
-			),
-			'copy' => array
-			(
-				'href'                => 'act=copy',
-				'icon'                => 'copy.svg'
 			),
 			'delete' => array
 			(
@@ -106,6 +75,10 @@ $GLOBALS['TL_DCA']['tl_preview'] = array
 			(
 				'href'                => 'act=show',
 				'icon'                => 'show.svg'
+			),
+			'share' => array
+			(
+				'icon'                => 'share.svg'
 			)
 		)
 	),
@@ -113,7 +86,7 @@ $GLOBALS['TL_DCA']['tl_preview'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{url_legend},url,showUnpublished;{expire_legend},expires,dateAdded,validUntil;{publishing_legend},published',
+		'default'                     => '{url_legend},url,showUnpublished;{expire_legend},createdAt,createdBy,expiresInDays,expiresAt;{publishing_legend},published',
 	),
 
 	// Fields
@@ -127,9 +100,26 @@ $GLOBALS['TL_DCA']['tl_preview'] = array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
+		'createdAt' => array
+		(
+			'default'                 => time(),
+			'flag'                    => DataContainer::SORT_DAY_DESC,
+			'sorting'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'datim', 'disabled'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'createdBy' => array
+		(
+			'sorting'                 => true,
+			'inputType'               => 'select',
+			'foreignKey'              => 'tl_user.name',
+			'eval'                    => array('disabled'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
 		'url' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'disabled'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048),
@@ -137,30 +127,21 @@ $GLOBALS['TL_DCA']['tl_preview'] = array
 		),
 		'showUnpublished' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'clr'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
-		'expires' => array
+		'expiresInDays' => array
 		(
+			'filter'                  => true,
 			'inputType'               => 'select',
 			'options'                 => ['1', '7', '30'],
-			'reference'               => &$GLOBALS['TL_LANG']['tl_preview']['expire_options'],
+			'reference'               => &$GLOBALS['TL_LANG']['tl_preview_link']['expire_options'],
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "char(2) NOT NULL default ''"
+			'sql'                     => "int(10) unsigned NOT NULL default 1"
 		),
-		'dateAdded' => array
-		(
-			'default'                 => time(),
-			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'sorting'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'disabled'=>true, 'doNotCopy'=>true, 'tl_class'=>'clr w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
-		),
-		'validUntil' => array
+		'expiresAt' => array
 		(
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'sorting'                 => true,

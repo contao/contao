@@ -111,6 +111,17 @@ services:
         arguments:
             - '@request_stack'
 
+    contao.listener.data_container.preview_link:
+        class: Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@security.helper'
+            - '@router'
+            - '@uri_signer'
+            - '@translator'
+            - '%contao.preview_script%'
+
     contao.listener.data_container.reset_custom_template:
         class: Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener
         arguments:

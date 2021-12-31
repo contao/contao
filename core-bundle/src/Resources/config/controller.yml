@@ -61,14 +61,6 @@ services:
             - controller.service_arguments
 
 
-    Contao\CoreBundle\Controller\FrontendPreviewController:
-        arguments:
-            - '@contao.security.frontend_preview_authenticator'
-            - '@uri_signer'
-            - '@database_connection'
-        tags:
-            - controller.service_arguments
-
     Contao\CoreBundle\Controller\FrontendModule\TemplateController:
         tags:
             - { name: contao.frontend_module, category: miscellaneous }
@@ -108,6 +100,14 @@ services:
             - '@contao.framework'
 
     Contao\CoreBundle\Controller\Page\RootPageController: ~
+
+    Contao\CoreBundle\Controller\PreviewLinkController:
+        arguments:
+            - '@contao.security.frontend_preview_authenticator'
+            - '@uri_signer'
+            - '@database_connection'
+        tags:
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
