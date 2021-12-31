@@ -164,7 +164,8 @@ class PreviewLinkListener
     public function togglePublished(array $row, ?string $href, ?string $label, ?string $title, string $icon, ?string $attributes): string
     {
         if (Input::get('tid')) {
-            $this->toggleVisibility((int) Input::get('tid'), '1' === ((string) Input::get('state')), (func_num_args() <= 12 ? null : func_get_arg(12)));
+            $this->toggleVisibility((int) Input::get('tid'), '1' === (string) Input::get('state'), (\func_num_args() <= 12 ? null : func_get_arg(12)));
+
             throw new RedirectResponseException(System::getReferer());
         }
 
@@ -193,11 +194,11 @@ class PreviewLinkListener
         }
 
         // Trigger the onload_callback
-        if (is_array($GLOBALS['TL_DCA']['tl_preview_link']['config']['onload_callback'] ?? null)) {
+        if (\is_array($GLOBALS['TL_DCA']['tl_preview_link']['config']['onload_callback'] ?? null)) {
             foreach ($GLOBALS['TL_DCA']['tl_preview_link']['config']['onload_callback'] as $callback) {
-                if (is_array($callback)) {
+                if (\is_array($callback)) {
                     System::importStatic($callback[0])->{$callback[1]}($dc);
-                } elseif (is_callable($callback)) {
+                } elseif (\is_callable($callback)) {
                     $callback($dc);
                 }
             }
@@ -223,11 +224,11 @@ class PreviewLinkListener
         $objVersions->initialize();
 
         // Trigger the save_callback
-        if (is_array($GLOBALS['TL_DCA']['tl_preview_link']['fields']['tl_preview_link']['save_callback'] ?? null)) {
+        if (\is_array($GLOBALS['TL_DCA']['tl_preview_link']['fields']['tl_preview_link']['save_callback'] ?? null)) {
             foreach ($GLOBALS['TL_DCA']['tl_preview_link']['fields']['tl_preview_link']['save_callback'] as $callback) {
-                if (is_array($callback)) {
+                if (\is_array($callback)) {
                     $blnPublished = System::importStatic($callback[0])->{$callback[1]}($blnPublished, $dc);
-                } elseif (is_callable($callback)) {
+                } elseif (\is_callable($callback)) {
                     $blnPublished = $callback($blnPublished, $dc);
                 }
             }
@@ -247,11 +248,11 @@ class PreviewLinkListener
         }
 
         // Trigger the onsubmit_callback
-        if (is_array($GLOBALS['TL_DCA']['tl_preview_link']['config']['onsubmit_callback'] ?? null)) {
+        if (\is_array($GLOBALS['TL_DCA']['tl_preview_link']['config']['onsubmit_callback'] ?? null)) {
             foreach ($GLOBALS['TL_DCA']['tl_preview_link']['config']['onsubmit_callback'] as $callback) {
-                if (is_array($callback)) {
+                if (\is_array($callback)) {
                     System::importStatic($callback[0])->{$callback[1]}($dc);
-                } elseif (is_callable($callback)) {
+                } elseif (\is_callable($callback)) {
                     $callback($dc);
                 }
             }

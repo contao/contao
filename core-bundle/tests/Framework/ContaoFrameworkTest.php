@@ -247,11 +247,6 @@ class ContaoFrameworkTest extends TestCase
         $request->setSession($session);
 
         $tokenChecker = $this->createMock(TokenChecker::class);
-        $tokenChecker
-            ->expects($this->once())
-            ->method('hasBackendUser')
-            ->willReturn(true)
-        ;
 
         $tokenChecker
             ->expects($this->once())

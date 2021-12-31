@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\Config;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Doctrine\DBAL\Connection;
 
@@ -22,6 +20,7 @@ use Doctrine\DBAL\Connection;
  * We don't purge right after expiration date since days can be changed to increase the lifetime.
  *
  * @CronJob("daily")
+ *
  * @internal
  */
 class PurgePreviewLinksCron
