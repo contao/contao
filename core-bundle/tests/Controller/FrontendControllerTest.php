@@ -47,7 +47,7 @@ class FrontendControllerTest extends TestCase
         $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
         $tokenManager
             ->expects($this->once())
-            ->method('getFrontendTokenValue')
+            ->method('getDefaultTokenValue')
             ->willReturn('tokenValue')
         ;
 

@@ -29,15 +29,15 @@ class BackupManager
     private DumperInterface $dumper;
     private string $backupDir;
     private array $tablesToIgnore;
-    private int $keepMax;
+    private RetentionPolicyInterface $retentionPolicy;
 
-    public function __construct(Connection $connection, DumperInterface $dumper, string $backupDir, array $tablesToIgnore, int $keepMax)
+    public function __construct(Connection $connection, DumperInterface $dumper, string $backupDir, array $tablesToIgnore, RetentionPolicyInterface $retentionPolicy)
     {
         $this->connection = $connection;
         $this->dumper = $dumper;
         $this->backupDir = $backupDir;
         $this->tablesToIgnore = $tablesToIgnore;
-        $this->keepMax = $keepMax;
+        $this->retentionPolicy = $retentionPolicy;
     }
 
     public function createCreateConfig(): CreateConfig
@@ -150,7 +150,7 @@ class BackupManager
             }
 
             $this->finishWriting($fileHandle, $deflateContext);
-            $this->tidyDirectory();
+            $this->tidyDirectory($config->getBackup());
         } catch (BackupManagerException $exception) {
             (new Filesystem())->remove($backup->getFilepath());
 
@@ -230,17 +230,14 @@ class BackupManager
         }
     }
 
-    private function tidyDirectory(): void
+    private function tidyDirectory(Backup $currentBackup): void
     {
-        $i = 0;
+        $allBackups = $this->listBackups();
+        $backupsToKeep = $this->retentionPolicy->apply($currentBackup, $allBackups);
 
-        foreach ($this->listBackups() as $backup) {
-            if ($i >= $this->keepMax) {
-                (new Filesystem())->remove($backup->getFilepath());
-            }
-
-            ++$i;
-        }
+        (new Filesystem())->remove(
+            array_map(static fn (Backup $backup) => $backup->getFilepath(), array_diff($allBackups, $backupsToKeep))
+        );
     }
 
     private function executeWrappedQuery(string $query): void

@@ -73,16 +73,6 @@ doctrine:
             type: service
             id: app.doctrine_result_cache_provider
 
-# Lexik configuration
-lexik_maintenance:
-    authorized:
-        path: ^%contao.backend.route_prefix%($|/)
-        attributes:
-            _bypass_maintenance: true
-    driver:
-        class: Lexik\Bundle\MaintenanceBundle\Drivers\FileDriver
-        options: { file_path: '%kernel.project_dir%/var/maintenance_lock' }
-
 # Security configuration
 nelmio_security:
     clickjacking:

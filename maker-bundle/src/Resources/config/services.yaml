@@ -2,11 +2,6 @@ services:
     contao_maker.config.xliff_merger:
         class: Contao\MakerBundle\Config\XliffMerger
 
-    contao_maker.generator.template:
-        class: Contao\MakerBundle\Generator\TemplateGenerator
-        arguments:
-            - '@maker.generator'
-
     contao_maker.generator.class:
         class: Contao\MakerBundle\Generator\ClassGenerator
         arguments:
@@ -24,6 +19,11 @@ services:
             - '@maker.file_manager'
             - '@contao_maker.config.xliff_merger'
             - '%kernel.project_dir%'
+
+    contao_maker.generator.template:
+        class: Contao\MakerBundle\Generator\TemplateGenerator
+        arguments:
+            - '@maker.generator'
 
     contao_maker.maker.make_content_element:
         class: Contao\MakerBundle\Maker\MakeContentElement
