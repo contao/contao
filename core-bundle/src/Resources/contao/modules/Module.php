@@ -287,6 +287,7 @@ abstract class Module extends Frontend
 		$items = array();
 		$security = System::getContainer()->get('security.helper');
 		$isMember = $security->isGranted('ROLE_MEMBER');
+		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->pid = $pid;
@@ -361,7 +362,7 @@ abstract class Module extends Frontend
 						}
 
 						// Hide the link if the target page is invisible
-						if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !BE_USER_LOGGED_IN))
+						if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !$blnShowUnpublished))
 						{
 							continue 2;
 						}

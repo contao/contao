@@ -1303,7 +1303,7 @@ abstract class Model
 			return false;
 		}
 
-		return \defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true;
+		return System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
 	}
 }
 

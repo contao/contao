@@ -147,7 +147,6 @@ class News extends Frontend
 		if ($objArticle !== null)
 		{
 			$arrUrls = array();
-
 			$request = $container->get('request_stack')->getCurrentRequest();
 
 			if ($request)
@@ -156,10 +155,17 @@ class News extends Frontend
 				$request->attributes->set('_scope', 'frontend');
 			}
 
+			$time = time();
 			$origObjPage = $GLOBALS['objPage'] ?? null;
 
 			while ($objArticle->next())
 			{
+				// Never add unpublished elements to the RSS feeds
+				if (!$objArticle->published || ($objArticle->start && $objArticle->start > $time) || ($objArticle->stop && $objArticle->stop <= $time))
+				{
+					continue;
+				}
+
 				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
 
 				// No jumpTo page set (see #4784)

@@ -67,9 +67,9 @@ class FrontendController extends AbstractController
     /**
      * Symfony will un-authenticate the user automatically by calling this route.
      *
-     * @throws LogoutException
-     *
      * @Route("/_contao/logout", name="contao_frontend_logout")
+     *
+     * @return never
      */
     public function logoutAction(): void
     {
@@ -108,7 +108,7 @@ class FrontendController extends AbstractController
      */
     public function requestTokenScriptAction(): Response
     {
-        $tokenValue = json_encode($this->container->get('contao.csrf.token_manager')->getFrontendTokenValue());
+        $tokenValue = json_encode($this->container->get('contao.csrf.token_manager')->getDefaultTokenValue());
 
         $response = new Response();
         $response->setContent('document.querySelectorAll(\'input[name=REQUEST_TOKEN],input[name$="[REQUEST_TOKEN]"]\').forEach(function(i){i.value='.$tokenValue.'})');

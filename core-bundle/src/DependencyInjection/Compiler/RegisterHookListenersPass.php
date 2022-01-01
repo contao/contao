@@ -66,9 +66,6 @@ class RegisterHookListenersPass implements CompilerPassInterface
         return $hooks;
     }
 
-    /**
-     * @throws InvalidDefinitionException
-     */
     private function addHookCallback(array &$hooks, string $serviceId, string $class, array $attributes): void
     {
         if (!isset($attributes['hook'])) {

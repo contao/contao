@@ -138,9 +138,6 @@ class Factory
         return $collection;
     }
 
-    /**
-     * @throws \InvalidArgumentException
-     */
     public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
         $escargot = Escargot::create($baseUris, $queue)->withHttpClient($this->createHttpClient($clientOptions));
@@ -152,7 +149,6 @@ class Factory
     }
 
     /**
-     * @throws \InvalidArgumentException
      * @throws InvalidJobIdException
      */
     public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
@@ -196,9 +192,6 @@ class Factory
         }
     }
 
-    /**
-     * @throws \InvalidArgumentException
-     */
     private function validateSubscribers(array $selectedSubscribers): array
     {
         $msg = sprintf(

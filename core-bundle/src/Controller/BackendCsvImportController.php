@@ -99,9 +99,6 @@ class BackendCsvImportController
         );
     }
 
-    /**
-     * @throws InternalServerErrorException
-     */
     private function importFromTemplate(callable $callback, string $table, string $field, int $id, string $submitLabel = null, bool $allowLinebreak = false): Response
     {
         $request = $this->requestStack->getCurrentRequest();
@@ -228,9 +225,6 @@ class BackendCsvImportController
         return $separators;
     }
 
-    /**
-     * @throws \RuntimeException
-     */
     private function getDelimiter(string $separator): string
     {
         $separators = $this->getSeparators(true);
@@ -244,8 +238,6 @@ class BackendCsvImportController
 
     /**
      * Returns the uploaded files from a FileUpload instance.
-     *
-     * @throws \RuntimeException
      *
      * @return array<string>
      */

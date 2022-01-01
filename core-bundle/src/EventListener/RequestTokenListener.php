@@ -43,9 +43,6 @@ class RequestTokenListener
         $this->csrfCookiePrefix = $csrfCookiePrefix;
     }
 
-    /**
-     * @throws InvalidRequestTokenException
-     */
     public function __invoke(RequestEvent $event): void
     {
         // Don't do anything if it's not the main request

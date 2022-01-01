@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment as TwigEnvironment;
-use Twig\Error\Error as TwigError;
 
 /**
  * Injects the back end preview toolbar on any response within the /preview.php
@@ -76,9 +75,6 @@ class PreviewToolbarListener
         $this->injectToolbar($response, $request);
     }
 
-    /**
-     * @throws TwigError
-     */
     private function injectToolbar(Response $response, Request $request): void
     {
         $content = $response->getContent();
