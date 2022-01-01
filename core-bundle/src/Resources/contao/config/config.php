@@ -440,6 +440,11 @@ $GLOBALS['TL_PURGE'] = array
 			'callback' => array(Automator::class, 'purgeImageCache'),
 			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.target_dir')))
 		),
+		'previews' => array
+		(
+			'callback' => array(Automator::class, 'purgePreviewCache'),
+			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.preview.target_dir')))
+		),
 		'scripts' => array
 		(
 			'callback' => array(Automator::class, 'purgeScriptCache'),
