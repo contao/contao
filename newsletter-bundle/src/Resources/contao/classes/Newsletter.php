@@ -422,7 +422,7 @@ class Newsletter extends Backend
 
 		System::getContainer()->get('event_dispatcher')->dispatch($event);
 
-		if ($event->isSubmissionPrevented())
+		if ($event->isSkipSending())
 		{
 			return false;
 		}

@@ -17,15 +17,15 @@ use PHPUnit\Framework\TestCase;
 
 class SendNewsletterEventTest extends TestCase
 {
-    public function testSupportsPreventingTheSubmission(): void
+    public function testSupportsSkipSending(): void
     {
         $event = new SendNewsletterEvent('foo@bar.baz', 'Foo');
 
-        $this->assertFalse($event->isSubmissionPrevented());
+        $this->assertFalse($event->isSkipSending());
 
-        $event->setSubmissionPrevented(true);
+        $event->setSkipSending(true);
 
-        $this->assertTrue($event->isSubmissionPrevented());
+        $this->assertTrue($event->isSkipSending());
     }
 
     public function testGetsAndSetsTheNewsletterText(): void

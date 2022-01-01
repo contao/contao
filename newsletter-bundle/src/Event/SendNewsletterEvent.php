@@ -19,7 +19,7 @@ class SendNewsletterEvent extends Event
     private string $recipientAddress;
     private string $text;
     private string $html;
-    private bool $submissionPrevented = false;
+    private bool $skipSending = false;
     private bool $htmlAllowed = true;
     private array $recipientData = [];
     private array $newsletterData = [];
@@ -43,14 +43,14 @@ class SendNewsletterEvent extends Event
         return $this;
     }
 
-    public function isSubmissionPrevented(): bool
+    public function isSkipSending(): bool
     {
-        return $this->submissionPrevented;
+        return $this->skipSending;
     }
 
-    public function setSubmissionPrevented(bool $submissionPrevented): void
+    public function setSkipSending(bool $skipSending): void
     {
-        $this->submissionPrevented = $submissionPrevented;
+        $this->skipSending = $skipSending;
     }
 
     public function getText(): string
