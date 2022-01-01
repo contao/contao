@@ -416,7 +416,7 @@ class Newsletter extends Backend
 		}
 
 		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html))
-			->setHtmlAllowed($objNewsletter->sendText != 1)
+			->setHtmlAllowed(!$objNewsletter->sendText)
 			->setNewsletterData($objNewsletter->row())
 			->setRecipientData($arrRecipient);
 
