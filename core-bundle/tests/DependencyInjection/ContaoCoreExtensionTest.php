@@ -19,8 +19,8 @@ use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Bundle\MonologBundle\DependencyInjection\MonologExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
@@ -553,19 +553,41 @@ class ContaoCoreExtensionTest extends TestCase
             'contao.general',
         ];
 
+        $monologExtension = $this->createMock(Extension::class);
+        $monologExtension
+            ->method('getAlias')
+            ->willReturn('monolog')
+        ;
+
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.project_dir' => Path::normalize($this->getTempDir()),
             ])
         );
-        $container->registerExtension(new MonologExtension());
+        $container->registerExtension($monologExtension);
 
         $extension = new ContaoCoreExtension();
         $extension->prepend($container);
 
         $config = $container->getExtensionConfig('monolog');
 
-        $this->assertSame($channels, $config[0]['channels'] ?? [], 'The channels have not been configured.');
+        $this->assertSame($channels, $config[0]['channels'] ?? []);
+    }
+
+    public function testDoesNotPrependMonologConfigurationWithoutMonologExtension(): void
+    {
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+            ])
+        );
+
+        $extension = new ContaoCoreExtension();
+        $extension->prepend($container);
+
+        $config = $container->getExtensionConfig('monolog');
+
+        $this->assertSame([], $config);
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder
