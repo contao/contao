@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\RootPageDependentModuleListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
@@ -22,7 +21,6 @@ use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
