@@ -175,10 +175,10 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
                     'rootPages' => [
                         1 => 'title-1 (language-1)',
                         2 => 'title-2 (language-2)',
-                        3 => 'title-3 (language-3)'
+                        3 => 'title-3 (language-3)',
                     ],
                     'blankOptionLabel' => null,
-                ]
+                ],
             ],
         ], $GLOBALS['TL_DCA']['tl_module']['fields']);
 
