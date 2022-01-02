@@ -86,15 +86,7 @@ final class FilesystemConfig
         return $this;
     }
 
-    public function addDefaultDbafs(
-        string $pathPrefix,
-        string $table,
-        string $hashFunction = 'md5',
-        int $maxFileSize = 2147483648,
-        int $bulkInsertSize = 100,
-        bool $useLastModified = true,
-        string $databasePrefix = ''
-    ): self
+    public function addDefaultDbafs(string $pathPrefix, string $table, string $hashFunction = 'md5', int $maxFileSize = 2147483648, int $bulkInsertSize = 100, bool $useLastModified = true, string $databasePrefix = ''): self
     {
         $definition = new Definition(Dbafs::class, []);
         $definition->setFactory(new Reference(DbafsFactory::class));

@@ -78,7 +78,7 @@ class ContaoCoreBundleTest extends TestCase
             AddNativeTransportFactoryPass::class,
             IntlInstalledLocalesAndCountriesPass::class,
             LoggerChannelPass::class,
-            ConfigureFilesystemPass::class
+            ConfigureFilesystemPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);
