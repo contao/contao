@@ -31,11 +31,13 @@ class MountManager
     /**
      * @var array<string, FilesystemAdapter>
      */
-    private array $mounts;
+    private array $mounts = [];
 
-    public function __construct(FilesystemAdapter $rootAdapter)
+    public function __construct(FilesystemAdapter $rootAdapter = null)
     {
-        $this->mounts = ['' => $rootAdapter];
+        if (null !== $rootAdapter) {
+            $this->mounts = ['' => $rootAdapter];
+        }
     }
 
     public function mount(FilesystemAdapter $adapter, string $path): void
@@ -291,14 +293,19 @@ class MountManager
     {
         $prefix = $path;
 
-        // Find operator with the longest (= most specific) matching prefix
+        // Find adapter with the longest (= most specific) matching prefix
         do {
             if (null !== ($adapter = $this->mounts[$prefix] ?? null)) {
                 return [$adapter, Path::makeRelative($path, $prefix), $prefix];
             }
-        } while ('.' !== ($prefix = Path::getDirectory($prefix))); // todo: why '.' here, not '' ?
+        } while ('.' !== ($prefix = \dirname($prefix)));
 
-        throw new \RuntimeException("No adapter was mounted to serve path '$path'."); // todo: why not root adapter?
+        // Root adapter
+        if (null !== ($adapter = $this->mounts[''] ?? null)) {
+            return [$adapter, $path, ''];
+        }
+
+        throw new \RuntimeException("No adapter was mounted to serve path '$path'.");
     }
 
     private function doListContents(string $path, bool $deep): iterable

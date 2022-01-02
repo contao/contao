@@ -19,22 +19,20 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DbafsFactory
 {
-    private HashGeneratorInterface $hashGenerator;
     private Connection $connection;
     private EventDispatcherInterface $eventDispatcher;
 
     /**
      * @internal
      */
-    public function __construct(HashGeneratorInterface $hashGenerator, Connection $connection, EventDispatcherInterface $eventDispatcher)
+    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher)
     {
-        $this->hashGenerator = $hashGenerator;
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function __invoke(VirtualFilesystemInterface $filesystem, string $table): Dbafs
+    public function __invoke(VirtualFilesystemInterface $filesystem, HashGeneratorInterface $hashGenerator, string $table): Dbafs
     {
-        return new Dbafs($this->hashGenerator, $this->connection, $this->eventDispatcher, $filesystem, $table);
+        return new Dbafs($hashGenerator, $this->connection, $this->eventDispatcher, $filesystem, $table);
     }
 }

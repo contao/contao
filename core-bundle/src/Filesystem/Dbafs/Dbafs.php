@@ -54,7 +54,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private string $dbPathPrefix = '';
     private int $maxFileSize = 2147483648; // 2 GiB
     private int $bulkInsertSize = 100;
-    private bool $useLastModified = false;
+    private bool $useLastModified = true;
 
     /**
      * @var array<string, array|null>

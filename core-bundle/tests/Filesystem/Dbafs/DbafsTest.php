@@ -871,6 +871,8 @@ class DbafsTest extends TestCase
         $dbafs->sync();
     }
 
+    // todo: test last modified
+
     private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null): Dbafs
     {
         $connection ??= $this->createMock(Connection::class);
@@ -897,13 +899,17 @@ class DbafsTest extends TestCase
 
         $filesystem ??= $this->createMock(VirtualFilesystemInterface::class);
 
-        return new Dbafs(
+        $dbafs = new Dbafs(
             new HashGenerator('md5'),
             $connection,
             $eventDispatcher,
             $filesystem,
             'tl_files'
         );
+
+        $dbafs->useLastModified(false);
+
+        return $dbafs;
     }
 
     /**

@@ -105,7 +105,7 @@ class HashGeneratorTest extends TestCase
 
         $context = new Context('fallback', 12345);
 
-        $generator = new HashGenerator('md5');
+        $generator = new HashGenerator('md5', false);
         $generator->hashFileContent($filesystem, 'foo.txt', $context);
 
         $this->assertFalse($context->lastModifiedChanged());

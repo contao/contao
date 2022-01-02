@@ -19,8 +19,12 @@ class HashGenerator implements HashGeneratorInterface
     private string $hashAlgorithm;
     private bool $useLastModified;
 
-    public function __construct(string $hashAlgorithm, bool $useLastModified = false)
+    public function __construct(string $hashAlgorithm, bool $useLastModified = true)
     {
+        if (!\in_array($hashAlgorithm, $supportedHashAlgorithms = hash_algos(), true)) {
+            throw new \InvalidArgumentException(sprintf("The '%s' hash algorithm isn't available on this system. Try '%s' instead.", $hashAlgorithm, implode("' or '", $supportedHashAlgorithms)));
+        }
+
         $this->hashAlgorithm = $hashAlgorithm;
         $this->useLastModified = $useLastModified;
     }

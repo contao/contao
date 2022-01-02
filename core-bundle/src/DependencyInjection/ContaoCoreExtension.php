@@ -203,19 +203,16 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     public function configureFilesystem(FilesystemConfig $config): void
     {
-        // 'files' storage
+        $filesStorageName = 'files';
+
         $config
-            ->addDefaultDbafs(
-                'files',
-                'tl_files',
-                'md5',
-                214783648,
-                100,
-                true,
-                'files'
-            )
             ->mountLocalAdapter('files', '%kernel.project_dir%/files')
-            ->addVirtualFilesystem('files', 'files')
+            ->addVirtualFilesystem($filesStorageName, 'files')
+        ;
+
+        $config
+            ->addDefaultDbafs($filesStorageName, 'tl_files')
+            ->addMethodCall('setDatabasePathPrefix', ['files']) // BC
         ;
     }
 

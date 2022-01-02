@@ -30,13 +30,6 @@ class DbafsManager
      */
     private array $dbafs = [];
 
-    /**
-     * @internal Use the "contao.filesystem.dbafs_thingy_factory" service to create new instances. // todo: name
-     */
-    public function __construct()
-    {
-    }
-
     public function register(DbafsInterface $dbafs, string $pathPrefix): void
     {
         $this->dbafs[$pathPrefix] = $dbafs;
