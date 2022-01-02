@@ -106,7 +106,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
                 'eval' => [
                     'rootPages' => [],
                     'blankOptionLabel' => null,
-                ]
+                ],
             ],
             'field2' => [
                 'eval' => [],
@@ -114,7 +114,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
             'field3' => [
                 'inputType' => 'text',
             ],
-        ], $GLOBALS['TL_DCA']['tl_module']['fields']);
+        ], $this->getGlobalsArray());
 
         $this->unsetGlobalsArray();
     }
@@ -180,7 +180,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
                     'blankOptionLabel' => null,
                 ],
             ],
-        ], $GLOBALS['TL_DCA']['tl_module']['fields']);
+        ], $this->getGlobalsArray());
 
         $this->unsetGlobalsArray();
     }
@@ -190,25 +190,14 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_module']['fields'] = $data;
     }
 
+    private function getGlobalsArray(): array
+    {
+        return $GLOBALS['TL_DCA']['tl_module']['fields'];
+    }
+
     private function unsetGlobalsArray(): void
     {
         unset($GLOBALS['TL_DCA']['tl_module']['fields']);
-    }
-
-    private function getRequest(bool $withPageModel = false, PageModel $pageModel = null): Request
-    {
-        $request = new Request();
-        $request->attributes->set('pageModel', null);
-
-        $pageModel ??= $this->createMock(PageModel::class);
-
-        if ($withPageModel) {
-            $request->attributes->set('pageModel', $pageModel);
-        }
-
-        $request->setSession($this->createMock(SessionInterface::class));
-
-        return $request;
     }
 
     /**
