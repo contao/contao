@@ -75,12 +75,12 @@ class RootPageDependentModuleListener
             $field = \array_slice($fields, $affectedField, 1);
             $keys = array_keys($field);
 
-            if (!\count($keys)) {
-                continue;
-            }
-
             $key = $keys[0];
             $fieldConfig = $GLOBALS['TL_DCA'][$table]['fields'][$key];
+
+            if (!\array_key_exists('eval', $fieldConfig)) {
+                $fieldConfig['eval'] = [];
+            }
 
             if (!\array_key_exists('rootPages', $fieldConfig['eval'])) {
                 $fieldConfig['eval']['rootPages'] = $this->getRootPages();
