@@ -197,9 +197,10 @@ class BackendPreviewSwitchControllerTest extends TestCase
                 ->withConsecutive(
                     [
                         'contao_backend',
-                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => $isPreviewMode ? '1' : '', 'rt' => 'csrf']
+                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => $isPreviewMode ? '1' : '', 'rt' => 'csrf'],
                     ],
-                    ['contao_backend_switch'])
+                    ['contao_backend_switch']
+                )
                 ->willReturn('/_contao/preview/1', '/contao/preview_switch')
             ;
         } else {

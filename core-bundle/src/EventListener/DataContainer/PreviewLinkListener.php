@@ -88,7 +88,7 @@ class PreviewLinkListener
         $userId = ($user = $this->security->getUser()) instanceof BackendUser ? $user->id : 0;
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
-            $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy=?', $user->id];
+            $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy=?', $userId];
 
             // TODO: more permission checks
         }
