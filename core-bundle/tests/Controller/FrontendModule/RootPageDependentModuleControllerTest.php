@@ -16,7 +16,6 @@ use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModuleController;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\FrontendTemplate;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
@@ -24,7 +23,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
 
 class RootPageDependentModuleControllerTest extends TestCase
 {
@@ -40,12 +38,14 @@ class RootPageDependentModuleControllerTest extends TestCase
         System::setContainer($this->container);
     }
 
-    public function testCreatesTheTemplateFromTheClassName(): void
+    public function testReturnsEmptyResponse(): void
     {
         $controller = new RootPageDependentModuleController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate());
 
-        $controller(new Request([], [], ['_scope' => 'frontend']), $this->getModuleModel(), 'main');
+        $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->getModuleModel(), 'main');
+
+        $this->assertSame('', $response->getContent());
     }
 
     public function testPopulatesTheTemplateWithTheModule(): void
@@ -62,33 +62,22 @@ class RootPageDependentModuleControllerTest extends TestCase
         $requestStack->push($request);
 
         $controller = new RootPageDependentModuleController();
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate($requestStack));
+        $controller->setContainer($this->mockContainerWithFrameworkTemplate($requestStack, 'example-content'));
 
-        $controller($request, $module, 'main');
+        $response = $controller($request, $module, 'main');
+
+        $this->assertSame('example-content', $response->getContent());
     }
 
-    private function mockContainerWithFrameworkTemplate(RequestStack $requestStack = null): ContainerBuilder
+    private function mockContainerWithFrameworkTemplate(RequestStack $requestStack = null, string $content = ''): ContainerBuilder
     {
-        $template = $this->createMock(FrontendTemplate::class);
-        $template
-            ->expects($this->atLeast(1))
-            ->method('getResponse')
-            ->willReturn(new Response())
-        ;
-
         $controllerAdapter = $this->mockAdapter(['getFrontendModule']);
         $controllerAdapter
             ->method('getFrontendModule')
-            ->willReturn('')
+            ->willReturn($content ?: '')
         ;
 
         $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
-        $framework
-            ->expects($this->once())
-            ->method('createInstance')
-            ->with(FrontendTemplate::class, ['mod_root_page_dependent_module'])
-            ->willReturn($template)
-        ;
 
         $this->container->set('contao.framework', $framework);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());

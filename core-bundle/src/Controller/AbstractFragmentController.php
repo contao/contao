@@ -166,11 +166,16 @@ abstract class AbstractFragmentController extends AbstractController implements 
         if (null === $response) {
             $response = new Response();
 
-            // Mark this response to affect the caching of the current page but remove any default cache headers
-            $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
-            $response->headers->remove('Cache-Control');
+            $this->markResponseForInternalCaching($response);
         }
 
         return parent::render($view, $parameters, $response);
+    }
+
+    protected function markResponseForInternalCaching(Response $response): void
+    {
+        // Mark this response to affect the caching of the current page but remove any default cache headers
+        $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+        $response->headers->remove('Cache-Control');
     }
 }

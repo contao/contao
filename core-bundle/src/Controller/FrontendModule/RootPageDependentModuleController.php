@@ -13,16 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\Controller;
+use Contao\CoreBundle\Controller\AbstractFragmentController;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RootPageDependentModuleController extends AbstractFrontendModuleController
+class RootPageDependentModuleController extends AbstractFragmentController
 {
-    protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response
+    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
     {
         /** @var PageModel $pageModel */
         $pageModel = $this->getPageModel();
@@ -30,11 +30,16 @@ class RootPageDependentModuleController extends AbstractFrontendModuleController
         $controller = $this->container->get('contao.framework')->getAdapter(Controller::class);
 
         $modules = StringUtil::deserialize($model->rootPageDependentModules);
+        $content = '';
 
         if (\is_array($modules) && \array_key_exists($pageModel->rootId, $modules)) {
-            $template->module = $controller->getFrontendModule($modules[$pageModel->rootId]);
+            $content = $controller->getFrontendModule($modules[$pageModel->rootId]);
         }
 
-        return $template->getResponse();
+        $response = new Response($content);
+
+        $this->markResponseForInternalCaching($response);
+
+        return $response;
     }
 }
