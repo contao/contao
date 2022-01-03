@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
@@ -41,6 +42,9 @@ class RootPageDependentModuleListener
         $this->csrfTokenName = $csrfTokenName;
     }
 
+    /**
+     * @Hook("loadDataContainer")
+     */
     public function onLoadDataContainer(string $table): void
     {
         /** @var Request $request */
