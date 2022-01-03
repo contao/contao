@@ -73,7 +73,7 @@ class PreviewLinkListener
     public function unloadTableWithoutPreviewScript(string $table): void
     {
         if ('tl_preview_link' === $table && empty($this->previewScript)) {
-            unset($GLOBALS['TL_DCA']['tl_preview_link']);
+            unset($GLOBALS['TL_DCA'][$table]);
         }
     }
 
