@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,7 +42,7 @@ class PreviewLinkController
     /**
      * @Route("/_contao/preview/{id}", name="contao_preview_link", requirements={"id"="\d+"})
      */
-    public function __invoke(Request $request, int $id): Response
+    public function __invoke(Request $request, int $id): RedirectResponse
     {
         if (!$this->uriSigner->checkRequest($request)) {
             throw new AccessDeniedException();
