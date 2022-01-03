@@ -98,7 +98,7 @@ class PreviewLinkListenerTest extends TestCase
 
         $GLOBALS['TL_DCA']['tl_preview_link'] = [
             'config' => ['notCreatable' => true],
-            'fields' => []
+            'fields' => [],
         ];
 
         $input = $this->mockClassWithProperties(Input::class, ['url' => $url, 'showUnpublished' => $showUnpublished]);
@@ -141,13 +141,13 @@ class PreviewLinkListenerTest extends TestCase
         yield [
             '/preview.php/foo/bar',
             true,
-            1
+            1,
         ];
 
         yield [
             '/preview.php/foo/baz',
             false,
-            2
+            2,
         ];
     }
 
