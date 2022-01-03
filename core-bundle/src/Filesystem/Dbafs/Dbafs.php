@@ -73,7 +73,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private array $pathById = [];
 
     /**
-     * @internal Use the "contao.filesystem.dbafs.dbafs_factory" service to create new instances. // todo service name
+     * @internal Use the "contao.filesystem.dbafs_factory" service to create new instances.
      */
     public function __construct(HashGeneratorInterface $hashGenerator, Connection $connection, EventDispatcherInterface $eventDispatcher, VirtualFilesystemInterface $filesystem, string $table)
     {

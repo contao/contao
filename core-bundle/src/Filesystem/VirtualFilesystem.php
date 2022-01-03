@@ -37,7 +37,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
     private bool $readonly;
 
     /**
-     * @internal Use the "contao.filesystem.virtual_filesystem_factory" service to create new instances. // todo: name
+     * @internal Use the "contao.filesystem.virtual_factory" service to create new instances.
      */
     public function __construct(MountManager $mountManager, DbafsManager $dbafsManager, string $prefix = '', bool $readonly = false)
     {

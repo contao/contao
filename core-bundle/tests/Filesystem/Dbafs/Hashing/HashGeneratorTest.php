@@ -23,6 +23,14 @@ use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 
 class HashGeneratorTest extends TestCase
 {
+    public function testValidateHashFunctionExists(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches("/The 'foofoo' hash algorithm isn't available on this system. Try '.*' instead\\./");
+
+        new HashGenerator('foofoo');
+    }
+
     /**
      * @dataProvider provideExpectedHashes
      */
