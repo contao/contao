@@ -309,10 +309,10 @@
         <source>Generates a form to set up or change two-factor authentication</source>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_module.0">
-        <source>Root page dependent module configuration</source>
+        <source>Root page dependent module</source>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_module.1">
-        <source>Generates a root page dependent module configuration.</source>
+        <source>Generates a root page dependent module</source>
       </trans-unit>
     </body>
   </file>
