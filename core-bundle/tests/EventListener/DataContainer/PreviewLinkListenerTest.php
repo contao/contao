@@ -98,7 +98,13 @@ class PreviewLinkListenerTest extends TestCase
 
         $GLOBALS['TL_DCA']['tl_preview_link'] = [
             'config' => ['notCreatable' => true],
-            'fields' => [],
+            'fields' => [
+                'url' => ['default' => ''],
+                'showUnpublished' => ['default' => ''],
+                'createdAt' => ['default' => ''],
+                'expiresAt' => ['default' => ''],
+                'createdBy' => ['default' => ''],
+            ],
         ];
 
         $input = $this->mockClassWithProperties(Input::class, ['url' => $url, 'showUnpublished' => $showUnpublished]);
@@ -153,7 +159,7 @@ class PreviewLinkListenerTest extends TestCase
 
     public function testUpdatesTheExpiresAtField(): void
     {
-        $dc = $this->createMock(DataContainer::class, ['id' => 42]);
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
 
         $connection = $this->createMock(Connection::class);
         $connection
