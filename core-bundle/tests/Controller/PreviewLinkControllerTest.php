@@ -82,7 +82,6 @@ class PreviewLinkControllerTest extends TestCase
         $listener($request, 42);
     }
 
-
     /**
      * @return FrontendPreviewAuthenticator&MockObject
      */
