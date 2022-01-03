@@ -224,8 +224,8 @@ class PreviewLinkListener
         $objVersions->initialize();
 
         // Trigger the save_callback
-        if (\is_array($GLOBALS['TL_DCA']['tl_preview_link']['fields']['tl_preview_link']['save_callback'] ?? null)) {
-            foreach ($GLOBALS['TL_DCA']['tl_preview_link']['fields']['tl_preview_link']['save_callback'] as $callback) {
+        if (\is_array($GLOBALS['TL_DCA']['tl_preview_link']['fields']['published']['save_callback'] ?? null)) {
+            foreach ($GLOBALS['TL_DCA']['tl_preview_link']['fields']['published']['save_callback'] as $callback) {
                 if (\is_array($callback)) {
                     $blnPublished = System::importStatic($callback[0])->{$callback[1]}($blnPublished, $dc);
                 } elseif (\is_callable($callback)) {
