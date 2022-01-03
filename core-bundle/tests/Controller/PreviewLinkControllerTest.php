@@ -118,6 +118,7 @@ class PreviewLinkControllerTest extends TestCase
 
     /**
      * @param array|bool|null $link
+     *
      * @return Connection&MockObject
      */
     private function mockConnection($link): Connection

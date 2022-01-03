@@ -30,5 +30,4 @@ class PurgePreviewLinksCronTest extends ContaoTestCase
         $cron = new PurgePreviewLinksCron($connection);
         $cron();
     }
-
 }
