@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -951,6 +952,12 @@ abstract class DataContainer extends Backend
 
 					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 					{
+						// Hide the toggle icon if user does not have access to the field
+						if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $params['field']))
+						{
+							continue;
+						}
+
 						$icon = $v['icon'];
 						$_icon = dirname($v['icon']).pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
 
