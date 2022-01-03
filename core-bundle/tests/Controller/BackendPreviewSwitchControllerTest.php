@@ -107,7 +107,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $response = $controller($request);
+        $controller($request);
     }
 
     /**
