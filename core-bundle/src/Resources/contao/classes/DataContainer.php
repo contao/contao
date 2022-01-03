@@ -959,7 +959,7 @@ abstract class DataContainer extends Backend
 						}
 
 						$icon = $v['icon'];
-						$_icon = dirname($v['icon']) . pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
+						$_icon = \dirname($v['icon']) . pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
 
 						if ($icon == 'visible.svg')
 						{
