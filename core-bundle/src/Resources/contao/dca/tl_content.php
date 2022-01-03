@@ -23,7 +23,6 @@ use Contao\Message;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
-use Contao\Versions;
 
 $GLOBALS['TL_DCA']['tl_content'] = array
 (
