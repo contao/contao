@@ -952,14 +952,14 @@ abstract class DataContainer extends Backend
 					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 					{
 						$icon = $v['icon'];
-						$_icon = dirname($v['icon']).pathinfo($v['icon'], PATHINFO_FILENAME).'_.'.pathinfo($v['icon'], PATHINFO_EXTENSION);
+						$_icon = dirname($v['icon']).pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
 
 						if ($icon == 'visible.svg')
 						{
 							$_icon = 'invisible.svg';
 						}
 
-						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,'.$arrRow['id'].')">'.Image::getHtml($arrRow[$params['field']] ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="'.($arrRow[$params['field']] ? 1 : 0).'"').'</a> ';
+						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,' . $arrRow['id'] . ')">' . Image::getHtml($arrRow[$params['field']] ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="'.($arrRow[$params['field']] ? 1 : 0).'"') . '</a> ';
 					}
 					else
 					{
