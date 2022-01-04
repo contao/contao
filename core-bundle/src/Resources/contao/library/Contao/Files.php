@@ -10,9 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Filesystem\Filesystem;
-
 /**
  * A class to access the file system
  *
@@ -159,7 +156,13 @@ class Files
 	{
 		$this->validate($strFile);
 
-		$this->mkdir($this->strRootDir);
+		$filesystem = System::getContainer()->get('filesystem');
+		$parentDir = \dirname($this->strRootDir . '/' . $strFile);
+
+		if (!$filesystem->exists($parentDir))
+		{
+			$filesystem->mkdir($parentDir);
+		}
 
 		return fopen($this->strRootDir . '/' . $strFile, $strMode);
 	}
