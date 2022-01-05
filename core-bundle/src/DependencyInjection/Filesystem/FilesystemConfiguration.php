@@ -24,7 +24,10 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Path;
 
-final class FilesystemConfiguration
+/**
+ * @final
+ */
+class FilesystemConfiguration
 {
     private ContainerBuilder $container;
     private AdapterDefinitionFactory $adapterDefinitionFactory;
