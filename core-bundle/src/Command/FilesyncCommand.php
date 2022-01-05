@@ -30,6 +30,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class FilesyncCommand extends Command
 {
     protected static $defaultName = 'contao:filesync';
+    protected static $defaultDescription = 'Synchronizes the registered DBAFS with the virtual filesystem.';
 
     private DbafsManager $dbafsManager;
 
@@ -43,7 +44,6 @@ class FilesyncCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('Synchronizes the registered DBAFS with the virtual filesystem.')
             ->addArgument('paths', InputArgument::IS_ARRAY, 'Optional path(s) for partial synchronization.')
         ;
     }

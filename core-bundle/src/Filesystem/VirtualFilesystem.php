@@ -74,7 +74,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
             return $this->dbafsManager->resourceExists($location);
         }
 
-        return $this->mountManager->fileExists($location);
+        return $this->mountManager->fileExists($path);
     }
 
     public function read($location): string
@@ -178,9 +178,12 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         // Read from adapter, but enhance result with extra metadata on demand
         /** @var FilesystemItem $item */
         foreach ($this->mountManager->listContents($path, $deep) as $item) {
-            yield $item->withExtraMetadata(
-                fn () => $this->dbafsManager->getExtraMetadata($item->getPath())
-            );
+            yield $item
+                ->withPath(Path::makeRelative($item->getPath(), $this->prefix))
+                ->withExtraMetadata(
+                    fn () => $this->dbafsManager->getExtraMetadata($item->getPath())
+                )
+            ;
         }
     }
 

@@ -57,8 +57,13 @@ class MountManager
 
     public function fileExists(string $path): bool
     {
-        /** @var FilesystemAdapter $adapter */
-        [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
+        try {
+            /** @var FilesystemAdapter $adapter */
+            [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
+        } catch (\RuntimeException $e) {
+            // Tolerate non-existing mount-points
+            return false;
+        }
 
         try {
             return $adapter->fileExists($adapterPath);

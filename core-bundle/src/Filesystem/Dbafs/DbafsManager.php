@@ -222,6 +222,17 @@ class DbafsManager
      */
     public function sync(string ...$paths): ChangeSet
     {
+        $changeSet = ChangeSet::createEmpty();
+
+        // Sync all DBAFS if no paths are supplied
+        if (empty($paths)) {
+            foreach ($this->dbafs as $prefix => $dbafs) {
+                $changeSet = $changeSet->withOther($dbafs->sync(), $prefix);
+            }
+
+            return $changeSet;
+        }
+
         /** @var array<int, array{0: DbafsInterface, 1:string}> $dbafsDictionary */
         $dbafsDictionary = [];
 
@@ -236,8 +247,6 @@ class DbafsManager
                 $pathsForDbafs[$id][] = Path::makeRelative($path, $prefix);
             }
         }
-
-        $changeSet = ChangeSet::createEmpty();
 
         foreach ($pathsForDbafs as $id => $matchingPaths) {
             [$dbafs, $prefix] = $dbafsDictionary[$id];

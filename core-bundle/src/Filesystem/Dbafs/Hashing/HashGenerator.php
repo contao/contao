@@ -32,7 +32,7 @@ class HashGenerator implements HashGeneratorInterface
     public function hashFileContent(VirtualFilesystemInterface $filesystem, string $path, Context $context): void
     {
         if ($this->useLastModified) {
-            $context->updateLastModified($filesystem->getLastModified($path));
+            $context->updateLastModified($filesystem->getLastModified($path, VirtualFilesystemInterface::BYPASS_DBAFS));
 
             // Skip generating hashes if possible
             if ($context->canSkipHashing() && !$context->lastModifiedChanged()) {
