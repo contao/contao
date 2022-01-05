@@ -169,34 +169,33 @@ class Dbafs implements DbafsInterface, ResetInterface
     public function setExtraMetadata(string $path, array $metadata): void
     {
         if (null === ($record = $this->getRecord($path))) {
-            throw new \InvalidArgumentException("Record for path $path does not exist.");
+            throw new \InvalidArgumentException("Record for path '$path' does not exist.");
         }
 
-        if (!$record['isFile']) {
-            throw new \LogicException("Can only set extra metadata for files, directory given under $path.");
+        if (!$record->isFile()) {
+            throw new \LogicException("Can only set extra metadata for files, directory given under '$path'.");
         }
 
         $row = [
-            'uuid' => $uuid = $this->pathByUuid[$path],
+            'uuid' => $uuid = array_flip($this->pathByUuid)[$path],
             'path' => $path,
         ];
 
-        $availableColumns = array_map(
-            static fn (Column $column): string => $column->getName(),
-            $this->connection->createSchemaManager()->listTableColumns($this->table)
-        );
+        $columnFilter = array_flip($this->getExtraMetadataColumns());
 
         $event = new StoreDbafsMetadataEvent(
             $this->table,
             $row,
-            array_intersect_key(array_flip($availableColumns), $metadata)
+            // Remove non-matching columns before dispatching event
+            array_intersect_key($metadata, $columnFilter)
         );
 
         $this->eventDispatcher->dispatch($event, ContaoCoreEvents::STORE_DBAFS_METADATA);
 
         $this->connection->update(
             $this->table,
-            $event->getRow(),
+            // Filter columns again before performing the query
+            array_intersect_key($event->getRow(), $columnFilter),
             ['uuid' => $uuid]
         );
     }
@@ -945,5 +944,21 @@ class Dbafs implements DbafsInterface, ResetInterface
         rsort($parentPaths);
 
         return [$searchPaths, $parentPaths];
+    }
+
+    private function getExtraMetadataColumns(): array
+    {
+        $columns = array_map(
+            static fn (Column $column): string => $column->getName(),
+            $this->connection->createSchemaManager()->listTableColumns($this->table)
+        );
+
+        $defaultFields = [
+            'id', 'pid', 'uuid', 'path',
+            'hash', 'lastModified', 'type',
+            'extension', 'found', 'name', 'tstamp',
+        ];
+
+        return array_diff($columns, $defaultFields);
     }
 }

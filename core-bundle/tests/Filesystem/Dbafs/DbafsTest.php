@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
+use Contao\CoreBundle\Event\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\MountManager;
@@ -22,6 +24,8 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Column;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -194,6 +198,143 @@ class DbafsTest extends TestCase
 
         $this->assertSame('foo/bar/third', $record4->getPath());
         $this->assertTrue($record4->isFile());
+    }
+
+    public function testSetExtraMetadata(): void
+    {
+        $uuid = $this->generateUuid(1);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn(
+                ['id' => 1, 'uuid' => $uuid->toBinary(), 'path' => 'some/path', 'type' => 'file'],
+            )
+        ;
+
+        $getColumn = function (string $name): Column {
+            $column = $this->createMock(Column::class);
+            $column
+                ->method('getName')
+                ->willReturn($name)
+            ;
+
+            return $column;
+        };
+
+        $schemaManager = $this->createMock(AbstractSchemaManager::class);
+        $schemaManager
+            ->method('listTableColumns')
+            ->with('tl_files')
+            ->willReturn(
+                array_map(
+                    $getColumn,
+                    [
+                        'id', 'pid', 'uuid', 'path',
+                        'hash', 'lastModified', 'type',
+                        'extension', 'found', 'name', 'tstamp',
+                        'foo', 'baz',
+                    ]
+                )
+            )
+        ;
+
+        $connection
+            ->method('createSchemaManager')
+            ->willReturn($schemaManager)
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with(
+                'tl_files',
+                [
+                    'foo' => 'normalized a',
+                    'baz' => 'normalized c',
+                ],
+                ['uuid' => $uuid->toBinary()]
+            )
+        ;
+
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->method('dispatch')
+            ->willReturnCallback(
+                function ($event) use ($uuid) {
+                    if (!$event instanceof StoreDbafsMetadataEvent) {
+                        return $event;
+                    }
+
+                    $this->assertSame(
+                        [
+                            'uuid' => $uuid->toBinary(),
+                            'path' => 'some/path',
+                        ],
+                        $event->getRow()
+                    );
+
+                    $this->assertSame(
+                        [
+                            'foo' => 'complex a',
+                            'baz' => 'complex c',
+                        ],
+                        $event->getExtraMetadata()
+                    );
+
+                    $event->set('foo', 'normalized a');
+                    $event->set('baz', 'normalized c');
+                    $event->set('invalid', 'something');
+
+                    return $event;
+                }
+            )
+        ;
+
+        $dbafs = $this->getDbafs($connection, null, $eventDispatcher);
+
+        $dbafs->setExtraMetadata(
+            'some/path',
+            [
+                'foo' => 'complex a',
+                'bar' => 'complex b',
+                'baz' => 'complex c',
+            ]
+        );
+    }
+
+    public function testSetExtraMetadataThrowsOnInvalidPath(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn(false)
+        ;
+
+        $dbafs = $this->getDbafs($connection);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Record for path \'some/invalid/path\' does not exist.');
+
+        $dbafs->setExtraMetadata('some/invalid/path', []);
+    }
+
+    public function testSetExtraMetadataThrowsIfRecordIsADirectory(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchAssociative')
+            ->willReturn(
+                ['id' => 1, 'uuid' => Uuid::v1()->toBinary(), 'path' => 'some/directory', 'type' => 'folder'],
+            )
+        ;
+
+        $dbafs = $this->getDbafs($connection);
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Can only set extra metadata for files, directory given under \'some/directory\'.');
+
+        $dbafs->setExtraMetadata('some/directory', []);
     }
 
     public function testNormalizesPathsIfDatabasePrefixWasSet(): void
@@ -871,9 +1012,25 @@ class DbafsTest extends TestCase
         $dbafs->sync();
     }
 
+    public function testSupportsNoExtraFeaturesByDefault(): void
+    {
+        $dbafs = $this->getDbafs();
+        $dbafs->useLastModified(false);
+
+        $this->assertSame(DbafsInterface::FEATURES_NONE, $dbafs->getSupportedFeatures());
+    }
+
+    public function testSupportsLastModifiedWhenEnabled(): void
+    {
+        $dbafs = $this->getDbafs();
+        $dbafs->useLastModified(true);
+
+        $this->assertSame(DbafsInterface::FEATURE_LAST_MODIFIED, $dbafs->getSupportedFeatures());
+    }
+
     // todo: test last modified
 
-    private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null): Dbafs
+    private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null, EventDispatcherInterface $eventDispatcher = null): Dbafs
     {
         $connection ??= $this->createMock(Connection::class);
 
@@ -885,17 +1042,19 @@ class DbafsTest extends TestCase
             ;
         }
 
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $eventDispatcher
-            ->method('dispatch')
-            ->willReturnCallback(
-                static function (RetrieveDbafsMetadataEvent $event) {
-                    $event->set('foo', 'bar');
+        if (null === $eventDispatcher) {
+            $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+            $eventDispatcher
+                ->method('dispatch')
+                ->willReturnCallback(
+                    static function (RetrieveDbafsMetadataEvent $event) {
+                        $event->set('foo', 'bar');
 
-                    return $event;
-                }
-            )
-        ;
+                        return $event;
+                    }
+                )
+            ;
+        }
 
         $filesystem ??= $this->createMock(VirtualFilesystemInterface::class);
 

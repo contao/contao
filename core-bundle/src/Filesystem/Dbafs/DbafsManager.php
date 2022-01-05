@@ -222,35 +222,32 @@ class DbafsManager
      */
     public function sync(string ...$paths): ChangeSet
     {
-        $changeSet = ChangeSet::createEmpty();
+        /** @var array<string, array{0: DbafsInterface, 1:array<string>}> $dbafsAndPathsByPrefix */
+        $dbafsAndPathsByPrefix = [];
 
-        // Sync all DBAFS if no paths are supplied
+        // Sync all DBAFS if no paths are supplied, otherwise individually
+        // match paths according to the configured DBAFS prefixes
         if (empty($paths)) {
             foreach ($this->dbafs as $prefix => $dbafs) {
-                $changeSet = $changeSet->withOther($dbafs->sync(), $prefix);
+                $dbafsAndPathsByPrefix[$prefix] = [$dbafs, []];
             }
-
-            return $changeSet;
-        }
-
-        /** @var array<int, array{0: DbafsInterface, 1:string}> $dbafsDictionary */
-        $dbafsDictionary = [];
-
-        /** @var array<int, array<string>> $pathsForDbafs */
-        $pathsForDbafs = [];
-
-        foreach ($paths as $path) {
-            foreach ($this->getDbafsForPath(rtrim($path, '*')) as $prefix => $dbafs) {
-                $id = spl_object_id($dbafs);
-
-                $dbafsDictionary[$id] = [$dbafs, $prefix];
-                $pathsForDbafs[$id][] = Path::makeRelative($path, $prefix);
+        } else {
+            foreach ($paths as $path) {
+                foreach ($this->getDbafsForPath(rtrim($path, '*')) as $prefix => $dbafs) {
+                    $dbafsAndPathsByPrefix[$prefix] = [
+                        $dbafs,
+                        [...($dbafsAndPathsByPrefix[$prefix][1] ?? []), Path::makeRelative($path, $prefix)],
+                    ];
+                }
             }
         }
 
-        foreach ($pathsForDbafs as $id => $matchingPaths) {
-            [$dbafs, $prefix] = $dbafsDictionary[$id];
+        // Ensure a consistent order
+        ksort($dbafsAndPathsByPrefix);
 
+        $changeSet = ChangeSet::createEmpty();
+
+        foreach ($dbafsAndPathsByPrefix as $prefix => [$dbafs, $matchingPaths]) {
             $changeSet = $changeSet->withOther($dbafs->sync(...$matchingPaths), $prefix);
         }
 

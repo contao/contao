@@ -448,6 +448,60 @@ class DbafsManagerTest extends TestCase
         );
     }
 
+    public function testSyncAll(): void
+    {
+        $filesDbafs = $this->createMock(DbafsInterface::class);
+        $filesDbafs
+            ->expects($this->once())
+            ->method('sync')
+            ->with()
+            ->willReturn(
+                new ChangeSet(
+                    [],
+                    [],
+                    ['foo/bar/file1' => ChangeSet::TYPE_FILE],
+                )
+            )
+        ;
+
+        $filesFooBarDbafs = $this->createMock(DbafsInterface::class);
+        $filesFooBarDbafs
+            ->expects($this->once())
+            ->method('sync')
+            ->with()
+            ->willReturn(
+                new ChangeSet(
+                    [],
+                    [],
+                    ['file2' => ChangeSet::TYPE_FILE],
+                )
+            )
+        ;
+
+        $assetsDbafs = $this->createMock(DbafsInterface::class);
+        $assetsDbafs
+            ->expects($this->once())
+            ->method('sync')
+            ->with()
+            ->willReturn(ChangeSet::createEmpty())
+        ;
+
+        $manager = new DbafsManager();
+        $manager->register($filesDbafs, 'files');
+        $manager->register($filesFooBarDbafs, 'files/foo/bar');
+        $manager->register($assetsDbafs, 'assets');
+
+        $changeSet = $manager->sync();
+
+        $this->assertSame(
+            [
+                'files/foo/bar/file1' => ChangeSet::TYPE_FILE,
+                'files/foo/bar/file2' => ChangeSet::TYPE_FILE,
+            ],
+            $changeSet->getItemsToDelete()
+        );
+    }
+
     private function getDbafsListingRecords(string $path, array $listing, bool $deep): DbafsInterface
     {
         $dbafs = $this->createMock(DbafsInterface::class);
