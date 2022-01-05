@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Path;
 
-final class FilesystemConfig
+final class FilesystemConfiguration
 {
     private ContainerBuilder $container;
 

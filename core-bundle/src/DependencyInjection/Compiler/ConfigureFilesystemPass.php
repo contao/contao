@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
-use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfig;
+use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
@@ -26,7 +26,7 @@ class ConfigureFilesystemPass implements CompilerPassInterface
             return;
         }
 
-        $config = new FilesystemConfig($container);
+        $config = new FilesystemConfiguration($container);
 
         foreach ($extensions as $extension) {
             $extension->configureFilesystem($config);

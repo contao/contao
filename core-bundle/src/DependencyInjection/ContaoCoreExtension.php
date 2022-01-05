@@ -21,7 +21,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
-use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfig;
+use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -201,7 +201,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         );
     }
 
-    public function configureFilesystem(FilesystemConfig $config): void
+    public function configureFilesystem(FilesystemConfiguration $config): void
     {
         $filesStorageName = 'files';
 

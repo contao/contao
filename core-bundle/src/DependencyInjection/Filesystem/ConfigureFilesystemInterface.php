@@ -14,5 +14,5 @@ namespace Contao\CoreBundle\DependencyInjection\Filesystem;
 
 interface ConfigureFilesystemInterface
 {
-    public function configureFilesystem(FilesystemConfig $config): void;
+    public function configureFilesystem(FilesystemConfiguration $config): void;
 }
