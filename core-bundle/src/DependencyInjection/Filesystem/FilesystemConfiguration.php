@@ -27,10 +27,12 @@ use Symfony\Component\Filesystem\Path;
 final class FilesystemConfiguration
 {
     private ContainerBuilder $container;
+    private AdapterDefinitionFactory $adapterDefinitionFactory;
 
     public function __construct(ContainerBuilder $container)
     {
         $this->container = $container;
+        $this->adapterDefinitionFactory = new AdapterDefinitionFactory();
     }
 
     public function getContainer(): ContainerBuilder
@@ -80,10 +82,10 @@ final class FilesystemConfiguration
      */
     public function mountAdapter(string $adapter, array $options, string $mountPath, string $name = null): self
     {
-        $name ??= str_replace(['.', '/'], '_', Container::underscore($mountPath));
+        $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
         $adapterId = "contao.filesystem.adapter.$name";
 
-        if ($adapterDefinition = (new AdapterDefinitionFactory())->createDefinition($adapter, $options)) {
+        if (null !== ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options))) {
             // Native adapter
             $this->container
                 ->setDefinition($adapterId, $adapterDefinition)
@@ -133,6 +135,20 @@ final class FilesystemConfiguration
     }
 
     /**
+     * Register a custom DBAFS service definition. This is advanced stuff, if
+     * you want to use the default implementation, please use addDefaultDbafs().
+     */
+    public function registerDbafs(Definition $dbafs, string $pathPrefix): self
+    {
+        $this->container
+            ->getDefinition('contao.filesystem.dbafs_manager')
+            ->addMethodCall('register', [$dbafs, $pathPrefix])
+        ;
+
+        return $this;
+    }
+
+    /**
      * Add and register a DBAFS service with the default implementation. If you
      * want to fine tune settings (e.g. adjust the bulk insert size or the
      * maximum file size) add method calls to the definition returned by this
@@ -168,20 +184,6 @@ final class FilesystemConfiguration
         $this->registerDbafs($definition, $prefix);
 
         return $definition;
-    }
-
-    /**
-     * Register a custom DBAFS service definition. This is advanced stuff, if
-     * you want to use the default implementation, please use addDefaultDbafs().
-     */
-    public function registerDbafs(Definition $dbafs, string $pathPrefix): self
-    {
-        $this->container
-            ->getDefinition('contao.filesystem.dbafs_manager')
-            ->addMethodCall('register', [$dbafs, $pathPrefix])
-        ;
-
-        return $this;
     }
 
     /**
