@@ -12,17 +12,13 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\FrontendUser;
 use Contao\Image;
-use Contao\Input;
 use Contao\MemberGroupModel;
 use Contao\MemberModel;
 use Contao\StringUtil;
 use Contao\System;
-use Contao\Versions;
 
 $GLOBALS['TL_DCA']['tl_member'] = array
 (
