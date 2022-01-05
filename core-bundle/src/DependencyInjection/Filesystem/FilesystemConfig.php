@@ -12,14 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Filesystem;
 
-use Ausi\SlugGenerator\SlugGenerator;
-use Ausi\SlugGenerator\SlugOptions;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use League\FlysystemBundle\Adapter\AdapterDefinitionFactory;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -76,7 +75,7 @@ final class FilesystemConfig
      */
     public function mountAdapter(string $adapter, array $options, string $mountPath, string $name = null): self
     {
-        $name ??= (new SlugGenerator((new SlugOptions())->setDelimiter('_')))->generate($mountPath);
+        $name ??= str_replace(['.', '/'], '_', Container::underscore($mountPath));
         $adapterId = "contao.filesystem.adapter.$name";
 
         if ($adapterDefinition = (new AdapterDefinitionFactory())->createDefinition($adapter, $options)) {
