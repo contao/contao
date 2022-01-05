@@ -205,14 +205,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     {
         $filesStorageName = 'files';
 
+        // TODO: Replace $uploadPath with 'files' in Contao 5 and remove the
+        //       redundant 'files' attribute when mounting the local adapter
+        $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
+
         $config
-            ->mountLocalAdapter('%kernel.project_dir%/files', 'files')
-            ->addVirtualFilesystem($filesStorageName, 'files')
+            ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
+            ->addVirtualFilesystem($filesStorageName, $uploadPath)
         ;
 
         $config
             ->addDefaultDbafs($filesStorageName, 'tl_files')
-            ->addMethodCall('setDatabasePathPrefix', ['files']) // BC
+            ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // BC
         ;
     }
 

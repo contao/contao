@@ -33,6 +33,11 @@ final class FilesystemConfig
         $this->container = $container;
     }
 
+    public function getContainer(): ContainerBuilder
+    {
+        return $this->container;
+    }
+
     /**
      * Add another new VirtualFilesystem service.
      *
@@ -107,7 +112,8 @@ final class FilesystemConfig
      *
      * The $mountPath must be a path relative to and inside the project root
      * (e.g. 'files/foo' or 'assets/images'); the $filesystemPath can either
-     * be absolute or relative to the project root.
+     * be absolute or relative to the project root and may contain
+     * placeholders (%name%).
      *
      * If you do not set a name, the id/alias for the adapter service will be
      * derived from the mount path.

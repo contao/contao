@@ -88,6 +88,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('upload_path')
                     ->info('The folder used by the file manager.')
+                    ->setDeprecated('contao/core-bundle', '4.13', 'Setting the upload path is deprecated. Instead, mount a local adapter for "files" that points to the desired directory.')
                     ->cannotBeEmpty()
                     ->defaultValue('files')
                     ->validate()
