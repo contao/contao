@@ -234,10 +234,9 @@ class DbafsManager
         } else {
             foreach ($paths as $path) {
                 foreach ($this->getDbafsForPath(rtrim($path, '*')) as $prefix => $dbafs) {
-                    $dbafsAndPathsByPrefix[$prefix] = [
-                        $dbafs,
-                        [...($dbafsAndPathsByPrefix[$prefix][1] ?? []), Path::makeRelative($path, $prefix)],
-                    ];
+                    $entry = $dbafsAndPathsByPrefix[$prefix] ?? [$dbafs, []];
+                    $entry[1][] = Path::makeRelative($path, $prefix);
+                    $dbafsAndPathsByPrefix[$prefix] = $entry;
                 }
             }
         }
