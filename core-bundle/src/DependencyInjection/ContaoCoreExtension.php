@@ -206,7 +206,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $filesStorageName = 'files';
 
         $config
-            ->mountLocalAdapter('files', '%kernel.project_dir%/files')
+            ->mountLocalAdapter('%kernel.project_dir%/files', 'files')
             ->addVirtualFilesystem($filesStorageName, 'files')
         ;
 

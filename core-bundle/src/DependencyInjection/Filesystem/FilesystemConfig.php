@@ -94,7 +94,7 @@ final class FilesystemConfig
 
         $this->container
             ->getDefinition('contao.filesystem.mount_manager')
-            ->addMethodCall('mount', [$adapterId, $mountPath])
+            ->addMethodCall('mount', [new Reference($adapterId), $mountPath])
         ;
 
         return $this;
@@ -116,8 +116,10 @@ final class FilesystemConfig
     {
         $path = Path::isAbsolute($filesystemPath) ?
             Path::canonicalize($filesystemPath) :
-            Path::join($this->container->getParameter('kernel.project_dir'), $filesystemPath)
+            Path::join('%kernel.project_dir%', $filesystemPath)
         ;
+
+        $path = $this->container->getParameterBag()->resolveValue($path);
 
         $this->mountAdapter('local', ['directory' => $path], $mountPath, $name);
 
