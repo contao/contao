@@ -80,10 +80,16 @@ final class FilesystemConfig
 
         if ($adapterDefinition = (new AdapterDefinitionFactory())->createDefinition($adapter, $options)) {
             // Native adapter
-            $this->container->setDefinition($adapterId, $adapterDefinition);
+            $this->container
+                ->setDefinition($adapterId, $adapterDefinition)
+                ->setPublic(false)
+            ;
         } else {
             // Custom adapter
-            $this->container->setAlias($adapterId, $adapter);
+            $this->container
+                ->setAlias($adapterId, $adapter)
+                ->setPublic(false)
+            ;
         }
 
         $this->container
