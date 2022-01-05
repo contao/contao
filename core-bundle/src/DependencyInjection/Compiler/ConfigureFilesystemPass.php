@@ -22,13 +22,9 @@ class ConfigureFilesystemPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        if (empty($extensions = $this->getExtensionsThatConfigureTheFilesystem($container))) {
-            return;
-        }
-
         $config = new FilesystemConfiguration($container);
 
-        foreach ($extensions as $extension) {
+        foreach ($this->getExtensionsThatConfigureTheFilesystem($container) as $extension) {
             $extension->configureFilesystem($config);
         }
     }
