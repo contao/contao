@@ -261,19 +261,9 @@ class Dbafs implements DbafsInterface, ResetInterface
         return $this->doComputeChangeSet($dbPaths, $allDbHashesByPath, $allLastModifiedByPath, $filesystemIterator, $searchPaths);
     }
 
-    public function supportsLastModified(): bool
+    public function getSupportedFeatures(): int
     {
-        return $this->useLastModified;
-    }
-
-    public function supportsFileSize(): bool
-    {
-        return false;
-    }
-
-    public function supportsMimeType(): bool
-    {
-        return false;
+        return $this->useLastModified ? DbafsInterface::FEATURE_LAST_MODIFIED : DbafsInterface::FEATURES_NONE;
     }
 
     /**

@@ -88,7 +88,8 @@ class DbafsManager
 
         if (
             null !== ($dbafs = $dbafsIterator->current())
-            && $dbafs->supportsLastModified()
+            /** @var DbafsInterface $dbafs */
+            && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_LAST_MODIFIED
             && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
             return $record->getLastModified();
@@ -107,7 +108,8 @@ class DbafsManager
 
         if (
             null !== ($dbafs = $dbafsIterator->current())
-            && $dbafs->supportsFileSize()
+            /** @var DbafsInterface $dbafs */
+            && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_FILE_SIZE
             && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
             return $record->getFileSize();
@@ -126,7 +128,8 @@ class DbafsManager
 
         if (
             null !== ($dbafs = $dbafsIterator->current())
-            && $dbafs->supportsMimeType()
+            /** @var DbafsInterface $dbafs */
+            && $dbafs->getSupportedFeatures() & DbafsInterface::FEATURE_MIME_TYPE
             && null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key())))
         ) {
             return $record->getMimeType();
@@ -278,28 +281,40 @@ class DbafsManager
      */
     private function validateTransitiveProperties(): void
     {
-        $supports = [
-            'supportsLastModified' => false,
-            'supportsFileSize' => false,
-            'supportsMimeType' => false,
-        ];
-
         $currentPrefix = '';
+        $supportedFeatures = DbafsInterface::FEATURES_NONE;
 
         foreach (array_reverse($this->dbafs) as $prefix => $dbafs) {
             if (Path::isBasePath("/$currentPrefix", "/$prefix")) {
-                foreach (array_keys(array_filter($supports)) as $property) {
-                    if (!$dbafs->$property()) {
-                        throw new \LogicException("The transitive property '$property' must be true for any DBAFS with a path prefix '$prefix', because it its also true for '$currentPrefix'.");
-                    }
+                // Find all feature flags that are required but not supported
+                $nonTransitive = $supportedFeatures & ~$dbafs->getSupportedFeatures();
+
+                if (0 !== $nonTransitive) {
+                    $features = implode("' and '", $this->getFeatureFlagsAsNames($nonTransitive));
+
+                    throw new \LogicException("The transitive feature(s) '$features' must be supported for any DBAFS with a path prefix '$prefix', because they are also supported for '$currentPrefix'.");
                 }
             }
 
             $currentPrefix = $prefix;
+            $supportedFeatures = $dbafs->getSupportedFeatures();
+        }
+    }
 
-            foreach (array_keys($supports) as $property) {
-                $supports[$property] = $dbafs->$property();
+    /**
+     * @return array<string>
+     */
+    private function getFeatureFlagsAsNames(int $flags): array
+    {
+        $reflection = new \ReflectionClass(DbafsInterface::class);
+        $resolved = [];
+
+        foreach ($reflection->getReflectionConstants() as $constant) {
+            if (($constant->getValue() & $flags) && str_starts_with($name = $constant->getName(), 'FEATURE_')) {
+                $resolved[] = strtolower(str_replace('_', ' ', substr($name, 8)));
             }
         }
+
+        return $resolved;
     }
 }

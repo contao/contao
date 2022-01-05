@@ -17,6 +17,11 @@ use Symfony\Component\Uid\Uuid;
 
 interface DbafsInterface
 {
+    public const FEATURES_NONE = 0;
+    public const FEATURE_LAST_MODIFIED = 1 << 0;
+    public const FEATURE_FILE_SIZE = 1 << 1;
+    public const FEATURE_MIME_TYPE = 1 << 2;
+
     /**
      * Resolves a UUID to a path, returns null if it does not exist.
      */
@@ -61,17 +66,15 @@ interface DbafsInterface
     public function sync(string ...$paths): ChangeSet;
 
     /**
-     * Returns true if this DBAFS sets the key 'lastModified' in the returned records.
+     * Returns combined binary flags of all features this implementation does
+     * support. For each feature, the respective values are expected to be set
+     * in the returned items.
+     *
+     * Example:
+     *    public function getSupportedFeatures(): int {
+     *        // We support 'file size' and 'mime type' and set it in each record.
+     *        return DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE;
+     *    }
      */
-    public function supportsLastModified(): bool;
-
-    /**
-     * Returns true if this DBAFS sets the key 'fileSize' in the returned records.
-     */
-    public function supportsFileSize(): bool;
-
-    /**
-     * Returns true if this DBAFS sets the key 'mimeType' in the returned records.
-     */
-    public function supportsMimeType(): bool;
+    public function getSupportedFeatures(): int;
 }

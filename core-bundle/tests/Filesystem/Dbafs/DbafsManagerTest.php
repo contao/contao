@@ -28,17 +28,17 @@ class DbafsManagerTest extends TestCase
         $manager = new DbafsManager();
 
         $manager->register(
-            $this->getDbafsWithProperties(true, false, false),
+            $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED),
             'foo'
         );
 
         $manager->register(
-            $this->getDbafsWithProperties(true, true, false),
+            $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
             'foo/bar'
         );
 
         $manager->register(
-            $this->getDbafsWithProperties(false, false, false),
+            $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE),
             'baz'
         );
 
@@ -71,36 +71,36 @@ class DbafsManagerTest extends TestCase
     {
         yield 'more specific one which does not support last modified should be reported' => [
             [
-                'files' => $this->getDbafsWithProperties(true, false, false),
-                'files/media' => $this->getDbafsWithProperties(false, false, false),
+                'files' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
+                'files/media' => $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE),
             ],
-            "The transitive property 'supportsLastModified' must be true for any DBAFS with a path prefix 'files/media', because it its also true for 'files'.",
+            "The transitive feature(s) 'last modified' and 'file size' must be supported for any DBAFS with a path prefix 'files/media', because they are also supported for 'files'.",
         ];
 
         yield 'should ignore valid configurations in between' => [
             [
-                'abc' => $this->getDbafsWithProperties(false, true, false),
-                'files' => $this->getDbafsWithProperties(false, true, true),
-                'abc/def' => $this->getDbafsWithProperties(true, true, true),
-                'files/media' => $this->getDbafsWithProperties(false, false, true),
+                'abc' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE),
+                'files' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
+                'abc/def' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
+                'files/media' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE),
             ],
-            "The transitive property 'supportsFileSize' must be true for any DBAFS with a path prefix 'files/media', because it its also true for 'files'.",
+            "The transitive feature(s) 'file size' must be supported for any DBAFS with a path prefix 'files/media', because they are also supported for 'files'.",
         ];
 
         yield 'make sure nested folders work as well' => [
             [
-                'foo' => $this->getDbafsWithProperties(false, false, true),
-                'foo/bar/baz' => $this->getDbafsWithProperties(true, true, false),
+                'foo' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE),
+                'foo/bar/baz' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
             ],
-            "The transitive property 'supportsMimeType' must be true for any DBAFS with a path prefix 'foo/bar/baz', because it its also true for 'foo'.",
+            "The transitive feature(s) 'mime type' must be supported for any DBAFS with a path prefix 'foo/bar/baz', because they are also supported for 'foo'.",
         ];
 
         yield 'adding a less specific one that covers more than the children should be reported' => [
             [
-                'foo/bar' => $this->getDbafsWithProperties(false, true, true),
-                '' => $this->getDbafsWithProperties(true, true, true),
+                'foo/bar' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
+                '' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
             ],
-            "The transitive property 'supportsLastModified' must be true for any DBAFS with a path prefix 'foo/bar', because it its also true for ''.",
+            "The transitive feature(s) 'last modified' must be supported for any DBAFS with a path prefix 'foo/bar', because they are also supported for ''.",
         ];
     }
 
@@ -169,14 +169,14 @@ class DbafsManagerTest extends TestCase
 
     public function testGetLastModified(): void
     {
-        $dbafs1 = $this->getDbafsWithProperties(true, false, false);
+        $dbafs1 = $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED);
         $dbafs1
             ->method('getRecord')
             ->with('bar')
             ->willReturn(new FilesystemItem(true, 'bar', 123450))
         ;
 
-        $dbafs2 = $this->getDbafsWithProperties(false, false, false);
+        $dbafs2 = $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE);
         $dbafs2
             ->expects($this->never())
             ->method('getRecord')
@@ -192,14 +192,14 @@ class DbafsManagerTest extends TestCase
 
     public function testGetFileSize(): void
     {
-        $dbafs1 = $this->getDbafsWithProperties(false, true, false);
+        $dbafs1 = $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE);
         $dbafs1
             ->method('getRecord')
             ->with('bar')
             ->willReturn(new FilesystemItem(true, 'bar', 0, 1024))
         ;
 
-        $dbafs2 = $this->getDbafsWithProperties(false, false, false);
+        $dbafs2 = $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE);
         $dbafs2
             ->expects($this->never())
             ->method('getRecord')
@@ -215,14 +215,14 @@ class DbafsManagerTest extends TestCase
 
     public function testGetMimeType(): void
     {
-        $dbafs1 = $this->getDbafsWithProperties(false, false, true);
+        $dbafs1 = $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE);
         $dbafs1
             ->method('getRecord')
             ->with('bar')
             ->willReturn(new FilesystemItem(true, 'bar', 0, 0, 'image/png'))
         ;
 
-        $dbafs2 = $this->getDbafsWithProperties(false, false, false);
+        $dbafs2 = $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE);
         $dbafs2
             ->expects($this->never())
             ->method('getRecord')
@@ -469,23 +469,12 @@ class DbafsManagerTest extends TestCase
     /**
      * @return DbafsInterface&MockObject
      */
-    private function getDbafsWithProperties(bool $supportsLastModified, bool $supportsFileSize, bool $supportsMimeType): DbafsInterface
+    private function getDbafsWithProperties(int $featureFlags): DbafsInterface
     {
         $dbafs = $this->createMock(DbafsInterface::class);
-
         $dbafs
-            ->method('supportsLastModified')
-            ->willReturn($supportsLastModified)
-        ;
-
-        $dbafs
-            ->method('supportsFileSize')
-            ->willReturn($supportsFileSize)
-        ;
-
-        $dbafs
-            ->method('supportsMimeType')
-            ->willReturn($supportsMimeType)
+            ->method('getSupportedFeatures')
+            ->willReturn($featureFlags)
         ;
 
         return $dbafs;
