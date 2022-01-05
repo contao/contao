@@ -971,7 +971,14 @@ abstract class DataContainer extends Backend
 							$_icon = 'invisible.svg';
 						}
 
-						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,' . $arrRow['id'] . ')">' . Image::getHtml($arrRow[$params['field']] ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . ($arrRow[$params['field']] ? 1 : 0) . '"') . '</a> ';
+						$state = $arrRow[$params['field']] ? 1 : 0;
+
+						if ($v['reverse'] ?? false)
+						{
+							$state = $arrRow[$params['field']] ? 0 : 1;
+						}
+
+						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,' . $arrRow['id'] . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
 					}
 					else
 					{
