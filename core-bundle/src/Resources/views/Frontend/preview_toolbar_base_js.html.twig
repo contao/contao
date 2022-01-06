@@ -1,4 +1,11 @@
-<style>
+<style cto-toolbar>
+    cto-toolbar {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 99999;
+    }
     .cto-toolbar {
         font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
         font-weight: 400;
@@ -180,9 +187,19 @@
 </style>
 <script>
     (function () {
+
+        const toolbarWrapper = document.createElement('cto-toolbar');
+        document.querySelector('body').prepend(toolbarWrapper);
+
+        const shadow = toolbarWrapper.attachShadow({mode: 'open'});
+        toolbarWrapper.appendChild(shadow);
+
+        const css = document.querySelector('style[cto-toolbar]');
+        shadow.innerHTML = css.outerHTML;
+
         const toolbar = document.createElement('div');
         toolbar.classList.add('cto-toolbar');
-        document.querySelector('body').prepend(toolbar);
+        shadow.appendChild(toolbar);
 
         function request(method, uri, body, callback, addClass = true) {
             body = body || null;
@@ -248,29 +265,32 @@
 
             if (document.createElement('datalist') && window.HTMLDataListElement) {
                 const userField = form.querySelector('input[name="user"]');
+                let timer;
 
                 if (userField) {
                     userField.addEventListener('input', function () {
                         if (userField.value.length < 2) {
                             return;
                         }
-
-                        const body = {
-                            FORM_SUBMIT: 'datalist_members',
-                            REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
-                            value: userField.value
-                        };
-
-                        const userList = form.querySelector('datalist[id="userlist"]');
-
-                        request('POST', form.action, new URLSearchParams(body), function () {
-                            userList.innerHTML = '';
-                            JSON.parse(this.response).forEach(item => {
-                                const option = document.createElement('option');
-                                option.value = item;
-                                userList.appendChild(option);
-                            });
-                        }, false);
+                        if (timer) {
+                            clearTimeout(timer);
+                        }
+                        timer = setTimeout(function () {
+                            const body = {
+                                FORM_SUBMIT: 'datalist_members',
+                                REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
+                                value: userField.value
+                            };
+                            const userList = form.querySelector('datalist[id="userlist"]');
+                            request('POST', form.action, new URLSearchParams(body), function () {
+                                userList.innerHTML = '';
+                                JSON.parse(this.response).forEach(item => {
+                                    const option = document.createElement('option');
+                                    option.value = item;
+                                    userList.appendChild(option);
+                                });
+                            }, false);
+                        }, 300);
                     });
                 }
             }
