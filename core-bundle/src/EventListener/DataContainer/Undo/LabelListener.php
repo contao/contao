@@ -158,7 +158,7 @@ class LabelListener
                 continue;
             }
 
-            if (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'] ?? null) && isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]])) {
+            if (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isAssociative'] ?? null) || (ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'] ?? null) && isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]]))) {
                 $labelValues[$k] = $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]];
                 continue;
             }
