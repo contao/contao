@@ -89,7 +89,8 @@ class ModuleFaqReader extends Module
 		}
 		else
 		{
-			// Backwards compatibility
+			trigger_deprecation('contao/faq-bundle', '4.13', 'If you do not select an overview page in the FAQ reader module, the "go back" link will no longer be shown in Contao 5.0.');
+
 			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 			$this->Template->referer = 'javascript:history.go(-1)';
 		}

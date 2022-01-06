@@ -91,7 +91,8 @@ class ModuleNewsReader extends ModuleNews
 		}
 		else
 		{
-			// Backwards compatibility
+			trigger_deprecation('contao/news-bundle', '4.13', 'If you do not select an overview page in the news reader module, the "go back" link will no longer be shown in Contao 5.0.');
+
 			$this->Template->referer = 'javascript:history.go(-1)';
 			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 		}
