@@ -134,7 +134,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'protected'                   => 'groups',
 		'reg_assignDir'               => 'reg_homeDir',
 		'reg_activate'                => 'reg_jumpTo,reg_text',
-		'formSettings'      => '',
+		'formSettings'                => '',
 	),
 
 	// Fields

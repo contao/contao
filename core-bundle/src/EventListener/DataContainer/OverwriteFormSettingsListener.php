@@ -22,10 +22,7 @@ use Contao\System;
 
 class OverwriteFormSettingsListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {
@@ -49,8 +46,10 @@ class OverwriteFormSettingsListener
 
         foreach ($fields as $field => $config) {
             $targetField = 'form_'.$field;
+
             $this->copyFieldConfig($table, $targetField, $config);
             $this->registerFieldLoadCallback($table, $targetField);
+
             $pm->addField($targetField, 'form_legend');
         }
 
@@ -89,7 +88,7 @@ class OverwriteFormSettingsListener
         $overwritable = [];
 
         foreach ($GLOBALS['TL_DCA']['tl_form']['fields'] as $field => $config) {
-            if (isset($config['eval'], $config['eval']['formOverwritable']) && true === $config['eval']['formOverwritable']) {
+            if (isset($config['eval']['formOverwritable']) && true === $config['eval']['formOverwritable']) {
                 $overwritable[$field] = $config;
             }
         }
@@ -109,8 +108,6 @@ class OverwriteFormSettingsListener
             $GLOBALS['TL_DCA'][$table]['fields'][$targetField]['load_callback'] = [];
         }
 
-        $GLOBALS['TL_DCA'][$table]['fields'][$targetField]['load_callback'][] = [
-            self::class, 'getPlaceholderFromForm',
-        ];
+        $GLOBALS['TL_DCA'][$table]['fields'][$targetField]['load_callback'][] = [self::class, 'getPlaceholderFromForm'];
     }
 }
