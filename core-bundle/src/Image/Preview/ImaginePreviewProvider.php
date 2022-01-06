@@ -62,6 +62,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
                     if (!$layers->has($page - 1)) {
                         break;
                     }
+
                     $images[] = $layers->get($page - 1);
                 }
             }
@@ -103,8 +104,7 @@ class ImaginePreviewProvider implements PreviewProviderInterface
     private function imagineSupportsFormat(string $format): bool
     {
         // TODO: Use once Imagine 1.3.0 was released
-        //if ($this->imagine instanceof InfoProvider)
-        //{
+        //if ($this->imagine instanceof InfoProvider) {
         //    return $this->imagine->getDriverInfo()->isFormatSupported($format);
         //}
 
@@ -174,9 +174,9 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         $magick->readImage($pagedPath);
 
         if (
-            'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))
-            && \is_callable([$magick, 'setImageAlphaChannel'])
+            \is_callable([$magick, 'setImageAlphaChannel'])
             && \defined("$magickClass::ALPHACHANNEL_REMOVE")
+            && 'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))
         ) {
             // Fix white PDF background
             if (is_iterable($magick)) {

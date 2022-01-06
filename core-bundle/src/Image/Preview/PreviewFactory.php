@@ -168,13 +168,11 @@ class PreviewFactory
      */
     public function createPreviewImage(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): ImageInterface
     {
-        return $this->imageFactory
-            ->create(
-                $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions),
-                $size,
-                $resizeOptions,
-            )
-        ;
+        return $this->imageFactory->create(
+            $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions),
+            $size,
+            $resizeOptions,
+        );
     }
 
     /**
@@ -243,7 +241,6 @@ class PreviewFactory
      */
     public function createPreviewFigures(string $path, $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
-        $figures = [];
         $previews = $this->createPreviews(
             $path,
             $this->getPreviewSizeFromImageSize($size),
@@ -253,6 +250,7 @@ class PreviewFactory
         );
 
         $builder = $this->imageStudio->createFigureBuilder()->setSize($size)->setResizeOptions($resizeOptions);
+        $figures = [];
 
         foreach ($previews as $preview) {
             $figures[] = $builder->fromImage($preview)->build();
@@ -378,9 +376,10 @@ class PreviewFactory
      */
     private function convertPreviewsToPictures(iterable $previews, $size, ResizeOptions $resizeOptions = null): iterable
     {
-        // Unlike the Contao\Image\PictureFactory the PictureFactoryInterface
+        // Unlike the Contao\Image\PictureFactory, the PictureFactoryInterface
         // does not know about ResizeOptions. We therefore check if the third
         // argument of the 'create' method allows setting them.
+        // TODO: Adjust this in Contao 5 after the interface has been adjusted.
         $canHandleResizeOptions = static function (PictureFactoryInterface $factory): bool {
             if ($factory instanceof PictureFactory) {
                 return true;
@@ -430,7 +429,6 @@ class PreviewFactory
     private function getCachedPreviews(string $targetPath, int $firstPage, int $lastPage): ?array
     {
         $globPattern = preg_replace('/[*?[{\\\\]/', '\\\\$0', $targetPath).'*.*';
-
         $filesFound = [];
 
         foreach (glob($globPattern) as $cacheFile) {

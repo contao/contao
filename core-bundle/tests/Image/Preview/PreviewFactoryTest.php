@@ -74,7 +74,6 @@ class PreviewFactoryTest extends TestCase
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
-
         $preview = $factory->createPreview($sourcePath);
 
         $this->assertFileExists($preview->getPath());
@@ -94,7 +93,6 @@ class PreviewFactoryTest extends TestCase
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
-
         $previews = $factory->createPreviews($sourcePath, 200, 3);
 
         $this->assertCount(3, $previews);
@@ -283,7 +281,6 @@ class PreviewFactoryTest extends TestCase
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
-
         $preview = $factory->createPreviewImage($sourcePath);
 
         $this->assertFileExists($preview->getPath());
@@ -300,7 +297,6 @@ class PreviewFactoryTest extends TestCase
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
-
         $previews = $factory->createPreviewImages($sourcePath);
 
         foreach ($previews as $preview) {
@@ -319,7 +315,6 @@ class PreviewFactoryTest extends TestCase
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
-
         $preview = $factory->createPreviewPicture($sourcePath);
 
         $this->assertFileExists($preview->getImg()['src']->getPath());
@@ -336,7 +331,6 @@ class PreviewFactoryTest extends TestCase
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
-
         $previews = $factory->createPreviewPictures($sourcePath);
 
         foreach ($previews as $preview) {
