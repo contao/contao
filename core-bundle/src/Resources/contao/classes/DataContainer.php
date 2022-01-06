@@ -952,7 +952,7 @@ abstract class DataContainer extends Backend
 
 					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 					{
-						// Hide the toggle icon if user does not have access to the field
+						// Hide the toggle icon if the user does not have access to the field
 						if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $params['field']))
 						{
 							continue;

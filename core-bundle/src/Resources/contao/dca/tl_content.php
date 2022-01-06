@@ -1980,7 +1980,6 @@ class tl_content extends Backend
 	{
 		$security = System::getContainer()->get('security.helper');
 
-		// Check permissions AFTER checking the cid, so hacking attempts are logged
 		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_content::invisible'))
 		{
 			return '';

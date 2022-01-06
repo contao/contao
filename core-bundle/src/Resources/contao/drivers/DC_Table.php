@@ -2672,6 +2672,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>' . $return;
 	}
 
+	/**
+	 * Toggle a field (e.g. "published" or "disable")
+	 *
+	 * @param integer $intId
+	 *
+	 * @throws AccessDeniedException
+	 * @throws InternalServerErrorException
+	 */
 	public function toggle($intId=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
@@ -2710,11 +2718,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$this->objActiveRecord = $objRow;
-
 		$this->values[] = $this->intId;
 		$this->procedure[] = 'id=?';
-
 		$this->blnCreateNewVersion = false;
+
 		$objVersions = new Versions($this->strTable, $this->intId);
 		$objVersions->initialize();
 
