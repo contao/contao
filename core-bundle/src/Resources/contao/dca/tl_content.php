@@ -103,6 +103,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				'href'                => 'act=toggle&amp;field=invisible',
 				'icon'                => 'visible.svg',
+				'rowIcon'             => true,
 				'button_callback'     => array('tl_content', 'toggleIcon')
 			),
 			'show' => array
@@ -1999,6 +2000,6 @@ class tl_content extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,' . $row['id'] . ')">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

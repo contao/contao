@@ -978,7 +978,7 @@ abstract class DataContainer extends Backend
 							$state = $arrRow[$params['field']] ? 0 : 1;
 						}
 
-						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,' . $arrRow['id'] . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . (($v['rowIcon'] ?? false) ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
 					}
 					else
 					{
