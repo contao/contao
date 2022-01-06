@@ -507,6 +507,8 @@ abstract class Backend extends Controller
 				case 'copyAll':
 				case 'move':
 				case 'edit':
+				case 'editAll':
+				case 'toggle':
 					if (!$dc instanceof EditableDataContainerInterface)
 					{
 						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, ContaoContext::ERROR);

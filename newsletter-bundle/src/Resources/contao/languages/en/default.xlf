@@ -38,6 +38,9 @@
       <trans-unit id="MSC.nl_channels">
         <source>Channels</source>
       </trans-unit>
+      <trans-unit id="MSC.nl_overview">
+        <source>Back to the newsletter overview</source>
+      </trans-unit>
       <trans-unit id="TABLES.tl_newsletter.0">
         <source>Newsletter</source>
       </trans-unit>
