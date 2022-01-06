@@ -101,7 +101,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			),
 			'toggle' => array
 			(
-				'href'                => 'act=toggle&amp;field=invisible',
+				'href'                => 'act=toggle',
 				'icon'                => 'visible.svg',
 				'button_callback'     => array('tl_content', 'toggleIcon')
 			),
@@ -856,6 +856,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'invisible' => array
 		(
 			'exclude'                 => true,
+			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"

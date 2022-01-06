@@ -87,7 +87,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			),
 			'toggle' => array
 			(
-				'href'                => 'act=toggle&amp;field=disable',
+				'href'                => 'act=toggle',
 				'icon'                => 'visible.svg',
 				'reverse'             => true,
 			),
@@ -335,6 +335,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'disable' => array
 		(
 			'exclude'                 => true,
+			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"
