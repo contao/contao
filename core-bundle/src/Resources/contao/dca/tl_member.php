@@ -87,7 +87,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			),
 			'toggle' => array
 			(
-				'href'                => 'act=toggle',
+				'href'                => 'act=toggle&amp;field=disable',
 				'icon'                => 'visible.svg',
 				'reverse'             => true,
 			),

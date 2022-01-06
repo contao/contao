@@ -954,23 +954,6 @@ abstract class DataContainer extends Backend
 					{
 						$strField = Input::get('field');
 
-						if (empty($strField))
-						{
-							foreach ($GLOBALS['TL_DCA'][$strTable]['fields'] as $field => $config)
-							{
-								if (($config['toggle'] ?? false) === true)
-								{
-									// Multiple toggle fields found, do not render the operation
-									if (!empty($strField))
-									{
-										continue 2;
-									}
-
-									$strField = $field;
-								}
-							}
-						}
-
 						// Hide the toggle icon if the user does not have access to the field
 						if (empty($strField) || ($GLOBALS['TL_DCA'][$strTable]['fields'][$strField]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $strField))
 						{
