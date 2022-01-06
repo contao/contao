@@ -1553,9 +1553,11 @@ abstract class DataContainer extends Backend
 	 *
 	 * @param array  $row   The data record
 	 * @param string $table The name of the data container
+	 * @param array  $args  The generated labels for each column
 	 */
-	public static function generateRecordLabel(array $row, string $table): string
+	public static function generateRecordLabel(array $row, string $table, array &$args = array()): string
 	{
+		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
 		$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
 
 		// Label

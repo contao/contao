@@ -4525,7 +4525,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 				else
 				{
-					$return .= '</div><div class="tl_content_left">' . parent::generateRecordLabel($row[$i], $this->strTable) . '</div></div>';
+					$label = parent::generateRecordLabel($row[$i], $this->strTable);
+
+					// Call the label_callback ($row, $label, $this)
+					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null))
+					{
+						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][0];
+						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][1];
+
+						$this->import($strClass);
+						$label = $this->$strClass->$strMethod($row[$i], $label, $this);
+					}
+					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null))
+					{
+						$label = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']($row[$i], $label, $this);
+					}
+
+					$return .= '</div><div class="tl_content_left">' . $label . '</div></div>';
 				}
 
 				// Make items sortable
@@ -4848,7 +4864,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($result as $row)
 			{
 				$this->current[] = $row['id'];
-				$label = parent::generateRecordLabel($row, $this->strTable);
+				$args = array();
+				$label = parent::generateRecordLabel($row, $this->strTable, $args);
 
 				// Build the sorting groups
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) > 0)
