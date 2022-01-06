@@ -134,57 +134,6 @@ class MaintenanceModeCommandTest extends TestCase
         $this->assertSame(['enabled' => false, 'maintenanceFilePath' => '/path/to/var/maintenance.html'], $json);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testHandlesLexikMaintenanceLock(): void
-    {
-        $this->expectDeprecation('Since contao/manager-bundle 4.13: Using "lexik:maintenance:lock" command is deprecated. Use "contao:maintenance-mode enable" instead.');
-
-        $twig = $this->getTwigMock();
-        $twig
-            ->expects($this->once())
-            ->method('render')
-            ->willReturn('parsed-template')
-        ;
-
-        $filesystem = $this->getFilesystemMock();
-        $filesystem
-            ->expects($this->once())
-            ->method('dumpFile')
-            ->with('/path/to/var/maintenance.html', 'parsed-template')
-        ;
-
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $twig, $filesystem);
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(['lexik:maintenance:lock']);
-
-        $this->assertStringContainsString('[OK] Maintenance mode enabled', $commandTester->getDisplay(true));
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testHandlesLexikMaintenanceUnlock(): void
-    {
-        $this->expectDeprecation('Since contao/manager-bundle 4.13: Using "lexik:maintenance:unlock" command is deprecated. Use "contao:maintenance-mode disable" instead.');
-
-        $filesystem = $this->getFilesystemMock();
-        $filesystem
-            ->expects($this->once())
-            ->method('remove')
-            ->with('/path/to/var/maintenance.html')
-        ;
-
-        $command = new MaintenanceModeCommand('/path/to/var/maintenance.html', $this->getTwigMock(), $filesystem);
-
-        $commandTester = new CommandTester($command);
-        $commandTester->execute(['lexik:maintenance:unlock']);
-
-        $this->assertStringContainsString('[OK] Maintenance mode disabled', $commandTester->getDisplay(true));
-    }
-
     public function enableProvider(): \Generator
     {
         yield 'Test defaults' => [

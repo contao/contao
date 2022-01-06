@@ -43,7 +43,6 @@ class MaintenanceModeCommand extends Command
     {
         $this
             ->setName('contao:maintenance-mode')
-            ->setAliases(['lexik:maintenance:lock', 'lexik:maintenance:unlock'])
             ->addArgument('state', InputArgument::OPTIONAL, 'Use "enable" to enable and "disable" to disable the maintenance mode. If the state is already the desired one, nothing happens. You can also use "on" and "off".')
             ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'Allows to take a different Twig template name when enabling the maintenance mode.', '@ContaoCore/Error/service_unavailable.html.twig')
             ->addOption('templateVars', null, InputOption::VALUE_OPTIONAL, 'Add custom template variables to the Twig template when enabling the maintenance mode (provide as JSON).', '{}')
@@ -55,14 +54,6 @@ class MaintenanceModeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $state = $input->getArgument('state');
-
-        if ('lexik:maintenance:lock' === $input->getFirstArgument()) {
-            trigger_deprecation('contao/manager-bundle', '4.13', 'Using "lexik:maintenance:lock" command is deprecated. Use "contao:maintenance-mode enable" instead.');
-            $state = 'enable';
-        } elseif ('lexik:maintenance:unlock' === $input->getFirstArgument()) {
-            trigger_deprecation('contao/manager-bundle', '4.13', 'Using "lexik:maintenance:unlock" command is deprecated. Use "contao:maintenance-mode disable" instead.');
-            $state = 'disable';
-        }
 
         $io = new SymfonyStyle($input, $output);
 
