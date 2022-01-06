@@ -19,6 +19,7 @@ use Contao\DataContainer;
 use Contao\Input;
 use Doctrine\DBAL\Connection;
 use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -34,6 +35,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->createMock(Connection::class),
             $this->createMock(Security::class),
+            $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             $this->createMock(TranslatorInterface::class),
@@ -55,6 +57,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->createMock(Connection::class),
             $this->createMock(Security::class),
+            $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             $this->createMock(TranslatorInterface::class),
@@ -76,6 +79,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->mockContaoFramework(),
             $this->createMock(Connection::class),
             $this->createMock(Security::class),
+            $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             $this->createMock(TranslatorInterface::class),
@@ -121,6 +125,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->mockContaoFramework([Input::class => $input]),
             $this->createMock(Connection::class),
             $security,
+            $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             $this->createMock(TranslatorInterface::class),
@@ -175,6 +180,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->mockContaoFramework(),
             $connection,
             $this->createMock(Security::class),
+            $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
             $this->createMock(TranslatorInterface::class),
