@@ -83,8 +83,19 @@ class ModuleNewsReader extends ModuleNews
 	protected function compile()
 	{
 		$this->Template->articles = '';
-		$this->Template->referer = 'javascript:history.go(-1)';
-		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+
+		if ($this->overviewPage)
+		{
+			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['newsOverview'];
+		}
+		else
+		{
+			trigger_deprecation('contao/news-bundle', '4.13', 'If you do not select an overview page in the news reader module, the "go back" link will no longer be shown in Contao 5.0.');
+
+			$this->Template->referer = 'javascript:history.go(-1)';
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+		}
 
 		// Get the news item
 		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
