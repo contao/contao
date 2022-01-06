@@ -46,9 +46,10 @@ class BackendPreviewSwitchController
     private TwigEnvironment $twig;
     private ContaoCsrfTokenManager $tokenManager;
     private RouterInterface $router;
-    private array $backendConfig;
+    private array $backendAttributes = [];
+    private string $backendBadgeTitle = '';
 
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager, array $backendConfig)
+    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager)
     {
         $this->previewAuthenticator = $previewAuthenticator;
         $this->tokenChecker = $tokenChecker;
@@ -57,7 +58,6 @@ class BackendPreviewSwitchController
         $this->twig = $twig;
         $this->router = $router;
         $this->tokenManager = $tokenManager;
-        $this->backendConfig = $backendConfig;
     }
 
     /**
@@ -90,6 +90,12 @@ class BackendPreviewSwitchController
         return new Response('', Response::HTTP_BAD_REQUEST);
     }
 
+    public function setBackendConfig(array $attributes, string $badgeTitle): void
+    {
+        $this->backendAttributes = $attributes;
+        $this->backendBadgeTitle = $badgeTitle;
+    }
+
     private function renderToolbar(): string
     {
         $canSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
@@ -98,11 +104,11 @@ class BackendPreviewSwitchController
 
         $attributes = '';
 
-        if (!empty($this->backendConfig['attributes']) && \is_array($this->backendConfig['attributes'])) {
+        if (!empty($this->backendAttributes)) {
             $attributes = ' '.implode(' ', array_map(
                 static fn ($v, $k) => sprintf('data-%s="%s"', $k, $v),
-                $this->backendConfig['attributes'],
-                array_keys($this->backendConfig['attributes'])
+                $this->backendAttributes,
+                array_keys($this->backendAttributes)
             ));
         }
 
@@ -116,7 +122,7 @@ class BackendPreviewSwitchController
                     'user' => $frontendUsername,
                     'show' => $showUnpublished,
                     'attributes' => $attributes,
-                    'badgeTitle' => $this->backendConfig['badge_title'] ?? '',
+                    'badgeTitle' => $this->backendBadgeTitle,
                 ]
             );
         } catch (TwigError $e) {
