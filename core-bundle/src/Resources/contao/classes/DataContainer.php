@@ -1563,6 +1563,12 @@ abstract class DataContainer extends Backend
 		// Label
 		foreach ($showFields as $k=>$v)
 		{
+			// Decrypt the value
+			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
+			{
+				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
+			}
+
 			if (strpos($v, ':') !== false)
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
