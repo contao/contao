@@ -359,12 +359,9 @@ class ModuleListing extends Module
 	 */
 	protected function listSingleRecord($id)
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
 		$this->Template = new FrontendTemplate($this->list_info_layout ?: 'info_default');
 		$this->Template->record = array();
-		$this->Template->referer = $objPage->getFrontendUrl();
+		$this->Template->referer = 'javascript:history.go(-1)';
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 		$this->list_info = StringUtil::deserialize($this->list_info);
