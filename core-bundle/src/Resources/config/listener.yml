@@ -117,6 +117,7 @@ services:
             - '@contao.framework'
             - '@database_connection'
             - '@security.helper'
+            - '@request_stack'
             - '@router'
             - '@uri_signer'
             - '@translator'

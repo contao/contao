@@ -67,8 +67,8 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			),
 			'toggle' => array
 			(
+				'href'                => 'act=toggle&amp;field=published',
 				'icon'                => 'visible.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 			),
 			'show' => array
 			(
@@ -151,6 +151,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		'published' => array
 		(
 			'exclude'                 => true,
+			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"

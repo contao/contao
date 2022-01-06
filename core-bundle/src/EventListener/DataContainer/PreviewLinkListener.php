@@ -12,22 +12,18 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
-use Contao\System;
 use Contao\UserModel;
-use Contao\Versions;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
@@ -41,16 +37,18 @@ class PreviewLinkListener
     private ContaoFramework $framework;
     private Connection $connection;
     private Security $security;
+    private RequestStack $requestStack;
     private UrlGeneratorInterface $urlGenerator;
     private UriSigner $uriSigner;
     private TranslatorInterface $translator;
     private string $previewScript;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, Security $security, UrlGeneratorInterface $urlGenerator, UriSigner $uriSigner, TranslatorInterface $translator, string $previewScript = '')
+    public function __construct(ContaoFramework $framework, Connection $connection, Security $security, RequestStack $requestStack, UrlGeneratorInterface $urlGenerator, UriSigner $uriSigner, TranslatorInterface $translator, string $previewScript = '')
     {
         $this->framework = $framework;
         $this->connection = $connection;
         $this->security = $security;
+        $this->requestStack = $requestStack;
         $this->urlGenerator = $urlGenerator;
         $this->uriSigner = $uriSigner;
         $this->translator = $translator;
@@ -85,12 +83,43 @@ class PreviewLinkListener
     public function createFromUrl(DataContainer $dc): void
     {
         $input = $this->framework->getAdapter(Input::class);
-        $userId = ($user = $this->security->getUser()) instanceof BackendUser ? $user->id : 0;
+        $user = $this->security->getUser();
+        $userId = $user instanceof BackendUser ? $user->id : 0;
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
             $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy=?', $userId];
 
-            // TODO: more permission checks
+            // Check the current action
+            switch ((string) $input->get('act')) {
+                case '': // empty
+                case 'paste':
+                case 'create':
+                case 'select':
+                    break;
+
+                case 'editAll':
+                case 'deleteAll':
+                case 'overrideAll':
+                    $allowedIds = $this->connection->fetchFirstColumn(
+                        'SELECT id FROM tl_preview_link WHERE createdBy=?',
+                        [$userId]
+                    );
+
+                    $session = $this->requestStack->getSession();
+                    $sessionData = $session->all();
+                    $sessionData['CURRENT']['IDS'] = array_intersect((array) $sessionData['CURRENT']['IDS'], $allowedIds);
+                    $session->replace($sessionData);
+                    break;
+
+                case 'edit':
+                case 'toggle':
+                case 'delete':
+                default:
+                    if ($dc->activeRecord->createdBy !== $userId) {
+                        throw new AccessDeniedException(sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
+                    }
+                    break;
+            }
         }
 
         // Only allow creating new records from front end link with preview script in URL
@@ -134,7 +163,8 @@ class PreviewLinkListener
                     break;
 
                 case 'createdBy':
-                    $args[$i] = UserModel::findByPk($row[$field])->name;
+                    $user = $this->framework->getAdapter(UserModel::class);
+                    $args[$i] = $user->findByPk($row[$field])->name ?? $args[$i];
                     break;
             }
         }
@@ -156,112 +186,5 @@ class PreviewLinkListener
             StringUtil::specialchars($this->translator->trans('tl_preview_link.clipboard', [], 'contao_tl_preview_link')),
             Image::getHtml($icon, $label)
         );
-    }
-
-    /**
-     * @Callback(table="tl_preview_link", target="list.operations.toggle.button")
-     */
-    public function togglePublished(array $row, ?string $href, ?string $label, ?string $title, string $icon, ?string $attributes): string
-    {
-        if (Input::get('tid')) {
-            $this->toggleVisibility((int) Input::get('tid'), '1' === (string) Input::get('state'), (\func_num_args() <= 12 ? null : func_get_arg(12)));
-
-            throw new RedirectResponseException(System::getReferer());
-        }
-
-        // Check permissions AFTER checking the tid, so hacking attempts are logged
-        if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_preview_link::published')) {
-            return '';
-        }
-
-        $href .= '&amp;tid='.$row['id'].'&amp;state='.$row['published'];
-
-        if (!$row['published']) {
-            $icon = 'invisible.svg';
-        }
-
-        return '<a href="'.Backend::addToUrl($href).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.Image::getHtml($icon, $label, 'data-state="'.($row['published'] ? 1 : 0).'"').'</a> ';
-    }
-
-    private function toggleVisibility(int $intId, bool $blnPublished, DataContainer $dc = null): void
-    {
-        // Set the ID and action
-        Input::setGet('id', $intId);
-        Input::setGet('act', 'toggle');
-
-        if ($dc) {
-            $dc->id = $intId; // see #8043
-        }
-
-        // Trigger the onload_callback
-        if (\is_array($GLOBALS['TL_DCA']['tl_preview_link']['config']['onload_callback'] ?? null)) {
-            foreach ($GLOBALS['TL_DCA']['tl_preview_link']['config']['onload_callback'] as $callback) {
-                if (\is_array($callback)) {
-                    System::importStatic($callback[0])->{$callback[1]}($dc);
-                } elseif (\is_callable($callback)) {
-                    $callback($dc);
-                }
-            }
-        }
-
-        // Check the field access
-        if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_preview_link::published')) {
-            throw new AccessDeniedException('Not enough permissions to publish/unpublish preview link ID '.$intId.'.');
-        }
-
-        $row = $this->connection->fetchAssociative('SELECT * FROM tl_preview_link WHERE id=?', [$intId]);
-
-        if (false === $row) {
-            throw new AccessDeniedException('Invalid preview link ID '.$intId.'.');
-        }
-
-        // Set the current record
-        if ($dc) {
-            $dc->activeRecord = (object) $row;
-        }
-
-        $objVersions = new Versions('tl_preview_link', $intId);
-        $objVersions->initialize();
-
-        // Trigger the save_callback
-        if (\is_array($GLOBALS['TL_DCA']['tl_preview_link']['fields']['published']['save_callback'] ?? null)) {
-            foreach ($GLOBALS['TL_DCA']['tl_preview_link']['fields']['published']['save_callback'] as $callback) {
-                if (\is_array($callback)) {
-                    $blnPublished = System::importStatic($callback[0])->{$callback[1]}($blnPublished, $dc);
-                } elseif (\is_callable($callback)) {
-                    $blnPublished = $callback($blnPublished, $dc);
-                }
-            }
-        }
-
-        $time = time();
-
-        // Update the database
-        $this->connection->executeStatement(
-            'UPDATE tl_preview_link SET tstamp=?, published=? WHERE id=?',
-            [$time, ($blnPublished ? '1' : ''), $intId]
-        );
-
-        if ($dc) {
-            $dc->activeRecord->tstamp = $time;
-            $dc->activeRecord->published = ($blnPublished ? '1' : '');
-        }
-
-        // Trigger the onsubmit_callback
-        if (\is_array($GLOBALS['TL_DCA']['tl_preview_link']['config']['onsubmit_callback'] ?? null)) {
-            foreach ($GLOBALS['TL_DCA']['tl_preview_link']['config']['onsubmit_callback'] as $callback) {
-                if (\is_array($callback)) {
-                    System::importStatic($callback[0])->{$callback[1]}($dc);
-                } elseif (\is_callable($callback)) {
-                    $callback($dc);
-                }
-            }
-        }
-
-        $objVersions->create();
-
-        if ($dc) {
-            $dc->invalidateCacheTags();
-        }
     }
 }

@@ -101,9 +101,9 @@ class PreviewLinkListenerTest extends TestCase
             'fields' => [
                 'url' => ['default' => ''],
                 'showUnpublished' => ['default' => ''],
-                'createdAt' => ['default' => ''],
-                'expiresAt' => ['default' => ''],
-                'createdBy' => ['default' => ''],
+                'createdAt' => ['default' => 0],
+                'expiresAt' => ['default' => 0],
+                'createdBy' => ['default' => 0],
             ],
         ];
 
