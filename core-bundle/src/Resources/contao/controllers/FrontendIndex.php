@@ -215,9 +215,10 @@ class FrontendIndex extends Frontend
 
 		// Inherit the settings from the parent pages
 		$objPage->loadDetails();
+		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
 
 		// Trigger the 404 page if the page is not published and the front end preview is not active (see #374)
-		if (!BE_USER_LOGGED_IN && !$objPage->isPublic)
+		if (!$blnShowUnpublished && !$objPage->isPublic)
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
@@ -242,7 +243,7 @@ class FrontendIndex extends Frontend
 
 		// Exit if the root page has not been published (see #2425)
 		// Do not try to load the 404 page, it can cause an infinite loop!
-		if (!BE_USER_LOGGED_IN && !$objPage->rootIsPublic)
+		if (!$blnShowUnpublished && !$objPage->rootIsPublic)
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}

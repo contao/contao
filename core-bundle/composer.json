@@ -118,7 +118,6 @@
     },
     "require-dev": {
         "ext-fileinfo": "*",
-        "contao/maintenance-bundle-deprecated": "^2.1.5",
         "contao/manager-plugin": "^2.3.1",
         "contao/test-case": "^4.5",
         "phpunit/phpunit": "^8.5",

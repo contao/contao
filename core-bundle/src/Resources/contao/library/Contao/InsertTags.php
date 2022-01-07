@@ -220,7 +220,7 @@ class InsertTags extends Controller
 						new ControllerReference(
 							InsertTagsController::class . '::renderAction',
 							$attributes,
-							array('clientCache' => (int) $objPage->clientCache, 'pageId' => $objPage->id, 'request' => Environment::get('request'))
+							array('clientCache' => (int) ($objPage->clientCache ?? 0), 'pageId' => ($objPage->id ?? null), 'request' => Environment::get('request'))
 						),
 						'esi',
 						array('ignore_errors'=>false) // see #48
@@ -238,7 +238,7 @@ class InsertTags extends Controller
 				// Date
 				case 'date':
 					$flags[] = 'attr';
-					$arrCache[$strTag] = Date::parse($elements[1] ?: $objPage->dateFormat);
+					$arrCache[$strTag] = Date::parse($elements[1] ?: ($objPage->dateFormat ?? Config::get('dateFormat')));
 					break;
 
 				// Accessibility tags
@@ -432,15 +432,15 @@ class InsertTags extends Controller
 
 						if ($rgxp == 'date')
 						{
-							$arrCache[$strTag] = Date::parse($objPage->dateFormat, $value);
+							$arrCache[$strTag] = Date::parse($objPage->dateFormat ?? Config::get('dateFormat'), $value);
 						}
 						elseif ($rgxp == 'time')
 						{
-							$arrCache[$strTag] = Date::parse($objPage->timeFormat, $value);
+							$arrCache[$strTag] = Date::parse($objPage->timeFormat ?? Config::get('timeFormat'), $value);
 						}
 						elseif ($rgxp == 'datim')
 						{
-							$arrCache[$strTag] = Date::parse($objPage->datimFormat, $value);
+							$arrCache[$strTag] = Date::parse($objPage->datimFormat ?? Config::get('datimFormat'), $value);
 						}
 						elseif (\is_array($value))
 						{
@@ -703,7 +703,7 @@ class InsertTags extends Controller
 
 					if ($objUpdate->numRows)
 					{
-						$arrCache[$strTag] = Date::parse($elements[1] ?: $objPage->datimFormat, max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
+						$arrCache[$strTag] = Date::parse($elements[1] ?: ($objPage->datimFormat ?? Config::get('datimFormat')), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
 					}
 					break;
 
@@ -799,13 +799,16 @@ class InsertTags extends Controller
 
 				// Page
 				case 'page':
-					if (!$objPage->parentPageTitle && $elements[1] == 'parentPageTitle')
+					if ($objPage)
 					{
-						$elements[1] = 'parentTitle';
-					}
-					elseif (!$objPage->mainPageTitle && $elements[1] == 'mainPageTitle')
-					{
-						$elements[1] = 'mainTitle';
+						if (!$objPage->parentPageTitle && $elements[1] == 'parentPageTitle')
+						{
+							$elements[1] = 'parentTitle';
+						}
+						elseif (!$objPage->mainPageTitle && $elements[1] == 'mainPageTitle')
+						{
+							$elements[1] = 'mainTitle';
+						}
 					}
 
 					$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
@@ -826,7 +829,7 @@ class InsertTags extends Controller
 								break;
 						}
 					}
-					else
+					elseif ($objPage)
 					{
 						// Do not use StringUtil::specialchars() here (see #4687)
 						if (!\in_array($elements[1], array('title', 'parentTitle', 'mainTitle', 'rootTitle', 'pageTitle', 'parentPageTitle', 'mainPageTitle', 'rootPageTitle'), true))
@@ -1005,7 +1008,7 @@ class InsertTags extends Controller
 					// Use the alternative text from the image metadata if none is given
 					if (!$alt && ($objFile = FilesModel::findByPath($strFile)))
 					{
-						$arrMeta = Frontend::getMetaData($objFile->meta, $objPage->language);
+						$arrMeta = Frontend::getMetaData($objFile->meta, $objPage->language ?? $GLOBALS['TL_LANGUAGE']);
 
 						if (isset($arrMeta['alt']))
 						{
