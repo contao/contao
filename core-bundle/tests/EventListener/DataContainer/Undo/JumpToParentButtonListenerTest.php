@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer\Undo;
 
 use Contao\Backend;
 use Contao\Controller;
-use Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentOperationButtonListener;
+use Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
@@ -24,7 +24,7 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class JumpToParentOperationButtonTest extends TestCase
+class JumpToParentButtonListenerTest extends TestCase
 {
     /**
      * @var Adapter<Image>&MockObject
@@ -103,7 +103,7 @@ class JumpToParentOperationButtonTest extends TestCase
             ->willReturnMap($translationsMap)
         ;
 
-        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection, $this->translator);
+        $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
         $buttonHtml = $listener($row, '', '', '', 'parent.svg');
 
         $this->assertSame("<a href=\"\" title=\"Show parent of Content element ID 42\" onclick=\"Backend.openModalIframe({'title':'Show parent of Content element ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ", $buttonHtml);
@@ -138,7 +138,7 @@ class JumpToParentOperationButtonTest extends TestCase
             ->willReturn('tl_news')
         ;
 
-        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection, $this->translator);
+        $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
         $buttonHtml = $listener($row, '', '', '', 'parent.svg');
 
         $this->assertSame('<img src="parent_.svg"> ', $buttonHtml);
@@ -155,7 +155,7 @@ class JumpToParentOperationButtonTest extends TestCase
             ->willReturn('<img src="parent_.svg">')
         ;
 
-        $listener = new JumpToParentOperationButtonListener($this->framework, $this->connection, $this->translator);
+        $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
         $buttonHtml = $listener($row);
 
         $this->assertSame('<img src="parent_.svg"> ', $buttonHtml);

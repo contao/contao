@@ -27,7 +27,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * @internal
  */
-class JumpToParentOperationButtonListener
+class JumpToParentButtonListener
 {
     use UndoListenerTrait;
 
