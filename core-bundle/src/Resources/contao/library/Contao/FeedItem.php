@@ -127,12 +127,6 @@ class FeedItem
 		if ($size && $objFile->isImage)
 		{
 			$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $strFile, $size);
-
-			if ($image instanceof DeferredImageInterface)
-			{
-				System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
-			}
-
 			$fileUrl = $strUrl . System::urlEncode($image->getUrl($rootDir));
 			$relativeFilePath = Path::makeRelative($image->getPath(), $rootDir);
 			$objFile = new File($relativeFilePath);
