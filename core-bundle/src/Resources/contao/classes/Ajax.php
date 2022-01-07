@@ -409,7 +409,7 @@ class Ajax extends Backend
 
 			// Feature/unfeature an element
 			case 'toggleFeatured':
-				trigger_deprecation('contao/core-bundle', '4.13', __METHOD__.' is deprecated, use the toggle operation instead.');
+				trigger_deprecation('contao/core-bundle', '4.13', __METHOD__ . ' is deprecated, use the toggle operation instead.');
 
 				if (class_exists($dc->table, false))
 				{
