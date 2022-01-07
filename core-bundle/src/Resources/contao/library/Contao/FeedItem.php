@@ -105,7 +105,7 @@ class FeedItem
 	 * @param string $strMedia The media type
 	 * @param mixed $size The image size
 	 */
-	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure', $size = null)
+	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure', $imageSize = null)
 	{
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -122,7 +122,7 @@ class FeedItem
 		$fileUrl = $strUrl . System::urlEncode($strFile);
 		$objFile = new File($strFile);
 
-		$size = StringUtil::deserialize($size, true);
+		$size = StringUtil::deserialize($imageSize, true);
 
 		if ($size && $objFile->isImage)
 		{
