@@ -121,10 +121,9 @@ class FrontendMenuBuilder
                 continue;
             }
 
-            $currentPageIsChild = $currentPage && ($currentPage->id === $page->id || \in_array($currentPage->id, $this->database->getChildRecords($page->id, 'tl_page'), false));
             $displayChildren = !$options['showLevel']
                                || $options['showLevel'] > $level
-                               || (!$options['hardLimit'] && $currentPageIsChild);
+                               || (!$options['hardLimit'] && $currentPage && ($currentPage->id === $page->id || \in_array($currentPage->id, $this->database->getChildRecords($page->id, 'tl_page'), false)));
             $hasSubmenu = $hasSubpages && $displayChildren;
 
             $this->populateMenuItem($item, $request, $page, $href, $hasSubmenu, $options);
