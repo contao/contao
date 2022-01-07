@@ -21,15 +21,13 @@ class FrontendMenuEvent extends Event
     private FactoryInterface $factory;
     private ItemInterface $tree;
     private int $pid;
-    private int $level;
     private array $options;
 
-    public function __construct(FactoryInterface $factory, ItemInterface $tree, int $pid, int $level, array $options)
+    public function __construct(FactoryInterface $factory, ItemInterface $tree, int $pid, array $options)
     {
         $this->factory = $factory;
         $this->tree = $tree;
         $this->pid = $pid;
-        $this->level = $level;
         $this->options = $options;
     }
 
@@ -50,14 +48,6 @@ class FrontendMenuEvent extends Event
     public function getPid(): int
     {
         return $this->pid;
-    }
-
-    /**
-     * Get the current level of the navigation where "1" = top level.
-     */
-    public function getLevel(): int
-    {
-        return $this->level;
     }
 
     /**

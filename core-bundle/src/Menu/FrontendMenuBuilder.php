@@ -66,7 +66,7 @@ class FrontendMenuBuilder
         $this->database = $database;
     }
 
-    public function getMenu(ItemInterface $root, int $pid, int $level = 1, string $host = null, array $options = []): ItemInterface
+    public function getMenu(ItemInterface $root, int $pid, array $options = []): ItemInterface
     {
         $options = array_replace([
             'showHidden' => false,
@@ -84,6 +84,9 @@ class FrontendMenuBuilder
 
         $isMember = $this->security->isGranted('ROLE_MEMBER');
 
+        // KnpMenu levels start at zero
+        $level = $root->getLevel() + 1;
+
         /** @var PageModel $page */
         foreach ($pages as ['page' => $page, 'hasSubpages' => $hasSubpages]) {
             // Skip hidden sitemap pages
@@ -94,11 +97,6 @@ class FrontendMenuBuilder
             $page->loadDetails();
 
             $item = $this->factory->createItem($page->title);
-
-            // Override the domain (see #3765)
-            if (null !== $host) {
-                $page->domain = $host;
-            }
 
             if ($page->tabindex > 0) {
                 trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
@@ -123,10 +121,9 @@ class FrontendMenuBuilder
                 continue;
             }
 
-            $nextLevel = $level + 1;
             $currentPageIsChild = $currentPage && ($currentPage->id === $page->id || \in_array($currentPage->id, $this->database->getChildRecords($page->id, 'tl_page'), false));
             $displayChildren = !$options['showLevel']
-                               || $options['showLevel'] >= $nextLevel
+                               || $options['showLevel'] > $level
                                || (!$options['hardLimit'] && $currentPageIsChild);
             $hasSubmenu = $hasSubpages && $displayChildren;
 
@@ -135,17 +132,17 @@ class FrontendMenuBuilder
 
             // Allow modifying empty submenu nodes
             if (!$hasSubpages) {
-                $menuEvent = new FrontendMenuEvent($this->factory, $item, (int) $page->id, $nextLevel, $options);
+                $menuEvent = new FrontendMenuEvent($this->factory, $item, (int) $page->id, $options);
                 $this->dispatcher->dispatch($menuEvent);
 
                 continue;
             }
 
-            $this->getMenu($item, (int) $page->id, $nextLevel, $host, $options);
+            $this->getMenu($item, (int) $page->id, $options);
             $item->setDisplayChildren($displayChildren);
         }
 
-        $menuEvent = new FrontendMenuEvent($this->factory, $root, $pid, $level, $options);
+        $menuEvent = new FrontendMenuEvent($this->factory, $root, $pid, $options);
         $this->dispatcher->dispatch($menuEvent);
 
         return $root;
