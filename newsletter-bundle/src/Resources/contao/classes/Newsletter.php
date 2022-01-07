@@ -382,14 +382,14 @@ class Newsletter extends Backend
 	/**
 	 * Compile the newsletter and send it
 	 *
-	 * @param Email       $objEmail
-	 * @param Result      $objNewsletter
-	 * @param array       $arrRecipient
-	 * @param string      $text
-	 * @param string      $html
-	 * @param string|null $css
+	 * @param Email  $objEmail
+	 * @param Result $objNewsletter
+	 * @param array  $arrRecipient
+	 * @param string $text
+	 * @param string $html
+	 * @param string $css
 	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
@@ -450,6 +450,8 @@ class Newsletter extends Backend
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['sendNewsletter']) && \is_array($GLOBALS['TL_HOOKS']['sendNewsletter']))
 		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using the "sendNewsletter" hook has been deprecated and will no longer work in Contao 5.0. Use the SendNewsletterEvent instead.');
+
 			foreach ($GLOBALS['TL_HOOKS']['sendNewsletter'] as $callback)
 			{
 				$this->import($callback[0]);
