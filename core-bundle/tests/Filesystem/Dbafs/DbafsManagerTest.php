@@ -133,9 +133,9 @@ class DbafsManagerTest extends TestCase
         $this->assertSame('other/c', $manager->resolveUuid($uuid3));
 
         // Resolve with constraining to prefix
-        $this->assertSame('foo/a', $manager->resolveUuid($uuid1, 'foo'));
-        $this->assertSame('foo/bar/b', $manager->resolveUuid($uuid2, 'foo'));
-        $this->assertSame('other/c', $manager->resolveUuid($uuid3, 'other'));
+        $this->assertSame('a', $manager->resolveUuid($uuid1, 'foo'));
+        $this->assertSame('bar/b', $manager->resolveUuid($uuid2, 'foo'));
+        $this->assertSame('c', $manager->resolveUuid($uuid3, 'other'));
 
         // Nothing should be found outside the constrained scope
         $this->expectException(UnableToResolveUuidException::class);

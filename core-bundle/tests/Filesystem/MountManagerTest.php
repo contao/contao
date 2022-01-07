@@ -323,7 +323,7 @@ class MountManagerTest extends TestCase
         $manager->mount($filesSpecialAdapter, 'files/special');
         $manager->mount($filesMediaExtraAdapter, 'files/media/extra');
 
-        // Get and normalize listing
+        // Normalize listing for comparison
         $listing = array_map(
             static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
             [...$manager->listContents($path, $deep)]

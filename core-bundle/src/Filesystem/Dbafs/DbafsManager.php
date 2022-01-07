@@ -65,13 +65,18 @@ class DbafsManager
      * will be thrown. You can constrain querying only a subset by providing
      * a path $prefix.
      *
+     * The returned path will always be relative to the provided prefix:
+     *
+     *     resolveUuid($uuid); // returns 'files/foo/bar'
+     *     resolveUuid($uuid, 'files/foo'); // returns 'bar'
+     *
      * @throws UnableToResolveUuidException
      */
     public function resolveUuid(Uuid $uuid, string $prefix = ''): string
     {
         foreach ($this->getCandidatesForPrefix($prefix) as $dbafs) {
             if (null !== ($path = $dbafs->getPathFromUuid($uuid))) {
-                return $path;
+                return Path::makeRelative($path, $prefix);
             }
         }
 

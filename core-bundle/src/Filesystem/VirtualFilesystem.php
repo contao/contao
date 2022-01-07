@@ -48,6 +48,16 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->readonly = $readonly;
     }
 
+    public function getPrefix(): string
+    {
+        return $this->prefix;
+    }
+
+    public function isReadOnly(): bool
+    {
+        return $this->readonly;
+    }
+
     public function fileExists($location, int $accessFlags = self::NONE): bool
     {
         if ($location instanceof Uuid) {
@@ -61,6 +71,9 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                 return false;
             }
 
+            // Do not care about VirtualFilesystem::FORCE_SYNC at this point as
+            // the resource was already found.
+
             return true;
         }
 
@@ -71,7 +84,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         }
 
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
-            return $this->dbafsManager->resourceExists($location);
+            return $this->dbafsManager->resourceExists($path);
         }
 
         return $this->mountManager->fileExists($path);
@@ -170,7 +183,9 @@ class VirtualFilesystem implements VirtualFilesystemInterface
 
         // Read from DBAFS
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
-            yield from $this->dbafsManager->listContents($path, $deep);
+            foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
+                yield $item->withPath(Path::makeRelative($item->getPath(), $this->prefix));
+            }
 
             return;
         }
@@ -259,14 +274,17 @@ class VirtualFilesystem implements VirtualFilesystemInterface
      */
     private function resolve($location): string
     {
-        if ($location instanceof Uuid) {
-            return $this->dbafsManager->resolveUuid($location, $this->prefix);
+        $path = $location instanceof Uuid ?
+            Path::canonicalize($this->dbafsManager->resolveUuid($location, $this->prefix)) :
+            Path::canonicalize($location)
+        ;
+
+        if (Path::isAbsolute($path)) {
+            throw new \OutOfBoundsException("Virtual filesystem path '$path' cannot be absolute.");
         }
 
-        $path = Path::canonicalize($location);
-
         if (str_starts_with($path, '..')) {
-            throw new \OutOfBoundsException("Relative paths that escape the filesystem boundary are not allowed, got '$location'.");
+            throw new \OutOfBoundsException("Virtual filesystem path '$path' must not escape the filesystem boundary.");
         }
 
         return Path::join($this->prefix, $path);

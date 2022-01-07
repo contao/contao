@@ -192,7 +192,7 @@ services:
         arguments:
             - ~
 
-    contao.filesystem.virtual_factory: # really, service linter? ;-)
+    contao.filesystem.virtual_factory:
         class: Contao\CoreBundle\Filesystem\VirtualFilesystemFactory
         arguments:
             - '@contao.filesystem.mount_manager'
