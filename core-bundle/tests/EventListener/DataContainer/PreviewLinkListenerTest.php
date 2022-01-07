@@ -133,14 +133,15 @@ class PreviewLinkListenerTest extends TestCase
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class);
+        $now = ClockMock::time();
 
         $listener->createFromUrl($dc);
 
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
         $this->assertSame($url, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default']);
         $this->assertSame($showUnpublished ? '1' : '', $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default']);
-        $this->assertSame(ClockMock::time(), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default']);
-        $this->assertSame(strtotime('+1 day', ClockMock::time()), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
+        $this->assertSame($now, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default']);
+        $this->assertSame(strtotime('+1 day', $now), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
         $this->assertSame($user, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default']);
 
         unset($GLOBALS['TL_DCA']);
