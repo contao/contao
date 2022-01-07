@@ -551,7 +551,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetLastModified(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->testGetMetadata(
+        $this->doTestGetMetadata(
             'lastModified',
             123450,
             $accessFlags,
@@ -565,7 +565,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetFileSize(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->testGetMetadata(
+        $this->doTestGetMetadata(
             'fileSize',
             1024,
             $accessFlags,
@@ -579,7 +579,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetMimeType(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->testGetMetadata(
+        $this->doTestGetMetadata(
             'mimeType',
             'image/png',
             $accessFlags,
@@ -731,7 +731,7 @@ class VirtualFilesystemTest extends TestCase
     /**
      * @param mixed $value
      */
-    private function testGetMetadata(string $property, $value, int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
+    private function doTestGetMetadata(string $property, $value, int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
         $method = sprintf('get%s', ucfirst($property));
 

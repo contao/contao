@@ -18,7 +18,9 @@ use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
+use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -507,9 +509,9 @@ class DbafsTest extends TestCase
     /**
      * @dataProvider provideFilesystemsAndExpectedChangeSets
      *
-     * @param string|array<int, string> $scope
+     * @param string|array<int, string> $paths
      */
-    public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, $scope, ChangeSet $expected): void
+    public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, $paths, ChangeSet $expected): void
     {
         /*
          * Demo file structure present in the database:
@@ -554,7 +556,7 @@ class DbafsTest extends TestCase
         // Lower max file size, so that we can test the limit without excessive memory usage
         $dbafs->setMaxFileSize(100);
 
-        $changeSet = $dbafs->computeChangeSet(...((array) $scope));
+        $changeSet = $dbafs->computeChangeSet(...((array) $paths));
 
         $this->assertSame(
             $expected->getItemsToCreate(),
@@ -877,6 +879,172 @@ class DbafsTest extends TestCase
         // todo: add a simple case that tests shallow sync
     }
 
+    public function testSyncWithLastModified(): void
+    {
+        $filesystem = new VirtualFilesystem(
+            new MountManager(new InMemoryFilesystemAdapter()),
+            $this->createMock(DbafsManager::class)
+        );
+
+        $filesystem->write('old', 'foo'); // untouched
+        $filesystem->write('file2', 'bar'); // moved
+        $filesystem->write('new', 'baz'); // new
+
+        $hashGenerator = $this->createMock(HashGeneratorInterface::class);
+        $hashGenerator
+            ->method('hashFileContent')
+            ->willReturnCallback(
+                function (VirtualFilesystemInterface $virtualFilesystem, string $path, Context $hashContext) use ($filesystem): void {
+                    $this->assertSame($filesystem, $virtualFilesystem);
+
+                    if ('old' === $path) {
+                        $this->assertSame(99, $hashContext->getLastModified());
+                        $this->assertTrue($hashContext->canSkipHashing());
+                        $hashContext->skipHashing();
+
+                        return;
+                    }
+
+                    if ('file2' === $path) {
+                        $this->assertNull($hashContext->getLastModified());
+                        $this->assertFalse($hashContext->canSkipHashing());
+                        $hashContext->updateLastModified(200);
+                        $hashContext->setHash('8446b');
+
+                        return;
+                    }
+
+                    if ('new' === $path) {
+                        $this->assertNull($hashContext->getLastModified());
+                        $this->assertFalse($hashContext->canSkipHashing());
+                        $hashContext->updateLastModified(201);
+                        $hashContext->setHash('cbab7');
+                    }
+                }
+            )
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('quoteIdentifier')
+            ->with('tl_files')
+            ->willReturn('tl_files')
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllNumeric')
+            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), lastModified FROM tl_files", [], [])
+            ->willReturn([
+                ['old', $this->generateUuid(1)->toBinary(), 'aa22b', 0, 99],
+                ['file1', $this->generateUuid(2)->toBinary(), '8446b', 0, 100],
+            ])
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('executeQuery')
+            ->with(
+                'INSERT INTO tl_files (`uuid`, `pid`, `path`, `hash`, `type`, `name`, `extension`, `tstamp`, `lastModified`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                $this->callback(
+                    function (array $params) {
+                        $this->assertSame('new', $params[2]); // path
+                        $this->assertSame('cbab7', $params[3]); // hash
+                        $this->assertSame(201, $params[8]); // lastModified
+
+                        return true;
+                    }
+                )
+            )
+        ;
+
+        $connection
+            ->expects($this->exactly(2))
+            ->method('update')
+            ->willReturnCallback(
+                function (string $table, array $update, array $criteria): void {
+                    $this->assertSame('tl_files', $table);
+
+                    $file = $criteria['path'] ?? null;
+
+                    if ('file1' === $file) {
+                        $this->assertSame('file2', $update['path']);
+
+                        return;
+                    }
+
+                    if ('new' === $file) {
+                        $this->assertSame(201, $update['lastModified']);
+
+                        return;
+                    }
+
+                    $this->fail();
+                }
+            )
+        ;
+
+        $dbafs = new Dbafs(
+            $hashGenerator,
+            $connection,
+            $this->createMock(EventDispatcherInterface::class),
+            $filesystem,
+            'tl_files'
+        );
+
+        $changeSet = $dbafs->sync();
+
+        $this->assertSame(
+            [
+                [
+                    ChangeSet::ATTR_HASH => 'cbab7',
+                    ChangeSet::ATTR_PATH => 'new',
+                    ChangeSet::ATTR_TYPE => ChangeSet::TYPE_FILE,
+                ],
+            ],
+            $changeSet->getItemsToCreate(),
+        );
+
+        $this->assertSame(
+            [
+                'new' => [ChangeSet::ATTR_LAST_MODIFIED => 201],
+                'file1' => [ChangeSet::ATTR_PATH => 'file2', ChangeSet::ATTR_LAST_MODIFIED => 200],
+            ],
+            $changeSet->getItemsToUpdate(true),
+        );
+
+        $this->assertSame(
+            [
+                'new' => 201,
+                'file1' => 200,
+            ],
+            $changeSet->getLastModifiedUpdates(),
+        );
+
+        $this->assertEmpty($changeSet->getItemsToDelete());
+    }
+
+    public function testSetsLastModifiedInRecords(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchAssociative')
+            ->with('SELECT * FROM tl_files WHERE path=?', ['foo'], [])
+            ->willReturn([
+                'id' => 1,
+                'uuid' => $this->generateUuid(1)->toBinary(),
+                'path' => 'foo',
+                'type' => 'file',
+                'lastModified' => 123450,
+            ])
+        ;
+
+        $dbafs = $this->getDbafs($connection);
+        $dbafs->useLastModified();
+
+        $this->assertSame(123450, $dbafs->getRecord('foo')->getLastModified());
+    }
+
     public function testSync(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -1017,6 +1185,19 @@ class DbafsTest extends TestCase
         $dbafs->sync();
 
         $this->assertSame($uuid, $dbafs->getRecord('baz2')->getExtraMetadata()['uuid']->toBinary());
+    }
+
+    public function testSyncWithoutChanges(): void
+    {
+        $filesystem = $this->createMock(VirtualFilesystemInterface::class);
+        $filesystem
+            ->method('listContents')
+            ->willReturn([])
+        ;
+
+        $dbafs = $this->getDbafs(null, $filesystem);
+
+        $this->assertTrue($dbafs->sync()->isEmpty());
     }
 
     public function testSupportsNoExtraFeaturesByDefault(): void

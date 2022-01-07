@@ -436,6 +436,11 @@ class Dbafs implements DbafsInterface, ResetInterface
             $itemsToUpdate[$oldPath] = [ChangeSet::ATTR_PATH => $path];
             unset($itemsToCreate[$path], $itemsToDelete[$oldPath]);
 
+            if (null !== ($lastModified = $lastModifiedUpdates[$path] ?? null)) {
+                $lastModifiedUpdates[$oldPath] = $lastModified;
+                unset($lastModifiedUpdates[$path]);
+            }
+
             $hasMoves = true;
         }
 
@@ -545,11 +550,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 return null;
             }
 
-            if (null !== ($pid = $allUuidsByPath[$parentPath] ?? null)) {
-                return $pid;
-            }
-
-            throw new \RuntimeException("No parent entry found for non-root resource '$path'.");
+            return $allUuidsByPath[$parentPath];
         };
 
         $allLastModifiedUpdatesByPath = $changeSet->getLastModifiedUpdates();
