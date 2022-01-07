@@ -26,6 +26,8 @@ use Twig\Environment;
  */
 class MaintenanceModeCommand extends Command
 {
+    protected static $defaultName = 'contao:maintenance-mode';
+
     private string $maintenanceFilePath;
     private Environment $twig;
     private Filesystem $filesystem;
@@ -42,7 +44,6 @@ class MaintenanceModeCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('contao:maintenance-mode')
             ->addArgument('state', InputArgument::OPTIONAL, 'Use "enable" to enable and "disable" to disable the maintenance mode. If the state is already the desired one, nothing happens. You can also use "on" and "off".')
             ->addOption('template', 't', InputOption::VALUE_REQUIRED, 'Allows to take a different Twig template name when enabling the maintenance mode.', '@ContaoCore/Error/service_unavailable.html.twig')
             ->addOption('templateVars', null, InputOption::VALUE_OPTIONAL, 'Add custom template variables to the Twig template when enabling the maintenance mode (provide as JSON).', '{}')
@@ -54,7 +55,6 @@ class MaintenanceModeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $state = $input->getArgument('state');
-
         $io = new SymfonyStyle($input, $output);
 
         if (\in_array($state, ['enable', 'on'], true)) {
@@ -74,10 +74,13 @@ class MaintenanceModeCommand extends Command
         $isEnabled = $this->filesystem->exists($this->maintenanceFilePath);
 
         if ('json' === $input->getOption('format')) {
-            $output->writeln(json_encode([
-                'enabled' => $isEnabled,
-                'maintenanceFilePath' => $this->maintenanceFilePath,
-            ], JSON_THROW_ON_ERROR));
+            $output->writeln(json_encode(
+                [
+                    'enabled' => $isEnabled,
+                    'maintenanceFilePath' => $this->maintenanceFilePath,
+                ],
+                JSON_THROW_ON_ERROR
+            ));
 
             return 0;
         }
