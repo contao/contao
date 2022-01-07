@@ -164,6 +164,144 @@ class PageModelTest extends ContaoTestCase
         $this->assertSame($databaseResultData[2]['subpages'], $pages->offsetGet(2)->subpages);
     }
 
+    /**
+     * @group legacy
+     * @dataProvider similarAliasProvider
+     */
+    public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
+    {
+        PageModel::reset();
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->once())
+            ->method('execute')
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->willReturn(new Result($rootData, ''))
+        ;
+
+        $aliasStatement = $this->createMock(Statement::class);
+        $aliasStatement
+            ->expects($this->once())
+            ->method('execute')
+            ->with('%'.$alias.'%', $page['id'])
+            ->willReturn(new Result([['id' => 42]], ''))
+        ;
+
+        $database
+            ->expects($this->once())
+            ->method('prepare')
+            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id!=?')
+            ->willReturn($aliasStatement)
+        ;
+
+        $this->mockDatabase($database);
+
+        $sourcePage = $this->mockClassWithProperties(PageModel::class, $page);
+        $result = PageModel::findSimilarByAlias($sourcePage);
+
+        $this->assertInstanceOf(Collection::class, $result);
+
+        /** @var PageModel $pageModel */
+        $pageModel = $result->first();
+
+        $this->assertSame(42, $pageModel->id);
+    }
+
+    public function similarAliasProvider(): \Generator
+    {
+        yield 'Use original alias without prefix and suffix' => [
+            [
+                'id' => 1,
+                'alias' => 'foo',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [],
+        ];
+
+        yield 'Strips prefix' => [
+            [
+                'id' => 1,
+                'alias' => 'de/foo',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => 'de', 'urlSuffix' => ''],
+            ],
+        ];
+
+        yield 'Strips multiple prefixes' => [
+            [
+                'id' => 1,
+                'alias' => 'switzerland/german/foo',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => 'switzerland', 'urlSuffix' => ''],
+                ['urlPrefix' => 'switzerland/german', 'urlSuffix' => ''],
+            ],
+        ];
+
+        yield 'Strips the current prefix' => [
+            [
+                'id' => 1,
+                'alias' => 'de/foo',
+                'urlPrefix' => 'de',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => 'en', 'urlSuffix' => ''],
+            ],
+        ];
+
+        yield 'Strips suffix' => [
+            [
+                'id' => 1,
+                'alias' => 'foo.html',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => '', 'urlSuffix' => '.html'],
+            ],
+        ];
+
+        yield 'Strips multiple suffixes' => [
+            [
+                'id' => 1,
+                'alias' => 'foo.php',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => '', 'urlSuffix' => '.html'],
+                ['urlPrefix' => '', 'urlSuffix' => '.php'],
+            ],
+        ];
+
+        yield 'Strips the current suffix' => [
+            [
+                'id' => 1,
+                'alias' => 'foo.html',
+                'urlPrefix' => '',
+                'urlSuffix' => '.html',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => '', 'urlSuffix' => '.php'],
+            ],
+        ];
+    }
+
     private function mockDatabase(Database $database): void
     {
         $property = (new \ReflectionClass($database))->getProperty('arrInstances');

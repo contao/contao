@@ -188,7 +188,7 @@ class ModuleArticle extends Module
 		// Back link
 		if (!$this->multiMode && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias))
 		{
-			$this->Template->backlink = 'javascript:history.go(-1)'; // see #6955
+			$this->Template->backlink = $objPage->getFrontendUrl();
 			$this->Template->back = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goBack']);
 		}
 
