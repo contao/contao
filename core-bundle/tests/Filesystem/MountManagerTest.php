@@ -290,6 +290,11 @@ class MountManagerTest extends TestCase
         ];
     }
 
+    public function testFileExistsToleratesNonExistingMountPoints(): void
+    {
+        $this->assertFalse((new MountManager())->fileExists('foo'));
+    }
+
     /**
      * @dataProvider provideListings
      */
@@ -420,7 +425,86 @@ class MountManagerTest extends TestCase
         ];
     }
 
-    // todo: test copy + move
+    public function testCopyAndMove(): void
+    {
+        $config = new Config();
+
+        $adapter1 = new InMemoryFilesystemAdapter();
+        $adapter1->write('file1', 'file1-content', $config);
+        $adapter1->write('file2', 'file2-content', $config);
+
+        $adapter2 = new InMemoryFilesystemAdapter();
+
+        $manager = new MountManager();
+        $manager->mount($adapter1, 'foo');
+        $manager->mount($adapter2, 'bar');
+
+        // Copy in same adapters
+        $manager->copy('foo/file1', 'foo/file1-copy');
+
+        $this->assertTrue($manager->fileExists('foo/file1'));
+        $this->assertTrue($manager->fileExists('foo/file1-copy'));
+        $this->assertSame('file1-content', $adapter1->read('file1-copy'));
+
+        // Copy across adapters
+        $manager->copy('foo/file1', 'bar/file1');
+
+        $this->assertTrue($manager->fileExists('foo/file1'));
+        $this->assertTrue($manager->fileExists('bar/file1'));
+        $this->assertSame('file1-content', $adapter2->read('file1'));
+
+        // Move in same adapter
+        $manager->move('foo/file1', 'foo/file1-moved');
+
+        $this->assertFalse($manager->fileExists('foo/file1'));
+        $this->assertTrue($manager->fileExists('foo/file1-moved'));
+        $this->assertSame('file1-content', $adapter1->read('file1-moved'));
+
+        // Move across adapters
+        $manager->move('foo/file2', 'bar/file2');
+
+        $this->assertFalse($manager->fileExists('foo/file2'));
+        $this->assertTrue($manager->fileExists('bar/file2'));
+        $this->assertSame('file2-content', $adapter2->read('file2'));
+    }
+
+    public function testWrapsFlysystemCopyExceptionIntoVirtualFilesystemException(): void
+    {
+        $flysystemException = new class() extends \RuntimeException implements FilesystemException {
+        };
+
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter
+            ->method('copy')
+            ->willThrowException($flysystemException)
+        ;
+
+        $manager = new MountManager($adapter);
+
+        $this->expectException(VirtualFilesystemException::class);
+        $this->expectExceptionMessage('Unable to copy file from \'foo\' to \'bar\'.');
+
+        $manager->copy('foo', 'bar');
+    }
+
+    public function testWrapsFlysystemMoveExceptionIntoVirtualFilesystemException(): void
+    {
+        $flysystemException = new class() extends \RuntimeException implements FilesystemException {
+        };
+
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter
+            ->method('move')
+            ->willThrowException($flysystemException)
+        ;
+
+        $manager = new MountManager($adapter);
+
+        $this->expectException(VirtualFilesystemException::class);
+        $this->expectExceptionMessage('Unable to move file from \'foo\' to \'bar\'.');
+
+        $manager->move('foo', 'bar');
+    }
 
     private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter
     {

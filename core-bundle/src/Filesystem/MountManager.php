@@ -196,7 +196,7 @@ class MountManager
         [$adapterFrom, $adapterPathFrom] = $this->getAdapterAndPath($pathFrom);
 
         /** @var FilesystemAdapter $adapterTo */
-        [$adapterTo, $adapterPathTo] = $this->getAdapterAndPath($pathFrom);
+        [$adapterTo, $adapterPathTo] = $this->getAdapterAndPath($pathTo);
 
         try {
             if ($adapterFrom === $adapterTo) {
@@ -205,7 +205,7 @@ class MountManager
                 return;
             }
 
-            $visibility = $options['visibility'] ?? $adapterFrom->visibility($adapterPathFrom);
+            $visibility = $options['visibility'] ?? $adapterFrom->visibility($adapterPathFrom)->visibility();
 
             $stream = $adapterFrom->readStream($adapterPathFrom);
             $adapterTo->writeStream($adapterPathTo, $stream, new Config(compact('visibility')));
@@ -232,14 +232,14 @@ class MountManager
                 return;
             }
 
-            $visibility = $options['visibility'] ?? $adapterFrom->visibility($adapterPathFrom);
+            $visibility = $options['visibility'] ?? $adapterFrom->visibility($adapterPathFrom)->visibility();
 
             $stream = $adapterFrom->readStream($adapterPathFrom);
             $adapterTo->writeStream($adapterPathTo, $stream, new Config(compact('visibility')));
 
             $adapterFrom->delete($adapterPathFrom);
         } catch (FilesystemException $e) {
-            throw VirtualFilesystemException::unableToCopy($pathFrom, $pathTo, $e);
+            throw VirtualFilesystemException::unableToMove($pathFrom, $pathTo, $e);
         }
     }
 
