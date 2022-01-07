@@ -16,6 +16,9 @@ use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use Symfony\Component\Filesystem\Path;
 
+/**
+ * @experimental
+ */
 class FilesystemItem
 {
     private bool $isFile;

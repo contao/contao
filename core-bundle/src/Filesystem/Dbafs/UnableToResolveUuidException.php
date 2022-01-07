@@ -14,6 +14,9 @@ namespace Contao\CoreBundle\Filesystem\Dbafs;
 
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @experimental
+ */
 class UnableToResolveUuidException extends \RuntimeException
 {
     private Uuid $uuid;

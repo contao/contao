@@ -14,6 +14,9 @@ namespace Contao\CoreBundle\Filesystem\Dbafs\Hashing;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 
+/**
+ * @experimental
+ */
 class HashGenerator implements HashGeneratorInterface
 {
     private string $hashAlgorithm;

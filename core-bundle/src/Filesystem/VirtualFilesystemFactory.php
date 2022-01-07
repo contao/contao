@@ -14,6 +14,9 @@ namespace Contao\CoreBundle\Filesystem;
 
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 
+/**
+ * @experimental
+ */
 class VirtualFilesystemFactory
 {
     private MountManager $mountManager;

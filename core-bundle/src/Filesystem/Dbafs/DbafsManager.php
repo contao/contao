@@ -22,6 +22,8 @@ use Symfony\Component\Uid\Uuid;
  *
  * Note: In general, user code should not directly interface with the
  *       DbafsManager, but use the @see VirtualFilesystem instead.
+ *
+ * @experimental
  */
 class DbafsManager
 {

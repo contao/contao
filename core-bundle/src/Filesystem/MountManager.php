@@ -25,6 +25,8 @@ use Symfony\Component\Filesystem\Path;
  *
  * Note: In general, user code should not directly interface with the
  *       MountManager, but use the @see VirtualFilesystem instead.
+ *
+ * @experimental
  */
 class MountManager
 {

@@ -34,6 +34,8 @@ use Symfony\Contracts\Service\ResetInterface;
  * @phpstan-import-type CreateItemDefinition from ChangeSet
  * @phpstan-import-type UpdateItemDefinition from ChangeSet
  * @phpstan-import-type DeleteItemDefinition from ChangeSet
+ *
+ * @experimental
  */
 class Dbafs implements DbafsInterface, ResetInterface
 {

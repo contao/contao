@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Filesystem;
 
+/**
+ * @experimental
+ */
 interface ConfigureFilesystemInterface
 {
     public function configureFilesystem(FilesystemConfiguration $config): void;

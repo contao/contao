@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\Filesystem\Dbafs;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @experimental
+ */
 interface DbafsInterface
 {
     public const FEATURES_NONE = 0;

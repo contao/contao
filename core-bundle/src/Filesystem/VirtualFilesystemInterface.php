@@ -15,6 +15,9 @@ namespace Contao\CoreBundle\Filesystem;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Symfony\Component\Uid\Uuid;
 
+/**
+ * @experimental
+ */
 interface VirtualFilesystemInterface
 {
     public const NONE = 0;

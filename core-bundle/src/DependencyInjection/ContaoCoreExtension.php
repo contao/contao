@@ -205,8 +205,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     {
         $filesStorageName = 'files';
 
-        // TODO: Replace $uploadPath with 'files' in Contao 5 and remove the
-        //       redundant 'files' attribute when mounting the local adapter
+        // TODO: Deprecate the 'contao.upload_path' config key. In the next
+        //       major version, $uploadPath can then be replaced with 'files'
+        //       and the redundant 'files' attribute removed when mounting the
+        //       local adapter.
         $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
 
         $config

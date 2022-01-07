@@ -27,6 +27,8 @@ use Symfony\Component\Uid\Uuid;
  * target resources. For operations that can be short-circuited via a DBAFS,
  * you can optionally set access flags to bypass the DBAFS or to force a
  * (partial) synchronization beforehand.
+ *
+ * @experimental
  */
 class VirtualFilesystem implements VirtualFilesystemInterface
 {

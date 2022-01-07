@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\Dbafs\Hashing;
 
+/**
+ * @experimental
+ */
 final class Context
 {
     private ?string $oldHash;

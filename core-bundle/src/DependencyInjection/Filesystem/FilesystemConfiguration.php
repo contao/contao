@@ -26,6 +26,8 @@ use Symfony\Component\Filesystem\Path;
 
 /**
  * @final
+ *
+ * @experimental
  */
 class FilesystemConfiguration
 {

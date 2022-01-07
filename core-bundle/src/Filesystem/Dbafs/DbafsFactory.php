@@ -17,6 +17,9 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @experimental
+ */
 class DbafsFactory
 {
     private Connection $connection;

@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
+/**
+ * @experimental
+ */
 class VirtualFilesystemException extends \RuntimeException
 {
     public const UNABLE_TO_CHECK_IF_FILE_EXISTS = 0;
