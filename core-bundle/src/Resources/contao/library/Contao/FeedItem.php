@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\Image\DeferredImageInterface;
 use Webmozart\PathUtil\Path;
 
 /**
@@ -100,10 +99,10 @@ class FeedItem
 	/**
 	 * Add an enclosure
 	 *
-	 * @param string $strFile The file path
-	 * @param null $strUrl The base URL
-	 * @param string $strMedia The media type
-	 * @param mixed $size The image size
+	 * @param string $strFile   The file path
+	 * @param null   $strUrl    The base URL
+	 * @param string $strMedia  The media type
+	 * @param mixed  $imageSize The image size
 	 */
 	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure', $imageSize = null)
 	{
