@@ -123,7 +123,7 @@ class PreviewLinkListener
         }
 
         // Only allow creating new records from front end link with preview script in URL
-        if ('create' === $input->get('act') && false !== strpos($input->get('url'), $this->previewScript)) {
+        if ('create' === $input->get('act') && false !== strpos($input->get('url') ?? '', $this->previewScript)) {
             $GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable'] = false;
         }
 
