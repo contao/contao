@@ -53,7 +53,6 @@ class PageRoutingListenerTest extends TestCase
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
-
         $listener = new PageRoutingListener($framework, $pageRegistry, $this->createMock(Environment::class));
 
         $this->assertSame('foobar', $listener->loadRoutePath('', $dc));
@@ -78,7 +77,6 @@ class PageRoutingListenerTest extends TestCase
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
-
         $listener = new PageRoutingListener($framework, $pageRegistry, $this->createMock(Environment::class));
 
         $this->assertSame('', $listener->loadRoutePath('foobar', $dc));
@@ -125,7 +123,6 @@ class PageRoutingListenerTest extends TestCase
         ];
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
-
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -158,7 +155,6 @@ class PageRoutingListenerTest extends TestCase
         ]);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
-
         $pageRegistry
             ->expects($this->exactly(3))
             ->method('isRoutable')
@@ -212,7 +208,6 @@ class PageRoutingListenerTest extends TestCase
     public function testReturnsEmptyRoutingConflictsIfPageModelIsNotFound(): void
     {
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
-
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -240,7 +235,6 @@ class PageRoutingListenerTest extends TestCase
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
-
         $listener = new PageRoutingListener($framework, $pageRegistry, $twig);
 
         $this->assertSame('', $listener->generateRouteConflicts($dc));
@@ -251,7 +245,6 @@ class PageRoutingListenerTest extends TestCase
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
-
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -281,7 +274,6 @@ class PageRoutingListenerTest extends TestCase
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
-
         $listener = new PageRoutingListener($framework, $pageRegistry, $twig);
 
         $this->assertSame('', $listener->generateRouteConflicts($dc));
@@ -306,7 +298,6 @@ class PageRoutingListenerTest extends TestCase
         ]);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
-
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -333,7 +324,6 @@ class PageRoutingListenerTest extends TestCase
         ]);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
-
         $pageRegistry
             ->expects($this->once())
             ->method('isRoutable')
@@ -378,7 +368,6 @@ class PageRoutingListenerTest extends TestCase
         ]);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
-
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -405,12 +394,9 @@ class PageRoutingListenerTest extends TestCase
         ]);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
-
         $pageRegistry
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isRoutable')
-            ->with($aliasPage)
-            ->willReturn(true)
         ;
 
         $pageRegistry
@@ -450,7 +436,6 @@ class PageRoutingListenerTest extends TestCase
         ]);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
-
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -477,12 +462,9 @@ class PageRoutingListenerTest extends TestCase
         ]);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
-
         $pageRegistry
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isRoutable')
-            ->with($aliasPage)
-            ->willReturn(true)
         ;
 
         $pageRegistry

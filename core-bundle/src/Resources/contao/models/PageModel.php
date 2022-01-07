@@ -702,9 +702,9 @@ class PageModel extends Model
 	 */
 	public static function findSimilarByAlias(self $pageModel)
 	{
-		$t = static::$strTable;
 		$pageModel->loadDetails();
 
+		$t = static::$strTable;
 		$alias = '%' . self::stripPrefixesAndSuffixes($pageModel->alias, $pageModel->urlPrefix, $pageModel->urlSuffix) . '%';
 
 		return static::findBy(array("$t.alias LIKE ?", "$t.id!=?"), array($alias, $pageModel->id));
@@ -1468,7 +1468,10 @@ class PageModel extends Model
 	{
 		if (null === self::$prefixes || null === self::$suffixes)
 		{
-			$rows = Database::getInstance()->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")->fetchAllAssoc();
+			$rows = Database::getInstance()
+				->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+				->fetchAllAssoc()
+			;
 
 			self::$prefixes = array();
 			self::$suffixes = array();

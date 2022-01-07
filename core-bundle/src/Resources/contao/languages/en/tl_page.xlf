@@ -30,7 +30,7 @@
         <source>Route priority</source>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.1">
-        <source>Optionally configure priority to affect the order of routes. Default: 0</source>
+        <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -473,7 +473,10 @@
       <trans-unit id="tl_page.legacyRouting">
         <source>Disable legacy routing mode to enable this configuration.</source>
       </trans-unit>
-      <trans-unit id="tl_page.routingConflicts">
+      <trans-unit id="tl_page.routeConflicts">
+        <source>Route conflicts</source>
+      </trans-unit>
+      <trans-unit id="tl_page.conflictingAlias">
         <source>The following pages have a similar alias that might conflict with this page. You can control the order through the route priority.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">

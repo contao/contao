@@ -138,7 +138,6 @@ class PageUrlListenerTest extends TestCase
         }
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
-
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -222,7 +221,6 @@ class PageUrlListenerTest extends TestCase
         }
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
-
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -259,7 +257,6 @@ class PageUrlListenerTest extends TestCase
         );
 
         $pageRegistry = $this->mockPageRegistry(array_fill(0, \count($pages) + 1, true), [$currentRoute, ...$aliasRoutes]);
-
         $urlPrefix = $activeRecord['urlPrefix'] ? $activeRecord['urlPrefix'].'/' : '';
         $url = '/'.$urlPrefix.$value.$activeRecord['urlSuffix'];
         $translator = $this->mockTranslator('ERR.pageUrlExists', $expectExists ? $url : null);
@@ -285,7 +282,6 @@ class PageUrlListenerTest extends TestCase
         $currentPage = $this->mockClassWithProperties(PageModel::class, $activeRecord);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
-
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -350,7 +346,6 @@ class PageUrlListenerTest extends TestCase
         }
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
-
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
@@ -994,7 +989,6 @@ class PageUrlListenerTest extends TestCase
         ;
 
         $route = new PageRoute($pageAdapter->findWithDetails(2));
-
         $pageRegistry = $this->mockPageRegistry([true, true], [$route]);
 
         $listener = new PageUrlListener(
@@ -1119,7 +1113,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var Adapter<PageModel>&MockObject $pageAdapter */
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(3))
@@ -1219,7 +1213,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var Adapter<PageModel>&MockObject $pageAdapter */
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(2))
@@ -1467,7 +1461,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        /** @var Adapter<PageModel>&MockObject $pageAdapter */
+        /** @var PageModel&MockObject $pageAdapter */
         $pageAdapter = $framework->getAdapter(PageModel::class);
         $pageAdapter
             ->expects($this->exactly(3))
@@ -1649,7 +1643,6 @@ class PageUrlListenerTest extends TestCase
         }
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findByPid', 'findSimilarByAlias']);
-
         $pageAdapter
             ->method('findWithDetails')
             ->willReturnCallback(static fn (int $id) => $pagesById[$id] ?? null)
@@ -1789,7 +1782,7 @@ class PageUrlListenerTest extends TestCase
                 ->method('generate')
                 ->with(
                     RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
-                    $this->isType('array'), //[RouteObjectInterface::ROUTE_OBJECT => $this->isInstanceOf(PageRoute::class)],
+                    $this->isType('array'),
                     UrlGeneratorInterface::ABSOLUTE_URL,
                 )
                 ->willReturnCallback(

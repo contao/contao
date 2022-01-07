@@ -165,16 +165,14 @@ class PageModelTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider similarAliasProvider
-     *
      * @group legacy
+     * @dataProvider similarAliasProvider
      */
     public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
     {
         PageModel::reset();
 
         $database = $this->createMock(Database::class);
-
         $database
             ->expects($this->once())
             ->method('execute')
@@ -200,7 +198,6 @@ class PageModelTest extends ContaoTestCase
         $this->mockDatabase($database);
 
         $sourcePage = $this->mockClassWithProperties(PageModel::class, $page);
-
         $result = PageModel::findSimilarByAlias($sourcePage);
 
         $this->assertInstanceOf(Collection::class, $result);

@@ -73,9 +73,14 @@ class PageRoutingListener
 
         foreach ($aliasPages as $aliasPage) {
             $aliasPage->loadDetails();
+
+            if ($currentPage->domain !== $aliasPage->domain) {
+                continue;
+            }
+
             $aliasUrl = $this->buildUrl($aliasPage->alias, $aliasPage->urlPrefix, $aliasPage->urlSuffix);
 
-            if (!$this->pageRegistry->isRoutable($aliasPage) || $currentPage->domain !== $aliasPage->domain || $currentUrl !== $aliasUrl) {
+            if ($currentUrl !== $aliasUrl || !$this->pageRegistry->isRoutable($aliasPage)) {
                 continue;
             }
 
