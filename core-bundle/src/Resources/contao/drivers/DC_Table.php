@@ -2673,6 +2673,123 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
+	 * Toggle a field (e.g. "published" or "disable")
+	 *
+	 * @param integer $intId
+	 *
+	 * @throws AccessDeniedException
+	 * @throws InternalServerErrorException
+	 */
+	public function toggle($intId=null)
+	{
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
+		{
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+		}
+
+		if ($intId)
+		{
+			$this->intId = $intId;
+		}
+
+		$this->strField = Input::get('field');
+
+		// Security check before using field in DB query!
+		if (!$this->Database->fieldExists($this->strField, $this->strTable))
+		{
+			throw new AccessDeniedException('Database field ' . $this->strTable . '.' . $this->strField . ' does not exist.');
+		}
+
+		// Check the field access
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
+		{
+			throw new AccessDeniedException('Not enough permissions to toggle field ' . $this->strTable . '.' . $this->strField . ' of record ID ' . $intId . '.');
+		}
+
+		// Get the current record
+		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+								 ->limit(1)
+								 ->execute($this->intId);
+
+		// Redirect if there is no record with the given ID
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
+		}
+
+		$this->objActiveRecord = $objRow;
+		$this->values[] = $this->intId;
+		$this->procedure[] = 'id=?';
+		$this->blnCreateNewVersion = false;
+
+		$objVersions = new Versions($this->strTable, $this->intId);
+		$objVersions->initialize();
+
+		Input::setPost('FORM_SUBMIT', $this->strTable);
+		$this->varValue = $objRow->{$this->strField};
+
+		$this->save($this->varValue ? '' : '1');
+
+		// Trigger the onsubmit_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$callback($this);
+				}
+			}
+		}
+
+		// Set the current timestamp before adding a new version
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+		{
+			$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
+						   ->execute($this->ptable, time(), $this->intId);
+		}
+		else
+		{
+			$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+						   ->execute(time(), $this->intId);
+		}
+
+		// Save the current version
+		if ($this->blnCreateNewVersion)
+		{
+			$objVersions->create();
+
+			// Call the onversion_callback
+			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
+			{
+				trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
+
+				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
+				{
+					if (\is_array($callback))
+					{
+						$this->import($callback[0]);
+						$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
+					}
+					elseif (\is_callable($callback))
+					{
+						$callback($this->strTable, $this->intId, $this);
+					}
+				}
+			}
+		}
+
+		$this->invalidateCacheTags();
+
+		$this->redirect($this->getReferer());
+	}
+
+	/**
 	 * Auto-generate a form to override all records that are currently shown
 	 *
 	 * @return string
@@ -3838,11 +3955,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
-		// Must be either visible in the root trail or allowed by permissions (or their children)
-		// In the extended tree view (mode 6) we have to check on the parent table only
-		$needsCheck = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable;
+		// Check if the ID is visible in the root trail or allowed by permissions (or their children)
+		// in tree mode or if $table differs from $this->strTable. The latter will be false in extended
+		// tree mode if both $table and $this->strTable point to the child table.
+		$checkIdAllowed = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable;
 
-		if ($needsCheck && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
+		if ($checkIdAllowed && !\in_array($id, $this->visibleRootTrails) && !\in_array($id, $this->root) && !\in_array($id, $this->rootChildren))
 		{
 			return '';
 		}
@@ -3983,7 +4101,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$label = preg_replace('/\(\) ?|\[] ?|{} ?|<> ?/', '', $label);
-		$isVisibleRootTrailPage = \in_array($id, $this->visibleRootTrails);
+
+		// Check either the ID (tree mode or parent table) or the parent ID (child table)
+		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($objRow->pid, $this->visibleRootTrails);
 
 		// Call the label_callback ($row, $label, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
@@ -4593,7 +4713,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 		// Add another panel at the end of the page
-		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
+		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
 		{
 			$return .= $this->paginationMenu();
 		}
@@ -5072,7 +5192,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 			// Add another panel at the end of the page
-			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'], 'limit') !== false)
+			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
 			{
 				$return .= $this->paginationMenu();
 			}
@@ -6040,7 +6160,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
 
 		list($offset, $limit) = explode(',', $this->limit) + array(null, null);
 
@@ -6283,7 +6403,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Fetch all children of the root
-		$this->rootChildren = $this->Database->getChildRecords($this->root, $table, $this->Database->fieldExists('sorting', $table));
+		if ($this->treeView)
+		{
+			$this->rootChildren = $this->Database->getChildRecords($this->root, $table, $this->Database->fieldExists('sorting', $table));
+		}
 	}
 
 	/**

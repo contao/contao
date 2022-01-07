@@ -160,7 +160,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, $value)
+    public function convertDcaValue(PickerConfig $config, $value)/*: int*/
     {
         return (int) $value;
     }

@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Result;
+use Contao\NewsletterBundle\Event\SendNewsletterEvent;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
@@ -125,10 +126,12 @@ class Newsletter extends Backend
 
 				// Send
 				$objEmail = $this->generateEmailObject($objNewsletter, $arrAttachments);
-				$this->sendNewsletter($objEmail, $objNewsletter, $arrRecipient, $text, $html);
 
-				// Redirect
-				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
+				if ($this->sendNewsletter($objEmail, $objNewsletter, $arrRecipient, $text, $html))
+				{
+					Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
+				}
+
 				$this->redirect($referer);
 			}
 
@@ -168,6 +171,7 @@ class Newsletter extends Backend
 								   ->execute(time(), $objNewsletter->id);
 
 					$_SESSION['REJECTED_RECIPIENTS'] = array();
+					$_SESSION['SKIPPED_RECIPIENTS'] = array();
 				}
 
 				$time = time();
@@ -183,9 +187,16 @@ class Newsletter extends Backend
 					}
 
 					$objEmail = $this->generateEmailObject($objNewsletter, $arrAttachments);
-					$this->sendNewsletter($objEmail, $objNewsletter, $objRecipients->row(), $text, $html);
 
-					echo 'Sending newsletter to <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
+					if ($this->sendNewsletter($objEmail, $objNewsletter, $objRecipients->row(), $text, $html))
+					{
+						echo 'Sending newsletter to <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
+					}
+					else
+					{
+						$_SESSION['SKIPPED_RECIPIENTS'][] = $objRecipients->email;
+						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
+					}
 				}
 			}
 
@@ -210,9 +221,15 @@ class Newsletter extends Backend
 
 						$this->log('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated', __METHOD__, ContaoContext::ERROR);
 					}
-
-					unset($_SESSION['REJECTED_RECIPIENTS']);
 				}
+
+				if ($intSkipped = \count($_SESSION['SKIPPED_RECIPIENTS']))
+				{
+					$intTotal -= $intSkipped;
+					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
+				}
+
+				unset($_SESSION['REJECTED_RECIPIENTS'], $_SESSION['SKIPPED_RECIPIENTS']);
 
 				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
@@ -371,6 +388,8 @@ class Newsletter extends Backend
 	 * @param string $text
 	 * @param string $html
 	 * @param string $css
+	 *
+	 * @return boolean
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
@@ -396,6 +415,22 @@ class Newsletter extends Backend
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
+		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html))
+			->setHtmlAllowed(!$objNewsletter->sendText)
+			->setNewsletterData($objNewsletter->row())
+			->setRecipientData($arrRecipient);
+
+		System::getContainer()->get('event_dispatcher')->dispatch($event);
+
+		if ($event->isSkipSending())
+		{
+			return false;
+		}
+
+		$objEmail->text = $event->getText();
+		$objEmail->html = $event->isHtmlAllowed() ? $event->getHtml() : '';
+		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
+
 		// Deactivate invalid addresses
 		try
 		{
@@ -415,12 +450,16 @@ class Newsletter extends Backend
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['sendNewsletter']) && \is_array($GLOBALS['TL_HOOKS']['sendNewsletter']))
 		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using the "sendNewsletter" hook has been deprecated and will no longer work in Contao 5.0. Use the SendNewsletterEvent instead.');
+
 			foreach ($GLOBALS['TL_HOOKS']['sendNewsletter'] as $callback)
 			{
 				$this->import($callback[0]);
 				$this->{$callback[0]}->{$callback[1]}($objEmail, $objNewsletter, $arrRecipient, $text, $html);
 			}
 		}
+
+		return true;
 	}
 
 	/**

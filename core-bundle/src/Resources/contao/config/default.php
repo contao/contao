@@ -19,7 +19,7 @@ $GLOBALS['TL_CONFIG']['folderUrl']      = true;
 $GLOBALS['TL_CONFIG']['datimFormat'] = 'Y-m-d H:i';
 $GLOBALS['TL_CONFIG']['dateFormat']  = 'Y-m-d';
 $GLOBALS['TL_CONFIG']['timeFormat']  = 'H:i';
-$GLOBALS['TL_CONFIG']['timeZone']    = ini_get('date.timezone') ?: 'GMT';
+$GLOBALS['TL_CONFIG']['timeZone']    = date_default_timezone_get();
 
 // Input and security
 $GLOBALS['TL_CONFIG']['allowedTags']

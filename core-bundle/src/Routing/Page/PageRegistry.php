@@ -18,7 +18,6 @@ use Doctrine\DBAL\Connection;
 class PageRegistry
 {
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
-    private const DISABLE_ROUTING = ['error_401', 'error_403', 'error_404'];
 
     private Connection $connection;
     private ?array $urlPrefixes = null;
@@ -61,13 +60,13 @@ class PageRegistry
         $options = $config->getOptions();
         $path = $config->getPath();
 
-        if (null === $path) {
+        if (false === $path) {
+            $path = '';
+            $options['compiler_class'] = UnroutablePageRouteCompiler::class;
+        } elseif (null === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
             $defaults['parameters'] = '';
             $requirements['parameters'] = $pageModel->requireItem ? '/.+' : '(/.+?)?';
-        } elseif (false === $path || \in_array($type, self::DISABLE_ROUTING, true)) {
-            $path = '';
-            $options['compiler_class'] = UnroutablePageRouteCompiler::class;
         }
 
         $route = new PageRoute($pageModel, $path, $defaults, $requirements, $options, $config->getMethods());
@@ -183,11 +182,6 @@ class PageRegistry
     {
         $type = $page->type;
 
-        // Check for non-routable legacy error pages
-        if (\in_array($type, self::DISABLE_ROUTING, true)) {
-            return false;
-        }
-
         // Any legacy page without route config is routable by default
         if (!isset($this->routeConfigs[$type])) {
             return true;
@@ -195,6 +189,22 @@ class PageRegistry
 
         // Check if page controller is routable
         return false !== $this->routeConfigs[$type]->getPath();
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getUnroutableTypes(): array
+    {
+        $types = [];
+
+        foreach ($this->routeConfigs as $type => $config) {
+            if (false === $config->getPath()) {
+                $types[] = $type;
+            }
+        }
+
+        return $types;
     }
 
     private function initializePrefixAndSuffix(): void

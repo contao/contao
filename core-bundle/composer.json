@@ -1,9 +1,8 @@
 {
     "name": "contao/core-bundle",
-    "type": "symfony-bundle",
     "description": "Contao Open Source CMS",
-    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
+    "type": "symfony-bundle",
     "authors": [
         {
             "name": "Leo Feyer",
@@ -14,6 +13,13 @@
             "homepage": "https://contao.org/contributors"
         }
     ],
+    "homepage": "https://contao.org",
+    "support": {
+        "issues": "https://github.com/contao/contao/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/core-bundle",
+        "docs": "https://docs.contao.org"
+    },
     "require": {
         "php": "^7.4 || ^8.0",
         "ext-dom": "*",
@@ -64,7 +70,6 @@
         "paragonie/constant_time_encoding": "^2.2",
         "phpspec/php-diff": "^1.0",
         "psr/log": "^1.0",
-        "ramsey/uuid": "^4.0",
         "scheb/2fa-backup-code": "^5.8",
         "scheb/2fa-bundle": "^5.8",
         "scheb/2fa-trusted-device": "^5.8",
@@ -98,7 +103,9 @@
         "symfony/security-bundle": "^5.4",
         "symfony/string": "^5.4",
         "symfony/translation": "^5.4",
+        "symfony/twig-bridge": "^5.4",
         "symfony/twig-bundle": "^5.4",
+        "symfony/uid": "^5.4",
         "symfony/var-dumper": "^5.4",
         "symfony/webpack-encore-bundle": "^1.10",
         "symfony/yaml": "^5.4",
@@ -110,6 +117,15 @@
         "webignition/robots-txt-file": "^3.0",
         "wikimedia/less.php": "^1.7"
     },
+    "require-dev": {
+        "ext-fileinfo": "*",
+        "contao/manager-plugin": "^2.3.1",
+        "contao/test-case": "^4.5",
+        "phpunit/phpunit": "^8.5",
+        "symfony/browser-kit": "^5.4",
+        "symfony/http-client": "^5.4",
+        "symfony/phpunit-bridge": "^5.4"
+    },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",
         "contao/core": "*",
@@ -119,24 +135,8 @@
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2"
     },
-    "require-dev": {
-        "ext-fileinfo": "*",
-        "contao/maintenance-bundle-deprecated": "^2.1.5",
-        "contao/manager-plugin": "^2.3.1",
-        "contao/test-case": "^4.5",
-        "phpunit/phpunit": "^8.5",
-        "symfony/browser-kit": "^5.4",
-        "symfony/http-client": "^5.4",
-        "symfony/phpunit-bridge": "^5.4"
-    },
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files"
-    },
-    "extra": {
-        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin",
-        "symfony": {
-            "require": "^5.4"
-        }
     },
     "autoload": {
         "psr-4": {
@@ -162,10 +162,7 @@
             "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
         }
     },
-    "support": {
-        "issues": "https://github.com/contao/contao/issues",
-        "forum": "https://community.contao.org",
-        "source": "https://github.com/contao/core-bundle",
-        "docs": "https://docs.contao.org"
+    "extra": {
+        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     }
 }

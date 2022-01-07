@@ -62,17 +62,6 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			return '';
 		}
 
-		// Hide the crawler in maintenance mode (see #1379)
-		try
-		{
-			$driver = System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
-			$blnMaintenance = $driver->isExists();
-		}
-		catch (\Exception $e)
-		{
-			$blnMaintenance = false;
-		}
-
 		$factory = System::getContainer()->get('contao.crawl.escargot.factory');
 		$subscriberNames = $factory->getSubscriberNames();
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
@@ -84,7 +73,6 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		}
 
 		$template = new BackendTemplate('be_crawl');
-		$template->isMaintenance = $blnMaintenance;
 		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
 		$template->memberWidget = $memberWidget;
@@ -182,7 +170,10 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		if (Environment::get('isAjaxRequest'))
 		{
 			// Start crawling
-			$escargot->crawl();
+			if ('true' !== Environment::get('httpOnlyStatusUpdate'))
+			{
+				$escargot->crawl();
+			}
 
 			// Commit the result on the lazy queue
 			$queue->commit($jobId);

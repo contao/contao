@@ -55,7 +55,7 @@ class Dumper implements DumperInterface
     }
 
     /**
-     * @param AbstractSchemaManager<AbstractPlatform> $schemaManager
+     * @phpstan-param AbstractSchemaManager<AbstractPlatform> $schemaManager
      */
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
@@ -90,7 +90,7 @@ class Dumper implements DumperInterface
 
         $rows = $connection->executeQuery(sprintf('SELECT %s FROM `%s`', implode(', ', $values), $table->getName()));
 
-        foreach ($rows->fetchAllAssociative() as $row) {
+        foreach ($rows->iterateAssociative() as $row) {
             $insertColumns = [];
             $insertValues = [];
 

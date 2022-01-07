@@ -102,7 +102,7 @@
         <source>Please note that the update assistant only handles tables starting with &lt;code&gt;tl_&lt;/code&gt;.</source>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
-        <source>The database is up to date.</source>
+        <source>The database is up-to-date.</source>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>
@@ -132,7 +132,7 @@
         <source>Import a template</source>
       </trans-unit>
       <trans-unit id="44" resname="template_import_explain">
-        <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
+        <source>Here you can import a &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>

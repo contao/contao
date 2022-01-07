@@ -37,7 +37,6 @@ services:
             - '@twig'
             - '@router'
             - '@contao.csrf.token_manager'
-            - '%contao.csrf_token_name%'
         tags:
             - controller.service_arguments
 
@@ -91,9 +90,15 @@ services:
 
     Contao\CoreBundle\Controller\InsertTagsController:
         arguments:
-            - '@contao.framework'
+            - '@contao.insert_tag.parser'
         tags:
             - controller.service_arguments
+
+    Contao\CoreBundle\Controller\Page\ErrorPageController:
+        arguments:
+            - '@contao.framework'
+
+    Contao\CoreBundle\Controller\Page\RootPageController: ~
 
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
@@ -101,8 +106,6 @@ services:
             - '@event_dispatcher'
         tags:
             - controller.service_arguments
-
-    Contao\CoreBundle\Controller\Page\RootPageController: ~
 
     Contao\CoreBundle\Controller\SitemapController:
         arguments:

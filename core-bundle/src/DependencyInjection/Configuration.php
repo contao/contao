@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
@@ -608,8 +609,27 @@ class Configuration implements ConfigurationInterface
                     ->scalarPrototype()->end()
                 ->end()
                 ->integerNode('keep_max')
-                    ->info('The maximum number of backups to keep.')
+                    ->info('The maximum number of backups to keep. Use 0 to keep all the backups forever.')
                     ->defaultValue(5)
+                ->end()
+                ->arrayNode('keep_intervals')
+                    ->info('The latest backup plus the oldest of every configured interval will be kept. Intervals have to be specified as documented in https://www.php.net/manual/en/dateinterval.construct.php without the P prefix.')
+                    ->defaultValue(['1D', '7D', '14D', '1M'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $intervals) {
+                                try {
+                                    RetentionPolicy::validateAndSortIntervals($intervals);
+                                } catch (\Exception $e) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        )
+                    ->thenInvalid('%s')
+                    ->end()
+                    ->scalarPrototype()->end()
                 ->end()
             ->end()
         ;
