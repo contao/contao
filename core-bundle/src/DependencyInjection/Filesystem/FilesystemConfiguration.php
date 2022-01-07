@@ -120,8 +120,8 @@ class FilesystemConfiguration
      * be absolute or relative to the project root and may contain
      * placeholders (%name%).
      *
-     * If you do not set a name, the id/alias for the adapter service will be
-     * derived from the mount path.
+     * If you do not set a name, the id for the adapter service will be derived
+     * from the mount path.
      */
     public function mountLocalAdapter(string $filesystemPath, string $mountPath, string $name = null): self
     {

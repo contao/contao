@@ -29,12 +29,16 @@ interface DbafsInterface
 
     /**
      * Returns a record or null if none was found.
+     *
+     * The given $path must be relative to the DBAFS root.
      */
     public function getRecord(string $path): ?FilesystemItem;
 
     /**
      * Returns an iterator over all records inside $path. If $deep is true,
      * this also includes all subdirectories (recursively).
+     *
+     * The given $path must be relative to the DBAFS root.
      *
      * @return iterable<FilesystemItem>
      */
@@ -45,6 +49,8 @@ interface DbafsInterface
      * keys that simply will be ignored if they do not match the internal data
      * structure.
      *
+     * The given $path must be relative to the DBAFS root.
+     *
      * @param array<string, mixed> $metadata
      *
      * @throws \InvalidArgumentException if provided $path is invalid
@@ -52,16 +58,16 @@ interface DbafsInterface
     public function setExtraMetadata(string $path, array $metadata): void;
 
     /**
-     * Synchronizes the database with the configured filesystem. If $scope
-     * paths are provided only certain files/directories will be synchronized.
+     * Updates the DBAFS database. By providing $paths, you can indicate that
+     * only certain files or directories need to be synchronized (performance).
+     * The DBAFS implementation may however include additional resources.
      *
-     * Paths can have the following forms:
+     * All $paths must be relative to the DBAFS root and can occur in one of
+     * the following forms:
      *
-     *   'foo/bar/baz' = just the single the file/directory foo/bar/baz
-     *   'foo/**' = foo and all resources in all subdirectories
-     *   'foo/*' = foo and only direct child resources of foo
-     *
-     * @param string ...$paths relative paths inside the filesystem root
+     *   'foo/bar/baz' = just the single file/directory 'foo/bar/baz'
+     *   'foo/**' = 'foo' and all resources in all subdirectories
+     *   'foo/*' = 'foo' and only direct child resources of 'foo'
      */
     public function sync(string ...$paths): ChangeSet;
 
