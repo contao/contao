@@ -10,6 +10,12 @@ services:
             - '%contao.prepend_locale%'
             - '%contao.url_suffix%'
 
+    contao.routing.candidates:
+        class: Contao\CoreBundle\Routing\Candidates\LegacyCandidates
+        arguments:
+            - '%contao.prepend_locale%'
+            - '%contao.url_suffix%'
+
     contao.routing.frontend_loader:
         class: Contao\CoreBundle\Routing\FrontendLoader
         arguments:
@@ -17,12 +23,6 @@ services:
             - '%contao.url_suffix%'
         tags:
             - routing.loader
-
-    contao.routing.candidates:
-        class: Contao\CoreBundle\Routing\Candidates\LegacyCandidates
-        arguments:
-            - '%contao.prepend_locale%'
-            - '%contao.url_suffix%'
 
     contao.routing.legacy_matcher:
         class: Contao\CoreBundle\Routing\Matcher\LegacyMatcher

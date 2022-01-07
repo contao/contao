@@ -581,20 +581,20 @@ var AjaxRequest =
 			div.getParent('div').getElement('pre').toggleClass('disabled');
 		}
 
+		icon = image.get('data-icon') || AjaxRequest.themePath + 'icons/visible.svg';
+		icond = image.get('data-icon-disabled') || AjaxRequest.themePath + 'icons/invisible.svg';
+
 		// Send request
-		if (!published) {
-			image.src = AjaxRequest.themePath + 'icons/visible.svg';
-			image.set('data-state', 1);
+		if (el.href.indexOf('act=toggle') !== -1) {
+			image.src = !published ? icon : icond;
+			image.set('data-state', !published ? 1 : 0);
 
-			params = {'state':1, 'rt':Contao.request_token};
-			params[$(el).get('data-tid') || 'tid'] = id;
-
-			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get(params);
+			new Request.Contao({'url':el.href, 'followRedirects':false}).get();
 		} else {
-			image.src = AjaxRequest.themePath + 'icons/invisible.svg';
-			image.set('data-state', 0);
+			image.src = published ? icond : icon;
+			image.set('data-state', published ? 0 : 1);
 
-			params = {'state':0, 'rt':Contao.request_token};
+			params = {'state':published ? 0 : 1, 'rt':Contao.request_token};
 			params[$(el).get('data-tid') || 'tid'] = id;
 
 			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get(params);
