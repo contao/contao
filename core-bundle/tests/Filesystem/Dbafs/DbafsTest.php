@@ -108,7 +108,7 @@ class DbafsTest extends TestCase
         $this->assertNotNull($record);
         $this->assertSame('foo/bar', $record->getPath());
         $this->assertTrue($record->isFile());
-        $this->assertSame(['foo' => 'bar'], $record->getExtraMetadata()); // defined via event
+        $this->assertSame('bar', $record->getExtraMetadata()['foo']); // defined via event
     }
 
     public function testGetUnknownRecord(): void
@@ -173,10 +173,10 @@ class DbafsTest extends TestCase
                 []
             )
             ->willReturn([
-                ['id' => 1, 'uuid' => 'b33f', 'path' => 'foo/first', 'type' => 'file'],
-                ['id' => 2, 'uuid' => 'a451', 'path' => 'foo/second', 'type' => 'file'],
-                ['id' => 3, 'uuid' => 'd98c', 'path' => 'foo/bar', 'type' => 'folder'],
-                ['id' => 4, 'uuid' => 'd98c', 'path' => 'foo/bar/third', 'type' => 'file'],
+                ['id' => 1, 'uuid' => $this->generateUuid(1)->toBinary(), 'path' => 'foo/first', 'type' => 'file'],
+                ['id' => 2, 'uuid' => $this->generateUuid(2)->toBinary(), 'path' => 'foo/second', 'type' => 'file'],
+                ['id' => 3, 'uuid' => $this->generateUuid(3)->toBinary(), 'path' => 'foo/bar', 'type' => 'folder'],
+                ['id' => 4, 'uuid' => $this->generateUuid(4)->toBinary(), 'path' => 'foo/bar/third', 'type' => 'file'],
             ])
         ;
 
@@ -879,25 +879,6 @@ class DbafsTest extends TestCase
 
     public function testSync(): void
     {
-        /*
-         * Demo file structure present in the database:
-         *
-         *  <root>
-         *    |-file1
-         *    |-file2
-         *    |-empty-dir
-         *    |  |- ~
-         *    |-foo
-         *    |  |-file3
-         *    |  |-baz
-         *    |    |-file4
-         *    |-bar
-         *       |-file5a
-         *       |-file5b
-         *
-         * File 5a and 5b have the same hash (e.g. both empty files).
-         */
-
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
@@ -906,10 +887,23 @@ class DbafsTest extends TestCase
             ->willReturn([
                 ['files/foo', 'ee61', '48a6bbe07d25733e37e2c949ee412d5d', 1, null],
                 ['files/bar.file', 'ab54', 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0, null],
+                ['files/baz', 'cc12', '73feffa4b7f6bb68e44cf984c85f6e88', 1, null],
             ])
         ;
 
-        $invocation = 0;
+        $connection
+            ->expects($this->once())
+            ->method('fetchAssociative')
+            ->with('SELECT * FROM tl_files WHERE path=?', ['files/baz'], [])
+            ->willReturn([
+                'id' => 1,
+                'uuid' => $uuid = $this->generateUuid(1)->toBinary(),
+                'path' => 'files/baz',
+                'type' => 'file',
+            ])
+        ;
+
+        $invokedInsert = 0;
 
         $connection
             ->expects($this->exactly(2))
@@ -923,7 +917,7 @@ class DbafsTest extends TestCase
                     }
                 ),
                 $this->callback(
-                    function (array $parameters) use (&$invocation): bool {
+                    function (array $parameters) use (&$invokedInsert): bool {
                         $expectedParameters = [
                             [
                                 // foo/file2.dat
@@ -953,11 +947,11 @@ class DbafsTest extends TestCase
                             ],
                         ];
 
-                        foreach ($expectedParameters[$invocation] as $index => $value) {
-                            $this->assertSame($value, $parameters[$index], "INSERT query #$invocation, index $index");
+                        foreach ($expectedParameters[$invokedInsert] as $index => $value) {
+                            $this->assertSame($value, $parameters[$index], "INSERT query #$invokedInsert, index $index");
                         }
 
-                        ++$invocation;
+                        ++$invokedInsert;
 
                         return true;
                     }
@@ -965,20 +959,26 @@ class DbafsTest extends TestCase
             )
         ;
 
-        $connection
-            ->expects($this->once())
-            ->method('update')
-            ->with(
-                'tl_files',
-                $this->callback(
-                    function (array $changes): bool {
-                        $this->assertSame('0f34431d95798f10bc55ee2e493a8818', $changes['hash']);
-                        $this->assertArrayHasKey('tstamp', $changes);
+        $invokedUpdate = 0;
 
-                        return true;
+        $connection
+            ->expects($this->exactly(2))
+            ->method('update')
+            ->willReturnCallback(
+                function (string $table, array $updates, array $criteria) use (&$invokedUpdate): void {
+                    $this->assertSame('tl_files', $table);
+                    $this->assertArrayHasKey('tstamp', $updates);
+
+                    if (0 === $invokedUpdate) {
+                        $this->assertSame('files/baz2', $updates['path']);
+                        $this->assertSame(['path' => 'files/baz'], $criteria);
+                    } else {
+                        $this->assertSame('0f34431d95798f10bc55ee2e493a8818', $updates['hash']);
+                        $this->assertSame(['path' => 'files/foo'], $criteria);
                     }
-                ),
-                ['path' => 'files/foo']
+
+                    ++$invokedUpdate;
+                }
             )
         ;
 
@@ -1000,6 +1000,7 @@ class DbafsTest extends TestCase
         $filesystem->createDirectory('foo/sub');
         $filesystem->write('foo/file1.txt', 'new');
         $filesystem->write('foo/file2.dat', 'stuff');
+        $filesystem->write('baz2', 'baz');
         $filesystem->delete('bar.file');
 
         $dbafs = $this->getDbafs($connection, $filesystem);
@@ -1009,7 +1010,13 @@ class DbafsTest extends TestCase
         // operations when testing
         $dbafs->setBulkInsertSize(2);
 
+        // Prime internal cache to test if it gets updated and still points to
+        // this resource
+        $this->assertSame($uuid, $dbafs->getRecord('baz')->getExtraMetadata()['uuid']->toBinary());
+
         $dbafs->sync();
+
+        $this->assertSame($uuid, $dbafs->getRecord('baz2')->getExtraMetadata()['uuid']->toBinary());
     }
 
     public function testSupportsNoExtraFeaturesByDefault(): void
@@ -1027,8 +1034,6 @@ class DbafsTest extends TestCase
 
         $this->assertSame(DbafsInterface::FEATURE_LAST_MODIFIED, $dbafs->getSupportedFeatures());
     }
-
-    // todo: test last modified
 
     private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null, EventDispatcherInterface $eventDispatcher = null): Dbafs
     {
@@ -1049,6 +1054,7 @@ class DbafsTest extends TestCase
                 ->willReturnCallback(
                     static function (RetrieveDbafsMetadataEvent $event) {
                         $event->set('foo', 'bar');
+                        $event->set('uuid', $event->getUuid());
 
                         return $event;
                     }

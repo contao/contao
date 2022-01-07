@@ -102,7 +102,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->bulkInsertSize = $chunkSize;
     }
 
-    public function useLastModified(bool $enable): void
+    public function useLastModified(bool $enable = true): void
     {
         $this->useLastModified = $enable;
     }
