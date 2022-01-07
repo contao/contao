@@ -271,7 +271,7 @@ class FrontendMenuBuilderTest extends TestCase
         );
 
         // Configure showProtected=true
-        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, 1, null, ['showProtected' => true]);
+        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, ['showProtected' => true]);
 
         // Assert protected pages are added to the menu
         $this->assertNotNull($tree->getChild('VIP Member area'));
@@ -369,7 +369,7 @@ class FrontendMenuBuilderTest extends TestCase
         );
 
         // Configure to show only one level and no pages above
-        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, 1, null, ['showLevel' => 1]);
+        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, ['showLevel' => 1]);
 
         // Assert submenu is generated but not displayed
         $item = $tree->getChild('Contact');
@@ -403,7 +403,7 @@ class FrontendMenuBuilderTest extends TestCase
         );
 
         // Configure to show only one level and no pages above
-        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, 1, null, ['showLevel' => 1, 'hardLimit' => true]);
+        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, ['showLevel' => 1, 'hardLimit' => true]);
 
         // Assert submenu is generated but not displayed
         $item = $tree->getChild('Contact');
@@ -437,7 +437,7 @@ class FrontendMenuBuilderTest extends TestCase
         );
 
         // Configure to show only one level and no pages above
-        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, 1, null, ['showLevel' => 1]);
+        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, ['showLevel' => 1]);
 
         // Assert submenu is generated and displayed
         $item = $tree->getChild('Contact');
@@ -504,7 +504,7 @@ class FrontendMenuBuilderTest extends TestCase
             $this->mockDatabase()
         );
 
-        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, 1, null, ['isSitemap' => true]);
+        $tree = $menuBuilder->getMenu($root, self::ROOT_ID, ['isSitemap' => true]);
 
         // Assert root item exists
         $this->assertSame('root', $tree->getName());
@@ -539,7 +539,7 @@ class FrontendMenuBuilderTest extends TestCase
             $this->mockDatabase()
         );
 
-        $tree = $menuBuilder->getMenu($root, 0, 1, null, ['pages' => array_column(self::PAGES, 'id')]);
+        $tree = $menuBuilder->getMenu($root, 0, ['pages' => array_column(self::PAGES, 'id')]);
 
         // Assert root item exists
         $this->assertSame('root', $tree->getName());
