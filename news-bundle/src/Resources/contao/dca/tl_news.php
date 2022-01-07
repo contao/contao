@@ -15,16 +15,13 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
-use Contao\Image;
 use Contao\Input;
 use Contao\LayoutModel;
 use Contao\News;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
-use Contao\StringUtil;
 use Contao\System;
-use Contao\Versions;
 
 System::loadLanguageFile('tl_content');
 
