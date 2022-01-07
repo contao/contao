@@ -23,7 +23,6 @@ use Contao\Message;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
-use Contao\Versions;
 
 $GLOBALS['TL_DCA']['tl_content'] = array
 (
@@ -102,8 +101,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			),
 			'toggle' => array
 			(
+				'href'                => 'act=toggle&amp;field=invisible',
 				'icon'                => 'visible.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_content', 'toggleIcon')
 			),
 			'show' => array
@@ -1138,7 +1137,7 @@ class tl_content extends Backend
 		$objSession = System::getContainer()->get('session');
 
 		// Prevent editing content elements with not allowed types
-		if (Input::get('act') == 'edit' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
+		if (Input::get('act') == 'edit' || Input::get('act') == 'delete' || Input::get('act') == 'toggle' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
 		{
 			$objCes = $this->Database->prepare("SELECT type FROM tl_content WHERE id=?")
 									 ->execute(Input::get('id'));
@@ -1979,15 +1978,8 @@ class tl_content extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Input::get('cid'))
-		{
-			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
-			$this->redirect($this->getReferer());
-		}
-
 		$security = System::getContainer()->get('security.helper');
 
-		// Check permissions AFTER checking the cid, so hacking attempts are logged
 		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_content::invisible'))
 		{
 			return '';
@@ -1999,136 +1991,13 @@ class tl_content extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		$href .= '&amp;id=' . Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
+		$href .= '&amp;id=' . $row['id'];
 
 		if ($row['invisible'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" data-tid="cid"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
-	}
-
-	/**
-	 * Toggle the visibility of an element
-	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
-	{
-		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
-
-		if ($dc)
-		{
-			$dc->id = $intId; // see #8043
-		}
-
-		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		// Check the field access
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_content::invisible'))
-		{
-			throw new AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
-		}
-
-		$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
-								 ->limit(1)
-								 ->execute($intId);
-
-		if ($objRow->numRows < 1)
-		{
-			throw new AccessDeniedException('Invalid content element ID ' . $intId . '.');
-		}
-
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $objRow->type))
-		{
-			throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
-		}
-
-		// Set the current record
-		if ($dc)
-		{
-			$dc->activeRecord = $objRow;
-		}
-
-		$objVersions = new Versions('tl_content', $intId);
-		$objVersions->initialize();
-
-		// Reverse the logic (elements have invisible=1)
-		$blnVisible = !$blnVisible;
-
-		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$blnVisible = $callback($blnVisible, $dc);
-				}
-			}
-		}
-
-		$time = time();
-
-		// Update the database
-		$this->Database->prepare("UPDATE tl_content SET tstamp=$time, invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
-					   ->execute($intId);
-
-		if ($dc)
-		{
-			$dc->activeRecord->tstamp = $time;
-			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
-		}
-
-		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		$objVersions->create();
-
-		if ($dc)
-		{
-			$dc->invalidateCacheTags();
-		}
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,' . $row['id'] . ')">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

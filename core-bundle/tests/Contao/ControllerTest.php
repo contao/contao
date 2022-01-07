@@ -32,8 +32,14 @@ class ControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    /**
+     * @group legacy
+     */
     public function testReturnsTheTimeZones(): void
     {
+        $this->expectDeprecation('%sgetTimeZones%shas been deprecated%s');
+        $this->expectDeprecation('%stimezones.php%s');
+
         $timeZones = System::getTimeZones();
 
         $this->assertCount(9, $timeZones['General']);
