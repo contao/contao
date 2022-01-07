@@ -543,10 +543,7 @@ class VirtualFilesystemTest extends TestCase
         ;
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
-
-        $this->assertEmpty(
-            [...$filesystem->listContents('foo/bar', false, VirtualFilesystemInterface::FORCE_SYNC)]
-        );
+        $filesystem->listContents('foo/bar', false, VirtualFilesystemInterface::FORCE_SYNC);
     }
 
     /**

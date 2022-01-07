@@ -181,25 +181,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
             $this->dbafsManager->sync($path);
         }
 
-        // Read from DBAFS
-        if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
-            foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
-                yield $item->withPath(Path::makeRelative($item->getPath(), $this->prefix));
-            }
-
-            return;
-        }
-
-        // Read from adapter, but enhance result with extra metadata on demand
-        /** @var FilesystemItem $item */
-        foreach ($this->mountManager->listContents($path, $deep) as $item) {
-            yield $item
-                ->withPath(Path::makeRelative($item->getPath(), $this->prefix))
-                ->withExtraMetadata(
-                    fn () => $this->dbafsManager->getExtraMetadata($item->getPath())
-                )
-            ;
-        }
+        return $this->doListContents($path, $deep, $accessFlags);
     }
 
     public function getLastModified($location, int $accessFlags = self::NONE): int
@@ -267,6 +249,32 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->ensureNotReadonly();
 
         $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
+    }
+
+    /**
+     * @return \Generator<FilesystemItem>
+     */
+    private function doListContents(string $path, bool $deep, int $accessFlags): \Generator
+    {
+        // Read from DBAFS
+        if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
+            foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
+                yield $item->withPath(Path::makeRelative($item->getPath(), $this->prefix));
+            }
+
+            return;
+        }
+
+        // Read from adapter, but enhance result with extra metadata on demand
+        /** @var FilesystemItem $item */
+        foreach ($this->mountManager->listContents($path, $deep) as $item) {
+            yield $item
+                ->withPath(Path::makeRelative($item->getPath(), $this->prefix))
+                ->withExtraMetadata(
+                    fn () => $this->dbafsManager->getExtraMetadata($item->getPath())
+                )
+            ;
+        }
     }
 
     /**

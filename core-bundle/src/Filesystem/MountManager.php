@@ -313,7 +313,10 @@ class MountManager
         throw new \RuntimeException("No adapter was mounted to serve path '$path'.");
     }
 
-    private function doListContents(string $path, bool $deep): iterable
+    /**
+     * @return \Generator<FilesystemItem>
+     */
+    private function doListContents(string $path, bool $deep): \Generator
     {
         /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath, $prefix] = $this->getAdapterAndPath($path);
