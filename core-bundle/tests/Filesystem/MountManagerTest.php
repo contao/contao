@@ -103,37 +103,6 @@ class MountManagerTest extends TestCase
         $this->closeStreamResources($arguments);
     }
 
-    /**
-     * @dataProvider provideCalls
-     */
-    public function testWrapsFlysystemExceptionIntoVirtualFilesystemException(array $call, array $expectedDelegateCall): void
-    {
-        [$delegateMethod, ,] = $expectedDelegateCall;
-
-        $flysystemException = new class() extends \RuntimeException implements FilesystemException {
-        };
-
-        $adapter = $this->createMock(FilesystemAdapter::class);
-        $adapter
-            ->method($delegateMethod)
-            ->willThrowException($flysystemException)
-        ;
-
-        $manager = new MountManager($this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod));
-        $manager->mount($adapter, 'some');
-
-        [$method, $arguments,] = $call;
-
-        try {
-            $manager->$method('some/place', ...$arguments);
-        } catch (VirtualFilesystemException $e) {
-            $this->assertSame($flysystemException, $e->getPrevious());
-            $this->assertSame('some/place', $e->getPath());
-        }
-
-        $this->closeStreamResources($arguments);
-    }
-
     public function provideCalls(): \Generator
     {
         yield 'fileExists' => [
@@ -286,6 +255,88 @@ class MountManagerTest extends TestCase
                 'mimeType',
                 [],
                 $fileAttributes,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideCallsForFlysystemExceptions
+     */
+    public function testWrapsFlysystemExceptionIntoVirtualFilesystemException(array $call, array $expectedDelegateCall): void
+    {
+        [$delegateMethod, ,] = $expectedDelegateCall;
+
+        $flysystemException = new class() extends \RuntimeException implements FilesystemException {
+        };
+
+        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter
+            ->expects($this->once())
+            ->method($delegateMethod)
+            ->willThrowException($flysystemException)
+        ;
+
+        $manager = new MountManager($this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod));
+        $manager->mount($adapter, 'some');
+
+        [$method, $arguments,] = $call;
+
+        try {
+            $result = $manager->$method('some/place', ...$arguments);
+
+            // Make sure to read from the iterator, so that the exception will get thrown
+            if($method === 'listContents') {
+                [...$result];
+            }
+
+        } catch (VirtualFilesystemException $e) {
+            $this->assertSame($flysystemException, $e->getPrevious());
+            $this->assertSame('some/place', $e->getPath());
+        }
+
+        $this->closeStreamResources($arguments);
+    }
+
+    public function provideCallsForFlysystemExceptions(): \Generator
+    {
+        yield from $this->provideCalls();
+
+        yield 'copy' => [
+            [
+                'copy',
+                ['some/place/b'],
+                null,
+            ],
+            [
+                'copy',
+                ['some/place/b'],
+                null,
+            ],
+        ];
+
+        yield 'move' => [
+            [
+                'move',
+                ['some/place/b'],
+                null,
+            ],
+            [
+                'move',
+                ['some/place/b'],
+                null,
+            ],
+        ];
+
+        yield 'list contents' => [
+            [
+                'listContents',
+                [],
+                null,
+            ],
+            [
+                'listContents',
+                [],
+                null,
             ],
         ];
     }
@@ -466,44 +517,6 @@ class MountManagerTest extends TestCase
         $this->assertFalse($manager->fileExists('foo/file2'));
         $this->assertTrue($manager->fileExists('bar/file2'));
         $this->assertSame('file2-content', $adapter2->read('file2'));
-    }
-
-    public function testWrapsFlysystemCopyExceptionIntoVirtualFilesystemException(): void
-    {
-        $flysystemException = new class() extends \RuntimeException implements FilesystemException {
-        };
-
-        $adapter = $this->createMock(FilesystemAdapter::class);
-        $adapter
-            ->method('copy')
-            ->willThrowException($flysystemException)
-        ;
-
-        $manager = new MountManager($adapter);
-
-        $this->expectException(VirtualFilesystemException::class);
-        $this->expectExceptionMessage('Unable to copy file from \'foo\' to \'bar\'.');
-
-        $manager->copy('foo', 'bar');
-    }
-
-    public function testWrapsFlysystemMoveExceptionIntoVirtualFilesystemException(): void
-    {
-        $flysystemException = new class() extends \RuntimeException implements FilesystemException {
-        };
-
-        $adapter = $this->createMock(FilesystemAdapter::class);
-        $adapter
-            ->method('move')
-            ->willThrowException($flysystemException)
-        ;
-
-        $manager = new MountManager($adapter);
-
-        $this->expectException(VirtualFilesystemException::class);
-        $this->expectExceptionMessage('Unable to move file from \'foo\' to \'bar\'.');
-
-        $manager->move('foo', 'bar');
     }
 
     private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter
