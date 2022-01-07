@@ -285,10 +285,9 @@ class MountManagerTest extends TestCase
             $result = $manager->$method('some/place', ...$arguments);
 
             // Make sure to read from the iterator, so that the exception will get thrown
-            if($method === 'listContents') {
+            if ('listContents' === $method) {
                 [...$result];
             }
-
         } catch (VirtualFilesystemException $e) {
             $this->assertSame($flysystemException, $e->getPrevious());
             $this->assertSame('some/place', $e->getPath());

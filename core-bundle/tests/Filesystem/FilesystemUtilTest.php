@@ -44,6 +44,13 @@ class FilesystemUtilTest extends TestCase
             $resource,
             'Invalid stream provided, expected stream resource, received \'resource (closed)\'.',
         ];
+
+        $nonStreamResource = stream_context_create();
+
+        yield 'non-stream resource' => [
+            $nonStreamResource,
+            'Invalid stream provided, expected stream resource, received resource of type \'stream-context\'.',
+        ];
     }
 
     public function testRewindStream(): void
