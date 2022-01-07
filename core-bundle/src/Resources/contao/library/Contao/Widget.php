@@ -1491,14 +1491,9 @@ abstract class Widget extends Controller
 					return null;
 				}
 
-				if (\in_array($sql['type'], array(Types::BIGINT, Types::DECIMAL, Types::INTEGER, Types::SMALLINT, Types::FLOAT)))
+				if (\in_array($sql['type'], array(Types::BIGINT, Types::DECIMAL, Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN)))
 				{
 					return 0;
-				}
-
-				if ($sql['type'] === Types::BOOLEAN)
-				{
-					return false;
 				}
 
 				return '';
