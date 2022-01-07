@@ -55,6 +55,9 @@ class MountManager
         return $this->mounts;
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function fileExists(string $path): bool
     {
         try {
@@ -72,6 +75,9 @@ class MountManager
         }
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function read(string $path): string
     {
         /** @var FilesystemAdapter $adapter */
@@ -85,6 +91,8 @@ class MountManager
     }
 
     /**
+     * @throws VirtualFilesystemException
+     *
      * @return resource
      */
     public function readStream(string $path)
@@ -99,6 +107,9 @@ class MountManager
         }
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function write(string $path, string $contents, array $options = []): void
     {
         /** @var FilesystemAdapter $adapter */
@@ -113,6 +124,8 @@ class MountManager
 
     /**
      * @param resource $contents
+     *
+     * @throws VirtualFilesystemException
      */
     public function writeStream(string $path, $contents, array $options = []): void
     {
@@ -129,6 +142,9 @@ class MountManager
         }
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function delete(string $path): void
     {
         /** @var FilesystemAdapter $adapter */
@@ -141,6 +157,9 @@ class MountManager
         }
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function deleteDirectory(string $path): void
     {
         /** @var FilesystemAdapter $adapter */
@@ -153,6 +172,9 @@ class MountManager
         }
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function createDirectory(string $path, array $options = []): void
     {
         /** @var FilesystemAdapter $adapter */
@@ -165,6 +187,9 @@ class MountManager
         }
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function copy(string $pathFrom, string $pathTo, array $options = []): void
     {
         /** @var FilesystemAdapter $adapterFrom */
@@ -189,6 +214,9 @@ class MountManager
         }
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function move(string $pathFrom, string $pathTo, array $options = []): void
     {
         /** @var FilesystemAdapter $adapterFrom */
@@ -216,6 +244,8 @@ class MountManager
     }
 
     /**
+     * @throws VirtualFilesystemException
+     *
      * @return \Generator<FilesystemItem>
      */
     public function listContents(string $path, bool $deep = false): \Generator
@@ -258,6 +288,9 @@ class MountManager
         }
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function getLastModified(string $path): int
     {
         /** @var FilesystemAdapter $adapter */
@@ -270,6 +303,9 @@ class MountManager
         }
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function getFileSize(string $path): int
     {
         /** @var FilesystemAdapter $adapter */
@@ -282,6 +318,9 @@ class MountManager
         }
     }
 
+    /**
+     * @throws VirtualFilesystemException
+     */
     public function getMimeType(string $path): string
     {
         /** @var FilesystemAdapter $adapter */
