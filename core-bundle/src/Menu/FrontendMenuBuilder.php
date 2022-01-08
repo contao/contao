@@ -79,8 +79,14 @@ class FrontendMenuBuilder
         $pages = $this->getPages($pid, $options);
 
         $request = $this->requestStack->getCurrentRequest();
-        /** @var PageModel|null $currentPage */
+        /** @var PageModel|int|null $currentPage */
         $currentPage = $request->attributes->get('pageModel');
+
+        // Support ESI requests
+        if (null !== $currentPage && !$currentPage instanceof PageModel) {
+            /** @var PageModel|null $currentPage */
+            $currentPage = $this->pageModelAdapter->findByPk($currentPage);
+        }
 
         $isMember = $this->security->isGranted('ROLE_MEMBER');
 
@@ -259,8 +265,14 @@ class FrontendMenuBuilder
 
     private function populateMenuItem(ItemInterface $item, Request $request, PageModel $page, ?string $href, bool $hasSubmenu, array $options = []): void
     {
-        /** @var PageModel|null $currentPage */
+        /** @var PageModel|int|null $currentPage */
         $currentPage = $request->attributes->get('pageModel');
+
+        // Support ESI requests
+        if (null !== $currentPage && !$currentPage instanceof PageModel) {
+            /** @var PageModel|null $currentPage */
+            $currentPage = $this->pageModelAdapter->findByPk($currentPage);
+        }
 
         $extra = $page->row();
         $isTrail = $currentPage && \in_array($page->id, $currentPage->trail, false);
