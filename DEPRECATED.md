@@ -150,11 +150,10 @@ deprecated in Contao 4.0 and will no longer work in Contao 5.0.
 ## VERSION and BUILD
 
 The `VERSION` and `BUILD` constants have been deprecated in Contao 4.0 and will
-be removed in Contao 5.0. Use the `kernel.packages` parameter instead.
+be removed in Contao 5.0. Use the `PackageUtil` class instead.
 
 ```php
-$packages = System::getContainer()->getParameter('kernel.packages');
-$coreVersion = $packages['contao/core-bundle'];
+$coreVersion = PackageUtil::getVersion('contao/core-bundle');
 ```
 
 ## member_grouped.html5

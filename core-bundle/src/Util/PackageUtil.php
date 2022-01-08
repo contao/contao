@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Util;
 
-use PackageVersions\Versions;
+use Composer\InstalledVersions;
 
 class PackageUtil
 {
@@ -21,16 +21,21 @@ class PackageUtil
      */
     public static function getVersion(string $packageName): string
     {
-        $version = Versions::getVersion($packageName);
+        $version = InstalledVersions::getPrettyVersion($packageName) ?? '';
 
-        return static::parseVersion($version);
+        return ltrim($version, 'v');
     }
 
     /**
      * Returns the version number as "major.minor.patch".
+     *
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0;
+     *             use the getVersion() method instead
      */
     public static function getNormalizedVersion(string $packageName): string
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'The PackageUtil::getNormalizedVersion() method has been deprecated and will no longer work in Contao 5.0. Use the PackageUtil::getVersion() method instead.');
+
         $chunks = explode('.', static::getVersion($packageName));
         $chunks += [0, 0, 0];
 
@@ -46,9 +51,13 @@ class PackageUtil
      *
      * The method either returns a version number such as 1.0.0 (a leading "v"
      * will be stripped) or a branch name such as dev-main.
+     *
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
      */
     public static function parseVersion(string $version): string
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'The PackageUtil::parseVersion() method has been deprecated and will no longer work in Contao 5.0.');
+
         return ltrim(strstr($version, '@', true), 'v');
     }
 
