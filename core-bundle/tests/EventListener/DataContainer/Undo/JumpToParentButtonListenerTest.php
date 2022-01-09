@@ -94,7 +94,6 @@ class JumpToParentButtonListenerTest extends TestCase
         ;
 
         $translationsMap = [
-            ['TABLES.tl_content.0', [], 'contao_default', null, 'Content element'],
             ['tl_undo.parent_modal', [], 'contao_tl_undo', null, 'Show parent of Content element ID 42'],
         ];
 
@@ -113,7 +112,6 @@ class JumpToParentButtonListenerTest extends TestCase
     {
         $row = $this->setupForDataSetWithParent();
 
-        $GLOBALS['TL_LANG']['TABLES']['tl_content'] = ['Content element', 'Content elements'];
         $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
@@ -167,7 +165,6 @@ class JumpToParentButtonListenerTest extends TestCase
             'tables' => ['tl_news_archive', 'tl_news'],
         ];
 
-        $GLOBALS['TL_LANG']['TABLES']['tl_content'] = ['Content element', 'Content elements'];
         $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
@@ -195,7 +192,6 @@ class JumpToParentButtonListenerTest extends TestCase
 
     private function setupForDataSetWithoutParent(): array
     {
-        $GLOBALS['TL_LANG']['TABLES']['tl_form'] = ['Form', 'Forms'];
         $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_form']['config'] = [];
