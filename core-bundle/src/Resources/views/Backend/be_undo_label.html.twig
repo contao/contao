@@ -13,7 +13,7 @@
     </div>
     <div class="tl_undo_header_item">
         <span class="tl_undo_header_label">{{ 'tl_undo.fromTable.0'|trans({}, 'contao_tl_undo') }}</span>
-        <strong>{{ translatedFromTable }}</strong>
+        <strong>{{ fromTable }}</strong>
     </div>
     <div class="tl_undo_header_item">
         <span class="tl_undo_header_label">ID</span> {{ originalRow.id }}
@@ -21,7 +21,7 @@
     {% if (parent) %}
         <div class="tl_undo_header_item">
             <span class="tl_undo_header_label">{{ 'MSC.parent'|trans }}</span>
-            <strong>{{ translatedParentTable }}</strong>
+            <strong>{{ parent.table }}</strong>
         </div>
     {% endif %}
 </div>

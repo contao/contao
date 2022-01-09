@@ -51,7 +51,7 @@ class JumpToParentButtonListener
 
         $newTitle = sprintf(
             $this->translator->trans('tl_undo.parent_modal', [], 'contao_tl_undo'),
-            $this->getTranslatedTypeFromTable($table),
+            $table,
             $originalRow['id']
         );
 

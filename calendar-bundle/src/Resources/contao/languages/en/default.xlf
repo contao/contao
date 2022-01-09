@@ -68,24 +68,6 @@
       <trans-unit id="MSC.eventOverview">
         <source>Back to the event overview</source>
       </trans-unit>
-      <trans-unit id="TABLES.tl_calendar.0">
-        <source>Calendar</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_calendar.1">
-        <source>Calendars</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_calendar_events.0">
-        <source>Event</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_calendar_events.1">
-        <source>Events</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_calendar_feed.0">
-        <source>Calendar feed</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_calendar_feed.1">
-        <source>Calendar feeds</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>

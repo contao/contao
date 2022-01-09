@@ -38,24 +38,6 @@
       <trans-unit id="MSC.newsOverview">
         <source>Back to the news overview</source>
       </trans-unit>
-      <trans-unit id="TABLES.tl_news.0">
-        <source>News item</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_news.1">
-        <source>News items</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_news_archive.0">
-        <source>News archive</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_news_archive.1">
-        <source>News archives</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_news_feed.0">
-        <source>News feed</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_news_feed.1">
-        <source>News feeds</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>

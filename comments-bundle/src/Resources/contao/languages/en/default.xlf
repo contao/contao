@@ -130,12 +130,6 @@ Click here to cancel your subscription:
 %s
 </source>
       </trans-unit>
-      <trans-unit id="TABLES.tl_comments.0">
-        <source>Comment</source>
-      </trans-unit>
-      <trans-unit id="TABLES.tl_comments.1">
-        <source>Comments</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>

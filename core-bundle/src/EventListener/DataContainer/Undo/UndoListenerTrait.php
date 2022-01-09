@@ -38,14 +38,6 @@ trait UndoListenerTrait
         return null;
     }
 
-    private function getTranslatedTypeFromTable(string $table): string
-    {
-        $key = "TABLES.$table.0";
-        $translatedTable = $this->translator->trans($key, [], 'contao_default');
-
-        return $translatedTable !== $key ? $translatedTable : $table;
-    }
-
     private function checkIfParentExists(array $parent): bool
     {
         $count = $this->connection->fetchOne(
