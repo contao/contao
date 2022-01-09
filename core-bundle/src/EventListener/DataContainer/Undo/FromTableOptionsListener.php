@@ -15,7 +15,7 @@ class FromTableOptionsListener
     }
 
     /** @Callback(table="tl_undo", target="fields.options.fromTable") */
-    public function __invoke()
+    public function __invoke(): array
     {
         $tables = $this->connection->executeQuery('SELECT DISTINCT ' . $this->connection->quoteIdentifier('fromTable') . ' FROM tl_undo');
 
