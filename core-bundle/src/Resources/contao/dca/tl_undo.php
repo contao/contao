@@ -99,7 +99,6 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		(
 			'sorting'                 => true,
 			'filter'                  => true,
-			'options_callback'        => array('tl_undo', 'getFromTableOptions'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'query' => array
@@ -220,25 +219,5 @@ class tl_undo extends Backend
 		}
 
 		return $data;
-	}
-
-	public function getFromTableOptions(DataContainer $dc)
-	{
-		$connection = System::getContainer()->get('database_connection');
-		$tables = $connection->executeQuery('SELECT DISTINCT ' . $connection->quoteIdentifier('fromTable') . ' FROM tl_undo');
-
-		if (0 === $tables->rowCount())
-		{
-			return array();
-		}
-
-		$options = array();
-
-		foreach ($tables->fetchFirstColumn() as $table)
-		{
-			$options[$table] = isset($GLOBALS['TL_LANG']['TABLES'][$table]) ? $GLOBALS['TL_LANG']['TABLES'][$table][0] : $table;
-		}
-
-		return $options;
 	}
 }
