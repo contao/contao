@@ -68,10 +68,10 @@ class JumpToParentButtonListener
 
     private function getParentLinkParameters(array $parent, string $table): string
     {
-        $params = '';
+        $params = [];
 
         if (empty($parent)) {
-            return $params;
+            return '';
         }
 
         $controller = $this->framework->getAdapter(Controller::class);
@@ -80,21 +80,22 @@ class JumpToParentButtonListener
         $module = $this->getModuleForTable($parent['table']);
 
         if (!$module) {
-            return $params;
+            return '';
         }
 
-        $params = 'do='.$module['_module_name'];
+        $params['do'] = $module['_module_name'];
 
         if (DataContainer::MODE_TREE === $GLOBALS['TL_DCA'][$parent['table']]['list']['sorting']['mode']) {
             // Limit tree to right parent node
-            $params .= '&pn='.$parent['id'];
+            $params['pn'] = $parent['id'];
         } elseif ($module['tables'][0] !== $table) {
             // If $table is the main table of a module, we just go to do=$module,
             // else we append the right table and ID
-            $params .= '&table='.$table.'&id='.$parent['id'];
+            $params['table'] = $table;
+            $params['id'] = $parent['id'];
         }
 
-        return $params;
+        return http_build_query($params, '', '&amp;', PHP_QUERY_RFC3986);
     }
 
     private function getModuleForTable(string $table): array

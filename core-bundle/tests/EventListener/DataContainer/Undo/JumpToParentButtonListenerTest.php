@@ -104,7 +104,7 @@ class JumpToParentButtonListenerTest extends TestCase
         ;
 
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
-        $buttonHtml = $listener($row, '', '', '', 'parent.svg');
+        $buttonHtml = $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg');
 
         $this->assertSame("<a href=\"\" title=\"Show parent of Content element ID 42\" onclick=\"Backend.openModalIframe({'title':'Show parent of Content element ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ", $buttonHtml);
     }
