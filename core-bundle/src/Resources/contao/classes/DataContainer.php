@@ -1585,18 +1585,21 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * Generate the label for a given data record according to the DCA configuration
+	 * Generates the label for a given data record according to the DCA configuration.
+	 * Returns an array of strings if 'showColumns' is enabled in the DCA configuration.
 	 *
 	 * @param array  $row   The data record
 	 * @param string $table The name of the data container
-	 * @param array  $args  The generated labels for each column
+	 *
+	 * @return string|array<string>
 	 */
-	public function generateRecordLabel(array $row, string $table = null, array &$args = array()): string
+	public function generateRecordLabel(array $row, string $table = null, bool $protected = false, bool $isVisibleRootTrailPage = false)
 	{
 		$table = $table ?? $this->strTable;
-		$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
+		$labelConfig = &$GLOBALS['TL_DCA'][$table]['list']['label'];
+		$args = array();
 
-		foreach ($showFields as $k=>$v)
+		foreach ($labelConfig['fields'] as $k=>$v)
 		{
 			// Decrypt the value
 			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
@@ -1670,17 +1673,62 @@ abstract class DataContainer extends Backend
 		}
 
 		// Render the label
-		$label = vsprintf($GLOBALS['TL_DCA'][$table]['list']['label']['format'] ?? '%s', $args);
+		$label = vsprintf($labelConfig['format'] ?? '%s', $args);
 
 		// Shorten the label it if it is too long
-		if (($GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] ?? null) > 0 && $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] < \strlen(strip_tags($label)))
+		if (($labelConfig['maxCharacters'] ?? null) > 0 && $labelConfig['maxCharacters'] < \strlen(strip_tags($label)))
 		{
-			$label = trim(StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'])) . ' …';
+			$label = trim(StringUtil::substrHtml($label, $labelConfig['maxCharacters'])) . ' …';
 		}
 
 		// Remove empty brackets (), [], {}, <> and empty tags from the label
 		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
 		$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
+
+		// Execute label_callback
+		if (\is_array($labelConfig['label_callback'] ?? null) || \is_callable($labelConfig['label_callback'] ?? null))
+		{
+			$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
+
+			if (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
+			{
+				if (\is_array($labelConfig['label_callback'] ?? null))
+				{
+					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, '', $protected, $isVisibleRootTrailPage);
+				}
+				else
+				{
+					$label = $labelConfig['label_callback']($row, $label, $this, '', $protected, $isVisibleRootTrailPage);
+				}
+			}
+			elseif ($mode === self::MODE_PARENT)
+			{
+				if (\is_array($labelConfig['label_callback'] ?? null))
+				{
+					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this);
+				}
+				else
+				{
+					$label = $labelConfig['label_callback']($row, $label, $this);
+				}
+			}
+			else
+			{
+				if (\is_array($labelConfig['label_callback'] ?? null))
+				{
+					$args = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
+				}
+				else
+				{
+					$args = $labelConfig['label_callback']($row, $label, $this, $args);
+				}
+			}
+		}
+
+		if (($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED)))
+		{
+			return $args;
+		}
 
 		return $label;
 	}

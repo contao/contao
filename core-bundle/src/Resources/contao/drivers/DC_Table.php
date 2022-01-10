@@ -4057,29 +4057,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '<a href="' . $this->addToUrl('ptg=' . $id) . '" title="' . StringUtil::specialchars($alt) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleStructure(this,\'' . $node . '_' . $id . '\',' . $level . ',' . ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? '') . ')">' . Image::getHtml($img, '', 'style="margin-right:2px"') . '</a>';
 		}
 
-		$label = $this->generateRecordLabel($objRow->row(), $table);
-
 		// Check either the ID (tree mode or parent table) or the parent ID (child table)
 		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($objRow->pid, $this->visibleRootTrails);
 
-		// Call the label_callback ($row, $label, $this)
-		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
-		{
-			$strClass = $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'][0];
-			$strMethod = $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'][1];
-
-			$this->import($strClass);
-			$return .= $this->$strClass->$strMethod($objRow->row(), $label, $this, '', false, $blnProtected, $isVisibleRootTrailPage);
-		}
-		elseif (\is_callable($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
-		{
-			$return .= $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback']($objRow->row(), $label, $this, '', false, $blnProtected, $isVisibleRootTrailPage);
-		}
-		else
-		{
-			$return .= Image::getHtml('iconPLAIN.svg') . ' ' . $label;
-		}
-
+		$return .= $this->generateRecordLabel($objRow->row(), $table, $blnProtected, $isVisibleRootTrailPage);
 		$return .= '</div> <div class="tl_right">';
 		$previous = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['pp'] ?? null) : ($arrPrevNext['p'] ?? null);
 		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
@@ -4642,23 +4623,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 				else
 				{
-					$label = $this->generateRecordLabel($row[$i]);
-
-					// Call the label_callback ($row, $label, $this)
-					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null))
-					{
-						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][0];
-						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][1];
-
-						$this->import($strClass);
-						$label = $this->$strClass->$strMethod($row[$i], $label, $this);
-					}
-					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null))
-					{
-						$label = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']($row[$i], $label, $this);
-					}
-
-					$return .= '</div><div class="tl_content_left">' . $label . '</div></div>';
+					$return .= '</div><div class="tl_content_left">' . $this->generateRecordLabel($row[$i]) . '</div></div>';
 				}
 
 				// Make items sortable
@@ -4981,8 +4946,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($result as $row)
 			{
 				$this->current[] = $row['id'];
-				$args = array();
-				$label = $this->generateRecordLabel($row, $this->strTable, $args);
+				$label = $this->generateRecordLabel($row, $this->strTable);
 
 				// Build the sorting groups
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) > 0)
@@ -5013,38 +4977,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$colspan = 1;
 
-				// Call the label_callback ($row, $label, $this)
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null))
+				// Handle strings and arrays
+				if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null))
 				{
-					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null))
-					{
-						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][0];
-						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][1];
-
-						$this->import($strClass);
-						$args = $this->$strClass->$strMethod($row, $label, $this, $args);
-					}
-					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null))
-					{
-						$args = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']($row, $label, $this, $args);
-					}
-
-					// Handle strings and arrays
-					if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null))
-					{
-						$label = \is_array($args) ? implode(' ', $args) : $args;
-					}
-					elseif (!\is_array($args))
-					{
-						$args = array($args);
-						$colspan = \count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] ?? array());
-					}
+					$label = \is_array($label) ? implode(' ', $label) : $label;
+				}
+				elseif (!\is_array($label))
+				{
+					$label = array($label);
+					$colspan = \count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] ?? array());
 				}
 
 				// Show columns
 				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
 				{
-					foreach ($args as $j=>$arg)
+					foreach ($label as $j=>$arg)
 					{
 						$field = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] ?? null;
 

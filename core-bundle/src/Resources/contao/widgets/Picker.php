@@ -291,41 +291,7 @@ class Picker extends Widget
 			}
 		}
 
-		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
-		$labelValues = array();
-		$label = $dc->generateRecordLabel($arrRow, $dc->table, $labelValues);
-
-		if (\is_array($labelConfig['label_callback'] ?? null))
-		{
-			$this->import($labelConfig['label_callback'][0]);
-
-			if (\in_array($mode, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)))
-			{
-				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, '', false, null);
-			}
-
-			if ($mode === DataContainer::MODE_PARENT)
-			{
-				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc);
-			}
-
-			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $labelValues);
-		}
-
-		if (\is_callable($labelConfig['label_callback'] ?? null))
-		{
-			if (\in_array($mode, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)))
-			{
-				return $labelConfig['label_callback']($arrRow, $label, $dc, '', false, null);
-			}
-
-			if ($mode === DataContainer::MODE_PARENT)
-			{
-				return $labelConfig['label_callback']($arrRow, $label, $dc);
-			}
-
-			return $labelConfig['label_callback']($arrRow, $label, $dc, $labelValues);
-		}
+		$label = $dc->generateRecordLabel($arrRow, $dc->table);
 
 		return $label ?: $arrRow['id'];
 	}
