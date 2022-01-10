@@ -115,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,alias,language;{archives_legend},archives;{config_legend},format,source,maxItems,feedBase,description,imgSize'
+		'default'                     => '{title_legend},title,alias,language;{archives_legend},archives;{config_legend},format,source,maxItems,feedBase,description;{image_legend:hide},imgSize'
 	),
 
 	// Fields

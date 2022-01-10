@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Creates items to be appended to RSS or Atom feeds
@@ -120,15 +120,13 @@ class FeedItem
 
 		$fileUrl = $strUrl . System::urlEncode($strFile);
 		$objFile = new File($strFile);
-
 		$size = StringUtil::deserialize($imageSize, true);
 
 		if ($size && $objFile->isImage)
 		{
 			$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $strFile, $size);
 			$fileUrl = $strUrl . System::urlEncode($image->getUrl($rootDir));
-			$relativeFilePath = Path::makeRelative($image->getPath(), $rootDir);
-			$objFile = new File($relativeFilePath);
+			$objFile = new File(Path::makeRelative($image->getPath(), $rootDir));
 		}
 
 		$mediaData = array(
