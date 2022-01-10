@@ -286,10 +286,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
-				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
-			},
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'defaultImageDensities' => array
