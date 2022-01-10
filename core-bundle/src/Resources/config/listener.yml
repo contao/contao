@@ -2,6 +2,13 @@ services:
     _defaults:
         autoconfigure: true
 
+    contao.listener.add_template_debug_information:
+        class: Contao\CoreBundle\EventListener\AddTemplateDebugInformationListener
+        arguments:
+            - '%kernel.debug%'
+        tags:
+            - kernel.event_listener
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
