@@ -24,7 +24,7 @@ class PhpTemplateProxyNodeTest extends TestCase
     {
         $compiler = new Compiler($this->createMock(Environment::class));
 
-        (new PhpTemplateProxyNode(ContaoExtension::class))->compile($compiler);
+        (new PhpTemplateProxyNode())->compile($compiler);
 
         $expectedSource = <<<'SOURCE'
             echo $this->extensions["Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension"]->renderLegacyTemplate(

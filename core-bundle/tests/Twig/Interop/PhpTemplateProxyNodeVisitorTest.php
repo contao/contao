@@ -29,14 +29,14 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
 {
     public function testPriority(): void
     {
-        $visitor = new PhpTemplateProxyNodeVisitor('ExtensionClass');
+        $visitor = new PhpTemplateProxyNodeVisitor();
 
         $this->assertSame(0, $visitor->getPriority());
     }
 
     public function testConfiguresTemplateProxy(): void
     {
-        $visitor = new PhpTemplateProxyNodeVisitor('ExtensionClass');
+        $visitor = new PhpTemplateProxyNodeVisitor();
 
         $module = new ModuleNode(
             new BodyNode(),

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Interop;
 
+use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Twig\Compiler;
 use Twig\Node\Node;
 
@@ -20,13 +21,6 @@ use Twig\Node\Node;
  */
 final class PhpTemplateProxyNode extends Node
 {
-    public function __construct(string $extensionName)
-    {
-        parent::__construct([], [
-            'extension_name' => $extensionName,
-        ]);
-    }
-
     public function compile(Compiler $compiler): void
     {
         // echo $this->extensions["Contao\\…\\ContaoExtension"]->renderLegacyTemplate(
@@ -40,7 +34,7 @@ final class PhpTemplateProxyNode extends Node
         // );
         $compiler
             ->write('echo $this->extensions[')
-            ->repr($this->getAttribute('extension_name'))
+            ->repr(ContaoExtension::class)
             ->raw(']->renderLegacyTemplate('."\n")
             ->indent()
             ->write('$this->getTemplateName(),'."\n")
