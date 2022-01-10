@@ -108,7 +108,7 @@ class FeedItem
 	{
 		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
 
-		if (!$strFile || !file_exists($rootDir . '/' . $strFile))
+		if (!$strFile || !file_exists(Path::join($rootDir, $strFile)))
 		{
 			return;
 		}
@@ -124,7 +124,7 @@ class FeedItem
 
 		if ($size && $objFile->isImage)
 		{
-			$image = System::getContainer()->get('contao.image.image_factory')->create($rootDir . '/' . $strFile, $size);
+			$image = System::getContainer()->get('contao.image.image_factory')->create(Path::join($rootDir, $strFile), $size);
 			$fileUrl = $strUrl . System::urlEncode($image->getUrl($rootDir));
 			$objFile = new File(Path::makeRelative($image->getPath(), $rootDir));
 		}
