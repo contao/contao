@@ -131,13 +131,17 @@ class FeedItem
 			$objFile = new File($relativeFilePath);
 		}
 
-		$this->arrData['enclosure'][] = array
-		(
+		$mediaData = [
 			'media' => $strMedia,
 			'url' => $fileUrl,
-			'length' => $objFile->size,
 			'type' => $objFile->mime
-		);
+		];
+
+		if ($objFile->exists()) {
+			$mediaData['length'] = $objFile->size;
+		}
+
+		$this->arrData['enclosure'][] = $mediaData;
 	}
 }
 
