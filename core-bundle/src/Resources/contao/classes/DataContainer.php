@@ -1585,7 +1585,7 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * Generates the label for a given data record according to the DCA configuration.
+	 * Generate the label for a given data record according to the DCA configuration
 	 *
 	 * @param array  $row   The data record
 	 * @param string $table The name of the data container
@@ -1596,7 +1596,6 @@ abstract class DataContainer extends Backend
 		$table = $table ?? $this->strTable;
 		$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
 
-		// Label
 		foreach ($showFields as $k=>$v)
 		{
 			// Decrypt the value
