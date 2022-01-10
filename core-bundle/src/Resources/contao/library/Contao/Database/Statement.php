@@ -251,7 +251,7 @@ class Statement
 	 *
 	 * @throws \Exception If the query string is empty
 	 */
-	public function query($strQuery='', array $arrParams = array())
+	public function query($strQuery='', array $arrParams = array(), array $arrTypes = array())
 	{
 		if (!empty($strQuery))
 		{
@@ -283,7 +283,7 @@ class Statement
 		// TODO: remove the try/catch block in Contao 5.0
 		try
 		{
-			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
+			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams, $arrTypes);
 		}
 		catch (DriverException|\ArgumentCountError $exception)
 		{
