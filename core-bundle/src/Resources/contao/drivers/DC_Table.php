@@ -2673,6 +2673,123 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
+	 * Toggle a field (e.g. "published" or "disable")
+	 *
+	 * @param integer $intId
+	 *
+	 * @throws AccessDeniedException
+	 * @throws InternalServerErrorException
+	 */
+	public function toggle($intId=null)
+	{
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
+		{
+			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+		}
+
+		if ($intId)
+		{
+			$this->intId = $intId;
+		}
+
+		$this->strField = Input::get('field');
+
+		// Security check before using field in DB query!
+		if (!$this->Database->fieldExists($this->strField, $this->strTable))
+		{
+			throw new AccessDeniedException('Database field ' . $this->strTable . '.' . $this->strField . ' does not exist.');
+		}
+
+		// Check the field access
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
+		{
+			throw new AccessDeniedException('Not enough permissions to toggle field ' . $this->strTable . '.' . $this->strField . ' of record ID ' . $intId . '.');
+		}
+
+		// Get the current record
+		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+								 ->limit(1)
+								 ->execute($this->intId);
+
+		// Redirect if there is no record with the given ID
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
+		}
+
+		$this->objActiveRecord = $objRow;
+		$this->values[] = $this->intId;
+		$this->procedure[] = 'id=?';
+		$this->blnCreateNewVersion = false;
+
+		$objVersions = new Versions($this->strTable, $this->intId);
+		$objVersions->initialize();
+
+		Input::setPost('FORM_SUBMIT', $this->strTable);
+		$this->varValue = $objRow->{$this->strField};
+
+		$this->save($this->varValue ? '' : '1');
+
+		// Trigger the onsubmit_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$callback($this);
+				}
+			}
+		}
+
+		// Set the current timestamp before adding a new version
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+		{
+			$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
+						   ->execute($this->ptable, time(), $this->intId);
+		}
+		else
+		{
+			$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
+						   ->execute(time(), $this->intId);
+		}
+
+		// Save the current version
+		if ($this->blnCreateNewVersion)
+		{
+			$objVersions->create();
+
+			// Call the onversion_callback
+			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
+			{
+				trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
+
+				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
+				{
+					if (\is_array($callback))
+					{
+						$this->import($callback[0]);
+						$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
+					}
+					elseif (\is_callable($callback))
+					{
+						$callback($this->strTable, $this->intId, $this);
+					}
+				}
+			}
+		}
+
+		$this->invalidateCacheTags();
+
+		$this->redirect($this->getReferer());
+	}
+
+	/**
 	 * Auto-generate a form to override all records that are currently shown
 	 *
 	 * @return string

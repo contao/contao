@@ -94,7 +94,7 @@ class ModuleLogin extends Module
 		$exception = null;
 		$lastUsername = '';
 
-		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getFrontendTokenValue();
+		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		// Only call the authentication utils if there is an active session to prevent starting an empty session
 		if ($request && $request->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))

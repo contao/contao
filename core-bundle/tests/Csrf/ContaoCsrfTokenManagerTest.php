@@ -22,7 +22,7 @@ use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
 
 class ContaoCsrfTokenManagerTest extends TestCase
 {
-    public function testGetFrontendTokenValue(): void
+    public function testGetDefaultTokenValue(): void
     {
         $storage = new MemoryTokenStorage();
         $storage->initialize(['contao_csrf_token' => 'foo']);
@@ -36,12 +36,12 @@ class ContaoCsrfTokenManagerTest extends TestCase
             'contao_csrf_token'
         );
 
-        $token = new CsrfToken('contao_csrf_token', $tokenManager->getFrontendTokenValue());
+        $token = new CsrfToken('contao_csrf_token', $tokenManager->getDefaultTokenValue());
 
         $this->assertTrue($tokenManager->isTokenValid($token));
     }
 
-    public function testGetFrontendTokenValueFailsIfTokenNameIsNotSet(): void
+    public function testGetDefaultTokenValueFailsIfTokenNameIsNotSet(): void
     {
         $tokenManager = new ContaoCsrfTokenManager(
             $this->createMock(RequestStack::class),
@@ -52,8 +52,8 @@ class ContaoCsrfTokenManagerTest extends TestCase
         );
 
         $this->expectException('RuntimeException');
-        $this->expectExceptionMessage('The Contao CSRF token manager was not initialized with a frontend token name.');
+        $this->expectExceptionMessage('The Contao CSRF token manager was not initialized with a default token name.');
 
-        $tokenManager->getFrontendTokenValue();
+        $tokenManager->getDefaultTokenValue();
     }
 }
