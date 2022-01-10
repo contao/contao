@@ -104,7 +104,7 @@ class ContaoTableProcessor implements ProcessorInterface
         $context->setSource(null !== $request && $this->scopeMatcher->isBackendRequest($request) ? 'BE' : 'FE');
     }
 
-    private function updateUri($context, Request $request = null): void
+    private function updateUri(ContaoContext $context, Request $request = null): void
     {
         if (null === $request) {
             return;
@@ -113,7 +113,7 @@ class ContaoTableProcessor implements ProcessorInterface
         $context->setUri($request->getUri());
     }
 
-    private function updatePageId($context, Request $request = null): void
+    private function updatePageId(ContaoContext $context, Request $request = null): void
     {
         if (null === $request || !$request->attributes->has('pageModel')) {
             return;
