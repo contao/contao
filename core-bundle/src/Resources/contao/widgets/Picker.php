@@ -293,7 +293,7 @@ class Picker extends Widget
 
 		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
 		$labelValues = array();
-		$label = DataContainer::generateRecordLabel($arrRow, $dc->table, $labelValues);
+		$label = $dc->generateRecordLabel($arrRow, $dc->table, $labelValues);
 
 		if (\is_array($labelConfig['label_callback'] ?? null))
 		{

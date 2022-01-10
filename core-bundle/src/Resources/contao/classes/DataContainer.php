@@ -1591,8 +1591,9 @@ abstract class DataContainer extends Backend
 	 * @param string $table The name of the data container
 	 * @param array  $args  The generated labels for each column
 	 */
-	public static function generateRecordLabel(array $row, string $table, array &$args = array()): string
+	public function generateRecordLabel(array $row, string $table = null, array &$args = array()): string
 	{
+		$table = $table ?? $this->strTable;
 		$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
 
 		// Label
