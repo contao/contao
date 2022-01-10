@@ -1,0 +1,51 @@
+{
+    "name": "contao/maker-bundle",
+    "description": "Allows you to create content elements, modules, hooks and more",
+    "license": "LGPL-3.0-or-later",
+    "type": "contao-bundle",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        },
+        {
+            "name": "Contao Community",
+            "homepage": "https://contao.org/contributors"
+        }
+    ],
+    "homepage": "https://contao.org",
+    "support": {
+        "issues": "https://github.com/contao/contao/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/maker-bundle",
+        "docs": "https://docs.contao.org"
+    },
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "contao/core-bundle": "self.version",
+        "symfony/maker-bundle": "^1.1"
+    },
+    "require-dev": {
+        "contao/manager-plugin": "^2.3.1",
+        "phpunit/phpunit": "^8.5",
+        "symfony/phpunit-bridge": "^5.3"
+    },
+    "conflict": {
+        "contao/core": "*",
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\MakerBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\MakerBundle\\Fixtures\\": "tests/Fixtures/src/",
+            "Contao\\MakerBundle\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Contao\\MakerBundle\\ContaoManager\\Plugin"
+    }
+}

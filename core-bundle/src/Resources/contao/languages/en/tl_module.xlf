@@ -98,6 +98,12 @@
       <trans-unit id="tl_module.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
       </trans-unit>
+      <trans-unit id="tl_module.overviewPage.0">
+        <source>Overview page</source>
+      </trans-unit>
+      <trans-unit id="tl_module.overviewPage.1">
+        <source>Select an overview page to include a link to it in the template.</source>
+      </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
       </trans-unit>

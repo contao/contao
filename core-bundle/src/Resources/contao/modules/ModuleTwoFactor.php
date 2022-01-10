@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
-use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -75,7 +74,7 @@ class ModuleTwoFactor extends BackendModule
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_generate_backup_codes')
 		{
 			$this->Template->showBackupCodes = true;
-			$this->Template->backupCodes = System::getContainer()->get(BackupCodeManager::class)->generateBackupCodes($user);
+			$this->Template->backupCodes = System::getContainer()->get('contao.security.two_factor.backup_code_manager')->generateBackupCodes($user);
 		}
 
 		if (Input::post('FORM_SUBMIT') == 'tl_two_factor_clear_trusted_devices')

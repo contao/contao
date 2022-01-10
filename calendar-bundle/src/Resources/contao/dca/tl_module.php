@@ -10,6 +10,7 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Controller;
 use Contao\DataContainer;
 use Contao\System;
@@ -20,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'cal_format';
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['calendar']         = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_startDay,cal_featured;{redirect_legend},jumpTo;{template_legend:hide},cal_ctemplate,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventlist']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_order,cal_readerModule,cal_limit,perPage,cal_ignoreDynamic,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader']      = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader']      = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_hideRunning,overviewPage;{template_legend:hide},cal_template,customTpl;{image_legend},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenu']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_order,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenucal_day'] = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_startDay,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 
@@ -186,10 +187,11 @@ class tl_module_calendar extends Backend
 
 		$arrCalendars = array();
 		$objCalendars = $this->Database->execute("SELECT id, title FROM tl_calendar ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objCalendars->next())
 		{
-			if ($this->User->hasAccess($objCalendars->id, 'calendars'))
+			if ($security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendars->id))
 			{
 				$arrCalendars[$objCalendars->id] = $objCalendars->title;
 			}

@@ -10,9 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\String\HtmlDecoder;
-use Contao\CoreBundle\String\SimpleTokenParser;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Provides string manipulation methods
@@ -564,13 +562,13 @@ class StringUtil
 	 * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
 	 *
 	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
-	 *             Use the SimpleTokenParser::class service instead.
+	 *             Use the contao.string.simple_token_parser service instead.
 	 */
 	public static function parseSimpleTokens($strString, $arrData, $blnAllowHtml = true)
 	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
+		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.string.simple_token_parser" service instead.');
 
-		return System::getContainer()->get(SimpleTokenParser::class)->parse($strString, $arrData, $blnAllowHtml);
+		return System::getContainer()->get('contao.string.simple_token_parser')->parse($strString, $arrData, $blnAllowHtml);
 	}
 
 	/**
@@ -755,7 +753,7 @@ class StringUtil
 	{
 		if ($str !== null && !is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
 		{
-			@trigger_error('Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated an will no longer work in Contao 5.0.', E_USER_DEPRECATED);
+			trigger_deprecation('contao/core-bundle', '4.9', 'Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated an will no longer work in Contao 5.0.');
 
 			return '';
 		}
@@ -1095,7 +1093,7 @@ class StringUtil
 	{
 		trigger_deprecation('contao/core-bundle', '4.13', 'Using "StringUtil::inputEncodedToPlainText()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
 
-		return System::getContainer()->get(HtmlDecoder::class)->inputEncodedToPlainText($strValue, $blnRemoveInsertTags);
+		return System::getContainer()->get('contao.string.html_decoder')->inputEncodedToPlainText($strValue, $blnRemoveInsertTags);
 	}
 
 	/**
@@ -1114,7 +1112,7 @@ class StringUtil
 	{
 		trigger_deprecation('contao/core-bundle', '4.13', 'Using "StringUtil::htmlToPlainText()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
 
-		return System::getContainer()->get(HtmlDecoder::class)->htmlToPlainText($strValue, $blnRemoveInsertTags);
+		return System::getContainer()->get('contao.string.html_decoder')->htmlToPlainText($strValue, $blnRemoveInsertTags);
 	}
 }
 

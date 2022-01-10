@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Image;
@@ -346,7 +347,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -355,7 +356,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imagemargin'],
 			'exclude'                 => true,
 			'inputType'               => 'trbl',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
@@ -365,8 +366,8 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(2048) NOT NULL default ''"
 		),
 		'fullsize' => array
 		(
@@ -443,8 +444,8 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(2048) NOT NULL default ''"
 		),
 		'target' => array
 		(
@@ -754,7 +755,7 @@ class tl_news extends Backend
 			array_map(
 				static function ($strVal)
 				{
-					return str_replace('%', '%%', self::replaceInsertTags($strVal));
+					return str_replace('%', '%%', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strVal));
 				},
 				explode('{{page::pageTitle}}', $layout->titleTag ?: '{{page::pageTitle}} - {{page::rootPageTitle}}', 2)
 			)
@@ -842,22 +843,23 @@ class tl_news extends Backend
 			return array('default', 'internal', 'article', 'external');
 		}
 
+		$security = System::getContainer()->get('security.helper');
 		$arrOptions = array('default');
 
 		// Add the "internal" option
-		if ($this->User->hasAccess('tl_news::jumpTo', 'alexf'))
+		if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::jumpTo'))
 		{
 			$arrOptions[] = 'internal';
 		}
 
 		// Add the "article" option
-		if ($this->User->hasAccess('tl_news::articleId', 'alexf'))
+		if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::articleId'))
 		{
 			$arrOptions[] = 'article';
 		}
 
 		// Add the "external" option
-		if ($this->User->hasAccess('tl_news::url', 'alexf'))
+		if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::url'))
 		{
 			$arrOptions[] = 'external';
 		}
@@ -974,7 +976,7 @@ class tl_news extends Backend
 		}
 
 		// Check permissions AFTER checking the fid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_news::featured', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::featured'))
 		{
 			return '';
 		}
@@ -1027,7 +1029,7 @@ class tl_news extends Backend
 		}
 
 		// Check permissions to feature
-		if (!$this->User->hasAccess('tl_news::featured', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::featured'))
 		{
 			throw new AccessDeniedException('Not enough permissions to feature/unfeature news item ID ' . $intId . '.');
 		}
@@ -1125,7 +1127,7 @@ class tl_news extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_news::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::published'))
 		{
 			return '';
 		}
@@ -1176,7 +1178,7 @@ class tl_news extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_news::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_news::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish news item ID ' . $intId . '.');
 		}

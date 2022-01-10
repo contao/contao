@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\EventListener\Security;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
 /**
@@ -34,8 +33,6 @@ class SwitchUserListener
 
     /**
      * Logs successful user impersonations.
-     *
-     * @throws \RuntimeException
      */
     public function __invoke(SwitchUserEvent $event): void
     {
@@ -46,11 +43,7 @@ class SwitchUserListener
         }
 
         $sourceUser = $token->getUserIdentifier();
-        $targetUser = $event->getTargetUser();
-
-        if ($targetUser instanceof UserInterface) {
-            $targetUser = $targetUser->getUserIdentifier();
-        }
+        $targetUser = $event->getTargetUser()->getUserIdentifier();
 
         $this->logger->info(
             sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser),

@@ -336,7 +336,7 @@
         <source>Markdown</source>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
+        <source>Generates HTML code from a Markdown text.</source>
       </trans-unit>
       <trans-unit id="CTE.template.0">
         <source>Custom template</source>
@@ -592,6 +592,12 @@
       </trans-unit>
       <trans-unit id="PTY.error_404.1">
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1460,9 +1466,6 @@
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
       </trans-unit>
@@ -2001,7 +2004,7 @@
         <source>Disable</source>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

@@ -34,9 +34,6 @@ class ContaoContext
     private ?string $uri;
     private ?int $pageId;
 
-    /**
-     * @throws \InvalidArgumentException
-     */
     public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null, string $uri = null, int $pageId = null)
     {
         if ('' === $func) {

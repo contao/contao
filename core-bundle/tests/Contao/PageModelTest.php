@@ -23,10 +23,13 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
 class PageModelTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -119,11 +122,11 @@ class PageModelTest extends ContaoTestCase
 
     /**
      * @group legacy
-     *
-     * @expectedDeprecation %sfindPublishedSubpagesWithoutGuestsByPid() has been deprecated%s
      */
     public function testFindPublishedSubpagesWithoutGuestsByPid(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: %sfindPublishedSubpagesWithoutGuestsByPid() has been deprecated%s');
+
         $databaseResultData = [
             ['id' => '1', 'alias' => 'alias1', 'subpages' => '0'],
             ['id' => '2', 'alias' => 'alias2', 'subpages' => '3'],
@@ -159,6 +162,144 @@ class PageModelTest extends ContaoTestCase
         $this->assertSame($databaseResultData[2]['id'], $pages->offsetGet(2)->id);
         $this->assertSame($databaseResultData[2]['alias'], $pages->offsetGet(2)->alias);
         $this->assertSame($databaseResultData[2]['subpages'], $pages->offsetGet(2)->subpages);
+    }
+
+    /**
+     * @group legacy
+     * @dataProvider similarAliasProvider
+     */
+    public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
+    {
+        PageModel::reset();
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->once())
+            ->method('execute')
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->willReturn(new Result($rootData, ''))
+        ;
+
+        $aliasStatement = $this->createMock(Statement::class);
+        $aliasStatement
+            ->expects($this->once())
+            ->method('execute')
+            ->with('%'.$alias.'%', $page['id'])
+            ->willReturn(new Result([['id' => 42]], ''))
+        ;
+
+        $database
+            ->expects($this->once())
+            ->method('prepare')
+            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id!=?')
+            ->willReturn($aliasStatement)
+        ;
+
+        $this->mockDatabase($database);
+
+        $sourcePage = $this->mockClassWithProperties(PageModel::class, $page);
+        $result = PageModel::findSimilarByAlias($sourcePage);
+
+        $this->assertInstanceOf(Collection::class, $result);
+
+        /** @var PageModel $pageModel */
+        $pageModel = $result->first();
+
+        $this->assertSame(42, $pageModel->id);
+    }
+
+    public function similarAliasProvider(): \Generator
+    {
+        yield 'Use original alias without prefix and suffix' => [
+            [
+                'id' => 1,
+                'alias' => 'foo',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [],
+        ];
+
+        yield 'Strips prefix' => [
+            [
+                'id' => 1,
+                'alias' => 'de/foo',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => 'de', 'urlSuffix' => ''],
+            ],
+        ];
+
+        yield 'Strips multiple prefixes' => [
+            [
+                'id' => 1,
+                'alias' => 'switzerland/german/foo',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => 'switzerland', 'urlSuffix' => ''],
+                ['urlPrefix' => 'switzerland/german', 'urlSuffix' => ''],
+            ],
+        ];
+
+        yield 'Strips the current prefix' => [
+            [
+                'id' => 1,
+                'alias' => 'de/foo',
+                'urlPrefix' => 'de',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => 'en', 'urlSuffix' => ''],
+            ],
+        ];
+
+        yield 'Strips suffix' => [
+            [
+                'id' => 1,
+                'alias' => 'foo.html',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => '', 'urlSuffix' => '.html'],
+            ],
+        ];
+
+        yield 'Strips multiple suffixes' => [
+            [
+                'id' => 1,
+                'alias' => 'foo.php',
+                'urlPrefix' => '',
+                'urlSuffix' => '',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => '', 'urlSuffix' => '.html'],
+                ['urlPrefix' => '', 'urlSuffix' => '.php'],
+            ],
+        ];
+
+        yield 'Strips the current suffix' => [
+            [
+                'id' => 1,
+                'alias' => 'foo.html',
+                'urlPrefix' => '',
+                'urlSuffix' => '.html',
+            ],
+            'foo',
+            [
+                ['urlPrefix' => '', 'urlSuffix' => '.php'],
+            ],
+        ];
     }
 
     private function mockDatabase(Database $database): void

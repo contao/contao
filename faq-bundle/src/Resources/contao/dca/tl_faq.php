@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\FaqCategoryModel;
@@ -275,7 +276,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
 			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
+				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
@@ -284,7 +285,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imagemargin'],
 			'exclude'                 => true,
 			'inputType'               => 'trbl',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
@@ -294,8 +295,8 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(2048) NOT NULL default ''"
 		),
 		'fullsize' => array
 		(
@@ -650,7 +651,7 @@ class tl_faq extends Backend
 		}
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_faq::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_faq::published'))
 		{
 			return '';
 		}
@@ -703,7 +704,7 @@ class tl_faq extends Backend
 		}
 
 		// Check the field access
-		if (!$this->User->hasAccess('tl_faq::published', 'alexf'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_faq::published'))
 		{
 			throw new AccessDeniedException('Not enough permissions to publish/unpublish FAQ ID ' . $intId . '.');
 		}

@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
+
 /**
  * Front end module "close account".
  *
@@ -45,7 +47,7 @@ class ModuleCloseAccount extends Module
 			return $objTemplate->parse();
 		}
 
-		// Return if there is no logged in user
+		// Return if there is no logged-in user
 		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';
@@ -62,6 +64,8 @@ class ModuleCloseAccount extends Module
 		$this->import(FrontendUser::class, 'User');
 		$this->loadDataContainer('tl_member');
 
+		$container = System::getContainer();
+
 		// Initialize the password widget
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
 		$arrField['name'] = 'password';
@@ -77,10 +81,10 @@ class ModuleCloseAccount extends Module
 		{
 			$objWidget->validate();
 
-			$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
+			$passwordHasher = $container->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
 
 			// Validate the password
-			if (!$objWidget->hasErrors() && !$encoder->isPasswordValid($this->User->password, $objWidget->value, null))
+			if (!$objWidget->hasErrors() && !$passwordHasher->verify($this->User->password, $objWidget->value))
 			{
 				$objWidget->value = '';
 				$objWidget->addError($GLOBALS['TL_LANG']['ERR']['invalidPass']);
@@ -111,7 +115,7 @@ class ModuleCloseAccount extends Module
 					}
 
 					$objMember->delete();
-					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deleted', __METHOD__, TL_ACCESS);
+					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deleted', __METHOD__, ContaoContext::ACCESS);
 				}
 				// Deactivate the account
 				else
@@ -119,10 +123,8 @@ class ModuleCloseAccount extends Module
 					$objMember->disable = 1;
 					$objMember->tstamp = time();
 					$objMember->save();
-					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deactivated', __METHOD__, TL_ACCESS);
+					$this->log('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deactivated', __METHOD__, ContaoContext::ACCESS);
 				}
-
-				$container = System::getContainer();
 
 				// Log out the user (see #93)
 				$container->get('security.token_storage')->setToken();
@@ -143,6 +145,7 @@ class ModuleCloseAccount extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
 		$this->Template->rowLast = 'row_1 row_last odd';
+		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
 

@@ -14,6 +14,7 @@ use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
@@ -21,9 +22,9 @@ use Doctrine\DBAL\Exception\DriverException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Webmozart\PathUtil\Path;
 
 /**
  * Provide methods to modify the file system.
@@ -37,7 +38,7 @@ use Webmozart\PathUtil\Path;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class DC_Folder extends DataContainer implements \listable, \editable
+class DC_Folder extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
 	/**
 	 * Current path
@@ -152,7 +153,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
+			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -762,7 +763,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// Add a log entry
-			$this->log('File or folder "' . $source . '" has been moved to "' . $destination . '"', __METHOD__, TL_FILES);
+			$this->log('File or folder "' . $source . '" has been moved to "' . $destination . '"', __METHOD__, ContaoContext::FILES);
 		}
 
 		// Redirect
@@ -928,7 +929,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Add a log entry
-		$this->log('File or folder "' . $source . '" has been copied to "' . $destination . '"', __METHOD__, TL_FILES);
+		$this->log('File or folder "' . $source . '" has been copied to "' . $destination . '"', __METHOD__, ContaoContext::FILES);
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -1051,7 +1052,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Add a log entry
-		$this->log('File or folder "' . $source . '" has been deleted', __METHOD__, TL_FILES);
+		$this->log('File or folder "' . $source . '" has been deleted', __METHOD__, ContaoContext::FILES);
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -2180,7 +2181,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		if (!empty($bundleTemplatePaths))
 		{
 			// If a bundle template path is changed, the whole container cache needs to
-			// be rebuild because the template paths are added at compile time
+			// be rebuilt because the template paths are added at compile time
 			$cacheItemPool = System::getContainer()->get('cache.system');
 
 			$item = $cacheItemPool->getItem(BackendRebuildCacheMessageListener::CACHE_DIRTY_FLAG);
@@ -2220,7 +2221,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Protect or unprotect the folder
-		if (file_exists($this->strRootDir . '/' . $this->intId . '/.public'))
+		if (is_file($this->strRootDir . '/' . $this->intId . '/.public'))
 		{
 			$objFolder = new Folder($this->intId);
 			$objFolder->protect();
@@ -2228,7 +2229,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
-			$this->log('Folder "' . $this->intId . '" has been protected', __METHOD__, TL_FILES);
+			$this->log('Folder "' . $this->intId . '" has been protected', __METHOD__, ContaoContext::FILES);
 		}
 		else
 		{
@@ -2238,7 +2239,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
-			$this->log('The protection from folder "' . $this->intId . '" has been removed', __METHOD__, TL_FILES);
+			$this->log('The protection from folder "' . $this->intId . '" has been removed', __METHOD__, ContaoContext::FILES);
 		}
 
 		$this->redirect($this->getReferer());
@@ -2318,7 +2319,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					$this->objActiveRecord = Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
-				$this->log('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created', __METHOD__, TL_FILES);
+				$this->log('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created', __METHOD__, ContaoContext::FILES);
 			}
 			else
 			{
@@ -2342,7 +2343,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 					}
 				}
 
-				$this->log('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"', __METHOD__, TL_FILES);
+				$this->log('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"', __METHOD__, ContaoContext::FILES);
 			}
 
 			$strWebDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
@@ -2446,7 +2447,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			// Save the value if there was no error
 			if (((string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue != $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 			{
-				// If the field is a fallback field, empty all other columns
+				// If the field is a fallback field, empty the other columns
 				if ($varValue && ($arrData['eval']['fallback'] ?? null))
 				{
 					$this->Database->execute("UPDATE " . $this->strTable . " SET " . $this->strField . "=''");
@@ -2757,7 +2758,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && \in_array('.public', $content))
+			if ($protected === true && \in_array('.public', $content) && !is_dir(Path::join($folders[$f], '.public')))
 			{
 				$protected = false;
 			}
@@ -2878,14 +2879,14 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						}
 						else
 						{
-							$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($this->strRootDir), '', 'class="preview-image"');
+							$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($this->strRootDir), '', 'class="preview-image" loading="lazy"');
 						}
 
-						$importantPart = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
+						$importantPart = System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 						if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
 						{
-							$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important"');
+							$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important" loading="lazy"');
 						}
 					}
 					catch (RuntimeException $e)
@@ -2991,7 +2992,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		return '
     <div class="tl_search tl_subpanel">
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-      <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
+      <select name="tl_field" class="tl_select tl_chosen' . ($active ? ' active' : '') . '">
         <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
       </select>
       <span>=</span>

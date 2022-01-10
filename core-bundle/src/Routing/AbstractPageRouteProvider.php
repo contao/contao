@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
@@ -26,11 +27,13 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
     protected ContaoFramework $framework;
     protected CandidatesInterface $candidates;
+    protected PageRegistry $pageRegistry;
 
-    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates)
+    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
     {
         $this->framework = $framework;
         $this->candidates = $candidates;
+        $this->pageRegistry = $pageRegistry;
     }
 
     /**
@@ -72,8 +75,10 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return [];
         }
 
-        /** @var array<PageModel> */
-        return $pages->getModels();
+        /** @var array<PageModel> $models */
+        $models = $pages->getModels();
+
+        return array_filter($models, fn (PageModel $model) => $this->pageRegistry->isRoutable($model));
     }
 
     /**
@@ -172,8 +177,26 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
+        if ($pageA->routePriority !== $pageB->routePriority) {
+            return $pageB->routePriority <=> $pageA->routePriority;
+        }
+
         $pathA = $a instanceof PageRoute && $a->getUrlSuffix() ? substr($a->getPath(), 0, -\strlen($a->getUrlSuffix())) : $a->getPath();
         $pathB = $b instanceof PageRoute && $b->getUrlSuffix() ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
+
+        // Prioritize the default behaviour when `requireItem` is enabled
+        if ($pathA === $pathB && '/{!parameters}' === substr($pathA, -14)) {
+            $paramA = $a->getRequirement('parameters');
+            $paramB = $b->getRequirement('parameters');
+
+            if ('/.+' === $paramA && '(/.+?)?' === $paramB) {
+                return -1;
+            }
+
+            if ('(/.+?)?' === $paramA && '/.+' === $paramB) {
+                return 1;
+            }
+        }
 
         $countA = \count(explode('/', $pathA));
         $countB = \count(explode('/', $pathB));

@@ -13,10 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
  * Front end module "event reader".
@@ -90,8 +87,19 @@ class ModuleEventReader extends Events
 		global $objPage;
 
 		$this->Template->event = '';
-		$this->Template->referer = 'javascript:history.go(-1)';
-		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+
+		if ($this->overviewPage)
+		{
+			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['eventOverview'];
+		}
+		else
+		{
+			trigger_deprecation('contao/calendar-bundle', '4.13', 'If you do not select an overview page in the event reader module, the "go back" link will no longer be shown in Contao 5.0.');
+
+			$this->Template->referer = 'javascript:history.go(-1)';
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+		}
 
 		// Get the current event
 		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('events'), $this->cal_calendar);
@@ -129,14 +137,14 @@ class ModuleEventReader extends Events
 				throw new InternalServerErrorException('Empty target URL');
 		}
 
-		// Overwrite the page meta data (see #2853, #4955 and #87)
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+		// Overwrite the page metadata (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-			$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			if ($objEvent->pageTitle)
 			{
@@ -317,7 +325,7 @@ class ModuleEventReader extends Events
 			}
 
 			$figure = System::getContainer()
-				->get(Studio::class)
+				->get('contao.image.studio')
 				->createFigureBuilder()
 				->from($objEvent->singleSRC)
 				->setSize($imgSize)

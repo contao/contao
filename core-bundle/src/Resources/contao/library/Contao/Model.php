@@ -17,7 +17,7 @@ use Contao\Model\QueryBuilder;
 use Contao\Model\Registry;
 
 /**
- * Reads objects from and writes them to to the database
+ * Reads objects from and writes them to the database
  *
  * The class allows you to find and automatically join database records and to
  * convert the result into objects. It also supports creating new objects and
@@ -1191,7 +1191,7 @@ abstract class Model
 	 *
 	 * @param string $strTable The table name
 	 *
-	 * @return string The model class name
+	 * @return class-string<Model> The model class name
 	 */
 	public static function getClassFromTable($strTable)
 	{
@@ -1303,7 +1303,7 @@ abstract class Model
 			return false;
 		}
 
-		return \defined('BE_USER_LOGGED_IN') && BE_USER_LOGGED_IN === true;
+		return System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
 	}
 }
 

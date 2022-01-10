@@ -18,6 +18,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
@@ -31,8 +32,14 @@ class ControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    /**
+     * @group legacy
+     */
     public function testReturnsTheTimeZones(): void
     {
+        $this->expectDeprecation('%sgetTimeZones%shas been deprecated%s');
+        $this->expectDeprecation('%stimezones.php%s');
+
         $timeZones = System::getTimeZones();
 
         $this->assertCount(9, $timeZones['General']);
@@ -164,9 +171,24 @@ class ControllerTest extends TestCase
         ;
 
         // Prepare environment
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->method('replaceInline')
+            ->willReturnArgument(0)
+        ;
+
+        $insertTagParser
+            ->method('replace')
+            ->willReturnArgument(0)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set(Studio::class, $studio);
+        $container->set('contao.image.studio', $studio);
+        $container->set('contao.insert_tag.parser', $insertTagParser);
+        $container->setParameter('contao.resources_paths', $this->getTempDir());
+
         System::setContainer($container);
+
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['caption' => null];
 
         $this->expectDeprecation('%sUsing %saddImageToTemplate() is deprecated%s');
@@ -317,9 +339,22 @@ class ControllerTest extends TestCase
         $template = new \stdClass();
 
         // Prepare environment
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->method('replaceInline')
+            ->willReturnArgument(0)
+        ;
+
+        $insertTagParser
+            ->method('replace')
+            ->willReturnArgument(0)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set(Studio::class, $studio);
+        $container->set('contao.image.studio', $studio);
+        $container->set('contao.insert_tag.parser', $insertTagParser);
         $container->set('monolog.logger.contao', $logger);
+
         System::setContainer($container);
 
         $this->expectDeprecation('%sUsing %saddImageToTemplate() is deprecated%s');

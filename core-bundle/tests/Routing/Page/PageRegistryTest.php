@@ -362,6 +362,22 @@ class PageRegistryTest extends TestCase
         $registry->supportsContentComposition($pageModel);
     }
 
+    public function testDoesNotGenerateRoutableRoutesForNonRoutablePages(): void
+    {
+        $pageModel = $this->mockClassWithProperties(
+            PageModel::class,
+            [
+                'type' => 'foobar',
+                'rootLanguage' => 'en',
+            ]
+        );
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $registry->add('foobar', new RouteConfig(false, null, null, []));
+
+        $this->assertFalse($registry->isRoutable($pageModel));
+    }
+
     private function mockConnectionWithPrefixAndSuffix(string $urlPrefix = '', string $urlSuffix = '.html'): Connection
     {
         $connection = $this->createMock(Connection::class);

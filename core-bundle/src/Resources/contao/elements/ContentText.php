@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Image\Studio\Studio;
-
 /**
  * Front end content element "text".
  *
@@ -47,7 +45,7 @@ class ContentText extends ContentElement
 		if ($this->addImage)
 		{
 			$figure = System::getContainer()
-				->get(Studio::class)
+				->get('contao.image.studio')
 				->createFigureBuilder()
 				->from($this->singleSRC)
 				->setSize($this->size)

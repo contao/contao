@@ -32,35 +32,6 @@ class Messages extends Backend
 	}
 
 	/**
-	 * Check for maintenance mode
-	 *
-	 * @return string
-	 */
-	public function maintenanceCheck()
-	{
-		$this->import(BackendUser::class, 'User');
-
-		if (!$this->User->hasAccess('maintenance', 'modules'))
-		{
-			return '';
-		}
-
-		try
-		{
-			if (System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver()->isExists())
-			{
-				return '<p class="tl_error">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</p>';
-			}
-		}
-		catch (\Exception $e)
-		{
-			// ignore
-		}
-
-		return '';
-	}
-
-	/**
 	 * Show a warning if there is no language fallback page
 	 *
 	 * @return string

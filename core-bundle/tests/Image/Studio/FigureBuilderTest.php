@@ -22,6 +22,7 @@ use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
@@ -33,7 +34,7 @@ use Contao\Validator;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class FigureBuilderTest extends TestCase
 {
@@ -263,6 +264,8 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
+     * @param mixed $identifier
+     *
      * @dataProvider provideMixedIdentifiers
      */
     public function testFromMixed($identifier): void
@@ -331,6 +334,8 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
+     * @param mixed $invalidType
+     *
      * @dataProvider provideInvalidTypes
      */
     public function testFromInvalidTypeThrowsTypeError($invalidType, string $typeString): void
@@ -553,9 +558,12 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideMetadataAutoFetchCases
      */
-    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, $locale, array $expectedMetadata): void
+    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, ?string $locale, array $expectedMetadata): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
+
+        System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
             'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
@@ -732,6 +740,8 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
+     * @param ImageInterface|string|null $resource
+     *
      * @dataProvider provideUuidMetadataAutoFetchCases
      */
     public function testAutoSetUuidFromFilesModelWhenDefiningMetadata($resource, ?Metadata $metadataToSet, ?string $locale, array $expectedMetadata): void
@@ -933,6 +943,8 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
+     * @param ImageInterface|string|null $resource
+     *
      * @dataProvider provideLightboxResourcesOrUrls
      */
     public function testSetLightboxResourceOrUrl($resource, array $expectedArguments, bool $hasLightbox = true): void
@@ -1208,10 +1220,7 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath] = $this->getTestFilePaths();
 
-        if (null === $studio) {
-            $studio = $this->mockStudioForImage($absoluteFilePath);
-        }
-
+        $studio ??= $this->mockStudioForImage($absoluteFilePath);
         $builder = $this->getFigureBuilder($studio)->fromPath($absoluteFilePath, false);
 
         if (null !== $configureBuilderCallback) {
@@ -1224,7 +1233,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @return Studio&MockObject
      */
-    private function mockStudioForImage(string $expectedFilePath, $expectedSizeConfiguration = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForImage(string $expectedFilePath, string $expectedSizeConfiguration = null, ResizeOptions $resizeOptions = null): Studio
     {
         $image = $this->createMock(ImageResult::class);
 
@@ -1240,9 +1249,11 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
+     * @param ImageInterface|string|null $expectedResource
+     *
      * @return Studio&MockObject
      */
-    private function mockStudioForLightbox($expectedResource, ?string $expectedUrl, $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForLightbox($expectedResource, ?string $expectedUrl, string $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
     {
         $lightbox = $this->createMock(LightboxResult::class);
 
@@ -1266,7 +1277,7 @@ class FigureBuilderTest extends TestCase
         $locator
             ->method('get')
             ->willReturnMap([
-                [Studio::class, $studio],
+                ['contao.image.studio', $studio],
                 ['contao.framework', $framework],
                 ['event_dispatcher', $eventDispatcher ?? new EventDispatcher()],
             ])

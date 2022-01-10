@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\StringUtil;
 use Contao\System;
@@ -288,6 +289,15 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
+		'overviewPage' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'pageTree',
+			'foreignKey'              => 'tl_page.title',
+			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
 		'redirectBack' => array
 		(
 			'exclude'                 => true,
@@ -413,8 +423,8 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(2048) NOT NULL default ''"
 		),
 		'imgSize' => array
 		(
@@ -422,10 +432,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
-			},
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'useCaption' => array
@@ -665,7 +671,7 @@ class tl_module extends Backend
 			return;
 		}
 
-		if (!$this->User->hasAccess('modules', 'themes'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES))
 		{
 			throw new AccessDeniedException('Not enough permissions to access the front end modules module.');
 		}
@@ -728,10 +734,11 @@ class tl_module extends Backend
 
 		$arrForms = array();
 		$objForms = $this->Database->execute("SELECT id, title FROM tl_form ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objForms->next())
 		{
-			if ($this->User->hasAccess($objForms->id, 'forms'))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $objForms->id))
 			{
 				$arrForms[$objForms->id] = $objForms->title;
 			}

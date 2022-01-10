@@ -45,7 +45,7 @@ class ModuleChangePassword extends Module
 			return $objTemplate->parse();
 		}
 
-		// Return if there is no logged in user
+		// Return if there is no logged-in user
 		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			return '';
@@ -153,9 +153,9 @@ class ModuleChangePassword extends Module
 				// Validate the old password
 				if ($strKey == 'oldPassword')
 				{
-					$encoder = System::getContainer()->get('security.password_hasher_factory')->getEncoder(FrontendUser::class);
+					$passwordHasher = System::getContainer()->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
 
-					if (!$encoder->isPasswordValid($objMember->password, $objWidget->value, null))
+					if (!$passwordHasher->verify($objMember->password, $objWidget->value))
 					{
 						$objWidget->value = '';
 						$objWidget->addError($GLOBALS['TL_LANG']['MSC']['oldPasswordWrong']);
@@ -197,7 +197,7 @@ class ModuleChangePassword extends Module
 				}
 			}
 
-			// Update the current user so they are not logged out automatically
+			// Update the current user, so they are not logged out automatically
 			$this->User->findBy('id', $objMember->id);
 
 			// Check whether there is a jumpTo page
@@ -220,6 +220,7 @@ class ModuleChangePassword extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
 

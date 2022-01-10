@@ -11,8 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
-use Contao\CoreBundle\String\SimpleTokenParser;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Result;
+use Contao\NewsletterBundle\Event\SendNewsletterEvent;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
@@ -94,8 +95,8 @@ class Newsletter extends Backend
 		}
 
 		// Replace insert tags
-		$html = $this->replaceInsertTags($objNewsletter->content, false);
-		$text = $this->replaceInsertTags($objNewsletter->text, false);
+		$html = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->content);
+		$text = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->text);
 
 		// Convert relative URLs
 		if ($objNewsletter->externalImages)
@@ -125,10 +126,12 @@ class Newsletter extends Backend
 
 				// Send
 				$objEmail = $this->generateEmailObject($objNewsletter, $arrAttachments);
-				$this->sendNewsletter($objEmail, $objNewsletter, $arrRecipient, $text, $html);
 
-				// Redirect
-				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
+				if ($this->sendNewsletter($objEmail, $objNewsletter, $arrRecipient, $text, $html))
+				{
+					Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], 1));
+				}
+
 				$this->redirect($referer);
 			}
 
@@ -168,6 +171,7 @@ class Newsletter extends Backend
 								   ->execute(time(), $objNewsletter->id);
 
 					$_SESSION['REJECTED_RECIPIENTS'] = array();
+					$_SESSION['SKIPPED_RECIPIENTS'] = array();
 				}
 
 				$time = time();
@@ -183,9 +187,16 @@ class Newsletter extends Backend
 					}
 
 					$objEmail = $this->generateEmailObject($objNewsletter, $arrAttachments);
-					$this->sendNewsletter($objEmail, $objNewsletter, $objRecipients->row(), $text, $html);
 
-					echo 'Sending newsletter to <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
+					if ($this->sendNewsletter($objEmail, $objNewsletter, $objRecipients->row(), $text, $html))
+					{
+						echo 'Sending newsletter to <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
+					}
+					else
+					{
+						$_SESSION['SKIPPED_RECIPIENTS'][] = $objRecipients->email;
+						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
+					}
 				}
 			}
 
@@ -208,11 +219,17 @@ class Newsletter extends Backend
 						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='' WHERE email=?")
 									   ->execute($strRecipient);
 
-						$this->log('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated', __METHOD__, TL_ERROR);
+						$this->log('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated', __METHOD__, ContaoContext::ERROR);
 					}
-
-					unset($_SESSION['REJECTED_RECIPIENTS']);
 				}
+
+				if ($intSkipped = \count($_SESSION['SKIPPED_RECIPIENTS']))
+				{
+					$intTotal -= $intSkipped;
+					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
+				}
+
+				unset($_SESSION['REJECTED_RECIPIENTS'], $_SESSION['SKIPPED_RECIPIENTS']);
 
 				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
@@ -337,7 +354,7 @@ class Newsletter extends Backend
 		}
 
 		$objEmail->embedImages = !$objNewsletter->externalImages;
-		$objEmail->logFile = TL_NEWSLETTER . '_' . $objNewsletter->id;
+		$objEmail->logFile = ContaoContext::NEWSLETTER . '_' . $objNewsletter->id;
 
 		// Attachments
 		if (!empty($arrAttachments) && \is_array($arrAttachments))
@@ -371,10 +388,12 @@ class Newsletter extends Backend
 	 * @param string $text
 	 * @param string $html
 	 * @param string $css
+	 *
+	 * @return boolean
 	 */
 	protected function sendNewsletter(Email $objEmail, Result $objNewsletter, $arrRecipient, $text, $html, $css=null)
 	{
-		$simpleTokenParser = System::getContainer()->get(SimpleTokenParser::class);
+		$simpleTokenParser = System::getContainer()->get('contao.string.simple_token_parser');
 
 		// Prepare the text content
 		$objEmail->text = $simpleTokenParser->parse($text, $arrRecipient);
@@ -396,6 +415,22 @@ class Newsletter extends Backend
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
+		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html))
+			->setHtmlAllowed(!$objNewsletter->sendText)
+			->setNewsletterData($objNewsletter->row())
+			->setRecipientData($arrRecipient);
+
+		System::getContainer()->get('event_dispatcher')->dispatch($event);
+
+		if ($event->isSkipSending())
+		{
+			return false;
+		}
+
+		$objEmail->text = $event->getText();
+		$objEmail->html = $event->isHtmlAllowed() ? $event->getHtml() : '';
+		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
+
 		// Deactivate invalid addresses
 		try
 		{
@@ -415,12 +450,16 @@ class Newsletter extends Backend
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['sendNewsletter']) && \is_array($GLOBALS['TL_HOOKS']['sendNewsletter']))
 		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using the "sendNewsletter" hook has been deprecated and will no longer work in Contao 5.0. Use the SendNewsletterEvent instead.');
+
 			foreach ($GLOBALS['TL_HOOKS']['sendNewsletter'] as $callback)
 			{
 				$this->import($callback[0]);
 				$this->{$callback[0]}->{$callback[1]}($objEmail, $objNewsletter, $arrRecipient, $text, $html);
 			}
 		}
+
+		return true;
 	}
 
 	/**
@@ -502,7 +541,7 @@ class Newsletter extends Backend
 					// Skip invalid entries
 					if (!Validator::isEmail($strRecipient))
 					{
-						$this->log('The recipient address "' . $strRecipient . '" seems to be invalid and was not imported', __METHOD__, TL_ERROR);
+						$this->log('The recipient address "' . $strRecipient . '" seems to be invalid and was not imported', __METHOD__, ContaoContext::ERROR);
 						++$intInvalid;
 						continue;
 					}
@@ -522,7 +561,7 @@ class Newsletter extends Backend
 
 					if ($objDenyList->count > 0)
 					{
-						$this->log('Recipient "' . $strRecipient . '" has unsubscribed from channel ID "' . Input::get('id') . '" and was not imported', __METHOD__, TL_ERROR);
+						$this->log('Recipient "' . $strRecipient . '" has unsubscribed from channel ID "' . Input::get('id') . '" and was not imported', __METHOD__, ContaoContext::ERROR);
 						continue;
 					}
 
@@ -909,7 +948,7 @@ class Newsletter extends Backend
 		}
 
 		// Add a log entry
-		$this->log('Purged the unactivated newsletter subscriptions', __METHOD__, TL_CRON);
+		$this->log('Purged the unactivated newsletter subscriptions', __METHOD__, ContaoContext::CRON);
 	}
 
 	/**

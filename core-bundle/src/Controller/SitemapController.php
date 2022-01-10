@@ -83,7 +83,10 @@ class SitemapController extends AbstractController
 
         $sitemap->appendChild($urlSet);
 
-        $this->get('event_dispatcher')->dispatch(new SitemapEvent($sitemap, $request, $rootPageIds), ContaoCoreEvents::SITEMAP);
+        $this->container
+            ->get('event_dispatcher')
+            ->dispatch(new SitemapEvent($sitemap, $request, $rootPageIds), ContaoCoreEvents::SITEMAP)
+        ;
 
         // Cache the response for a month in the shared cache and tag it for invalidation purposes
         $response = new Response((string) $sitemap->saveXML(), 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
@@ -139,8 +142,9 @@ class SitemapController extends AbstractController
                 $isPublished
                 && !$pageModel->requireItem
                 && 'noindex,nofollow' !== $pageModel->robots
-                && 'regular' === $pageModel->type // TODO: replace this with a better solution (see #3544)
                 && $this->pageRegistry->supportsContentComposition($pageModel)
+                && $this->pageRegistry->isRoutable($pageModel)
+                && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
             ) {
                 $urls = [$pageModel->getAbsoluteUrl()];
 

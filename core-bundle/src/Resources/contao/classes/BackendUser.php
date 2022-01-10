@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\RedirectResponseException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -34,31 +35,37 @@ class BackendUser extends User
 {
 	/**
 	 * Edit page flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_PAGE.
 	 */
 	const CAN_EDIT_PAGE = 1;
 
 	/**
 	 * Edit page hierarchy flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY.
 	 */
 	const CAN_EDIT_PAGE_HIERARCHY = 2;
 
 	/**
 	 * Delete page flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_DELETE_PAGE.
 	 */
 	const CAN_DELETE_PAGE = 3;
 
 	/**
 	 * Edit articles flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_ARTICLES.
 	 */
 	const CAN_EDIT_ARTICLES = 4;
 
 	/**
 	 * Edit article hierarchy flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY.
 	 */
 	const CAN_EDIT_ARTICLE_HIERARCHY = 5;
 
 	/**
 	 * Delete articles flag
+	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_DELETE_ARTICLES.
 	 */
 	const CAN_DELETE_ARTICLES = 6;
 
@@ -281,9 +288,15 @@ class BackendUser extends User
 	 * @param array   $row
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use the "security.helper" service with the ContaoCorePermissions
+	 *             constants instead.
 	 */
 	public function isAllowed($int, $row)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::isAllowed()" has been deprecated and will no longer work in Contao 5. Use the "security.helper" service with the ContaoCorePermissions constants instead.');
+
 		if ($this->isAdmin)
 		{
 			return true;
@@ -352,9 +365,15 @@ class BackendUser extends User
 	 * @param string $table
 	 *
 	 * @return boolean
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use the "security.helper" service with the ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE
+	 *             constant instead.
 	 */
 	public function canEditFieldsOf($table)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::canEditFieldsOfTable()" has been deprecated and will no longer work in Contao 5. Use the "security.helper" service with the ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE constant instead.');
+
 		if ($this->isAdmin)
 		{
 			return true;
@@ -502,6 +521,7 @@ class BackendUser extends User
 		$arrStatus = System::getContainer()->get('session')->getBag('contao_backend')->get('backend_modules');
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 		$router = System::getContainer()->get('router');
+		$security = System::getContainer()->get('security.helper');
 
 		foreach ($GLOBALS['BE_MOD'] as $strGroupName=>$arrGroupModules)
 		{
@@ -517,7 +537,7 @@ class BackendUser extends User
 				foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
 				{
 					// Check access
-					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || $this->hasAccess($strModuleName, 'modules');
+					$blnAccess = (isset($arrModuleConfig['disablePermissionChecks']) && $arrModuleConfig['disablePermissionChecks'] === true) || $security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $strModuleName);
 					$blnHide = isset($arrModuleConfig['hideInNavigation']) && $arrModuleConfig['hideInNavigation'] === true;
 
 					if ($blnAccess && !$blnHide)

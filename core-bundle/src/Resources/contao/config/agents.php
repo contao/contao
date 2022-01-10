@@ -8,6 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
+// Backwards compatibility
 // Operating systems (check Windows CE before Windows and Android before Linux!)
 $GLOBALS['TL_CONFIG']['os'] = array
 (
@@ -29,6 +30,7 @@ $GLOBALS['TL_CONFIG']['os'] = array
 	'NetBSD'        => array('os'=>'unix',       'mobile'=>false),
 );
 
+// Backwards compatibility
 // Browsers (check OmniWeb and Silk before Safari and Opera Mini/Mobi before Opera!)
 $GLOBALS['TL_CONFIG']['browser'] = array
 (

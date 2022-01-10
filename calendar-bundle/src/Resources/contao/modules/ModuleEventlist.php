@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Image\Studio\Studio;
 
 /**
  * Front end module "event list".
@@ -282,7 +281,7 @@ class ModuleEventlist extends Events
 			}
 		}
 
-		// Preload all images in one query so they are loaded into the model registry
+		// Preload all images in one query, so they are loaded into the model registry
 		FilesModel::findMultipleByUuids($uuids);
 
 		// Parse events
@@ -366,7 +365,7 @@ class ModuleEventlist extends Events
 					}
 				}
 
-				$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+				$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
 
 				$figure = $figureBuilder
 					->from($event['singleSRC'])

@@ -28,7 +28,7 @@ use Terminal42\Escargot\Exception\InvalidJobIdException;
  *
  * @author Yanick Witschi <https://github.com/toflar>
  */
-class Crawl extends Backend implements \executable
+class Crawl extends Backend implements MaintenanceModuleInterface
 {
 	/**
 	 * @var bool
@@ -57,23 +57,12 @@ class Crawl extends Backend implements \executable
 	 */
 	public function run()
 	{
-		if (!System::getContainer()->has('contao.crawl.escargot_factory'))
+		if (!System::getContainer()->has('contao.crawl.escargot.factory'))
 		{
 			return '';
 		}
 
-		// Hide the crawler in maintenance mode (see #1379)
-		try
-		{
-			$driver = System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
-			$blnMaintenance = $driver->isExists();
-		}
-		catch (\Exception $e)
-		{
-			$blnMaintenance = false;
-		}
-
-		$factory = System::getContainer()->get('contao.crawl.escargot_factory');
+		$factory = System::getContainer()->get('contao.crawl.escargot.factory');
 		$subscriberNames = $factory->getSubscriberNames();
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
 		$memberWidget = null;
@@ -84,7 +73,6 @@ class Crawl extends Backend implements \executable
 		}
 
 		$template = new BackendTemplate('be_crawl');
-		$template->isMaintenance = $blnMaintenance;
 		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
 		$template->memberWidget = $memberWidget;
@@ -182,7 +170,10 @@ class Crawl extends Backend implements \executable
 		if (Environment::get('isAjaxRequest'))
 		{
 			// Start crawling
-			$escargot->crawl();
+			if ('true' !== Environment::get('httpOnlyStatusUpdate'))
+			{
+				$escargot->crawl();
+			}
 
 			// Commit the result on the lazy queue
 			$queue->commit($jobId);

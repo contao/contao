@@ -12,6 +12,7 @@ use Contao\Automator;
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Calendar;
+use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CalendarModel;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -114,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,alias,language;{calendars_legend},calendars;{config_legend},format,source,maxItems,feedBase,description'
+		'default'                     => '{title_legend},title,alias,language;{calendars_legend},calendars;{config_legend},format,source,maxItems,feedBase,description;{image_legend:hide},imgSize'
 	),
 
 	// Fields
@@ -210,7 +211,16 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
-		)
+		),
+		'imgSize' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'imageSize',
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
+			'options_callback'	      => array('contao.listener.image_size_options', '__invoke'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 	)
 );
 
@@ -255,9 +265,10 @@ class tl_calendar_feed extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_calendar_feed']['list']['sorting']['root'] = $root;
+		$security = System::getContainer()->get('security.helper');
 
 		// Check permissions to add feeds
-		if (!$this->User->hasAccess('create', 'calendarfeedp'))
+		if (!$security->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_FEEDS))
 		{
 			$GLOBALS['TL_DCA']['tl_calendar_feed']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_calendar_feed']['config']['notCreatable'] = true;
@@ -265,7 +276,7 @@ class tl_calendar_feed extends Backend
 		}
 
 		// Check permissions to delete feeds
-		if (!$this->User->hasAccess('delete', 'calendarfeedp'))
+		if (!$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS))
 		{
 			$GLOBALS['TL_DCA']['tl_calendar_feed']['config']['notDeletable'] = true;
 		}
@@ -280,7 +291,7 @@ class tl_calendar_feed extends Backend
 				break;
 
 			case 'create':
-				if (!$this->User->hasAccess('create', 'calendarfeedp'))
+				if (!$security->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_FEEDS))
 				{
 					throw new AccessDeniedException('Not enough permissions to create calendar feeds.');
 				}
@@ -290,7 +301,7 @@ class tl_calendar_feed extends Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'calendarfeedp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS)))
 				{
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' calendar feed ID ' . Input::get('id') . '.');
 				}
@@ -302,7 +313,7 @@ class tl_calendar_feed extends Backend
 			case 'copyAll':
 				$session = $objSession->all();
 
-				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'calendarfeedp'))
+				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -421,7 +432,7 @@ class tl_calendar_feed extends Backend
 	 */
 	public function copyFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'calendarfeedp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -438,7 +449,7 @@ class tl_calendar_feed extends Backend
 	 */
 	public function deleteFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'calendarfeedp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

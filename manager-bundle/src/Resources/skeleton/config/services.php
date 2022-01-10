@@ -2,15 +2,21 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 use Contao\Model;
 use Contao\System;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-/**
- * @var ContainerBuilder $container
- */
-return static function(ContainerConfigurator $configurator) use ($container) {
+/** @var ContainerBuilder $container */
+return static function (ContainerConfigurator $configurator) use ($container): void {
     $originalDefinitions = $container->getDefinitions();
 
     // Don't do anything if there is a service definition for the App namespace
@@ -33,14 +39,14 @@ return static function(ContainerConfigurator $configurator) use ($container) {
 
         // Trigger __destruct handler
         unset($config);
-    } catch (\Throwable $e) {
+    } catch (Throwable $e) {
         // Ignore failed autoloading
     }
 
     $errors = [];
     $services = array_diff_key($container->getDefinitions(), $originalDefinitions);
 
-    if (0 === ($serviceCount = \count($services))) {
+    if (0 === ($serviceCount = count($services))) {
         return;
     }
 
@@ -95,7 +101,7 @@ return static function(ContainerConfigurator $configurator) use ($container) {
     }
 
     // If all services fail to register, there is probably another namespace in use
-    if ($serviceCount === \count($errors)) {
+    if ($serviceCount === count($errors)) {
         foreach ($errors as $id) {
             $container->removeDefinition($id);
         }

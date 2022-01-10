@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -200,6 +202,8 @@ class Ajax extends Backend
 
 			// Load nodes of the page tree
 			case 'loadPagetree':
+				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=loadPagetree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
+
 				$varValue = null;
 				$strField = $dc->field = Input::post('name');
 
@@ -235,6 +239,8 @@ class Ajax extends Backend
 
 			// Load nodes of the file tree
 			case 'loadFiletree':
+				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=loadFiletree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
+
 				$varValue = null;
 				$strField = $dc->field = Input::post('name');
 
@@ -313,7 +319,7 @@ class Ajax extends Backend
 						// The record does not exist
 						if ($objRow->numRows < 1)
 						{
-							$this->log('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"', __METHOD__, TL_ERROR);
+							$this->log('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"', __METHOD__, ContaoContext::ERROR);
 
 							throw new BadRequestHttpException('Bad request');
 						}
@@ -350,10 +356,14 @@ class Ajax extends Backend
 						break;
 
 					case 'reloadPagetree':
+						trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=reloadPagetree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
+
 						$strKey = 'pageTree';
 						break;
 
 					default:
+						trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=reloadFiletree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
+
 						$strKey = 'fileTree';
 				}
 
@@ -416,9 +426,9 @@ class Ajax extends Backend
 				$this->import(BackendUser::class, 'User');
 
 				// Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
-				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? null) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || (($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] ?? null) && !$this->User->hasAccess($dc->table . '::' . Input::post('field'), 'alexf')))
+				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? null) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || (($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] ?? null) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $dc->table . '::' . Input::post('field'))))
 				{
-					$this->log('Field "' . Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)', __METHOD__, TL_ERROR);
+					$this->log('Field "' . Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)', __METHOD__, ContaoContext::ERROR);
 
 					throw new BadRequestHttpException('Bad request');
 				}

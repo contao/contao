@@ -41,7 +41,7 @@ class CommandSchedulerListenerTest extends TestCase
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->method('get')
-            ->with(Cron::class)
+            ->with('contao.cron')
             ->willReturn($cron)
         ;
 
@@ -176,7 +176,7 @@ class CommandSchedulerListenerTest extends TestCase
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->method('get')
-            ->with(Cron::class)
+            ->with('contao.cron')
             ->willReturn($cron)
         ;
 

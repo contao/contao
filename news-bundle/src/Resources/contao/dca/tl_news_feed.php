@@ -19,6 +19,7 @@ use Contao\Image;
 use Contao\Input;
 use Contao\News;
 use Contao\NewsArchiveModel;
+use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\StringUtil;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -114,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,alias,language;{archives_legend},archives;{config_legend},format,source,maxItems,feedBase,description'
+		'default'                     => '{title_legend},title,alias,language;{archives_legend},archives;{config_legend},format,source,maxItems,feedBase,description;{image_legend:hide},imgSize'
 	),
 
 	// Fields
@@ -210,7 +211,16 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
-		)
+		),
+		'imgSize' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'imageSize',
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
+			'options_callback'	      => array('contao.listener.image_size_options', '__invoke'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 	)
 );
 
@@ -255,9 +265,10 @@ class tl_news_feed extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_news_feed']['list']['sorting']['root'] = $root;
+		$security = System::getContainer()->get('security.helper');
 
 		// Check permissions to add feeds
-		if (!$this->User->hasAccess('create', 'newsfeedp'))
+		if (!$security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_FEEDS))
 		{
 			$GLOBALS['TL_DCA']['tl_news_feed']['config']['closed'] = true;
 			$GLOBALS['TL_DCA']['tl_news_feed']['config']['notCreatable'] = true;
@@ -265,7 +276,7 @@ class tl_news_feed extends Backend
 		}
 
 		// Check permissions to delete feeds
-		if (!$this->User->hasAccess('delete', 'newsfeedp'))
+		if (!$security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_FEEDS))
 		{
 			$GLOBALS['TL_DCA']['tl_news_feed']['config']['notDeletable'] = true;
 		}
@@ -280,7 +291,7 @@ class tl_news_feed extends Backend
 				break;
 
 			case 'create':
-				if (!$this->User->hasAccess('create', 'newsfeedp'))
+				if (!$security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_FEEDS))
 				{
 					throw new AccessDeniedException('Not enough permissions to create news feeds.');
 				}
@@ -290,7 +301,7 @@ class tl_news_feed extends Backend
 			case 'copy':
 			case 'delete':
 			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$this->User->hasAccess('delete', 'newsfeedp')))
+				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_FEEDS)))
 				{
 					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news feed ID ' . Input::get('id') . '.');
 				}
@@ -302,7 +313,7 @@ class tl_news_feed extends Backend
 			case 'copyAll':
 				$session = $objSession->all();
 
-				if (Input::get('act') == 'deleteAll' && !$this->User->hasAccess('delete', 'newsfeedp'))
+				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_FEEDS))
 				{
 					$session['CURRENT']['IDS'] = array();
 				}
@@ -422,7 +433,7 @@ class tl_news_feed extends Backend
 	 */
 	public function copyFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('create', 'newsfeedp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -439,7 +450,7 @@ class tl_news_feed extends Backend
 	 */
 	public function deleteFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess('delete', 'newsfeedp') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

@@ -16,9 +16,9 @@ use Contao\ManagerPlugin\PluginLoader;
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\RouteLoaderInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouteCollection;
-use Webmozart\PathUtil\Path;
 
 class RouteLoader implements RouteLoaderInterface
 {
@@ -28,7 +28,7 @@ class RouteLoader implements RouteLoaderInterface
     private string $projectDir;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_manager.routing_loader" service instead
+     * @internal Do not inherit from this class; decorate the "contao_manager.routing.route_loader" service instead
      */
     public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $projectDir)
     {

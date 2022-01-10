@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\String\HtmlDecoder;
+use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Provide methods regarding news archives.
@@ -58,7 +58,7 @@ class News extends Frontend
 		else
 		{
 			$this->generateFiles($objFeed->row());
-			$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, TL_CRON);
+			$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
 		}
 	}
 
@@ -78,7 +78,7 @@ class News extends Frontend
 			{
 				$objFeed->feedName = $objFeed->alias ?: 'news' . $objFeed->id;
 				$this->generateFiles($objFeed->row());
-				$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, TL_CRON);
+				$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
 			}
 		}
 	}
@@ -100,7 +100,7 @@ class News extends Frontend
 
 				// Update the XML file
 				$this->generateFiles($objFeed->row());
-				$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, TL_CRON);
+				$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
 			}
 		}
 	}
@@ -140,12 +140,13 @@ class News extends Frontend
 			$objArticle = NewsModel::findPublishedByPids($arrArchives);
 		}
 
+		$container = System::getContainer();
+
 		// Parse the items
 		if ($objArticle !== null)
 		{
 			$arrUrls = array();
-
-			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$request = $container->get('request_stack')->getCurrentRequest();
 
 			if ($request)
 			{
@@ -153,10 +154,17 @@ class News extends Frontend
 				$request->attributes->set('_scope', 'frontend');
 			}
 
+			$time = time();
 			$origObjPage = $GLOBALS['objPage'] ?? null;
 
 			while ($objArticle->next())
 			{
+				// Never add unpublished elements to the RSS feeds
+				if (!$objArticle->published || ($objArticle->start && $objArticle->start > $time) || ($objArticle->stop && $objArticle->stop <= $time))
+				{
+					continue;
+				}
+
 				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
 
 				// No jumpTo page set (see #4784)
@@ -220,7 +228,7 @@ class News extends Frontend
 					$strDescription = $objArticle->teaser;
 				}
 
-				$strDescription = $this->replaceInsertTags($strDescription, false);
+				$strDescription = $container->get('contao.insert_tag.parser')->replaceInline($strDescription);
 				$objItem->description = $this->convertRelativeUrls($strDescription, $strLink);
 
 				// Add the article image as enclosure
@@ -230,7 +238,7 @@ class News extends Frontend
 
 					if ($objFile !== null)
 					{
-						$objItem->addEnclosure($objFile->path, $strLink, 'media:content');
+						$objItem->addEnclosure($objFile->path, $strLink, 'media:content', $arrFeed['imgSize']);
 					}
 				}
 
@@ -264,10 +272,10 @@ class News extends Frontend
 			$GLOBALS['objPage'] = $origObjPage;
 		}
 
-		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		// Create the file
-		File::putContent($webDir . '/share/' . $strFile . '.xml', $this->replaceInsertTags($objFeed->$strType(), false));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', $container->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
 	}
 
 	/**
@@ -462,7 +470,7 @@ class News extends Frontend
 	 */
 	public static function getSchemaOrgData(NewsModel $objArticle): array
 	{
-		$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 		$jsonLd = array(
 			'@type' => 'NewsArticle',

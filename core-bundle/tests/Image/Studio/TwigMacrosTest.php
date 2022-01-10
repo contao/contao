@@ -23,10 +23,10 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
-use Webmozart\PathUtil\Path;
 
 class TwigMacrosTest extends TestCase
 {
@@ -593,9 +593,7 @@ class TwigMacrosTest extends TestCase
         $environment = new Environment(new ArrayLoader($templates));
         $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))]);
 
-        if (null === $responseContextAccessor) {
-            $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
-        }
+        $responseContextAccessor ??= $this->createMock(ResponseContextAccessor::class);
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([

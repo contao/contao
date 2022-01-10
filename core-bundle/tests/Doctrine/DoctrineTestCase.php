@@ -40,9 +40,7 @@ abstract class DoctrineTestCase extends TestCase
      */
     protected function mockDoctrineRegistry(Connection $connection = null): Registry
     {
-        if (null === $connection) {
-            $connection = $this->createMock(Connection::class);
-        }
+        $connection ??= $this->createMock(Connection::class);
 
         if ($connection instanceof MockObject) {
             $connection
@@ -97,6 +95,9 @@ abstract class DoctrineTestCase extends TestCase
         return $framework;
     }
 
+    /**
+     * @param Connection&MockObject $connection
+     */
     protected function getDcaSchemaProvider(array $dca = [], array $file = [], $connection = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(

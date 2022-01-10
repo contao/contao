@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
 use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
@@ -39,6 +40,11 @@ class DebugPagesCommand extends Command
      */
     private array $routeEnhancers = [];
 
+    /**
+     * @var array<ContentCompositionInterface|bool>
+     */
+    private array $contentComposition = [];
+
     public function __construct(ContaoFramework $framework, PageRegistry $pageRegistry)
     {
         parent::__construct();
@@ -47,12 +53,19 @@ class DebugPagesCommand extends Command
         $this->pageRegistry = $pageRegistry;
     }
 
-    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null): void
+    /**
+     * @param ContentCompositionInterface|bool $contentComposition
+     */
+    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, $contentComposition = true): void
     {
         $this->routeConfigs[$type] = $config;
 
         if (null !== $routeEnhancer) {
             $this->routeEnhancers[$type] = $routeEnhancer;
+        }
+
+        if (null !== $contentComposition) {
+            $this->contentComposition[$type] = $contentComposition;
         }
     }
 
@@ -77,11 +90,17 @@ class DebugPagesCommand extends Command
             $page = new PageModel();
             $page->type = $type;
 
+            $contentComposition = $this->pageRegistry->supportsContentComposition($page) ? 'yes' : 'no';
+
+            if (($this->contentComposition[$type] ?? null) instanceof ContentCompositionInterface) {
+                $contentComposition = 'dynamic';
+            }
+
             $rows[] = [
                 $type,
                 $config && $config->getPath() ? $config->getPath() : '*',
                 $config && $config->getUrlSuffix() ? $config->getUrlSuffix() : '*',
-                $this->pageRegistry->supportsContentComposition($page) ? 'yes' : 'no',
+                $contentComposition,
                 isset($this->routeEnhancers[$type]) ? \get_class($this->routeEnhancers[$type]) : '-',
                 $config ? $this->generateArray($config->getRequirements()) : '-',
                 $config ? $this->generateArray($config->getDefaults()) : '-',
@@ -102,7 +121,7 @@ class DebugPagesCommand extends Command
             static function ($carry, $item): int {
                 $length = \strlen($item);
 
-                return $carry > $length ? $carry : $length;
+                return max($carry, $length);
             },
             0
         );
@@ -114,7 +133,7 @@ class DebugPagesCommand extends Command
                 $v = $v ? 'true' : 'false';
             }
 
-            $return[] = sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), (string) $v);
+            $return[] = sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), $v);
         }
 
         return !empty($return) ? implode("\n", $return) : '-';

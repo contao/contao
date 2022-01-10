@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -21,6 +23,8 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\System;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -34,7 +38,6 @@ use Twig\NodeTraverser;
 use Twig\Source;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Webmozart\PathUtil\Path;
 
 class ContaoExtensionTest extends TestCase
 {
@@ -205,9 +208,13 @@ class ContaoExtensionTest extends TestCase
     {
         $extension = $this->getContaoExtension();
 
-        System::setContainer($this->getContainerWithContaoConfiguration(
+        $container = $this->getContainerWithContaoConfiguration(
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
-        ));
+        );
+
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+
+        System::setContainer($container);
 
         $output = $extension->renderLegacyTemplate(
             'foo.html5',
@@ -222,13 +229,20 @@ class ContaoExtensionTest extends TestCase
     {
         $extension = $this->getContaoExtension();
 
-        System::setContainer($this->getContainerWithContaoConfiguration(
+        $container = $this->getContainerWithContaoConfiguration(
             Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy')
-        ));
+        );
+
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+
+        System::setContainer($container);
+
+        $framework = new \ReflectionClass(ContaoFramework::class);
+        $framework->setStaticPropertyValue('nonce', '<nonce>');
 
         $output = $extension->renderLegacyTemplate(
             'baz.html5',
-            ['B' => "root before B\n[[TL_PARENT]]root after B"],
+            ['B' => "root before B\n[[TL_PARENT_<nonce>]]root after B"],
             ['foo' => 'bar']
         );
 
@@ -260,6 +274,7 @@ class ContaoExtensionTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/legacy'));
         $container->set('contao.security.token_checker', $tokenChecker);
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
 
         System::setContainer($container);
 
@@ -283,15 +298,13 @@ class ContaoExtensionTest extends TestCase
         unset($GLOBALS['TL_LANG']);
     }
 
-    private function getContaoExtension($environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
+    /**
+     * @param Environment&MockObject $environment
+     */
+    private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
     {
-        if (null === $environment) {
-            $environment = $this->createMock(Environment::class);
-        }
-
-        if (null === $hierarchy) {
-            $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        }
+        $environment ??= $this->createMock(Environment::class);
+        $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
 
         $environment
             ->method('getExtension')

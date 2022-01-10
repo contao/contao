@@ -18,13 +18,14 @@ use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Twig\Environment;
-use Webmozart\PathUtil\Path;
 
 class FigureRendererTest extends TestCase
 {
@@ -128,6 +129,7 @@ class FigureRendererTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('filesystem', $filesystem);
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
 
         System::setContainer($container);
 

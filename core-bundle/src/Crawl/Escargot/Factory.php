@@ -17,8 +17,8 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Terminal42\Escargot\BaseUriCollection;
 use Terminal42\Escargot\Escargot;
@@ -93,7 +93,7 @@ class Factory
     {
         return new LazyQueue(
             new InMemoryQueue(),
-            new DoctrineQueue($this->connection, static fn (): string => Uuid::uuid4()->toString(), 'tl_crawl_queue')
+            new DoctrineQueue($this->connection, static fn (): string => Uuid::v4()->toRfc4122(), 'tl_crawl_queue')
         );
     }
 
@@ -138,9 +138,6 @@ class Factory
         return $collection;
     }
 
-    /**
-     * @throws \InvalidArgumentException
-     */
     public function create(BaseUriCollection $baseUris, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
     {
         $escargot = Escargot::create($baseUris, $queue)->withHttpClient($this->createHttpClient($clientOptions));
@@ -152,7 +149,6 @@ class Factory
     }
 
     /**
-     * @throws \InvalidArgumentException
      * @throws InvalidJobIdException
      */
     public function createFromJobId(string $jobId, QueueInterface $queue, array $selectedSubscribers, array $clientOptions = []): Escargot
@@ -196,9 +192,6 @@ class Factory
         }
     }
 
-    /**
-     * @throws \InvalidArgumentException
-     */
     private function validateSubscribers(array $selectedSubscribers): array
     {
         $msg = sprintf(

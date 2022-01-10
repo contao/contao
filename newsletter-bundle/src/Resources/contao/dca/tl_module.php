@@ -12,13 +12,15 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\DataContainer;
+use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
+use Contao\System;
 
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']     = str_replace(',editable', ',editable,newsletters', $GLOBALS['TL_DCA']['tl_module']['palettes']['personalData']);
 $GLOBALS['TL_DCA']['tl_module']['palettes']['subscribe']        = '{title_legend},name,headline,type;{config_legend},nl_channels,nl_hideChannels,disableCaptcha;{text_legend},nl_text;{redirect_legend},jumpTo;{email_legend:hide},nl_subscribe;{template_legend:hide},nl_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['unsubscribe']      = '{title_legend},name,headline,type;{config_legend},nl_channels,nl_hideChannels,disableCaptcha;{redirect_legend},jumpTo;{email_legend:hide},nl_unsubscribe;{template_legend:hide},nl_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['newsletterlist']   = '{title_legend},name,headline,type;{config_legend},nl_channels;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['newsletterreader'] = '{title_legend},name,headline,type;{config_legend},nl_channels;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['newsletterreader'] = '{title_legend},name,headline,type;{config_legend},nl_channels,overviewPage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 
 // Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['newsletters'] = array
@@ -165,10 +167,11 @@ class tl_module_newsletter extends Backend
 
 		$arrChannels = array();
 		$objChannels = $this->Database->execute($strQuery);
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objChannels->next())
 		{
-			if ($this->User->hasAccess($objChannels->id, 'newsletters'))
+			if ($security->isGranted(ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL, $objChannels->id))
 			{
 				$arrChannels[$objChannels->id] = $objChannels->title;
 			}

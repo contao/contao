@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Security\TwoFactor;
 
 use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\User;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
@@ -85,6 +86,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $user->save();
     }
 
+    /**
+     * @return Collection<int, TrustedDevice>
+     */
     public function getTrustedDevices(User $user)
     {
         return $this->entityManager

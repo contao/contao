@@ -14,9 +14,9 @@ namespace Contao\ManagerBundle\Composer;
 
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
-use Webmozart\PathUtil\Path;
 
 /**
  * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0; use

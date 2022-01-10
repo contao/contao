@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Page(contentComposition=false)
+ *
+ * @internal
  */
 class RootPageController extends AbstractController
 {
@@ -39,8 +41,8 @@ class RootPageController extends AbstractController
             return $nextPage;
         }
 
-        if ($this->has('logger')) {
-            $this->get('logger')->error(
+        if ($this->container->has('logger')) {
+            $this->container->get('logger')->error(
                 'No active page found under root page "'.$rootPageId.'"',
                 ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
             );

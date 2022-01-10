@@ -27,12 +27,16 @@ final class Page implements ServiceTagInterface
 {
     private ?string $type = null;
     private bool $contentComposition = true;
-    private ?string $path = null;
     private ?string $urlSuffix = null;
     private array $requirements = [];
     private array $options = [];
     private array $defaults = [];
     private array $methods = [];
+
+    /**
+     * @var string|bool|null
+     */
+    private $path;
 
     public function __construct(array $data)
     {
@@ -106,12 +110,18 @@ final class Page implements ServiceTagInterface
         $this->contentComposition = $contentComposition;
     }
 
-    public function setPath(?string $path): void
+    /**
+     * @param string|bool|null $path
+     */
+    public function setPath($path): void
     {
         $this->path = $path;
     }
 
-    public function getPath(): ?string
+    /**
+     * @return string|bool|null
+     */
+    public function getPath()
     {
         return $this->path;
     }

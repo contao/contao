@@ -12,10 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
  * Class ModuleFaqReader
@@ -85,8 +82,18 @@ class ModuleFaqReader extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
-		$this->Template->referer = 'javascript:history.go(-1)';
+		if ($this->overviewPage)
+		{
+			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['faqOverview'];
+		}
+		else
+		{
+			trigger_deprecation('contao/faq-bundle', '4.13', 'If you do not select an overview page in the FAQ reader module, the "go back" link will no longer be shown in Contao 5.0.');
+
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+			$this->Template->referer = 'javascript:history.go(-1)';
+		}
 
 		$objFaq = FaqModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->faq_categories);
 
@@ -98,14 +105,14 @@ class ModuleFaqReader extends Module
 		// Add the FAQ record to the template (see #221)
 		$this->Template->faq = $objFaq->row();
 
-		// Overwrite the page meta data (see #2853, #4955 and #87)
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+		// Overwrite the page metadata (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-			$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			if ($objFaq->pageTitle)
 			{
@@ -144,7 +151,7 @@ class ModuleFaqReader extends Module
 		if ($objFaq->addImage)
 		{
 			$figure = System::getContainer()
-				->get(Studio::class)
+				->get('contao.image.studio')
 				->createFigureBuilder()
 				->from($objFaq->singleSRC)
 				->setSize($objFaq->size)

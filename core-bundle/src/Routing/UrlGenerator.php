@@ -47,7 +47,7 @@ class UrlGenerator implements UrlGeneratorInterface
         return $this->router->getContext();
     }
 
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): ?string
+    public function generate(string $name, array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): ?string
     {
         $this->framework->initialize();
 
@@ -102,8 +102,6 @@ class UrlGenerator implements UrlGeneratorInterface
 
     /**
      * Adds the parameters to the alias.
-     *
-     * @throws MissingMandatoryParametersException
      */
     private function prepareAlias(string $alias, array &$parameters): void
     {

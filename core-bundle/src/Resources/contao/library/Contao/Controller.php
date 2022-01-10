@@ -16,10 +16,9 @@ use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
-use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext as ContaoMonologContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -51,6 +50,11 @@ use Symfony\Component\Finder\Glob;
  */
 abstract class Controller extends System
 {
+	/**
+	 * @var Template
+	 */
+	protected $Template;
+
 	/**
 	 * @var array
 	 */
@@ -393,7 +397,7 @@ abstract class Controller extends System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			static::log('Module class "' . $strClass . '" (module "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
+			static::log('Module class "' . $strClass . '" (module "' . $objRow->type . '") does not exist', __METHOD__, ContaoMonologContext::ERROR);
 
 			return '';
 		}
@@ -575,7 +579,7 @@ abstract class Controller extends System
 		// Return if the class does not exist
 		if (!class_exists($strClass))
 		{
-			static::log('Content element class "' . $strClass . '" (content element "' . $objRow->type . '") does not exist', __METHOD__, TL_ERROR);
+			static::log('Content element class "' . $strClass . '" (content element "' . $objRow->type . '") does not exist', __METHOD__, ContaoMonologContext::ERROR);
 
 			return '';
 		}
@@ -650,7 +654,7 @@ abstract class Controller extends System
 
 		if (!class_exists($strClass))
 		{
-			static::log('Form class "' . $strClass . '" does not exist', __METHOD__, TL_ERROR);
+			static::log('Form class "' . $strClass . '" does not exist', __METHOD__, ContaoMonologContext::ERROR);
 
 			return '';
 		}
@@ -710,7 +714,7 @@ abstract class Controller extends System
 	public static function getPageStatusIcon($objPage)
 	{
 		$sub = 0;
-		$type = \in_array($objPage->type, array('regular', 'root', 'forward', 'redirect', 'error_401', 'error_403', 'error_404'), true) ? $objPage->type : 'regular';
+		$type = \in_array($objPage->type, array('regular', 'root', 'forward', 'redirect', 'error_401', 'error_403', 'error_404', 'error_503'), true) ? $objPage->type : 'regular';
 		$image = $type . '.svg';
 
 		// Page not published or not active
@@ -720,13 +724,13 @@ abstract class Controller extends System
 		}
 
 		// Page hidden from menu
-		if ($objPage->hide && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404')))
+		if ($objPage->hide && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404', 'error_503')))
 		{
 			$sub += 2;
 		}
 
 		// Page protected
-		if ($objPage->protected && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404')))
+		if ($objPage->protected && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404', 'error_503')))
 		{
 			$sub += 4;
 		}
@@ -796,12 +800,22 @@ abstract class Controller extends System
 	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
 	 *
 	 * @return string The text with the replaced tags
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+	 *             Use the InsertTagParser service instead.
 	 */
 	public static function replaceInsertTags($strBuffer, $blnCache=true)
 	{
-		$objIt = new InsertTags();
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
 
-		return $objIt->replace($strBuffer, $blnCache);
+		$parser = System::getContainer()->get('contao.insert_tag.parser');
+
+		if ($blnCache)
+		{
+			return $parser->replace((string) $strBuffer);
+		}
+
+		return $parser->replaceInline((string) $strBuffer);
 	}
 
 	/**
@@ -831,7 +845,9 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_JQUERY']));
 		}
 
-		$arrReplace['[[TL_JQUERY]]'] = $strScripts;
+		$nonce = ContaoFramework::getNonce();
+
+		$arrReplace["[[TL_JQUERY_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		// Add the internal MooTools scripts
@@ -840,7 +856,7 @@ abstract class Controller extends System
 			$strScripts .= implode('', array_unique($GLOBALS['TL_MOOTOOLS']));
 		}
 
-		$arrReplace['[[TL_MOOTOOLS]]'] = $strScripts;
+		$arrReplace["[[TL_MOOTOOLS_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		// Add the internal <body> tags
@@ -855,7 +871,7 @@ abstract class Controller extends System
 		$objLayout = ($objPage !== null) ? LayoutModel::findByPk($objPage->layoutId) : null;
 		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
 
-		$arrReplace['[[TL_BODY]]'] = $strScripts;
+		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		$objCombiner = new Combiner();
@@ -922,7 +938,7 @@ abstract class Controller extends System
 			}
 		}
 
-		$arrReplace['[[TL_CSS]]'] = $strScripts;
+		$arrReplace["[[TL_CSS_$nonce]]"] = $strScripts;
 		$strScripts = '';
 
 		// Add the internal scripts
@@ -992,7 +1008,7 @@ abstract class Controller extends System
 			}
 		}
 
-		$arrReplace['[[TL_HEAD]]'] = $strScripts;
+		$arrReplace["[[TL_HEAD_$nonce]]"] = $strScripts;
 
 		return str_replace(array_keys($arrReplace), $arrReplace, $strBuffer);
 	}
@@ -1187,7 +1203,7 @@ abstract class Controller extends System
 	 * @param string  $strForceLang Force a certain language
 	 * @param boolean $blnFixDomain Check the domain of the target page and append it if necessary
 	 *
-	 * @return string An URL that can be used in the front end
+	 * @return string A URL that can be used in the front end
 	 *
 	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
 	 *             Use PageModel::getFrontendUrl() instead.
@@ -1557,7 +1573,7 @@ abstract class Controller extends System
 			return new Metadata(array(
 				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
 				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-				Metadata::VALUE_URL => self::replaceInsertTags($rowData['imageUrl'] ?? ''),
+				Metadata::VALUE_URL => System::getContainer()->get('contao.insert_tag.parser')->replaceInline($rowData['imageUrl'] ?? ''),
 				'linkTitle' => (string) ($rowData['linkTitle'] ?? ''),
 			));
 		};
@@ -1663,7 +1679,7 @@ abstract class Controller extends System
 
 				/** @var BoxInterface $originalSize */
 				$originalSize = $container
-					->get('contao.image.image_factory')
+					->get('contao.image.factory')
 					->create($container->getParameter('kernel.project_dir') . '/' . $rowData['singleSRC'])
 					->getDimensions()
 					->getSize();
@@ -1683,7 +1699,7 @@ abstract class Controller extends System
 			return array($size, $margin);
 		};
 
-		$figureBuilder = System::getContainer()->get(Studio::class)->createFigureBuilder();
+		$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
 
 		// Set image resource
 		if (null !== $filesModel)
@@ -1744,7 +1760,7 @@ abstract class Controller extends System
 		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?? null, $includeFullMetadata);
 
 		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
-		$template->linkTitle = $template->linkTitle ?? StringUtil::specialchars($rowData['title'] ?? '');
+		$template->linkTitle ??= StringUtil::specialchars($rowData['title'] ?? '');
 	}
 
 	/**
@@ -2188,13 +2204,13 @@ abstract class Controller extends System
 	 * @return string The text with the replaced tokens
 	 *
 	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0;
-	 *             Use the SimpleTokenParser::class service instead.
+	 *             Use the contao.string.simple_token_parser service instead.
 	 */
 	protected function parseSimpleTokens($strBuffer, $arrData)
 	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\Controller::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "SimpleTokenParser::class" service instead.');
+		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\Controller::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.string.simple_token_parser" service instead.');
 
-		return System::getContainer()->get(SimpleTokenParser::class)->parse($strBuffer, $arrData);
+		return System::getContainer()->get('contao.string.simple_token_parser')->parse($strBuffer, $arrData);
 	}
 
 	/**

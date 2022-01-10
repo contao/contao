@@ -31,12 +31,13 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 {
     private ContaoFramework $framework;
     private SessionInterface $session;
-    private string $userClass;
     private ?LoggerInterface $logger;
 
     /**
-     * @throws \RuntimeException
+     * @var class-string<User>
      */
+    private string $userClass;
+
     public function __construct(ContaoFramework $framework, SessionInterface $session, string $userClass, LoggerInterface $logger = null)
     {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
@@ -50,6 +51,8 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     }
 
     /**
+     * @param mixed $username
+     *
      * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0;
      *             use ContaoUserProvider::loadUserByIdentifier() instead
      */
@@ -57,7 +60,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     {
         trigger_deprecation('contao/core-bundle', '4.13', 'Using "ContaoUserProvider::loadUserByUsername()" has been deprecated and will no longer work in Contao 5.0. Use "ContaoUserProvider::loadUserByIdentifier()" instead.');
 
-        return $this->loadUserByIdentifier($username);
+        return $this->loadUserByIdentifier((string) $username);
     }
 
     public function loadUserByIdentifier(string $identifier): User
@@ -89,7 +92,10 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         return $user;
     }
 
-    public function supportsClass($class): bool
+    /**
+     * @param class-string<User> $class
+     */
+    public function supportsClass(string $class): bool
     {
         return $this->userClass === $class;
     }
@@ -109,8 +115,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 
     /**
      * Validates the session lifetime and logs the user out if the session has expired.
-     *
-     * @throws UsernameNotFoundException
      */
     private function validateSessionLifetime(User $user): void
     {

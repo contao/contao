@@ -37,6 +37,8 @@ class DateListenerTest extends TestCase
     }
 
     /**
+     * @param string|false $expected
+     *
      * @dataProvider getConvertedInsertTags
      */
     public function testReplacedInsertTag(string $insertTag, $expected): void

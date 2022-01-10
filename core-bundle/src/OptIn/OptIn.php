@@ -21,7 +21,7 @@ class OptIn implements OptInInterface
     private ContaoFramework $framework;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.opt-in" service instead
+     * @internal Do not inherit from this class; decorate the "contao.opt_in" service instead
      */
     public function __construct(ContaoFramework $framework)
     {
@@ -89,8 +89,11 @@ class OptIn implements OptInInterface
                 $related = $token->getRelatedRecords();
 
                 foreach ($related as $table => $id) {
+                    /** @var class-string<Model> $class */
+                    $class = $adapter->getClassFromTable($table);
+
                     /** @var Model $model */
-                    $model = $this->framework->getAdapter($adapter->getClassFromTable($table));
+                    $model = $this->framework->getAdapter($class);
 
                     if (null !== $model->findMultipleByIds($id)) {
                         $delete = false;

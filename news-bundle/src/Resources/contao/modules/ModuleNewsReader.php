@@ -14,8 +14,6 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\String\HtmlDecoder;
 
 /**
  * Front end module "news reader".
@@ -85,8 +83,19 @@ class ModuleNewsReader extends ModuleNews
 	protected function compile()
 	{
 		$this->Template->articles = '';
-		$this->Template->referer = 'javascript:history.go(-1)';
-		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+
+		if ($this->overviewPage)
+		{
+			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['newsOverview'];
+		}
+		else
+		{
+			trigger_deprecation('contao/news-bundle', '4.13', 'If you do not select an overview page in the news reader module, the "go back" link will no longer be shown in Contao 5.0.');
+
+			$this->Template->referer = 'javascript:history.go(-1)';
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+		}
 
 		// Get the news item
 		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
@@ -133,14 +142,14 @@ class ModuleNewsReader extends ModuleNews
 		$arrArticle = $this->parseArticle($objArticle);
 		$this->Template->articles = $arrArticle;
 
-		// Overwrite the page meta data (see #2853, #4955 and #87)
-		$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+		// Overwrite the page metadata (see #2853, #4955 and #87)
+		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 		{
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-			$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 			if ($objArticle->pageTitle)
 			{

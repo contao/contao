@@ -13,9 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
-use Contao\CoreBundle\String\HtmlDecoder;
-use Contao\CoreBundle\String\SimpleTokenParser;
 
 /**
  * Front end module "newsletter reader".
@@ -81,8 +78,19 @@ class ModuleNewsletterReader extends Module
 	protected function compile()
 	{
 		$this->Template->content = '';
-		$this->Template->referer = 'javascript:history.go(-1)';
-		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+
+		if ($this->overviewPage)
+		{
+			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['nl_overview'];
+		}
+		else
+		{
+			trigger_deprecation('contao/newsletter-bundle', '4.13', 'If you do not select an overview page in the newsletter reader module, the "go back" link will no longer be shown in Contao 5.0.');
+
+			$this->Template->referer = 'javascript:history.go(-1)';
+			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
+		}
 
 		$objNewsletter = NewsletterModel::findSentByParentAndIdOrAlias(Input::get('items'), $this->nl_channels);
 
@@ -91,14 +99,14 @@ class ModuleNewsletterReader extends Module
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		// Overwrite the page meta data (see #2853, #4955 and #87)
+		// Overwrite the page metadata (see #2853, #4955 and #87)
 		if ($objNewsletter->subject)
 		{
-			$responseContext = System::getContainer()->get(ResponseContextAccessor::class)->getResponseContext();
+			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
 			if ($responseContext && $responseContext->has(HtmlHeadBag::class))
 			{
-				$htmlDecoder = System::getContainer()->get(HtmlDecoder::class);
+				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
 				/** @var HtmlHeadBag $htmlHeadBag */
 				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
@@ -123,8 +131,8 @@ class ModuleNewsletterReader extends Module
 		}
 
 		// Parse simple tokens and insert tags
-		$strContent = $this->replaceInsertTags($strContent);
-		$strContent = System::getContainer()->get(SimpleTokenParser::class)->parse($strContent, array());
+		$strContent = System::getContainer()->get('contao.insert_tag.parser')->replace($strContent);
+		$strContent = System::getContainer()->get('contao.string.simple_token_parser')->parse($strContent, array());
 
 		// Encode e-mail addresses
 		$strContent = StringUtil::encodeEmail($strContent);

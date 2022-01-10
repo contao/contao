@@ -68,7 +68,6 @@ use Contao\InputUnit;
 use Contao\KeyValueWizard;
 use Contao\LayoutModel;
 use Contao\ListWizard;
-use Contao\Maintenance;
 use Contao\MemberGroupModel;
 use Contao\MemberModel;
 use Contao\Messages;
@@ -399,7 +398,6 @@ $GLOBALS['TL_PTY'] = array
 // Maintenance
 $GLOBALS['TL_MAINTENANCE'] = array
 (
-	Maintenance::class,
 	Crawl::class,
 	PurgeData::class
 );
@@ -470,6 +468,7 @@ $GLOBALS['TL_PURGE'] = array
 	)
 );
 
+// Backwards compatibility
 // Image crop modes
 $GLOBALS['TL_CROP'] = array
 (
@@ -490,6 +489,7 @@ $GLOBALS['TL_CROP'] = array
 	)
 );
 
+// Backwards compatibility
 // Cron jobs
 $GLOBALS['TL_CRON'] = array
 (
@@ -510,7 +510,6 @@ $GLOBALS['TL_HOOKS'] = array
 (
 	'getSystemMessages' => array
 	(
-		array(Messages::class, 'maintenanceCheck'),
 		array(Messages::class, 'languageFallback')
 	)
 );

@@ -10,7 +10,7 @@
     <div class="formbody">
       <?php if ('get' != $this->method): ?>
         <input type="hidden" name="FORM_SUBMIT" value="<?= $this->formSubmit ?>">
-        <input type="hidden" name="REQUEST_TOKEN" value="{{request_token}}">
+        <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
         <?php if ($this->maxFileSize): ?>
           <input type="hidden" name="MAX_FILE_SIZE" value="<?= $this->maxFileSize ?>">
         <?php endif; ?>

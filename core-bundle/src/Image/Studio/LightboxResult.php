@@ -46,7 +46,7 @@ class LightboxResult
 
         if (null !== $filePathOrImage) {
             $this->image = $locator
-                ->get(Studio::class)
+                ->get('contao.image.studio')
                 ->createImage(
                     $filePathOrImage,
                     $sizeConfiguration ?? $this->getDefaultLightboxSizeConfiguration(),

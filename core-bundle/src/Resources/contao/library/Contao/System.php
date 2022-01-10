@@ -12,8 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\Intl\Countries;
-use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
@@ -42,19 +40,18 @@ use Symfony\Component\HttpFoundation\Session\Session;
  *         }
  *     }
  *
- * @property Automator                        $Automator   The automator object
- * @property Config                           $Config      The config object
- * @property Database                         $Database    The database object
- * @property Environment                      $Environment The environment object
- * @property Files                            $Files       The files object
- * @property Input                            $Input       The input object
- * @property Installer                        $Installer   The database installer object
- * @property Updater                          $Updater     The database updater object
- * @property Messages                         $Messages    The messages object
- * @property Session                          $Session     The session object
- * @property StyleSheets                      $StyleSheets The style sheets object
- * @property BackendTemplate|FrontendTemplate $Template    The template object
- * @property BackendUser|FrontendUser         $User        The user object
+ * @property Automator                $Automator   The automator object
+ * @property Config                   $Config      The config object
+ * @property Database                 $Database    The database object
+ * @property Environment              $Environment The environment object
+ * @property Files                    $Files       The files object
+ * @property Input                    $Input       The input object
+ * @property Installer                $Installer   The database installer object
+ * @property Updater                  $Updater     The database updater object
+ * @property Messages                 $Messages    The messages object
+ * @property Session                  $Session     The session object
+ * @property StyleSheets              $StyleSheets The style sheets object
+ * @property BackendUser|FrontendUser $User        The user object
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -535,7 +532,7 @@ abstract class System
 			$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
 		}
 
-		// HOOK: allow to load custom labels
+		// HOOK: allow loading custom labels
 		if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && \is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['loadLanguageFile'] as $callback)
@@ -605,9 +602,9 @@ abstract class System
 	 */
 	public static function getCountries()
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the %s service instead.', __METHOD__, Countries::class);
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the "contao.intl.countries" service instead.', __METHOD__);
 
-		$arrCountries = self::getContainer()->get(Countries::class)->getCountries();
+		$arrCountries = self::getContainer()->get('contao.intl.countries')->getCountries();
 
 		return array_combine(array_map('strtolower', array_keys($arrCountries)), $arrCountries);
 	}
@@ -624,14 +621,14 @@ abstract class System
 	 */
 	public static function getLanguages($blnInstalledOnly=false)
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the %s service instead.', __METHOD__, Locales::class);
+		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the "contao.intl.locales" service instead.', __METHOD__);
 
 		if ($blnInstalledOnly)
 		{
-			return self::getContainer()->get(Locales::class)->getEnabledLocales(null, true);
+			return self::getContainer()->get('contao.intl.locales')->getEnabledLocales(null, true);
 		}
 
-		return self::getContainer()->get(Locales::class)->getLocales(null, true);
+		return self::getContainer()->get('contao.intl.locales')->getLocales(null, true);
 	}
 
 	/**
@@ -641,6 +638,8 @@ abstract class System
 	 */
 	public static function getTimeZones()
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the DateTimeZone::listIdentifiers() instead.', __METHOD__);
+
 		$arrReturn = array();
 		$timezones = array();
 
@@ -663,13 +662,13 @@ abstract class System
 	 * @return array The available image sizes
 	 *
 	 * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
-	 *             Use the contao.image.image_sizes service instead.
+	 *             Use the contao.image.sizes service instead.
 	 */
 	public static function getImageSizes()
 	{
-		trigger_deprecation('contao/core-bundle', '4.1', 'Using "Contao\System::getImageSizes()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.image_sizes" service instead.');
+		trigger_deprecation('contao/core-bundle', '4.1', 'Using "Contao\System::getImageSizes()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.sizes" service instead.');
 
-		return static::getContainer()->get('contao.image.image_sizes')->getAllOptions();
+		return static::getContainer()->get('contao.image.sizes')->getAllOptions();
 	}
 
 	/**
@@ -722,7 +721,7 @@ abstract class System
 		$objCookie->blnSecure   = $blnSecure;
 		$objCookie->blnHttpOnly = $blnHttpOnly;
 
-		// HOOK: allow to add custom logic
+		// HOOK: allow adding custom logic
 		if (isset($GLOBALS['TL_HOOKS']['setCookie']) && \is_array($GLOBALS['TL_HOOKS']['setCookie']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['setCookie'] as $callback)
@@ -735,12 +734,12 @@ abstract class System
 	}
 
 	/**
-	 * Convert a byte value into a human readable format
+	 * Convert a byte value into a human-readable format
 	 *
 	 * @param integer $intSize     The size in bytes
 	 * @param integer $intDecimals The number of decimals to show
 	 *
-	 * @return string The human readable size
+	 * @return string The human-readable size
 	 */
 	public static function getReadableSize($intSize, $intDecimals=1)
 	{
@@ -1122,7 +1121,7 @@ abstract class System
 	}
 
 	/**
-	 * Encode the domain in an URL
+	 * Encode the domain in a URL
 	 *
 	 * @param string $strUrl The URL
 	 *

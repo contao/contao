@@ -97,7 +97,7 @@ class FrontendTemplate extends Template
 	/**
 	 * Compile the template
 	 *
-	 * @throws \UnusedArgumentsException If there are unused $_GET parameters
+	 * @throws UnusedArgumentsException If there are unused $_GET parameters
 	 *
 	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
@@ -127,6 +127,7 @@ class FrontendTemplate extends Template
 			}
 		}
 
+		$this->strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($this->strBuffer);
 		$this->strBuffer = $this->replaceDynamicScriptTags($this->strBuffer); // see #4203
 
 		// HOOK: allow to modify the compiled markup (see #4291)
@@ -142,7 +143,7 @@ class FrontendTemplate extends Template
 		// Check whether all $_GET parameters have been used (see #4277)
 		if ($this->blnCheckRequest && Input::hasUnusedGet())
 		{
-			throw new \UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
+			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
 		}
 
 		/** @var PageModel|null $objPage */
@@ -217,11 +218,7 @@ class FrontendTemplate extends Template
 			}
 
 			// Tag the page (see #2137)
-			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
-			{
-				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-				$responseTagger->addTags(array('contao.db.tl_page.' . $objPage->id));
-			}
+			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($objPage);
 		}
 
 		return $response;

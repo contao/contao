@@ -1,5 +1,27 @@
 # Deprecated features
 
+## $GLOBALS['TL_CSS_UNITS']
+
+The `$GLOBALS['TL_CSS_UNITS']` variable has been deprecated and will be removed
+in Contao 5.0. Set the appropriate units in the DCA file instead.
+
+## $GLOBALS['TL_AUTO_ITEM']
+
+The `$GLOBALS['TL_AUTO_ITEM']` variable has been deprecated and will be removed
+together with the `useAutoItem` setting in Contao 5.0. Using auto items can no
+longer be disabled then.
+
+## BE_USER_LOGGED_IN
+
+The constant `BE_USER_LOGGED_IN` has been deprecated and will be removed in
+Contao 5.0. It was historically used to preview unpublished elements in the
+front end. Use the token checker service to check the separate cases instead:
+
+```php
+$hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+$showUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+```
+
 ## FE_USER_LOGGED_IN
 
 The constant `FE_USER_LOGGED_IN` has been deprecated and will be removed in
@@ -12,10 +34,10 @@ $hasFrontendUser = System::getContainer()->get('contao.security.token_checker')-
 ## kernel.packages
 
 The `kernel.packages` parameter has been deprecated in Contao 4.5 and will be
-removed in Contao 5.0. Use `PackageUtil::getVersion()` instead.
+removed in Contao 5.0. Use the `Composer\InstalledVersions` class instead.
 
 ```php
-$coreVersion = PackageUtil::getVersion('contao/core-bundle');
+$coreVersion = InstalledVersions::getPrettyVersion('contao/core-bundle');
 ```
 
 ## TL_ASSETS_URL and TL_FILES_URL
@@ -51,7 +73,7 @@ $container = System::getContainer();
 $rootDir = $container->getParameter('kernel.project_dir');
 
 $image = $container
-    ->get('contao.image.image_factory')
+    ->get('contao.image.factory')
     ->create($rootDir.'/'.$objSubfiles->path, [80, 60, 'center_center'])
     ->getUrl($rootDir)
 ;
@@ -71,7 +93,7 @@ $container = System::getContainer();
 $rootDir = $container->getParameter('kernel.project_dir');
 
 $image = $container
-    ->get('contao.image.image_factory')
+    ->get('contao.image.factory')
     ->create(
         $rootDir.'/'.$path,
         (new ResizeConfiguration())
@@ -128,11 +150,11 @@ deprecated in Contao 4.0 and will no longer work in Contao 5.0.
 ## VERSION and BUILD
 
 The `VERSION` and `BUILD` constants have been deprecated in Contao 4.0 and will
-be removed in Contao 5.0. Use the `kernel.packages` parameter instead.
+be removed in Contao 5.0. Use the `ContaoCoreBundle::getVersion()` method
+instead.
 
 ```php
-$packages = System::getContainer()->getParameter('kernel.packages');
-$coreVersion = $packages['contao/core-bundle'];
+$coreVersion = ContaoCoreBundle::getVersion();
 ```
 
 ## member_grouped.html5
@@ -230,7 +252,7 @@ elements, make sure to always set the `ptable` column.
 ## Contao class loader
 
 Even though we are still using the Contao class loader, it has been deprecated
-in favor of the Composer class loader. You should no longer use it and you can
+in favor of the Composer class loader. You should no longer use it, and you can
 no longer use it to override arbitrary core classes.
 
 ## Using $this in configuration files
@@ -293,7 +315,7 @@ if ('contao_backend' === $route) {
 }
 ```
 
-Use the the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
+Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
 
 ```php
 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');

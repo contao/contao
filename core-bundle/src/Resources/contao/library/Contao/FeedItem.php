@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Path;
+
 /**
  * Creates items to be appended to RSS or Atom feeds
  *
@@ -97,13 +99,16 @@ class FeedItem
 	/**
 	 * Add an enclosure
 	 *
-	 * @param string $strFile  The file path
-	 * @param string $strUrl   The base URL
-	 * @param string $strMedia The media type
+	 * @param string $strFile   The file path
+	 * @param null   $strUrl    The base URL
+	 * @param string $strMedia  The media type
+	 * @param mixed  $imageSize The image size
 	 */
-	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure')
+	public function addEnclosure($strFile, $strUrl=null, $strMedia='enclosure', $imageSize = null)
 	{
-		if (!$strFile || !file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $strFile))
+		$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+
+		if (!$strFile || !file_exists(Path::join($rootDir, $strFile)))
 		{
 			return;
 		}
@@ -113,15 +118,29 @@ class FeedItem
 			$strUrl = Environment::get('base');
 		}
 
+		$fileUrl = $strUrl . System::urlEncode($strFile);
 		$objFile = new File($strFile);
+		$size = StringUtil::deserialize($imageSize, true);
 
-		$this->arrData['enclosure'][] = array
-		(
+		if ($size && $objFile->isImage)
+		{
+			$image = System::getContainer()->get('contao.image.image_factory')->create(Path::join($rootDir, $strFile), $size);
+			$fileUrl = $strUrl . System::urlEncode($image->getUrl($rootDir));
+			$objFile = new File(Path::makeRelative($image->getPath(), $rootDir));
+		}
+
+		$mediaData = array(
 			'media' => $strMedia,
-			'url' => $strUrl . System::urlEncode($strFile),
-			'length' => $objFile->size,
+			'url' => $fileUrl,
 			'type' => $objFile->mime
 		);
+
+		if ($objFile->exists())
+		{
+			$mediaData['length'] = $objFile->size;
+		}
+
+		$this->arrData['enclosure'][] = $mediaData;
 	}
 }
 

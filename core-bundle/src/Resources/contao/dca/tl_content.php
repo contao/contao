@@ -15,6 +15,7 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -22,7 +23,6 @@ use Contao\Message;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
-use Contao\Versions;
 
 $GLOBALS['TL_DCA']['tl_content'] = array
 (
@@ -101,8 +101,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			),
 			'toggle' => array
 			(
+				'href'                => 'act=toggle&amp;field=invisible',
 				'icon'                => 'visible.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_content', 'toggleIcon')
 			),
 			'show' => array
@@ -265,17 +265,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
-				return System::getContainer()->get('contao.image.image_sizes')->getOptionsForUser(BackendUser::getInstance());
-			},
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'imagemargin' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'trbl',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
@@ -284,8 +280,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(2048) NOT NULL default ''"
 		),
 		'fullsize' => array
 		(
@@ -461,8 +457,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(2048) NOT NULL default ''"
 		),
 		'target' => array
 		(
@@ -1007,7 +1003,7 @@ class tl_content extends Backend
 		}
 
 		// Not enough permissions to modify the article
-		if (!$this->User->isAllowed(BackendUser::CAN_EDIT_ARTICLES, $objPage->row()))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
 		{
 			throw new AccessDeniedException('Not enough permissions to modify article ID ' . $objPage->aid . '.');
 		}
@@ -1020,13 +1016,14 @@ class tl_content extends Backend
 	 */
 	public function getContentElements()
 	{
+		$security = System::getContainer()->get('security.helper');
 		$groups = array();
 
 		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
 		{
 			foreach (array_keys($v) as $kk)
 			{
-				if ($this->User->hasAccess($kk, 'elements'))
+				if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $kk))
 				{
 					$groups[$k][] = $kk;
 				}
@@ -1136,7 +1133,7 @@ class tl_content extends Backend
 		$objSession = System::getContainer()->get('session');
 
 		// Prevent editing content elements with not allowed types
-		if (Input::get('act') == 'edit' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
+		if (Input::get('act') == 'edit' || Input::get('act') == 'delete' || Input::get('act') == 'toggle' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
 		{
 			$objCes = $this->Database->prepare("SELECT type FROM tl_content WHERE id=?")
 									 ->execute(Input::get('id'));
@@ -1206,8 +1203,10 @@ class tl_content extends Backend
 			return;
 		}
 
+		$security = System::getContainer()->get('security.helper');
+
 		// Return if the user cannot access the layout module (see #6190)
-		if (!$this->User->hasAccess('themes', 'modules') || !$this->User->hasAccess('layout', 'themes'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'themes') || !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS))
 		{
 			return;
 		}
@@ -1392,7 +1391,7 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Throw an exception if the current article is selected (circular reference))
+	 * Throw an exception if the current article is selected (circular reference)
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -1555,10 +1554,11 @@ class tl_content extends Backend
 
 		$arrForms = array();
 		$objForms = $this->Database->execute("SELECT id, title FROM tl_form ORDER BY title");
+		$security = System::getContainer()->get('security.helper');
 
 		while ($objForms->next())
 		{
-			if ($this->User->hasAccess($objForms->id, 'forms'))
+			if ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FORM, $objForms->id))
 			{
 				$arrForms[$objForms->id] = $objForms->title . ' (ID ' . $objForms->id . ')';
 			}
@@ -1819,7 +1819,7 @@ class tl_content extends Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->User->hasAccess($row['type'], 'elements') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -1837,7 +1837,7 @@ class tl_content extends Backend
 	public function deleteElement($row, $href, $label, $title, $icon, $attributes)
 	{
 		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'elements'))
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
@@ -1915,7 +1915,7 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Extract the YouTube ID from an URL
+	 * Extract the YouTube ID from a URL
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -1938,7 +1938,7 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Extract the Vimeo ID from an URL
+	 * Extract the Vimeo ID from a URL
 	 *
 	 * @param mixed         $varValue
 	 * @param DataContainer $dc
@@ -1974,154 +1974,26 @@ class tl_content extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Input::get('cid'))
-		{
-			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
-			$this->redirect($this->getReferer());
-		}
+		$security = System::getContainer()->get('security.helper');
 
-		// Check permissions AFTER checking the cid, so hacking attempts are logged
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_content::invisible'))
 		{
 			return '';
 		}
 
 		// Disable the button if the element type is not allowed
-		if (!$this->User->hasAccess($row['type'], 'elements'))
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $row['type']))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		$href .= '&amp;id=' . Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
+		$href .= '&amp;id=' . $row['id'];
 
 		if ($row['invisible'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" data-tid="cid"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
-	}
-
-	/**
-	 * Toggle the visibility of an element
-	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
-	{
-		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
-
-		if ($dc)
-		{
-			$dc->id = $intId; // see #8043
-		}
-
-		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		// Check the field access
-		if (!$this->User->hasAccess('tl_content::invisible', 'alexf'))
-		{
-			throw new AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
-		}
-
-		$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
-								 ->limit(1)
-								 ->execute($intId);
-
-		if ($objRow->numRows < 1)
-		{
-			throw new AccessDeniedException('Invalid content element ID ' . $intId . '.');
-		}
-
-		if (!$this->User->hasAccess($objRow->type, 'elements'))
-		{
-			throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
-		}
-
-		// Set the current record
-		if ($dc)
-		{
-			$dc->activeRecord = $objRow;
-		}
-
-		$objVersions = new Versions('tl_content', $intId);
-		$objVersions->initialize();
-
-		// Reverse the logic (elements have invisible=1)
-		$blnVisible = !$blnVisible;
-
-		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$blnVisible = $callback($blnVisible, $dc);
-				}
-			}
-		}
-
-		$time = time();
-
-		// Update the database
-		$this->Database->prepare("UPDATE tl_content SET tstamp=$time, invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
-					   ->execute($intId);
-
-		if ($dc)
-		{
-			$dc->activeRecord->tstamp = $time;
-			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
-		}
-
-		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		$objVersions->create();
-
-		if ($dc)
-		{
-			$dc->invalidateCacheTags();
-		}
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,' . $row['id'] . ')">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

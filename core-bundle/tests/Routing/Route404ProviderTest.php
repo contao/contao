@@ -14,11 +14,11 @@ namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\Route404Provider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\Candidates;
@@ -92,8 +92,6 @@ class Route404ProviderTest extends TestCase
             ]
         );
 
-        $otherPageRoute = new PageRoute($otherPage);
-
         $pageAdapter = $this->mockAdapter(['findAll']);
         $pageAdapter
             ->expects($this->once())
@@ -109,13 +107,7 @@ class Route404ProviderTest extends TestCase
             ->method('getCandidates')
         ;
 
-        $pageRegistry = $this->createMock(PageRegistry::class);
-        $pageRegistry
-            ->expects($this->exactly(2))
-            ->method('getRoute')
-            ->withConsecutive([$otherPage], [$notFoundPage])
-            ->willReturn($otherPageRoute)
-        ;
+        $pageRegistry = new PageRegistry($this->createMock(Connection::class));
 
         $provider = new Route404Provider(
             $framework,
@@ -135,7 +127,7 @@ class Route404ProviderTest extends TestCase
         $route = $routes['tl_page.3.locale'];
         $this->assertInstanceOf(Route::class, $route);
         $this->assertSame(RedirectController::class, $route->getDefault('_controller'));
-        $this->assertSame('/en/foo.html', $route->getDefault('path'));
+        $this->assertSame('/en/foo{!parameters}.html', $route->getDefault('path'));
         $this->assertFalse($route->getDefault('permanent'));
     }
 
