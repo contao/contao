@@ -55,8 +55,7 @@ class ImageSizeOptionsListenerTest extends TestCase
         ;
 
         $listener = new ImageSizeOptionsListener($security, $imageSizes);
-        $imageSizesPerUser = $listener();
 
-        $this->assertSame($imageSizeConfig, $imageSizesPerUser);
+        $this->assertSame($imageSizeConfig, $listener());
     }
 }

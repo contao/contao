@@ -25,7 +25,6 @@ use Symfony\Component\Security\Core\Security;
 class ImageSizeOptionsListener
 {
     private Security $security;
-
     private ImageSizes $imageSizes;
 
     public function __construct(Security $security, ImageSizes $imageSizes)
