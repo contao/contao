@@ -28,7 +28,7 @@ class ImageSizeOptionsListener
     {
         $user = $this->security->getUser();
 
-        if (!$user instanceof BackendUser || !$user->language) {
+        if (!$user instanceof BackendUser) {
             return [];
         }
 
