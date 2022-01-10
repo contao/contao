@@ -1,4 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer\Undo;
 
@@ -16,7 +26,7 @@ class FromTableOptionsListenerTest extends TestCase
      */
     private Connection $connection;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
         $this->connection = $this->createMock(Connection::class);
@@ -55,6 +65,6 @@ class FromTableOptionsListenerTest extends TestCase
         $listener = new FromTableOptionsListener($this->connection);
         $tables = $listener();
 
-        $this->assertEquals(['tl_form'], $tables);
+        $this->assertSame(['tl_form'], $tables);
     }
 }

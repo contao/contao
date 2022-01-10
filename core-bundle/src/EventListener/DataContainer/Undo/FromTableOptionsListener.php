@@ -1,4 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
 
 namespace Contao\CoreBundle\EventListener\DataContainer\Undo;
 
@@ -14,16 +24,18 @@ class FromTableOptionsListener
         $this->connection = $connection;
     }
 
-    /** @Callback(table="tl_undo", target="fields.options.fromTable") */
+    /**
+     * @Callback(table="tl_undo", target="fields.options.fromTable")
+     */
     public function __invoke(): array
     {
-        $tables = $this->connection->executeQuery('SELECT DISTINCT ' . $this->connection->quoteIdentifier('fromTable') . ' FROM tl_undo');
+        $tables = $this->connection->executeQuery("SELECT DISTINCT {$this->connection->quoteIdentifier('fromTable')} FROM tl_undo");
 
         if (0 === $tables->rowCount()) {
-            return array();
+            return [];
         }
 
-        $options = array();
+        $options = [];
 
         foreach ($tables->fetchFirstColumn() as $table) {
             $options[] = $table;
@@ -31,5 +43,4 @@ class FromTableOptionsListener
 
         return $options;
     }
-
 }
