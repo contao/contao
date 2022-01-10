@@ -115,7 +115,7 @@ class LabelListener
                 [$strTable, $strField] = explode('.', $strTable);
 
                 $objRef = $this->connection
-                    ->prepare('SELECT '.$strField.' FROM '.$strTable.' WHERE id=? LIMIT 1')
+                    ->prepare("SELECT {$this->connection->quoteIdentifier($strField)} FROM {$strTable} WHERE id=? LIMIT 1")
                     ->executeQuery($arrRow[$strKey])
                 ;
 
