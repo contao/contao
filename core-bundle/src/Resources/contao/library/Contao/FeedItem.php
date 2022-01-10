@@ -131,13 +131,14 @@ class FeedItem
 			$objFile = new File($relativeFilePath);
 		}
 
-		$mediaData = [
+		$mediaData = array(
 			'media' => $strMedia,
 			'url' => $fileUrl,
 			'type' => $objFile->mime
-		];
+		);
 
-		if ($objFile->exists()) {
+		if ($objFile->exists())
+		{
 			$mediaData['length'] = $objFile->size;
 		}
 
