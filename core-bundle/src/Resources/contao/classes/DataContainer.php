@@ -1593,7 +1593,6 @@ abstract class DataContainer extends Backend
 	 */
 	public static function generateRecordLabel(array $row, string $table, array &$args = array()): string
 	{
-		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
 		$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
 
 		// Label
