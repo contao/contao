@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * @internal
  *
  * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0; use
- *             the PackageUtil class instead
+ *             the Composer\InstalledVersions class instead
  */
 class AddPackagesPass implements CompilerPassInterface
 {
