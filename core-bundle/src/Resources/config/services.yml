@@ -882,6 +882,7 @@ services:
         arguments:
             - '@twig'
             - '@contao.twig.filesystem_loader'
+            - '@event_dispatcher'
 
     contao.twig.fail_tolerant_filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader

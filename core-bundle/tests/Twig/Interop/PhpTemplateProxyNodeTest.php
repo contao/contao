@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Twig\Compiler;
 use Twig\Environment;

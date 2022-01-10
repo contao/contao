@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
+use Contao\CoreBundle\Event\RenderTemplateEvent;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\Twig\Event\EventsNodeVisitor;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -27,6 +29,7 @@ use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\FrontendTemplateTrait;
 use Contao\Template;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -42,12 +45,14 @@ final class ContaoExtension extends AbstractExtension
 {
     private Environment $environment;
     private TemplateHierarchyInterface $hierarchy;
+    private EventDispatcherInterface $eventDispatcher;
     private array $contaoEscaperFilterRules = [];
 
-    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
+    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy, EventDispatcherInterface $eventDispatcher)
     {
         $this->environment = $environment;
         $this->hierarchy = $hierarchy;
+        $this->eventDispatcher = $eventDispatcher;
 
         $contaoEscaper = new ContaoEscaper();
 
@@ -87,6 +92,10 @@ final class ContaoExtension extends AbstractExtension
             // Allows rendering PHP templates with the legacy framework by
             // installing proxy nodes
             new PhpTemplateProxyNodeVisitor(),
+            // Dispatches an event when compiling (once) and inserts a node to
+            // each module, that dispatches an event every time the template is
+            // rendered/displayed.
+            new EventsNodeVisitor($this->eventDispatcher),
         ];
     }
 
@@ -226,6 +235,21 @@ final class ContaoExtension extends AbstractExtension
         $partialTemplate->setBlocks($blocks);
 
         return $partialTemplate->parse();
+    }
+
+    /**
+     * @see \Contao\CoreBundle\Twig\Event\RenderEventNode
+     * @see \Contao\CoreBundle\Twig\Event\… // todo
+     *
+     * @internal
+     */
+    public function dispatchRenderEvent(string $name, array $context): array
+    {
+        $event = new RenderTemplateEvent($name, $context);
+
+        $this->eventDispatcher->dispatch($event);
+
+        return $event->getContext();
     }
 
     private function getTwigIncludeFunction(): TwigFunction
