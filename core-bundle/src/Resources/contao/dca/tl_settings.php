@@ -9,7 +9,6 @@
  */
 
 use Contao\StringUtil;
-use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_settings'] = array
 (
@@ -50,7 +49,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
-				return System::getTimeZones();
+				return array_values(DateTimeZone::listIdentifiers());
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50')
 		),

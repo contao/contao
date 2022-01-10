@@ -56,6 +56,12 @@
       <trans-unit id="tl_news_feed.description.1">
         <source>Here you can enter a short description of the news feed.</source>
       </trans-unit>
+      <trans-unit id="tl_news_feed.imgSize.0">
+        <source>Image size</source>
+      </trans-unit>
+      <trans-unit id="tl_news_feed.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+      </trans-unit>
       <trans-unit id="tl_news_feed.title_legend">
         <source>Title and language</source>
       </trans-unit>
@@ -64,6 +70,9 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.config_legend">
         <source>Feed settings</source>
+      </trans-unit>
+      <trans-unit id="tl_news_feed.image_legend">
+        <source>Image settings</source>
       </trans-unit>
       <trans-unit id="tl_news_feed.source_teaser">
         <source>News teasers</source>
