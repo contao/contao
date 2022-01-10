@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\Security;
 
 class ImageSizeOptionsListenerTest extends TestCase
 {
-    public function testGetImageSizesForUser()
+    public function testGetImageSizesForUser(): void
     {
         $imageSizeConfig = [
             'image_sizes' => [],

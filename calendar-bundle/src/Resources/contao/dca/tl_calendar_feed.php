@@ -218,7 +218,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'options_callback'	      => ['contao.listener.image_size_options', '__invoke'],
+			'options_callback'	      => array('contao.listener.image_size_options', '__invoke'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 	)
