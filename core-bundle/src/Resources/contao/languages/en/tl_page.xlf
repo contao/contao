@@ -24,7 +24,7 @@
         <source>Route path</source>
       </trans-unit>
       <trans-unit id="tl_page.routePath.1">
-        <source>A preview of the final path (possibly with placeholers) to match this page.</source>
+        <source>A preview of the final path (possibly with placeholders) to match this page.</source>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.0">
         <source>Route priority</source>
