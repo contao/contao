@@ -8,6 +8,9 @@
       <trans-unit id="MSC.faqPicker">
         <source>FAQ</source>
       </trans-unit>
+      <trans-unit id="MSC.faqOverview">
+        <source>Back to the FAQ overview</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

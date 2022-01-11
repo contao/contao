@@ -289,6 +289,15 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
+		'overviewPage' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'pageTree',
+			'foreignKey'              => 'tl_page.title',
+			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
 		'redirectBack' => array
 		(
 			'exclude'                 => true,
@@ -419,14 +428,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		),
 		'imgSize' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
-				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
-			},
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'useCaption' => array

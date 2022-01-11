@@ -162,6 +162,9 @@ abstract class Backend extends Controller
 			case 'markdown':
 				return 'markdown';
 
+			case 'ts':
+				return 'typescript';
+
 			case 'cgi':
 			case 'pl':
 				return 'perl';
@@ -179,7 +182,7 @@ abstract class Backend extends Controller
 
 			case 'svg':
 			case 'svgz':
-				return 'xml';
+				return 'svg';
 
 			default:
 				return 'text';
@@ -506,6 +509,8 @@ abstract class Backend extends Controller
 				case 'copyAll':
 				case 'move':
 				case 'edit':
+				case 'editAll':
+				case 'toggle':
 					if (!$dc instanceof EditableDataContainerInterface)
 					{
 						System::getContainer()->get('monolog.logger.contao.error')->error('Data container ' . $strTable . ' is not editable');

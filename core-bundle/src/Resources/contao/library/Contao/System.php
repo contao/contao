@@ -638,6 +638,8 @@ abstract class System
 	 */
 	public static function getTimeZones()
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the DateTimeZone::listIdentifiers() instead.', __METHOD__);
+
 		$arrReturn = array();
 		$timezones = array();
 

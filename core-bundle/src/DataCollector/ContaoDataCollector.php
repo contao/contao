@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataCollector;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\CoreBundle\Util\PackageUtil;
 use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
@@ -50,7 +50,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
     public function collect(Request $request, Response $response, \Throwable $exception = null): void
     {
-        $this->data = ['contao_version' => PackageUtil::getContaoVersion()];
+        $this->data = ['contao_version' => ContaoCoreBundle::getVersion()];
 
         $this->addSummaryData();
         $this->addLegacyRoutingData();
