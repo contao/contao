@@ -107,7 +107,7 @@ class RootPageDependentSelectListener
     /**
      * @Callback(table="tl_module", target="fields.rootPageDependentModules.options")
      */
-    public function getOptions(DataContainer $dc): array
+    public function optionsCallback(DataContainer $dc): array
     {
         $options = [];
         $types = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['modules'] ?? [];
@@ -148,7 +148,7 @@ class RootPageDependentSelectListener
      *
      * @Callback(table="tl_module", target="fields.rootPageDependentModules.save")
      */
-    public function save($value, DataContainer $dataContainer): string
+    public function saveCallback($value, DataContainer $dataContainer): string
     {
         $values = StringUtil::deserialize($value);
 
@@ -169,7 +169,7 @@ class RootPageDependentSelectListener
     /**
      * @Callback(table="tl_module", target="fields.rootPageDependentModules.wizard")
      */
-    public function onEditModule(DataContainer $dc): string
+    public function wizardCallback(DataContainer $dc): string
     {
         $wizards = [];
         $values = StringUtil::deserialize($dc->value, true);
