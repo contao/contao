@@ -510,7 +510,7 @@ class PreviewFactory
         ];
 
         $hash = hash_hmac('sha256', md5(implode('|', $hashData)), $this->secret, true);
-        $hash = substr(strtr(base64_encode($hash), '+/', '-_'), 0, 11);
+        $hash = substr(strtr(base64_encode($hash), '+/', '-_'), 0, 16);
         $name = pathinfo($path, PATHINFO_FILENAME);
 
         return strtolower($hash[0])."/$name-".substr($hash, 1);
