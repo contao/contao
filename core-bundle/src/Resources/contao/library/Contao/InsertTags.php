@@ -436,6 +436,23 @@ class InsertTags extends Controller
 							break;
 						}
 
+						$strName = $objNextPage->title;
+						$strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
+						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
+						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
+
+						// Early return for tags that do not need the URL
+						switch (strtolower($elements[0]))
+						{
+							case 'link_title':
+								$arrCache[$strTag] = StringUtil::specialcharsAttribute($strTitle);
+								break 2;
+
+							case 'link_name':
+								$arrCache[$strTag] = StringUtil::specialcharsAttribute($strName);
+								break 2;
+						}
+
 						// Page type specific settings (thanks to Andreas Schempp)
 						switch ($objNextPage->type)
 						{
@@ -469,11 +486,6 @@ class InsertTags extends Controller
 								$strUrl = \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
 								break;
 						}
-
-						$strName = $objNextPage->title;
-						$strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
-						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
-						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
 					}
 
 					// Replace the tag
