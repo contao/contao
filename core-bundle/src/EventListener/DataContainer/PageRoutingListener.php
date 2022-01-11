@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\Backend;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\PageModel;
@@ -46,7 +47,7 @@ class PageRoutingListener
             return '';
         }
 
-        return $this->pageRegistry->getRoute($pageModel)->getPath();
+        return $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel));
     }
 
     /**
@@ -86,7 +87,7 @@ class PageRoutingListener
 
             $conflicts[] = [
                 'page' => $aliasPage,
-                'route' => $this->pageRegistry->getRoute($aliasPage),
+                'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($aliasPage)),
                 'editUrl' => $backendAdapter->addToUrl(sprintf('act=edit&id=%s&popup=1&nb=1', $aliasPage->id)),
             ];
         }
@@ -117,5 +118,16 @@ class PageRoutingListener
         }
 
         return $url;
+    }
+
+    private function getPathWithParameters(PageRoute $route): string
+    {
+        $path = $route->getPath();
+
+        foreach ($route->getRequirements() as $name => $regexp) {
+            $path = preg_replace('/{[!]?'.preg_quote($name, '/').'}/', '{'.$regexp.'}', $path);
+        }
+
+        return $path;
     }
 }
