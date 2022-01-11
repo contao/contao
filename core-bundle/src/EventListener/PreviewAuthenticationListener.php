@@ -54,8 +54,8 @@ class PreviewAuthenticationListener
             return;
         }
 
-        // Ajax requests must not be redirected to the login screen,
-        // instead we redirect to the url without preview script.
+        // Ajax requests must not be redirected to the login screen, instead we
+        // redirect to the URL without preview script.
         if ($request->isXmlHttpRequest()) {
             $event->setResponse(new RedirectResponse($request->getSchemeAndHttpHost().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : '')));
 

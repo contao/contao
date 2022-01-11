@@ -247,7 +247,6 @@ class ContaoFrameworkTest extends TestCase
         $request->setSession($session);
 
         $tokenChecker = $this->createMock(TokenChecker::class);
-
         $tokenChecker
             ->expects($this->once())
             ->method('isPreviewMode')

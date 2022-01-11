@@ -18,7 +18,6 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\UriSigner;
@@ -35,19 +34,17 @@ class PreviewLinkControllerTest extends TestCase
         $listener = new PreviewLinkController(
             $this->mockAuthenticator($showUnpublished),
             $this->mockUriSigner(true),
-            $this->mockConnection(['url' => $url, 'showUnpublished' => $showUnpublished])
+            $this->mockConnection(compact('url', 'showUnpublished'))
         );
 
         $response = $listener($request, 42);
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame($url, $response->getTargetUrl());
     }
 
     public function authenticateGuestProvider(): \Generator
     {
         yield 'show unpublished' => ['/foo/bar', true];
-
         yield 'hide unpublished' => ['/foo/baz', false];
     }
 
@@ -88,7 +85,6 @@ class PreviewLinkControllerTest extends TestCase
     private function mockAuthenticator(?bool $showUnpublished): FrontendPreviewAuthenticator
     {
         $authenticator = $this->createMock(FrontendPreviewAuthenticator::class);
-
         $authenticator
             ->expects(null === $showUnpublished ? $this->never() : $this->once())
             ->method('authenticateFrontendGuest')
@@ -104,7 +100,6 @@ class PreviewLinkControllerTest extends TestCase
     private function mockUriSigner(bool $checkSuccessful): UriSigner
     {
         $uriSigner = $this->createMock(UriSigner::class);
-
         $uriSigner
             ->expects($this->once())
             ->method('checkRequest')
@@ -123,7 +118,6 @@ class PreviewLinkControllerTest extends TestCase
     private function mockConnection($link): Connection
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->expects(null === $link ? $this->never() : $this->once())
             ->method('fetchAssociative')

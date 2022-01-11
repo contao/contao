@@ -146,6 +146,7 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertSame($userId, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default']);
 
         unset($GLOBALS['TL_DCA']);
+
         ClockMock::withClockMock(false);
     }
 
@@ -251,12 +252,11 @@ class PreviewLinkListenerTest extends TestCase
     /**
      * @return Security&MockObject
      */
-    private function mockSecurity(int $userId = 42, bool $isAdmin = true): Security
+    private function mockSecurity(int $userId = 42): Security
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
 
         $security = $this->createMock(Security::class);
-
         $security
             ->expects($this->once())
             ->method('getUser')
@@ -267,7 +267,7 @@ class PreviewLinkListenerTest extends TestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with('ROLE_ADMIN')
-            ->willReturn($isAdmin)
+            ->willReturn(true)
         ;
 
         return $security;
@@ -279,7 +279,6 @@ class PreviewLinkListenerTest extends TestCase
     private function mockInputAdapter(array $inputData): Adapter
     {
         $inputAdapter = $this->mockAdapter(['get']);
-
         $inputAdapter
             ->method('get')
             ->willReturnCallback(static fn ($key) => $inputData[$key] ?? null)

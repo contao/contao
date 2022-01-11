@@ -241,7 +241,6 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $user = $this->createMock(BackendUser::class);
 
         $security = $this->createMock(Security::class);
-
         $security
             ->method('getUser')
             ->willReturn($user)

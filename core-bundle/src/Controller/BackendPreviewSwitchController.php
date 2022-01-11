@@ -97,12 +97,15 @@ class BackendPreviewSwitchController
         $shareLink = '';
 
         if ($this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link')) {
-            $shareLink = $this->router->generate('contao_backend', [
-                'do' => 'preview_link',
-                'act' => 'create',
-                'showUnpublished' => $showUnpublished ? '1' : '',
-                'rt' => $this->tokenManager->getDefaultTokenValue(),
-            ]);
+            $shareLink = $this->router->generate(
+                'contao_backend',
+                [
+                    'do' => 'preview_link',
+                    'act' => 'create',
+                    'showUnpublished' => $showUnpublished ? '1' : '',
+                    'rt' => $this->tokenManager->getDefaultTokenValue(),
+                ]
+            );
         }
 
         try {

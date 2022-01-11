@@ -39,7 +39,7 @@ class PreviewToolbarListenerTest extends TestCase
             $this->mockScopeMatcher(),
             $this->mockTokenChecker(),
             $this->mockTwig(),
-            $this->mockRouterWithContext(),
+            $this->mockRouterWithContext()
         );
 
         $response = new Response($content);
@@ -410,13 +410,12 @@ class PreviewToolbarListenerTest extends TestCase
     /**
      * @return TokenChecker&MockObject
      */
-    private function mockTokenChecker(bool $hasBackendUser = true): TokenChecker
+    private function mockTokenChecker(): TokenChecker
     {
         $tokenChecker = $this->createMock(TokenChecker::class);
-
         $tokenChecker
             ->method('hasBackendUser')
-            ->willReturn($hasBackendUser)
+            ->willReturn(true)
         ;
 
         return $tokenChecker;
