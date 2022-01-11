@@ -1723,7 +1723,7 @@ abstract class DataContainer extends Backend
 					$args = $labelConfig['label_callback']($row, $label, $this, $args);
 				}
 			}
-		} 
+		}
 		elseif (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 		{
 			$label = Image::getHtml('iconPLAIN.svg') . ' ' . $label;
