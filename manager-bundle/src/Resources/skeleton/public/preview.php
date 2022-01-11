@@ -36,7 +36,6 @@ if (file_exists(__DIR__.'/../var/maintenance.html')) {
     die($contents);
 }
 
-
 /** @var ClassLoader $loader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
