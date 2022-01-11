@@ -20,7 +20,7 @@ use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RootPageDependentModuleController extends AbstractFragmentController
+class RootPageDependentModulesController extends AbstractFragmentController
 {
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
     {
@@ -38,6 +38,7 @@ class RootPageDependentModuleController extends AbstractFragmentController
 
         $response = new Response($content);
 
+        $this->tagResponse($model);
         $this->markResponseForInternalCaching($response);
 
         return $response;
