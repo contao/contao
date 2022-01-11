@@ -21,7 +21,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -30,8 +29,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectListenerTest extends ContaoTestCase
 {
-    private ContainerBuilder $container;
-
     public function testReturnsIfTheRequestIsNotABackendRequest(): void
     {
         $request = new Request([], [], ['_scope' => 'frontend']);
@@ -228,8 +225,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
             ->willReturn($token)
         ;
 
-        $this->container = $this->getContainerWithContaoConfiguration('/directory/project');
-        System::setContainer($this->container);
+        System::setContainer($this->getContainerWithContaoConfiguration('/directory/project'));
 
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
