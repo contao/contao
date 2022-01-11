@@ -74,7 +74,7 @@ class PageRoutingListenerTest extends TestCase
         yield 'Path without parameters' => [
             'foobar',
             [],
-            'foobar'
+            'foobar',
         ];
 
         yield 'Ignores unknown parameters in path' => [
