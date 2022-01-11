@@ -132,10 +132,10 @@ class ContentMedia extends ContentElement
 		$strCaption = $this->playerCaption;
 
 		// Pass File objects to the template
-		foreach ($objFiles as $objFile)
+		foreach ($objFiles as $objFileModel)
 		{
-			/** @var FilesModel $objFile */
-			$objMeta = $objFile->getMetadata($strLanguage);
+			/** @var FilesModel $objFileModel */
+			$objMeta = $objFileModel->getMetadata($strLanguage);
 			$strTitle = null;
 
 			if (null !== $objMeta)
@@ -148,7 +148,7 @@ class ContentMedia extends ContentElement
 				}
 			}
 
-			$objFile = new File($objFile->path);
+			$objFile = new File($objFileModel->path);
 			$objFile->title = StringUtil::specialchars($strTitle ?: $objFile->name);
 
 			$arrFiles[$objFile->extension] = $objFile;
