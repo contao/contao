@@ -47,6 +47,13 @@ class PageUrlGenerator extends SymfonyUrlGenerator
         ) {
             $route = $this->pageRegistry->getRoute($parameters[RouteObjectInterface::CONTENT_OBJECT]);
             unset($parameters[RouteObjectInterface::CONTENT_OBJECT]);
+        } elseif (
+            RouteObjectInterface::OBJECT_BASED_ROUTE_NAME === $name
+            && \array_key_exists(RouteObjectInterface::ROUTE_OBJECT, $parameters)
+            && $parameters[RouteObjectInterface::ROUTE_OBJECT] instanceof PageRoute
+        ) {
+            $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
+            unset($parameters[RouteObjectInterface::ROUTE_OBJECT]);
         } else {
             $route = $this->provider->getRouteByName($name);
         }

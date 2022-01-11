@@ -27,8 +27,11 @@
         "symfony/http-kernel": "^5.4"
     },
     "require-dev": {
-        "contao/manager-plugin": "^2.0",
-        "symfony/http-client": "^5.4"
+        "contao/manager-plugin": "^2.3.1",
+        "contao/test-case": "^4.4",
+        "phpunit/phpunit": "^8.5",
+        "symfony/http-client": "^5.4",
+        "symfony/phpunit-bridge": "^5.4"
     },
     "conflict": {
         "contao/core": "*",
@@ -47,6 +50,11 @@
             "src/Resources/contao/languages/",
             "src/Resources/contao/templates/"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Contao\\NewsletterBundle\\Tests\\": "tests/"
+        }
     },
     "extra": {
         "contao-manager-plugin": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"

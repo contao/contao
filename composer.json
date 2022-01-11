@@ -30,9 +30,9 @@
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-zlib": "*",
+        "composer-runtime-api": "^2.0",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
-        "composer/package-versions-deprecated": "^1.8",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.2",
         "contao-components/colorbox": "^1.6",
@@ -230,6 +230,7 @@
             "Contao\\ManagerBundle\\Tests\\": "manager-bundle/tests/",
             "Contao\\NewBundle\\": "core-bundle/tests/Fixtures/vendor/contao/new-bundle/src/",
             "Contao\\NewsBundle\\Tests\\": "news-bundle/tests/",
+            "Contao\\NewsletterBundle\\Tests\\": "newsletter-bundle/tests/",
             "Contao\\TestBundle\\": "core-bundle/tests/Fixtures/vendor/contao/test-bundle/"
         }
     },

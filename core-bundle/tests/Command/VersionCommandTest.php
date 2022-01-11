@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\VersionCommand;
-use Contao\CoreBundle\Util\PackageUtil;
+use Contao\CoreBundle\ContaoCoreBundle;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -27,6 +27,6 @@ class VersionCommandTest extends TestCase
         $code = $tester->execute([]);
 
         $this->assertSame(0, $code);
-        $this->assertStringContainsString(PackageUtil::getContaoVersion(), $tester->getDisplay());
+        $this->assertStringContainsString(ContaoCoreBundle::getVersion(), $tester->getDisplay());
     }
 }
