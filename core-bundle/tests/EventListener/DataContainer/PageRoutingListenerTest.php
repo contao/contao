@@ -19,11 +19,15 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\PageModel;
+use PHPUnit\Framework\MockObject\MockObject;
 use Twig\Environment;
 
 class PageRoutingListenerTest extends TestCase
 {
-    public function testGetsPathFromPageRoute(): void
+    /**
+     * @dataProvider routePathProvider
+     */
+    public function testGetsPathFromPageRoute(string $path, array $requirements, string $expected): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
@@ -38,10 +42,17 @@ class PageRoutingListenerTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
 
         $pageRoute = $this->createMock(PageRoute::class);
+
         $pageRoute
             ->expects($this->once())
             ->method('getPath')
-            ->willReturn('foobar')
+            ->willReturn($path)
+        ;
+
+        $pageRoute
+            ->expects($this->once())
+            ->method('getRequirements')
+            ->willReturn($requirements)
         ;
 
         $pageRegistry = $this->createMock(PageRegistry::class);
@@ -55,7 +66,46 @@ class PageRoutingListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
         $listener = new PageRoutingListener($framework, $pageRegistry, $this->createMock(Environment::class));
 
-        $this->assertSame('foobar', $listener->loadRoutePath('', $dc));
+        $this->assertSame($expected, $listener->loadRoutePath('', $dc));
+    }
+
+    public function routePathProvider(): \Generator
+    {
+        yield 'Path without parameters' => [
+            'foobar',
+            [],
+            'foobar'
+        ];
+
+        yield 'Ignores unknown parameters in path' => [
+            'foo/bar/{baz}.html',
+            [],
+            'foo/bar/{baz}.html',
+        ];
+
+        yield 'Ignores unknown parameters' => [
+            'foo/bar/{baz}.html',
+            ['bar' => 'baz'],
+            'foo/bar/{baz}.html',
+        ];
+
+        yield 'Replaces parameter' => [
+            'foo/{bar}.html',
+            ['bar' => '.+'],
+            'foo/{.+}.html',
+        ];
+
+        yield 'Replaces parameters' => [
+            'foo/{bar}/{baz}.html',
+            ['bar' => '.+', 'baz' => '\d+'],
+            'foo/{.+}/{\d+}.html',
+        ];
+
+        yield 'Handles parameters starting with exclamation point' => [
+            'foo/{!bar}.html',
+            ['bar' => '.+'],
+            'foo/{.+}.html',
+        ];
     }
 
     public function testReturnsEmptyPathIfPageModelIsNotFound(): void
@@ -117,9 +167,9 @@ class PageRoutingListenerTest extends TestCase
         ];
 
         $aliasRoutes = [
-            $this->createMock(PageRoute::class),
-            $this->createMock(PageRoute::class),
-            $this->createMock(PageRoute::class),
+            $this->mockPageRoute('foo'),
+            $this->mockPageRoute('bar'),
+            $this->mockPageRoute('baz'),
         ];
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
@@ -181,17 +231,17 @@ class PageRoutingListenerTest extends TestCase
                     'conflicts' => [
                         [
                             'page' => $aliasPages[0],
-                            'route' => $aliasRoutes[0],
+                            'path' => 'foo',
                             'editUrl' => 'editUrl',
                         ],
                         [
                             'page' => $aliasPages[1],
-                            'route' => $aliasRoutes[1],
+                            'path' => 'bar',
                             'editUrl' => 'editUrl',
                         ],
                         [
                             'page' => $aliasPages[2],
-                            'route' => $aliasRoutes[2],
+                            'path' => 'baz',
                             'editUrl' => 'editUrl',
                         ],
                     ],
@@ -483,5 +533,25 @@ class PageRoutingListenerTest extends TestCase
         $listener = new PageRoutingListener($framework, $pageRegistry, $twig);
 
         $this->assertSame('', $listener->generateRouteConflicts($dc));
+    }
+
+    /**
+     * @return PageRoute&MockObject
+     */
+    private function mockPageRoute(string $path, array $requirements = []): PageRoute
+    {
+        $route = $this->createMock(PageRoute::class);
+
+        $route
+            ->method('getPath')
+            ->willReturn($path)
+        ;
+
+        $route
+            ->method('getRequirements')
+            ->willReturn($requirements)
+        ;
+
+        return $route;
     }
 }
