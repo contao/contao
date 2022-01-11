@@ -1685,11 +1685,11 @@ abstract class DataContainer extends Backend
 		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
 		$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
 
+		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
+
 		// Execute label_callback
 		if (\is_array($labelConfig['label_callback'] ?? null) || \is_callable($labelConfig['label_callback'] ?? null))
 		{
-			$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
-
 			if (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 			{
 				if (\is_array($labelConfig['label_callback'] ?? null))
@@ -1723,6 +1723,10 @@ abstract class DataContainer extends Backend
 					$args = $labelConfig['label_callback']($row, $label, $this, $args);
 				}
 			}
+		} 
+		elseif (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
+		{
+			$label = Image::getHtml('iconPLAIN.svg') . ' ' . $label;
 		}
 
 		if (($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED)))
