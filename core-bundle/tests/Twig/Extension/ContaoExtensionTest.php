@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\CoreBundle\Event\RenderTemplateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -303,6 +304,29 @@ class ContaoExtensionTest extends TestCase
         $this->assertSame($expected, $output);
 
         unset($GLOBALS['TL_LANG']);
+    }
+
+    public function testDispatchRenderEvent(): void
+    {
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->willReturnCallback(
+                function (RenderTemplateEvent $event): RenderTemplateEvent {
+                    $this->assertSame('foo.html.twig', $event->getName());
+                    $event->setValue('foo', 'bar');
+
+                    return $event;
+                }
+            )
+        ;
+
+        $extension = $this->getContaoExtension(null, null, $eventDispatcher);
+
+        $context = $extension->dispatchRenderEvent('foo.html.twig', ['some' => 'context']);
+
+        $this->assertSame(['some' => 'context', 'foo' => 'bar'], $context);
     }
 
     /**

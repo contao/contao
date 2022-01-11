@@ -239,7 +239,7 @@ final class ContaoExtension extends AbstractExtension
 
     /**
      * @see \Contao\CoreBundle\Twig\Event\RenderEventNode
-     * @see \Contao\CoreBundle\Twig\Event\… // todo
+     * @see \Contao\CoreBundle\Twig\Event\EventsNodeVisitor
      *
      * @internal
      */

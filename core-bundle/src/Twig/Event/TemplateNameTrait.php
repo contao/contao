@@ -19,11 +19,43 @@ use Contao\CoreBundle\Twig\ContaoTwigUtil;
  */
 trait TemplateNameTrait
 {
-    private string $name = '';
+    private ?string $name = null;
+    private ?string $contaoNamespace = null;
+    private ?string $contaoShortName = null;
 
+    /**
+     * Returns the full logical name, e.g. "@Foo/bar.html.twig".
+     */
     public function getName(): string
     {
-        return $this->name;
+        return $this->name ?? '';
+    }
+
+    /**
+     * Returns true if the template comes from a managed "@Contao" or
+     * "@Contao_*" namespace.
+     */
+    public function isContaoTemplate(): bool
+    {
+        return null !== $this->contaoNamespace;
+    }
+
+    /**
+     * Returns the Contao namespace or an empty string if not applicable, e.g.
+     * "@Contao_Theme_foo" or "@Contao".
+     */
+    public function getContaoNamespace(): string
+    {
+        return $this->contaoNamespace ?? '';
+    }
+
+    /**
+     * Returns the short name, e.g. "foo.html.twig" for a Contao Twig template
+     * "@Contao/foo.html.twig".
+     */
+    public function getContaoShortName(): string
+    {
+        return $this->contaoShortName ?? '';
     }
 
     /**
@@ -37,13 +69,13 @@ trait TemplateNameTrait
      */
     public function getType(): string
     {
-        preg_match('/\.(\w+)(\.twig)?/', $this->name, $matches);
+        preg_match('/\.(\w+)(\.twig)?/', $this->getName(), $matches);
 
         return strtolower($matches[1] ?? '');
     }
 
     /**
-     * Check if the template matches the given types.
+     * Checks if the template matches the given types.
      *
      * Example for foo.html.twig:
      *   matchType('svg') // false
@@ -51,11 +83,20 @@ trait TemplateNameTrait
      */
     public function matchType(string ...$types): bool
     {
-        return \in_array($this->getType(), $types, true);
+        if ('' === ($type = $this->getType())) {
+            return false;
+        }
+
+        return \in_array($type, $types, true);
     }
 
-    public function isContaoTemplate(): bool
+    private function setName(string $name): void
     {
-        return null !== ContaoTwigUtil::parseContaoName($this->name);
+        $this->name = $name;
+        $result = ContaoTwigUtil::parseContaoName($name);
+
+        if (null !== $result) {
+            [$this->contaoNamespace, $this->contaoShortName] = $result;
+        }
     }
 }

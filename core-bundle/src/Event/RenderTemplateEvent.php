@@ -33,8 +33,9 @@ class RenderTemplateEvent
      */
     public function __construct(string $name, array $context)
     {
-        $this->name = $name;
         $this->context = $context;
+
+        $this->setName($name);
     }
 
     /**

@@ -33,6 +33,7 @@ final class EventsNodeVisitor extends AbstractNodeVisitor
 
     public function getPriority(): int
     {
+        // Run late in case we want to alter existing nodes
         return 10;
     }
 
