@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Console;
 
-use Contao\CoreBundle\Util\PackageUtil;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
@@ -26,7 +26,7 @@ class ContaoApplication extends Application
         parent::__construct($kernel);
 
         $this->setName('Contao Managed Edition');
-        $this->setVersion(PackageUtil::getContaoVersion());
+        $this->setVersion(ContaoCoreBundle::getVersion());
 
         $inputDefinition = $this->getDefinition();
         $options = $inputDefinition->getOptions();

@@ -27,10 +27,10 @@ if (in_array('phar', stream_get_wrappers(), true)) {
 if (file_exists(__DIR__.'/../var/maintenance.html')) {
     $contents = file_get_contents(__DIR__.'/../var/maintenance.html');
 
-    header('HTTP/1.1 503 Service Unavailable', true, 503);
-    header('Content-Type: text/html; charset=UTF-8', true, 503);
-    header('Content-Length: '.strlen($contents), true, 503);
-    header('Cache-Control: no-store', true, 503);
+    http_response_code(503);
+    header('Content-Type: text/html; charset=UTF-8');
+    header('Content-Length: '.strlen($contents));
+    header('Cache-Control: no-store');
 
     die($contents);
 }

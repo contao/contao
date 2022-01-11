@@ -24,6 +24,18 @@ if (in_array('phar', stream_get_wrappers(), true)) {
     stream_wrapper_unregister('phar');
 }
 
+// System maintenance mode comes first as it has to work even if the vendor directory does not exist
+if (file_exists(__DIR__.'/../var/maintenance.html')) {
+    $contents = file_get_contents(__DIR__.'/../var/maintenance.html');
+
+    http_response_code(503);
+    header('Content-Type: text/html; charset=UTF-8');
+    header('Content-Length: '.strlen($contents));
+    header('Cache-Control: no-store');
+
+    die($contents);
+}
+
 /** @var ClassLoader $loader */
 $loader = require __DIR__.'/../vendor/autoload.php';
 
