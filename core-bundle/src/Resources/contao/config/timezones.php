@@ -8,6 +8,8 @@
  * @license LGPL-3.0-or-later
  */
 
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the timezones.php file has been deprecated and will no longer work in Contao 5.0. Use the intl library instead.');
+
 $timezones = array
 (
 	'General' => array

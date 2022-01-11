@@ -24,6 +24,7 @@ use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\Model\Registry;
+use Contao\PageModel;
 use Contao\RequestToken;
 use Contao\System;
 use Contao\TemplateLoader;
@@ -83,6 +84,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         Input::resetCache();
         Input::resetUnusedGet();
         InsertTags::reset();
+        PageModel::reset();
         Registry::getInstance()->reset();
     }
 

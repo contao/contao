@@ -37,6 +37,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $customLabel
  * @property boolean $autologin
  * @property integer $jumpTo
+ * @property integer $overviewPage
  * @property boolean $redirectBack
  * @property string  $cols
  * @property array   $editable

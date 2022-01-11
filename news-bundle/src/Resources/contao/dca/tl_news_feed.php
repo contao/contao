@@ -115,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},title,alias,language;{archives_legend},archives;{config_legend},format,source,maxItems,feedBase,description'
+		'default'                     => '{title_legend},title,alias,language;{archives_legend},archives;{config_legend},format,source,maxItems,feedBase,description;{image_legend:hide},imgSize'
 	),
 
 	// Fields
@@ -211,7 +211,16 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
-		)
+		),
+		'imgSize' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'imageSize',
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
+			'options_callback'	      => array('contao.listener.image_size_options', '__invoke'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 	)
 );
 
