@@ -212,6 +212,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $translator
             ->expects($this->exactly(3))
             ->method('trans')
+            ->willReturn('title')
         ;
 
         $token = $this->createMock(CsrfToken::class);
