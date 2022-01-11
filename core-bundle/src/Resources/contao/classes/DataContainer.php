@@ -1716,11 +1716,11 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($labelConfig['label_callback'] ?? null))
 				{
-					$args = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
+					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
 				}
 				else
 				{
-					$args = $labelConfig['label_callback']($row, $label, $this, $args);
+					$label = $labelConfig['label_callback']($row, $label, $this, $args);
 				}
 			}
 		}
@@ -1731,7 +1731,7 @@ abstract class DataContainer extends Backend
 
 		if (($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 		{
-			return $args;
+			return \is_array($label) ? $label : $args;
 		}
 
 		return $label;
