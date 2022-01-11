@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Contao\Image;
@@ -23,7 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class RootPageDependentModuleListener
+class RootPageDependentSelectListener
 {
     private Connection $connection;
     private TranslatorInterface $translator;
@@ -58,7 +59,7 @@ class RootPageDependentModuleListener
 
         if (
             !\is_array($fields) ||
-            !\in_array('rootPageDependentModule', array_column($fields, 'inputType'), true)
+            !\in_array('rootPageDependentSelect', array_column($fields, 'inputType'), true)
         ) {
             return;
         }
@@ -71,7 +72,7 @@ class RootPageDependentModuleListener
 
         $affectedFields = array_keys(
             array_column($fields, 'inputType'),
-            'rootPageDependentModule',
+            'rootPageDependentSelect',
             true
         );
 
@@ -103,7 +104,10 @@ class RootPageDependentModuleListener
         }
     }
 
-    public function onOptionsCallback(DataContainer $dc): array
+    /**
+     * @Callback(table="tl_module", target="fields.rootPageDependentModules.options")
+     */
+    public function getOptions(DataContainer $dc): array
     {
         $options = [];
         $types = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['modules'] ?? [];
@@ -111,7 +115,7 @@ class RootPageDependentModuleListener
         $statement = $this->connection->executeQuery(
             "SELECT m.id, m.name
             FROM tl_module m
-            WHERE m.type <> 'root_page_dependent_module' AND
+            WHERE m.type <> 'root_page_dependent_modules' AND
                   m.pid = ?
             ORDER BY m.name",
             [$dc->activeRecord->pid]
@@ -122,7 +126,7 @@ class RootPageDependentModuleListener
                 "SELECT m.id, m.name
                     FROM tl_module m
                     WHERE m.type IN (?) AND
-                          m.type <> 'root_page_dependent_module' AND
+                          m.type <> 'root_page_dependent_modules' AND
                           m.pid = ?
                     ORDER BY m.name",
                 [$types, $dc->activeRecord->pid],
@@ -141,8 +145,10 @@ class RootPageDependentModuleListener
 
     /**
      * @param mixed $value
+     *
+     * @Callback(table="tl_module", target="fields.rootPageDependentModules.save")
      */
-    public function onSaveCallback($value, DataContainer $dataContainer): string
+    public function save($value, DataContainer $dataContainer): string
     {
         $values = StringUtil::deserialize($value);
 
@@ -160,6 +166,9 @@ class RootPageDependentModuleListener
         return serialize($newValues);
     }
 
+    /**
+     * @Callback(table="tl_module", target="fields.rootPageDependentModules.wizard")
+     */
     public function onEditModule(DataContainer $dc): string
     {
         $wizards = [];

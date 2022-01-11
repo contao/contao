@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
-		'root_page_dependent_module'  => '{title_legend},name,type;{config_legend},rootPageDependentModules;{template_legend:hide},customTpl;{protected_legend:hide},protected'
+		'root_page_dependent_modules' => '{title_legend},name,type;{config_legend},rootPageDependentModules;{template_legend:hide},customTpl;{protected_legend:hide},protected'
 	),
 
 	// Subpalettes
@@ -639,16 +639,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'rootPageDependentModules' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'rootPageDependentModule',
-			'options_callback'        => array('contao.listener.data_container.root_page_dependent_module', 'onOptionsCallback'),
-			'save_callback'           => array
-			(
-				array('contao.listener.data_container.root_page_dependent_module', 'onSaveCallback')
-			),
-			'wizard'                  => array
-			(
-				array('contao.listener.data_container.root_page_dependent_module', 'onEditModule')
-			),
+			'inputType'               => 'rootPageDependentSelect',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50', 'includeBlankOption'=>true),
 			'sql'                     => 'blob NULL'
 		),
