@@ -32,6 +32,10 @@ class RenderTemplateEventTest extends TestCase
         $this->assertTrue($event->hasValue('baz'));
         $this->assertSame(42, $event->getValue('baz'));
         $this->assertSame(['foo' => 'bar', 'baz' => 42], $event->getContext());
+
+        $event->setContext(['some' => 'context']);
+
+        $this->assertSame(['some' => 'context'], $event->getContext());
     }
 
     public function testThrowsWhenAccessingAnInvalidKey(): void
