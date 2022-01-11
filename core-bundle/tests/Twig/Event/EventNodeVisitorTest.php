@@ -19,8 +19,10 @@ use Contao\CoreBundle\Twig\Event\RenderEventNode;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment;
 use Twig\Node\BodyNode;
+use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\PrintNode;
 use Twig\NodeTraverser;
 use Twig\Source;
 
@@ -61,6 +63,9 @@ class EventNodeVisitorTest extends TestCase
             new Source('world!', '@Contao_Foo/foo.html5')
         );
 
+        $existingNode = new PrintNode(new ConstantExpression('existing', 1), 1);
+        $module->setNode('display_start', new Node([$existingNode]));
+
         $environment = $this->createMock(Environment::class);
         (new NodeTraverser($environment, [$visitor]))->traverse($module);
 
@@ -68,6 +73,7 @@ class EventNodeVisitorTest extends TestCase
         $displayStart = iterator_to_array($module->getNode('display_start'));
 
         $this->assertInstanceOf(RenderEventNode::class, $displayStart[0]);
-        $this->assertSame('Hello ', $displayStart[2]->getNode('expr')->getAttribute('value'));
+        $this->assertSame('Hello ', $displayStart[1]->getNode('expr')->getAttribute('value'));
+        $this->assertSame($existingNode, $displayStart[2]);
     }
 }

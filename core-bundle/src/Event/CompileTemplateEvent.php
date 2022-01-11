@@ -144,17 +144,17 @@ class CompileTemplateEvent
 
     private function prependNode(Node $node): void
     {
-        $this->node->setNode(
-            'display_start',
-            new Node([$node, ...$this->node->getNode('display_start')])
-        );
+        $inner = iterator_to_array($this->node->getNode('display_start'), true);
+        array_unshift($inner, $node);
+
+        $this->node->setNode('display_start', new Node($inner));
     }
 
     private function appendNode(Node $node): void
     {
-        $this->node->setNode(
-            'display_end',
-            new Node([...$this->node->getNode('display_end'), $node])
-        );
+        $inner = iterator_to_array($this->node->getNode('display_end'), true);
+        $inner[] = $node;
+
+        $this->node->setNode('display_end', new Node($inner));
     }
 }

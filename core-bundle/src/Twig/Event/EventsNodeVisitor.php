@@ -45,8 +45,8 @@ final class EventsNodeVisitor extends AbstractNodeVisitor
     protected function doLeaveNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode) {
-            $this->addRenderEventNode($node);
             $this->dispatchCompileEvent($node);
+            $this->addRenderEventNode($node);
         }
 
         return $node;
@@ -54,10 +54,10 @@ final class EventsNodeVisitor extends AbstractNodeVisitor
 
     private function addRenderEventNode(ModuleNode $node): void
     {
-        $node->setNode(
-            'display_start',
-            new Node([new RenderEventNode(), $node->getNode('display_start')])
-        );
+        $inner = iterator_to_array($node->getNode('display_start'), true);
+        array_unshift($inner, new RenderEventNode());
+
+        $node->setNode('display_start', new Node($inner));
     }
 
     private function dispatchCompileEvent(ModuleNode $node): void
