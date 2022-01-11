@@ -14,18 +14,24 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\RootPageDependentSelectListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\DataContainer;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectListenerTest extends ContaoTestCase
 {
+    private ContainerBuilder $container;
+
     public function testReturnsIfTheRequestIsNotABackendRequest(): void
     {
         $request = new Request([], [], ['_scope' => 'frontend']);
@@ -181,6 +187,68 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         ], $this->getGlobalsArray());
 
         $this->unsetGlobalsArray();
+    }
+
+    public function testDoesNotAddWizardWhenNoValuesSet(): void
+    {
+        $listener = new RootPageDependentSelectListener(
+            $this->createMock(Connection::class),
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(ScopeMatcher::class),
+            $this->createMock(RequestStack::class),
+            $this->createMock(CsrfTokenManagerInterface::class),
+            'contao_csrf_token'
+        );
+
+        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+        $dataContainer->value = serialize([]);
+
+        $this->assertSame('', $listener->wizardCallback($dataContainer));
+    }
+
+    public function testAddWizardToSelectWhenModuleIsSet(): void
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->exactly(3))
+            ->method('trans')
+        ;
+
+        $token = $this->createMock(CsrfToken::class);
+        $token
+            ->expects($this->exactly(3))
+            ->method('getValue')
+        ;
+
+        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $csrfTokenManager
+            ->expects($this->exactly(3))
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+
+        $this->container = $this->getContainerWithContaoConfiguration('/directory/project');
+        System::setContainer($this->container);
+
+        $listener = new RootPageDependentSelectListener(
+            $this->createMock(Connection::class),
+            $translator,
+            $this->createMock(ScopeMatcher::class),
+            $this->createMock(RequestStack::class),
+            $csrfTokenManager,
+            'contao_csrf_token'
+        );
+
+        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+        $dataContainer->value = serialize([
+            '1' => '10',
+            '2' => '20',
+            '3' => '30',
+            '4' => '',
+        ]);
+
+        $this->assertCount(3, unserialize($listener->wizardCallback($dataContainer)));
     }
 
     private function populateGlobalsArray(array $data): void
