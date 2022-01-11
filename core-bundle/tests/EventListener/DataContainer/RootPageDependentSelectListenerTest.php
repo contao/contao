@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\CoreBundle\EventListener\DataContainer\RootPageDependentModuleListener;
+use Contao\CoreBundle\EventListener\DataContainer\RootPageDependentSelectListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class RootPageDependentModuleListenerTest extends ContaoTestCase
+class RootPageDependentSelectListenerTest extends ContaoTestCase
 {
     public function testReturnsIfTheRequestIsNotABackendRequest(): void
     {
@@ -33,7 +33,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $listener = new RootPageDependentModuleListener(
+        $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
             $this->mockScopeMatcher(false, $request),
@@ -52,7 +52,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $listener = new RootPageDependentModuleListener(
+        $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
             $this->mockScopeMatcher(true, $request),
@@ -75,7 +75,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $listener = new RootPageDependentModuleListener(
+        $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
             $this->mockScopeMatcher(true, $request),
@@ -86,7 +86,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
 
         $this->populateGlobalsArray([
             'field1' => [
-                'inputType' => 'rootPageDependentModule',
+                'inputType' => 'rootPageDependentSelect',
             ],
             'field2' => [
                 'eval' => [],
@@ -100,7 +100,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
 
         $this->assertSame([
             'field1' => [
-                'inputType' => 'rootPageDependentModule',
+                'inputType' => 'rootPageDependentSelect',
                 'eval' => [
                     'rootPages' => [],
                     'blankOptionLabel' => null,
@@ -149,7 +149,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
             ->willReturn($statement)
         ;
 
-        $listener = new RootPageDependentModuleListener(
+        $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(TranslatorInterface::class),
             $this->mockScopeMatcher(true, $request),
@@ -160,7 +160,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
 
         $this->populateGlobalsArray([
             'field1' => [
-                'inputType' => 'rootPageDependentModule',
+                'inputType' => 'rootPageDependentSelect',
             ],
         ]);
 
@@ -168,7 +168,7 @@ class RootPageDependentModuleListenerTest extends ContaoTestCase
 
         $this->assertSame([
             'field1' => [
-                'inputType' => 'rootPageDependentModule',
+                'inputType' => 'rootPageDependentSelect',
                 'eval' => [
                     'rootPages' => [
                         1 => 'title-1 (language-1)',

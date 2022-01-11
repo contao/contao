@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
-use Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModuleController;
+use Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class RootPageDependentModuleControllerTest extends TestCase
+class RootPageDependentModulesControllerTest extends TestCase
 {
     private ContainerBuilder $container;
 
@@ -40,7 +40,7 @@ class RootPageDependentModuleControllerTest extends TestCase
 
     public function testReturnsEmptyResponse(): void
     {
-        $controller = new RootPageDependentModuleController();
+        $controller = new RootPageDependentModulesController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate());
 
         $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->getModuleModel(), 'main');
@@ -61,7 +61,7 @@ class RootPageDependentModuleControllerTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $controller = new RootPageDependentModuleController();
+        $controller = new RootPageDependentModulesController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate($requestStack, 'example-content'));
 
         $response = $controller($request, $module, 'main');

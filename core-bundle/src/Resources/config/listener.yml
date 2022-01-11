@@ -116,6 +116,16 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.listener.data_container.root_page_dependent_select:
+        class: Contao\CoreBundle\EventListener\DataContainer\RootPageDependentSelectListener
+        arguments:
+            - '@database_connection'
+            - '@translator'
+            - '@contao.routing.scope_matcher'
+            - '@request_stack'
+            - '@contao.csrf.token_manager'
+            - '%contao.csrf_token_name%'
+
     contao.listener.data_container.theme_templates:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeTemplatesListener
         arguments:

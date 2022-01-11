@@ -68,7 +68,7 @@ services:
         tags:
             - { name: contao.frontend_module, category: user }
 
-    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModuleController:
+    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController:
         tags:
             - { name: contao.frontend_module, category: miscellaneous }
 

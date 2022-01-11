@@ -13,7 +13,7 @@ namespace Contao;
 /**
  * @property array $rootPages
  */
-class RootPageDependentModule extends SelectMenu
+class RootPageDependentSelect extends SelectMenu
 {
 	public function generate(): string
 	{
