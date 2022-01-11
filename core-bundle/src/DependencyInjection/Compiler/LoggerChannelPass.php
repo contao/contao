@@ -72,10 +72,8 @@ class LoggerChannelPass implements CompilerPassInterface
 
     private function isContaoChannelLoggerDefinition(Definition $definition): bool
     {
-        return
-            $definition instanceof ChildDefinition &&
-            'monolog.logger_prototype' === $definition->getParent() &&
-            str_starts_with($definition->getArgument(0), 'contao.')
-        ;
+        return $definition instanceof ChildDefinition
+            && 'monolog.logger_prototype' === $definition->getParent()
+            && str_starts_with($definition->getArgument(0), 'contao.');
     }
 }

@@ -564,6 +564,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.project_dir' => Path::normalize($this->getTempDir()),
             ])
         );
+
         $container->registerExtension($monologExtension);
 
         $extension = new ContaoCoreExtension();

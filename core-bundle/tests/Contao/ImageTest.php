@@ -1562,12 +1562,10 @@ class ImageTest extends TestCase
             Path::join($container->getParameter('kernel.project_dir'), $container->getParameter('contao.upload_path'))
         );
 
-        $logger = $this->createMock(LoggerInterface::class);
-
         $container->set('contao.image.legacy_resizer', $resizer);
         $container->set('contao.image.factory', $factory);
         $container->set('filesystem', new Filesystem());
-        $container->set('contao.monolog.logger.error', $logger);
+        $container->set('contao.monolog.logger.error', $this->createMock(LoggerInterface::class));
 
         return $container;
     }

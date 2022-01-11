@@ -23,11 +23,11 @@ class LoggerChannelPassTest extends TestCase
 {
     public function testDecoratesServicesWithLoggersUsingContaoChannel(): void
     {
-        $container = new ContainerBuilder();
-        $container->setDefinition('monolog.logger', new Definition());
-
         $definition = new ChildDefinition('monolog.logger_prototype');
         $definition->setArgument(0, 'contao.foo');
+
+        $container = new ContainerBuilder();
+        $container->setDefinition('monolog.logger', new Definition());
         $container->setDefinition('contao.dummy_service', $definition);
 
         $pass = new LoggerChannelPass();
@@ -44,11 +44,11 @@ class LoggerChannelPassTest extends TestCase
 
     public function testDoesNotChangeServicesWithLoggersNotUsingContaoChannel(): void
     {
-        $container = new ContainerBuilder();
-        $container->setDefinition('monolog.logger', new Definition());
-
         $definition = new ChildDefinition('monolog.logger_prototype');
         $definition->setArgument(0, 'foo.bar');
+
+        $container = new ContainerBuilder();
+        $container->setDefinition('monolog.logger', new Definition());
         $container->setDefinition('contao.dummy_service', $definition);
 
         $pass = new LoggerChannelPass();
@@ -59,10 +59,10 @@ class LoggerChannelPassTest extends TestCase
 
     public function testDoesNothingIfNoMonologLogger(): void
     {
-        $container = new ContainerBuilder();
-
         $definition = new ChildDefinition('monolog.logger_prototype');
         $definition->setArgument(0, 'contao.foo');
+
+        $container = new ContainerBuilder();
         $container->setDefinition('contao.dummy_service', $definition);
 
         $pass = new LoggerChannelPass();
@@ -76,11 +76,11 @@ class LoggerChannelPassTest extends TestCase
      */
     public function testTransformsLegacyActionNamesForLoggersUsingContaoChannel(string $action, string $transformed): void
     {
-        $container = new ContainerBuilder();
-        $container->setDefinition('monolog.logger', new Definition());
-
         $definition = new ChildDefinition('monolog.logger_prototype');
         $definition->setArgument(0, 'contao.'.$action);
+
+        $container = new ContainerBuilder();
+        $container->setDefinition('monolog.logger', new Definition());
         $container->setDefinition('contao.dummy_service', $definition);
 
         $pass = new LoggerChannelPass();

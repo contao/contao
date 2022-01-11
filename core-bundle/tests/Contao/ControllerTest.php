@@ -324,7 +324,6 @@ class ControllerTest extends TestCase
         ;
 
         $logger = $this->createMock(LoggerInterface::class);
-
         $logger
             ->expects($this->once())
             ->method('error')

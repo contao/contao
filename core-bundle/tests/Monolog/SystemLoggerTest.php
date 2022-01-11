@@ -27,9 +27,9 @@ class SystemLoggerTest extends TestCase
     public function testSetsContaoContextForPsrLogActions(string $method): void
     {
         $message = 'Log message';
-        $logger = $this->createMock(LoggerInterface::class);
         $action = 'foo';
 
+        $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
             ->method($method)
@@ -39,9 +39,7 @@ class SystemLoggerTest extends TestCase
             )
         ;
 
-        (new SystemLogger($logger, $action))
-            ->{$method}($message)
-        ;
+        (new SystemLogger($logger, $action))->{$method}($message);
     }
 
     public function psrLogActionsProvider(): array
@@ -63,8 +61,8 @@ class SystemLoggerTest extends TestCase
         $message = 'Log message';
         $action = 'foo';
         $level = LogLevel::INFO;
-        $logger = $this->createMock(LoggerInterface::class);
 
+        $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
             ->method('log')
@@ -75,9 +73,7 @@ class SystemLoggerTest extends TestCase
             )
         ;
 
-        (new SystemLogger($logger, $action))
-            ->log($level, $message)
-        ;
+        (new SystemLogger($logger, $action))->log($level, $message);
     }
 
     /**
