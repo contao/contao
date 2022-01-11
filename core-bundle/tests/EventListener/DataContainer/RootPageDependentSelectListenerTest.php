@@ -227,7 +227,6 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
             ->willReturn($token)
         ;
 
-
         $this->container = $this->getContainerWithContaoConfiguration('/directory/project');
         System::setContainer($this->container);
 
