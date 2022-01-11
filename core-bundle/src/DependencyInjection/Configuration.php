@@ -348,7 +348,7 @@ class Configuration implements ConfigurationInterface
                             ->max(65535)
                             ->defaultValue(1024)
                         ->end()
-                        ->booleanNode('fallbacks')
+                        ->booleanNode('enable_fallback_images')
                             ->info('Whether or not to generate previews for unsupported file types that show a file icon containing the file type.')
                             ->defaultValue(true)
                         ->end()

@@ -385,7 +385,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     private function handleFallbackPreviewProvider(array $config, ContainerBuilder $container): void
     {
         if (
-            $config['image']['preview']['fallbacks']
+            $config['image']['preview']['enable_fallback_images']
             || !$container->hasDefinition('contao.image.fallback_preview_provider')
         ) {
             return;
