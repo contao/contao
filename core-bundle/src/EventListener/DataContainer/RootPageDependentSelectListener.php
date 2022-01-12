@@ -111,9 +111,10 @@ class RootPageDependentSelectListener
     {
         $options = [];
         $types = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['modules'] ?? [];
+        $hasTypes = \count($types) > 0;
 
-        $statement = $this->connection->executeQuery(
-            "SELECT m.id, m.name
+        $result = $this->connection->executeQuery(
+            "SELECT m.id, m.name, m.type
             FROM tl_module m
             WHERE m.type <> 'root_page_dependent_modules' AND
                   m.pid = ?
@@ -121,22 +122,13 @@ class RootPageDependentSelectListener
             [$dc->activeRecord->pid]
         );
 
-        if (\count($types)) {
-            $statement = $this->connection->executeQuery(
-                "SELECT m.id, m.name
-                    FROM tl_module m
-                    WHERE m.type IN (?) AND
-                          m.type <> 'root_page_dependent_modules' AND
-                          m.pid = ?
-                    ORDER BY m.name",
-                [$types, $dc->activeRecord->pid],
-                [Connection::PARAM_STR_ARRAY]
-            );
-        }
-
-        $modules = $statement->fetchAllAssociative();
+        $modules = $result->fetchAllAssociative();
 
         foreach ($modules as $module) {
+            if ($hasTypes && !in_array($module['type'], $types, true)) {
+                continue;
+            }
+
             $options[$module['id']] = $module['name'];
         }
 
