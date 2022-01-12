@@ -810,7 +810,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 clr', 'submitOnChange'=>true),
+			'eval'                    => array('tl_class'=>'w50', 'submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'module' => array
