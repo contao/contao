@@ -59,6 +59,103 @@ class StringUtilTest extends TestCase
         $this->assertSame('foo123', StringUtil::generateAlias('foo123'));
     }
 
+    /**
+     * @dataProvider getBase32
+     */
+    public function testEncodeDecodeBase32(string $binary, string $base32): void
+    {
+        $this->assertSame($base32, StringUtil::encodeBase32($binary));
+        $this->assertSame($binary, StringUtil::decodeBase32($base32));
+        $this->assertSame($binary, StringUtil::decodeBase32(strtolower($base32)));
+        $this->assertSame($binary, StringUtil::decodeBase32(strtr($base32, '01', 'ol')));
+        $this->assertSame($binary, StringUtil::decodeBase32(strtr($base32, '01', 'OI')));
+
+        $this->assertSame($binary, StringUtil::decodeBase32(StringUtil::encodeBase32($binary)));
+        $this->assertSame($base32, StringUtil::decodeBase32(StringUtil::encodeBase32($base32)));
+
+        $this->assertSame($binary.$binary, StringUtil::decodeBase32(StringUtil::encodeBase32($binary.$binary)));
+        $this->assertSame($base32.$base32, StringUtil::decodeBase32(StringUtil::encodeBase32($base32.$base32)));
+    }
+
+    public function getBase32(): \Generator
+    {
+        yield ['', ''];
+        yield [' ', '40'];
+        yield ['0', '60'];
+        yield ["\0", '00'];
+        yield [" \0", '4000'];
+        yield ["  \0", '40G00'];
+        yield ["   \0", '40G2000'];
+        yield ["    \0", '40G20800'];
+        yield ["     \0", '40G2081000'];
+        yield ["\x00\x80", '0200'];
+        yield ["\x01\x80", '0600'];
+        yield ["\x01\x00", '0400'];
+        yield ["\x00\x01", '000G'];
+        yield ['foo', 'CSQPY'];
+        yield ["\0foo\0", '01K6YVR0'];
+        yield ["\0\0foo\0\0", '0006CVVF0000'];
+        yield ["\0\0\0foo\0\0\0", '00000SKFDW00000'];
+        yield ["\0\0\0\0foo\0\0\0\0", '00000036DXQG000000'];
+        yield ["\0\0\0\0\0foo\0\0\0\0\0", '00000000CSQPY00000000'];
+        yield ["\x00\x44\x32\x14\xc7\x42\x54\xb6\x35\xcf\x84\x65\x3a\x56\xd7\xc6\x75\xbe\x77\xdf", '0123456789ABCDEFGHJKMNPQRSTVWXYZ'];
+    }
+
+    public function testEncodeDecodeBase32AllBytes(): void
+    {
+        for ($i = 0; $i < 256; ++$i) {
+            $char = \chr($i);
+
+            for ($length = 1; $length < 8; ++$length) {
+                $data = str_repeat($char, $length);
+                $this->assertSame($data, StringUtil::decodeBase32(StringUtil::encodeBase32($data)));
+            }
+        }
+
+        for ($i = 0; $i < 32; ++$i) {
+            $char = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'[$i];
+
+            for ($length = 8; $length < 17; $length += 8) {
+                $data = str_repeat($char, $length);
+                $this->assertSame($data, StringUtil::encodeBase32(StringUtil::decodeBase32($data)));
+            }
+        }
+
+        $this->assertSame('00011111', StringUtil::encodeBase32(StringUtil::decodeBase32('oO0iLIl1')));
+    }
+
+    /**
+     * @dataProvider getBase32Invalid
+     */
+    public function testThrowsForInvalidBase32(string $invalid): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        StringUtil::decodeBase32($invalid);
+    }
+
+    public function getBase32Invalid(): \Generator
+    {
+        yield [' '];
+        yield ['-'];
+        yield ["\0"];
+        yield ['ö'];
+        yield ['u'];
+        yield ['U'];
+        yield ['a '];
+        yield ['a-'];
+        yield ["a\0"];
+        yield ['aö'];
+        yield ['au'];
+        yield ['aU'];
+        yield [' a'];
+        yield ['-a'];
+        yield ["\0a"];
+        yield ['öa'];
+        yield ['ua'];
+        yield ['Ua'];
+    }
+
     public function testStripsTheRootDirectory(): void
     {
         $this->assertSame('', StringUtil::stripRootDir($this->getFixturesDir().'/'));

@@ -134,6 +134,32 @@ class Automator extends System
 	}
 
 	/**
+	 * Purge the preview cache
+	 */
+	public function purgePreviewCache()
+	{
+		$container = System::getContainer();
+		$strTargetPath = StringUtil::stripRootDir($container->getParameter('contao.image.preview.target_dir'));
+		$strRootDir = $container->getParameter('kernel.project_dir');
+
+		// Walk through the subfolders
+		foreach (Folder::scan($strRootDir . '/' . $strTargetPath) as $dir)
+		{
+			if (strncmp($dir, '.', 1) !== 0)
+			{
+				$objFolder = new Folder($strTargetPath . '/' . $dir);
+				$objFolder->purge();
+			}
+		}
+
+		// Also empty the shared cache so there are no links to deleted previews
+		$this->purgePageCache();
+
+		// Add a log entry
+		$this->log('Purged the preview cache', __METHOD__, ContaoContext::CRON);
+	}
+
+	/**
 	 * Purge the script cache
 	 */
 	public function purgeScriptCache()
