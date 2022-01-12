@@ -19,14 +19,14 @@ use Symfony\Contracts\EventDispatcher\Event;
 class FrontendMenuEvent extends Event
 {
     private FactoryInterface $factory;
-    private ItemInterface $tree;
+    private ItemInterface $menu;
     private int $pid;
     private array $options;
 
-    public function __construct(FactoryInterface $factory, ItemInterface $tree, int $pid, array $options)
+    public function __construct(FactoryInterface $factory, ItemInterface $menu, int $pid, array $options)
     {
         $this->factory = $factory;
-        $this->tree = $tree;
+        $this->menu = $menu;
         $this->pid = $pid;
         $this->options = $options;
     }
@@ -36,13 +36,13 @@ class FrontendMenuEvent extends Event
         return $this->factory;
     }
 
-    public function getTree(): ItemInterface
+    public function getMenu(): ItemInterface
     {
-        return $this->tree;
+        return $this->menu;
     }
 
     /**
-     * Returns the page ID of the parent page, i.e. the root page from which the children are selected.
+     * Returns the page ID of the parent page, i.e., the root page from which the children are selected.
      * May be "0" in combination with $options['pages'] (array<int>).
      */
     public function getPid(): int
