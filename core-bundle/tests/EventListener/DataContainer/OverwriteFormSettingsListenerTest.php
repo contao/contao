@@ -66,7 +66,7 @@ class OverwriteFormSettingsListenerTest extends TestCase
                 'form_recipient' => [
                     'eval' => ['formOverwritable' => true, 'mandatory' => false],
                     'load_callback' => [
-                        [OverwriteFormSettingsListener::class, 'getPlaceholderFromForm'],
+                        ['contao.listener.data_container.overwrite_form_settings', 'getPlaceholderFromForm'],
                     ],
                 ],
             ],

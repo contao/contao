@@ -110,7 +110,7 @@ class OverwriteFormSettingsListener
         }
 
         $GLOBALS['TL_DCA'][$table]['fields'][$targetField]['load_callback'][] = [
-            self::class, 'getPlaceholderFromForm',
+            'contao.listener.data_container.overwrite_form_settings', 'getPlaceholderFromForm',
         ];
     }
 }
