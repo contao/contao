@@ -27,10 +27,7 @@ class OverwriteFormSettingsListenerTest extends TestCase
 {
     public function testAnnotatedHook(): void
     {
-        $listener = new OverwriteFormSettingsListener(
-            $this->mockContaoFramework()
-        );
-
+        $listener = new OverwriteFormSettingsListener($this->mockContaoFramework());
         $annotationReader = new AnnotationReader();
 
         /** @var Hook $annotation */

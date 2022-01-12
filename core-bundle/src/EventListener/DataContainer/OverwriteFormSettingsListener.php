@@ -22,10 +22,7 @@ use Contao\System;
 
 class OverwriteFormSettingsListener
 {
-    /**
-     * @var ContaoFramework
-     */
-    private $framework;
+    private ContaoFramework $framework;
 
     public function __construct(ContaoFramework $framework)
     {
@@ -49,8 +46,10 @@ class OverwriteFormSettingsListener
 
         foreach ($fields as $field => $config) {
             $targetField = 'form_'.$field;
+
             $this->copyFieldConfig($table, $targetField, $config);
             $this->registerFieldLoadCallback($table, $targetField);
+
             $pm->addField($targetField, 'form_legend');
         }
 

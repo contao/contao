@@ -159,7 +159,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'splashImage'                 => 'singleSRC,size',
 		'markdownSource_sourceText'   => 'code',
 		'markdownSource_sourceFile'   => 'singleSRC',
-		'formSettings'      		  => '',
+		'formSettings'                => ''
 	),
 
 	// Fields
