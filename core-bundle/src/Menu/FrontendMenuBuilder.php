@@ -133,13 +133,12 @@ class FrontendMenuBuilder
             $hasSubmenu = $hasSubpages && $displayChildren;
 
             $this->populateMenuItem($item, $request, $page, $href, $hasSubmenu, $options);
+            $root->addChild($item);
 
             if ($hasSubpages) {
                 $this->getMenu($item, (int) $page->id, $options);
                 $item->setDisplayChildren($displayChildren);
             }
-
-            $root->addChild($item);
         }
 
         // For the root level, trigger the event to allow modifying the menu
