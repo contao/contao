@@ -510,7 +510,7 @@ class PreviewFactory
         ];
 
         $hash = hash_hmac('sha256', md5(implode('|', $hashData)), $this->secret, true);
-        $hash = substr($this->base32($hash), 0, 16);
+        $hash = strtolower(substr(StringUtil::encodeBase32($hash), 0, 16));
         $name = pathinfo($path, PATHINFO_FILENAME);
 
         return $hash[0]."/$name-".substr($hash, 1);
@@ -528,29 +528,5 @@ class PreviewFactory
         }
 
         (new Filesystem())->symlink($linkToPath, $linkPath);
-    }
-
-    private function base32(string $bytes): string
-    {
-        $result = [];
-
-        foreach (str_split($bytes, 5) as $chunk) {
-            $result[] = substr(
-                str_pad(
-                    strtr(
-                        base_convert(bin2hex(str_pad($chunk, 5, "\0")), 16, 32),
-                        'ijklmnopqrstuv',
-                        'jkmnpqrstvwxyz', // Crockford's Base32
-                    ),
-                    8,
-                    '0',
-                    STR_PAD_LEFT,
-                ),
-                0,
-                (int) ceil(\strlen($chunk) * 8 / 5),
-            );
-        }
-
-        return implode('', $result);
     }
 }
