@@ -1694,11 +1694,11 @@ abstract class DataContainer extends Backend
 			{
 				if (\is_array($labelConfig['label_callback'] ?? null))
 				{
-					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, '', $protected, $isVisibleRootTrailPage);
+					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
 				}
 				else
 				{
-					$label = $labelConfig['label_callback']($row, $label, $this, '', $protected, $isVisibleRootTrailPage);
+					$label = $labelConfig['label_callback']($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
 				}
 			}
 			elseif ($mode === self::MODE_PARENT)
