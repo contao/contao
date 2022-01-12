@@ -177,7 +177,7 @@ class ContentDownloads extends ContentDownload
 					'meta'      => $arrMeta,
 					'extension' => $objFile->extension,
 					'path'      => $objFile->dirname,
-					'previews'  => $this->getPreviews($objFile->path),
+					'previews'  => $this->getPreviews($objFile->path, $strHref),
 				);
 
 				$auxDate[] = $objFile->mtime;
@@ -255,7 +255,7 @@ class ContentDownloads extends ContentDownload
 						'meta'      => $arrMeta,
 						'extension' => $objFile->extension,
 						'path'      => $objFile->dirname,
-						'previews'  => $this->getPreviews($objFile->path),
+						'previews'  => $this->getPreviews($objFile->path, $strHref),
 					);
 
 					$auxDate[] = $objFile->mtime;

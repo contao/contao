@@ -142,10 +142,10 @@ class ContentDownload extends ContentElement
 		$this->Template->meta = $arrMeta;
 		$this->Template->extension = $objFile->extension;
 		$this->Template->path = $objFile->dirname;
-		$this->Template->previews = $this->getPreviews($objFile->path);
+		$this->Template->previews = $this->getPreviews($objFile->path, $strHref);
 	}
 
-	protected function getPreviews(string $path): array
+	protected function getPreviews(string $path, string $downloadUrl): array
 	{
 		if (!$this->showPreview)
 		{
@@ -167,6 +167,10 @@ class ContentDownload extends ContentElement
 			}
 
 			$builder->enableLightbox(true)->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxSize($lightboxSize);
+		}
+		else
+		{
+			$builder->setLinkHref($downloadUrl);
 		}
 
 		try

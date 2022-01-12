@@ -3,15 +3,9 @@
 <?php $this->block('content'); ?>
 
   <?php if ($this->previews): ?>
-    <?php if (!$this->previews[0]->getLinkHref()): ?>
-      <a href="<?= $this->href ?>" title="<?= $this->title ?>" type="<?= $this->mime ?>">
-    <?php endif ?>
-      <?php foreach ($this->previews as $preview): ?>
-        <?php $this->insert('image', $preview->getLegacyTemplateData()) ?>
-      <?php endforeach ?>
-    <?php if (!$this->previews[0]->getLinkHref()): ?>
-      </a>
-    <?php endif ?>
+    <?php foreach ($this->previews as $preview): ?>
+      <?php $this->insert('image', $preview->getLegacyTemplateData()) ?>
+    <?php endforeach ?>
   <?php endif ?>
 
   <p class="download-element ext-<?= $this->extension ?>">
