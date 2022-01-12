@@ -457,18 +457,10 @@ class FrontendMenuBuilderTest extends TestCase
             ],
         ];
 
-        // Assert event dispatcher is called twice, once per root node
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $eventDispatcher
-            ->expects($this->exactly(2))
-            ->method('dispatch')
-            ->with($this->isInstanceOf(FrontendMenuEvent::class))
-        ;
-
         $menuBuilder = new FrontendMenuBuilder(
             $menuFactory,
             $this->mockRequestStack(),
-            $eventDispatcher,
+            $this->mockEventDispatcher(),
             $this->mockConnection($pages),
             $this->mockPageRegistry(),
             $this->mockPageModelAdapter(),
@@ -641,9 +633,10 @@ class FrontendMenuBuilderTest extends TestCase
 
     private function mockEventDispatcher(): EventDispatcherInterface
     {
+        // Assert the event is dispatched exactly once per menu
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
-            ->expects($this->atLeastOnce())
+            ->expects($this->once())
             ->method('dispatch')
             ->with($this->isInstanceOf(FrontendMenuEvent::class))
         ;

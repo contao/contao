@@ -133,22 +133,20 @@ class FrontendMenuBuilder
             $hasSubmenu = $hasSubpages && $displayChildren;
 
             $this->populateMenuItem($item, $request, $page, $href, $hasSubmenu, $options);
-            $root->addChild($item);
 
-            // Allow modifying empty submenu nodes
-            if (!$hasSubpages) {
-                $menuEvent = new FrontendMenuEvent($this->factory, $item, (int) $page->id, $options);
-                $this->dispatcher->dispatch($menuEvent);
-
-                continue;
+            if ($hasSubpages) {
+                $this->getMenu($item, (int) $page->id, $options);
+                $item->setDisplayChildren($displayChildren);
             }
 
-            $this->getMenu($item, (int) $page->id, $options);
-            $item->setDisplayChildren($displayChildren);
+            $root->addChild($item);
         }
 
-        $menuEvent = new FrontendMenuEvent($this->factory, $root, $pid, $options);
-        $this->dispatcher->dispatch($menuEvent);
+        // For the root level, trigger the event to allow modifying the menu
+        if (null === $root->getParent()) {
+            $menuEvent = new FrontendMenuEvent($this->factory, $root, $pid, $options);
+            $this->dispatcher->dispatch($menuEvent);
+        }
 
         return $root;
     }
