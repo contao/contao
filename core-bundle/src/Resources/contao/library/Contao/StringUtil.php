@@ -596,7 +596,7 @@ class StringUtil
 	}
 
 	/**
-	 * Encodes the given string with Crockford’s Base32 (0123456789ABCDEFGHJKMNPQRSTVWXYZ)
+	 * Encode a string with Crockford’s Base32 (0123456789ABCDEFGHJKMNPQRSTVWXYZ)
 	 *
 	 * @see StringUtil::decodeBase32()
 	 */
@@ -626,7 +626,7 @@ class StringUtil
 	}
 
 	/**
-	 * Decodes a Crockford’s Base32 encoded string.
+	 * Decode a Crockford’s Base32 encoded string
 	 *
 	 * Uppercase and lowercase letters are supported. Letters O and o are
 	 * interpreted as 0. Letters I, i, L and l are interpreted as 1.

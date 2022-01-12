@@ -71,6 +71,7 @@ class PreviewFactoryTest extends TestCase
     public function testCreatePreview(): void
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
@@ -82,6 +83,7 @@ class PreviewFactoryTest extends TestCase
         $this->assertRegExp('(/[0-9a-z]/foo-[0-9a-z]{15}\.png$)', $preview->getPath());
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+
         $this->expectException(MissingPreviewProviderException::class);
 
         $factory->createPreview($sourcePath, 256);
@@ -90,6 +92,7 @@ class PreviewFactoryTest extends TestCase
     public function testCreatePreviews(): void
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
@@ -107,7 +110,9 @@ class PreviewFactoryTest extends TestCase
         $lastPagePath = substr($previews[0]->getPath(), 0, -4).'-last.png';
 
         $this->assertFileNotExists($lastPagePath);
+
         $previews = $factory->createPreviews($sourcePath, 200, 9999, 2);
+
         $this->assertCount(2, $previews);
         $this->assertFileExists($lastPagePath);
 
@@ -127,6 +132,7 @@ class PreviewFactoryTest extends TestCase
         $this->assertCount(0, $previews);
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+
         $this->expectException(MissingPreviewProviderException::class);
 
         $factory->createPreviews($sourcePath, 128);
@@ -278,6 +284,7 @@ class PreviewFactoryTest extends TestCase
     public function testCreatePreviewImage(): void
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
@@ -286,6 +293,7 @@ class PreviewFactoryTest extends TestCase
         $this->assertFileExists($preview->getPath());
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+
         $this->expectException(MissingPreviewProviderException::class);
 
         $factory->createPreviewImage($sourcePath, [200, 200, 'box']);
@@ -294,6 +302,7 @@ class PreviewFactoryTest extends TestCase
     public function testCreatePreviewImages(): void
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
@@ -304,6 +313,7 @@ class PreviewFactoryTest extends TestCase
         }
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+
         $this->expectException(MissingPreviewProviderException::class);
 
         $factory->createPreviewImages($sourcePath, [200, 200, 'box']);
@@ -312,6 +322,7 @@ class PreviewFactoryTest extends TestCase
     public function testCreatePreviewPicture(): void
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
@@ -320,6 +331,7 @@ class PreviewFactoryTest extends TestCase
         $this->assertFileExists($preview->getImg()['src']->getPath());
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+
         $this->expectException(MissingPreviewProviderException::class);
 
         $factory->createPreviewPicture($sourcePath, [200, 200, 'box']);
@@ -328,6 +340,7 @@ class PreviewFactoryTest extends TestCase
     public function testCreatePreviewPictures(): void
     {
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+
         (new Filesystem())->dumpFile($sourcePath, '%PDF-');
 
         $factory = $this->createFactoryWithExampleProvider();
@@ -338,6 +351,7 @@ class PreviewFactoryTest extends TestCase
         }
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+
         $this->expectException(MissingPreviewProviderException::class);
 
         $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
