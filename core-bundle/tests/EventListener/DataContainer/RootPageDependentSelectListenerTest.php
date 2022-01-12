@@ -127,30 +127,11 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $result = $this->createMock(Result::class);
-        $result
-            ->expects($this->once())
-            ->method('fetchAllAssociative')
-            ->willReturn([
-                ['id' => 1, 'title' => 'title-1', 'language' => 'language-1'],
-                ['id' => 2, 'title' => 'title-2', 'language' => 'language-2'],
-                ['id' => 3, 'title' => 'title-3', 'language' => 'language-3'],
-            ])
-        ;
-
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->once())
-            ->method('executeQuery')
-            ->willReturn($result)
-        ;
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('prepare')
-            ->willReturn($statement)
-        ;
+        $connection = $this->mockGetRootPages([
+            ['id' => 1, 'title' => 'title-1', 'language' => 'language-1'],
+            ['id' => 2, 'title' => 'title-2', 'language' => 'language-2'],
+            ['id' => 3, 'title' => 'title-3', 'language' => 'language-3'],
+        ]);
 
         $listener = new RootPageDependentSelectListener(
             $connection,
@@ -247,6 +228,51 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $this->assertCount(3, unserialize($listener->wizardCallback($dataContainer)));
     }
 
+    public function testDoesNotSaveUnserializableData(): void
+    {
+        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+
+        $listener = new RootPageDependentSelectListener(
+            $this->createMock(Connection::class),
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(ScopeMatcher::class),
+            $this->createMock(RequestStack::class),
+            $this->createMock(CsrfTokenManagerInterface::class),
+            'contao_csrf_token'
+        );
+
+        $this->assertSame('foobar', $listener->saveCallback('foobar', $dataContainer));
+    }
+
+    public function testSavesValuesRelatedToRootPage(): void
+    {
+        $dataContainer = $this->mockClassWithProperties(DataContainer::class);
+
+        $connection = $this->mockGetRootPages([
+            ['id' => 1, 'title' => 'title-1', 'language' => 'language-1'],
+            ['id' => 2, 'title' => 'title-2', 'language' => 'language-2'],
+            ['id' => 3, 'title' => 'title-3', 'language' => 'language-3'],
+        ]);
+
+        $listener = new RootPageDependentSelectListener(
+            $connection,
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(ScopeMatcher::class),
+            $this->createMock(RequestStack::class),
+            $this->createMock(CsrfTokenManagerInterface::class),
+            'contao_csrf_token'
+        );
+
+        $this->assertSame(
+            serialize([
+                1 => 10,
+                2 => 20,
+                3 => 30,
+            ]),
+            $listener->saveCallback(serialize([10, 20, 30]), $dataContainer)
+        );
+    }
+
     private function populateGlobalsArray(array $data): void
     {
         $GLOBALS['TL_DCA']['tl_module']['fields'] = $data;
@@ -276,5 +302,31 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         ;
 
         return $scopeMatcher;
+    }
+
+    private function mockGetRootPages(array $data): Connection
+    {
+        $result = $this->createMock(Result::class);
+        $result
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->willReturn($data)
+        ;
+
+        $statement = $this->createMock(Statement::class);
+        $statement
+            ->expects($this->once())
+            ->method('executeQuery')
+            ->willReturn($result)
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
+
+        return $connection;
     }
 }
