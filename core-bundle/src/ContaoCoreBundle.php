@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle;
 
+use Composer\InstalledVersions;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
@@ -118,5 +119,20 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new RewireTwigPathsPass());
         $container->addCompilerPass(new AddNativeTransportFactoryPass());
         $container->addCompilerPass(new IntlInstalledLocalesAndCountriesPass());
+    }
+
+    public static function getVersion(): string
+    {
+        try {
+            $version = (string) InstalledVersions::getPrettyVersion('contao/core-bundle');
+        } catch (\OutOfBoundsException $e) {
+            $version = '';
+        }
+
+        if ('' === $version) {
+            $version = (string) InstalledVersions::getPrettyVersion('contao/contao');
+        }
+
+        return $version;
     }
 }

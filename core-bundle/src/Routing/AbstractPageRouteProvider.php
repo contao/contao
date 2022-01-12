@@ -177,8 +177,26 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return 1;
         }
 
+        if ($pageA->routePriority !== $pageB->routePriority) {
+            return $pageB->routePriority <=> $pageA->routePriority;
+        }
+
         $pathA = $a instanceof PageRoute && $a->getUrlSuffix() ? substr($a->getPath(), 0, -\strlen($a->getUrlSuffix())) : $a->getPath();
         $pathB = $b instanceof PageRoute && $b->getUrlSuffix() ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
+
+        // Prioritize the default behaviour when `requireItem` is enabled
+        if ($pathA === $pathB && '/{!parameters}' === substr($pathA, -14)) {
+            $paramA = $a->getRequirement('parameters');
+            $paramB = $b->getRequirement('parameters');
+
+            if ('/.+' === $paramA && '(/.+?)?' === $paramB) {
+                return -1;
+            }
+
+            if ('(/.+?)?' === $paramA && '/.+' === $paramB) {
+                return 1;
+            }
+        }
 
         $countA = \count(explode('/', $pathA));
         $countB = \count(explode('/', $pathB));
