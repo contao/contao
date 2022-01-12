@@ -63,10 +63,23 @@ class PageRoutingListenerTest extends TestCase
             ->willReturn($pageRoute)
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
-        $listener = new PageRoutingListener($framework, $pageRegistry, $this->createMock(Environment::class));
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@ContaoCore/Backend/be_route_path.html.twig',
+                [
+                    'path' => $expected,
+                ]
+            )
+            ->willReturn('foobar')
+        ;
 
-        $this->assertSame($expected, $listener->loadRoutePath('', $dc));
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
+        $listener = new PageRoutingListener($framework, $pageRegistry, $twig);
+
+        $listener->generateRoutePath($dc);
     }
 
     public function routePathProvider(): \Generator
@@ -92,19 +105,19 @@ class PageRoutingListenerTest extends TestCase
         yield 'Replaces parameter' => [
             'foo/{bar}.html',
             ['bar' => '.+'],
-            'foo/{.+}.html',
+            'foo/{<span class="tl_tip" title=".+">bar</span>}.html',
         ];
 
         yield 'Replaces parameters' => [
             'foo/{bar}/{baz}.html',
             ['bar' => '.+', 'baz' => '\d+'],
-            'foo/{.+}/{\d+}.html',
+            'foo/{<span class="tl_tip" title=".+">bar</span>}/{<span class="tl_tip" title="\d+">baz</span>}.html',
         ];
 
         yield 'Handles parameters starting with exclamation point' => [
             'foo/{!bar}.html',
             ['bar' => '.+'],
-            'foo/{.+}.html',
+            'foo/{<span class="tl_tip" title=".+">bar</span>}.html',
         ];
     }
 
@@ -129,7 +142,7 @@ class PageRoutingListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
         $listener = new PageRoutingListener($framework, $pageRegistry, $this->createMock(Environment::class));
 
-        $this->assertSame('', $listener->loadRoutePath('foobar', $dc));
+        $this->assertSame('', $listener->generateRoutePath($dc));
     }
 
     public function testGeneratesRoutingConflicts(): void

@@ -19,6 +19,7 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Twig\Environment;
 
 class PageRoutingListener
@@ -35,11 +36,9 @@ class PageRoutingListener
     }
 
     /**
-     * @Callback(table="tl_page", target="fields.routePath.load")
-     *
-     * @param mixed $value
+     * @Callback(table="tl_page", target="fields.routePath.input_field")
      */
-    public function loadRoutePath($value, DataContainer $dc): string
+    public function generateRoutePath(DataContainer $dc): string
     {
         $pageModel = $this->framework->getAdapter(PageModel::class)->findByPk($dc->id);
 
@@ -47,7 +46,12 @@ class PageRoutingListener
             return '';
         }
 
-        return $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel));
+        return $this->twig->render(
+            '@ContaoCore/Backend/be_route_path.html.twig',
+            [
+                'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel)),
+            ]
+        );
     }
 
     /**
@@ -125,7 +129,7 @@ class PageRoutingListener
         $path = $route->getPath();
 
         foreach ($route->getRequirements() as $name => $regexp) {
-            $path = preg_replace('/{[!]?'.preg_quote($name, '/').'}/', '{'.$regexp.'}', $path);
+            $path = preg_replace('/{[!]?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'">$1</span>}', $path);
         }
 
         return $path;

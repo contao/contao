@@ -246,9 +246,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'routePath' => array
 		(
-			'inputType'               => 'text',
-			'eval'                    => array('disabled'=>true, 'tl_class'=>'w50 clr'),
-			// load_callback from PageRoutingListener
+			// input_field_callback from PageRoutingListener
+			'eval'                    => array('tl_class'=>'w50 clr'),
 		),
 		'routePriority' => array
 		(
@@ -259,6 +258,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'routeConflicts' => array
 		(
 			// input_field_callback from PageRoutingListener
+			'eval'                    => array('tl_class'=>'clr'),
 		),
 		'pageTitle' => array
 		(
