@@ -86,6 +86,14 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.listener.data_container.page_routing:
+        class: Contao\CoreBundle\EventListener\DataContainer\PageRoutingListener
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.page_registry'
+            - '@twig'
+
     contao.listener.data_container.page_search:
         class: Contao\CoreBundle\EventListener\DataContainer\PageSearchListener
         public: true
@@ -110,6 +118,8 @@ services:
             - '@translator'
             - '@database_connection'
             - '@contao.routing.page_registry'
+            - '@router'
+            - '@contao.routing.url_matcher'
 
     contao.listener.data_container.page_use_ssl_default:
         class: Contao\CoreBundle\EventListener\DataContainer\PageUseSslDefaultListener
@@ -167,6 +177,12 @@ services:
             - '@database_connection'
         tags:
             - kernel.event_listener
+
+    contao.listener.image_size_options:
+        class: Contao\CoreBundle\EventListener\ImageSizeOptionsListener
+        arguments:
+            - '@security.helper'
+            - '@contao.image.sizes'
 
     contao.listener.initialize_controller:
         class: Contao\CoreBundle\EventListener\InitializeControllerListener

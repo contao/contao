@@ -848,6 +848,12 @@
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
       </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+      </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
       </trans-unit>

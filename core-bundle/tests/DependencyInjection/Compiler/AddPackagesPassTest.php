@@ -16,12 +16,20 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\PackageUtil;
 use PackageVersions\Versions;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AddPackagesPassTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
+    /**
+     * @group legacy
+     */
     public function testAddsThePackages(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Using the PackageUtil::getVersion() method has been deprecated %s.');
+
         $container = new ContainerBuilder();
 
         $pass = new AddPackagesPass();
