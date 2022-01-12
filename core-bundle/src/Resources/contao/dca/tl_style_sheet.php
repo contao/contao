@@ -330,7 +330,7 @@ class tl_style_sheet extends Backend
 	 *
 	 * @param mixed $varValue
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function romanizeName($varValue)
 	{

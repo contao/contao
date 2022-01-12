@@ -106,7 +106,7 @@ class FigureBuilder
     /**
      * User defined lightbox size configuration. This will overwrite the default if set.
      *
-     * @var mixed|null
+     * @var int|string|array|PictureConfiguration|null
      */
     private $lightboxSizeConfiguration;
 
@@ -418,7 +418,7 @@ class FigureBuilder
      * For this setting to take effect, make sure you have enabled the creation
      * of a lightbox by calling enableLightbox().
      *
-     * @param int|string|array|PictureConfiguration $size A picture size configuration or reference
+     * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
     public function setLightboxSize($size): self
     {
