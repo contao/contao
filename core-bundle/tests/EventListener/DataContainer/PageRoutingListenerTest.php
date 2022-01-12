@@ -42,7 +42,6 @@ class PageRoutingListenerTest extends TestCase
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
 
         $pageRoute = $this->createMock(PageRoute::class);
-
         $pageRoute
             ->expects($this->once())
             ->method('getPath')
@@ -77,8 +76,8 @@ class PageRoutingListenerTest extends TestCase
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 42]);
-        $listener = new PageRoutingListener($framework, $pageRegistry, $twig);
 
+        $listener = new PageRoutingListener($framework, $pageRegistry, $twig);
         $listener->generateRoutePath($dc);
     }
 
@@ -554,7 +553,6 @@ class PageRoutingListenerTest extends TestCase
     private function mockPageRoute(string $path, array $requirements = []): PageRoute
     {
         $route = $this->createMock(PageRoute::class);
-
         $route
             ->method('getPath')
             ->willReturn($path)

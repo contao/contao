@@ -255,7 +255,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			// input_field_callback from PageRoutingListener
-			'eval'                    => array('tl_class'=>'w50 clr'),
 		),
 		'routePriority' => array
 		(
@@ -268,7 +267,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			// input_field_callback from PageRoutingListener
-			'eval'                    => array('tl_class'=>'clr'),
 		),
 		'pageTitle' => array
 		(
