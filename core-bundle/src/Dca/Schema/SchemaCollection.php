@@ -14,8 +14,9 @@ namespace Contao\CoreBundle\Dca\Schema;
 
 /**
  * @template T of SchemaInterface
+ * @implements \IteratorAggregate<string, T>
  */
-abstract class SchemaCollection extends Schema
+abstract class SchemaCollection extends Schema implements \IteratorAggregate
 {
     public function isEmpty(): bool
     {
@@ -28,6 +29,14 @@ abstract class SchemaCollection extends Schema
     public function children(): array
     {
         return array_map(fn ($key) => $this->getSchema($key, $this->getChildSchema()), array_map('\strval', array_keys($this->all())));
+    }
+
+    /**
+     * @return \Iterator<T>
+     */
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->children());
     }
 
     /**

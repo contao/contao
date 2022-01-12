@@ -30,7 +30,7 @@ class Callback extends Schema implements ContainerAwareInterface, FrameworkAware
     protected bool $allowServiceCalls = true;
 
     // TODO: Set assureCallable from the configuration array when creating the callback.
-    protected bool $assureCallable = true;
+    protected bool $assureCallable = false;
 
     public function __invoke(mixed ...$arguments): mixed
     {
@@ -57,6 +57,35 @@ class Callback extends Schema implements ContainerAwareInterface, FrameworkAware
         return $callback(...$arguments);
     }
 
+    public function isCallable(): bool
+    {
+        if ($this->assureCallable) {
+            return true;
+        }
+
+        $data = $this->all();
+
+        if (empty($data)) {
+            return false;
+        }
+
+        if ($this->isClosureCallback($data)) {
+            return true;
+        }
+
+        if ($this->allowsServiceCalls()) {
+            if (null === $this->container) {
+                throw new \LogicException('You must set the service container via "Callback::setContainer()" or disallow service calls for this callback.');
+            }
+
+            if (($data[0] ?? false) && $this->container->has($data[0])) {
+                return true;
+            }
+        }
+
+        return \is_callable($data) || method_exists($data[0], $data[1]);
+    }
+
     public function allowsServiceCalls(): bool
     {
         return $this->allowServiceCalls;
@@ -66,22 +95,8 @@ class Callback extends Schema implements ContainerAwareInterface, FrameworkAware
     {
         $data = $this->all();
 
-        if ($this->isClosureCallback($data)) {
-            return;
-        }
-
-        if ($this->allowsServiceCalls()) {
-            if (null === $this->container) {
-                throw new \LogicException('You must set the service container via "Callback::setContainer()" or disallow service calls for this callback.');
-            }
-
-            if (($data[0] ?? false) && $this->container->has($data[0])) {
-                return;
-            }
-        }
-
-        if (!\is_callable($data) && (!method_exists($data[0], $data[1]))) {
-            throw new \InvalidArgumentException(sprintf('Callback %s is not callable', implode('::', $data)));
+        if (!empty($data) && !$this->isCallable()) {
+            throw new \InvalidArgumentException(sprintf('Callback %s is not callable at %s', implode('::', $data), $this->getData()->getPath()));
         }
     }
 

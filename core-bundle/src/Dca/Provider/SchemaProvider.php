@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Dca\Provider;
 
 use Contao\CoreBundle\Dca\Schema\Field;
+use Contao\CoreBundle\Dca\Schema\Operation;
 
 class SchemaProvider implements SchemaProviderInterface
 {
@@ -20,6 +21,7 @@ class SchemaProvider implements SchemaProviderInterface
     {
         return [
             Field::class,
+            Operation::class,
         ];
     }
 }
