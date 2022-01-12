@@ -78,7 +78,7 @@
             <td><span class="tl_label"><?= $this->labels->fileMeta ?>:</span></td>
             <td>
               <?php foreach ($this->meta as $lang => $data): ?>
-                <p><?= $this->languages->$lang ?></p>
+                <p><?= $this->languages[$lang] ?></p>
                 <?php foreach ($data as $field => $value): ?>
                   <?php if ($value): ?>
                     <?= $value ?> (<?= $this->labels->{'aw_'.$field} ?>)<br>

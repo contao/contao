@@ -500,6 +500,9 @@
       <trans-unit id="tl_content.download_legend">
         <source>Download settings</source>
       </trans-unit>
+      <trans-unit id="tl_content.preview_legend">
+        <source>Preview settings</source>
+      </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
       </trans-unit>

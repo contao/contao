@@ -185,10 +185,8 @@ class BackendPopup extends Backend
 
 				if (\is_array($arrMeta))
 				{
-					System::loadLanguageFile('languages');
-
 					$objTemplate->meta = $arrMeta;
-					$objTemplate->languages = (object) $GLOBALS['TL_LANG']['LNG'];
+					$objTemplate->languages = System::getContainer()->get('contao.intl.locales')->getLocales();
 				}
 			}
 
