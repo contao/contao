@@ -93,7 +93,7 @@ class MaintenanceModeCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->assertStringContainsString(' ! [NOTE] Maintenance mode is enabled.', $commandTester->getDisplay(true));
+        $this->assertStringContainsString(' ! [NOTE] Maintenance mode is enabled', $commandTester->getDisplay(true));
     }
 
     public function testOutputIfDisabled(): void
@@ -111,7 +111,7 @@ class MaintenanceModeCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->assertStringContainsString(' [INFO] Maintenance mode is disabled.', $commandTester->getDisplay(true));
+        $this->assertStringContainsString(' [INFO] Maintenance mode is disabled', $commandTester->getDisplay(true));
     }
 
     public function testOutputWithJsonFormat(): void

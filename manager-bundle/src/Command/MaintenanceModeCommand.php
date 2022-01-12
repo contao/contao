@@ -55,43 +55,23 @@ class MaintenanceModeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $state = $input->getArgument('state');
-        $io = new SymfonyStyle($input, $output);
-
         if (\in_array($state, ['enable', 'on'], true)) {
             $this->enable($input->getOption('template'), $input->getOption('templateVars'));
-            $io->success('Maintenance mode enabled.');
+            $this->outputResult($input, $output, true, true);
 
             return 0;
         }
 
         if (\in_array($state, ['disable', 'off'], true)) {
             $this->disable();
-            $io->success('Maintenance mode disabled.');
+            $this->outputResult($input, $output, false, true);
 
             return 0;
         }
 
         $isEnabled = $this->filesystem->exists($this->maintenanceFilePath);
 
-        if ('json' === $input->getOption('format')) {
-            $output->writeln(json_encode(
-                [
-                    'enabled' => $isEnabled,
-                    'maintenanceFilePath' => $this->maintenanceFilePath,
-                ],
-                JSON_THROW_ON_ERROR
-            ));
-
-            return 0;
-        }
-
-        if ($isEnabled) {
-            $io->note('Maintenance mode is enabled.');
-
-            return 1;
-        }
-
-        $io->info('Maintenance mode is disabled.');
+        $this->outputResult($input, $output, $isEnabled, false);
 
         return 0;
     }
@@ -115,5 +95,31 @@ class MaintenanceModeCommand extends Command
     private function disable(): void
     {
         $this->filesystem->remove($this->maintenanceFilePath);
+    }
+
+    private function outputResult(InputInterface $input, OutputInterface $output, bool $enabled, bool $toggled): void
+    {
+        if ('json' === $input->getOption('format')) {
+            $output->writeln(json_encode(
+                [
+                    'enabled' => $enabled,
+                    'maintenanceFilePath' => $this->maintenanceFilePath,
+                ],
+                JSON_THROW_ON_ERROR
+            ));
+
+            return;
+        }
+
+        $io = new SymfonyStyle($input, $output);
+        $message = 'Maintenance mode '.($toggled ? '' : 'is ').($enabled ? 'enabled' : 'disabled');
+
+        if ($toggled) {
+            $io->success($message);
+        } elseif ($enabled) {
+            $io->note($message);
+        } else {
+            $io->info($message);
+        }
     }
 }
