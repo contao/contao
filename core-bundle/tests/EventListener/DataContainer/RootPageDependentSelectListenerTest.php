@@ -286,7 +286,8 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
             'contao_csrf_token'
         );
 
-        $this->assertSame([
+        $this->assertSame(
+            [
                 10 => 'name-10',
                 20 => 'name-20',
                 30 => 'name-30',
@@ -303,9 +304,9 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
                     'modules' => [
                         'foo',
                         'bar',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
@@ -325,10 +326,11 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
             'contao_csrf_token'
         );
 
-        $this->assertSame([
-            10 => 'name-10',
-            20 => 'name-20',
-        ],
+        $this->assertSame(
+            [
+                10 => 'name-10',
+                20 => 'name-20',
+            ],
             $listener->optionsCallback($dataContainer)
         );
     }

@@ -125,7 +125,7 @@ class RootPageDependentSelectListener
         $modules = $result->fetchAllAssociative();
 
         foreach ($modules as $module) {
-            if ($hasTypes && !in_array($module['type'], $types, true)) {
+            if ($hasTypes && !\in_array($module['type'], $types, true)) {
                 continue;
             }
 
