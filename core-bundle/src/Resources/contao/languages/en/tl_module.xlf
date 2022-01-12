@@ -140,10 +140,10 @@
       <trans-unit id="tl_module.form.1">
         <source>Please select a form.</source>
       </trans-unit>
-      <trans-unit id="tl_module.formSettings.0">
-        <source>Overwrite form configuration</source>
+      <trans-unit id="tl_module.overwriteFormSettings.0">
+        <source>Overwrite form settings</source>
       </trans-unit>
-      <trans-unit id="tl_module.formSettings.1">
+      <trans-unit id="tl_module.overwriteFormSettings.1">
         <source>Overwrite some form configuration values</source>
       </trans-unit>
       <trans-unit id="tl_module.queryType.0">

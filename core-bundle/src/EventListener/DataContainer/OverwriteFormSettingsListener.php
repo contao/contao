@@ -53,7 +53,7 @@ class OverwriteFormSettingsListener
             $pm->addField($targetField, 'form_legend');
         }
 
-        $pm->applyToSubpalette('formSettings', $table);
+        $pm->applyToSubpalette('overwriteFormSettings', $table);
     }
 
     /**
