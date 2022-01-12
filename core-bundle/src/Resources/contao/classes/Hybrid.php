@@ -300,23 +300,26 @@ abstract class Hybrid extends Frontend
 
 	private function overwriteConfigFromParent(): void
 	{
-		if (!$this->objParent->formSettings) {
+		if (!$this->objParent->formSettings)
+		{
 			return;
 		}
 
-		$fieldsToOverwrite = array_filter(array_keys($GLOBALS['TL_DCA']['tl_form']['fields']), static function($fieldName) {
+		$fieldsToOverwrite = array_filter(array_keys($GLOBALS['TL_DCA']['tl_form']['fields']), static function ($fieldName)
+		{
 			$fieldConfig = $GLOBALS['TL_DCA']['tl_form']['fields'][$fieldName];
-			return (isset($fieldConfig['eval']['formOverwritable']) && true === $fieldConfig['eval']['formOverwritable']);
+
+			return isset($fieldConfig['eval']['formOverwritable']) && true === $fieldConfig['eval']['formOverwritable'];
 		});
 
 		foreach ($fieldsToOverwrite as $fieldName)
 		{
-			$parentField = 'form_'.$fieldName;
+			$parentField = 'form_' . $fieldName;
 
-			if (!$this->objParent->{$parentField}) {
+			if (!$this->objParent->{$parentField})
+			{
 				continue;
 			}
-
 
 			$this->{$fieldName} = $this->objParent->{$parentField};
 		}
