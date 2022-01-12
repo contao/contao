@@ -15,6 +15,11 @@ namespace Contao\CoreBundle\EventListener\DataContainer\Undo;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Doctrine\DBAL\Connection;
 
+/**
+ * @Callback(table="tl_undo", target="fields.options.fromTable")
+ *
+ * @internal
+ */
 class FromTableOptionsListener
 {
     private Connection $connection;
@@ -24,9 +29,6 @@ class FromTableOptionsListener
         $this->connection = $connection;
     }
 
-    /**
-     * @Callback(table="tl_undo", target="fields.options.fromTable")
-     */
     public function __invoke(): array
     {
         $tables = $this->connection->executeQuery("SELECT DISTINCT {$this->connection->quoteIdentifier('fromTable')} FROM tl_undo");
