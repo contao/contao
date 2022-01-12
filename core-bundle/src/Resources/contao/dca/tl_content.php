@@ -1089,6 +1089,7 @@ class tl_content extends Backend
 				$GLOBALS['TL_DCA']['tl_content']['fields']['imagemargin']['eval']['tl_class'] .= ' clr';
 				break;
 
+			case 'download':
 			case 'downloads':
 				$GLOBALS['TL_DCA']['tl_content']['fields']['size']['eval']['mandatory'] = true;
 				break;
