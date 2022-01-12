@@ -79,7 +79,7 @@ class PreviewFactoryTest extends TestCase
         $this->assertFileExists($preview->getPath());
         $this->assertSame(128, $preview->getDimensions()->getSize()->getWidth());
         $this->assertSame(256, $preview->getDimensions()->getSize()->getHeight());
-        $this->assertRegExp('(/[0-9a-z_-]/foo-[0-9a-zA-Z_-]{15}\.png$)', $preview->getPath());
+        $this->assertRegExp('(/[0-9a-z]/foo-[0-9a-z]{15}\.png$)', $preview->getPath());
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
         $this->expectException(MissingPreviewProviderException::class);
@@ -101,7 +101,7 @@ class PreviewFactoryTest extends TestCase
             $this->assertFileExists($preview->getPath());
             $this->assertSame(256, $preview->getDimensions()->getSize()->getWidth());
             $this->assertSame(512, $preview->getDimensions()->getSize()->getHeight());
-            $this->assertRegExp('(/[0-9a-z_-]/foo-[0-9a-zA-Z_-]{15}(-\d)?\.png$)', $preview->getPath());
+            $this->assertRegExp('(/[0-9a-z]/foo-[0-9a-z]{15}(-\d)?\.png$)', $preview->getPath());
         }
 
         $lastPagePath = substr($previews[0]->getPath(), 0, -4).'-last.png';
@@ -119,7 +119,7 @@ class PreviewFactoryTest extends TestCase
             $this->assertFileExists($preview->getPath());
             $this->assertSame(499, $preview->getDimensions()->getSize()->getWidth());
             $this->assertSame(998, $preview->getDimensions()->getSize()->getHeight());
-            $this->assertRegExp('(/[0-9a-z_-]/foo-[0-9a-zA-Z_-]{15}-\d\.png$)', $preview->getPath());
+            $this->assertRegExp('(/[0-9a-z]/foo-[0-9a-z]{15}-\d\.png$)', $preview->getPath());
         }
 
         $previews = $factory->createPreviews($sourcePath, 128, 9999, 4);
@@ -341,6 +341,44 @@ class PreviewFactoryTest extends TestCase
         $this->expectException(MissingPreviewProviderException::class);
 
         $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
+    }
+
+    /**
+     * @dataProvider getBase32
+     */
+    public function testBase32(string $source, string $expected): void
+    {
+        $reflection = new \ReflectionClass(PreviewFactory::class);
+        $factory = $reflection->newInstanceWithoutConstructor();
+        $method = $reflection->getMethod('base32');
+
+        $method->setAccessible(true);
+
+        $this->assertSame($expected, $method->invoke($factory, $source));
+    }
+
+    public function getBase32(): \Generator
+    {
+        yield ['', ''];
+        yield [' ', '40'];
+        yield ['0', '60'];
+        yield ["\0", '00'];
+        yield [" \0", '4000'];
+        yield ["  \0", '40g00'];
+        yield ["   \0", '40g2000'];
+        yield ["    \0", '40g20800'];
+        yield ["     \0", '40g2081000'];
+        yield ["\x00\x80", '0200'];
+        yield ["\x01\x80", '0600'];
+        yield ["\x01\x00", '0400'];
+        yield ["\x00\x01", '000g'];
+        yield ['foo', 'csqpy'];
+        yield ["\0foo\0", '01k6yvr0'];
+        yield ["\0\0foo\0\0", '0006cvvf0000'];
+        yield ["\0\0\0foo\0\0\0", '00000skfdw00000'];
+        yield ["\0\0\0\0foo\0\0\0\0", '00000036dxqg000000'];
+        yield ["\0\0\0\0\0foo\0\0\0\0\0", '00000000csqpy00000000'];
+        yield ["\x00\x44\x32\x14\xc7\x42\x54\xb6\x35\xcf\x84\x65\x3a\x56\xd7\xc6\x75\xbe\x77\xdf", '0123456789abcdefghjkmnpqrstvwxyz'];
     }
 
     private function createFactoryWithExampleProvider(ContaoFramework $framework = null): PreviewFactory
