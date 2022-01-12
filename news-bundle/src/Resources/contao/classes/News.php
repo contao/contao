@@ -238,7 +238,7 @@ class News extends Frontend
 
 					if ($objFile !== null)
 					{
-						$objItem->addEnclosure($objFile->path, $strLink, 'media:content');
+						$objItem->addEnclosure($objFile->path, $strLink, 'media:content', $arrFeed['imgSize']);
 					}
 				}
 

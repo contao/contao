@@ -14,6 +14,10 @@ namespace Contao\CoreBundle\Util;
 
 use PackageVersions\Versions;
 
+/**
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0; use
+ *             the Composer\InstalledVersions class instead
+ */
 class PackageUtil
 {
     /**
@@ -21,6 +25,9 @@ class PackageUtil
      */
     public static function getVersion(string $packageName): string
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using the PackageUtil::getVersion() method has been deprecated and will no longer work in Contao 5.0. Use the Composer\InstalledVersions class instead.');
+
+        /** @phpstan-ignore-next-line */
         $version = Versions::getVersion($packageName);
 
         return static::parseVersion($version);
@@ -31,6 +38,8 @@ class PackageUtil
      */
     public static function getNormalizedVersion(string $packageName): string
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using the PackageUtil::getNormalizedVersion() method has been deprecated and will no longer work in Contao 5.0. Use the Composer\InstalledVersions class instead.');
+
         $chunks = explode('.', static::getVersion($packageName));
         $chunks += [0, 0, 0];
 
@@ -49,6 +58,8 @@ class PackageUtil
      */
     public static function parseVersion(string $version): string
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using the PackageUtil::parseVersion() method has been deprecated and will no longer work in Contao 5.0. Use the Composer\InstalledVersions class instead.');
+
         return ltrim(strstr($version, '@', true), 'v');
     }
 
@@ -57,6 +68,8 @@ class PackageUtil
      */
     public static function getContaoVersion(): string
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using the PackageUtil::getContaoVersion() method has been deprecated and will no longer work in Contao 5.0. Use the ContaoCoreBundle::getVersion() method instead.');
+
         try {
             $version = static::getVersion('contao/core-bundle');
         } catch (\OutOfBoundsException $e) {

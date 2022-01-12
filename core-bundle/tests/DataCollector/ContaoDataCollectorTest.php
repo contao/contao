@@ -14,12 +14,12 @@ namespace Contao\CoreBundle\Tests\DataCollector;
 
 use Contao\ContentImage;
 use Contao\ContentText;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\Fixtures\DataCollector\TestClass;
 use Contao\CoreBundle\Tests\Fixtures\DataCollector\vendor\foo\bar\BundleTestClass;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Util\PackageUtil;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\System;
@@ -43,7 +43,7 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertSame(['ContentText' => ContentText::class], $collector->getClassesAliased());
         $this->assertSame(['ContentImage' => ContentImage::class], $collector->getClassesComposerized());
 
-        $version = PackageUtil::getContaoVersion();
+        $version = ContaoCoreBundle::getVersion();
 
         $this->assertSame(
             [
@@ -88,7 +88,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $this->assertSame(
             [
-                'version' => PackageUtil::getContaoVersion(),
+                'version' => ContaoCoreBundle::getVersion(),
                 'framework' => false,
                 'models' => 0,
                 'frontend' => true,
@@ -135,7 +135,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $this->assertSame(
             [
-                'version' => PackageUtil::getContaoVersion(),
+                'version' => ContaoCoreBundle::getVersion(),
                 'framework' => false,
                 'models' => 0,
                 'frontend' => true,

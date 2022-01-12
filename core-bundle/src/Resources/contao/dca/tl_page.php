@@ -227,14 +227,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
-		'alias' => array
-		(
-			'exclude'                 => true,
-			'search'                  => true,
-			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
-		),
 		'type' => array
 		(
 			'exclude'                 => true,
@@ -244,20 +236,38 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['PTY'],
 			'sql'                     => "varchar(64) NOT NULL default 'regular'"
 		),
+		'alias' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'folderalias', 'doNotCopy'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
+		),
+		'requireItem' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50 m12'),
+			'sql'                     => "char(1) NOT NULL default ''"
+		),
 		'routePath' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('disabled'=>true, 'tl_class'=>'w50 clr'),
 			// load_callback from PageRoutingListener
 		),
 		'routePriority' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "int(10) NOT NULL default 0"
 		),
 		'routeConflicts' => array
 		(
+			'exclude'                 => true,
 			// input_field_callback from PageRoutingListener
 		),
 		'pageTitle' => array
@@ -660,13 +670,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
-		),
-		'requireItem' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'cssClass' => array
