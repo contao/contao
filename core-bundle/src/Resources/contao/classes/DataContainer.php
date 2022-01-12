@@ -1583,6 +1583,159 @@ abstract class DataContainer extends Backend
 
 		return $dataContainer;
 	}
+
+	/**
+	 * Generates the label for a given data record according to the DCA configuration.
+	 * Returns an array of strings if 'showColumns' is enabled in the DCA configuration.
+	 *
+	 * @param array  $row   The data record
+	 * @param string $table The name of the data container
+	 *
+	 * @return string|array<string>
+	 */
+	public function generateRecordLabel(array $row, string $table = null, bool $protected = false, bool $isVisibleRootTrailPage = false)
+	{
+		$table = $table ?? $this->strTable;
+		$labelConfig = &$GLOBALS['TL_DCA'][$table]['list']['label'];
+		$args = array();
+
+		foreach ($labelConfig['fields'] as $k=>$v)
+		{
+			// Decrypt the value
+			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
+			{
+				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
+			}
+
+			if (strpos($v, ':') !== false)
+			{
+				list($strKey, $strTable) = explode(':', $v, 2);
+				list($strTable, $strField) = explode('.', $strTable, 2);
+
+				$objRef = Database::getInstance()
+					->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
+					->limit(1)
+					->execute($row[$strKey]);
+
+				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
+			}
+			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
+			{
+				if (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
+				{
+					$args[$k] = $row[$v] ? Date::parse(Config::get('dateFormat'), $row[$v]) : '-';
+				}
+				elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['rgxp'] ?? null) == 'time')
+				{
+					$args[$k] = $row[$v] ? Date::parse(Config::get('timeFormat'), $row[$v]) : '-';
+				}
+				else
+				{
+					$args[$k] = $row[$v] ? Date::parse(Config::get('datimFormat'), $row[$v]) : '-';
+				}
+			}
+			elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$table]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['multiple'] ?? null)))
+			{
+				$args[$k] = $row[$v] ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
+			}
+			elseif (isset($row[$v]))
+			{
+				$row_v = StringUtil::deserialize($row[$v]);
+
+				if (\is_array($row_v))
+				{
+					$args_k = array();
+
+					foreach ($row_v as $option)
+					{
+						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?: $option;
+					}
+
+					$args[$k] = implode(', ', $args_k);
+				}
+				elseif (isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]))
+				{
+					$args[$k] = \is_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]) ? $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]][0] : $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]];
+				}
+				elseif ((($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'] ?? null)) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
+				{
+					$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]] ?? null;
+				}
+				else
+				{
+					$args[$k] = $row[$v];
+				}
+			}
+			else
+			{
+				$args[$k] = null;
+			}
+		}
+
+		// Render the label
+		$label = vsprintf($labelConfig['format'] ?? '%s', $args);
+
+		// Shorten the label it if it is too long
+		if (($labelConfig['maxCharacters'] ?? null) > 0 && $labelConfig['maxCharacters'] < \strlen(strip_tags($label)))
+		{
+			$label = trim(StringUtil::substrHtml($label, $labelConfig['maxCharacters'])) . ' …';
+		}
+
+		// Remove empty brackets (), [], {}, <> and empty tags from the label
+		$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
+		$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
+
+		$mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? self::MODE_SORTED;
+
+		// Execute label_callback
+		if (\is_array($labelConfig['label_callback'] ?? null) || \is_callable($labelConfig['label_callback'] ?? null))
+		{
+			if (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
+			{
+				if (\is_array($labelConfig['label_callback'] ?? null))
+				{
+					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
+				}
+				else
+				{
+					$label = $labelConfig['label_callback']($row, $label, $this, '', false, $protected, $isVisibleRootTrailPage);
+				}
+			}
+			elseif ($mode === self::MODE_PARENT)
+			{
+				if (\is_array($labelConfig['label_callback'] ?? null))
+				{
+					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this);
+				}
+				else
+				{
+					$label = $labelConfig['label_callback']($row, $label, $this);
+				}
+			}
+			else
+			{
+				if (\is_array($labelConfig['label_callback'] ?? null))
+				{
+					$label = System::importStatic($labelConfig['label_callback'][0])->{$labelConfig['label_callback'][1]}($row, $label, $this, $args);
+				}
+				else
+				{
+					$label = $labelConfig['label_callback']($row, $label, $this, $args);
+				}
+			}
+		}
+		elseif (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
+		{
+			$label = Image::getHtml('iconPLAIN.svg') . ' ' . $label;
+		}
+
+		if (($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED)))
+		{
+			return \is_array($label) ? $label : $args;
+		}
+
+		return $label;
+	}
 }
 
 class_alias(DataContainer::class, 'DataContainer');
