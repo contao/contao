@@ -89,7 +89,7 @@ class OverwriteFormSettingsListener
         $overwritable = [];
 
         foreach ($GLOBALS['TL_DCA']['tl_form']['fields'] as $field => $config) {
-            if (isset($config['eval'], $config['eval']['formOverwritable']) && true === $config['eval']['formOverwritable']) {
+            if (isset($config['eval']['formOverwritable']) && true === $config['eval']['formOverwritable']) {
                 $overwritable[$field] = $config;
             }
         }
