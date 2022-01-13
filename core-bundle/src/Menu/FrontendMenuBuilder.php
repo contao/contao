@@ -271,12 +271,8 @@ class FrontendMenuBuilder
 
         $item->setCurrent($isActive);
 
-        $extra['isActive'] = $isActive;
         $extra['isTrail'] = $isActive ? false : $isTrail;
         $extra['class'] = $this->getCssClass($page, $currentPage, $isActive, $isTrail, $hasSubmenu);
-        $extra['title'] = StringUtil::specialchars($page->title, true);
-        $extra['pageTitle'] = StringUtil::specialchars($page->pageTitle, true);
-        $extra['description'] = str_replace(["\n", "\r"], [' ', ''], (string) $page->description);
 
         $rel = [];
 

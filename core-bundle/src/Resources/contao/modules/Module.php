@@ -446,8 +446,11 @@ abstract class Module extends Frontend
 		$item = $menuItem->getExtras();
 
 		$item['subitems'] = $subitems;
-		$item['title'] = $menuItem->getLinkAttribute('title');
-		$item['link'] = $menuItem->getExtra('title');
+		$item['isActive'] = $menuItem->isCurrent();
+		$item['title'] = StringUtil::specialchars($menuItem->getLinkAttribute('title'), true);
+		$item['pageTitle'] = StringUtil::specialchars($item['pageTitle'], true);
+		$item['description'] = str_replace(array("\n", "\r"), array(' ', ''), $item['description']);
+		$item['link'] = $item['title'];
 		$item['href'] = $menuItem->getUri();
 		$item['nofollow'] = (strncmp($menuItem->getLinkAttribute('rel', ''), 'noindex,nofollow', 16) === 0); // backwards compatibility
 		$item['target'] = ($v = $menuItem->getLinkAttribute('target')) ? " target=\"$v\"" : '';
