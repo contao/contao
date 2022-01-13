@@ -102,16 +102,6 @@ class BackendPreviewSwitchController
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = $this->tokenChecker->isPreviewMode();
 
-        $attributes = '';
-
-        if (!empty($this->backendAttributes)) {
-            $attributes = ' '.implode(' ', array_map(
-                static fn ($v, $k) => sprintf('data-%s="%s"', $k, $v),
-                $this->backendAttributes,
-                array_keys($this->backendAttributes)
-            ));
-        }
-
         try {
             return $this->twig->render(
                 '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
@@ -121,7 +111,7 @@ class BackendPreviewSwitchController
                     'canSwitchUser' => $canSwitchUser,
                     'user' => $frontendUsername,
                     'show' => $showUnpublished,
-                    'attributes' => $attributes,
+                    'attributes' => $this->backendAttributes,
                     'badgeTitle' => $this->backendBadgeTitle,
                 ]
             );
