@@ -1,26 +1,21 @@
 {% trans_default_domain 'contao_default' %}
 <div class="tl_undo_header">
-    <div class="tl_undo_header_item">
-        <span class="tl_undo_header_label">
-            <span class="date">{{ row.tstamp|date(dateFormat) }}</span>
-            <span class="time">{{ row.tstamp|date(timeFormat) }}</span>
-        </span>
+    <div>
+        <span class="date">{{ row.tstamp|date(dateFormat) }}</span>
+        <span class="time">{{ row.tstamp|date(timeFormat) }}</span>
     </div>
-    <div class="tl_undo_header_item">
-        <span class="tl_undo_header_label">{{ 'tl_undo.pid.0'|trans({}, 'contao_tl_undo') }}</span>
-        <strong>{% if user %}{{ user.username }}{% else %}{{ row.pid }}{% endif %}</strong>
+    <div>
+        {{ 'tl_undo.pid.0'|trans({}, 'contao_tl_undo') }}: <strong>{% if user %}{{ user.username }}{% else %}{{ row.pid }}{% endif %}</strong>
     </div>
-    <div class="tl_undo_header_item">
-        <span class="tl_undo_header_label">{{ 'tl_undo.fromTable.0'|trans({}, 'contao_tl_undo') }}</span>
-        <strong>{{ fromTable }}</strong>
+    <div>
+        {{ 'tl_undo.fromTable.0'|trans({}, 'contao_tl_undo') }}: <strong>{{ fromTable }}</strong>
     </div>
-    <div class="tl_undo_header_item">
-        <span class="tl_undo_header_label">ID</span> {{ originalRow.id }}
+    <div>
+        ID: <strong>{{ originalRow.id }}</strong>
     </div>
     {% if (parent) %}
-        <div class="tl_undo_header_item">
-            <span class="tl_undo_header_label">{{ 'MSC.parent'|trans }}</span>
-            <strong>{{ parent.table }}</strong>
+        <div>
+            {{ 'MSC.parent'|trans }}: <strong>{{ parent.table }}</strong>
         </div>
     {% endif %}
 </div>

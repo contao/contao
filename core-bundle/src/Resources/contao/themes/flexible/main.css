@@ -2139,68 +2139,27 @@ fieldset.collapsed > legend {
 	background-color: #f7f7f9 !important;
 }
 
-/* UNDO */
-.listing__tl_undo.list_view .tl_file_list {
-	border-top: 1px solid darkgray;
-}
-.listing__tl_undo.list_view .tl_folder_tlist,
-.listing__tl_undo.list_view .tl_folder_list {
-	background-color: #eaeaec;
-}
-.listing__tl_undo.list_view .tl_listing tr.odd td {
-	background-color: #f4f4f4;
-}
-.listing__tl_undo.list_view .tl_file_list {
-	border-bottom: 1px solid darkgray;
-}
-.listing__tl_undo.list_view tr:last-child .tl_file_list {
-	border-bottom: 0;
-}
-.listing__tl_undo.list_view .tl_file_list:first-child {
-	padding: 0!important;
-}
-.listing__tl_undo.list_view .tl_file_list:first-child > div:nth-child(2) {
-	padding: 16px 16px 16px 6px !important;
-}
-.listing__tl_undo.list_view .tl_file_list:nth-child(2) {
-	border-left: 1px solid #e9e9e9;
-	padding: 0 8px!important;
-	background-color: #f4f4f4;
-}
+/* Undo */
 .tl_undo_header {
-	display: flex;
-	padding: 7px 6px;
-	border-bottom: 1px solid #e9e9e9;
+	max-width:800px;
+	display:grid;
+	grid-template-columns:2fr 2fr 2fr 1fr 2fr;
+	grid-column-gap:32px;
+	font-size:.75rem;
 }
 .hover-row:hover .tl_undo_header {
-	background-color: #fffce1!important;
-	border-bottom-color: #fffce1;
-}
-.hover-row:hover .tl_file_list:nth-child(2) {
-	border-left-color: #fffce1;
-}
-.listing__tl_undo.list_view .odd .limit_toggler {
-	background-color: #fafafc;
-}
-.tl_undo_header .tl_undo_header_item:not(:first-child) {
-	margin-left: 32px;
-}
-.tl_undo_header_label {
-	font-size: .75rem;
-	color: gray;
-}
-.tl_undo_header_label .date {
-	color: #222;
-}
-.tl_undo_header_item:not(:first-child) .tl_undo_header_label {
-	margin-right: 6px;
+	background-color:#fffce1 !important;
 }
 .tl_undo_preview {
 	position:relative;
-	padding: 0 6px;
+	padding:18px 0 14px;
 }
-.tl_undo_preview table {
-	width:100%;
+.tl_undo_preview td {
+	padding-left:0 !important;
+	padding-right:32px !important;
+}
+.tl_listing .odd .tl_undo_preview .limit_toggler {
+	background-color:#fafafc;
 }
 
 /* Tablet */
@@ -2397,6 +2356,10 @@ fieldset.collapsed > legend {
 	}
 	.tl_file_list .ellipsis {
 		padding-right:10px;
+	}
+	.tl_undo_header {
+		grid-template-columns:1fr 1fr;
+		grid-row-gap:3px;
 	}
 }
 
