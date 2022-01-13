@@ -340,7 +340,6 @@ class FrontendMenuBuilderTest extends TestCase
 
         // Assert request page is marked current
         $item = $tree->getChild('Contact');
-        $this->assertTrue($item->getExtra('isActive'));
         $this->assertTrue($item->isCurrent());
         $this->assertTrue(\in_array('active', explode(' ', $item->getExtra('class')), true));
         $this->assertFalse(\in_array('sibling', explode(' ', $item->getExtra('class')), true));
@@ -728,6 +727,8 @@ class FrontendMenuBuilderTest extends TestCase
 
     private function mockPageModel(array $row): PageModel
     {
+        $row['isPublic'] = $row['published'] ?? false;
+
         $pageModel = $this->createMock(PageModel::class);
         $pageModel
             ->method('loadDetails')
