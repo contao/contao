@@ -1,13 +1,13 @@
 {% trans_default_domain 'contao_tl_undo' %}
 <div class="tl_undo_header">
-    <div>
+    <div class="date">
         <span class="date">{{ row.tstamp|date(dateFormat) }}</span>
         <span class="time">{{ row.tstamp|date(timeFormat) }}</span>
     </div>
     <div>
         {{ 'tl_undo.pid.0'|trans }}: <strong>{% if user %}{{ user.username }}{% else %}{{ row.pid }}{% endif %}</strong>
     </div>
-    <div>
+    <div class="source">
         {{ 'tl_undo.fromTable.0'|trans }}: <strong>{{ fromTable }}</strong>
     </div>
     <div>
