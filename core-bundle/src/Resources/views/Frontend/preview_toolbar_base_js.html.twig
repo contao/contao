@@ -198,7 +198,7 @@
 
         const toolbar = document.createElement('div');
         toolbar.classList.add('cto-toolbar');
-        shadow.appendChild(toolbar);
+        toolbarWrapper.shadowRoot.appendChild(toolbar);
 
         function request(method, uri, body, callback, addClass = true) {
             body = body || null;
