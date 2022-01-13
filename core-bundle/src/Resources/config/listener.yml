@@ -133,11 +133,6 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
-    contao.listener.data_container.undo.from_table_options:
-        class: Contao\CoreBundle\EventListener\DataContainer\Undo\FromTableOptionsListener
-        arguments:
-            - '@database_connection'
-
     contao.listener.data_container.undo.jump_to_parent_button:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
         arguments:
