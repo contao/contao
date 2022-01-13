@@ -92,7 +92,7 @@ class JumpToParentButtonListenerTest extends TestCase
         ;
 
         $translationsMap = [
-            ['tl_undo.parent_modal', [], 'contao_tl_undo', null, 'Show parent of Content element ID 42'],
+            ['tl_undo.parent_modal', [], 'contao_tl_undo', null, 'Show origin of Content element ID 42'],
         ];
 
         $this->translator
@@ -104,7 +104,7 @@ class JumpToParentButtonListenerTest extends TestCase
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
         $this->assertSame(
-            "<a href=\"\" title=\"Show parent of Content element ID 42\" onclick=\"Backend.openModalIframe({'title':'Show parent of Content element ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ",
+            "<a href=\"\" title=\"Show origin of Content element ID 42\" onclick=\"Backend.openModalIframe({'title':'Show origin of Content element ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ",
             $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
         );
     }
@@ -173,7 +173,7 @@ class JumpToParentButtonListenerTest extends TestCase
 
         $row = $this->setupForDataSetWithDynamicParent();
 
-        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show origin of %s ID %s';
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
 
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
@@ -217,7 +217,7 @@ class JumpToParentButtonListenerTest extends TestCase
 
         $row = $this->setupForDataSetWithDirectParent();
 
-        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show origin of %s ID %s';
 
         // No back-end module for `tl_form`
         unset($GLOBALS['BE_MOD']['content']['form']);
@@ -251,7 +251,7 @@ class JumpToParentButtonListenerTest extends TestCase
             'tables' => ['tl_news_archive', 'tl_news'],
         ];
 
-        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show origin of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
         $GLOBALS['TL_DCA']['tl_news']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
@@ -282,7 +282,7 @@ class JumpToParentButtonListenerTest extends TestCase
             'tables' => ['tl_form', 'tl_form_field'],
         ];
 
-        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show origin of %s ID %s';
         $GLOBALS['TL_DCA']['tl_form']['list']['sorting']['mode'] = DataContainer::MODE_SORTED;
         $GLOBALS['TL_DCA']['tl_form_field']['config']['ptable'] = 'tl_form';
 
@@ -307,7 +307,7 @@ class JumpToParentButtonListenerTest extends TestCase
 
     private function setupForDataSetWithoutParent(): array
     {
-        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show origin of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_form']['config'] = [];
 

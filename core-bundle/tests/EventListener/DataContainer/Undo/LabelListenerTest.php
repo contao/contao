@@ -98,7 +98,7 @@ class LabelListenerTest extends TestCase
             'tables' => ['tl_news_archive', 'tl_news'],
         ];
 
-        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show origin of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_news']['list'] = [
             'label' => [
