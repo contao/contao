@@ -36,8 +36,6 @@ class LabelListenerTest extends TestCase
 
     public function testRendersUndoLabel(): void
     {
-        $row = $this->setupDataSet();
-
         $connectionAdapter = $this->createMock(Connection::class);
 
         $userModelAdapter = $this->mockAdapter(['findById']);
@@ -87,11 +85,11 @@ class LabelListenerTest extends TestCase
         ;
 
         $dc = $this->createMock(DC_Table::class);
+        $row = $this->setupDataSet();
 
         $listener = new LabelListener($framework, $connectionAdapter, $translator, $twig);
-        $label = $listener($row, '', $dc);
 
-        $this->assertSame('<result>', $label);
+        $this->assertSame('<result>', $listener($row, '', $dc));
     }
 
     private function setupDataSet(): array

@@ -31,7 +31,7 @@ class FromTableOptionsListener
 
     public function __invoke(): array
     {
-        $tables = $this->connection->executeQuery("SELECT DISTINCT {$this->connection->quoteIdentifier('fromTable')} FROM tl_undo");
+        $tables = $this->connection->executeQuery('SELECT DISTINCT '.$this->connection->quoteIdentifier('fromTable').' FROM tl_undo');
 
         if (0 === $tables->rowCount()) {
             return [];

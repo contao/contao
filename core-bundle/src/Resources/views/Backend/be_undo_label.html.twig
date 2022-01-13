@@ -1,5 +1,4 @@
 {% trans_default_domain 'contao_default' %}
-
 <div class="tl_undo_header">
     <div class="tl_undo_header_item">
         <span class="tl_undo_header_label">
@@ -30,11 +29,11 @@
     {% if preview is not iterable %}
         {{ preview|raw }}
     {% else %}
-        <table style="width: 100%;">
+        <table>
             <tr>
-            {% for value in preview %}
-                <td>{{ value|raw }}</td>
-            {% endfor %}
+                {% for value in preview %}
+                    <td>{{ value|raw }}</td>
+                {% endfor %}
             </tr>
         </table>
     {% endif %}

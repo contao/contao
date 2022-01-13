@@ -66,6 +66,7 @@ class LabelListener
 
         $user = $this->framework->getAdapter(UserModel::class)->findById($row['pid']);
         $config = $this->framework->getAdapter(Config::class);
+
         $parent = null;
 
         if (true === ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)) {
@@ -93,9 +94,7 @@ class LabelListener
             $callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
 
             if (\is_array($callback)) {
-                $callable = System::importStatic($callback[0]);
-
-                return $callable->{$callback[1]}($row);
+                return System::importStatic($callback[0])->{$callback[1]}($row);
             }
 
             if (\is_callable($callback)) {

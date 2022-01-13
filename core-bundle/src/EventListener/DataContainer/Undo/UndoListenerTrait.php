@@ -41,7 +41,7 @@ trait UndoListenerTrait
     private function checkIfParentExists(array $parent): bool
     {
         $count = $this->connection->fetchOne(
-            "SELECT COUNT(*) FROM {$this->connection->quoteIdentifier($parent['table'])} WHERE id = :id",
+            'SELECT COUNT(*) FROM '.$this->connection->quoteIdentifier($parent['table']).' WHERE id = :id',
             [
                 'id' => $parent['id'],
             ]

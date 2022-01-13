@@ -64,7 +64,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 			),
 			'jumpToParent' => array
 			(
-				'icon'				  => 'parent.svg',
+				'icon'                => 'parent.svg',
 			),
 			'show' => array
 			(

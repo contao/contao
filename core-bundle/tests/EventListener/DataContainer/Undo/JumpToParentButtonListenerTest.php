@@ -71,8 +71,6 @@ class JumpToParentButtonListenerTest extends TestCase
 
     public function testRenderJumpToParentButton(): void
     {
-        $row = $this->setupForDataSetWithParent();
-
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -102,16 +100,17 @@ class JumpToParentButtonListenerTest extends TestCase
             ->willReturnMap($translationsMap)
         ;
 
+        $row = $this->setupForDataSetWithParent();
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
-        $buttonHtml = $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg');
 
-        $this->assertSame("<a href=\"\" title=\"Show parent of Content element ID 42\" onclick=\"Backend.openModalIframe({'title':'Show parent of Content element ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ", $buttonHtml);
+        $this->assertSame(
+            "<a href=\"\" title=\"Show parent of Content element ID 42\" onclick=\"Backend.openModalIframe({'title':'Show parent of Content element ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ",
+            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
+        );
     }
 
     public function testRendersDisabledJumpToParentButtonWhenParentHasBeenDeleted(): void
     {
-        $row = $this->setupForDataSetWithParent();
-
         $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
 
         $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
@@ -136,16 +135,14 @@ class JumpToParentButtonListenerTest extends TestCase
             ->willReturn('tl_news')
         ;
 
+        $row = $this->setupForDataSetWithParent();
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
-        $buttonHtml = $listener($row, '', '', '', 'parent.svg');
 
-        $this->assertSame('<img src="parent_.svg"> ', $buttonHtml);
+        $this->assertSame('<img src="parent_.svg"> ', $listener($row, '', '', '', 'parent.svg'));
     }
 
     public function testRendersDisabledJumpToParentButton(): void
     {
-        $row = $this->setupForDataSetWithoutParent();
-
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -153,10 +150,10 @@ class JumpToParentButtonListenerTest extends TestCase
             ->willReturn('<img src="parent_.svg">')
         ;
 
+        $row = $this->setupForDataSetWithoutParent();
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
-        $buttonHtml = $listener($row);
 
-        $this->assertSame('<img src="parent_.svg"> ', $buttonHtml);
+        $this->assertSame('<img src="parent_.svg"> ', $listener($row));
     }
 
     private function setupForDataSetWithParent(): array

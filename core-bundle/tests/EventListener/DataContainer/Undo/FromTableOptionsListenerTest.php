@@ -17,21 +17,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Result;
-use PHPUnit\Framework\MockObject\MockObject;
 
 class FromTableOptionsListenerTest extends TestCase
 {
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->connection = $this->createMock(Connection::class);
-    }
-
     public function testGetFromTableOptions(): void
     {
         $result = $this->createConfiguredMock(Result::class, [
@@ -45,24 +33,25 @@ class FromTableOptionsListenerTest extends TestCase
             ->willReturn('\'')
         ;
 
-        $this->connection
+        $connection = $this->createMock(Connection::class);
+        $connection
             ->method('getDatabasePlatform')
             ->willReturn($platform)
         ;
 
-        $this->connection
+        $connection
             ->method('quoteIdentifier')
             ->willReturnArgument(0)
         ;
 
-        $this->connection
+        $connection
             ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT DISTINCT fromTable FROM tl_undo')
             ->willReturn($result)
         ;
 
-        $listener = new FromTableOptionsListener($this->connection);
+        $listener = new FromTableOptionsListener($connection);
         $tables = $listener();
 
         $this->assertSame(['tl_form'], $tables);
