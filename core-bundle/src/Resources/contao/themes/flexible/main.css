@@ -2151,7 +2151,7 @@ fieldset.collapsed > legend {
 	padding:1px 0;
 	display:grid;
 	grid-template-columns:2fr 2fr 3fr 1fr 2fr;
-	grid-column-gap:32px;
+	grid-column-gap:24px;
 	font-size:.75rem;
 }
 .hover-row:hover .tl_undo_header {
@@ -2159,7 +2159,7 @@ fieldset.collapsed > legend {
 }
 .tl_undo_preview {
 	position:relative;
-	padding:18px 0 14px;
+	padding:22px 0 18px;
 }
 .tl_undo_preview td {
 	padding-left:0 !important;
@@ -2365,7 +2365,7 @@ fieldset.collapsed > legend {
 		padding-right:10px;
 	}
 	.tl_undo_header {
-		grid-template-columns:1fr 1fr;
+		grid-template-columns:2fr 1fr;
 		grid-row-gap:3px;
 	}
 }
