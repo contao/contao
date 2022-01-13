@@ -79,14 +79,7 @@ class FrontendMenuBuilder
         $pages = $this->getPages($pid, $options);
 
         $request = $this->requestStack->getCurrentRequest();
-        /** @var PageModel|int|null $currentPage */
-        $currentPage = $request->attributes->get('pageModel');
-
-        // Support ESI requests
-        if (null !== $currentPage && !$currentPage instanceof PageModel) {
-            /** @var PageModel|null $currentPage */
-            $currentPage = $this->pageModelAdapter->findByPk($currentPage);
-        }
+        $currentPage = $this->getPageFromRequest($request);
 
         $isMember = $this->security->isGranted('ROLE_MEMBER');
 
@@ -262,16 +255,8 @@ class FrontendMenuBuilder
 
     private function populateMenuItem(ItemInterface $item, Request $request, PageModel $page, ?string $href, bool $hasSubmenu, array $options = []): void
     {
-        /** @var PageModel|int|null $currentPage */
-        $currentPage = $request->attributes->get('pageModel');
-
-        // Support ESI requests
-        if (null !== $currentPage && !$currentPage instanceof PageModel) {
-            /** @var PageModel|null $currentPage */
-            $currentPage = $this->pageModelAdapter->findByPk($currentPage);
-        }
-
         $extra = $page->row();
+        $currentPage = $this->getPageFromRequest($request);
         $isTrail = $currentPage && \in_array($page->id, $currentPage->trail, false);
 
         $item->setUri($href);
@@ -329,6 +314,29 @@ class FrontendMenuBuilder
         }
 
         $item->setExtra('pageModel', $page);
+    }
+
+    private function getPageFromRequest(Request $request): ?PageModel
+    {
+        if (!$request->attributes->has('pageModel')) {
+            return null;
+        }
+
+        $pageModel = $request->attributes->get('pageModel');
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
+        }
+
+        if (
+            isset($GLOBALS['objPage'])
+            && $GLOBALS['objPage'] instanceof PageModel
+            && (int) $GLOBALS['objPage']->id === (int) $pageModel
+        ) {
+            return $GLOBALS['objPage'];
+        }
+
+        return $this->pageModelAdapter->findByPk((int) $pageModel);
     }
 
     private function getCssClass(PageModel $page, ?PageModel $currentPage, bool $isActive, bool $isTrail, bool $hasSubmenu): string
