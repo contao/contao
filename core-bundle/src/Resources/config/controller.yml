@@ -98,7 +98,9 @@ services:
         arguments:
             - '@contao.framework'
 
-    Contao\CoreBundle\Controller\Page\RootPageController: ~
+    Contao\CoreBundle\Controller\Page\RootPageController:
+        tags:
+            - { name: monolog.logger, channel: contao.error }
 
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
