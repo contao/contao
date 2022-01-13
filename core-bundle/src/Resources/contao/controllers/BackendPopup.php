@@ -11,6 +11,11 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
+use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
+use Contao\Image\PictureConfiguration;
+use Contao\Image\PictureConfigurationItem;
+use Contao\Image\ResizeConfiguration;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -131,6 +136,47 @@ class BackendPopup extends Backend
 				$objTemplate->src = $this->urlEncode($this->strFile);
 				$objTemplate->dataUri = $objFile->dataUri;
 			}
+			else
+			{
+				$objTemplate->hasPreview = true;
+
+				try
+				{
+					$pictureSize = (new PictureConfiguration())
+						->setSize(
+							(new PictureConfigurationItem())
+								->setResizeConfig((new ResizeConfiguration())->setWidth(864 / 4))
+								->setDensities('1x, 2x')
+						)
+					;
+
+					$previewPictures = array();
+					$container = System::getContainer();
+					$pictures = $container->get('contao.image.preview_factory')->createPreviewPictures($projectDir . '/' . $this->strFile, $pictureSize);
+
+					if (($previewCount = \count(is_countable($pictures) ? $pictures : iterator_to_array($pictures))) < 4)
+					{
+						$pictureSize->getSize()->getResizeConfig()->setWidth((int) floor(864 / ($previewCount ?: 1)));
+						$pictures = $container->get('contao.image.preview_factory')->createPreviewPictures($projectDir . '/' . $this->strFile, $pictureSize);
+					}
+
+					$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
+
+					foreach ($pictures as $picture)
+					{
+						$previewPictures[] = array(
+							'img' => $picture->getImg($projectDir, $staticUrl),
+							'sources' => $picture->getSources($projectDir, $staticUrl),
+						);
+					}
+
+					$objTemplate->previewPictures = $previewPictures;
+				}
+				catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
+				{
+					$objTemplate->hasPreview = false;
+				}
+			}
 
 			// Metadata
 			if (($objModel = FilesModel::findByPath($this->strFile)) instanceof FilesModel)
@@ -139,10 +185,8 @@ class BackendPopup extends Backend
 
 				if (\is_array($arrMeta))
 				{
-					System::loadLanguageFile('languages');
-
 					$objTemplate->meta = $arrMeta;
-					$objTemplate->languages = (object) $GLOBALS['TL_LANG']['LNG'];
+					$objTemplate->languages = System::getContainer()->get('contao.intl.locales')->getLocales();
 				}
 			}
 
