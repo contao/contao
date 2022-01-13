@@ -17,9 +17,7 @@ class RootPageDependentSelect extends SelectMenu
 		$fields = array();
 		$originalLabel = $this->strLabel;
 		$cssClasses = 'tl_select tl_chosen';
-
 		$rootPages = PageModel::findByPid(0, array('order' => 'sorting'));
-
 		$wizard = StringUtil::deserialize($this->wizard);
 
 		$this->blankOptionLabel = $GLOBALS['TL_LANG']['tl_module'][sprintf('%sBlankOptionLabel', $this->name)];
