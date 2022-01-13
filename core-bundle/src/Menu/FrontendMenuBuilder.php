@@ -239,7 +239,7 @@ class FrontendMenuBuilder
                 !$jumpTo instanceof PageModel
                 || (!$jumpTo->loadDetails()->isPublic && !$this->tokenChecker->isPreviewMode())
             ) {
-                $menuItem->setDisplay(false);
+                return null;
             }
 
             try {
