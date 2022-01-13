@@ -185,6 +185,12 @@ abstract class DataContainer extends Backend
 	protected $visibleRootTrails = array();
 
 	/**
+	 * If pasting at root level is allowed (permissions)
+	 * @var bool
+	 */
+	protected $rootPaste = false;
+
+	/**
 	 * WHERE clause of the database query
 	 * @var array
 	 */
