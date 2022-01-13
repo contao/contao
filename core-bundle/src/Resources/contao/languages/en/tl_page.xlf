@@ -8,17 +8,23 @@
       <trans-unit id="tl_page.title.1">
         <source>Please enter the page name.</source>
       </trans-unit>
+      <trans-unit id="tl_page.type.0">
+        <source>Page type</source>
+      </trans-unit>
+      <trans-unit id="tl_page.type.1">
+        <source>Please choose the page type.</source>
+      </trans-unit>
       <trans-unit id="tl_page.alias.0">
         <source>Page alias</source>
       </trans-unit>
       <trans-unit id="tl_page.alias.1">
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
       </trans-unit>
-      <trans-unit id="tl_page.type.0">
-        <source>Page type</source>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
       </trans-unit>
-      <trans-unit id="tl_page.type.1">
-        <source>Please choose the page type.</source>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
       </trans-unit>
       <trans-unit id="tl_page.routePath.0">
         <source>Route path</source>
@@ -284,12 +290,6 @@
       <trans-unit id="tl_page.noSearch.1">
         <source>Exclude the page from the search index.</source>
       </trans-unit>
-      <trans-unit id="tl_page.requireItem.0">
-        <source>Require an item</source>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.1">
-        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
-      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
       </trans-unit>
@@ -473,10 +473,10 @@
       <trans-unit id="tl_page.legacyRouting">
         <source>Disable legacy routing mode to enable this configuration.</source>
       </trans-unit>
-      <trans-unit id="tl_page.routeConflicts">
+      <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
       </trans-unit>
-      <trans-unit id="tl_page.conflictingAlias">
+      <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
