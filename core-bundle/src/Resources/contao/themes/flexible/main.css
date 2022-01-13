@@ -2148,18 +2148,16 @@ fieldset.collapsed > legend {
 /* Undo */
 .tl_undo_header {
 	max-width:880px;
-	padding:1px 0;
 	display:grid;
-	grid-template-columns:2fr 2fr 3fr 1fr 2fr;
+	grid-template-columns:2fr 2fr 3fr 3fr;
 	grid-column-gap:24px;
-	font-size:.75rem;
 }
 .hover-row:hover .tl_undo_header {
 	background-color:#fffce1 !important;
 }
 .tl_undo_preview {
 	position:relative;
-	padding:22px 0 18px;
+	padding:22px 0 10px;
 }
 .tl_undo_preview td {
 	padding-left:0 !important;
@@ -2365,9 +2363,9 @@ fieldset.collapsed > legend {
 		padding-right:10px;
 	}
 	.tl_undo_header {
-		grid-template-columns:1fr 2fr;
+		grid-template-columns:2fr 3fr;
 	}
-	.tl_undo_header div:not(.date):not(.source) {
+	.tl_undo_header div:not(.tstamp):not(.source) {
 		display:none;
 	}
 }
