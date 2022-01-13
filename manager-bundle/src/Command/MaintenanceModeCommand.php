@@ -55,6 +55,7 @@ class MaintenanceModeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $state = $input->getArgument('state');
+
         if (\in_array($state, ['enable', 'on'], true)) {
             $this->enable($input->getOption('template'), $input->getOption('templateVars'));
             $this->outputResult($input, $output, true, true);
