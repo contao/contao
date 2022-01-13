@@ -447,10 +447,10 @@ abstract class Module extends Frontend
 
 		$item['subitems'] = $subitems;
 		$item['isActive'] = $menuItem->isCurrent();
+		$item['link'] = $item['title'];
 		$item['title'] = StringUtil::specialchars($menuItem->getLinkAttribute('title'), true);
 		$item['pageTitle'] = StringUtil::specialchars($item['pageTitle'], true);
 		$item['description'] = str_replace(array("\n", "\r"), array(' ', ''), $item['description']);
-		$item['link'] = $item['title'];
 		$item['href'] = $menuItem->getUri();
 		$item['nofollow'] = (strncmp($menuItem->getLinkAttribute('rel', ''), 'noindex,nofollow', 16) === 0); // backwards compatibility
 		$item['target'] = ($v = $menuItem->getLinkAttribute('target')) ? " target=\"$v\"" : '';
