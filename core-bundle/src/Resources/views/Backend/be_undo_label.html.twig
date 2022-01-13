@@ -1,21 +1,21 @@
-{% trans_default_domain 'contao_default' %}
+{% trans_default_domain 'contao_tl_undo' %}
 <div class="tl_undo_header">
     <div>
         <span class="date">{{ row.tstamp|date(dateFormat) }}</span>
         <span class="time">{{ row.tstamp|date(timeFormat) }}</span>
     </div>
     <div>
-        {{ 'tl_undo.pid.0'|trans({}, 'contao_tl_undo') }}: <strong>{% if user %}{{ user.username }}{% else %}{{ row.pid }}{% endif %}</strong>
+        {{ 'tl_undo.pid.0'|trans }}: <strong>{% if user %}{{ user.username }}{% else %}{{ row.pid }}{% endif %}</strong>
     </div>
     <div>
-        {{ 'tl_undo.fromTable.0'|trans({}, 'contao_tl_undo') }}: <strong>{{ fromTable }}</strong>
+        {{ 'tl_undo.fromTable.0'|trans }}: <strong>{{ fromTable }}</strong>
     </div>
     <div>
         ID: <strong>{{ originalRow.id }}</strong>
     </div>
     {% if (parent) %}
         <div>
-            {{ 'MSC.parent'|trans }}: <strong>{{ parent.table }}</strong>
+            {{ 'MSC.parent'|trans({}, 'contao_default') }}: <strong>{{ parent.table }}</strong>
         </div>
     {% endif %}
 </div>

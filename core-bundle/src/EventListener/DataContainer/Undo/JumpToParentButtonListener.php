@@ -68,8 +68,6 @@ class JumpToParentButtonListener
 
     private function getParentLinkParameters(array $parent, string $table): string
     {
-        $params = [];
-
         if (empty($parent)) {
             return '';
         }
@@ -83,7 +81,7 @@ class JumpToParentButtonListener
             return '';
         }
 
-        $params['do'] = $module['_module_name'];
+        $params = ['do' => $module['_module_name']];
 
         if (DataContainer::MODE_TREE === $GLOBALS['TL_DCA'][$parent['table']]['list']['sorting']['mode']) {
             // Limit tree to right parent node
