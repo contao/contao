@@ -1320,11 +1320,11 @@ var Backend =
 		});
 
 		// Links and input elements
-		['a[title]', 'input[title]', 'button[title]', 'time[title]'].each(function(el) {
+		['a[title]', 'input[title]', 'button[title]', 'time[title]', 'span[title]'].each(function(el) {
 			new Tips.Contao($$(el).filter(function(i) {
 				return i.title != ''
 			}), {
-				offset: {x:0, y:((el == 'time[title]') ? 26 : 30)}
+				offset: {x:0, y:((el == 'time[title]' || el == 'span[title]') ? 26 : 30)}
 			});
 		});
 	},
