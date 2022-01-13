@@ -883,7 +883,8 @@ table.tl_listing {
 	word-break:break-all;
 }
 .tl_right_nowrap {
-	padding:3px 0;
+	padding:6px 0;
+	vertical-align:top;
 	text-align:right;
 	white-space:nowrap;
 }
@@ -2146,9 +2147,10 @@ fieldset.collapsed > legend {
 
 /* Undo */
 .tl_undo_header {
-	max-width:800px;
+	max-width:880px;
+	padding:1px 0;
 	display:grid;
-	grid-template-columns:2fr 2fr 2fr 1fr 2fr;
+	grid-template-columns:2fr 2fr 3fr 1fr 2fr;
 	grid-column-gap:32px;
 	font-size:.75rem;
 }
