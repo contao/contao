@@ -22,7 +22,6 @@ use Contao\DataContainer;
 use Contao\Image;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JumpToParentButtonListenerTest extends TestCase
@@ -47,13 +46,6 @@ class JumpToParentButtonListenerTest extends TestCase
      */
     private Connection $connection;
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_DCA'], $GLOBALS['BE_MOD']);
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -68,6 +60,13 @@ class JumpToParentButtonListenerTest extends TestCase
         ]);
 
         $this->connection = $this->createMock(Connection::class);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_DCA'], $GLOBALS['BE_MOD']);
     }
 
     public function testRenderJumpToParentButtonForDynamicParentTable(): void
@@ -179,7 +178,9 @@ class JumpToParentButtonListenerTest extends TestCase
 
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
-        $this->assertSame('<img src="parent_.svg"> ', $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
+        $this->assertSame(
+            '<img src="parent_.svg"> ',
+            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
         );
     }
 
