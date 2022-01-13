@@ -53,8 +53,8 @@
       <trans-unit id="tl_preview_link.url_legend">
         <source>Target URL</source>
       </trans-unit>
-      <trans-unit id="tl_preview_link.expire_legend">
-        <source>Expiration</source>
+      <trans-unit id="tl_preview_link.config_legend">
+        <source>Configuration</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.publishing_legend">
         <source>Publish settings</source>

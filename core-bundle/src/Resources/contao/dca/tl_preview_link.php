@@ -40,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('url', 'showUnpublished', 'expiresAt'),
+			'fields'                  => array('url', 'createdAt', 'expiresAt'),
 			'showColumns'             => true,
 		),
 		'global_operations' => array
@@ -85,7 +85,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{url_legend},url,showUnpublished;{expire_legend},createdAt,createdBy,expiresInDays,expiresAt;{publishing_legend},published',
+		'default'                     => '{url_legend},url;{config_legend},expiresInDays,showUnpublished,createdAt,expiresAt;{publishing_legend},published',
 	),
 
 	// Fields
@@ -99,37 +99,12 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
-		'createdAt' => array
-		(
-			'default'                 => time(),
-			'flag'                    => DataContainer::SORT_DAY_DESC,
-			'sorting'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'disabled'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0"
-		),
-		'createdBy' => array
-		(
-			'sorting'                 => true,
-			'inputType'               => 'select',
-			'foreignKey'              => 'tl_user.name',
-			'eval'                    => array('disabled'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "int(10) unsigned NOT NULL default 0",
-			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
-		),
 		'url' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'disabled'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048),
+			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048),
 			'sql'                     => "varchar(2048) NOT NULL default ''",
-		),
-		'showUnpublished' => array
-		(
-			'filter'                  => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'clr'),
-			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'expiresInDays' => array
 		(
@@ -140,12 +115,28 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 1"
 		),
+		'showUnpublished' => array
+		(
+			'filter'                  => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50 m12'),
+			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'createdAt' => array
+		(
+			'default'                 => time(),
+			'flag'                    => DataContainer::SORT_DAY_DESC,
+			'sorting'                 => true,
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'datim', 'readonly'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
 		'expiresAt' => array
 		(
 			'flag'                    => DataContainer::SORT_DAY_DESC,
 			'sorting'                 => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'datim', 'disabled'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'datim', 'readonly'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'published' => array
@@ -155,6 +146,11 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"
+		),
+		'createdBy' => array
+		(
+			'foreignKey'              => 'tl_user.name',
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
 		)
 	)
 );
