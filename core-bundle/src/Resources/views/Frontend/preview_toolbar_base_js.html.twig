@@ -191,8 +191,7 @@
         const toolbarWrapper = document.createElement('cto-toolbar');
         document.querySelector('body').prepend(toolbarWrapper);
 
-        const shadow = toolbarWrapper.attachShadow({mode: 'open'});
-        toolbarWrapper.appendChild(shadow);
+        toolbarWrapper.attachShadow({mode: 'open'});
 
         const css = document.querySelector('style[cto-toolbar]');
         shadow.innerHTML = css.outerHTML;
