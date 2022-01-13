@@ -39,7 +39,8 @@ class RootPageDependentModulesController extends AbstractFragmentController
         $response = new Response($content);
 
         $this->tagResponse($model);
-        $this->markResponseForInternalCaching($response);
+        // Do not call $this->markResponseForInternalCaching($response); as this would turn all responses into
+        // private, no-store as our response never has caching information.
 
         return $response;
     }
