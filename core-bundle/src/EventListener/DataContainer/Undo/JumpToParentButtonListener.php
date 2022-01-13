@@ -105,6 +105,7 @@ class JumpToParentButtonListener
                 if (\is_array($config['tables'] ?? null) && \in_array($table, $config['tables'], true)) {
                     $module = $config;
                     $module['_module_name'] = $name;
+                    break 2;
                 }
             }
         }
