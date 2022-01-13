@@ -22,6 +22,7 @@ use Contao\DataContainer;
 use Contao\Image;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\VarDumper\VarDumper;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class JumpToParentButtonListenerTest extends TestCase
@@ -46,11 +47,11 @@ class JumpToParentButtonListenerTest extends TestCase
      */
     private Connection $connection;
 
-    public static function tearDownAfterClass(): void
+    public function tearDown(): void
     {
-        parent::tearDownAfterClass();
+        parent::tearDown();
 
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_DCA']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_DCA'], $GLOBALS['BE_MOD']);
     }
 
     protected function setUp(): void
@@ -69,7 +70,7 @@ class JumpToParentButtonListenerTest extends TestCase
         $this->connection = $this->createMock(Connection::class);
     }
 
-    public function testRenderJumpToParentButton(): void
+    public function testRenderJumpToParentButtonForDynamicParentTable(): void
     {
         $this->imageAdapter
             ->expects($this->once())
@@ -100,7 +101,7 @@ class JumpToParentButtonListenerTest extends TestCase
             ->willReturnMap($translationsMap)
         ;
 
-        $row = $this->setupForDataSetWithParent();
+        $row = $this->setupForDataSetWithDynamicParent();
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
         $this->assertSame(
@@ -109,12 +110,48 @@ class JumpToParentButtonListenerTest extends TestCase
         );
     }
 
+    public function testRenderJumpToParentButtonForDirectParent(): void
+    {
+        $this->imageAdapter
+            ->expects($this->once())
+            ->method('getHtml')
+            ->with('parent.svg')
+            ->willReturn('<img src="parent.svg">')
+        ;
+
+        $this->connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT COUNT(*) FROM tl_form WHERE id = :id', ['id' => 1])
+            ->willReturn('1')
+        ;
+
+        $this->connection
+            ->method('quoteIdentifier')
+            ->with('tl_form')
+            ->willReturn('tl_form')
+        ;
+
+        $translationsMap = [
+            ['tl_undo.parent_modal', [], 'contao_tl_undo', null, 'Go to parent of tl_form_field ID 42'],
+        ];
+
+        $this->translator
+            ->method('trans')
+            ->willReturnMap($translationsMap)
+        ;
+
+        $row = $this->setupForDataSetWithDirectParent();
+        $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
+
+        $this->assertSame(
+            "<a href=\"\" title=\"Go to parent of tl_form_field ID 42\" onclick=\"Backend.openModalIframe({'title':'Go to parent of tl_form_field ID 42','url': this.href });return false\"><img src=\"parent.svg\"></a> ",
+            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
+        );
+    }
+
     public function testRendersDisabledJumpToParentButtonWhenParentHasBeenDeleted(): void
     {
-        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
-
-        $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
-
         $this->imageAdapter
             ->expects($this->once())
             ->method('getHtml')
@@ -135,7 +172,55 @@ class JumpToParentButtonListenerTest extends TestCase
             ->willReturn('tl_news')
         ;
 
-        $row = $this->setupForDataSetWithParent();
+        $row = $this->setupForDataSetWithDynamicParent();
+
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
+        $GLOBALS['TL_DCA']['tl_content']['config']['dynamicPtable'] = true;
+
+        $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
+
+        $this->assertSame('<img src="parent_.svg"> ', $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
+        );
+    }
+
+    public function testRendersDisabledJumpToParentButtonIfNoBackEndModuleWasFound(): void
+    {
+        $this->imageAdapter
+            ->expects($this->once())
+            ->method('getHtml')
+            ->with('parent_.svg')
+            ->willReturn('<img src="parent_.svg">')
+        ;
+
+        $this->connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT COUNT(*) FROM tl_form WHERE id = :id', ['id' => 1])
+            ->willReturn('1')
+        ;
+
+        $this->connection
+            ->method('quoteIdentifier')
+            ->with('tl_form')
+            ->willReturn('tl_form')
+        ;
+
+        $translationsMap = [
+            ['tl_undo.parent_modal', [], 'contao_tl_undo', null, 'Go to parent of tl_form_field ID 42'],
+        ];
+
+        $this->translator
+            ->method('trans')
+            ->willReturnMap($translationsMap)
+        ;
+
+        $row = $this->setupForDataSetWithDirectParent();
+
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
+
+        // No back-end module for `tl_form`
+        unset($GLOBALS['BE_MOD']['content']['form']);
+
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
         $this->assertSame('<img src="parent_.svg"> ', $listener($row, '', '', '', 'parent.svg'));
@@ -153,10 +238,13 @@ class JumpToParentButtonListenerTest extends TestCase
         $row = $this->setupForDataSetWithoutParent();
         $listener = new JumpToParentButtonListener($this->framework, $this->connection, $this->translator);
 
-        $this->assertSame('<img src="parent_.svg"> ', $listener($row));
+        $this->assertSame(
+            '<img src="parent_.svg"> ',
+            $listener($row, '', 'jumpToParent', 'jumpToParent', 'parent.svg')
+        );
     }
 
-    private function setupForDataSetWithParent(): array
+    private function setupForDataSetWithDynamicParent(): array
     {
         $GLOBALS['BE_MOD']['content']['news'] = [
             'tables' => ['tl_news_archive', 'tl_news'],
@@ -181,6 +269,35 @@ class JumpToParentButtonListenerTest extends TestCase
                 'tl_news' => [
                     [
                         'id' => 24,
+                    ],
+                ],
+            ]),
+        ];
+    }
+
+    private function setupForDataSetWithDirectParent(): array
+    {
+        $GLOBALS['BE_MOD']['content']['form'] = [
+            'tables' => ['tl_form', 'tl_form_field'],
+        ];
+
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show parent of %s ID %s';
+        $GLOBALS['TL_DCA']['tl_form']['list']['sorting']['mode'] = DataContainer::MODE_SORTED;
+        $GLOBALS['TL_DCA']['tl_form_field']['config']['ptable'] = 'tl_form';
+
+        return [
+            'id' => 1,
+            'fromTable' => 'tl_form_field',
+            'data' => serialize([
+                'tl_form_field' => [
+                    [
+                        'id' => 42,
+                        'pid' => 1,
+                    ],
+                ],
+                'tl_form' => [
+                    [
+                        'id' => 1,
                     ],
                 ],
             ]),

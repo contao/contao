@@ -49,6 +49,12 @@ class JumpToParentButtonListener
             return $image->getHtml('parent_.svg', $label).' ';
         }
 
+        $parentLinkParameters = $this->getParentLinkParameters($parent, $table);
+
+        if (!$parentLinkParameters) {
+            return $image->getHtml('parent_.svg', $label).' ';
+        }
+
         $newTitle = sprintf(
             $this->translator->trans('tl_undo.parent_modal', [], 'contao_tl_undo'),
             $table,
@@ -59,7 +65,7 @@ class JumpToParentButtonListener
 
         return sprintf(
             '<a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\': this.href });return false">%s</a> ',
-            $backend->addToUrl($this->getParentLinkParameters($parent, $table)),
+            $backend->addToUrl($parentLinkParameters),
             StringUtil::specialchars($newTitle),
             StringUtil::specialchars($newTitle),
             $image->getHtml($icon, $label)
