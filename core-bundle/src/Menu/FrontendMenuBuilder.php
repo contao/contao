@@ -214,7 +214,7 @@ class FrontendMenuBuilder
         }
 
         if ('root' === $pageModel->type) {
-            // Overwrite the alias to link to the empty URL or language URL (see #1641)
+            // Overwrite the alias to link to a URL without path (see https://github.com/contao/core-bundle/issues/1641)
             $pageModel->alias = 'index';
 
             return $pageModel->getFrontendUrl();
