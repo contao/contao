@@ -40,7 +40,6 @@ class PageRoutingListenerTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
-
         $pageRoute = $this->mockPageRoute($path, $requirements);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
