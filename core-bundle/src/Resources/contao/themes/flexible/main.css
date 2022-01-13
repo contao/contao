@@ -2185,9 +2185,6 @@ fieldset.collapsed > legend {
 .tl_undo_header .tl_undo_header_item:not(:first-child) {
 	margin-left: 32px;
 }
-.tl_undo_header_item.align-right {
-	align-self: right;
-}
 .tl_undo_header_label {
 	font-size: .75rem;
 	color: gray;
