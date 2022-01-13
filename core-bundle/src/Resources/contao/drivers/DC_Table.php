@@ -3222,7 +3222,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (((string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue !== $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 		{
 			$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
-			$strType = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null;
+			$arrTypes = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
 
 			// If the field is a fallback field, empty all other columns (see #6498)
 			if ($varValue && ($arrData['eval']['fallback'] ?? null))
@@ -3230,12 +3230,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
 					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
-								   ->query('', array($varEmpty, $this->activeRecord->pid), array_filter(array($strType)));
+								   ->query('', array($varEmpty, $this->activeRecord->pid), $arrTypes);
 				}
 				else
 				{
 					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
-								   ->query('', array($varEmpty), array_filter(array($strType)));
+								   ->query('', array($varEmpty), $arrTypes);
 				}
 			}
 
@@ -3249,7 +3249,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			array_unshift($arrValues, $varValue);
 
 			$objUpdateStmt = $this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE " . implode(' AND ', $this->procedure))
-											->query('', $arrValues, array_filter(array($strType)));
+											->query('', $arrValues, $arrTypes);
 
 			if ($objUpdateStmt->affectedRows)
 			{
