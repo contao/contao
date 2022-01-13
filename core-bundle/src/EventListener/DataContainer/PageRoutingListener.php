@@ -15,9 +15,11 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\Backend;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Twig\Environment;
 
 class PageRoutingListener
@@ -34,11 +36,9 @@ class PageRoutingListener
     }
 
     /**
-     * @Callback(table="tl_page", target="fields.routePath.load")
-     *
-     * @param mixed $value
+     * @Callback(table="tl_page", target="fields.routePath.input_field")
      */
-    public function loadRoutePath($value, DataContainer $dc): string
+    public function generateRoutePath(DataContainer $dc): string
     {
         $pageModel = $this->framework->getAdapter(PageModel::class)->findByPk($dc->id);
 
@@ -46,7 +46,12 @@ class PageRoutingListener
             return '';
         }
 
-        return $this->pageRegistry->getRoute($pageModel)->getPath();
+        return $this->twig->render(
+            '@ContaoCore/Backend/be_route_path.html.twig',
+            [
+                'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel)),
+            ]
+        );
     }
 
     /**
@@ -86,7 +91,7 @@ class PageRoutingListener
 
             $conflicts[] = [
                 'page' => $aliasPage,
-                'route' => $this->pageRegistry->getRoute($aliasPage),
+                'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($aliasPage)),
                 'editUrl' => $backendAdapter->addToUrl(sprintf('act=edit&id=%s&popup=1&nb=1', $aliasPage->id)),
             ];
         }
@@ -117,5 +122,16 @@ class PageRoutingListener
         }
 
         return $url;
+    }
+
+    private function getPathWithParameters(PageRoute $route): string
+    {
+        $path = $route->getPath();
+
+        foreach ($route->getRequirements() as $name => $regexp) {
+            $path = preg_replace('/{[!]?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'">$1</span>}', $path);
+        }
+
+        return $path;
     }
 }

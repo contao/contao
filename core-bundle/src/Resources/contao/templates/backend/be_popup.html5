@@ -78,7 +78,7 @@
             <td><span class="tl_label"><?= $this->labels->fileMeta ?>:</span></td>
             <td>
               <?php foreach ($this->meta as $lang => $data): ?>
-                <p><?= $this->languages->$lang ?></p>
+                <p><?= $this->languages[$lang] ?></p>
                 <?php foreach ($data as $field => $value): ?>
                   <?php if ($value): ?>
                     <?= $value ?> (<?= $this->labels->{'aw_'.$field} ?>)<br>
@@ -99,6 +99,15 @@
           <div class="checkerbox"<?php if ($this->width && $this->height): ?> style="width:<?= $this->width ?>px;height:<?= $this->height ?>px"<?php endif; ?>>
             <img src="<?= $this->dataUri ?>" alt="" style="image-orientation:from-image"<?php if ($this->width && $this->height): ?> width="<?= $this->width ?>" height="<?= $this->height ?>"<?php endif; ?>>
           </div>
+        </div>
+      <?php endif; ?>
+      <?php if ($this->hasPreview): ?>
+        <div id="preview">
+          <?php foreach ($this->previewPictures as $picture): ?>
+            <div class="checkerbox"<?php if (!empty($picture['img']['width']) && !empty($picture['img']['height'])): ?> style="width:<?= $picture['img']['width'] ?>px;height:<?= $picture['img']['height'] ?>px"<?php endif; ?>>
+              <?php $this->insert('picture_default', $picture) ?>
+            </div>
+          <?php endforeach ?>
         </div>
       <?php endif; ?>
     </main>

@@ -95,6 +95,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.image.valid_extensions', $config['image']['valid_extensions']);
         $container->setParameter('contao.image.imagine_options', $config['image']['imagine_options']);
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
+        $container->setParameter('contao.image.preview.target_dir', $config['image']['preview']['target_dir']);
+        $container->setParameter('contao.image.preview.default_size', $config['image']['preview']['default_size']);
+        $container->setParameter('contao.image.preview.max_size', $config['image']['preview']['max_size']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
         $container->setParameter('contao.localconfig', $config['localconfig'] ?? []);
         $container->setParameter('contao.backend.attributes', $config['backend']['attributes']);
@@ -115,6 +118,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleTokenCheckerConfig($config, $container);
         $this->handleLegacyRouting($config, $configs, $container, $loader);
         $this->handleBackup($config, $container);
+        $this->handleFallbackPreviewProvider($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -259,7 +263,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $imageSizes['_'.$name] = $this->camelizeKeys($value);
         }
 
-        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory'];
+        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory', 'contao.image.preview_factory'];
 
         foreach ($services as $service) {
             if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {
@@ -376,6 +380,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
         $dbDumper->setArgument(2, $config['backup']['directory']);
         $dbDumper->setArgument(3, $config['backup']['ignore_tables']);
+    }
+
+    private function handleFallbackPreviewProvider(array $config, ContainerBuilder $container): void
+    {
+        if (
+            $config['image']['preview']['enable_fallback_images']
+            || !$container->hasDefinition('contao.image.fallback_preview_provider')
+        ) {
+            return;
+        }
+
+        $container->removeDefinition('contao.image.fallback_preview_provider');
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void

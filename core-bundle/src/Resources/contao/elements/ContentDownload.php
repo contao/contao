@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
+use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
 
 /**
  * Front end content element "download".
@@ -140,6 +142,67 @@ class ContentDownload extends ContentElement
 		$this->Template->meta = $arrMeta;
 		$this->Template->extension = $objFile->extension;
 		$this->Template->path = $objFile->dirname;
+		$this->Template->previews = $this->getPreviews($objFile->path, $strHref);
+	}
+
+	protected function getPreviews(string $path, string $downloadUrl): array
+	{
+		if (!$this->showPreview)
+		{
+			return array();
+		}
+
+		$container = System::getContainer();
+		$factory = $container->get('contao.image.preview_factory');
+		$sourcePath = $container->getParameter('kernel.project_dir') . '/' . $path;
+		$builder = $container->get('contao.image.studio')->createFigureBuilder()->setSize($this->size);
+		$numberOfItems = (int) $this->numberOfItems;
+		$lightboxSize = null;
+
+		if ($this->fullsize)
+		{
+			if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findByPk($layoutId)))
+			{
+				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
+			}
+
+			$builder->enableLightbox(true)->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxSize($lightboxSize);
+		}
+		else
+		{
+			$builder->setLinkHref($downloadUrl);
+		}
+
+		try
+		{
+			$lightboxPreviews = array();
+			$previews = $factory->createPreviews($sourcePath, $factory->getPreviewSizeFromImageSize($this->size), $numberOfItems ?: PHP_INT_MAX);
+			$previews = \is_array($previews) ? array_values($previews) : iterator_to_array($previews, false);
+
+			if ($this->fullsize)
+			{
+				$lightboxPreviews = $factory->createPreviews($sourcePath, $factory->getPreviewSizeFromImageSize($lightboxSize), $numberOfItems ?: PHP_INT_MAX);
+				$lightboxPreviews = \is_array($lightboxPreviews) ? array_values($lightboxPreviews) : iterator_to_array($lightboxPreviews, false);
+			}
+
+			foreach ($previews as $index => $preview)
+			{
+				$builder->fromImage($preview);
+
+				if (!empty($lightboxPreviews[$index]))
+				{
+					$builder->setLightboxResourceOrUrl($lightboxPreviews[$index]);
+				}
+
+				$previews[$index] = $builder->build();
+			}
+
+			return $previews;
+		}
+		catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
+		{
+			return array();
+		}
 	}
 }
 
