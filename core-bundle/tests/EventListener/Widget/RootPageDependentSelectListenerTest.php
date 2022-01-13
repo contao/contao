@@ -10,166 +10,26 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
+namespace Contao\CoreBundle\Tests\EventListener\Widget;
 
-use Contao\CoreBundle\EventListener\DataContainer\RootPageDependentSelectListener;
-use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener;
 use Contao\DataContainer;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
-use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectListenerTest extends ContaoTestCase
 {
-    public function testReturnsIfTheRequestIsNotABackendRequest(): void
-    {
-        $request = new Request([], [], ['_scope' => 'frontend']);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $listener = new RootPageDependentSelectListener(
-            $this->createMock(Connection::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->mockScopeMatcher(false, $request),
-            $requestStack,
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'contao_csrf_token'
-        );
-
-        $listener->onLoadDataContainer('tl_module');
-    }
-
-    public function testReturnsIfThereAreNoFields(): void
-    {
-        $request = new Request([], [], ['_scope' => 'backend']);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $listener = new RootPageDependentSelectListener(
-            $this->createMock(Connection::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->mockScopeMatcher(true, $request),
-            $requestStack,
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'contao_csrf_token'
-        );
-
-        $this->populateGlobalsArray([]);
-
-        $listener->onLoadDataContainer('tl_module');
-
-        $this->unsetGlobalsArray();
-    }
-
-    public function testOnlyModifyFieldsWithProperInputType(): void
-    {
-        $request = new Request([], [], ['_scope' => 'backend']);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $listener = new RootPageDependentSelectListener(
-            $this->createMock(Connection::class),
-            $this->createMock(TranslatorInterface::class),
-            $this->mockScopeMatcher(true, $request),
-            $requestStack,
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'contao_csrf_token'
-        );
-
-        $this->populateGlobalsArray([
-            'field1' => [
-                'inputType' => 'rootPageDependentSelect',
-            ],
-            'field2' => [
-                'eval' => [],
-            ],
-            'field3' => [
-                'inputType' => 'text',
-            ],
-        ]);
-
-        $listener->onLoadDataContainer('tl_module');
-
-        $this->assertSame([
-            'field1' => [
-                'inputType' => 'rootPageDependentSelect',
-                'eval' => [
-                    'rootPages' => [],
-                    'blankOptionLabel' => null,
-                ],
-            ],
-            'field2' => [
-                'eval' => [],
-            ],
-            'field3' => [
-                'inputType' => 'text',
-            ],
-        ], $this->getGlobalsArray());
-
-        $this->unsetGlobalsArray();
-    }
-
-    public function testAddRootPagesToFieldConfig(): void
-    {
-        $request = new Request([], [], ['_scope' => 'backend']);
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $connection = $this->mockGetRootPages();
-
-        $listener = new RootPageDependentSelectListener(
-            $connection,
-            $this->createMock(TranslatorInterface::class),
-            $this->mockScopeMatcher(true, $request),
-            $requestStack,
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'contao_csrf_token'
-        );
-
-        $this->populateGlobalsArray([
-            'field1' => [
-                'inputType' => 'rootPageDependentSelect',
-            ],
-        ]);
-
-        $listener->onLoadDataContainer('tl_module');
-
-        $this->assertSame([
-            'field1' => [
-                'inputType' => 'rootPageDependentSelect',
-                'eval' => [
-                    'rootPages' => [
-                        1 => 'title-1 (language-1)',
-                        2 => 'title-2 (language-2)',
-                        3 => 'title-3 (language-3)',
-                    ],
-                    'blankOptionLabel' => null,
-                ],
-            ],
-        ], $this->getGlobalsArray());
-
-        $this->unsetGlobalsArray();
-    }
-
     public function testDoesNotAddWizardWhenNoValuesSet(): void
     {
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ScopeMatcher::class),
-            $this->createMock(RequestStack::class),
             $this->createMock(CsrfTokenManagerInterface::class),
             'contao_csrf_token'
         );
@@ -207,8 +67,6 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $translator,
-            $this->createMock(ScopeMatcher::class),
-            $this->createMock(RequestStack::class),
             $csrfTokenManager,
             'contao_csrf_token'
         );
@@ -231,8 +89,6 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ScopeMatcher::class),
-            $this->createMock(RequestStack::class),
             $this->createMock(CsrfTokenManagerInterface::class),
             'contao_csrf_token'
         );
@@ -249,8 +105,6 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ScopeMatcher::class),
-            $this->createMock(RequestStack::class),
             $this->createMock(CsrfTokenManagerInterface::class),
             'contao_csrf_token'
         );
@@ -280,8 +134,6 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ScopeMatcher::class),
-            $this->createMock(RequestStack::class),
             $this->createMock(CsrfTokenManagerInterface::class),
             'contao_csrf_token'
         );
@@ -294,6 +146,8 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
             ],
             $listener->optionsCallback($dataContainer)
         );
+
+        $this->unsetGlobalsArray();
     }
 
     public function testReturnsSelectedTypesOfModulesAsOption(): void
@@ -320,8 +174,6 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ScopeMatcher::class),
-            $this->createMock(RequestStack::class),
             $this->createMock(CsrfTokenManagerInterface::class),
             'contao_csrf_token'
         );
@@ -333,6 +185,8 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
             ],
             $listener->optionsCallback($dataContainer)
         );
+
+        $this->unsetGlobalsArray();
     }
 
     private function populateGlobalsArray(array $data): void
@@ -340,30 +194,9 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $GLOBALS['TL_DCA']['tl_module']['fields'] = $data;
     }
 
-    private function getGlobalsArray(): array
-    {
-        return $GLOBALS['TL_DCA']['tl_module']['fields'];
-    }
-
     private function unsetGlobalsArray(): void
     {
         unset($GLOBALS['TL_DCA']['tl_module']['fields']);
-    }
-
-    /**
-     * @return ScopeMatcher&MockObject
-     */
-    private function mockScopeMatcher(bool $hasBackendUser, Request $request): ScopeMatcher
-    {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isBackendRequest')
-            ->with($request)
-            ->willReturn($hasBackendUser)
-        ;
-
-        return $scopeMatcher;
     }
 
     private function mockGetRootPages(): Connection
@@ -371,12 +204,12 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $result = $this->createMock(Result::class);
         $result
             ->expects($this->once())
-            ->method('fetchAllAssociative')
-            ->willReturn([
+            ->method('iterateAssociative')
+            ->willReturn(new \ArrayIterator([
                 ['id' => 1, 'title' => 'title-1', 'language' => 'language-1'],
                 ['id' => 2, 'title' => 'title-2', 'language' => 'language-2'],
                 ['id' => 3, 'title' => 'title-3', 'language' => 'language-3'],
-            ])
+            ]))
         ;
 
         $statement = $this->createMock(Statement::class);
@@ -401,12 +234,12 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $result = $this->createMock(Result::class);
         $result
             ->expects($this->once())
-            ->method('fetchAllAssociative')
-            ->willReturn([
+            ->method('iterateAssociative')
+            ->willReturn(new \ArrayIterator([
                 ['id' => 10, 'name' => 'name-10', 'type' => 'foo'],
                 ['id' => 20, 'name' => 'name-20', 'type' => 'bar'],
                 ['id' => 30, 'name' => 'name-30', 'type' => 'baz'],
-            ])
+            ]))
         ;
 
         $connection = $this->createMock(Connection::class);

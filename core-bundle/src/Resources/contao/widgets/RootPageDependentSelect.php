@@ -10,23 +10,23 @@
 
 namespace Contao;
 
-/**
- * @property array $rootPages
- */
 class RootPageDependentSelect extends SelectMenu
 {
 	public function generate(): string
 	{
 		$fields = array();
-		$label = $this->strLabel;
+		$originalLabel = $this->strLabel;
 		$cssClasses = 'tl_select tl_chosen';
 
-		$rootPages = $this->rootPages;
+		$rootPages = PageModel::findByPid(0, array('order' => 'sorting'));
 
 		$wizard = StringUtil::deserialize($this->wizard);
 
-		foreach ($rootPages as $id => $label)
+		$this->blankOptionLabel = $GLOBALS['TL_LANG']['tl_module'][sprintf('%sBlankOptionLabel', $this->name)];
+
+		foreach ($rootPages as $rootPage)
 		{
+			$label = sprintf('%s (%s)', $rootPage->title, $rootPage->language);
 			$this->arrOptions[0]['label'] = sprintf($this->blankOptionLabel, $label);
 			$this->strLabel = $label;
 
@@ -37,12 +37,12 @@ class RootPageDependentSelect extends SelectMenu
 				$cssClasses,
 				($this->strClass ? ' ' . $this->strClass : ''),
 				$this->getAttributes(),
-				implode('', $this->getOptions($id)),
-				$wizard[$id] ?? ''
+				implode('', $this->getOptions($rootPage->id)),
+				$wizard[$rootPage->id] ?? ''
 			);
 		}
 
-		$this->strLabel = $label;
+		$this->strLabel = $originalLabel;
 
 		return implode('', $fields);
 	}

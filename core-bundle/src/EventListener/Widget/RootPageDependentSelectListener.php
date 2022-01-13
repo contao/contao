@@ -10,17 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\EventListener\DataContainer;
+namespace Contao\CoreBundle\EventListener\Widget;
 
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
-use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -28,80 +24,15 @@ class RootPageDependentSelectListener
 {
     private Connection $connection;
     private TranslatorInterface $translator;
-    private ScopeMatcher $scopeMatcher;
-    private RequestStack $requestStack;
     private CsrfTokenManagerInterface $csrfTokenManager;
     private string $csrfTokenName;
 
-    public function __construct(Connection $connection, TranslatorInterface $translator, ScopeMatcher $scopeMatcher, RequestStack $requestStack, CsrfTokenManagerInterface $csrfTokenManager, string $csrfTokenName)
+    public function __construct(Connection $connection, TranslatorInterface $translator, CsrfTokenManagerInterface $csrfTokenManager, string $csrfTokenName)
     {
         $this->connection = $connection;
         $this->translator = $translator;
-        $this->scopeMatcher = $scopeMatcher;
-        $this->requestStack = $requestStack;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->csrfTokenName = $csrfTokenName;
-    }
-
-    /**
-     * @Hook("loadDataContainer")
-     */
-    public function onLoadDataContainer(string $table): void
-    {
-        /** @var Request $request */
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (!$request instanceof Request || !$this->scopeMatcher->isBackendRequest($request)) {
-            return;
-        }
-
-        $fields = $GLOBALS['TL_DCA'][$table]['fields'];
-
-        if (
-            !\is_array($fields) ||
-            !\in_array('rootPageDependentSelect', array_column($fields, 'inputType'), true)
-        ) {
-            return;
-        }
-
-        foreach ($fields as $key => $field) {
-            if (!\array_key_exists('inputType', $field)) {
-                unset($fields[$key]);
-            }
-        }
-
-        $affectedFields = array_keys(
-            array_column($fields, 'inputType'),
-            'rootPageDependentSelect',
-            true
-        );
-
-        foreach ($affectedFields as $affectedField) {
-            $field = \array_slice($fields, $affectedField, 1);
-            $keys = array_keys($field);
-
-            $key = $keys[0];
-            $fieldConfig = $GLOBALS['TL_DCA'][$table]['fields'][$key];
-
-            if (!\array_key_exists('eval', $fieldConfig)) {
-                $fieldConfig['eval'] = [];
-            }
-
-            if (!\array_key_exists('rootPages', $fieldConfig['eval'])) {
-                $fieldConfig['eval']['rootPages'] = $this->getRootPages();
-            }
-
-            if (!\array_key_exists('blankOptionLabel', $fieldConfig['eval'])) {
-                $fieldConfig['eval']['blankOptionLabel'] = $this->translator->trans(
-                    sprintf('tl_module.%sBlankOptionLabel', $key),
-                    [],
-                    'contao_module'
-                );
-            }
-
-            // Save modified configuration back to global DCA
-            $GLOBALS['TL_DCA'][$table]['fields'][$key] = $fieldConfig;
-        }
     }
 
     /**
@@ -113,7 +44,7 @@ class RootPageDependentSelectListener
         $types = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['modules'] ?? [];
         $hasTypes = \count($types) > 0;
 
-        $result = $this->connection->executeQuery(
+        $rows = $this->connection->executeQuery(
             "SELECT m.id, m.name, m.type
             FROM tl_module m
             WHERE m.type <> 'root_page_dependent_modules' AND
@@ -122,9 +53,7 @@ class RootPageDependentSelectListener
             [$dc->activeRecord->pid]
         );
 
-        $modules = $result->fetchAllAssociative();
-
-        foreach ($modules as $module) {
+        foreach ($rows->iterateAssociative() as $module) {
             if ($hasTypes && !\in_array($module['type'], $types, true)) {
                 continue;
             }
@@ -194,11 +123,11 @@ class RootPageDependentSelectListener
             ORDER BY p.sorting ASC
         ');
 
-        $rootPages = $statement->executeQuery()->fetchAllAssociative();
+        $rows = $statement->executeQuery();
 
         $pages = [];
 
-        foreach ($rootPages as $rootPage) {
+        foreach ($rows->iterateAssociative() as $rootPage) {
             $pages[$rootPage['id']] = sprintf('%s (%s)', $rootPage['title'], $rootPage['language']);
         }
 
