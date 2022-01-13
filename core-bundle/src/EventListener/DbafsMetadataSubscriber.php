@@ -13,10 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Event\AbstractDbafsMetadataEvent;
-use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
-use Contao\CoreBundle\Event\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
 use Contao\Image\ImportantPart;
 use Contao\StringUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -91,8 +90,8 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ContaoCoreEvents::RETRIEVE_DBAFS_METADATA => ['enhanceMetadata'],
-            ContaoCoreEvents::STORE_DBAFS_METADATA => ['normalizeMetadata'],
+            RetrieveDbafsMetadataEvent::class => ['enhanceMetadata'],
+            StoreDbafsMetadataEvent::class => ['normalizeMetadata'],
         ];
     }
 

@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
-use Contao\CoreBundle\Event\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
@@ -192,7 +189,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             array_intersect_key($metadata, $columnFilter)
         );
 
-        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::STORE_DBAFS_METADATA);
+        $this->eventDispatcher->dispatch($event);
 
         $this->connection->update(
             $this->table,
@@ -515,7 +512,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $isFile = 'file' === $row['type'];
 
         $event = new RetrieveDbafsMetadataEvent($this->table, $row);
-        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::RETRIEVE_DBAFS_METADATA);
+        $this->eventDispatcher->dispatch($event);
 
         /** @phpstan-var Record $record */
         $record = [

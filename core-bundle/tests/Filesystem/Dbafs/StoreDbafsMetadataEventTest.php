@@ -10,13 +10,15 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Event;
+namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
-use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Uid\Uuid;
 
-class RetrieveDbafsMetadataEventTest extends TestCase
+class StoreDbafsMetadataEventTest extends TestCase
 {
     public function testSetAndGetValues(): void
     {
@@ -28,16 +30,29 @@ class RetrieveDbafsMetadataEventTest extends TestCase
             'baz' => 42,
         ];
 
-        $event = new RetrieveDbafsMetadataEvent('tl_files', $rowData);
+        $extraMetadata = [
+            'foo' => new Metadata(['some' => 'value']),
+        ];
+
+        $event = new StoreDbafsMetadataEvent('tl_files', $rowData, $extraMetadata);
 
         $this->assertSame('tl_files', $event->getTable());
         $this->assertSame($uuid->toBinary(), $event->getUuid()->toBinary());
         $this->assertSame('foo/bar', $event->getPath());
-        $this->assertSame($rowData, $event->getRow());
+        $this->assertSame($extraMetadata, $event->getExtraMetadata());
 
-        $this->assertEmpty($event->getExtraMetadata());
-        $event->set('baz-data', $event->getRow()['baz']);
-        $this->assertSame(['baz-data' => 42], $event->getExtraMetadata());
+        $this->assertSame($rowData, $event->getRow());
+        $event->set('foo', $event->getExtraMetadata()['foo']->all());
+
+        $this->assertSame(
+            [
+                'uuid' => $uuid->toBinary(),
+                'path' => 'foo/bar',
+                'baz' => 42,
+                'foo' => ['some' => 'value'],
+            ],
+            $event->getRow()
+        );
     }
 
     /**

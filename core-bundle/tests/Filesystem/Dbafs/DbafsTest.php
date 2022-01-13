@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
-use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
-use Contao\CoreBundle\Event\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
@@ -21,6 +19,8 @@ use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
+use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;

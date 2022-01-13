@@ -12,11 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\RetrieveDbafsMetadataEvent;
-use Contao\CoreBundle\Event\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\EventListener\DbafsMetadataSubscriber;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImportantPart;
 use Symfony\Component\Uid\Uuid;
@@ -29,8 +28,8 @@ class DbafsMetadataSubscriberTest extends TestCase
 
         $this->assertSame(
             [
-                ContaoCoreEvents::RETRIEVE_DBAFS_METADATA => ['enhanceMetadata'],
-                ContaoCoreEvents::STORE_DBAFS_METADATA => ['normalizeMetadata'],
+                RetrieveDbafsMetadataEvent::class => ['enhanceMetadata'],
+                StoreDbafsMetadataEvent::class => ['normalizeMetadata'],
             ],
             $subscriber::getSubscribedEvents()
         );
