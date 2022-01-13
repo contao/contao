@@ -96,20 +96,16 @@ class JumpToParentButtonListener
         return http_build_query($params, '', '&amp;', PHP_QUERY_RFC3986);
     }
 
-    private function getModuleForTable(string $table): array
+    private function getModuleForTable(string $table): ?array
     {
-        $module = null;
-
         foreach ($GLOBALS['BE_MOD'] as $group) {
             foreach ($group as $name => $config) {
                 if (\is_array($config['tables'] ?? null) && \in_array($table, $config['tables'], true)) {
-                    $module = $config;
-                    $module['_module_name'] = $name;
-                    break 2;
+                    return array_merge($config, ['_module_name' => $name]);
                 }
             }
         }
 
-        return $module;
+        return null;
     }
 }
