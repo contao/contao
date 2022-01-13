@@ -2,7 +2,12 @@
 <div class="cto-toolbar__open">
     <a href="#" title="{{ 'MSC.openToolbar'|trans }}">{{ include('@ContaoCore/Collector/contao.svg') }}</a>
 </div>
-<div class="cto-toolbar__inside" {{ attributes|raw }}>
+<div
+    class="cto-toolbar__inside"
+    {% for key, value in attributes %}
+        data-{{ key|e('html_attr') }}="{{ value }}"
+    {% endfor %}
+>
     <form action="{{ action }}" method="post" autocomplete="off">
         <div class="formbody">
             {% if badgeTitle %}
