@@ -159,9 +159,21 @@ class FrontendMenuBuilderTest extends TestCase
             'pid' => 1,
             'type' => 'forward',
             'title' => '⏭',
-            'pageTitle' => '⏭',
+            'pageTitle' => '⏭ (with valid jumpTo)',
             'alias' => 'forward',
             'jumpTo' => 4,
+            'robots' => '',
+            'published' => true,
+            'sitemap' => '',
+            'trail' => [1],
+        ],
+        [
+            'id' => 6,
+            'pid' => 1,
+            'type' => 'forward',
+            'title' => '⏭2',
+            'pageTitle' => '⏭ (without valid jumpTo or child)',
+            'alias' => 'forward',
             'robots' => '',
             'published' => true,
             'sitemap' => '',
@@ -217,6 +229,9 @@ class FrontendMenuBuilderTest extends TestCase
 
         // Assert forward URIs are generated
         $this->assertSame($tree->getChild('Contact')->getUri(), $tree->getChild('⏭')->getUri());
+
+        // Assert a forward page with invalid jumpTo is not generated
+        $this->assertNull($tree->getChild('⏭2'));
 
         $item = $tree->getChild('Contact');
 
@@ -537,7 +552,7 @@ class FrontendMenuBuilderTest extends TestCase
 
         // Assert every page (incl. root) is in custom nav without hierarchy/levels
         foreach (self::PAGES as $page) {
-            if ($page['protected'] ?? false) {
+            if (($page['protected'] ?? false) || '⏭2' === $page['title']) {
                 continue;
             }
 
@@ -701,6 +716,16 @@ class FrontendMenuBuilderTest extends TestCase
             return $this->mockPageModel($page);
         };
 
+        $findCallbackByPid = function ($id) {
+            foreach (self::PAGES as $page) {
+                if ($page['pid'] === $id) {
+                    return $this->mockPageModel($page);
+                }
+            }
+
+            return null;
+        };
+
         $pageModelAdapter
             ->method('findMultipleByIds')
             ->willReturn([])
@@ -719,7 +744,7 @@ class FrontendMenuBuilderTest extends TestCase
         ;
         $pageModelAdapter
             ->method('findFirstPublishedRegularByPid')
-            ->willReturnCallback($findCallback)
+            ->willReturnCallback($findCallbackByPid)
         ;
 
         return $pageModelAdapter;
