@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Util\PackageUtil;
-use PackageVersions\Versions;
+use Composer\InstalledVersions;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -85,14 +84,10 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $packages = $container->getDefinition('assets.packages');
         $context = new Reference('contao.assets.assets_context');
 
-        foreach (Versions::VERSIONS as $name => $version) {
-            if (!Path::isBasePath('contao-components', $name)) {
-                continue;
-            }
-
+        foreach (InstalledVersions::getInstalledPackagesByType('contao-component') as $name) {
             $serviceId = 'assets._package_'.$name;
             $basePath = Path::join('assets', Path::makeRelative($name, 'contao-components'));
-            $version = $this->createVersionStrategy($container, $version, $name);
+            $version = $this->createVersionStrategy($container, $name);
 
             $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $version, $context));
             $packages->addMethodCall('addPackage', [$name, new Reference($serviceId)]);
@@ -112,10 +107,10 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         return $package;
     }
 
-    private function createVersionStrategy(ContainerBuilder $container, string $version, string $name): Reference
+    private function createVersionStrategy(ContainerBuilder $container, string $name): Reference
     {
         $def = new ChildDefinition('assets.static_version_strategy');
-        $def->replaceArgument(0, PackageUtil::parseVersion($version));
+        $def->replaceArgument(0, InstalledVersions::getPrettyVersion($name));
         $def->replaceArgument(1, '%%s?v=%%s');
 
         $container->setDefinition('assets._version_'.$name, $def);

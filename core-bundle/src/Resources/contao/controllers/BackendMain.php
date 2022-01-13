@@ -10,9 +10,9 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Util\PackageUtil;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -101,7 +101,7 @@ class BackendMain extends Backend
 	 */
 	public function run()
 	{
-		$version = PackageUtil::getContaoVersion();
+		$version = ContaoCoreBundle::getVersion();
 
 		$this->Template = new BackendTemplate('be_main');
 		$this->Template->version = $version;

@@ -173,6 +173,12 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.image_size_options:
+        class: Contao\CoreBundle\EventListener\ImageSizeOptionsListener
+        arguments:
+            - '@security.helper'
+            - '@contao.image.sizes'
+
     contao.listener.initialize_controller:
         class: Contao\CoreBundle\EventListener\InitializeControllerListener
         tags:
