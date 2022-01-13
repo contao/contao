@@ -253,7 +253,7 @@ class FrontendMenuBuilder
         }
     }
 
-    private function populateMenuItem(ItemInterface $item, Request $request, PageModel $page, ?string $href, bool $hasSubmenu, array $options = []): void
+    private function populateMenuItem(ItemInterface $item, Request $request, PageModel $page, string $href, bool $hasSubmenu, array $options): void
     {
         $extra = $page->row();
         $currentPage = $this->getPageFromRequest($request);
@@ -266,7 +266,7 @@ class FrontendMenuBuilder
 
         $isActive = $currentPage
             && $href === $path
-            && !($options['isSitemap'] ?? false)
+            && !$options['isSitemap']
             && (($currentPage->id === $page->id) || ('forward' === $page->type && $currentPage->id === $page->jumpTo));
 
         $item->setCurrent($isActive);
