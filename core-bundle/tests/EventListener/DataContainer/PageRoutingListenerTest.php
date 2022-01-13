@@ -41,18 +41,7 @@ class PageRoutingListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
 
-        $pageRoute = $this->createMock(PageRoute::class);
-        $pageRoute
-            ->expects($this->once())
-            ->method('getPath')
-            ->willReturn($path)
-        ;
-
-        $pageRoute
-            ->expects($this->once())
-            ->method('getRequirements')
-            ->willReturn($requirements)
-        ;
+        $pageRoute = $this->mockPageRoute($path, $requirements);
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -554,11 +543,13 @@ class PageRoutingListenerTest extends TestCase
     {
         $route = $this->createMock(PageRoute::class);
         $route
+            ->expects($this->once())
             ->method('getPath')
             ->willReturn($path)
         ;
 
         $route
+            ->expects($this->once())
             ->method('getRequirements')
             ->willReturn($requirements)
         ;
