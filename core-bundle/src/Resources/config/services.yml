@@ -241,6 +241,8 @@ services:
             - '%contao.image.valid_extensions%'
             - '%kernel.project_dir%/%contao.upload_path%'
             - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
 
     contao.image.fallback_preview_provider:
         class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider

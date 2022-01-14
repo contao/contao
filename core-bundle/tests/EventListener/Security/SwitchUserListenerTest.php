@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\Security;
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\Security\SwitchUserListener;
 use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityTokenInterface;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -64,18 +63,10 @@ class SwitchUserListenerTest extends TestCase
             return $logger;
         }
 
-        $context = [
-            'contao' => new ContaoContext(
-                'Contao\CoreBundle\EventListener\Security\SwitchUserListener::__invoke',
-                ContaoContext::ACCESS,
-                'user1'
-            ),
-        ];
-
         $logger
             ->expects($this->once())
             ->method('info')
-            ->with($message, $context)
+            ->with($message)
         ;
 
         return $logger;

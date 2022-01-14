@@ -23,6 +23,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\IntlInstalledLocalesAndCountriesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\LoggerChannelPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
@@ -75,6 +76,7 @@ class ContaoCoreBundleTest extends TestCase
             RewireTwigPathsPass::class,
             AddNativeTransportFactoryPass::class,
             IntlInstalledLocalesAndCountriesPass::class,
+            LoggerChannelPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);

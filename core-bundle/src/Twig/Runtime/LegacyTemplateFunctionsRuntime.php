@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Runtime;
 
 use Contao\BackendCustom;
+use Contao\CoreBundle\Controller\AbstractBackendController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\FrontendTemplate;
@@ -80,6 +81,8 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
      */
     public function renderContaoBackendTemplate(array $blocks = []): string
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using the "render_contao_backend_template" Twig function is deprecated and will be removed in Contao 5.0. Let your controller inherit from "%s" and your template directly from "@Contao/be_main" instead.', AbstractBackendController::class);
+
         $request = $this->requestStack->getCurrentRequest();
 
         if (null === $request || !$this->scopeMatcher->isBackendRequest($request)) {

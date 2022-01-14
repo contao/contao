@@ -212,16 +212,26 @@ class BackendMain extends Backend
 	 */
 	protected function output()
 	{
+		$this->Template->setData($this->compileTemplateData($this->Template->getData()));
+
+		return $this->Template->getResponse();
+	}
+
+	/**
+	 * @internal
+	 */
+	protected function compileTemplateData(array $data): array
+	{
 		// Default headline
-		if (!$this->Template->headline)
+		if (!isset($data['headline']))
 		{
-			$this->Template->headline = $GLOBALS['TL_LANG']['MSC']['dashboard'];
+			$data['headline'] = $GLOBALS['TL_LANG']['MSC']['dashboard'];
 		}
 
 		// Default title
-		if (!$this->Template->title)
+		if (!isset($data['title']))
 		{
-			$this->Template->title = $this->Template->headline;
+			$data['title'] = $this->Template->headline;
 		}
 
 		$container = System::getContainer();
@@ -230,26 +240,26 @@ class BackendMain extends Backend
 		// File picker reference (backwards compatibility)
 		if (Input::get('popup') && Input::get('act') != 'show' && $objSession->get('filePickerRef') && ((Input::get('do') == 'page' && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'page')) || (Input::get('do') == 'files' && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'files'))))
 		{
-			$this->Template->managerHref = StringUtil::ampersand($objSession->get('filePickerRef'));
-			$this->Template->manager = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
+			$data['managerHref'] = StringUtil::ampersand($objSession->get('filePickerRef'));
+			$data['manager'] = (strpos($objSession->get('filePickerRef'), 'contao/page?') !== false) ? $GLOBALS['TL_LANG']['MSC']['pagePickerHome'] : $GLOBALS['TL_LANG']['MSC']['filePickerHome'];
 		}
 
-		$this->Template->theme = Backend::getTheme();
-		$this->Template->base = Environment::get('base');
-		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
-		$this->Template->title = StringUtil::specialchars(strip_tags($this->Template->title));
-		$this->Template->host = Backend::getDecodedHostname();
-		$this->Template->charset = System::getContainer()->getParameter('kernel.charset');
-		$this->Template->home = $GLOBALS['TL_LANG']['MSC']['home'];
-		$this->Template->isPopup = Input::get('popup');
-		$this->Template->learnMore = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
+		$data['theme'] = Backend::getTheme();
+		$data['base'] = Environment::get('base');
+		$data['language'] = $GLOBALS['TL_LANGUAGE'];
+		$data['title'] = StringUtil::specialchars(strip_tags($data['title'] ?? ''));
+		$data['host'] = Backend::getDecodedHostname();
+		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
+		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
+		$data['isPopup'] = Input::get('popup');
+		$data['learnMore'] = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
 
 		$twig = $container->get('twig');
 
-		$this->Template->menu = $twig->render('@ContaoCore/Backend/be_menu.html.twig');
-		$this->Template->headerMenu = $twig->render('@ContaoCore/Backend/be_header_menu.html.twig');
+		$data['menu'] = $twig->render('@ContaoCore/Backend/be_menu.html.twig');
+		$data['headerMenu'] = $twig->render('@ContaoCore/Backend/be_header_menu.html.twig');
 
-		return $this->Template->getResponse();
+		return $data;
 	}
 }
 

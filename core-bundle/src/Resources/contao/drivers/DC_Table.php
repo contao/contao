@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Doctrine\DBAL\Exception\DriverException;
@@ -135,7 +134,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			$this->log('Could not load the data container configuration for "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load the data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load the data container configuration', E_USER_ERROR);
 		}
 
@@ -667,8 +666,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				// Add a log entry
-				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, ContaoContext::GENERAL);
+				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID));
+
 				$this->redirect($this->switchToEdit($insertID) . $s2e);
 			}
 		}
@@ -964,8 +963,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				// Add a log entry
-				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, ContaoContext::GENERAL);
+				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID));
 
 				// Switch to edit mode
 				if (!$blnDoNotRedirect)
@@ -1532,7 +1530,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Add a log entry unless we are deleting from tl_log itself
 			if ($this->strTable != 'tl_log')
 			{
-				$this->log('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id'], __METHOD__, ContaoContext::GENERAL);
+				System::getContainer()->get('monolog.logger.contao.general')->info('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id']);
 			}
 		}
 
@@ -1700,7 +1698,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add log entry and delete record from tl_undo if there was no error
 		if (!$error)
 		{
-			$this->log('Undone ' . $query, __METHOD__, ContaoContext::GENERAL);
+			System::getContainer()->get('monolog.logger.contao.general')->info('Undone ' . $query);
 
 			$this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
 						   ->limit(1)
@@ -3221,31 +3219,35 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Save the value if there was no error
 		if (((string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue !== $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 		{
+			$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
+			$arrTypes = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
+
 			// If the field is a fallback field, empty all other columns (see #6498)
 			if ($varValue && ($arrData['eval']['fallback'] ?? null))
 			{
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "='' WHERE pid=?")
-								   ->execute($this->activeRecord->pid);
+					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
+								   ->query('', array($varEmpty, $this->activeRecord->pid), $arrTypes);
 				}
 				else
 				{
-					$this->Database->execute("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=''");
+					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
+								   ->query('', array($varEmpty), $arrTypes);
 				}
 			}
 
 			// Set the correct empty value (see #6284, #6373)
 			if ((string) $varValue === '')
 			{
-				$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
+				$varValue = $varEmpty;
 			}
 
 			$arrValues = $this->values;
 			array_unshift($arrValues, $varValue);
 
 			$objUpdateStmt = $this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE " . implode(' AND ', $this->procedure))
-											->execute($arrValues);
+											->query('', $arrValues, $arrTypes);
 
 			if ($objUpdateStmt->affectedRows)
 			{
