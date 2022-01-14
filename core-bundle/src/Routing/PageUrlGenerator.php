@@ -17,6 +17,7 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\Routing\CompiledRoute;
@@ -56,6 +57,15 @@ class PageUrlGenerator extends SymfonyUrlGenerator
             unset($parameters[RouteObjectInterface::ROUTE_OBJECT]);
         } else {
             $route = $this->provider->getRouteByName($name);
+        }
+
+        // If route is a redirect to an absolute URL, use it directly as the route path
+        if (
+            $route->getDefault('_controller') === RedirectController::class
+            && !empty($path = $route->getDefault('path'))
+            && parse_url($path, \PHP_URL_SCHEME)
+        ) {
+            return $path;
         }
 
         /** @var CompiledRoute $compiledRoute */

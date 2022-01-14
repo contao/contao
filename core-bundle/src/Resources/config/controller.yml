@@ -98,6 +98,10 @@ services:
         arguments:
             - '@contao.framework'
 
+    Contao\CoreBundle\Controller\Page\RedirectPageController:
+        arguments:
+            - '@contao.insert_tag.parser'
+
     Contao\CoreBundle\Controller\Page\RootPageController: ~
 
     Contao\CoreBundle\Controller\RobotsTxtController:

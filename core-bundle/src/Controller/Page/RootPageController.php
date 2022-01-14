@@ -15,8 +15,11 @@ namespace Contao\CoreBundle\Controller\Page;
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\ServiceAnnotation\Page;
 use Contao\PageModel;
+use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -24,13 +27,31 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @internal
  */
-class RootPageController extends AbstractController
+class RootPageController extends AbstractController implements DynamicRouteInterface
 {
     public function __invoke(PageModel $pageModel): Response
     {
         $nextPage = $this->getNextPage((int) $pageModel->id);
 
         return $this->redirect($nextPage->getAbsoluteUrl());
+    }
+
+    public function configurePageRoute(PageRoute $route): void
+    {
+        $nextPage = $this->getContaoAdapter(PageModel::class)->findFirstPublishedByPid((int) $route->getPageModel()->id);
+
+        if (null === $nextPage) {
+            return;
+        }
+
+        $route->setDefault('_controller', RedirectController::class);
+        $route->setDefault('path', $nextPage->getAbsoluteUrl());
+        $route->setDefault('permanent', true);
+    }
+
+    public function getUrlSuffixes(): array
+    {
+        return [];
     }
 
     private function getNextPage(int $rootPageId): PageModel
