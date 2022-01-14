@@ -104,7 +104,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 				'href'                => 'act=toggle&amp;field=disable',
 				'icon'                => 'visible.svg',
 				'reverse'             => true,
-				'rowIcon'             => true,
 				'button_callback'     => array('tl_user', 'toggleIcon')
 			),
 			'show' => array

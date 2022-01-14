@@ -99,7 +99,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 				'href'                => 'act=toggle&amp;field=invisible',
 				'icon'                => 'visible.svg',
 				'reverse'             => true,
-				'rowIcon'             => true,
 				'button_callback'     => array('tl_form_field', 'toggleIcon')
 			),
 			'show' => array

@@ -146,7 +146,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				'href'                => 'act=toggle&amp;field=published',
 				'icon'                => 'visible.svg',
-				'rowIcon'             => true,
 				'button_callback'     => array('tl_page', 'toggleIcon')
 			),
 			'show' => array

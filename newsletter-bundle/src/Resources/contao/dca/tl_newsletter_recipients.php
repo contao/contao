@@ -98,8 +98,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'toggle' => array
 			(
 				'href'                => 'act=toggle&amp;field=active',
-				'icon'                => 'visible.svg',
-				'rowIcon'             => true,
+				'icon'                => 'visible.svg'
 			),
 			'show' => array
 			(

@@ -94,8 +94,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'toggle' => array
 			(
 				'href'                => 'act=toggle&amp;field=published',
-				'icon'                => 'visible.svg',
-				'rowIcon'             => true,
+				'icon'                => 'visible.svg'
 			),
 			'show' => array
 			(
