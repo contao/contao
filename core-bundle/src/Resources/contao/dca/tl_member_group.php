@@ -11,7 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\DataContainer;
-use Contao\System;
+use Contao\Image;
 
 $GLOBALS['TL_DCA']['tl_member_group'] = array
 (

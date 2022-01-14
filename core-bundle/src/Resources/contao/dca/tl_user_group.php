@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\DataContainer;
+use Contao\Image;
 use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;

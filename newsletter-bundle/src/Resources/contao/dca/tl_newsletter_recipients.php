@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Idna;
+use Contao\Image;
 use Contao\Input;
 use Contao\System;
 
@@ -368,7 +369,7 @@ class tl_newsletter_recipients extends Backend
 
 		return sprintf(
 			'<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div></div>' . "\n",
-			Image::getPath($row['active'] ? $icon : $icond),
+			$row['active'] ? $icon : $icond,
 			$icon,
 			$icond,
 			$label

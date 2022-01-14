@@ -432,9 +432,9 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle state of a checkbox field
+	 * Toggle the state of a checkbox field
 	 *
-	 * @param {object}  el            The DOM element
+	 * @param {object}  el      The DOM element
 	 * @param {boolean} rowIcon Whether the row icon should be toggled as well
 	 *
 	 * @returns {boolean}
