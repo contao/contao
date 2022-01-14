@@ -11,8 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Monolog\ContaoContext;
-use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -113,14 +111,7 @@ trait TemplateInheritance
 				}
 				else
 				{
-					System::getContainer()
-						->get('monolog.logger.contao')
-						->log(
-							LogLevel::ERROR,
-							'Invalid template path: ' . StringUtil::stripRootDir($strParent),
-							array('contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR))
-						)
-					;
+					System::getContainer()->get('monolog.logger.contao.error')->error('Invalid template path: ' . StringUtil::stripRootDir($strParent));
 				}
 
 				// Capture the output of the root template
@@ -158,9 +149,6 @@ trait TemplateInheritance
 				$blnDebug = (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false);
 			}
 		}
-
-		// Replace insert tags
-		$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
 
 		// Add start and end markers in debug mode
 		if ($blnDebug)

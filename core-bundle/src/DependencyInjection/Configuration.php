@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
@@ -95,7 +96,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('editable_files')
-                    ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,txt,xliff,xml,yml,yaml')
+                    ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,ts,txt,xliff,xml,yml,yaml')
                 ->end()
                 ->scalarNode('url_suffix')
                     ->setDeprecated('contao/core-bundle', '4.10', 'The URL suffix is configured per root page since Contao 4.10. Using this option requires legacy routing.')
@@ -324,6 +325,38 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('valid_extensions')
                     ->prototype('scalar')->end()
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'])
+                ->end()
+                ->arrayNode('preview')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('target_dir')
+                            ->info('The target directory for the cached previews.')
+                            ->example('%kernel.project_dir%/assets/previews')
+                            ->cannotBeEmpty()
+                            ->defaultValue(Path::join($this->projectDir, 'assets/previews'))
+                            ->validate()
+                                ->always(static fn (string $value): string => Path::canonicalize($value))
+                            ->end()
+                        ->end()
+                        ->integerNode('default_size')
+                            ->min(1)
+                            ->max(65535)
+                            ->defaultValue(512)
+                        ->end()
+                        ->integerNode('max_size')
+                            ->min(1)
+                            ->max(65535)
+                            ->defaultValue(1024)
+                        ->end()
+                        ->booleanNode('enable_fallback_images')
+                            ->info('Whether or not to generate previews for unsupported file types that show a file icon containing the file type.')
+                            ->defaultValue(true)
+                        ->end()
+                    ->end()
+                    ->validate()
+                        ->ifTrue(static fn (array $v) => $v['default_size'] > $v['max_size'])
+                        ->thenInvalid('The default_size must not be greater than the max_size: %s')
+                    ->end()
                 ->end()
             ->end()
         ;
@@ -608,8 +641,27 @@ class Configuration implements ConfigurationInterface
                     ->scalarPrototype()->end()
                 ->end()
                 ->integerNode('keep_max')
-                    ->info('The maximum number of backups to keep.')
+                    ->info('The maximum number of backups to keep. Use 0 to keep all the backups forever.')
                     ->defaultValue(5)
+                ->end()
+                ->arrayNode('keep_intervals')
+                    ->info('The latest backup plus the oldest of every configured interval will be kept. Intervals have to be specified as documented in https://www.php.net/manual/en/dateinterval.construct.php without the P prefix.')
+                    ->defaultValue(['1D', '7D', '14D', '1M'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $intervals) {
+                                try {
+                                    RetentionPolicy::validateAndSortIntervals($intervals);
+                                } catch (\Exception $e) {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+                        )
+                    ->thenInvalid('%s')
+                    ->end()
+                    ->scalarPrototype()->end()
                 ->end()
             ->end()
         ;

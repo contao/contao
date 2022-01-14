@@ -20,13 +20,13 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
+use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
+use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
-use Contao\CoreBundle\Routing\Page\ContentCompositionInterface;
-use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
@@ -43,7 +43,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class ContaoCoreExtension extends Extension implements PrependExtensionInterface
+class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
 {
     public function getAlias(): string
     {
@@ -62,6 +62,22 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         // Prepend the backend route prefix to make it available for third-party bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
+
+        // Make sure channels for all Contao log actions are available
+        if ($container->hasExtension('monolog')) {
+            $container->prependExtensionConfig('monolog', [
+                'channels' => [
+                    'contao.access',
+                    'contao.configuration',
+                    'contao.cron',
+                    'contao.email',
+                    'contao.error',
+                    'contao.files',
+                    'contao.forms',
+                    'contao.general',
+                ],
+            ]);
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container): void
@@ -97,6 +113,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.image.valid_extensions', $config['image']['valid_extensions']);
         $container->setParameter('contao.image.imagine_options', $config['image']['imagine_options']);
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
+        $container->setParameter('contao.image.preview.target_dir', $config['image']['preview']['target_dir']);
+        $container->setParameter('contao.image.preview.default_size', $config['image']['preview']['default_size']);
+        $container->setParameter('contao.image.preview.max_size', $config['image']['preview']['max_size']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
         $container->setParameter('contao.localconfig', $config['localconfig'] ?? []);
         $container->setParameter('contao.backend.attributes', $config['backend']['attributes']);
@@ -117,6 +136,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleTokenCheckerConfig($config, $container);
         $this->handleLegacyRouting($config, $configs, $container, $loader);
         $this->handleBackup($config, $container);
+        $this->handleFallbackPreviewProvider($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -126,16 +146,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container
             ->registerForAutoconfiguration(MigrationInterface::class)
             ->addTag('contao.migration')
-        ;
-
-        $container
-            ->registerForAutoconfiguration(DynamicRouteInterface::class)
-            ->addTag('contao.page')
-        ;
-
-        $container
-            ->registerForAutoconfiguration(ContentCompositionInterface::class)
-            ->addTag('contao.page')
         ;
 
         $container->registerAttributeForAutoconfiguration(
@@ -186,6 +196,26 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 $definition->addTag('contao.picker_provider', get_object_vars($attribute));
             }
         );
+    }
+
+    public function configureFilesystem(FilesystemConfiguration $config): void
+    {
+        $filesStorageName = 'files';
+
+        // TODO: Deprecate the 'contao.upload_path' config key. In the next
+        // major version, $uploadPath can then be replaced with 'files' and the
+        // redundant 'files' attribute removed when mounting the local adapter.
+        $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
+
+        $config
+            ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
+            ->addVirtualFilesystem($filesStorageName, $uploadPath)
+        ;
+
+        $config
+            ->addDefaultDbafs($filesStorageName, 'tl_files')
+            ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
+        ;
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
@@ -271,7 +301,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $imageSizes['_'.$name] = $this->camelizeKeys($value);
         }
 
-        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory'];
+        $services = ['contao.image.sizes', 'contao.image.factory', 'contao.image.picture_factory', 'contao.image.preview_factory'];
 
         foreach ($services as $service) {
             if (method_exists((string) $container->getDefinition($service)->getClass(), 'setPredefinedSizes')) {
@@ -377,10 +407,29 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             return;
         }
 
+        if (!$container->hasDefinition('contao.doctrine.backup.retention_policy')) {
+            return;
+        }
+
+        $retentionPolicy = $container->getDefinition('contao.doctrine.backup.retention_policy');
+        $retentionPolicy->setArgument(0, $config['backup']['keep_max']);
+        $retentionPolicy->setArgument(1, $config['backup']['keep_intervals']);
+
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
-        $dbDumper->replaceArgument(2, $config['backup']['directory']);
-        $dbDumper->replaceArgument(3, $config['backup']['ignore_tables']);
-        $dbDumper->replaceArgument(4, $config['backup']['keep_max']);
+        $dbDumper->setArgument(2, $config['backup']['directory']);
+        $dbDumper->setArgument(3, $config['backup']['ignore_tables']);
+    }
+
+    private function handleFallbackPreviewProvider(array $config, ContainerBuilder $container): void
+    {
+        if (
+            $config['image']['preview']['enable_fallback_images']
+            || !$container->hasDefinition('contao.image.fallback_preview_provider')
+        ) {
+            return;
+        }
+
+        $container->removeDefinition('contao.image.fallback_preview_provider');
     }
 
     private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void

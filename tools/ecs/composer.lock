@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "contao/easy-coding-standard",
-            "version": "4.0.0",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/easy-coding-standard.git",
-                "reference": "621d05d44a1a76784f658f4196b02d5035d472e4"
+                "reference": "624077959b31fab17c200e210ddab854cc558c60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/621d05d44a1a76784f658f4196b02d5035d472e4",
-                "reference": "621d05d44a1a76784f658f4196b02d5035d472e4",
+                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/624077959b31fab17c200e210ddab854cc558c60",
+                "reference": "624077959b31fab17c200e210ddab854cc558c60",
                 "shasum": ""
             },
             "require": {
@@ -47,9 +47,9 @@
             "description": "EasyCodingStandard configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/easy-coding-standard/issues",
-                "source": "https://github.com/contao/easy-coding-standard/tree/4.0.0"
+                "source": "https://github.com/contao/easy-coding-standard/tree/4.0.1"
             },
-            "time": "2021-11-23T10:27:58+00:00"
+            "time": "2022-01-11T11:25:49+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -351,5 +351,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

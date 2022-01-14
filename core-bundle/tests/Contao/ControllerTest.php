@@ -19,12 +19,10 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -32,8 +30,14 @@ class ControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    /**
+     * @group legacy
+     */
     public function testReturnsTheTimeZones(): void
     {
+        $this->expectDeprecation('%sgetTimeZones%shas been deprecated%s');
+        $this->expectDeprecation('%stimezones.php%s');
+
         $timeZones = System::getTimeZones();
 
         $this->assertCount(9, $timeZones['General']);
@@ -322,12 +326,8 @@ class ControllerTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
-            ->method('log')
-            ->with(
-                LogLevel::ERROR,
-                'Image "/path/to/image.jpg" could not be processed: <error>',
-                ['contao' => new ContaoContext('Contao\Controller::addImageToTemplate', 'ERROR')]
-            )
+            ->method('error')
+            ->with('Image "/path/to/image.jpg" could not be processed: <error>')
         ;
 
         $template = new \stdClass();
@@ -347,7 +347,7 @@ class ControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag.parser', $insertTagParser);
-        $container->set('monolog.logger.contao', $logger);
+        $container->set('contao.monolog.logger.error', $logger);
 
         System::setContainer($container);
 

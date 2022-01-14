@@ -37,7 +37,8 @@ services:
             - '@twig'
             - '@router'
             - '@contao.csrf.token_manager'
-            - '%contao.csrf_token_name%'
+            - '%contao.backend.attributes%'
+            - '%contao.backend.badge_title%'
         tags:
             - controller.service_arguments
 
@@ -91,7 +92,25 @@ services:
 
     Contao\CoreBundle\Controller\InsertTagsController:
         arguments:
+            - '@contao.insert_tag.parser'
+        tags:
+            - controller.service_arguments
+
+    Contao\CoreBundle\Controller\Page\ErrorPageController:
+        arguments:
             - '@contao.framework'
+
+    Contao\CoreBundle\Controller\Page\RootPageController:
+        arguments:
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
+
+    Contao\CoreBundle\Controller\PreviewLinkController:
+        arguments:
+            - '@contao.security.frontend_preview_authenticator'
+            - '@uri_signer'
+            - '@database_connection'
         tags:
             - controller.service_arguments
 
@@ -101,8 +120,6 @@ services:
             - '@event_dispatcher'
         tags:
             - controller.service_arguments
-
-    Contao\CoreBundle\Controller\Page\RootPageController: ~
 
     Contao\CoreBundle\Controller\SitemapController:
         arguments:

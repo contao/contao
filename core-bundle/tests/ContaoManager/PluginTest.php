@@ -19,7 +19,6 @@ use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
-use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use PHPUnit\Framework\TestCase;
@@ -76,7 +75,6 @@ class PluginTest extends TestCase
                 DoctrineBundle::class,
                 KnpMenuBundle::class,
                 KnpTimeBundle::class,
-                LexikMaintenanceBundle::class,
                 NelmioCorsBundle::class,
                 NelmioSecurityBundle::class,
                 SchebTwoFactorBundle::class,

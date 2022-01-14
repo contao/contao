@@ -32,10 +32,6 @@ class LogoutSuccessListener
 
     public function __invoke(LogoutEvent $event): void
     {
-        if (null !== $event->getResponse()) {
-            return;
-        }
-
         $request = $event->getRequest();
 
         if ($this->scopeMatcher->isBackendRequest($request)) {

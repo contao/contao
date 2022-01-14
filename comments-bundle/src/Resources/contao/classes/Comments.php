@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Class Comments
@@ -147,7 +146,7 @@ class Comments extends Frontend
 		$objTemplate->email = $GLOBALS['TL_LANG']['MSC']['com_email'];
 		$objTemplate->website = $GLOBALS['TL_LANG']['MSC']['com_website'];
 		$objTemplate->commentsTotal = $limit ? $gtotal : $total;
-		$objTemplate->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getFrontendTokenValue();
+		$objTemplate->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		// Add a form to create new comments
 		$this->renderCommentForm($objTemplate, $objConfig, $strSource, $intParent, $varNotifies);
@@ -533,8 +532,7 @@ class Comments extends Frontend
 			$objNotify->delete();
 		}
 
-		// Add a log entry
-		$this->log('Purged the unactivated comment subscriptions', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the unactivated comment subscriptions');
 	}
 
 	/**

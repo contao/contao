@@ -133,6 +133,7 @@ services:
     contao.data_collector:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
+            - '@contao.security.token_checker'
             - '%contao.legacy_routing%'
             - '%kernel.project_dir%'
             - '%contao.prepend_locale%'
@@ -143,6 +144,12 @@ services:
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
 
+    contao.doctrine.backup.retention_policy:
+        class: Contao\CoreBundle\Doctrine\Backup\RetentionPolicy
+        arguments:
+            - ~
+            - ~
+
     contao.doctrine.backup_manager:
         class: Contao\CoreBundle\Doctrine\Backup\BackupManager
         arguments:
@@ -150,7 +157,7 @@ services:
             - '@contao.doctrine.backup.dumper'
             - ~
             - ~
-            - ~
+            - '@contao.doctrine.backup.retention_policy'
 
     contao.doctrine.dca_schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider
@@ -170,6 +177,26 @@ services:
         class: Contao\CoreBundle\Doctrine\Schema\SchemaProvider
         arguments:
             - '@doctrine.orm.default_entity_manager'
+
+    contao.filesystem.dbafs_factory:
+        class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
+        arguments:
+            - '@database_connection'
+            - '@event_dispatcher'
+
+    contao.filesystem.dbafs_manager:
+        class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
+
+    contao.filesystem.mount_manager:
+        class: Contao\CoreBundle\Filesystem\MountManager
+        arguments:
+            - ~
+
+    contao.filesystem.virtual_factory:
+        class: Contao\CoreBundle\Filesystem\VirtualFilesystemFactory
+        arguments:
+            - '@contao.filesystem.mount_manager'
+            - '@contao.filesystem.dbafs_manager'
 
     contao.fragment.forward_renderer:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
@@ -234,6 +261,13 @@ services:
             - '%contao.image.valid_extensions%'
             - '%kernel.project_dir%/%contao.upload_path%'
             - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
+
+    contao.image.fallback_preview_provider:
+        class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider
+        tags:
+            - { name: contao.preview_provider, priority: -1024 }
 
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
@@ -243,6 +277,13 @@ services:
 
     contao.image.imagine.imagick:
         class: Imagine\Imagick\Imagine
+
+    contao.image.imagine_preview_provider:
+        class: Contao\CoreBundle\Image\Preview\ImaginePreviewProvider
+        arguments:
+            - '@contao.image.imagine'
+        tags:
+            - { name: contao.preview_provider, priority: 0 }
 
     contao.image.imagine_svg:
         class: Contao\ImagineSvg\Imagine
@@ -273,6 +314,21 @@ services:
         arguments:
             - '@contao.image.legacy_resizer'
             - '@?contao.image.resize_calculator'
+
+    contao.image.preview_factory:
+        class: Contao\CoreBundle\Image\Preview\PreviewFactory
+        public: true
+        arguments:
+            - !tagged_iterator contao.preview_provider
+            - '@contao.image.factory'
+            - '@contao.image.picture_factory'
+            - '@contao.image.studio'
+            - '@contao.framework'
+            - '%kernel.secret%'
+            - '%contao.image.preview.target_dir%'
+            - '%contao.image.valid_extensions%'
+            - '%contao.image.preview.default_size%'
+            - '%contao.image.preview.max_size%'
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator
@@ -519,6 +575,16 @@ services:
         arguments:
             - '@contao.security.token_checker'
 
+    contao.routing.nested_404_matcher:
+        class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
+        public: true
+        arguments:
+            - '@contao.routing.route_404_provider'
+            - '@contao.routing.url_matcher'
+        calls:
+            - [addRouteFilter, ['@contao.routing.matcher.domain_filter']]
+            - [addRouteFilter, ['@contao.routing.matcher.published_filter']]
+
     contao.routing.nested_matcher:
         class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
         public: true
@@ -530,15 +596,17 @@ services:
             - [addRouteFilter, ['@contao.routing.matcher.published_filter']]
             - [addRouteFilter, ['@contao.routing.matcher.language_filter']]
 
-    contao.routing.nested_404_matcher:
-        class: Symfony\Cmf\Component\Routing\NestedMatcher\NestedMatcher
-        public: true
+    contao.routing.page_404_router:
+        class: Symfony\Cmf\Component\Routing\DynamicRouter
         arguments:
+            - '@router.request_context'
+            - '@contao.routing.nested_404_matcher'
+            - '@contao.routing.page_url_generator'
+            - ''
+            - '@event_dispatcher'
             - '@contao.routing.route_404_provider'
-            - '@contao.routing.url_matcher'
-        calls:
-            - [addRouteFilter, ['@contao.routing.matcher.domain_filter']]
-            - [addRouteFilter, ['@contao.routing.matcher.published_filter']]
+        tags:
+            - { name: router, priority: -200 }
 
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry
@@ -557,18 +625,6 @@ services:
             - '@contao.routing.route_provider'
         tags:
             - { name: router, priority: 20 }
-
-    contao.routing.page_404_router:
-        class: Symfony\Cmf\Component\Routing\DynamicRouter
-        arguments:
-            - '@router.request_context'
-            - '@contao.routing.nested_404_matcher'
-            - '@contao.routing.page_url_generator'
-            - ''
-            - '@event_dispatcher'
-            - '@contao.routing.route_404_provider'
-        tags:
-            - { name: router, priority: -200 }
 
     contao.routing.page_url_generator:
         class: Contao\CoreBundle\Routing\PageUrlGenerator
@@ -594,6 +650,13 @@ services:
             - '@request_stack'
             - '@contao.insert_tag.parser'
 
+    contao.routing.route_404_provider:
+        class: Contao\CoreBundle\Routing\Route404Provider
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.locale_candidates'
+            - '@contao.routing.page_registry'
+
     contao.routing.route_provider:
         class: Contao\CoreBundle\Routing\RouteProvider
         arguments:
@@ -602,13 +665,6 @@ services:
             - '@contao.routing.page_registry'
             - '%contao.legacy_routing%'
             - '%contao.prepend_locale%'
-
-    contao.routing.route_404_provider:
-        class: Contao\CoreBundle\Routing\Route404Provider
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.locale_candidates'
-            - '@contao.routing.page_registry'
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher
@@ -853,14 +909,6 @@ services:
         arguments:
             - 48
 
-    contao.translation.translator:
-        class: Contao\CoreBundle\Translation\Translator
-        decorates: translator
-        arguments:
-            - '@contao.translation.translator.inner'
-            - '@contao.framework'
-            - '@contao.resource_finder'
-
     contao.translation.data_collector_translator:
         class: Contao\CoreBundle\Translation\DataCollectorTranslator
         autoconfigure: false
@@ -868,6 +916,14 @@ services:
             - '@contao.translation.data_collector_translator.inner'
         tags:
             - { name: kernel.reset, method: reset }
+
+    contao.translation.translator:
+        class: Contao\CoreBundle\Translation\Translator
+        decorates: translator
+        arguments:
+            - '@contao.translation.translator.inner'
+            - '@contao.framework'
+            - '@contao.resource_finder'
 
     contao.twig.extension:
         class: Contao\CoreBundle\Twig\Extension\ContaoExtension
@@ -920,6 +976,13 @@ services:
         class: Contao\CoreBundle\Twig\Interop\ContextFactory
         public: true
 
+    contao.twig.legacy_template_functions_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
+        arguments:
+            - '@request_stack'
+            - '@contao.framework'
+            - '@contao.routing.scope_matcher'
+
     contao.twig.loader.template_locator:
         class: Contao\CoreBundle\Twig\Loader\TemplateLocator
         arguments:
@@ -931,13 +994,6 @@ services:
 
     contao.twig.loader.theme_namespace:
         class: Contao\CoreBundle\Twig\Loader\ThemeNamespace
-
-    contao.twig.legacy_template_functions_runtime:
-        class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
-        arguments:
-            - '@request_stack'
-            - '@contao.framework'
-            - '@contao.routing.scope_matcher'
 
     contao.twig.picture_configuration_runtime:
         class: Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime

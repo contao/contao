@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
-
 /**
  * Provide methods regarding news archives.
  *
@@ -58,7 +56,8 @@ class News extends Frontend
 		else
 		{
 			$this->generateFiles($objFeed->row());
-			$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
+
+			System::getContainer()->get('monolog.logger.contao.cron')->info('Generated news feed "' . $objFeed->feedName . '.xml"');
 		}
 	}
 
@@ -78,7 +77,8 @@ class News extends Frontend
 			{
 				$objFeed->feedName = $objFeed->alias ?: 'news' . $objFeed->id;
 				$this->generateFiles($objFeed->row());
-				$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
+
+				System::getContainer()->get('monolog.logger.contao.cron')->info('Generated news feed "' . $objFeed->feedName . '.xml"');
 			}
 		}
 	}
@@ -100,7 +100,8 @@ class News extends Frontend
 
 				// Update the XML file
 				$this->generateFiles($objFeed->row());
-				$this->log('Generated news feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
+
+				System::getContainer()->get('monolog.logger.contao.cron')->info('Generated news feed "' . $objFeed->feedName . '.xml"');
 			}
 		}
 	}
@@ -146,7 +147,6 @@ class News extends Frontend
 		if ($objArticle !== null)
 		{
 			$arrUrls = array();
-
 			$request = $container->get('request_stack')->getCurrentRequest();
 
 			if ($request)
@@ -155,10 +155,17 @@ class News extends Frontend
 				$request->attributes->set('_scope', 'frontend');
 			}
 
+			$time = time();
 			$origObjPage = $GLOBALS['objPage'] ?? null;
 
 			while ($objArticle->next())
 			{
+				// Never add unpublished elements to the RSS feeds
+				if (!$objArticle->published || ($objArticle->start && $objArticle->start > $time) || ($objArticle->stop && $objArticle->stop <= $time))
+				{
+					continue;
+				}
+
 				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
 
 				// No jumpTo page set (see #4784)
@@ -232,7 +239,7 @@ class News extends Frontend
 
 					if ($objFile !== null)
 					{
-						$objItem->addEnclosure($objFile->path, $strLink, 'media:content');
+						$objItem->addEnclosure($objFile->path, $strLink, 'media:content', $arrFeed['imgSize']);
 					}
 				}
 

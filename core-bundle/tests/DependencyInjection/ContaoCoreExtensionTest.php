@@ -13,13 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
+use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\DependencyInjection\Compiler\ResolvePrivatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
@@ -336,7 +339,13 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
         $this->assertSame('%kernel.project_dir%/var/backups', $definition->getArgument(2));
         $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(3));
-        $this->assertSame(5, $definition->getArgument(4));
+        $this->assertEquals(new Reference('contao.doctrine.backup.retention_policy'), $definition->getArgument(4));
+
+        $retentionPolicyDefinition = $container->getDefinition('contao.doctrine.backup.retention_policy');
+
+        $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
+        $this->assertSame(5, $retentionPolicyDefinition->getArgument(0));
+        $this->assertSame(['1D', '7D', '14D', '1M'], $retentionPolicyDefinition->getArgument(1));
 
         $extension->load(
             [
@@ -345,6 +354,7 @@ class ContaoCoreExtensionTest extends TestCase
                         'directory' => 'somewhere/else',
                         'ignore_tables' => ['foobar'],
                         'keep_max' => 10,
+                        'keep_intervals' => ['1D', '2D', '7D', '14D', '1M', '1Y'],
                     ],
                 ],
             ],
@@ -357,7 +367,13 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
         $this->assertSame('somewhere/else', $definition->getArgument(2));
         $this->assertSame(['foobar'], $definition->getArgument(3));
-        $this->assertSame(10, $definition->getArgument(4));
+        $this->assertEquals(new Reference('contao.doctrine.backup.retention_policy'), $definition->getArgument(4));
+
+        $retentionPolicyDefinition = $container->getDefinition('contao.doctrine.backup.retention_policy');
+
+        $this->assertSame(RetentionPolicy::class, $retentionPolicyDefinition->getClass());
+        $this->assertSame(10, $retentionPolicyDefinition->getArgument(0));
+        $this->assertSame(['1D', '2D', '7D', '14D', '1M', '1Y'], $retentionPolicyDefinition->getArgument(1));
     }
 
     public function testRegistersTheDefaultSearchIndexer(): void
@@ -526,6 +542,92 @@ class ContaoCoreExtensionTest extends TestCase
         ];
     }
 
+    public function testPrependsMonologConfigurationWithActionChannels(): void
+    {
+        $channels = [
+            'contao.access',
+            'contao.configuration',
+            'contao.cron',
+            'contao.email',
+            'contao.error',
+            'contao.files',
+            'contao.forms',
+            'contao.general',
+        ];
+
+        $monologExtension = $this->createMock(Extension::class);
+        $monologExtension
+            ->method('getAlias')
+            ->willReturn('monolog')
+        ;
+
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+            ])
+        );
+
+        $container->registerExtension($monologExtension);
+
+        $extension = new ContaoCoreExtension();
+        $extension->prepend($container);
+
+        $config = $container->getExtensionConfig('monolog');
+
+        $this->assertSame($channels, $config[0]['channels'] ?? []);
+    }
+
+    public function testDoesNotPrependMonologConfigurationWithoutMonologExtension(): void
+    {
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+            ])
+        );
+
+        $extension = new ContaoCoreExtension();
+        $extension->prepend($container);
+
+        $config = $container->getExtensionConfig('monolog');
+
+        $this->assertSame([], $config);
+    }
+
+    public function testConfiguresFilesystemDefaults(): void
+    {
+        $container = new ContainerBuilder(new ParameterBag([
+            'contao.upload_path' => 'upload/path',
+        ]));
+
+        $config = $this->createMock(FilesystemConfiguration::class);
+        $config
+            ->method('getContainer')
+            ->willReturn($container)
+        ;
+
+        $config
+            ->expects($this->once())
+            ->method('mountLocalAdapter')
+            ->with('upload/path', 'upload/path', 'files')
+        ;
+
+        $dbafsDefinition = $this->createMock(Definition::class);
+        $dbafsDefinition
+            ->expects($this->once())
+            ->method('addMethodCall')
+            ->with('setDatabasePathPrefix', ['upload/path'])
+        ;
+
+        $config
+            ->expects($this->once())
+            ->method('addDefaultDbafs')
+            ->with('files', 'tl_files')
+            ->willReturn($dbafsDefinition)
+        ;
+
+        (new ContaoCoreExtension())->configureFilesystem($config);
+    }
+
     private function getContainerBuilder(array $params = null): ContainerBuilder
     {
         $container = new ContainerBuilder(
@@ -546,14 +648,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $extension = new ContaoCoreExtension();
         $extension->load($params, $container);
-
-        // To find out whether we need to run the ResolvePrivatesPass, we take
-        // a private service and check the isPublic() return value. In Symfony
-        // 4.4, it will be "true", whereas in Symfony 5, it will be "false".
-        if (true === $container->findDefinition('contao.routing.page_router')->isPublic()) {
-            $pass = new ResolvePrivatesPass();
-            $pass->process($container);
-        }
 
         return $container;
     }

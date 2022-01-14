@@ -19,11 +19,11 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
+use Contao\MemberGroupModel;
 use Contao\Message;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
-use Contao\Versions;
 
 $GLOBALS['TL_DCA']['tl_content'] = array
 (
@@ -102,8 +102,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			),
 			'toggle' => array
 			(
+				'href'                => 'act=toggle&amp;field=invisible',
 				'icon'                => 'visible.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_content', 'toggleIcon')
 			),
 			'show' => array
@@ -117,7 +117,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'overwriteLink', 'protected', 'splashImage', 'markdownSource'),
+		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'overwriteLink', 'protected', 'splashImage', 'markdownSource', 'showPreview'),
 		'default'                     => '{type_legend},type',
 		'headline'                    => '{type_legend},type,headline;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'text'                        => '{type_legend},type,headline;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
@@ -139,8 +139,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{player_legend},playerSize,playerOptions,playerStart,playerStop,playerCaption,playerPreload;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},playerSize,youtubeOptions,playerStart,playerStop,playerCaption,playerAspect;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'vimeo'                       => '{type_legend},type,headline;{source_legend},vimeo;{player_legend},playerSize,vimeoOptions,playerStart,playerColor,playerCaption,playerAspect;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
-		'download'                    => '{type_legend},type,headline;{source_legend},singleSRC;{download_legend},inline,overwriteLink;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
-		'downloads'                   => '{type_legend},type,headline;{source_legend},multiSRC;{download_legend},inline,sortBy,metaIgnore;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
+		'download'                    => '{type_legend},type,headline;{source_legend},singleSRC;{download_legend},inline,overwriteLink;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
+		'downloads'                   => '{type_legend},type,headline;{source_legend},multiSRC;{download_legend},inline,sortBy,metaIgnore;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,useHomeDir;{invisible_legend:hide},invisible,start,stop',
 		'alias'                       => '{type_legend},type;{include_legend},cteAlias;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
 		'article'                     => '{type_legend},type;{include_legend},articleAlias;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
 		'teaser'                      => '{type_legend},type;{include_legend},article;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop',
@@ -159,7 +159,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'protected'                   => 'groups',
 		'splashImage'                 => 'singleSRC,size',
 		'markdownSource_sourceText'   => 'code',
-		'markdownSource_sourceFile'   => 'singleSRC'
+		'markdownSource_sourceFile'   => 'singleSRC',
+		'showPreview'                 => 'size,fullsize,numberOfItems',
 	),
 
 	// Fields
@@ -220,6 +221,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
+		'showPreview' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'checkbox',
+			'eval'                    => array('submitOnChange'=>true, 'tl_class' => 'clr'),
+			'sql'                     => "char(1) NOT NULL default ''"
+		),
 		'inline' => array(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
@@ -262,21 +270,18 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'size' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
-				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
-			},
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'imagemargin' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'trbl',
-			'options'                 => $GLOBALS['TL_CSS_UNITS'],
+			'options'                 => array('px', '%', 'em', 'rem'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
@@ -857,6 +862,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'invisible' => array
 		(
 			'exclude'                 => true,
+			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -1084,6 +1090,11 @@ class tl_content extends Backend
 			case 'image':
 				$GLOBALS['TL_DCA']['tl_content']['fields']['imagemargin']['eval']['tl_class'] .= ' clr';
 				break;
+
+			case 'download':
+			case 'downloads':
+				$GLOBALS['TL_DCA']['tl_content']['fields']['size']['eval']['mandatory'] = true;
+				break;
 		}
 	}
 
@@ -1138,7 +1149,7 @@ class tl_content extends Backend
 		$objSession = System::getContainer()->get('session');
 
 		// Prevent editing content elements with not allowed types
-		if (Input::get('act') == 'edit' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
+		if (Input::get('act') == 'edit' || Input::get('act') == 'toggle' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
 		{
 			$objCes = $this->Database->prepare("SELECT type FROM tl_content WHERE id=?")
 									 ->execute(Input::get('id'));
@@ -1291,7 +1302,23 @@ class tl_content extends Backend
 		// Add the protection status
 		if ($arrRow['protected'])
 		{
-			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ')';
+			$groupIds = StringUtil::deserialize($arrRow['groups'], true);
+			$groupNames = array();
+
+			if (!empty($groupIds))
+			{
+				if (in_array(-1, array_map('intval', $groupIds), true))
+				{
+					$groupNames[] = $GLOBALS['TL_LANG']['MSC']['guests'];
+				}
+
+				if (null !== ($groups = MemberGroupModel::findMultipleByIds($groupIds)))
+				{
+					$groupNames += $groups->fetchEach('name');
+				}
+			}
+
+			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ($groupNames ? ': ' . implode(', ', $groupNames) : '') . ')';
 		}
 
 		// Add the headline level (see #5858)
@@ -1979,15 +2006,8 @@ class tl_content extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Input::get('cid'))
-		{
-			$this->toggleVisibility(Input::get('cid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
-			$this->redirect($this->getReferer());
-		}
-
 		$security = System::getContainer()->get('security.helper');
 
-		// Check permissions AFTER checking the cid, so hacking attempts are logged
 		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_content::invisible'))
 		{
 			return '';
@@ -1999,136 +2019,13 @@ class tl_content extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		$href .= '&amp;id=' . Input::get('id') . '&amp;cid=' . $row['id'] . '&amp;state=' . $row['invisible'];
+		$href .= '&amp;id=' . $row['id'];
 
 		if ($row['invisible'])
 		{
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" data-tid="cid"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
-	}
-
-	/**
-	 * Toggle the visibility of an element
-	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
-	{
-		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
-
-		if ($dc)
-		{
-			$dc->id = $intId; // see #8043
-		}
-
-		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onload_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		// Check the field access
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_content::invisible'))
-		{
-			throw new AccessDeniedException('Not enough permissions to show/hide content element ID ' . $intId . '.');
-		}
-
-		$objRow = $this->Database->prepare("SELECT * FROM tl_content WHERE id=?")
-								 ->limit(1)
-								 ->execute($intId);
-
-		if ($objRow->numRows < 1)
-		{
-			throw new AccessDeniedException('Invalid content element ID ' . $intId . '.');
-		}
-
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_ELEMENT_TYPE, $objRow->type))
-		{
-			throw new AccessDeniedException('Not enough permissions to modify content elements of type "' . $objRow->type . '".');
-		}
-
-		// Set the current record
-		if ($dc)
-		{
-			$dc->activeRecord = $objRow;
-		}
-
-		$objVersions = new Versions('tl_content', $intId);
-		$objVersions->initialize();
-
-		// Reverse the logic (elements have invisible=1)
-		$blnVisible = !$blnVisible;
-
-		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['fields']['invisible']['save_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$blnVisible = $callback($blnVisible, $dc);
-				}
-			}
-		}
-
-		$time = time();
-
-		// Update the database
-		$this->Database->prepare("UPDATE tl_content SET tstamp=$time, invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
-					   ->execute($intId);
-
-		if ($dc)
-		{
-			$dc->activeRecord->tstamp = $time;
-			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
-		}
-
-		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_content']['config']['onsubmit_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		$objVersions->create();
-
-		if ($dc)
-		{
-			$dc->invalidateCacheTags();
-		}
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

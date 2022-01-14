@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle;
 
+use Composer\InstalledVersions;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
@@ -19,9 +20,11 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\IntlInstalledLocalesAndCountriesPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\LoggerChannelPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\MakeServicesPublicPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
@@ -118,5 +121,22 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new RewireTwigPathsPass());
         $container->addCompilerPass(new AddNativeTransportFactoryPass());
         $container->addCompilerPass(new IntlInstalledLocalesAndCountriesPass());
+        $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
+        $container->addCompilerPass(new ConfigureFilesystemPass());
+    }
+
+    public static function getVersion(): string
+    {
+        try {
+            $version = (string) InstalledVersions::getPrettyVersion('contao/core-bundle');
+        } catch (\OutOfBoundsException $e) {
+            $version = '';
+        }
+
+        if ('' === $version) {
+            $version = (string) InstalledVersions::getPrettyVersion('contao/contao');
+        }
+
+        return $version;
     }
 }

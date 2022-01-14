@@ -432,6 +432,91 @@ var AjaxRequest =
 	},
 
 	/**
+	 * Toggle the state of a checkbox field
+	 *
+	 * @param {object}  el      The DOM element
+	 * @param {boolean} rowIcon Whether the row icon should be toggled as well
+	 *
+	 * @returns {boolean}
+	 */
+	toggleField: function(el, rowIcon) {
+		el.blur();
+
+		var img = null,
+			image = $(el).getFirst('img'),
+			published = (image.get('data-state') == 1),
+			div = el.getParent('div'),
+			next, pa;
+
+		if (rowIcon) {
+			// Find the icon depending on the view (tree view, list view, parent view)
+			if (div.hasClass('tl_right')) {
+				img = div.getPrevious('div').getElement('img');
+			} else if (div.hasClass('tl_listing_container')) {
+				img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
+				if (img === null) { // comments
+					img = el.getParent('td').getPrevious('td').getElement('div.cte_type');
+				}
+				if (img === null) { // showColumns
+					img = el.getParent('tr').getFirst('td').getElement('div.list_icon_new');
+				}
+			} else if (next = div.getNext('div')) {
+				if (next.hasClass('cte_type')) {
+					img = next;
+				}
+				if (img === null) { // newsletter recipients
+					img = next.getFirst('div.list_icon');
+				}
+			}
+
+			// Change the row icon
+			if (img !== null) {
+				// Tree view
+				if (img.nodeName.toLowerCase() == 'img') {
+					if (img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
+						img.src = !published ? img.get('data-icon') : img.get('data-icon-disabled');
+					} else {
+						pa = img.getParent('a');
+
+						if (pa && pa.href.indexOf('contao/preview') == -1) {
+							if (next = pa.getNext('a')) {
+								img = next.getFirst('img');
+							} else {
+								img = new Element('img'); // no icons used (see #2286)
+							}
+						}
+
+						img.src = !published ? img.get('data-icon') : img.get('data-icon-disabled');
+					}
+				}
+				// Parent view
+				else if (img.hasClass('cte_type')) {
+					if (!published) {
+						img.addClass('published');
+						img.removeClass('unpublished');
+					} else {
+						img.addClass('unpublished');
+						img.removeClass('published');
+					}
+				}
+				// List view
+				else {
+					img.setStyle('background-image', 'url(' + (!published ? img.get('data-icon') : img.get('data-icon-disabled')) + ')');
+				}
+			}
+		}
+
+		// Send request
+		image.src = !published ? image.get('data-icon') : image.get('data-icon-disabled');
+		image.set('data-state', !published ? 1 : 0);
+
+		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
+
+		// Return false to stop the click event on link
+		return false;
+	},
+
+	/**
 	 * Toggle the visibility of an element
 	 *
 	 * @param {object} el    The DOM element
@@ -439,8 +524,12 @@ var AjaxRequest =
 	 * @param {string} table The table name
 	 *
 	 * @returns {boolean}
+	 *
+	 * @deprecated
 	 */
 	toggleVisibility: function(el, id, table) {
+		window.console && console.warn('AjaxRequest.toggleVisibility() is deprecated. Please use the new toggle operation.');
+
 		el.blur();
 
 		var img = null,
@@ -581,20 +670,20 @@ var AjaxRequest =
 			div.getParent('div').getElement('pre').toggleClass('disabled');
 		}
 
+		icon = image.get('data-icon') || AjaxRequest.themePath + 'icons/visible.svg';
+		icond = image.get('data-icon-disabled') || AjaxRequest.themePath + 'icons/invisible.svg';
+
 		// Send request
-		if (!published) {
-			image.src = AjaxRequest.themePath + 'icons/visible.svg';
-			image.set('data-state', 1);
+		if (el.href.indexOf('act=toggle') !== -1) {
+			image.src = !published ? icon : icond;
+			image.set('data-state', !published ? 1 : 0);
 
-			params = {'state':1, 'rt':Contao.request_token};
-			params[$(el).get('data-tid') || 'tid'] = id;
-
-			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get(params);
+			new Request.Contao({'url':el.href, 'followRedirects':false}).get();
 		} else {
-			image.src = AjaxRequest.themePath + 'icons/invisible.svg';
-			image.set('data-state', 0);
+			image.src = published ? icond : icon;
+			image.set('data-state', published ? 0 : 1);
 
-			params = {'state':0, 'rt':Contao.request_token};
+			params = {'state':published ? 0 : 1, 'rt':Contao.request_token};
 			params[$(el).get('data-tid') || 'tid'] = id;
 
 			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get(params);
@@ -610,8 +699,12 @@ var AjaxRequest =
 	 * @param {string} id The ID of the target element
 	 *
 	 * @returns {boolean}
+	 *
+	 * @deprecated
 	 */
 	toggleFeatured: function(el, id) {
+		window.console && console.warn('AjaxRequest.toggleFeatured() is deprecated. Please use the new toggle operation.');
+
 		el.blur();
 
 		var image = $(el).getFirst('img'),
@@ -1320,11 +1413,11 @@ var Backend =
 		});
 
 		// Links and input elements
-		['a[title]', 'input[title]', 'button[title]', 'time[title]'].each(function(el) {
+		['a[title]', 'input[title]', 'button[title]', 'time[title]', 'span[title]'].each(function(el) {
 			new Tips.Contao($$(el).filter(function(i) {
 				return i.title != ''
 			}), {
-				offset: {x:0, y:((el == 'time[title]') ? 26 : 30)}
+				offset: {x:0, y:((el == 'time[title]' || el == 'span[title]') ? 26 : 30)}
 			});
 		});
 	},
@@ -2594,7 +2687,7 @@ var Backend =
 		var inputs = edit
 			.getElements('input, textarea')
 			.filter(function(item) {
-				return !item.get('disabled') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image' && (!item.get('autocomplete') || item.get('autocomplete') === 'off' || !item.get('value'));
+				return !item.get('disabled') && !item.get('readonly') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image' && (!item.get('autocomplete') || item.get('autocomplete') === 'off' || !item.get('value'));
 			});
 
 		if (inputs[0]) inputs[0].focus();

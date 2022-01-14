@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -19,6 +18,7 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -31,6 +31,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string                 $title
  * @property string                 $alias
  * @property string                 $type
+ * @property string|integer         $routePriority
  * @property string                 $pageTitle
  * @property string                 $language
  * @property string                 $robots
@@ -45,6 +46,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string                 $staticPlugins
  * @property string|boolean         $fallback
  * @property string|boolean         $disableLanguageRedirect
+ * @property string|boolean         $maintenanceMode
  * @property string|null            $favicon
  * @property string|null            $robotsTxt
  * @property string                 $mailerTransport
@@ -127,6 +129,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByTitle($val, array $opt=array())
  * @method static PageModel|null findOneByAlias($val, array $opt=array())
  * @method static PageModel|null findOneByType($val, array $opt=array())
+ * @method static PageModel|null findOneByRoutePriority($val, array $opt=array())
  * @method static PageModel|null findOneByPageTitle($val, array $opt=array())
  * @method static PageModel|null findOneByLanguage($val, array $opt=array())
  * @method static PageModel|null findOneByRobots($val, array $opt=array())
@@ -186,6 +189,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByTitle($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAlias($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByType($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByRoutePriority($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByPageTitle($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLanguage($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
@@ -249,6 +253,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByTitle($val, array $opt=array())
  * @method static integer countByAlias($val, array $opt=array())
  * @method static integer countByType($val, array $opt=array())
+ * @method static integer countByRoutePriority($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
  * @method static integer countByLanguage($val, array $opt=array())
  * @method static integer countByRobots($val, array $opt=array())
@@ -318,6 +323,9 @@ class PageModel extends Model
 	 */
 	protected $blnDetailsLoaded = false;
 
+	private static ?array $prefixes = null;
+	private static ?array $suffixes = null;
+
 	public function __set($strKey, $varValue)
 	{
 		// Deprecate setting dynamic page attributes if they are set on the global $objPage
@@ -371,6 +379,12 @@ class PageModel extends Model
 		}
 
 		parent::__set($strKey, $varValue);
+	}
+
+	public static function reset()
+	{
+		self::$prefixes = null;
+		self::$suffixes = null;
 	}
 
 	/**
@@ -686,6 +700,21 @@ class PageModel extends Model
 	}
 
 	/**
+	 * Find pages that have a similar alias
+	 *
+	 * @return Collection|PageModel[]|null A collection of models or null if there are no pages
+	 */
+	public static function findSimilarByAlias(self $pageModel)
+	{
+		$pageModel->loadDetails();
+
+		$t = static::$strTable;
+		$alias = '%' . self::stripPrefixesAndSuffixes($pageModel->alias, $pageModel->urlPrefix, $pageModel->urlSuffix) . '%';
+
+		return static::findBy(array("$t.alias LIKE ?", "$t.id!=?"), array($alias, $pageModel->id));
+	}
+
+	/**
 	 * Find published pages by their ID or aliases
 	 *
 	 * @param mixed $varId      The numeric ID or the alias name
@@ -726,7 +755,7 @@ class PageModel extends Model
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
 		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
-		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
+		$blnBeUserLoggedIn = $tokenChecker->isPreviewMode();
 		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
 
 		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
@@ -1206,6 +1235,7 @@ class PageModel extends Model
 			$this->mailerTransport = $objParentPage->mailerTransport;
 			$this->enableCanonical = $objParentPage->enableCanonical;
 			$this->useAutoItem = Config::get('useAutoItem');
+			$this->maintenanceMode = $objParentPage->maintenanceMode;
 
 			// Store whether the root page has been published
 			$this->rootIsPublic = ($objParentPage->published && (!$objParentPage->start || $objParentPage->start <= $time) && (!$objParentPage->stop || $objParentPage->stop > $time));
@@ -1236,7 +1266,7 @@ class PageModel extends Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
 
 			throw new NoRootPageFoundException('No root page found');
 		}
@@ -1290,6 +1320,8 @@ class PageModel extends Model
 	 * @param string $strParams    An optional string of URL parameters
 	 * @param string $strForceLang Force a certain language
 	 *
+	 * @throws RouteNotFoundException
+	 *
 	 * @return string A URL that can be used in the front end
 	 */
 	public function getFrontendUrl($strParams=null, $strForceLang=null)
@@ -1331,6 +1363,8 @@ class PageModel extends Model
 	 *
 	 * @param string $strParams An optional string of URL parameters
 	 *
+	 * @throws RouteNotFoundException
+	 *
 	 * @return string An absolute URL that can be used in the front end
 	 */
 	public function getAbsoluteUrl($strParams=null)
@@ -1347,6 +1381,8 @@ class PageModel extends Model
 	 * Generate the front end preview URL
 	 *
 	 * @param string $strParams An optional string of URL parameters
+	 *
+	 * @throws RouteNotFoundException
 	 *
 	 * @return string The front end preview URL
 	 */
@@ -1430,6 +1466,73 @@ class PageModel extends Model
 		}
 
 		return $strUrl;
+	}
+
+	private static function stripPrefixesAndSuffixes(string $alias, string $urlPrefix, string $urlSuffix): string
+	{
+		if (null === self::$prefixes || null === self::$suffixes)
+		{
+			$rows = Database::getInstance()
+				->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+				->fetchAllAssoc()
+			;
+
+			self::$prefixes = array();
+			self::$suffixes = array();
+
+			foreach (array_column($rows, 'urlPrefix') as $prefix)
+			{
+				$prefix = trim($prefix, '/');
+
+				if ('' !== $prefix)
+				{
+					self::$prefixes[] = $prefix . '/';
+				}
+			}
+
+			foreach (array_column($rows, 'urlSuffix') as $suffix)
+			{
+				self::$suffixes[] = $suffix;
+			}
+		}
+
+		$prefixes = self::$prefixes;
+
+		if (!empty($urlPrefix))
+		{
+			$prefixes[] = $urlPrefix . '/';
+		}
+
+		if (null !== ($prefixRegex = self::regexArray($prefixes)))
+		{
+			$alias = preg_replace('/^' . $prefixRegex . '/i', '', $alias);
+		}
+
+		if (null !== ($suffixRegex = self::regexArray(array_merge(array($urlSuffix), self::$suffixes))))
+		{
+			$alias = preg_replace('/' . $suffixRegex . '$/i', '', $alias);
+		}
+
+		return $alias;
+	}
+
+	private static function regexArray(array $data): ?string
+	{
+		$data = array_filter(array_unique($data));
+
+		if (0 === \count($data))
+		{
+			return null;
+		}
+
+		usort($data, static fn ($v, $k) => \strlen($v));
+
+		foreach ($data as $k => $v)
+		{
+			$data[$k] = preg_quote($v, '/');
+		}
+
+		return '(' . implode('|', $data) . ')';
 	}
 }
 

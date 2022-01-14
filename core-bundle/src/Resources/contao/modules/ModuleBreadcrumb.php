@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -63,6 +62,8 @@ class ModuleBreadcrumb extends Module
 		$pages = array($objPage);
 		$items = array();
 
+		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+
 		// Get all pages up to the root page
 		$objPages = PageModel::findParentsById($objPage->pid);
 
@@ -97,7 +98,7 @@ class ModuleBreadcrumb extends Module
 
 		for ($i=(\count($pages)-1); $i>0; $i--)
 		{
-			if (($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !BE_USER_LOGGED_IN))
+			if (($pages[$i]->hide && !$this->showHidden) || (!$pages[$i]->published && !$blnShowUnpublished))
 			{
 				continue;
 			}
@@ -256,7 +257,7 @@ class ModuleBreadcrumb extends Module
 		}
 		catch (ExceptionInterface $exception)
 		{
-			System::log('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage());
 
 			return '';
 		}

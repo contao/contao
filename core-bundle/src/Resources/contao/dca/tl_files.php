@@ -14,7 +14,6 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Folder;
@@ -190,6 +189,10 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'hash' => array
 		(
 			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
+		'lastModified' => array
+		(
+			'sql'                     => "int(13) unsigned NULL default NULL"
 		),
 		'found' => array
 		(
@@ -607,14 +610,29 @@ class tl_files extends Backend
 	public function checkFilename($varValue, DataContainer $dc)
 	{
 		$varValue = str_replace('"', '', $varValue);
+		$chunks = array_filter(explode('/', $varValue));
 
-		if (strpos($varValue, '/') !== false || preg_match('/\.$/', $varValue))
+		if (count($chunks) < 1)
+		{
+			return '';
+		}
+
+		// Only allow slashes when creating new folders
+		if (count($chunks) > 1 && $dc->value != '__new__')
 		{
 			throw new Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
 		}
 
+		foreach ($chunks as $chunk)
+		{
+			if (preg_match('/\.$/', $chunk))
+			{
+				throw new Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
+			}
+		}
+
 		// Check the length without the file extension
-		if ($dc->activeRecord && $varValue)
+		if ($dc->activeRecord)
 		{
 			$intMaxlength = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['maxlength'] ?? null;
 
@@ -625,14 +643,17 @@ class tl_files extends Backend
 					$intMaxlength -= (strlen($dc->activeRecord->extension) + 1);
 				}
 
-				if (mb_strlen($varValue) > $intMaxlength)
+				foreach ($chunks as $chunk)
 				{
-					throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
+					if (mb_strlen($chunk) > $intMaxlength)
+					{
+						throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['maxlength'], $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['label'][0], $intMaxlength));
+					}
 				}
 			}
 		}
 
-		return $varValue;
+		return implode('/', $chunks);
 	}
 
 	/**
@@ -877,7 +898,7 @@ class tl_files extends Backend
 					$this->import(Automator::class, 'Automator');
 					$this->Automator->generateSymlinks();
 
-					$this->log('Folder "' . $strPath . '" has been published', __METHOD__, ContaoContext::FILES);
+					System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $strPath . '" has been published');
 				}
 			}
 			elseif ($blnUnprotected)
@@ -888,7 +909,7 @@ class tl_files extends Backend
 				$this->import(Automator::class, 'Automator');
 				$this->Automator->generateSymlinks();
 
-				$this->log('Folder "' . $strPath . '" has been protected', __METHOD__, ContaoContext::FILES);
+				System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $strPath . '" has been protected');
 			}
 		}
 
@@ -965,7 +986,7 @@ class tl_files extends Backend
 					$blnUnsynchronized = true;
 					$objFolder->unsynchronize();
 
-					$this->log('Synchronization of folder "' . $strPath . '" has been disabled', __METHOD__, ContaoContext::FILES);
+					System::getContainer()->get('monolog.logger.contao.files')->info('Synchronization of folder "' . $strPath . '" has been disabled');
 				}
 			}
 			elseif ($blnUnsynchronized)
@@ -973,7 +994,7 @@ class tl_files extends Backend
 				$blnUnsynchronized = false;
 				$objFolder->synchronize();
 
-				$this->log('Synchronization of folder "' . $strPath . '" has been enabled', __METHOD__, ContaoContext::FILES);
+				System::getContainer()->get('monolog.logger.contao.files')->info('Synchronization of folder "' . $strPath . '" has been enabled');
 			}
 		}
 

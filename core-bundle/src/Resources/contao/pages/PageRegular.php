@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -85,6 +84,7 @@ class PageRegular extends Frontend
 		$request->setLocale($locale);
 
 		$this->responseContext = $container->get('contao.routing.response_context_factory')->createContaoWebpageResponseContext($objPage);
+		$blnShowUnpublished = $container->get('contao.security.token_checker')->isPreviewMode();
 
 		System::loadLanguageFile('default');
 
@@ -99,6 +99,7 @@ class PageRegular extends Frontend
 
 		// Set the default image densities
 		$container->get('contao.image.picture_factory')->setDefaultDensities($objLayout->defaultImageDensities);
+		$container->get('contao.image.preview_factory')->setDefaultDensities($objLayout->defaultImageDensities);
 
 		// Store the layout ID
 		$objPage->layoutId = $objLayout->id;
@@ -147,7 +148,7 @@ class PageRegular extends Frontend
 			foreach ($arrModules as $arrModule)
 			{
 				// Disabled module
-				if (!BE_USER_LOGGED_IN && !($arrModule['enable'] ?? null))
+				if (!$blnShowUnpublished && !($arrModule['enable'] ?? null))
 				{
 					continue;
 				}
@@ -266,7 +267,7 @@ class PageRegular extends Frontend
 		// Die if there is no layout
 		if (null === $objLayout)
 		{
-			$this->log('Could not find layout ID "' . $objPage->layout . '"', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not find layout ID "' . $objPage->layout . '"');
 
 			throw new NoLayoutSpecifiedException('No layout specified');
 		}

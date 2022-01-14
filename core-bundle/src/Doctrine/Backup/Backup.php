@@ -29,6 +29,11 @@ class Backup
         $this->createdAt = self::extractDatetime($filepath);
     }
 
+    public function __toString(): string
+    {
+        return sprintf('[Backup]: %s', $this->getFilepath());
+    }
+
     /**
      * Returns the size in bytes.
      */

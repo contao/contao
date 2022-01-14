@@ -205,7 +205,7 @@ class Picker extends Widget
         e.preventDefault();
         Backend.openModalSelector({
           "id": "tl_listing",
-          "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0]) . ',
+          "title": ' . json_encode($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['label'][0] ?? '') . ',
           "url": this.href + document.getElementById("ctrl_' . $this->strId . '").value,
           "callback": function(table, value) {
             new Request.Contao({
@@ -291,94 +291,7 @@ class Picker extends Widget
 			}
 		}
 
-		$labelConfig = &$GLOBALS['TL_DCA'][$dc->table]['list']['label'];
-		$labelValues = array();
-
-		foreach ($labelConfig['fields'] as $k => $v)
-		{
-			if (strpos($v, ':') !== false)
-			{
-				list($strKey, $strTable) = explode(':', $v);
-				list($strTable, $strField) = explode('.', $strTable);
-
-				$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
-										 ->limit(1)
-										 ->execute($arrRow[$strKey]);
-
-				$labelValues[$k] = $objRef->numRows ? $objRef->$strField : '';
-			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['flag'], array(DataContainer::SORT_DAY_ASC, DataContainer::SORT_DAY_DESC, DataContainer::SORT_MONTH_ASC, DataContainer::SORT_MONTH_DESC, DataContainer::SORT_YEAR_ASC, DataContainer::SORT_YEAR_DESC)))
-			{
-				if ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp'] == 'date')
-				{
-					$labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('dateFormat'), $arrRow[$v]) : '-';
-				}
-				elseif ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['rgxp'] == 'time')
-				{
-					$labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('timeFormat'), $arrRow[$v]) : '-';
-				}
-				else
-				{
-					$labelValues[$k] = $arrRow[$v] ? Date::parse(Config::get('datimFormat'), $arrRow[$v]) : '-';
-				}
-			}
-			elseif ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isBoolean'] || ($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['multiple']))
-			{
-				$labelValues[$k] = $arrRow[$v] ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
-			}
-			else
-			{
-				$row_v = StringUtil::deserialize($arrRow[$v]);
-
-				if (\is_array($row_v))
-				{
-					$args_k = array();
-
-					foreach ($row_v as $option)
-					{
-						$args_k[] = $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$option] ?: $option;
-					}
-
-					$labelValues[$k] = implode(', ', $args_k);
-				}
-				elseif (isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]]))
-				{
-					$labelValues[$k] = \is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]]) ? $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]][0] : $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['reference'][$arrRow[$v]];
-				}
-				elseif (($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['eval']['isAssociative'] || array_is_assoc($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'])) && isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]]))
-				{
-					$labelValues[$k] = $GLOBALS['TL_DCA'][$dc->table]['fields'][$v]['options'][$arrRow[$v]];
-				}
-				else
-				{
-					$labelValues[$k] = $arrRow[$v];
-				}
-			}
-		}
-
-		$label = vsprintf($labelConfig['format'], $labelValues);
-
-		if (\is_array($labelConfig['label_callback'] ?? null))
-		{
-			$this->import($labelConfig['label_callback'][0]);
-
-			if (\in_array($mode, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)))
-			{
-				return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, '', false, null);
-			}
-
-			return $this->{$labelConfig['label_callback'][0]}->{$labelConfig['label_callback'][1]}($arrRow, $label, $dc, $labelValues);
-		}
-
-		if (\is_callable($labelConfig['label_callback'] ?? null))
-		{
-			if (\in_array($mode, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)))
-			{
-				return $labelConfig['label_callback']($arrRow, $label, $dc, '', false, null);
-			}
-
-			return $labelConfig['label_callback']($arrRow, $label, $dc, $labelValues);
-		}
+		$label = $dc->generateRecordLabel($arrRow, $dc->table);
 
 		return $label ?: $arrRow['id'];
 	}

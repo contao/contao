@@ -62,6 +62,8 @@ services:
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
+        arguments:
+            - '@contao.filesystem.dbafs_manager'
 
     contao.command.install:
         class: Contao\CoreBundle\Command\InstallCommand

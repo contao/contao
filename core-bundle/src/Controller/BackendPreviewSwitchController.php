@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Date;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,7 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Error\Error as TwigError;
 
@@ -44,11 +45,12 @@ class BackendPreviewSwitchController
     private Connection $connection;
     private Security $security;
     private TwigEnvironment $twig;
-    private CsrfTokenManagerInterface $tokenManager;
-    private string $csrfTokenName;
+    private ContaoCsrfTokenManager $tokenManager;
     private RouterInterface $router;
+    private array $backendAttributes;
+    private string $backendBadgeTitle;
 
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName)
+    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager, array $attributes = [], string $badgeTitle = '')
     {
         $this->previewAuthenticator = $previewAuthenticator;
         $this->tokenChecker = $tokenChecker;
@@ -57,7 +59,8 @@ class BackendPreviewSwitchController
         $this->twig = $twig;
         $this->router = $router;
         $this->tokenManager = $tokenManager;
-        $this->csrfTokenName = $csrfTokenName;
+        $this->backendAttributes = $attributes;
+        $this->backendBadgeTitle = $badgeTitle;
     }
 
     /**
@@ -95,16 +98,32 @@ class BackendPreviewSwitchController
         $canSwitchUser = $this->security->isGranted('ROLE_ALLOWED_TO_SWITCH_MEMBER');
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
         $showUnpublished = $this->tokenChecker->isPreviewMode();
+        $shareLink = '';
+
+        if ($this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link')) {
+            $shareLink = $this->router->generate(
+                'contao_backend',
+                [
+                    'do' => 'preview_link',
+                    'act' => 'create',
+                    'showUnpublished' => $showUnpublished ? '1' : '',
+                    'rt' => $this->tokenManager->getDefaultTokenValue(),
+                ]
+            );
+        }
 
         try {
             return $this->twig->render(
                 '@ContaoCore/Frontend/preview_toolbar_base.html.twig',
                 [
-                    'request_token' => $this->tokenManager->getToken($this->csrfTokenName)->getValue(),
+                    'request_token' => $this->tokenManager->getDefaultTokenValue(),
                     'action' => $this->router->generate('contao_backend_switch'),
                     'canSwitchUser' => $canSwitchUser,
                     'user' => $frontendUsername,
                     'show' => $showUnpublished,
+                    'attributes' => $this->backendAttributes,
+                    'badgeTitle' => $this->backendBadgeTitle,
+                    'share' => $shareLink,
                 ]
             );
         } catch (TwigError $e) {

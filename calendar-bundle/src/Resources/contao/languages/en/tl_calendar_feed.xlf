@@ -65,6 +65,9 @@
       <trans-unit id="tl_calendar_feed.config_legend">
         <source>Feed settings</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_feed.image_legend">
+        <source>Image settings</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_feed.source_teaser">
         <source>Event teasers</source>
       </trans-unit>

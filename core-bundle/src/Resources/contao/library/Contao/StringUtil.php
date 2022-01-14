@@ -596,6 +596,80 @@ class StringUtil
 	}
 
 	/**
+	 * Encode a string with Crockford’s Base32 (0123456789ABCDEFGHJKMNPQRSTVWXYZ)
+	 *
+	 * @see StringUtil::decodeBase32()
+	 */
+	public static function encodeBase32(string $bytes): string
+	{
+		$result = array();
+
+		foreach (str_split($bytes, 5) as $chunk)
+		{
+			$result[] = substr(
+				str_pad(
+					strtr(
+						base_convert(bin2hex(str_pad($chunk, 5, "\0")), 16, 32),
+						'ijklmnopqrstuv',
+						'jkmnpqrstvwxyz', // Crockford's Base32
+					),
+					8,
+					'0',
+					STR_PAD_LEFT,
+				),
+				0,
+				(int) ceil(\strlen($chunk) * 8 / 5),
+			);
+		}
+
+		return strtoupper(implode('', $result));
+	}
+
+	/**
+	 * Decode a Crockford’s Base32 encoded string
+	 *
+	 * Uppercase and lowercase letters are supported. Letters O and o are
+	 * interpreted as 0. Letters I, i, L and l are interpreted as 1.
+	 *
+	 * @see StringUtil::encodeBase32()
+	 */
+	public static function decodeBase32(string $base32String): string
+	{
+		if (1 !== preg_match('/^[0-9a-tv-z]*$/i', $base32String))
+		{
+			throw new \InvalidArgumentException('Base32 string must only consist of digits and letters except "U"');
+		}
+
+		$result = array();
+
+		foreach (str_split($base32String, 8) as $chunk)
+		{
+			$result[] = substr(
+				hex2bin(
+					str_pad(
+						base_convert(
+							strtr(
+								str_pad(strtolower($chunk), 8, '0'),
+								'oiljkmnpqrstvwxyz', // Crockford's Base32
+								'011ijklmnopqrstuv',
+							),
+							32,
+							16,
+						),
+						10,
+						'0',
+						STR_PAD_LEFT,
+					),
+				),
+				0,
+				(int) floor(\strlen($chunk) * 5 / 8),
+			);
+		}
+
+		return implode('', $result);
+	}
+
+	/**
 	 * Convert file paths inside "src" attributes to insert tags
 	 *
 	 * @param string $data The markup string

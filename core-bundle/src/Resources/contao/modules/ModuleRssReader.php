@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Front end module "rss reader".
@@ -77,7 +76,7 @@ class ModuleRssReader extends Module
 
 		if (!$this->objFeed->init())
 		{
-			$this->log('Error importing RSS feed "' . $this->rss_feed . '"', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Error importing RSS feed "' . $this->rss_feed . '"');
 
 			return '';
 		}

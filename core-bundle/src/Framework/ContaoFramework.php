@@ -24,6 +24,7 @@ use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\Model\Registry;
+use Contao\PageModel;
 use Contao\RequestToken;
 use Contao\System;
 use Contao\TemplateLoader;
@@ -83,6 +84,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         Input::resetCache();
         Input::resetUnusedGet();
         InsertTags::reset();
+        PageModel::reset();
         Registry::getInstance()->reset();
     }
 
@@ -185,7 +187,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         if ('FE' === $this->getMode() && ($session = $this->getSession()) && $this->request->hasPreviousSession()) {
             $session->start();
 
-            \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
+            \define('BE_USER_LOGGED_IN', $this->tokenChecker->isPreviewMode());
             \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
         } else {
             \define('BE_USER_LOGGED_IN', false);

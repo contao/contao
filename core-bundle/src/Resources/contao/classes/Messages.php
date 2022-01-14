@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\ContaoCorePermissions;
-
 /**
  * Add system messages to the welcome screen.
  *
@@ -29,35 +27,6 @@ class Messages extends Backend
 	public function versionCheck()
 	{
 		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\Messages::versionCheck()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return '';
-	}
-
-	/**
-	 * Check for maintenance mode
-	 *
-	 * @return string
-	 */
-	public function maintenanceCheck()
-	{
-		$this->import(BackendUser::class, 'User');
-
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'maintenance'))
-		{
-			return '';
-		}
-
-		try
-		{
-			if (System::getContainer()->get('lexik_maintenance.driver.factory')->getDriver()->isExists())
-			{
-				return '<p class="tl_error">' . $GLOBALS['TL_LANG']['MSC']['maintenanceEnabled'] . '</p>';
-			}
-		}
-		catch (\Exception $e)
-		{
-			// ignore
-		}
 
 		return '';
 	}

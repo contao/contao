@@ -85,7 +85,7 @@ class ModuleArticle extends Module
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
 
 		// Preview mode is enabled, so show the article
-		if ($tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode())
+		if ($tokenChecker->isPreviewMode())
 		{
 			return false;
 		}
@@ -188,7 +188,7 @@ class ModuleArticle extends Module
 		// Back link
 		if (!$this->multiMode && $strArticle && ($strArticle == $this->id || $strArticle == $this->alias))
 		{
-			$this->Template->backlink = 'javascript:history.go(-1)'; // see #6955
+			$this->Template->backlink = $objPage->getFrontendUrl();
 			$this->Template->back = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goBack']);
 		}
 

@@ -92,7 +92,9 @@
             <?php if ($this->error): ?>
               <p class="tl_gerror"><?= $this->error ?></p>
             <?php endif; ?>
-            <?= $this->main ?>
+            <?php $this->block('main_content'); ?>
+              <?= $this->main ?>
+            <?php $this->endblock(); ?>
           </div>
         </main>
       <?php $this->endblock(); ?>

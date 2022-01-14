@@ -68,7 +68,6 @@ use Contao\InputUnit;
 use Contao\KeyValueWizard;
 use Contao\LayoutModel;
 use Contao\ListWizard;
-use Contao\Maintenance;
 use Contao\MemberGroupModel;
 use Contao\MemberModel;
 use Contao\Messages;
@@ -228,6 +227,10 @@ $GLOBALS['BE_MOD'] = array
 		'log' => array
 		(
 			'tables'                  => array('tl_log')
+		),
+		'preview_link' => array
+		(
+			'tables'                  => array('tl_preview_link')
 		),
 		'opt_in' => array
 		(
@@ -399,7 +402,6 @@ $GLOBALS['TL_PTY'] = array
 // Maintenance
 $GLOBALS['TL_MAINTENANCE'] = array
 (
-	Maintenance::class,
 	Crawl::class,
 	PurgeData::class
 );
@@ -441,6 +443,11 @@ $GLOBALS['TL_PURGE'] = array
 		(
 			'callback' => array(Automator::class, 'purgeImageCache'),
 			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.target_dir')))
+		),
+		'previews' => array
+		(
+			'callback' => array(Automator::class, 'purgePreviewCache'),
+			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.preview.target_dir')))
 		),
 		'scripts' => array
 		(
@@ -512,7 +519,6 @@ $GLOBALS['TL_HOOKS'] = array
 (
 	'getSystemMessages' => array
 	(
-		array(Messages::class, 'maintenanceCheck'),
 		array(Messages::class, 'languageFallback')
 	)
 );

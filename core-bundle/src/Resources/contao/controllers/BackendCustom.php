@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Util\PackageUtil;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -49,7 +49,7 @@ class BackendCustom extends BackendMain
 	 */
 	public function run()
 	{
-		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . PackageUtil::getContaoVersion();
+		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . ContaoCoreBundle::getVersion();
 
 		// Ajax request
 		if ($_POST && Environment::get('isAjaxRequest'))
