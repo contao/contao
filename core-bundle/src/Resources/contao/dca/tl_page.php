@@ -254,9 +254,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'routePath' => array
 		(
 			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('disabled'=>true, 'tl_class'=>'w50 clr'),
-			// load_callback from PageRoutingListener
+			// input_field_callback from PageRoutingListener
 		),
 		'routePriority' => array
 		(
@@ -321,7 +319,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title')),
+			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'tl_class'=>'clr'),
 			'sql'                     => null
 		),
 		'redirect' => array

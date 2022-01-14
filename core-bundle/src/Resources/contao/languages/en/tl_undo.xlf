@@ -9,7 +9,7 @@
         <source>Name of the associated user</source>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.0">
-        <source>Source table</source>
+        <source>Source</source>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.1">
         <source>Name of the original table</source>
@@ -34,6 +34,9 @@
       </trans-unit>
       <trans-unit id="tl_undo.undo">
         <source>Restore element ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_undo.parent_modal">
+        <source>Show origin of %s ID %s</source>
       </trans-unit>
     </body>
   </file>

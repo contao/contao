@@ -242,6 +242,11 @@ services:
             - '%kernel.project_dir%/%contao.upload_path%'
             - '@?logger'
 
+    contao.image.fallback_preview_provider:
+        class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider
+        tags:
+            - { name: contao.preview_provider, priority: -1024 }
+
     contao.image.imagine.gd:
         class: Imagine\Gd\Imagine
 
@@ -250,6 +255,13 @@ services:
 
     contao.image.imagine.imagick:
         class: Imagine\Imagick\Imagine
+
+    contao.image.imagine_preview_provider:
+        class: Contao\CoreBundle\Image\Preview\ImaginePreviewProvider
+        arguments:
+            - '@contao.image.imagine'
+        tags:
+            - { name: contao.preview_provider, priority: 0 }
 
     contao.image.imagine_svg:
         class: Contao\ImagineSvg\Imagine
@@ -280,6 +292,21 @@ services:
         arguments:
             - '@contao.image.legacy_resizer'
             - '@?contao.image.resize_calculator'
+
+    contao.image.preview_factory:
+        class: Contao\CoreBundle\Image\Preview\PreviewFactory
+        public: true
+        arguments:
+            - !tagged_iterator contao.preview_provider
+            - '@contao.image.factory'
+            - '@contao.image.picture_factory'
+            - '@contao.image.studio'
+            - '@contao.framework'
+            - '%kernel.secret%'
+            - '%contao.image.preview.target_dir%'
+            - '%contao.image.valid_extensions%'
+            - '%contao.image.preview.default_size%'
+            - '%contao.image.preview.max_size%'
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator

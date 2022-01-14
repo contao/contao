@@ -4030,8 +4030,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
-		$args = array();
-		$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
 		$level = ($intMargin / $intSpacing + 1);
 		$blnIsOpen = (!empty($arrFound) || $session[$node][$id] == 1);
 
@@ -4059,70 +4057,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '<a href="' . $this->addToUrl('ptg=' . $id) . '" title="' . StringUtil::specialchars($alt) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleStructure(this,\'' . $node . '_' . $id . '\',' . $level . ',' . ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? '') . ')">' . Image::getHtml($img, '', 'style="margin-right:2px"') . '</a>';
 		}
 
-		foreach ($showFields as $k=>$v)
-		{
-			// Decrypt the value
-			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
-			{
-				$objRow->$v = Encryption::decrypt(StringUtil::deserialize($objRow->$v));
-			}
-
-			if (strpos($v, ':') !== false)
-			{
-				list($strKey, $strTable) = explode(':', $v, 2);
-				list($strTable, $strField) = explode('.', $strTable, 2);
-
-				$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
-										 ->limit(1)
-										 ->execute($objRow->$strKey);
-
-				$args[$k] = $objRef->numRows ? $objRef->$strField : '';
-			}
-			elseif (\in_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
-			{
-				$args[$k] = Date::parse(Config::get('datimFormat'), $objRow->$v);
-			}
-			elseif (($GLOBALS['TL_DCA'][$table]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['multiple'] ?? null))
-			{
-				$args[$k] = $objRow->$v ? ($GLOBALS['TL_DCA'][$table]['fields'][$v]['label'][0] ?? $v) : '';
-			}
-			else
-			{
-				$args[$k] = !empty($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$objRow->$v]) ? $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$objRow->$v] : $objRow->$v;
-			}
-		}
-
-		$label = vsprintf($GLOBALS['TL_DCA'][$table]['list']['label']['format'] ?? '%s', $args);
-
-		// Shorten the label if it is too long
-		if (($GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] ?? null) > 0 && $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'] < mb_strlen(strip_tags($label)))
-		{
-			$label = trim(StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$table]['list']['label']['maxCharacters'])) . ' …';
-		}
-
-		$label = preg_replace('/\(\) ?|\[] ?|{} ?|<> ?/', '', $label);
-
 		// Check either the ID (tree mode or parent table) or the parent ID (child table)
 		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($objRow->pid, $this->visibleRootTrails);
 
-		// Call the label_callback ($row, $label, $this)
-		if (\is_array($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
-		{
-			$strClass = $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'][0];
-			$strMethod = $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'][1];
-
-			$this->import($strClass);
-			$return .= $this->$strClass->$strMethod($objRow->row(), $label, $this, '', false, $blnProtected, $isVisibleRootTrailPage);
-		}
-		elseif (\is_callable($GLOBALS['TL_DCA'][$table]['list']['label']['label_callback'] ?? null))
-		{
-			$return .= $GLOBALS['TL_DCA'][$table]['list']['label']['label_callback']($objRow->row(), $label, $this, '', false, $blnProtected, $isVisibleRootTrailPage);
-		}
-		else
-		{
-			$return .= Image::getHtml('iconPLAIN.svg') . ' ' . $label;
-		}
-
+		$return .= $this->generateRecordLabel($objRow->row(), $table, $blnProtected, $isVisibleRootTrailPage);
 		$return .= '</div> <div class="tl_right">';
 		$previous = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['pp'] ?? null) : ($arrPrevNext['p'] ?? null);
 		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
@@ -4547,151 +4485,152 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 			}
 
-			// Call the child_record_callback
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
+			// Render the child records
+			$strGroup = '';
+			$blnIndent = false;
+			$intWrapLevel = 0;
+			$row = $objOrderBy->fetchAllAssoc();
+
+			// Make items sortable
+			if ($blnHasSorting)
 			{
-				$strGroup = '';
-				$blnIndent = false;
-				$intWrapLevel = 0;
-				$row = $objOrderBy->fetchAllAssoc();
+				$return .= '
+
+<ul id="ul_' . CURRENT_ID . '">';
+			}
+
+			for ($i=0, $c=\count($row); $i<$c; $i++)
+			{
+				$this->current[] = $row[$i]['id'];
+				$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
+				$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
+
+				// Decrypt encrypted value
+				foreach ($row[$i] as $k=>$v)
+				{
+					if ($GLOBALS['TL_DCA'][$table]['fields'][$k]['eval']['encrypt'] ?? null)
+					{
+						$row[$i][$k] = Encryption::decrypt(StringUtil::deserialize($v));
+					}
+				}
 
 				// Make items sortable
 				if ($blnHasSorting)
 				{
 					$return .= '
-
-<ul id="ul_' . CURRENT_ID . '">';
+<li id="li_' . $row[$i]['id'] . '">';
 				}
 
-				for ($i=0, $c=\count($row); $i<$c; $i++)
+				// Add the group header
+				if ($firstOrderBy != 'sorting' && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
 				{
-					$this->current[] = $row[$i]['id'];
-					$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
-					$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
+					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null)) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
+					$remoteNew = $this->formatCurrentValue($firstOrderBy, $row[$i][$firstOrderBy], $sortingMode);
+					$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row[$i]);
 
-					// Decrypt encrypted value
-					foreach ($row[$i] as $k=>$v)
+					if ($group != $strGroup)
 					{
-						if ($GLOBALS['TL_DCA'][$table]['fields'][$k]['eval']['encrypt'] ?? null)
-						{
-							$row[$i][$k] = Encryption::decrypt(StringUtil::deserialize($v));
-						}
+						$return .= "\n\n" . '<div class="tl_content_header">' . $group . '</div>';
+						$strGroup = $group;
 					}
+				}
 
-					// Make items sortable
-					if ($blnHasSorting)
-					{
-						$return .= '
-<li id="li_' . $row[$i]['id'] . '">';
-					}
+				$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
+				$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
+				$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
+				$blnIndentFirst = isset($row[$i - 1]['type']) && \in_array($row[$i - 1]['type'], $GLOBALS['TL_WRAPPERS']['start']);
+				$blnIndentLast = isset($row[$i + 1]['type']) && \in_array($row[$i + 1]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
 
-					// Add the group header
-					if ($firstOrderBy != 'sorting' && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
-					{
-						$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null)) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'];
-						$remoteNew = $this->formatCurrentValue($firstOrderBy, $row[$i][$firstOrderBy], $sortingMode);
-						$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row[$i]);
+				// Closing wrappers
+				if ($blnWrapperStop && --$intWrapLevel < 1)
+				{
+					$blnIndent = false;
+				}
 
-						if ($group != $strGroup)
-						{
-							$return .= "\n\n" . '<div class="tl_content_header">' . $group . '</div>';
-							$strGroup = $group;
-						}
-					}
-
-					$blnWrapperStart = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
-					$blnWrapperSeparator = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
-					$blnWrapperStop = isset($row[$i]['type']) && \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
-					$blnIndentFirst = isset($row[$i - 1]['type']) && \in_array($row[$i - 1]['type'], $GLOBALS['TL_WRAPPERS']['start']);
-					$blnIndentLast = isset($row[$i + 1]['type']) && \in_array($row[$i + 1]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
-
-					// Closing wrappers
-					if ($blnWrapperStop && --$intWrapLevel < 1)
-					{
-						$blnIndent = false;
-					}
-
-					$return .= '
+				$return .= '
 <div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
 <div class="tl_content_right">';
 
-					// Opening wrappers
-					if ($blnWrapperStart && ++$intWrapLevel > 0)
-					{
-						$blnIndent = true;
-					}
+				// Opening wrappers
+				if ($blnWrapperStart && ++$intWrapLevel > 0)
+				{
+					$blnIndent = true;
+				}
 
-					// Edit multiple
-					if (Input::get('act') == 'select')
-					{
-						$return .= '<input type="checkbox" name="IDS[]" id="ids_' . $row[$i]['id'] . '" class="tl_tree_checkbox" value="' . $row[$i]['id'] . '">';
-					}
+				// Edit multiple
+				if (Input::get('act') == 'select')
+				{
+					$return .= '<input type="checkbox" name="IDS[]" id="ids_' . $row[$i]['id'] . '" class="tl_tree_checkbox" value="' . $row[$i]['id'] . '">';
+				}
 
-					// Regular buttons
-					else
-					{
-						$return .= $this->generateButtons($row[$i], $this->strTable, $this->root, false, null, ($row[($i-1)]['id'] ?? null), ($row[($i+1)]['id'] ?? null));
+				// Regular buttons
+				else
+				{
+					$return .= $this->generateButtons($row[$i], $this->strTable, $this->root, false, null, ($row[($i-1)]['id'] ?? null), ($row[($i+1)]['id'] ?? null));
 
-						// Sortable table
-						if ($blnHasSorting)
-						{
-							// Create new button
-							if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
-							{
-								$return .= ' <a href="' . $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteNew[1], $row[$i]['id'])) . '">' . $imagePasteNew . '</a>';
-							}
-
-							// Prevent circular references
-							if (($blnClipboard && $arrClipboard['mode'] == 'cut' && $row[$i]['id'] == $arrClipboard['id']) || ($blnMultiboard && $arrClipboard['mode'] == 'cutAll' && \in_array($row[$i]['id'], $arrClipboard['id'])))
-							{
-								$return .= ' ' . Image::getHtml('pasteafter_.svg');
-							}
-
-							// Copy/move multiple
-							elseif ($blnMultiboard)
-							{
-								$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
-							}
-
-							// Paste buttons
-							elseif ($blnClipboard)
-							{
-								$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
-							}
-
-							// Drag handle
-							if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
-							{
-								$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars(sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
-							}
-						}
-
-						// Picker
-						if ($this->strPickerFieldType)
-						{
-							$return .= $this->getPickerInputField($row[$i]['id']);
-						}
-					}
-
-					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
-					{
-						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][0];
-						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
-
-						$this->import($strClass);
-						$return .= '</div>' . $this->$strClass->$strMethod($row[$i]) . '</div>';
-					}
-					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
-					{
-						$return .= '</div>' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
-					}
-
-					// Make items sortable
+					// Sortable table
 					if ($blnHasSorting)
 					{
-						$return .= '
-</li>';
+						// Create new button
+						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
+						{
+							$return .= ' <a href="' . $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteNew[1], $row[$i]['id'])) . '">' . $imagePasteNew . '</a>';
+						}
+
+						// Prevent circular references
+						if (($blnClipboard && $arrClipboard['mode'] == 'cut' && $row[$i]['id'] == $arrClipboard['id']) || ($blnMultiboard && $arrClipboard['mode'] == 'cutAll' && \in_array($row[$i]['id'], $arrClipboard['id'])))
+						{
+							$return .= ' ' . Image::getHtml('pasteafter_.svg');
+						}
+
+						// Copy/move multiple
+						elseif ($blnMultiboard)
+						{
+							$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
+						}
+
+						// Paste buttons
+						elseif ($blnClipboard)
+						{
+							$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
+						}
+
+						// Drag handle
+						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
+						{
+							$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars(sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
+						}
 					}
+
+					// Picker
+					if ($this->strPickerFieldType)
+					{
+						$return .= $this->getPickerInputField($row[$i]['id']);
+					}
+				}
+
+				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
+				{
+					$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][0];
+					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
+
+					$this->import($strClass);
+					$return .= '</div>' . $this->$strClass->$strMethod($row[$i]) . '</div>';
+				}
+				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
+				{
+					$return .= '</div>' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
+				}
+				else
+				{
+					$return .= '</div><div class="tl_content_left">' . $this->generateRecordLabel($row[$i]) . '</div></div>';
+				}
+
+				// Make items sortable
+				if ($blnHasSorting)
+				{
+					$return .= '
+</li>';
 				}
 			}
 		}
@@ -5006,94 +4945,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			foreach ($result as $row)
 			{
-				$args = array();
 				$this->current[] = $row['id'];
-				$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
-
-				// Label
-				foreach ($showFields as $k=>$v)
-				{
-					// Decrypt the value
-					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['eval']['encrypt'] ?? null)
-					{
-						$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
-					}
-
-					if (strpos($v, ':') !== false)
-					{
-						list($strKey, $strTable) = explode(':', $v, 2);
-						list($strTable, $strField) = explode('.', $strTable, 2);
-
-						$objRef = $this->Database->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE id=?")
-												 ->limit(1)
-												 ->execute($row[$strKey]);
-
-						$args[$k] = $objRef->numRows ? $objRef->$strField : '';
-					}
-					elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
-					{
-						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
-						{
-							$args[$k] = $row[$v] ? Date::parse(Config::get('dateFormat'), $row[$v]) : '-';
-						}
-						elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['eval']['rgxp'] ?? null) == 'time')
-						{
-							$args[$k] = $row[$v] ? Date::parse(Config::get('timeFormat'), $row[$v]) : '-';
-						}
-						else
-						{
-							$args[$k] = $row[$v] ? Date::parse(Config::get('datimFormat'), $row[$v]) : '-';
-						}
-					}
-					elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['eval']['multiple'] ?? null)))
-					{
-						$args[$k] = $row[$v] ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
-					}
-					elseif (isset($row[$v]))
-					{
-						$row_v = StringUtil::deserialize($row[$v]);
-
-						if (\is_array($row_v))
-						{
-							$args_k = array();
-
-							foreach ($row_v as $option)
-							{
-								$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?: $option;
-							}
-
-							$args[$k] = implode(', ', $args_k);
-						}
-						elseif (isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]))
-						{
-							$args[$k] = \is_array($GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]]) ? $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]][0] : $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$row[$v]];
-						}
-						elseif ((($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'] ?? null)) && isset($GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]]))
-						{
-							$args[$k] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['options'][$row[$v]] ?? null;
-						}
-						else
-						{
-							$args[$k] = $row[$v];
-						}
-					}
-					else
-					{
-						$args[$k] = null;
-					}
-				}
-
-				// Shorten the label it if it is too long
-				$label = vsprintf(!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['format']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['format'] : '%s', $args);
-
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'] ?? null) > 0 && $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'] < \strlen(strip_tags($label)))
-				{
-					$label = trim(StringUtil::substrHtml($label, $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['maxCharacters'])) . ' …';
-				}
-
-				// Remove empty brackets (), [], {}, <> and empty tags from the label
-				$label = preg_replace('/\( *\) ?|\[ *] ?|{ *} ?|< *> ?/', '', $label);
-				$label = preg_replace('/<[^>]+>\s*<\/[^>]+>/', '', $label);
+				$label = $this->generateRecordLabel($row, $this->strTable);
 
 				// Build the sorting groups
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) > 0)
@@ -5124,38 +4977,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$colspan = 1;
 
-				// Call the label_callback ($row, $label, $this)
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null))
+				// Handle strings and arrays
+				if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null))
 				{
-					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null))
-					{
-						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][0];
-						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'][1];
-
-						$this->import($strClass);
-						$args = $this->$strClass->$strMethod($row, $label, $this, $args);
-					}
-					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback'] ?? null))
-					{
-						$args = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']($row, $label, $this, $args);
-					}
-
-					// Handle strings and arrays
-					if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null))
-					{
-						$label = \is_array($args) ? implode(' ', $args) : $args;
-					}
-					elseif (!\is_array($args))
-					{
-						$args = array($args);
-						$colspan = \count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] ?? array());
-					}
+					$label = \is_array($label) ? implode(' ', $label) : $label;
+				}
+				elseif (!\is_array($label))
+				{
+					$label = array($label);
+					$colspan = \count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] ?? array());
 				}
 
 				// Show columns
 				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
 				{
-					foreach ($args as $j=>$arg)
+					foreach ($label as $j=>$arg)
 					{
 						$field = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] ?? null;
 
