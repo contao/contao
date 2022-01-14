@@ -195,6 +195,12 @@ class tl_member_group extends Backend
 			$image .= '_';
 		}
 
-		return sprintf('<div class="list_icon" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">%s</div>', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Backend::getTheme(), $image, $disabled ? $image : rtrim($image, '_'), rtrim($image, '_') . '_', $label);
+		return sprintf(
+			'<div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div>',
+			Image::getPath($image),
+			Image::getPath($disabled ? $image : rtrim($image, '_')),
+			Image::getPath(rtrim($image, '_') . '_'),
+			$label
+		);
 	}
 }

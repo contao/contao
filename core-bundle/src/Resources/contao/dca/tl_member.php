@@ -483,7 +483,12 @@ class tl_member extends Backend
 			$image .= '_';
 		}
 
-		$args[0] = sprintf('<div class="list_icon_new" style="background-image:url(\'%ssystem/themes/%s/icons/%s.svg\')" data-icon="%s.svg" data-icon-disabled="%s.svg">&nbsp;</div>', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl(), Backend::getTheme(), $image, $disabled ? $image : rtrim($image, '_'), rtrim($image, '_') . '_');
+		$args[0] = sprintf(
+			'<div class="list_icon_new" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">&nbsp;</div>',
+			Image::getPath($image),
+			Image::getPath($disabled ? $image : rtrim($image, '_')),
+			Image::getPath(rtrim($image, '_') . '_')
+		);
 
 		return $args;
 	}

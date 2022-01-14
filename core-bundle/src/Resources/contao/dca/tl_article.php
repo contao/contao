@@ -121,7 +121,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'toggle' => array
 			(
 				'href'                => 'act=toggle&amp;field=published',
-				'icon'                => 'visible.svg'
+				'icon'                => 'visible.svg',
 				'button_callback'     => array('tl_article', 'toggleIcon'),
 				'showInHeader'        => true
 			),
@@ -559,7 +559,13 @@ class tl_article extends Backend
 			$image .= '_';
 		}
 
-		return '<a href="contao/preview.php?page=' . $row['pid'] . '&amp;article=' . ($row['alias'] ?: $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image . '.svg', '', 'data-icon="' . ($unpublished ? $image : rtrim($image, '_')) . '.svg" data-icon-disabled="' . rtrim($image, '_') . '_.svg"') . '</a> ' . $label;
+		$attributes = sprintf(
+			'data-icon="%s" data-icon-disabled="%s"',
+			Image::getPath($unpublished ? $image : rtrim($image, '_')),
+			Image::getPath(rtrim($image, '_') . '_')
+		);
+
+		return '<a href="contao/preview.php?page=' . $row['pid'] . '&amp;article=' . ($row['alias'] ?: $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image . '.svg', '', $attributes) . '</a> ' . $label;
 	}
 
 	/**
