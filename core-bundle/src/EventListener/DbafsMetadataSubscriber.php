@@ -61,7 +61,6 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
         }
 
         $extraMetadata = $event->getExtraMetadata();
-
         $importantPart = $extraMetadata['importantPart'] ?? null;
 
         if ($importantPart instanceof ImportantPart) {

@@ -43,9 +43,7 @@ class FilesyncCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('paths', InputArgument::IS_ARRAY, 'Optional path(s) for partial synchronization.')
-        ;
+        $this->addArgument('paths', InputArgument::IS_ARRAY, 'Optional path(s) for partial synchronization.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -57,6 +55,7 @@ class FilesyncCommand extends Command
         $timeTotal = round(microtime(true) - $time, 2);
 
         $this->renderStats($changeSet, $output);
+
         (new SymfonyStyle($input, $output))->success("Synchronization complete in {$timeTotal}s.");
 
         return 0;
@@ -86,7 +85,7 @@ class FilesyncCommand extends Command
 
         foreach ($changeSet->getItemsToUpdate() as $path => $attributes) {
             if (null !== ($newPath = $attributes[ChangeSet::ATTR_PATH] ?? null)) {
-                $change = "$path ⟶ <newpath>$newPath</newpath>";
+                $change = "$path → <newpath>$newPath</newpath>";
                 $action = 'move';
             } else {
                 $change = $path;

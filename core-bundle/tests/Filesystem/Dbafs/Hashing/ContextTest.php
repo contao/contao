@@ -69,6 +69,7 @@ class ContextTest extends TestCase
         $this->assertFalse($context->lastModifiedChanged());
 
         $context->updateLastModified(234560);
+
         $this->assertTrue($context->lastModifiedChanged());
         $this->assertSame(234560, $context->getLastModified());
     }

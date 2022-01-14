@@ -47,7 +47,6 @@ class HashGeneratorTest extends TestCase
     public function testHashFileContent(string $algorithm, string $hash): void
     {
         $filesystem = $this->getDemoFilesystem();
-
         $context = new Context();
 
         $generator = new HashGenerator($algorithm);
@@ -71,7 +70,6 @@ class HashGeneratorTest extends TestCase
     {
         $filesystem = $this->getDemoFilesystem();
         $lastModified = $filesystem->getLastModified('foo.txt');
-
         $context = new Context('fallback', $lastModified);
 
         $generator = new HashGenerator('md5', true);
@@ -83,7 +81,6 @@ class HashGeneratorTest extends TestCase
     public function testDoesNotSkipHashingIfLastModifiedTimeDiffers(): void
     {
         $filesystem = $this->getDemoFilesystem();
-
         $context = new Context('fallback', 12345);
 
         $generator = new HashGenerator('md5', true);
@@ -96,7 +93,6 @@ class HashGeneratorTest extends TestCase
     {
         $filesystem = $this->getDemoFilesystem();
         $lastModified = $filesystem->getLastModified('foo.txt');
-
         $context = new Context('fallback', 12345);
 
         $generator = new HashGenerator('md5', true);
@@ -110,7 +106,6 @@ class HashGeneratorTest extends TestCase
     {
         $filesystem = $this->getDemoFilesystem();
         $lastModified = $filesystem->getLastModified('foo.txt');
-
         $context = new Context('fallback', 12345);
 
         $generator = new HashGenerator('md5', false);

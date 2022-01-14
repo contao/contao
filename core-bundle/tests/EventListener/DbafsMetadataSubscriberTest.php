@@ -44,8 +44,8 @@ class DbafsMetadataSubscriberTest extends TestCase
         (new DbafsMetadataSubscriber())->enhanceMetadata($event);
 
         $extraMetadata = $event->getExtraMetadata();
-
         $importantPart = $extraMetadata['importantPart'] ?? null;
+
         $this->assertInstanceOf(ImportantPart::class, $importantPart);
         $this->assertSame(0.1, $importantPart->getX());
         $this->assertSame(0.2, $importantPart->getY());
@@ -53,6 +53,7 @@ class DbafsMetadataSubscriberTest extends TestCase
         $this->assertSame(0.4, $importantPart->getHeight());
 
         $metadata = $extraMetadata['metadata']['de'] ?? null;
+
         $this->assertInstanceOf(Metadata::class, $metadata);
         $this->assertSame('my title', $metadata->getTitle());
         $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $metadata->getUuid());

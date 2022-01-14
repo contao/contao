@@ -235,10 +235,9 @@ class MountManager
             }
 
             $visibility = $options['visibility'] ?? $adapterFrom->visibility($adapterPathFrom)->visibility();
-
             $stream = $adapterFrom->readStream($adapterPathFrom);
-            $adapterTo->writeStream($adapterPathTo, $stream, new Config(compact('visibility')));
 
+            $adapterTo->writeStream($adapterPathTo, $stream, new Config(compact('visibility')));
             $adapterFrom->delete($adapterPathFrom);
         } catch (FilesystemException $e) {
             throw VirtualFilesystemException::unableToMove($pathFrom, $pathTo, $e);

@@ -21,7 +21,6 @@ class UnableToResolveUuidExceptionTest extends TestCase
     public function testGetValues(): void
     {
         $uuid = Uuid::fromString('2bfce622-5ea5-11ec-bf63-0242ac130002');
-
         $exception = new UnableToResolveUuidException($uuid, 'Additional message.');
 
         $this->assertSame($uuid, $exception->getUuid());

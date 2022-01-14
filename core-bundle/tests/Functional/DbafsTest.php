@@ -61,7 +61,6 @@ class DbafsTest extends FunctionalTestCase
         );
 
         $dbafsManager->register($dbafs, '');
-
         $dbafs->useLastModified();
 
         // Expect no changes initially
@@ -129,7 +128,6 @@ class DbafsTest extends FunctionalTestCase
     private function assertFile3Deleted(ChangeSet $changeSet): void
     {
         $this->assertEmpty($changeSet->getItemsToCreate());
-
         $this->assertEmpty($changeSet->getItemsToUpdate());
 
         $this->assertSame(

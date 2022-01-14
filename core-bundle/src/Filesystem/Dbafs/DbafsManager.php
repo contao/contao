@@ -35,6 +35,7 @@ class DbafsManager
     public function register(DbafsInterface $dbafs, string $pathPrefix): void
     {
         $this->dbafs[$pathPrefix] = $dbafs;
+
         krsort($this->dbafs);
 
         if (\count($this->dbafs) > 1) {
@@ -62,10 +63,11 @@ class DbafsManager
     }
 
     /**
-     * Resolves a UUID to a path. All registered DBAFS are queried until the
-     * request can be fulfilled, otherwise an UnableToResolveUuidException
-     * will be thrown. You can constrain querying only a subset by providing
-     * a path $prefix.
+     * Resolves a UUID to a path.
+     *
+     * All registered DBAFS are queried until the request can be fulfilled,
+     * otherwise an UnableToResolveUuidException will be thrown. You can
+     * constrain querying only a subset by providing a path $prefix.
      *
      * The returned path will always be relative to the provided prefix:
      *
@@ -87,7 +89,7 @@ class DbafsManager
 
     /**
      * Returns the last modified time or null if no DBAFS exists for the given
-     * $path, that supports the attribute and contains a matching record.
+     * $path that supports the attribute and contains a matching record.
      */
     public function getLastModified(string $path): ?int
     {
@@ -106,7 +108,7 @@ class DbafsManager
     }
 
     /**
-     * Returns the file size or null if no DBAFS exists for the given $path,
+     * Returns the file size or null if no DBAFS exists for the given $path
      * that supports the attribute and contains a matching record.
      */
     public function getFileSize(string $path): ?int
@@ -126,7 +128,7 @@ class DbafsManager
     }
 
     /**
-     * Returns the mime type or null if no DBAFS exists for the given $path,
+     * Returns the mime type or null if no DBAFS exists for the given $path
      * that supports the attribute and contains a matching record.
      */
     public function getMimeType(string $path): ?string
@@ -200,6 +202,7 @@ class DbafsManager
 
     /**
      * List contents from all DBAFS that are able to serve the given $path.
+     *
      * Each path is guaranteed to be only reported once, i.e. identical paths
      * from DBAFs with a lower specificity will be ignored.
      *
@@ -285,11 +288,12 @@ class DbafsManager
     }
 
     /**
-     * Make sure that all DBAFS with a more specific prefix are also supporting
-     * everything each less specific one does. For example a DBAFS with prefix
-     * 'files/media' must also support 'fileSize' if the DBAFS under 'files'
-     * does. It could, however, support additional properties like 'mimeType',
-     * even if the 'files' DBAFS does not.
+     * Ensures that all DBAFS with a more specific prefix are also supporting
+     * everything each less specific one does.
+     *
+     * For example, a DBAFS with prefix 'files/media' must also support
+     * 'fileSize' if the DBAFS under 'files' does. It could, however, support
+     * additional properties like 'mimeType' even if the 'files' DBAFS does not.
      */
     private function validateTransitiveProperties(): void
     {

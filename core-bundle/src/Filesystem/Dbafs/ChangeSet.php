@@ -71,7 +71,6 @@ class ChangeSet
         $this->itemsToCreate = $itemsToCreate;
         $this->itemsToUpdate = $itemsToUpdate;
         $this->itemsToDelete = $itemsToDelete;
-
         $this->lastModifiedUpdates = $lastModifiedUpdates;
     }
 
@@ -113,12 +112,7 @@ class ChangeSet
             $lastModifiedUpdates[Path::join($pathPrefix, $path)] = $lastModified;
         }
 
-        return new self(
-            array_values($itemsToCreate),
-            $itemsToUpdate,
-            $itemsToDelete,
-            $lastModifiedUpdates
-        );
+        return new self(array_values($itemsToCreate), $itemsToUpdate, $itemsToDelete, $lastModifiedUpdates);
     }
 
     public static function createEmpty(): self
@@ -148,6 +142,7 @@ class ChangeSet
      * get created.
      *
      * @return array<array<string, string>>
+     *
      * @phpstan-return array<CreateItemDefinition>
      */
     public function getItemsToCreate(): array
@@ -163,6 +158,7 @@ class ChangeSet
      * timestamps will be included in the definitions.
      *
      * @return array<string, array<string, string|int>>
+     *
      * @phpstan-return array<string, UpdateItemDefinition>>
      */
     public function getItemsToUpdate(bool $includeLastModified = false): array
@@ -193,6 +189,7 @@ class ChangeSet
      * of resource (self::TYPE_FILE or self::TYPE_DIRECTORY).
      *
      * @return array<string, int>
+     *
      * @phpstan-return array<string, DeleteItemDefinition>
      */
     public function getItemsToDelete(): array

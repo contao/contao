@@ -29,7 +29,6 @@ class VirtualFilesystemFactoryTest extends TestCase
         $dbafsManager = $this->createMock(DbafsManager::class);
 
         $factory = new VirtualFilesystemFactory($mountManager, $dbafsManager);
-
         $dbafs = $factory('some/prefix', $readonly);
 
         $reflection = new \ReflectionClass(VirtualFilesystem::class);

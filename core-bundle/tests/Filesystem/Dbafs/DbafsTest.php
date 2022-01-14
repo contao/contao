@@ -104,7 +104,6 @@ class DbafsTest extends TestCase
         ;
 
         $dbafs = $this->getDbafs($connection);
-
         $record = $dbafs->getRecord('foo/bar');
 
         $this->assertNotNull($record);
@@ -148,10 +147,10 @@ class DbafsTest extends TestCase
         ;
 
         $dbafs = $this->getDbafs($connection);
-
         $records = iterator_to_array($dbafs->getRecords('foo'));
 
         $this->assertCount(3, $records);
+
         [$record1, $record2, $record3] = $records;
 
         $this->assertSame('foo/first', $record1->getPath());
@@ -183,10 +182,10 @@ class DbafsTest extends TestCase
         ;
 
         $dbafs = $this->getDbafs($connection);
-
         $records = iterator_to_array($dbafs->getRecords('foo', true));
 
         $this->assertCount(4, $records);
+
         [$record1, $record2, $record3, $record4] = $records;
 
         $this->assertSame('foo/first', $record1->getPath());
@@ -359,6 +358,7 @@ class DbafsTest extends TestCase
         $dbafs->setDatabasePathPrefix('files');
 
         $record = $dbafs->getRecord('foo/bar');
+
         $this->assertNotNull($record);
         $this->assertSame('foo/bar', $record->getPath());
 
@@ -411,6 +411,7 @@ class DbafsTest extends TestCase
         // step when synchronizing, but we do not want to expose this functionality.
         $method = new \ReflectionMethod($dbafs, 'getNormalizedSearchPaths');
         $method->setAccessible(true);
+
         [$searchPaths, $parentPaths] = $method->invoke($dbafs, ...$paths);
 
         $this->assertSame($expectedSearchPaths, $searchPaths, 'search paths');
@@ -1243,14 +1244,7 @@ class DbafsTest extends TestCase
 
         $filesystem ??= $this->createMock(VirtualFilesystemInterface::class);
 
-        $dbafs = new Dbafs(
-            new HashGenerator('md5'),
-            $connection,
-            $eventDispatcher,
-            $filesystem,
-            'tl_files'
-        );
-
+        $dbafs = new Dbafs(new HashGenerator('md5'), $connection, $eventDispatcher, $filesystem, 'tl_files');
         $dbafs->useLastModified(false);
 
         return $dbafs;

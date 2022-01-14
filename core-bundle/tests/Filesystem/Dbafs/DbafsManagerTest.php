@@ -139,6 +139,7 @@ class DbafsManagerTest extends TestCase
 
         // Nothing should be found outside the constrained scope
         $this->expectException(UnableToResolveUuidException::class);
+
         $manager->resolveUuid($uuid3, 'foo');
     }
 
@@ -505,7 +506,6 @@ class DbafsManagerTest extends TestCase
     private function getDbafsListingRecords(string $path, array $listing, bool $deep): DbafsInterface
     {
         $dbafs = $this->createMock(DbafsInterface::class);
-
         $dbafs
             ->method('getRecords')
             ->with($path, $deep)

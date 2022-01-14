@@ -34,7 +34,6 @@ class VirtualFilesystem implements VirtualFilesystemInterface
 {
     private MountManager $mountManager;
     private DbafsManager $dbafsManager;
-
     private string $prefix;
     private bool $readonly;
 
@@ -45,7 +44,6 @@ class VirtualFilesystem implements VirtualFilesystemInterface
     {
         $this->mountManager = $mountManager;
         $this->dbafsManager = $dbafsManager;
-
         $this->prefix = $prefix;
         $this->readonly = $readonly;
     }
@@ -115,6 +113,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
     public function writeStream($location, $contents, array $options = []): void
     {
         $this->ensureNotReadonly();
+
         FilesystemUtil::assertIsResource($contents);
 
         $path = $this->resolve($location);

@@ -56,6 +56,7 @@ class HashGenerator implements HashGeneratorInterface
     private function generateFileContentHash(VirtualFilesystemInterface $filesystem, string $path): string
     {
         $hashContext = hash_init($this->hashAlgorithm);
+
         hash_update_stream($hashContext, $filesystem->readStream($path));
 
         return hash_final($hashContext);

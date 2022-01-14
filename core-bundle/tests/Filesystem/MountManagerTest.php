@@ -78,6 +78,7 @@ class MountManagerTest extends TestCase
         $manager->mount($filesMediaAdapter, 'files/media');
 
         [$method, $arguments, $return] = $call;
+
         $this->assertSame($return, $manager->$method('files/media/foo', ...$arguments));
 
         $this->closeStreamResources($arguments);
@@ -439,8 +440,8 @@ class MountManagerTest extends TestCase
                 'file1 (file)',
                 'files (dir)',
                 // Note: 'files/media' must not be reported as a directory
-                //       here, because it is virtual and implicit (i.e. only the
-                //       explicitly mounted 'files/media/extra' is included).
+                // here, because it is virtual and implicit (i.e. only the
+                // explicitly mounted 'files/media/extra' is included).
                 'files/media/extra (dir)',
                 'files/media/extra/cat.avif (file)',
                 'files/media/extra/videos (dir)',

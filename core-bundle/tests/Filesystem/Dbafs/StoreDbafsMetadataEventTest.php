@@ -40,8 +40,8 @@ class StoreDbafsMetadataEventTest extends TestCase
         $this->assertSame($uuid->toBinary(), $event->getUuid()->toBinary());
         $this->assertSame('foo/bar', $event->getPath());
         $this->assertSame($extraMetadata, $event->getExtraMetadata());
-
         $this->assertSame($rowData, $event->getRow());
+
         $event->set('foo', $event->getExtraMetadata()['foo']->all());
 
         $this->assertSame(

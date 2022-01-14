@@ -31,8 +31,8 @@ class FilesystemConfigurationTest extends TestCase
     public function testGetContainer(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
-
         $config = new FilesystemConfiguration($container);
+
         $this->assertSame($container, $config->getContainer());
     }
 
@@ -42,9 +42,7 @@ class FilesystemConfigurationTest extends TestCase
     public function testAddVirtualFilesystem(bool $readOnly): void
     {
         $container = $this->getContainerBuilder();
-
         $config = new FilesystemConfiguration($container);
-
         $definition = $config->addVirtualFilesystem('foo', 'some/prefix', $readOnly);
 
         $this->assertTrue($container->hasDefinition('contao.filesystem.virtual.foo'));
@@ -56,10 +54,7 @@ class FilesystemConfigurationTest extends TestCase
 
         $this->assertSame(['some/prefix', $readOnly], $definition->getArguments());
         $this->assertTrue($definition->hasTag('contao.virtual_filesystem'));
-        $this->assertSame(
-            [['name' => 'foo', 'prefix' => 'some/prefix']],
-            $definition->getTag('contao.virtual_filesystem')
-        );
+        $this->assertSame([['name' => 'foo', 'prefix' => 'some/prefix']], $definition->getTag('contao.virtual_filesystem'));
     }
 
     public function provideReadOnlyValues(): \Generator
@@ -104,6 +99,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertSame($adapterDefinition, $container->getDefinition('contao.filesystem.adapter.foo'));
 
         $calls = $container->getDefinition('contao.filesystem.mount_manager')->getMethodCalls();
+
         $this->assertCount(1, $calls);
         $this->assertSame('mount', $calls[0][0]);
         $this->assertSame('contao.filesystem.adapter.foo', (string) $calls[0][1][0]);
@@ -128,6 +124,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertFalse($container->getAlias('contao.filesystem.adapter.foo')->isPublic());
 
         $calls = $container->getDefinition('contao.filesystem.mount_manager')->getMethodCalls();
+
         $this->assertCount(1, $calls);
         $this->assertSame('mount', $calls[0][0]);
         $this->assertSame('contao.filesystem.adapter.foo', (string) $calls[0][1][0]);
@@ -140,11 +137,12 @@ class FilesystemConfigurationTest extends TestCase
     public function testMountAdapterAutoGeneratesId(string $mountPath, string $expectedId): void
     {
         $container = $this->getContainerBuilder();
-
         $config = new FilesystemConfiguration($container);
 
         $this->assertFalse($container->hasAlias($expectedId));
+
         $config->mountAdapter('foo', [], $mountPath);
+
         $this->assertTrue($container->hasAlias($expectedId));
     }
 
@@ -210,13 +208,13 @@ class FilesystemConfigurationTest extends TestCase
     public function testRegisterDbafs(): void
     {
         $container = $this->getContainerBuilder();
+        $dbafsDefinition = $this->createMock(Definition::class);
 
         $config = new FilesystemConfiguration($container);
-
-        $dbafsDefinition = $this->createMock(Definition::class);
         $config->registerDbafs($dbafsDefinition, 'foo/bar');
 
         $calls = $container->getDefinition('contao.filesystem.dbafs_manager')->getMethodCalls();
+
         $this->assertCount(1, $calls);
         $this->assertSame(['register', [$dbafsDefinition, 'foo/bar']], $calls[0]);
     }
@@ -286,7 +284,6 @@ class FilesystemConfigurationTest extends TestCase
     private function getContainerBuilder(array $parameters = []): ContainerBuilder
     {
         $container = new ContainerBuilder(new ParameterBag($parameters));
-
         $container->setDefinition('contao.filesystem.mount_manager', new Definition(MountManager::class));
         $container->setDefinition('contao.filesystem.dbafs_manager', new Definition(DbafsManager::class));
 

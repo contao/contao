@@ -26,15 +26,11 @@ class DbafsFactoryTest extends TestCase
     {
         $connection = $this->createMock(Connection::class);
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-
-        $factory = new DbafsFactory($connection, $eventDispatcher);
-
         $filesystem = $this->createMock(VirtualFilesystemInterface::class);
         $hashGenerator = $this->createMock(HashGeneratorInterface::class);
 
+        $factory = new DbafsFactory($connection, $eventDispatcher);
         $dbafs = $factory($filesystem, $hashGenerator, 'tl_foo');
-
-        $reflection = new \ReflectionClass(Dbafs::class);
 
         $expectedValues = [
             'filesystem' => $filesystem,
@@ -43,9 +39,12 @@ class DbafsFactoryTest extends TestCase
             'table' => 'tl_foo',
         ];
 
+        $reflection = new \ReflectionClass(Dbafs::class);
+
         foreach ($expectedValues as $propertyName => $value) {
             $property = $reflection->getProperty($propertyName);
             $property->setAccessible(true);
+
             $this->assertSame($value, $property->getValue($dbafs));
         }
     }

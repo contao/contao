@@ -25,8 +25,6 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Path;
 
 /**
- * @final
- *
  * @experimental
  */
 class FilesystemConfiguration
@@ -46,7 +44,7 @@ class FilesystemConfiguration
     }
 
     /**
-     * Add another new VirtualFilesystem service.
+     * Adds another new VirtualFilesystem service.
      *
      * Setting the name to 'foo' will create a 'contao.filesystem.virtual.foo'
      * service and additionally enable constructor injection with an argument
@@ -62,7 +60,7 @@ class FilesystemConfiguration
 
         $definition = new Definition(VirtualFilesystem::class, [$prefix, $readonly]);
         $definition->setFactory(new Reference('contao.filesystem.virtual_factory'));
-        $definition->addTag('contao.virtual_filesystem', ['name' => $name, 'prefix' => $prefix]);
+        $definition->addTag('contao.virtual_filesystem', compact('name', 'prefix'));
 
         $this->container->setDefinition($id = "contao.filesystem.virtual.$name", $definition);
         $this->container->registerAliasForArgument($id, VirtualFilesystemInterface::class, "{$name}Storage");
@@ -71,13 +69,13 @@ class FilesystemConfiguration
     }
 
     /**
-     * Mount a new Flysystem adapter to the virtual filesystem. The $adapter
-     * and $options can be set analogous to the configuration of the Flysystem
-     * Symfony bundle. Alternatively you can pass in an id of an already
-     * existing filesystem adapter service.
+     * Mounts a new Flysystem adapter to the virtual filesystem.
      *
-     * See https://github.com/thephpleague/flysystem-bundle#basic-usage for
-     * more details.
+     * The $adapter and $options can be set analogous to the configuration of
+     * the Flysystem Symfony bundle. Alternatively you can pass in an id of an
+     * already existing filesystem adapter service.
+     *
+     * @see https://github.com/thephpleague/flysystem-bundle#basic-usage
      *
      * The $mountPath must be a path relative to and inside the project root
      * (e.g. 'files/foo' or 'assets/images').
@@ -113,9 +111,10 @@ class FilesystemConfiguration
     }
 
     /**
-     * Shortcut method to mount a filesystem path to the virtual filesystem. If
-     * you want to use arbitrary adapters or options, please use mountAdapter()
-     * instead.
+     * Shortcut method to mount a filesystem path to the virtual filesystem.
+     *
+     * If you want to use arbitrary adapters or options, please use
+     * mountAdapter() instead.
      *
      * The $mountPath must be a path relative to and inside the project root
      * (e.g. 'files/foo' or 'assets/images'); the $filesystemPath can either
@@ -140,8 +139,10 @@ class FilesystemConfiguration
     }
 
     /**
-     * Register a custom DBAFS service definition. This is advanced stuff, if
-     * you want to use the default implementation, please use addDefaultDbafs().
+     * Registers a custom DBAFS service definition.
+     *
+     * This is advanced stuff. If you want to use the default implementation,
+     * please use addDefaultDbafs() instead.
      */
     public function registerDbafs(Definition $dbafs, string $pathPrefix): self
     {
@@ -154,10 +155,11 @@ class FilesystemConfiguration
     }
 
     /**
-     * Add and register a DBAFS service with the default implementation. If you
-     * want to fine tune settings (e.g. adjust the bulk insert size or the
-     * maximum file size) add method calls to the definition returned by this
-     * method.
+     * Registers a DBAFS service with the default implementation.
+     *
+     * If you want to fine tune settings (e.g. adjust the bulk insert size or
+     * the maximum file size) add method calls to the definition returned by
+     * this method.
      *
      * @return Definition the newly created definition
      */

@@ -203,9 +203,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $filesStorageName = 'files';
 
         // TODO: Deprecate the 'contao.upload_path' config key. In the next
-        //       major version, $uploadPath can then be replaced with 'files'
-        //       and the redundant 'files' attribute removed when mounting the
-        //       local adapter.
+        // major version, $uploadPath can then be replaced with 'files' and the
+        // redundant 'files' attribute removed when mounting the local adapter.
         $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
 
         $config
@@ -215,7 +214,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $config
             ->addDefaultDbafs($filesStorageName, 'tl_files')
-            ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // BC
+            ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
         ;
     }
 

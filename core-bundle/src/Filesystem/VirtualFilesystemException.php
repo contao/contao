@@ -27,6 +27,7 @@ class VirtualFilesystemException extends \RuntimeException
     public const UNABLE_TO_MOVE = 7;
     public const UNABLE_TO_LIST_CONTENTS = 8;
     public const UNABLE_TO_RETRIEVE_METADATA = 9;
+
     private string $path;
 
     private function __construct(string $path, string $message, int $code, \Throwable $previous)

@@ -79,7 +79,6 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->hashGenerator = $hashGenerator;
         $this->connection = $connection;
         $this->eventDispatcher = $eventDispatcher;
-
         $this->filesystem = $filesystem;
         $this->table = $table;
     }
@@ -286,7 +285,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * @param \Generator<string, int> $filesystemIterator
      * @param array<string>           $searchPaths
      *
-     * @phpstan-param DatabasePaths $dbPaths
+     * @phpstan-param DatabasePaths   $dbPaths
      * @phpstan-param FilesystemPaths $filesystemIterator
      */
     private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, array $allLastModifiedByPath, \Generator $filesystemIterator, array $searchPaths): ChangeSet
@@ -576,7 +575,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 'type' => $isDir ? 'folder' : 'file',
             ];
 
-            // BC
+            // Backwards compatibility
             if ('tl_files' === $this->table) {
                 $dataToInsert['name'] = basename($newPath);
                 $dataToInsert['extension'] = !$isDir ? Path::getExtension($newPath) : '';
@@ -650,7 +649,8 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     /**
      * Loads paths from the database that should be considered when synchronizing.
-     * his includes all parent directories and - in case of directories - all
+     *
+     * This includes all parent directories and - in case of directories - all
      * resources that reside in it.
      *
      * This method also builds lookup tables for hashes, 'last modified' timestamps
@@ -660,6 +660,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * @param array<string> $parentDirectories parent directories to consider
      *
      * @return array<array<string, string|int|null>>
+     *
      * @phpstan-return array{0: DatabasePaths, 1: array<string, string>, 2: array<string, int|null>, 3: array<string, string>}
      */
     private function getDatabaseEntries(array $searchPaths, array $parentDirectories): array
@@ -703,10 +704,11 @@ class Dbafs implements DbafsInterface, ResetInterface
      * Items will always be listed before the directories they reside in (most
      * specific path first).
      *
-     * @param array<string> $searchPaths       non-empty list of search paths
-     * @param array<string> $parentDirectories parent directories to consider
+     * @param array<string> $searchPaths       Non-empty list of search paths
+     * @param array<string> $parentDirectories Parent directories to consider
      *
      * @return \Generator<string, int>
+     *
      * @phpstan-return FilesystemPaths
      */
     private function getFilesystemPaths(array $searchPaths, array $parentDirectories): \Generator
@@ -808,9 +810,10 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Returns true if a path is inside any of the given base paths. All
-     * provided paths are expected to be normalized and may contain a double
-     * slash (//) as suffix.
+     * Returns true if a path is inside any of the given base paths.
+     *
+     * All provided paths are expected to be normalized and may contain a
+     * double slash (//) as suffix.
      *
      * If $considerShallowDirectories is set to false, paths that are directly
      * inside shallow directories (e.g. 'foo/bar' in 'foo') do NOT yield a
@@ -858,9 +861,9 @@ class Dbafs implements DbafsInterface, ResetInterface
      * append a double slash (//) as an internal marker.
      *
      * @see \Contao\CoreBundle\Tests\Filesystem\DbafsTest::testNormalizesSearchPaths()
-     * for examples.
      *
      * @return array<array<string>>
+     *
      * @phpstan-return array{0: array<string>, 1: array<string>}
      */
     private function getNormalizedSearchPaths(string ...$paths): array

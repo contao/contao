@@ -28,11 +28,10 @@ class AbstractDbafsMetadataEvent
      * @var array<string, mixed>
      */
     protected array $extraMetadata;
+
     private string $table;
 
     /**
-     * @internal
-     *
      * @param array<string, mixed> $row
      * @param array<string, mixed> $extraMetadata
      */

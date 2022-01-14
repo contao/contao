@@ -108,7 +108,7 @@ class FilesyncCommandTest extends TestCase
                 +--------+------------------------------------------------------------------------+
                 | add    | foo/new1 (new hash: 5493611ba7d91b0ee8e0f893f6bf837e)                  |
                 | add    | foo/new2 (new hash: 802ffec476939b66450caf0140bee49e)                  |
-                | move   | bar/old_path ⟶ bar/updated_path                                        |
+                | move   | bar/old_path → bar/updated_path                                        |
                 | update | bar/file_that_changes (updated hash: 8a1631a4eacf47253f3ebb5aea2ccce7) |
                 | delete | baz                                                                    |
                 | delete | baz/deleted1                                                           |
@@ -145,8 +145,6 @@ class FilesyncCommandTest extends TestCase
 
     private function getCommand(DbafsManager $manager = null): FilesyncCommand
     {
-        return new FilesyncCommand(
-            $manager ?? $this->createMock(DbafsManager::class),
-        );
+        return new FilesyncCommand($manager ?? $this->createMock(DbafsManager::class));
     }
 }
