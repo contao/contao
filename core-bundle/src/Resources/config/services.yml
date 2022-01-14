@@ -398,6 +398,21 @@ services:
             - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
             - { name: knp_menu.menu_builder, method: buildHeaderMenu, alias: be_header_menu }
 
+    contao.menu.frontend_builder:
+        class: Contao\CoreBundle\Menu\FrontendMenuBuilder
+        arguments:
+            - '@Knp\Menu\FactoryInterface'
+            - '@request_stack'
+            - '@event_dispatcher'
+            - '@database_connection'
+            - '@contao.routing.page_registry'
+            - '@=service("contao.framework").getAdapter("Contao\\PageModel")'
+            - '@contao.security.token_checker'
+            - '@security.helper'
+            - '@logger'
+            - '@=service("contao.framework").createInstance("Contao\\Database")'
+        public: true
+
     contao.menu.matcher:
         class: Knp\Menu\Matcher\Matcher
 

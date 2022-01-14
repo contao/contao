@@ -55,29 +55,17 @@ class ModuleSitemap extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$lang = null;
-		$host = null;
-
 		// Start from the website root if there is no reference page
 		if (!$this->rootPage)
 		{
 			$this->rootPage = $objPage->rootId;
 		}
 
-		// Overwrite the domain and language if the reference page belongs to a different root page (see #3765)
-		else
-		{
-			$objRootPage = PageModel::findWithDetails($this->rootPage);
-
-			$lang = $objRootPage->rootLanguage;
-			$host = $objRootPage->domain;
-		}
-
 		$this->showLevel = 0;
 		$this->hardLimit = false;
 		$this->levelOffset = 0;
 
-		$this->Template->items = $this->renderNavigation($this->rootPage, 1, $host, $lang);
+		$this->Template->items = $this->renderNavigation($this->rootPage);
 	}
 }
 

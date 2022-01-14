@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Contao\CoreBundle\Menu\FrontendMenuBuilder;
+use Knp\Menu\ItemInterface;
 
 /**
  * Front end module "custom navigation".
@@ -65,19 +65,19 @@ class ModuleCustomnav extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
+		/** @var FrontendMenuBuilder $menuBuilder */
+		$menuBuilder = System::getContainer()->get('contao.menu.frontend_builder');
+		$root = System::getContainer()->get('knp_menu.factory')->createItem('root');
 
-		$items = array();
-
-		// Get all active pages and also include root pages if the language is added to the URL (see #72)
-		$objPages = PageModel::findPublishedRegularByIds($this->pages, array('includeRoot'=>true));
+		$menu = $menuBuilder->getMenu($root, 0, $this->arrData);
 
 		// Return if there are no pages
-		if ($objPages === null)
+		if (!$menu->count())
 		{
 			return;
 		}
+
+		$items = array();
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
 		$objTemplate->type = static::class;
@@ -85,159 +85,10 @@ class ModuleCustomnav extends Module
 		$objTemplate->level = 'level_1';
 		$objTemplate->module = $this; // see #155
 
-		$security = System::getContainer()->get('security.helper');
-		$isMember = $security->isGranted('ROLE_MEMBER');
-
-		/** @var PageModel[] $objPages */
-		foreach ($objPages as $objModel)
+		/** @var ItemInterface $menuItem */
+		foreach ($menu as $menuItem)
 		{
-			$objModel->loadDetails();
-
-			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objModel->guests && !$objModel->protected && $isMember)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				continue;
-			}
-
-			// PageModel->groups is an array after calling loadDetails()
-			if (!$objModel->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objModel->groups))
-			{
-				// Get href
-				switch ($objModel->type)
-				{
-					case 'redirect':
-						$href = $objModel->url;
-						break;
-
-					case 'root':
-						// Overwrite the alias to link to the empty URL or language URL (see #1641)
-						$objModel->alias = 'index';
-						$href = $objModel->getFrontendUrl();
-						break;
-
-					case 'forward':
-						if ($objModel->jumpTo)
-						{
-							$objNext = PageModel::findPublishedById($objModel->jumpTo);
-						}
-						else
-						{
-							$objNext = PageModel::findFirstPublishedRegularByPid($objModel->id);
-						}
-
-						if ($objNext instanceof PageModel)
-						{
-							$href = $objNext->getFrontendUrl();
-							break;
-						}
-						// no break
-
-					default:
-						try
-						{
-							$href = $objModel->getFrontendUrl();
-						}
-						catch (ExceptionInterface $exception)
-						{
-							System::log('Unable to generate URL for page ID ' . $objModel->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
-
-							continue 2;
-						}
-						break;
-				}
-
-				$trail = \in_array($objModel->id, $objPage->trail);
-
-				// Use the path without query string to check for active pages (see #480)
-				list($path) = explode('?', Environment::get('request'), 2);
-
-				// Active page
-				if ($objPage->id == $objModel->id && $href == $path)
-				{
-					$strClass = trim($objModel->cssClass);
-					$row = $objModel->row();
-
-					$row['isActive'] = true;
-					$row['isTrail'] = false;
-					$row['class'] = trim('active ' . $strClass);
-					$row['title'] = StringUtil::specialchars($objModel->title, true);
-					$row['pageTitle'] = StringUtil::specialchars($objModel->pageTitle, true);
-					$row['link'] = $objModel->title;
-					$row['href'] = $href;
-					$row['rel'] = '';
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
-					$row['target'] = '';
-					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
-
-					$arrRel = array();
-
-					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
-					{
-						$arrRel[] = 'nofollow';
-					}
-
-					// Override the link target
-					if ($objModel->type == 'redirect' && $objModel->target)
-					{
-						$arrRel[] = 'noreferrer';
-						$arrRel[] = 'noopener';
-
-						$row['target'] = ' target="_blank"';
-					}
-
-					// Set the rel attribute
-					if (!empty($arrRel))
-					{
-						$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
-					}
-
-					$items[] = $row;
-				}
-
-				// Regular page
-				else
-				{
-					$strClass = trim($objModel->cssClass . ($trail ? ' trail' : ''));
-					$row = $objModel->row();
-
-					$row['isActive'] = false;
-					$row['isTrail'] = $trail;
-					$row['class'] = $strClass;
-					$row['title'] = StringUtil::specialchars($objModel->title, true);
-					$row['pageTitle'] = StringUtil::specialchars($objModel->pageTitle, true);
-					$row['link'] = $objModel->title;
-					$row['href'] = $href;
-					$row['rel'] = '';
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
-					$row['target'] = '';
-					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
-
-					$arrRel = array();
-
-					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
-					{
-						$arrRel[] = 'nofollow';
-					}
-
-					// Override the link target
-					if ($objModel->type == 'redirect' && $objModel->target)
-					{
-						$arrRel[] = 'noreferrer';
-						$arrRel[] = 'noopener';
-
-						$row['target'] = ' target="_blank"';
-					}
-
-					// Set the rel attribute
-					if (!empty($arrRel))
-					{
-						$row['rel'] = ' rel="' . implode(' ', $arrRel) . '"';
-					}
-
-					$items[] = $row;
-				}
-			}
+			$items[] = $this->compileMenuItem($menuItem);
 		}
 
 		// Add classes first and last if there are items
