@@ -143,8 +143,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			),
 			'toggle' => array
 			(
+				'href'                => 'act=toggle&amp;field=published',
 				'icon'                => 'visible.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_page', 'toggleIcon')
 			),
 			'show' => array
@@ -720,6 +720,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'published' => array
 		(
 			'exclude'                 => true,
+			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
@@ -1740,12 +1741,6 @@ class tl_page extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Input::get('tid'))
-		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
-			$this->redirect($this->getReferer());
-		}
-
 		$security = System::getContainer()->get('security.helper');
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
@@ -1754,7 +1749,7 @@ class tl_page extends Backend
 			return '';
 		}
 
-		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
+		$href .= '&amp;id=' . $row['id'];
 
 		if (!$row['published'])
 		{
@@ -1766,122 +1761,7 @@ class tl_page extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
-	}
-
-	/**
-	 * Disable/enable a user group
-	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
-	{
-		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
-
-		if ($dc)
-		{
-			$dc->id = $intId; // see #8043
-		}
-
-		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		// Check the field access
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::published'))
-		{
-			throw new AccessDeniedException('Not enough permissions to publish/unpublish page ID ' . $intId . '.');
-		}
-
-		$objRow = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-								 ->limit(1)
-								 ->execute($intId);
-
-		if ($objRow->numRows < 1)
-		{
-			throw new AccessDeniedException('Invalid page ID ' . $intId . '.');
-		}
-
-		// Set the current record
-		if ($dc)
-		{
-			$dc->activeRecord = $objRow;
-		}
-
-		$objVersions = new Versions('tl_page', $intId);
-		$objVersions->initialize();
-
-		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$blnVisible = $callback($blnVisible, $dc);
-				}
-			}
-		}
-
-		$time = time();
-
-		// Update the database
-		$this->Database->prepare("UPDATE tl_page SET tstamp=$time, published='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
-					   ->execute($intId);
-
-		if ($dc)
-		{
-			$dc->activeRecord->tstamp = $time;
-			$dc->activeRecord->published = ($blnVisible ? '1' : '');
-		}
-
-		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		$objVersions->create();
-
-		if ($dc)
-		{
-			$dc->invalidateCacheTags();
-		}
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**

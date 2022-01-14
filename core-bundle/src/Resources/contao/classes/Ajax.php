@@ -408,6 +408,8 @@ class Ajax extends Backend
 
 			// Feature/unfeature an element
 			case 'toggleFeatured':
+				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=toggleFeatured) has been deprecated and will no longer work in Contao 5.0. Use the toggle operation instead.');
+
 				if (class_exists($dc->table, false))
 				{
 					$dca = new $dc->table();
