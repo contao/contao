@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
-
 /**
  * Class FormFileUpload
  *
@@ -299,8 +297,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 						'uuid'     => $strUuid
 					);
 
-					// Add a log entry
-					$this->log('File "' . $strUploadFolder . '/' . $file['name'] . '" has been uploaded', __METHOD__, ContaoContext::FILES);
+					System::getContainer()->get('monolog.logger.contao.files')->info('File "' . $strUploadFolder . '/' . $file['name'] . '" has been uploaded');
 				}
 			}
 		}

@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
+use Contao\MemberGroupModel;
 use Contao\Message;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -1300,7 +1301,23 @@ class tl_content extends Backend
 		// Add the protection status
 		if ($arrRow['protected'])
 		{
-			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ')';
+			$groupIds = StringUtil::deserialize($arrRow['groups'], true);
+			$groupNames = array();
+
+			if (!empty($groupIds))
+			{
+				if (in_array(-1, array_map('intval', $groupIds), true))
+				{
+					$groupNames[] = $GLOBALS['TL_LANG']['MSC']['guests'];
+				}
+
+				if (null !== ($groups = MemberGroupModel::findMultipleByIds($groupIds)))
+				{
+					$groupNames += $groups->fetchEach('name');
+				}
+			}
+
+			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ($groupNames ? ': ' . implode(', ', $groupNames) : '') . ')';
 		}
 
 		// Add the headline level (see #5858)
