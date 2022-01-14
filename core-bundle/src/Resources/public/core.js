@@ -446,7 +446,7 @@ var AjaxRequest =
 			image = $(el).getFirst('img'),
 			published = (image.get('data-state') == 1),
 			div = el.getParent('div'),
-			next, icon, icond, pa;
+			next, pa;
 
 		if (rowIcon) {
 			// Find the icon depending on the view (tree view, list view, parent view)
@@ -474,18 +474,7 @@ var AjaxRequest =
 				// Tree view
 				if (img.nodeName.toLowerCase() == 'img') {
 					if (img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
-						icon = img.get('data-icon');
-						icond = img.get('data-icon-disabled');
-
-						// Prepend the theme path
-						if (icon.indexOf('/') == -1) {
-							icon = AjaxRequest.themePath + (icon.match(/\.svg$/) ? 'icons/' : 'images/') + icon;
-						}
-						if (icond.indexOf('/') == -1) {
-							icond = AjaxRequest.themePath + (icond.match(/\.svg$/) ? 'icons/' : 'images/') + icond;
-						}
-
-						img.src = !published ? icon : icond;
+						img.src = !published ? img.get('data-icon') : img.get('data-icon-disabled');
 					} else {
 						pa = img.getParent('a');
 
@@ -497,18 +486,7 @@ var AjaxRequest =
 							}
 						}
 
-						icon = img.get('data-icon');
-						icond = img.get('data-icon-disabled');
-
-						// Prepend the theme path
-						if (icon.indexOf('/') == -1) {
-							icon = AjaxRequest.themePath + (icon.match(/\.svg$/) ? 'icons/' : 'images/') + icon;
-						}
-						if (icond.indexOf('/') == -1) {
-							icond = AjaxRequest.themePath + (icond.match(/\.svg$/) ? 'icons/' : 'images/') + icond;
-						}
-
-						img.src = !published ? icon : icond;
+						img.src = !published ? img.get('data-icon') : img.get('data-icon-disabled');
 					}
 				}
 				// Parent view
@@ -523,27 +501,13 @@ var AjaxRequest =
 				}
 				// List view
 				else {
-					icon = img.get('data-icon');
-					icond = img.get('data-icon-disabled');
-
-					// Prepend the theme path
-					if (icon.indexOf('/') == -1) {
-						icon = AjaxRequest.themePath + (icon.match(/\.svg$/) ? 'icons/' : 'images/') + icon;
-					}
-					if (icond.indexOf('/') == -1) {
-						icond = AjaxRequest.themePath + (icond.match(/\.svg$/) ? 'icons/' : 'images/') + icond;
-					}
-
-					img.setStyle('background-image', 'url(' + (!published ? icon : icond) + ')');
+					img.setStyle('background-image', 'url(' + (!published ? img.get('data-icon') : img.get('data-icon-disabled')) + ')');
 				}
 			}
 		}
 
-		icon = image.get('data-icon') || AjaxRequest.themePath + 'icons/visible.svg';
-		icond = image.get('data-icon-disabled') || AjaxRequest.themePath + 'icons/invisible.svg';
-
 		// Send request
-		image.src = !published ? icon : icond;
+		image.src = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 		image.set('data-state', !published ? 1 : 0);
 
 		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
