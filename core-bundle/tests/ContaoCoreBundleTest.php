@@ -20,6 +20,7 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\CrawlerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\DataContainerCallbackPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\IntlInstalledLocalesAndCountriesPass;
@@ -77,6 +78,7 @@ class ContaoCoreBundleTest extends TestCase
             AddNativeTransportFactoryPass::class,
             IntlInstalledLocalesAndCountriesPass::class,
             LoggerChannelPass::class,
+            ConfigureFilesystemPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);

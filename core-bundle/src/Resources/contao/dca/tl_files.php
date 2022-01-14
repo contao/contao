@@ -190,6 +190,10 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		(
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
+		'lastModified' => array
+		(
+			'sql'                     => "int(13) unsigned NULL default NULL"
+		),
 		'found' => array
 		(
 			'sql'                     => "char(1) NOT NULL default '1'"
