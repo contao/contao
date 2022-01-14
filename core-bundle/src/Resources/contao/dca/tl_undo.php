@@ -48,14 +48,12 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_SORTABLE,
-			'fields'                  => array('tstamp'),
-			'panelLayout'             => 'sort,search,limit'
+			'fields'                  => array('tstamp DESC'),
+			'panelLayout'             => 'filter;sort,search,limit'
 		),
 		'label' => array
 		(
-			'fields'                  => array('tstamp', 'query'),
-			'format'                  => '<span style="color:#999;padding-right:3px">[%s]</span>%s',
-			'label_callback'          => array('tl_undo', 'ellipsis')
+			'fields'                  => array('tstamp', 'pid', 'fromTable', 'query'),
 		),
 		'operations' => array
 		(
@@ -63,6 +61,10 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 			(
 				'href'                => '&amp;act=undo',
 				'icon'                => 'undo.svg'
+			),
+			'jumpToParent' => array
+			(
+				'icon'                => 'parent.svg',
 			),
 			'show' => array
 			(
@@ -82,7 +84,8 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'pid' => array
 		(
 			'sorting'                 => true,
-			'foreignKey'              => 'tl_user.name',
+			'filter'                  => true,
+			'foreignKey'              => 'tl_user.username',
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'belongsTo', 'load'=>'lazy')
 		),
@@ -95,6 +98,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'fromTable' => array
 		(
 			'sorting'                 => true,
+			'filter'                  => true,
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'query' => array
@@ -215,18 +219,5 @@ class tl_undo extends Backend
 		}
 
 		return $data;
-	}
-
-	/**
-	 * Add the surrounding ellipsis layer
-	 *
-	 * @param array  $row
-	 * @param string $label
-	 *
-	 * @return string
-	 */
-	public function ellipsis($row, $label)
-	{
-		return '<div class="ellipsis">' . $label . '</div>';
 	}
 }
