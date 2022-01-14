@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
-
 /**
  * Provide methods to handle front end forms.
  *
@@ -579,11 +577,12 @@ class Form extends Hybrid
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
 			$this->import(FrontendUser::class, 'User');
-			$this->log('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".', __METHOD__, ContaoContext::FORMS);
+
+			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by "' . $this->User->username . '".');
 		}
 		else
 		{
-			$this->log('Form "' . $this->title . '" has been submitted by a guest.', __METHOD__, ContaoContext::FORMS);
+			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by a guest.');
 		}
 
 		// Check whether there is a jumpTo page

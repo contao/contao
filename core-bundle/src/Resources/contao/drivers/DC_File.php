@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -34,7 +33,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -457,11 +456,11 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			{
 				if (($arrData['inputType'] ?? null) == 'password' || ($arrData['inputType'] ?? null) == 'textStore')
 				{
-					$this->log('The global configuration variable "' . $this->strField . '" has been changed', __METHOD__, ContaoContext::CONFIGURATION);
+					System::getContainer()->get('monolog.logger.contao.configuration')->info('The global configuration variable "' . $this->strField . '" has been changed');
 				}
 				else
 				{
-					$this->log('The global configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"', __METHOD__, ContaoContext::CONFIGURATION);
+					System::getContainer()->get('monolog.logger.contao.configuration')->info('The global configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"');
 				}
 			}
 
