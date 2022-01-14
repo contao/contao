@@ -177,6 +177,30 @@
     .cto-toolbar .tl_submit:active {
         color: #aaa;
     }
+
+    .cto-toolbar .badge-title {
+        align-self: center;
+        margin: 0 auto 0 9px;
+        border-radius: 8px;
+        padding: 2px 5px;
+        background: #0f1c26;
+        color: #fff;
+        font-size: .75rem;
+        font-weight: 600;
+    }
+
+    @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+        .cto-toolbar .badge-title {
+            font-weight: 500;
+        }
+    }
+
+    @media only screen and (max-width: 676px) {
+        .cto-toolbar .badge-title {
+            float: left;
+            margin: 3px auto 0 8px;
+        }
+    }
 </style>
 <script>
     (function () {
