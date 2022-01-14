@@ -2692,6 +2692,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->strField = Input::get('field');
 
+		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true)
+		{
+			throw new AccessDeniedException('Field "' . $this->strTable . '.' . $this->strField . '" cannot be toggled.');
+		}
+
 		// Security check before using field in DB query!
 		if (!$this->Database->fieldExists($this->strField, $this->strTable))
 		{
