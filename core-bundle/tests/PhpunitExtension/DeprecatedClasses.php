@@ -19,7 +19,6 @@ use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
 use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\CoreBundle\Tests\Fixtures\Image\PictureFactoryWithoutResizeOptionsStub;
 use Contao\GdImage;
-use Contao\Session;
 use Contao\TestCase\DeprecatedClassesPhpunitExtension;
 use Symfony\Bundle\SecurityBundle\Security\LegacyLogoutHandlerListener;
 
@@ -38,7 +37,6 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
                 '%s"Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider" class is deprecated%s',
                 '%s"Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface" interface is deprecated%s',
             ],
-            Session::class => ['%sUsing the "Contao\Session" class has been deprecated %s.'],
         ];
 
         if (class_exists(LegacyLogoutHandlerListener::class)) {

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\CoreBundle\Controller\AbstractBackendController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Environment as ContaoEnvironment;
 use Contao\System;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -38,7 +39,7 @@ class AbstractBackendControllerTest extends TestCase
         };
 
         // Legacy setup
-        \Contao\Environment::reset();
+        ContaoEnvironment::reset();
         (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
 
         $GLOBALS['TL_LANG']['MSC'] = [
