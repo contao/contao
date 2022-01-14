@@ -14,7 +14,6 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
-use Contao\Date;
 use Contao\Input;
 use Contao\LayoutModel;
 use Contao\News;
@@ -78,8 +77,11 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'fields'                  => array('date'),
 			'headerFields'            => array('title', 'jumpTo', 'tstamp', 'protected', 'allowComments'),
 			'panelLayout'             => 'filter;sort,search,limit',
-			'child_record_callback'   => array('tl_news', 'listNewsArticles'),
-			'child_record_class'      => 'no_padding'
+		),
+		'label' => array
+		(
+			'fields' => array('headline', 'date', 'time'),
+			'format' => '%s <span style="color:#999;padding-left:3px">[%s %s]</span>',
 		),
 		'global_operations' => array
 		(
@@ -236,6 +238,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		(
 			'default'                 => time(),
 			'exclude'                 => true,
+			'flag'                    => DataContainer::SORT_MONTH_DESC,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'time', 'mandatory'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50'),
 			'load_callback' => array
@@ -760,18 +763,6 @@ class tl_news extends Backend
 		$GLOBALS['objPage'] = $origObjPage;
 
 		return $title;
-	}
-
-	/**
-	 * List a news article
-	 *
-	 * @param array $arrRow
-	 *
-	 * @return string
-	 */
-	public function listNewsArticles($arrRow)
-	{
-		return '<div class="tl_content_left">' . $arrRow['headline'] . ' <span style="color:#999;padding-left:3px">[' . Date::parse(Config::get('datimFormat'), $arrRow['date']) . ']</span></div>';
 	}
 
 	/**

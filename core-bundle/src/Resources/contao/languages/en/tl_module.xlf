@@ -242,12 +242,6 @@
       <trans-unit id="tl_module.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
       </trans-unit>
-      <trans-unit id="tl_module.imgSize.0">
-        <source>Image size</source>
-      </trans-unit>
-      <trans-unit id="tl_module.imgSize.1">
-        <source>Here you can set the image dimensions and the resize mode.</source>
-      </trans-unit>
       <trans-unit id="tl_module.useCaption.0">
         <source>Show caption</source>
       </trans-unit>

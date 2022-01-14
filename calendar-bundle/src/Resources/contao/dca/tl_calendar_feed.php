@@ -214,6 +214,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		),
 		'imgSize' => array
 		(
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],

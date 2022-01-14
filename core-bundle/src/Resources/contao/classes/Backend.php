@@ -163,6 +163,9 @@ abstract class Backend extends Controller
 			case 'markdown':
 				return 'markdown';
 
+			case 'ts':
+				return 'typescript';
+
 			case 'cgi':
 			case 'pl':
 				return 'perl';
@@ -180,7 +183,7 @@ abstract class Backend extends Controller
 
 			case 'svg':
 			case 'svgz':
-				return 'xml';
+				return 'svg';
 
 			default:
 				return 'text';

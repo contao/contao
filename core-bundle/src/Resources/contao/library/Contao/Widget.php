@@ -1256,7 +1256,7 @@ abstract class Widget extends Controller
 
 			foreach ($arrAttributes as $strAttrKey => $varAttrValue)
 			{
-				if (!\is_string($varAttrValue) || !preg_match('/%[a-z][a-z0-9_]*\.[a-z0-9_.]+%/i', $varAttrValue, $arrMatches))
+				if (!\is_string($varAttrValue) || !preg_match('/%[a-z][a-z0-9_]*\.[a-z0-9_.]+%/i', $varAttrValue))
 				{
 					continue;
 				}

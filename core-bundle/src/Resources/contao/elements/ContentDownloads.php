@@ -18,7 +18,7 @@ use Contao\Model\Collection;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-class ContentDownloads extends ContentElement
+class ContentDownloads extends ContentDownload
 {
 	/**
 	 * Files object
@@ -89,7 +89,7 @@ class ContentDownloads extends ContentElement
 			$this->objFiles->reset();
 		}
 
-		return parent::generate();
+		return ContentElement::generate();
 	}
 
 	/**
@@ -176,7 +176,8 @@ class ContentDownloads extends ContentElement
 					'mime'      => $objFile->mime,
 					'meta'      => $arrMeta,
 					'extension' => $objFile->extension,
-					'path'      => $objFile->dirname
+					'path'      => $objFile->dirname,
+					'previews'  => $this->getPreviews($objFile->path, $strHref),
 				);
 
 				$auxDate[] = $objFile->mtime;
@@ -253,7 +254,8 @@ class ContentDownloads extends ContentElement
 						'mime'      => $objFile->mime,
 						'meta'      => $arrMeta,
 						'extension' => $objFile->extension,
-						'path'      => $objFile->dirname
+						'path'      => $objFile->dirname,
+						'previews'  => $this->getPreviews($objFile->path, $strHref),
 					);
 
 					$auxDate[] = $objFile->mtime;
