@@ -26,9 +26,9 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RootPageController extends AbstractController
 {
-    private LoggerInterface $logger;
+    private ?LoggerInterface $logger;
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger = null)
     {
         $this->logger = $logger;
     }
@@ -48,7 +48,9 @@ class RootPageController extends AbstractController
             return $nextPage;
         }
 
-        $this->logger->error('No active page found under root page "'.$rootPageId.'"');
+        if ($this->logger) {
+            $this->logger->error('No active page found under root page "'.$rootPageId.'"');
+        }
 
         throw new NoActivePageFoundException('No active page found under root page.');
     }
