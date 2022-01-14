@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\Ajax;
 use Contao\BackendMain;
 use Contao\BackendTemplate;
-use Contao\CoreBundle\Util\PackageUtil;
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\Environment;
 use Contao\Input;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractBackendController extends AbstractController
 {
     /**
-     * Render a Twig template with additional context for `@Contao/be_main`.
+     * Renders a Twig template with additional context for `@Contao/be_main`.
      */
     protected function render(string $view, array $parameters = [], Response $response = null): Response
     {
@@ -31,7 +31,7 @@ abstract class AbstractBackendController extends AbstractController
             public function __invoke(): array
             {
                 $this->Template = new BackendTemplate('be_main');
-                $this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'].' '.PackageUtil::getContaoVersion();
+                $this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'].' '.ContaoCoreBundle::getVersion();
 
                 // Handle ajax request
                 if ($_POST && Environment::get('isAjaxRequest')) {

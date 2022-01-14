@@ -47,7 +47,9 @@ class AbstractBackendControllerTest extends TestCase
             'home' => 'home',
             'learnMore' => 'learn more',
         ];
+
         $GLOBALS['TL_LANGUAGE'] = 'en';
+
         $_SERVER['HTTP_USER_AGENT'] = 'Contao/Foo';
         $_SERVER['HTTP_HOST'] = 'localhost';
 
