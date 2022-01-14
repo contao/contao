@@ -17,6 +17,9 @@
             <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
             <div>
                 <button type="button" id="copyPublishedPath" class="tl_submit">{{ 'MSC.copyURL'|trans([], 'contao_default') }}</button>
+                {% if share is not empty %}
+                    <a href="{{ share }}" target="_blank" class="tl_submit" onclick="window.open(this.href+'&amp;url='+location.href);return false">{{ 'MSC.shareURL'|trans([], 'contao_default') }}</a>
+                {% endif %}
             </div>
             {% if canSwitchUser %}
                 <div>

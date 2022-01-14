@@ -32,9 +32,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('isGranted')
-            ->willReturnOnConsecutiveCalls(true, true)
+            ->willReturnOnConsecutiveCalls(true)
         ;
 
         $session = $this->mockSession();
@@ -70,29 +70,12 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         yield [false];
     }
 
-    public function testDoesNotAuthenticateAFrontendUserIfThereIsNoBackendUser(): void
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(false)
-        ;
-
-        $authenticator = $this->getAuthenticator($security);
-
-        $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
-    }
-
     public function testDoesNotAuthenticateAFrontendUserIfTheUsernameIsInvalid(): void
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isGranted')
-            ->with('ROLE_USER')
-            ->willReturn(true)
         ;
 
         $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
@@ -118,9 +101,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('isGranted')
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->willReturnOnConsecutiveCalls(false)
         ;
 
         $user = $this->mockClassWithProperties(FrontendUser::class);
@@ -148,9 +131,8 @@ class FrontendPreviewAuthenticatorTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isGranted')
-            ->willReturn(true)
         ;
 
         $session = $this->mockSession();
@@ -164,26 +146,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertInstanceOf(FrontendPreviewToken::class, $token);
         $this->assertSame('anon.', $token->getUser()); // @phpstan-ignore-line
         $this->assertSame($showUnpublished, $token->showUnpublished());
-    }
-
-    public function testDoesNotAuthenticateAFrontendGuestIfThereIsNoBackendUser(): void
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->willReturn(false)
-        ;
-
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->never())
-            ->method('set')
-        ;
-
-        $authenticator = $this->getAuthenticator($security, $session);
-
-        $this->assertFalse($authenticator->authenticateFrontendGuest(false));
     }
 
     public function testRemovesTheAuthenticationFromTheSession(): void
