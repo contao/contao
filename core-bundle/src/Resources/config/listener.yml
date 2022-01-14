@@ -281,6 +281,14 @@ services:
             - { name: kernel.event_listener, priority: 256 }
             - { name: kernel.reset, method: reset }
 
+    contao.listener.page_access:
+        class: Contao\CoreBundle\EventListener\PageAccessListener
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+        tags:
+            - kernel.event_listener
+
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
