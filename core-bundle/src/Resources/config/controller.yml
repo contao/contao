@@ -106,6 +106,14 @@ services:
         tags:
             - { name: monolog.logger, channel: contao.error }
 
+    Contao\CoreBundle\Controller\PreviewLinkController:
+        arguments:
+            - '@contao.security.frontend_preview_authenticator'
+            - '@uri_signer'
+            - '@database_connection'
+        tags:
+            - controller.service_arguments
+
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:
             - '@contao.framework'
