@@ -3221,31 +3221,35 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Save the value if there was no error
 		if (((string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue !== $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 		{
+			$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
+			$arrTypes = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
+
 			// If the field is a fallback field, empty all other columns (see #6498)
 			if ($varValue && ($arrData['eval']['fallback'] ?? null))
 			{
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "='' WHERE pid=?")
-								   ->execute($this->activeRecord->pid);
+					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
+								   ->query('', array($varEmpty, $this->activeRecord->pid), $arrTypes);
 				}
 				else
 				{
-					$this->Database->execute("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=''");
+					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
+								   ->query('', array($varEmpty), $arrTypes);
 				}
 			}
 
 			// Set the correct empty value (see #6284, #6373)
 			if ((string) $varValue === '')
 			{
-				$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
+				$varValue = $varEmpty;
 			}
 
 			$arrValues = $this->values;
 			array_unshift($arrValues, $varValue);
 
 			$objUpdateStmt = $this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE " . implode(' AND ', $this->procedure))
-											->execute($arrValues);
+											->query('', $arrValues, $arrTypes);
 
 			if ($objUpdateStmt->affectedRows)
 			{

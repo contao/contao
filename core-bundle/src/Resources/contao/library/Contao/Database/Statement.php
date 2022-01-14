@@ -251,7 +251,7 @@ class Statement
 	 *
 	 * @throws \Exception If the query string is empty
 	 */
-	public function query($strQuery='', array $arrParams = array())
+	public function query($strQuery='', array $arrParams = array(), array $arrTypes = array())
 	{
 		if (!empty($strQuery))
 		{
@@ -283,7 +283,7 @@ class Statement
 		// TODO: remove the try/catch block in Contao 5.0
 		try
 		{
-			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams);
+			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams, $arrTypes);
 		}
 		catch (DriverException|\ArgumentCountError $exception)
 		{
@@ -300,7 +300,7 @@ class Statement
 			}
 
 			// If we get here, there are more parameters than tokens, so we slice the array and try to execute the query again
-			$this->statement = $this->resConnection->executeQuery($this->strQuery, \array_slice($arrParams, 0, $intTokenCount));
+			$this->statement = $this->resConnection->executeQuery($this->strQuery, \array_slice($arrParams, 0, $intTokenCount), $arrTypes);
 
 			// Only trigger the deprecation if the parameter count was the reason for the exception and the previous call did not throw
 			if ($this->arrLastUsedParams === array(null))
