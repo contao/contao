@@ -68,9 +68,6 @@
       <trans-unit id="tl_preview_link.expire_options.30">
         <source>30 days</source>
       </trans-unit>
-      <trans-unit id="tl_preview_link.clipboard">
-        <source>The preview link was copied to your clipboard.</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>

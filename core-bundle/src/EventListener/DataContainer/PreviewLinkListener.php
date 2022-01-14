@@ -27,7 +27,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -40,10 +39,9 @@ class PreviewLinkListener
     private RequestStack $requestStack;
     private UrlGeneratorInterface $urlGenerator;
     private UriSigner $uriSigner;
-    private TranslatorInterface $translator;
     private string $previewScript;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, Security $security, RequestStack $requestStack, UrlGeneratorInterface $urlGenerator, UriSigner $uriSigner, TranslatorInterface $translator, string $previewScript = '')
+    public function __construct(ContaoFramework $framework, Connection $connection, Security $security, RequestStack $requestStack, UrlGeneratorInterface $urlGenerator, UriSigner $uriSigner, string $previewScript = '')
     {
         $this->framework = $framework;
         $this->connection = $connection;
@@ -51,7 +49,6 @@ class PreviewLinkListener
         $this->requestStack = $requestStack;
         $this->urlGenerator = $urlGenerator;
         $this->uriSigner = $uriSigner;
-        $this->translator = $translator;
         $this->previewScript = $previewScript;
     }
 
@@ -180,10 +177,9 @@ class PreviewLinkListener
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $row['id']], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return sprintf(
-            '<a href="%s" target="_blank" title="%s" onclick="navigator.clipboard.writeText(this.href) && alert(\'%s\');return false">%s</a> ',
+            '<a href="%s" target="_blank" title="%s" onclick="navigator.clipboard.writeText(this.href);return false">%s</a> ',
             $this->uriSigner->sign($url),
             StringUtil::specialchars($title),
-            StringUtil::specialchars($this->translator->trans('tl_preview_link.clipboard', [], 'contao_tl_preview_link')),
             Image::getHtml($icon, $label)
         );
     }

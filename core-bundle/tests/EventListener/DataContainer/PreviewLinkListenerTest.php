@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PreviewLinkListenerTest extends TestCase
 {
@@ -47,7 +46,6 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            $this->createMock(TranslatorInterface::class),
             ''
         );
 
@@ -69,7 +67,6 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            $this->createMock(TranslatorInterface::class),
             ''
         );
 
@@ -91,7 +88,6 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            $this->createMock(TranslatorInterface::class),
             ''
         );
 
@@ -129,7 +125,6 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            $this->createMock(TranslatorInterface::class),
             '/preview.php'
         );
 
@@ -180,7 +175,6 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            $this->createMock(TranslatorInterface::class),
             '/preview.php'
         );
 
@@ -208,7 +202,6 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            $this->createMock(TranslatorInterface::class),
             '/preview.php'
         );
 
@@ -242,7 +235,6 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
-            $this->createMock(TranslatorInterface::class),
             ''
         );
 
