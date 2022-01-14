@@ -875,8 +875,6 @@ class DbafsTest extends TestCase
                 []
             ),
         ];
-
-        // todo: add a simple case that tests shallow sync
     }
 
     public function testSyncWithLastModified(): void

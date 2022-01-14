@@ -78,9 +78,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 ],
             ]);
         }
-
-        // todo: how do I do this correctly?
-        $container->setParameter('contao.upload_path', $config['upload_path']);
     }
 
     public function load(array $configs, ContainerBuilder $container): void
