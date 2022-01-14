@@ -144,6 +144,12 @@ class Calendar extends Frontend
 		{
 			while ($objArticle->next())
 			{
+				// Never add unpublished elements to the RSS feeds
+				if (!$objArticle->published || ($objArticle->start && $objArticle->start > $time) || ($objArticle->stop && $objArticle->stop <= $time))
+				{
+					continue;
+				}
+
 				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
 
 				// No jumpTo page set (see #4784)
@@ -281,7 +287,7 @@ class Calendar extends Frontend
 					{
 						foreach ($event['media:content'] as $enclosure)
 						{
-							$objItem->addEnclosure($enclosure, $strLink, 'media:content');
+							$objItem->addEnclosure($enclosure, $strLink, 'media:content', $arrFeed['imgSize']);
 						}
 					}
 

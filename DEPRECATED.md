@@ -11,6 +11,17 @@ The `$GLOBALS['TL_AUTO_ITEM']` variable has been deprecated and will be removed
 together with the `useAutoItem` setting in Contao 5.0. Using auto items can no
 longer be disabled then.
 
+## BE_USER_LOGGED_IN
+
+The constant `BE_USER_LOGGED_IN` has been deprecated and will be removed in
+Contao 5.0. It was historically used to preview unpublished elements in the
+front end. Use the token checker service to check the separate cases instead:
+
+```php
+$hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+$showUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+```
+
 ## FE_USER_LOGGED_IN
 
 The constant `FE_USER_LOGGED_IN` has been deprecated and will be removed in
@@ -23,10 +34,10 @@ $hasFrontendUser = System::getContainer()->get('contao.security.token_checker')-
 ## kernel.packages
 
 The `kernel.packages` parameter has been deprecated in Contao 4.5 and will be
-removed in Contao 5.0. Use `PackageUtil::getVersion()` instead.
+removed in Contao 5.0. Use the `Composer\InstalledVersions` class instead.
 
 ```php
-$coreVersion = PackageUtil::getVersion('contao/core-bundle');
+$coreVersion = InstalledVersions::getPrettyVersion('contao/core-bundle');
 ```
 
 ## TL_ASSETS_URL and TL_FILES_URL
@@ -139,11 +150,11 @@ deprecated in Contao 4.0 and will no longer work in Contao 5.0.
 ## VERSION and BUILD
 
 The `VERSION` and `BUILD` constants have been deprecated in Contao 4.0 and will
-be removed in Contao 5.0. Use the `kernel.packages` parameter instead.
+be removed in Contao 5.0. Use the `ContaoCoreBundle::getVersion()` method
+instead.
 
 ```php
-$packages = System::getContainer()->getParameter('kernel.packages');
-$coreVersion = $packages['contao/core-bundle'];
+$coreVersion = ContaoCoreBundle::getVersion();
 ```
 
 ## member_grouped.html5

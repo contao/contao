@@ -848,6 +848,12 @@
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
       </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+      </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
       </trans-unit>
@@ -1466,9 +1472,6 @@
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
       </trans-unit>
@@ -2053,6 +2056,9 @@
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

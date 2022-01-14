@@ -20,7 +20,6 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
 use Knp\Bundle\TimeBundle\KnpTimeBundle;
-use Lexik\Bundle\MaintenanceBundle\LexikMaintenanceBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
@@ -58,7 +57,6 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
                         DoctrineBundle::class,
                         KnpMenuBundle::class,
                         KnpTimeBundle::class,
-                        LexikMaintenanceBundle::class,
                         NelmioCorsBundle::class,
                         NelmioSecurityBundle::class,
                         SchebTwoFactorBundle::class,

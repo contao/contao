@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\InsertTags;
+use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,20 +25,16 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class InsertTagsController
 {
-    private ContaoFramework $framework;
+    private InsertTagParser $insertTagParser;
 
-    public function __construct(ContaoFramework $framework)
+    public function __construct(InsertTagParser $insertTagParser)
     {
-        $this->framework = $framework;
+        $this->insertTagParser = $insertTagParser;
     }
 
     public function renderAction(Request $request, string $insertTag): Response
     {
-        $this->framework->initialize();
-
-        $it = $this->framework->createInstance(InsertTags::class);
-
-        $response = new Response($it->replace($insertTag, false));
+        $response = new Response($this->insertTagParser->replaceInline($insertTag));
         $response->setPrivate(); // always private
 
         if ($clientCache = $request->query->getInt('clientCache')) {

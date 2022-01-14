@@ -19,6 +19,7 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -31,6 +32,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string                 $title
  * @property string                 $alias
  * @property string                 $type
+ * @property string|integer         $routePriority
  * @property string                 $pageTitle
  * @property string                 $language
  * @property string                 $robots
@@ -126,6 +128,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByTitle($val, array $opt=array())
  * @method static PageModel|null findOneByAlias($val, array $opt=array())
  * @method static PageModel|null findOneByType($val, array $opt=array())
+ * @method static PageModel|null findOneByRoutePriority($val, array $opt=array())
  * @method static PageModel|null findOneByPageTitle($val, array $opt=array())
  * @method static PageModel|null findOneByLanguage($val, array $opt=array())
  * @method static PageModel|null findOneByRobots($val, array $opt=array())
@@ -185,6 +188,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByTitle($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAlias($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByType($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findByRoutePriority($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByPageTitle($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLanguage($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByRobots($val, array $opt=array())
@@ -248,6 +252,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByTitle($val, array $opt=array())
  * @method static integer countByAlias($val, array $opt=array())
  * @method static integer countByType($val, array $opt=array())
+ * @method static integer countByRoutePriority($val, array $opt=array())
  * @method static integer countByPageTitle($val, array $opt=array())
  * @method static integer countByLanguage($val, array $opt=array())
  * @method static integer countByRobots($val, array $opt=array())
@@ -317,6 +322,9 @@ class PageModel extends Model
 	 */
 	protected $blnDetailsLoaded = false;
 
+	private static ?array $prefixes = null;
+	private static ?array $suffixes = null;
+
 	public function __set($strKey, $varValue)
 	{
 		// Deprecate setting dynamic page attributes if they are set on the global $objPage
@@ -370,6 +378,12 @@ class PageModel extends Model
 		}
 
 		parent::__set($strKey, $varValue);
+	}
+
+	public static function reset()
+	{
+		self::$prefixes = null;
+		self::$suffixes = null;
 	}
 
 	/**
@@ -682,6 +696,21 @@ class PageModel extends Model
 		}
 
 		return static::findBy($arrColumns, null, $arrOptions);
+	}
+
+	/**
+	 * Find pages that have a similar alias
+	 *
+	 * @return Collection|PageModel[]|null A collection of models or null if there are no pages
+	 */
+	public static function findSimilarByAlias(self $pageModel)
+	{
+		$pageModel->loadDetails();
+
+		$t = static::$strTable;
+		$alias = '%' . self::stripPrefixesAndSuffixes($pageModel->alias, $pageModel->urlPrefix, $pageModel->urlSuffix) . '%';
+
+		return static::findBy(array("$t.alias LIKE ?", "$t.id!=?"), array($alias, $pageModel->id));
 	}
 
 	/**
@@ -1290,6 +1319,8 @@ class PageModel extends Model
 	 * @param string $strParams    An optional string of URL parameters
 	 * @param string $strForceLang Force a certain language
 	 *
+	 * @throws RouteNotFoundException
+	 *
 	 * @return string A URL that can be used in the front end
 	 */
 	public function getFrontendUrl($strParams=null, $strForceLang=null)
@@ -1331,6 +1362,8 @@ class PageModel extends Model
 	 *
 	 * @param string $strParams An optional string of URL parameters
 	 *
+	 * @throws RouteNotFoundException
+	 *
 	 * @return string An absolute URL that can be used in the front end
 	 */
 	public function getAbsoluteUrl($strParams=null)
@@ -1347,6 +1380,8 @@ class PageModel extends Model
 	 * Generate the front end preview URL
 	 *
 	 * @param string $strParams An optional string of URL parameters
+	 *
+	 * @throws RouteNotFoundException
 	 *
 	 * @return string The front end preview URL
 	 */
@@ -1430,6 +1465,73 @@ class PageModel extends Model
 		}
 
 		return $strUrl;
+	}
+
+	private static function stripPrefixesAndSuffixes(string $alias, string $urlPrefix, string $urlSuffix): string
+	{
+		if (null === self::$prefixes || null === self::$suffixes)
+		{
+			$rows = Database::getInstance()
+				->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+				->fetchAllAssoc()
+			;
+
+			self::$prefixes = array();
+			self::$suffixes = array();
+
+			foreach (array_column($rows, 'urlPrefix') as $prefix)
+			{
+				$prefix = trim($prefix, '/');
+
+				if ('' !== $prefix)
+				{
+					self::$prefixes[] = $prefix . '/';
+				}
+			}
+
+			foreach (array_column($rows, 'urlSuffix') as $suffix)
+			{
+				self::$suffixes[] = $suffix;
+			}
+		}
+
+		$prefixes = self::$prefixes;
+
+		if (!empty($urlPrefix))
+		{
+			$prefixes[] = $urlPrefix . '/';
+		}
+
+		if (null !== ($prefixRegex = self::regexArray($prefixes)))
+		{
+			$alias = preg_replace('/^' . $prefixRegex . '/i', '', $alias);
+		}
+
+		if (null !== ($suffixRegex = self::regexArray(array_merge(array($urlSuffix), self::$suffixes))))
+		{
+			$alias = preg_replace('/' . $suffixRegex . '$/i', '', $alias);
+		}
+
+		return $alias;
+	}
+
+	private static function regexArray(array $data): ?string
+	{
+		$data = array_filter(array_unique($data));
+
+		if (0 === \count($data))
+		{
+			return null;
+		}
+
+		usort($data, static fn ($v, $k) => \strlen($v));
+
+		foreach ($data as $k => $v)
+		{
+			$data[$k] = preg_quote($v, '/');
+		}
+
+		return '(' . implode('|', $data) . ')';
 	}
 }
 

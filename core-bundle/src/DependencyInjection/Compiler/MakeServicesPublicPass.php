@@ -27,7 +27,6 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'database_connection',
         'debug.stopwatch',
         'fragment.handler',
-        'lexik_maintenance.driver.factory',
         'mailer',
         'monolog.logger.contao',
         'security.authentication_utils',

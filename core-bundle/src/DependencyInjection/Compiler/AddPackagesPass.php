@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Util\PackageUtil;
-use PackageVersions\Versions;
+use Composer\InstalledVersions;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -21,6 +20,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * Adds the composer packages and version numbers to the container.
  *
  * @internal
+ *
+ * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0; use
+ *             the Composer\InstalledVersions class instead
  */
 class AddPackagesPass implements CompilerPassInterface
 {
@@ -28,8 +30,12 @@ class AddPackagesPass implements CompilerPassInterface
     {
         $packages = [];
 
-        foreach (Versions::VERSIONS as $name => $version) {
-            $packages[$name] = PackageUtil::parseVersion($version);
+        foreach (InstalledVersions::getAllRawData() as $installed) {
+            foreach ($installed['versions'] as $name => $version) {
+                if (isset($version['pretty_version'])) {
+                    $packages[$name] = ltrim($version['pretty_version'], 'v');
+                }
+            }
         }
 
         $container->setParameter('kernel.packages', $packages);

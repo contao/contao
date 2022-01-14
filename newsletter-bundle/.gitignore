@@ -3,4 +3,5 @@
 /vendor/
 
 # PhpUnit
+/.phpunit.result.cache
 /phpunit.xml

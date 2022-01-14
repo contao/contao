@@ -27,14 +27,6 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.bypass_maintenance:
-        class: Contao\CoreBundle\EventListener\BypassMaintenanceListener
-        arguments:
-            - '@contao.security.token_checker'
-        tags:
-            # The priority must be higher than the one of the Lexik maintenance bundle (defaults to 0)
-            - { name: kernel.event_listener, priority: 6 }
-
     contao.listener.clear_session_data:
         class: Contao\CoreBundle\EventListener\ClearSessionDataListener
         tags:
@@ -89,6 +81,14 @@ services:
             - '@database_connection'
             - '@translator'
 
+    contao.listener.data_container.page_routing:
+        class: Contao\CoreBundle\EventListener\DataContainer\PageRoutingListener
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.page_registry'
+            - '@twig'
+
     contao.listener.data_container.page_search:
         class: Contao\CoreBundle\EventListener\DataContainer\PageSearchListener
         public: true
@@ -113,6 +113,8 @@ services:
             - '@translator'
             - '@database_connection'
             - '@contao.routing.page_registry'
+            - '@router'
+            - '@contao.routing.url_matcher'
 
     contao.listener.data_container.page_use_ssl_default:
         class: Contao\CoreBundle\EventListener\DataContainer\PageUseSslDefaultListener
@@ -130,6 +132,21 @@ services:
             - '@contao.twig.filesystem_loader_warmer'
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
+
+    contao.listener.data_container.undo.jump_to_parent_button:
+        class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@translator'
+
+    contao.listener.data_container.undo.label:
+        class: Contao\CoreBundle\EventListener\DataContainer\Undo\LabelListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@translator'
+            - '@twig'
 
     contao.listener.data_container.validate_custom_rgxp:
         class: Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener
@@ -170,6 +187,12 @@ services:
             - '@database_connection'
         tags:
             - kernel.event_listener
+
+    contao.listener.image_size_options:
+        class: Contao\CoreBundle\EventListener\ImageSizeOptionsListener
+        arguments:
+            - '@security.helper'
+            - '@contao.image.sizes'
 
     contao.listener.initialize_controller:
         class: Contao\CoreBundle\EventListener\InitializeControllerListener
@@ -232,16 +255,6 @@ services:
             # and must be lower than the one of the CsrfTokenCookieSubscriber listener (defaults to -832)
             - { name: kernel.event_listener, priority: -896 }
 
-    contao.listener.menu.backend_logout:
-        class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
-        arguments:
-            - '@security.helper'
-            - '@router'
-            - '@security.logout_url_generator'
-            - '@translator'
-        tags:
-            - kernel.event_listener
-
     contao.listener.menu.backend:
         class: Contao\CoreBundle\EventListener\Menu\BackendMenuListener
         arguments:
@@ -253,6 +266,16 @@ services:
         tags:
             # Make sure this listener comes before the other ones adding to its tree
             - { name: kernel.event_listener, priority: 10 }
+
+    contao.listener.menu.backend_logout:
+        class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@security.logout_url_generator'
+            - '@translator'
+        tags:
+            - kernel.event_listener
 
     contao.listener.menu.backend_preview:
         class: Contao\CoreBundle\EventListener\Menu\BackendPreviewListener
@@ -435,13 +458,13 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.widget.http_url:
-        class: Contao\CoreBundle\EventListener\Widget\HttpUrlListener
+    contao.listener.widget.custom_rgxp:
+        class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener
         arguments:
             - '@translator'
 
-    contao.listener.widget.custom_rgxp:
-        class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener
+    contao.listener.widget.http_url:
+        class: Contao\CoreBundle\EventListener\Widget\HttpUrlListener
         arguments:
             - '@translator'
 
