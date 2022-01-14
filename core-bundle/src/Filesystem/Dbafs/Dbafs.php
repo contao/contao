@@ -862,9 +862,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      *
      * @see \Contao\CoreBundle\Tests\Filesystem\DbafsTest::testNormalizesSearchPaths()
      *
-     * @return array<array<string>>
-     *
-     * @phpstan-return array{0: array<string>, 1: array<string>}
+     * @return array{0: array<string>, 1: array<string>}
      */
     private function getNormalizedSearchPaths(string ...$paths): array
     {
