@@ -127,8 +127,6 @@ class ContentMedia extends ContentElement
 
 		// Convert the language to a locale (see #5678)
 		$strLanguage = LocaleUtil::formatAsLocale($objPage->language);
-
-		// Determine caption
 		$strCaption = $this->playerCaption;
 
 		// Pass File objects to the template
