@@ -22,8 +22,6 @@ tl_page:
       fallback: ''
       includeLayout: '1'
       layout: 1
-      subpagesLayout: 1
-      layoutPropagation: propagate
       published: ''
 
     - id: 2
@@ -39,8 +37,6 @@ tl_page:
       fallback: '1'
       includeLayout: '1'
       layout: 1
-      subpagesLayout: 1
-      layoutPropagation: propagate
       published: '1'
 
     - id: 3
@@ -56,8 +52,6 @@ tl_page:
       fallback: ''
       includeLayout: '1'
       layout: 1
-      subpagesLayout: 1
-      layoutPropagation: propagate
       published: ''
 
     - id: 6
@@ -73,8 +67,6 @@ tl_page:
       fallback: '1'
       includeLayout: '1'
       layout: 1
-      subpagesLayout: 1
-      layoutPropagation: propagate
       published: '1'
 
     - id: 7
@@ -90,7 +82,6 @@ tl_page:
       fallback: ''
       includeLayout: ''
       layout: 0
-      subpagesLayout: 0
       published: ''
 
     - id: 22
@@ -151,7 +142,6 @@ tl_page:
       fallback: '1'
       includeLayout: ''
       layout: 0
-      subpagesLayout: 0
       published: ''
 
     - id: 137
@@ -167,8 +157,6 @@ tl_page:
       fallback: '1'
       includeLayout: '1'
       layout: 1
-      subpagesLayout: 1
-      layoutPropagation: propagate
       published: ''
 
     - id: 142
@@ -184,8 +172,6 @@ tl_page:
       fallback: ''
       includeLayout: '1'
       layout: 1
-      subpagesLayout: 1
-      layoutPropagation: propagate
       published: ''
 
     - id: 170
@@ -210,8 +196,6 @@ tl_page:
       fallback: '1'
       includeLayout: '1'
       layout: 1
-      subpagesLayout: 1
-      layoutPropagation: propagate
       published: '1'
 
     - id: 193
@@ -236,7 +220,6 @@ tl_page:
       fallback: '1'
       includeLayout: ''
       layout: 0
-      subpagesLayout: 0
       published: '1'
 
     - id: 251
@@ -252,7 +235,6 @@ tl_page:
       fallback: '1'
       includeLayout: ''
       layout: 0
-      subpagesLayout: 0
       published: '1'
 
     - id: 254
@@ -268,7 +250,6 @@ tl_page:
       fallback: '1'
       includeLayout: ''
       layout: 0
-      subpagesLayout: 0
       published: '1'
 
     - id: 257
@@ -284,7 +265,6 @@ tl_page:
       fallback: '1'
       includeLayout: ''
       layout: 0
-      subpagesLayout: 0
       published: '1'
 
 tl_theme:

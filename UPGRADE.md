@@ -1,10 +1,5 @@
 # API changes
 
-## Version 4.* to 4.13
-
-Pages no longer pass their layout to subpages by default. Use the new
-`Subpages layout` option to specify a layout for subpages.
-
 ## Version 4.* to 4.11
 
 Loading MooTools and jQuery from CDN is no longer supported, because it does

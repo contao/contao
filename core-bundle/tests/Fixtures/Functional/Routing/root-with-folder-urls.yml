@@ -11,8 +11,6 @@ tl_page:
       dns: root-with-folder-urls.local
       includeLayout: '1'
       layout: 1
-      subpagesLayout: 1
-      layoutPropagation: propagate
       published: '1'
 
     # Fake page to test if page ID 3 with longer alias is sorted correctly before ID 2

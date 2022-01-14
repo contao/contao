@@ -109,11 +109,6 @@ services:
         arguments:
             - '@database_connection'
 
-    contao.migration.version_413.page_subpages_layout:
-        class: Contao\CoreBundle\Migration\Version413\PageSubpagesLayoutMigration
-        arguments:
-            - '@database_connection'
-
     # Backwards compatibility
     Contao\CoreBundle\Migration\MigrationCollection:
         alias: contao.migration.collection

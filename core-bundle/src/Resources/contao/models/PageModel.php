@@ -68,7 +68,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|boolean         $includeLayout
  * @property string|integer         $layout
  * @property string|integer         $subpagesLayout
- * @property string                 $layoutPropagation
  * @property string|boolean         $includeCache
  * @property string|integer|boolean $cache
  * @property string|boolean         $alwaysLoadFromCache
@@ -1184,9 +1183,9 @@ class PageModel extends Model
 					}
 
 					// Layout
-					if ($this->layout === false && $objParentPage->includeLayout && 'disable' !== $objParentPage->layoutPropagation)
+					if ($objParentPage->includeLayout && $this->layout === false)
 					{
-						$this->layout = 'propagate' === $objParentPage->layoutPropagation ? $objParentPage->layout : $objParentPage->subpagesLayout;
+						$this->layout = $objParentPage->subpagesLayout ?: $objParentPage->layout;
 					}
 
 					// Protection

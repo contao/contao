@@ -11,8 +11,6 @@ tl_page:
       dns: root-without-fallback-language.local
       includeLayout: '1'
       layout: 1
-      subpagesLayout: 1
-      layoutPropagation: propagate
       published: '1'
 
     - id: 2

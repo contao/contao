@@ -1092,35 +1092,6 @@ abstract class Widget extends Controller
 			$varInput = preg_replace('/\/+$/', '', $varInput) . ($this->trailingSlash ? '/' : '');
 		}
 
-		if (isset($this->arrConfiguration['foreignOptions']))
-		{
-			$blnIsForeignOption = false;
-
-			foreach ($this->arrConfiguration['foreignOptions'] as $strTargetField => $arrTargetOptions)
-			{
-				$varTargetValue = static::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$strTargetField]['sql']);
-
-				if (\in_array($varInput, $arrTargetOptions['options'], true))
-				{
-					$varTargetValue = $varInput;
-					$blnIsForeignOption = true;
-				}
-
-				$objUpdateStatement = Database::getInstance()->prepare("UPDATE " . $this->strTable . " SET $strTargetField=? WHERE id=?")
-					->execute(array($varTargetValue, $this->activeRecord->id));
-
-				if ($objUpdateStatement->affectedRows)
-				{
-					Input::setPost($this->strName . '_foreignOptionsChanged', true);
-				}
-			}
-
-			if ($blnIsForeignOption)
-			{
-				return '';
-			}
-		}
-
 		return $varInput;
 	}
 
@@ -1343,53 +1314,28 @@ abstract class Widget extends Controller
 			$arrAttributes['onclick'] = "AjaxRequest.toggleSubpalette(this, 'sub_" . $strName . "', '" . $strField . "')";
 		}
 
-		$arrData['options'] = static::buildOptionsFromData($arrData, $objDca);
-
-		if (isset($arrData['foreignOptions']))
+		// Options callback
+		if (\is_array($arrData['options_callback'] ?? null))
 		{
-			$arrMergedOptions = array();
-			$blnAssocOptions = ArrayUtil::isAssoc($arrData['options']);
+			$arrCallback = $arrData['options_callback'];
+			$arrData['options'] = static::importStatic($arrCallback[0])->{$arrCallback[1]}($objDca);
+		}
+		elseif (\is_callable($arrData['options_callback'] ?? null))
+		{
+			$arrData['options'] = $arrData['options_callback']($objDca);
+		}
 
-			foreach ($arrData['foreignOptions'] as $strTargetField => $arrForeignConfiguration)
+		// Foreign key
+		elseif (isset($arrData['foreignKey']))
+		{
+			$arrKey = explode('.', $arrData['foreignKey'], 2);
+			$objOptions = Database::getInstance()->query("SELECT id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
+			$arrData['options'] = array();
+
+			while ($objOptions->next())
 			{
-				$arrTargetField = $GLOBALS['TL_DCA'][$strTable]['fields'][$strTargetField];
-				$arrForeignOptions = static::buildOptionsFromData($arrTargetField, $objDca);
-
-				if (!\is_array($arrForeignOptions))
-				{
-					continue;
-				}
-
-				if ($blnAssocOptions && !ArrayUtil::isAssoc($arrForeignOptions))
-				{
-					$arrForeignOptions = array_combine($arrForeignOptions, array_values($arrForeignOptions));
-				}
-
-				$varTargetValue = Database::getInstance()->prepare("SELECT $strTargetField AS value FROM $strTable WHERE id=?")
-					->execute($objDca->id)->value;
-
-				$arrMergedOptions[$strTargetField] = array(
-					'value' => $varTargetValue,
-					'options' => $arrForeignOptions
-				);
-
-				if ($varTargetValue)
-				{
-					$arrAttributes['value'] = $varTargetValue;
-				}
-
-				$arrData['reference'] = array_merge(
-					$arrData['reference'] ?? array(),
-					$arrTargetField['reference'] ?? array(),
-					$arrForeignConfiguration['reference'] ?? array()
-				);
-
-				$arrData['options'] = true === ($arrForeignConfiguration['prepend'] ?? false) ?
-					array_merge($arrForeignOptions, $arrData['options']) :
-					array_merge($arrData['options'], $arrForeignOptions);
+				$arrData['options'][$objOptions->id] = $objOptions->value;
 			}
-
-			$arrAttributes['foreignOptions'] = $arrMergedOptions;
 		}
 
 		// Add default option to single checkbox
@@ -1604,44 +1550,6 @@ abstract class Widget extends Controller
 		}
 
 		return static::getEmptyValueByFieldType($sql) === null ? null : '';
-	}
-
-	/**
-	 * Build the options for the given data
-	 *
-	 * @param                           $arrData The field configuration array
-	 * @param DataContainer|Module|null $objDca  An optional DataContainer or Module object
-	 *
-	 * @return array|null An options array that can be passed to a widget
-	 */
-	protected static function buildOptionsFromData($arrData, $objDca)
-	{
-		$arrOptions = $arrData['options'] ?? null;
-
-		// Options callback
-		if (\is_array($arrData['options_callback'] ?? null))
-		{
-			$arrCallback = $arrData['options_callback'];
-			$arrOptions = static::importStatic($arrCallback[0])->{$arrCallback[1]}($objDca);
-		}
-		elseif (\is_callable($arrData['options_callback'] ?? null))
-		{
-			$arrOptions = $arrData['options_callback']($objDca);
-		}
-		// Foreign key
-		elseif (isset($arrData['foreignKey']))
-		{
-			$arrKey = explode('.', $arrData['foreignKey'], 2);
-			$objOptions = Database::getInstance()->query("SELECT id, " . $arrKey[1] . " AS value FROM " . $arrKey[0] . " WHERE tstamp>0 ORDER BY value");
-			$arrOptions = array();
-
-			while ($objOptions->next())
-			{
-				$arrOptions[$objOptions->id] = $objOptions->value;
-			}
-		}
-
-		return \is_array($arrOptions) ? $arrOptions : null;
 	}
 
 	/**

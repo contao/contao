@@ -316,8 +316,8 @@ class PageModelTest extends ContaoTestCase
         $page->pid = 42;
         $numberOfParents = \count($parents);
 
-        // Last page has to be a root page for this test case to prevent
-        // running the check of TL_MODE constant in PageModel::loadDetails()
+        // The last page has to be a root page for this test method to prevent
+        // running into the check of TL_MODE in PageModel::loadDetails()
         $parents[$numberOfParents - 1][0]['type'] = 'root';
 
         $statement = $this->createMock(Statement::class);
@@ -348,8 +348,8 @@ class PageModelTest extends ContaoTestCase
         yield 'no parent with an inheritable layout' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => '1', 'subpagesLayout' => '2', 'layoutPropagation' => 'propagate']],
-                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '3', 'layoutPropagation' => 'disable']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => '1', 'subpagesLayout' => '2']],
+                [['id' => '3', 'pid' => '0']],
             ],
             false,
         ];
@@ -357,7 +357,7 @@ class PageModelTest extends ContaoTestCase
         yield 'inherit layout from parent page' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '2', 'layoutPropagation' => 'propagate']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '']],
                 [['id' => '3', 'pid' => '0']],
             ],
             '1',
@@ -366,28 +366,19 @@ class PageModelTest extends ContaoTestCase
         yield 'inherit subpages layout from parent page' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '2', 'layoutPropagation' => '']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '2']],
                 [['id' => '3', 'pid' => '0']],
             ],
             '2',
-        ];
-
-        yield 'disabled layout propagation' => [
-            [
-                [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '2', 'layoutPropagation' => 'disable']],
-                [['id' => '3', 'pid' => '0']],
-            ],
-            false,
         ];
 
         yield 'multiple parents with layouts' => [
             [
-                [['id' => '1', 'pid' => '2', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '1', 'layoutPropagation' => 'disable']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '', 'layoutPropagation' => 'propagate']],
-                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '', 'layoutPropagation' => 'propagate']],
+                [['id' => '1', 'pid' => '2', 'includeLayout' => '', 'layout' => '1', 'subpagesLayout' => '1']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '3']],
+                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '4', 'subpagesLayout' => '']],
             ],
-            '2',
+            '3',
         ];
     }
 

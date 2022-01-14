@@ -13,8 +13,6 @@ tl_page:
       fallback: '1'
       includeLayout: '1'
       layout: 1
-      subpagesLayout: 1
-      layoutPropagation: propagate
       published: '1'
 
     - id: 2
