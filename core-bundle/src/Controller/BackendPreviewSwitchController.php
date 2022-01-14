@@ -46,10 +46,10 @@ class BackendPreviewSwitchController
     private TwigEnvironment $twig;
     private ContaoCsrfTokenManager $tokenManager;
     private RouterInterface $router;
-    private array $backendAttributes = [];
-    private string $backendBadgeTitle = '';
+    private array $backendAttributes;
+    private string $backendBadgeTitle;
 
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager)
+    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager, array $attributes = [], string $badgeTitle = '')
     {
         $this->previewAuthenticator = $previewAuthenticator;
         $this->tokenChecker = $tokenChecker;
@@ -58,6 +58,8 @@ class BackendPreviewSwitchController
         $this->twig = $twig;
         $this->router = $router;
         $this->tokenManager = $tokenManager;
+        $this->backendAttributes = $attributes;
+        $this->backendBadgeTitle = $badgeTitle;
     }
 
     /**
@@ -88,12 +90,6 @@ class BackendPreviewSwitchController
         }
 
         return new Response('', Response::HTTP_BAD_REQUEST);
-    }
-
-    public function setBackendConfig(array $attributes, string $badgeTitle): void
-    {
-        $this->backendAttributes = $attributes;
-        $this->backendBadgeTitle = $badgeTitle;
     }
 
     private function renderToolbar(): string
