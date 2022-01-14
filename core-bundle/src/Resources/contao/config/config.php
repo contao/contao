@@ -228,6 +228,10 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_log')
 		),
+		'preview_link' => array
+		(
+			'tables'                  => array('tl_preview_link')
+		),
 		'opt_in' => array
 		(
 			'tables'                  => array('tl_opt_in'),

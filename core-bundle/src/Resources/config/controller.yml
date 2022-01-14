@@ -100,7 +100,19 @@ services:
         arguments:
             - '@contao.framework'
 
-    Contao\CoreBundle\Controller\Page\RootPageController: ~
+    Contao\CoreBundle\Controller\Page\RootPageController:
+        arguments:
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
+
+    Contao\CoreBundle\Controller\PreviewLinkController:
+        arguments:
+            - '@contao.security.frontend_preview_authenticator'
+            - '@uri_signer'
+            - '@database_connection'
+        tags:
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:

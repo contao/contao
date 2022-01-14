@@ -14,7 +14,6 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Folder;
@@ -895,7 +894,7 @@ class tl_files extends Backend
 					$this->import(Automator::class, 'Automator');
 					$this->Automator->generateSymlinks();
 
-					$this->log('Folder "' . $strPath . '" has been published', __METHOD__, ContaoContext::FILES);
+					System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $strPath . '" has been published');
 				}
 			}
 			elseif ($blnUnprotected)
@@ -906,7 +905,7 @@ class tl_files extends Backend
 				$this->import(Automator::class, 'Automator');
 				$this->Automator->generateSymlinks();
 
-				$this->log('Folder "' . $strPath . '" has been protected', __METHOD__, ContaoContext::FILES);
+				System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $strPath . '" has been protected');
 			}
 		}
 
@@ -983,7 +982,7 @@ class tl_files extends Backend
 					$blnUnsynchronized = true;
 					$objFolder->unsynchronize();
 
-					$this->log('Synchronization of folder "' . $strPath . '" has been disabled', __METHOD__, ContaoContext::FILES);
+					System::getContainer()->get('monolog.logger.contao.files')->info('Synchronization of folder "' . $strPath . '" has been disabled');
 				}
 			}
 			elseif ($blnUnsynchronized)
@@ -991,7 +990,7 @@ class tl_files extends Backend
 				$blnUnsynchronized = false;
 				$objFolder->synchronize();
 
-				$this->log('Synchronization of folder "' . $strPath . '" has been enabled', __METHOD__, ContaoContext::FILES);
+				System::getContainer()->get('monolog.logger.contao.files')->info('Synchronization of folder "' . $strPath . '" has been enabled');
 			}
 		}
 

@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 trigger_deprecation('contao/core-bundle', '4.12', 'Using the "Contao\PageRoot" class been deprecated and will no longer work in Contao 5.0. Use Symfony routing instead.');
@@ -73,7 +72,7 @@ class PageRoot extends Frontend
 		// No published pages yet
 		if (null === $objNextPage)
 		{
-			$this->log('No active page found under root page "' . $rootPageId . '"', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('No active page found under root page "' . $rootPageId . '"');
 
 			throw new NoActivePageFoundException('No active page found under root page.');
 		}

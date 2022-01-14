@@ -60,6 +60,22 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         // Prepend the backend route prefix to make it available for third-party bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
+
+        // Make sure channels for all Contao log actions are available
+        if ($container->hasExtension('monolog')) {
+            $container->prependExtensionConfig('monolog', [
+                'channels' => [
+                    'contao.access',
+                    'contao.configuration',
+                    'contao.cron',
+                    'contao.email',
+                    'contao.error',
+                    'contao.files',
+                    'contao.forms',
+                    'contao.general',
+                ],
+            ]);
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container): void

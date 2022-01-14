@@ -338,11 +338,11 @@ abstract class System
 	 * @param string $strCategory The category name
 	 *
 	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
-	 *             Use the logger service instead.
+	 *             Use the logger service with your context or any of the predefined monolog.logger.contao services instead.
 	 */
 	public static function log($strText, $strFunction, $strCategory)
 	{
-		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\System::log()" has been deprecated and will no longer work in Contao 5.0. Use the "logger" service instead.');
+		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\System::log()" has been deprecated and will no longer work in Contao 5.0. Use the "logger" service or any of the predefined "monolog.logger.contao" services instead.');
 
 		$level = 'ERROR' === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
 		$logger = static::getContainer()->get('monolog.logger.contao');

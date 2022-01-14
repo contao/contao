@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email as EmailMessage;
@@ -603,7 +604,14 @@ class Email
 			}
 		}
 
-		System::log($strMessage, __METHOD__, $this->strLogFile);
+		$context = null;
+
+		if ($this->strLogFile !== ContaoContext::EMAIL)
+		{
+			$context = array('contao' => new ContaoContext(__METHOD__, $this->strLogFile));
+		}
+
+		System::getContainer()->get('monolog.logger.contao.email')->info($strMessage, $context);
 
 		return true;
 	}
