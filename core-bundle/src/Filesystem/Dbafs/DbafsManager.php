@@ -300,7 +300,7 @@ class DbafsManager
     }
 
     /**
-     * @return \Generator<string, DbafsInterface>
+     * @return \Generator<string, DbafsInterface|null>
      */
     private function getDbafsForPath(string $path): \Generator
     {
