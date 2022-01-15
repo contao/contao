@@ -56,10 +56,23 @@ class DbafsManager
      */
     public function has(string $path): bool
     {
-        $dbafsIterator = $this->getDbafsForPath($path);
+        return null !== $this->getRecord($path);
+    }
 
-        return null !== ($dbafs = $dbafsIterator->current())
-            && null !== $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key()));
+    /**
+     * Returns true if a file exists under this path.
+     */
+    public function fileExists(string $path): bool
+    {
+        return null !== ($record = $this->getRecord($path)) && $record->isFile();
+    }
+
+    /**
+     * Returns true if a directory exists under this path.
+     */
+    public function directoryExists(string $path): bool
+    {
+        return null !== ($record = $this->getRecord($path)) && !$record->isFile();
     }
 
     /**
@@ -261,6 +274,17 @@ class DbafsManager
         }
 
         return $changeSet;
+    }
+
+    private function getRecord(string $path): ?FilesystemItem
+    {
+        $dbafsIterator = $this->getDbafsForPath($path);
+
+        if (null === ($dbafs = $dbafsIterator->current())) {
+            return null;
+        }
+
+        return $dbafs->getRecord(Path::makeRelative($path, $dbafsIterator->key()));
     }
 
     /**
