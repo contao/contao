@@ -112,7 +112,7 @@ class PreviewLinkListener
                 case 'toggle':
                 case 'delete':
                 default:
-                    $createdBy = $this->connection->fetchOne("SELECT createdBy FROM tl_preview_link WHERE id=?", [$dc->id]);
+                    $createdBy = $this->connection->fetchOne('SELECT createdBy FROM tl_preview_link WHERE id=?', [$dc->id]);
                     if ($createdBy !== $userId) {
                         throw new AccessDeniedException(sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
                     }
