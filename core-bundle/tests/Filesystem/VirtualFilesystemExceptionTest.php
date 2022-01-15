@@ -36,6 +36,11 @@ class VirtualFilesystemExceptionTest extends TestCase
             'Unable to check if a file exists at \'foo/bar\'.',
         ];
 
+        yield 'unable to check if directory exists' => [
+            VirtualFilesystemException::unableToCheckIfDirectoryExists('foo/bar', $previous),
+            'Unable to check if a directory exists at \'foo/bar\'.',
+        ];
+
         yield 'unable to read' => [
             VirtualFilesystemException::unableToRead('foo/bar', $previous),
             'Unable to read from \'foo/bar\'.',
