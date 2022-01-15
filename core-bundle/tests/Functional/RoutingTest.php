@@ -46,6 +46,7 @@ class RoutingTest extends FunctionalTestCase
         parent::setUp();
 
         $_GET = [];
+        unset($GLOBALS['objPage']);
 
         Config::set('useAutoItem', true);
         $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
