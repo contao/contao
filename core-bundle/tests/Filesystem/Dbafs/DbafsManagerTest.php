@@ -143,7 +143,7 @@ class DbafsManagerTest extends TestCase
         $manager->resolveUuid($uuid3, 'foo');
     }
 
-    public function testResourceExists(): void
+    public function testHasResource(): void
     {
         $dbafs = $this->createMock(DbafsInterface::class);
         $dbafs
@@ -162,10 +162,10 @@ class DbafsManagerTest extends TestCase
         $manager = new DbafsManager();
         $manager->register($dbafs, 'foo');
 
-        $this->assertTrue($manager->resourceExists('foo/bar.file'));
-        $this->assertTrue($manager->resourceExists('foo/bar/baz'));
-        $this->assertFalse($manager->resourceExists('foo/other'));
-        $this->assertFalse($manager->resourceExists('foobar'));
+        $this->assertTrue($manager->has('foo/bar.file'));
+        $this->assertTrue($manager->has('foo/bar/baz'));
+        $this->assertFalse($manager->has('foo/other'));
+        $this->assertFalse($manager->has('foobar'));
     }
 
     public function testGetLastModified(): void

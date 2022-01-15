@@ -54,7 +54,7 @@ class DbafsManager
     /**
      * Returns true if a resource exists under this path.
      */
-    public function resourceExists(string $path): bool
+    public function has(string $path): bool
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
