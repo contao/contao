@@ -46,7 +46,7 @@ class RootPageController extends AbstractController implements DynamicRouteInter
 
         $route->setDefault('_controller', RedirectController::class);
         $route->setDefault('path', $nextPage->getAbsoluteUrl());
-        $route->setDefault('permanent', true);
+        $route->setDefault('permanent', false);
     }
 
     public function getUrlSuffixes(): array
