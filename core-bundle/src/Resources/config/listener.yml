@@ -287,7 +287,9 @@ services:
             - '@contao.framework'
             - '@security.helper'
         tags:
-            - kernel.event_listener
+            # The priority must be lower than the Symfony route listener (defaults to 32)
+            # and lower than the Symfony firewall listener (defaults to 8)
+            - { name: kernel.event_listener, priority: 7 }
 
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
