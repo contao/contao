@@ -281,16 +281,6 @@ services:
             - { name: kernel.event_listener, priority: 256 }
             - { name: kernel.reset, method: reset }
 
-    contao.listener.page_access:
-        class: Contao\CoreBundle\EventListener\PageAccessListener
-        arguments:
-            - '@contao.framework'
-            - '@security.helper'
-        tags:
-            # The priority must be lower than the Symfony route listener (defaults to 32)
-            # and lower than the Symfony firewall listener (defaults to 8)
-            - { name: kernel.event_listener, priority: 7 }
-
     contao.listener.module_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
@@ -300,6 +290,16 @@ services:
             - Contao\ModuleProxy
         tags:
             - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
+
+    contao.listener.page_access:
+        class: Contao\CoreBundle\EventListener\PageAccessListener
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+        tags:
+            # The priority must be lower than the Symfony route listener (defaults to 32)
+            # and lower than the Symfony firewall listener (defaults to 8)
+            - { name: kernel.event_listener, priority: 7 }
 
     contao.listener.pretty_error_screen:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
