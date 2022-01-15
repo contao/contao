@@ -54,7 +54,11 @@ class PageAccessListener
             return;
         }
 
-        if (!$this->security->isGranted('ROLE_MEMBER')) {
+        // Do not check for logged in member if -1 (guest group) is allowed
+        if (
+            !\in_array(-1, array_map('intval', $pageModel->groups), true)
+            && !$this->security->isGranted('ROLE_MEMBER')
+        ) {
             throw new InsufficientAuthenticationException('Not authenticated');
         }
 
@@ -80,6 +84,10 @@ class PageAccessListener
             )
         ) {
             return $GLOBALS['objPage'];
+        }
+
+        if ($pageModel instanceof PageModel) {
+            return $pageModel;
         }
 
         $this->framework->initialize();
