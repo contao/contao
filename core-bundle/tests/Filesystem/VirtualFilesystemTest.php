@@ -144,13 +144,13 @@ class VirtualFilesystemTest extends TestCase
     /**
      * @dataProvider provideResourceExistsResults
      */
-    public function testFileExistsWithUuid(bool $resourceExists): void
+    public function testResourceExistsWithUuid(bool $resourceExists): void
     {
         $uuid = self::$defaultUuid;
 
         $dbafsManager = $this->createMock(DbafsManager::class);
         $invocationMocker = $dbafsManager
-            ->expects($this->once())
+            ->expects($this->exactly(3))
             ->method('resolveUuid')
             ->with($uuid, 'prefix')
         ;
@@ -166,12 +166,30 @@ class VirtualFilesystemTest extends TestCase
         );
 
         $this->assertSame($resourceExists, $filesystem->fileExists($uuid));
+        $this->assertSame($resourceExists, $filesystem->directoryExists($uuid));
+        $this->assertSame($resourceExists, $filesystem->has($uuid));
     }
 
     public function provideResourceExistsResults(): \Generator
     {
         yield 'resource found' => [true];
         yield 'resource not found' => [false];
+    }
+
+    /**
+     * @dataProvider provideInvalidAccessFlags
+     */
+    public function testResourceExistsThrowsWithUuidAndInvalidAccessFlags(int $invalidAccessFlags): void
+    {
+        $filesystem = new VirtualFilesystem(
+            $this->createMock(MountManager::class),
+            $this->createMock(DbafsManager::class)
+        );
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Cannot use a UUID in combination with VirtualFilesystem::BYPASS_DBAFS to check if a resource exists.');
+
+        $filesystem->has(Uuid::v1(), $invalidAccessFlags);
     }
 
     /**
@@ -185,9 +203,25 @@ class VirtualFilesystemTest extends TestCase
         );
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Cannot use a UUID in combination with VirtualFilesystem::BYPASS_DBAFS to check if a file exists.');
+        $this->expectExceptionMessage('Cannot use a UUID in combination with VirtualFilesystem::BYPASS_DBAFS to check if a resource exists.');
 
         $filesystem->fileExists(Uuid::v1(), $invalidAccessFlags);
+    }
+
+    /**
+     * @dataProvider provideInvalidAccessFlags
+     */
+    public function testDirectoryExistsThrowsWithUuidAndInvalidAccessFlags(int $invalidAccessFlags): void
+    {
+        $filesystem = new VirtualFilesystem(
+            $this->createMock(MountManager::class),
+            $this->createMock(DbafsManager::class)
+        );
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Cannot use a UUID in combination with VirtualFilesystem::BYPASS_DBAFS to check if a resource exists.');
+
+        $filesystem->directoryExists(Uuid::v1(), $invalidAccessFlags);
     }
 
     public function provideInvalidAccessFlags(): \Generator
@@ -201,11 +235,27 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testFileExistsReadsFromMountManagerAndSyncsDbafs(bool $resourceExists): void
     {
-        $mountManager = $this->mockMountManagerWithCall('fileExists', [], $resourceExists);
+        $mountManager = $this->createMock(MountManager::class);
+        $mountManager
+            // Called once each for fileExists() and has()
+            ->expects($this->exactly(4))
+            ->method('fileExists')
+            ->with('prefix/path')
+            ->willReturn($resourceExists)
+        ;
+
+        $mountManager
+            // Called once each for directoryExists() and once each for has() if resource does not exist
+            ->expects($this->exactly($resourceExists ? 2 : 4))
+            ->method('directoryExists')
+            ->with('prefix/path')
+            ->willReturn($resourceExists)
+        ;
 
         $dbafsManager = $this->createMock(DbafsManager::class);
         $dbafsManager
-            ->expects($this->exactly(2))
+            // Called every time
+            ->expects($this->exactly(6))
             ->method('sync')
             ->with('prefix/path')
         ;
@@ -218,26 +268,33 @@ class VirtualFilesystemTest extends TestCase
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
 
-        $this->assertSame(
-            $resourceExists,
-            $filesystem->fileExists('path', VirtualFilesystemInterface::FORCE_SYNC)
-        );
+        foreach (['has', 'fileExists', 'directoryExists'] as $method) {
+            $this->assertSame(
+                $resourceExists,
+                $filesystem->$method('path', VirtualFilesystemInterface::FORCE_SYNC)
+            );
 
-        $this->assertSame(
-            $resourceExists,
-            $filesystem->fileExists('path', VirtualFilesystemInterface::FORCE_SYNC | VirtualFilesystemInterface::BYPASS_DBAFS)
-        );
+            $this->assertSame(
+                $resourceExists,
+                $filesystem->$method('path', VirtualFilesystemInterface::FORCE_SYNC | VirtualFilesystemInterface::BYPASS_DBAFS)
+            );
+        }
     }
 
     /**
      * @dataProvider provideResourceExistsResults
      */
-    public function testFileExistsReadsFromDbafsManager(bool $resourceExists): void
+    public function testResourceExistsReadsFromDbafsManager(bool $resourceExists): void
     {
         $mountManager = $this->createMock(MountManager::class);
         $mountManager
             ->expects($this->never())
             ->method('fileExists')
+        ;
+
+        $mountManager
+            ->expects($this->never())
+            ->method('directoryExists')
         ;
 
         $dbafsManager = $this->createMock(DbafsManager::class);
@@ -248,7 +305,19 @@ class VirtualFilesystemTest extends TestCase
         ;
 
         $dbafsManager
-            ->method('resourceExists')
+            ->method('fileExists')
+            ->with('prefix/path')
+            ->willReturn($resourceExists)
+        ;
+
+        $dbafsManager
+            ->method('directoryExists')
+            ->with('prefix/path')
+            ->willReturn($resourceExists)
+        ;
+
+        $dbafsManager
+            ->method('has')
             ->with('prefix/path')
             ->willReturn($resourceExists)
         ;
@@ -256,6 +325,8 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
 
         $this->assertSame($resourceExists, $filesystem->fileExists('path'));
+        $this->assertSame($resourceExists, $filesystem->directoryExists('path'));
+        $this->assertSame($resourceExists, $filesystem->has('path'));
     }
 
     public function testRead(): void
