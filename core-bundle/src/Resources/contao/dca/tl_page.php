@@ -191,7 +191,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'autoforward'                 => 'jumpTo',
 		'protected'                   => 'groups',
-		'createSitemap'               => 'sitemapName',
 		'includeLayout'               => 'layout,subpagesLayout',
 		'includeCache'                => 'clientCache,cache,alwaysLoadFromCache',
 		'includeChmod'                => 'cuser,cgroup,chmod',
