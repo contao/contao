@@ -23,20 +23,10 @@ class RootPageDependentSelectTest extends ContaoTestCase
 {
     public function testRendersMultipleSelects(): void
     {
-        $mockPageModel = function (array $properties) {
-            $model = $this->mockClassWithProperties(PageModel::class);
-
-            foreach ($properties as $key => $property) {
-                $model->$key = $property;
-            }
-
-            return $model;
-        };
-
         $rootPages = [
-            $mockPageModel(['id' => 1, 'title' => 'Root Page 1', 'language' => 'en']),
-            $mockPageModel(['id' => 2, 'title' => 'Root Page 2', 'language' => 'de']),
-            $mockPageModel(['id' => 3, 'title' => 'Root Page 3', 'language' => 'fr']),
+            $this->mockPageModel(['id' => 1, 'title' => 'Root Page 1', 'language' => 'en']),
+            $this->mockPageModel(['id' => 2, 'title' => 'Root Page 2', 'language' => 'de']),
+            $this->mockPageModel(['id' => 3, 'title' => 'Root Page 3', 'language' => 'fr']),
         ];
 
         $pageAdapter = $this->mockAdapter(['findByType']);
@@ -113,5 +103,16 @@ class RootPageDependentSelectTest extends ContaoTestCase
         $minifiedExpectedOutput = preg_replace(['/\s\s|\n/', '/\s</'], ['', '<'], $expectedOutput);
 
         $this->assertSame($minifiedExpectedOutput, $widget->generate());
+    }
+
+    private function mockPageModel(array $properties): PageModel
+    {
+        $model = $this->mockClassWithProperties(PageModel::class);
+
+        foreach ($properties as $key => $property) {
+            $model->$key = $property;
+        }
+
+        return $model;
     }
 }
