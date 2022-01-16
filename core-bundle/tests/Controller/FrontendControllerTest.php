@@ -23,7 +23,7 @@ class FrontendControllerTest extends TestCase
 {
     public function testThrowsALogoutExceptionUponLogout(): void
     {
-        $controller = new FrontendController($this->createMock(Cron::class));
+        $controller = new FrontendController();
 
         $this->expectException(LogoutException::class);
         $this->expectExceptionMessage('The user was not logged out correctly.');
@@ -33,7 +33,7 @@ class FrontendControllerTest extends TestCase
 
     public function testCheckCookiesAction(): void
     {
-        $controller = new FrontendController($this->createMock(Cron::class));
+        $controller = new FrontendController();
         $response = $controller->checkCookiesAction();
 
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
@@ -54,7 +54,7 @@ class FrontendControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.csrf.token_manager', $tokenManager);
 
-        $controller = new FrontendController($this->createMock(Cron::class));
+        $controller = new FrontendController();
         $controller->setContainer($container);
 
         $response = $controller->requestTokenScriptAction();
@@ -79,8 +79,9 @@ class FrontendControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
+        $container->set('contao.cron', $cron);
 
-        $controller = new FrontendController($cron);
+        $controller = new FrontendController();
         $controller->setContainer($container);
 
         $request = $this->createMock(Request::class);
@@ -106,8 +107,9 @@ class FrontendControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
+        $container->set('contao.cron', $cron);
 
-        $controller = new FrontendController($cron);
+        $controller = new FrontendController();
         $controller->setContainer($container);
 
         $request = $this->createMock(Request::class);

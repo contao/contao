@@ -59,10 +59,9 @@ services:
             - controller.service_arguments
 
     Contao\CoreBundle\Controller\FrontendController:
-        arguments:
-            - '@contao.cron'
         tags:
             - controller.service_arguments
+            - { name: container.service_subscriber, id: contao.cron }
 
     Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController:
         tags:
