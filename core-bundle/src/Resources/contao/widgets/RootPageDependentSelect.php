@@ -31,7 +31,7 @@ class RootPageDependentSelect extends SelectMenu
 
 		$this->blankOptionLabel = $translator->trans(
 			sprintf('tl_module.%sBlankOptionLabel', $this->name),
-			[],
+			array(),
 			'contao_module'
 		);
 
