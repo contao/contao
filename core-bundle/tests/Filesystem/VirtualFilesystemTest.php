@@ -439,7 +439,7 @@ class VirtualFilesystemTest extends TestCase
 
         $mountManager
             ->expects($this->once())
-            ->method('fileSize')
+            ->method('getFileSize')
             ->willReturn(1024)
             ->with('prefix/foo/bar/file')
         ;
@@ -489,9 +489,9 @@ class VirtualFilesystemTest extends TestCase
                 new FilesystemItem(
                     true,
                     'prefix/foo/bar/file',
-                    0,
-                    0,
-                    '',
+                    null,
+                    null,
+                    null,
                     ['extra' => 'data']
                 ),
                 new FilesystemItem(false, 'prefix/foo/bar/things'),
@@ -508,9 +508,9 @@ class VirtualFilesystemTest extends TestCase
                 new FilesystemItem(
                     true,
                     'prefix/foo/bar/file',
-                    0,
-                    0,
-                    '',
+                    null,
+                    null,
+                    null,
                     ['extra' => 'data']
                 ),
                 new FilesystemItem(false, 'prefix/foo/bar/things'),
