@@ -29,6 +29,13 @@ use Symfony\Component\Security\Core\Exception\LogoutException;
  */
 class FrontendController extends AbstractController
 {
+    private Cron $cron;
+
+    public function __construct(Cron $cron)
+    {
+        $this->cron = $cron;
+    }
+
     public function indexAction(): Response
     {
         $this->initializeContaoFramework();
@@ -43,10 +50,10 @@ class FrontendController extends AbstractController
     /**
      * @Route("/_contao/cron", name="contao_frontend_cron")
      */
-    public function cronAction(Request $request, Cron $cron): Response
+    public function cronAction(Request $request): Response
     {
         if ($request->isMethod(Request::METHOD_GET)) {
-            $cron->run(Cron::SCOPE_WEB);
+            $this->cron->run(Cron::SCOPE_WEB);
         }
 
         return new Response('', Response::HTTP_NO_CONTENT);

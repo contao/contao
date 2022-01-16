@@ -59,6 +59,8 @@ services:
             - controller.service_arguments
 
     Contao\CoreBundle\Controller\FrontendController:
+        arguments:
+            - '@contao.cron'
         tags:
             - controller.service_arguments
 

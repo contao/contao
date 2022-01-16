@@ -23,7 +23,7 @@ class FrontendControllerTest extends TestCase
 {
     public function testThrowsALogoutExceptionUponLogout(): void
     {
-        $controller = new FrontendController();
+        $controller = new FrontendController($this->createMock(Cron::class));
 
         $this->expectException(LogoutException::class);
         $this->expectExceptionMessage('The user was not logged out correctly.');
@@ -33,7 +33,7 @@ class FrontendControllerTest extends TestCase
 
     public function testCheckCookiesAction(): void
     {
-        $controller = new FrontendController();
+        $controller = new FrontendController($this->createMock(Cron::class));
         $response = $controller->checkCookiesAction();
 
         $this->assertTrue($response->headers->hasCacheControlDirective('private'));
@@ -54,7 +54,7 @@ class FrontendControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.csrf.token_manager', $tokenManager);
 
-        $controller = new FrontendController();
+        $controller = new FrontendController($this->createMock(Cron::class));
         $controller->setContainer($container);
 
         $response = $controller->requestTokenScriptAction();
@@ -70,18 +70,18 @@ class FrontendControllerTest extends TestCase
     {
         $framework = $this->mockContaoFramework();
 
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $framework);
-
-        $controller = new FrontendController();
-        $controller->setContainer($container);
-
         $cron = $this->createMock(Cron::class);
         $cron
             ->expects($this->once())
             ->method('run')
             ->with(Cron::SCOPE_WEB)
         ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController($cron);
+        $controller->setContainer($container);
 
         $request = $this->createMock(Request::class);
         $request
@@ -91,24 +91,24 @@ class FrontendControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $controller->cronAction($request, $cron);
+        $controller->cronAction($request);
     }
 
     public function testDoesNotRunTheCronJobsUponPostRequests(): void
     {
         $framework = $this->mockContaoFramework();
 
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.framework', $framework);
-
-        $controller = new FrontendController();
-        $controller->setContainer($container);
-
         $cron = $this->createMock(Cron::class);
         $cron
             ->expects($this->never())
             ->method('run')
         ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.framework', $framework);
+
+        $controller = new FrontendController($cron);
+        $controller->setContainer($container);
 
         $request = $this->createMock(Request::class);
         $request
@@ -118,6 +118,6 @@ class FrontendControllerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $controller->cronAction($request, $cron);
+        $controller->cronAction($request);
     }
 }
