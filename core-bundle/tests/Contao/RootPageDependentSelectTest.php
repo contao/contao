@@ -75,6 +75,8 @@ class RootPageDependentSelectTest extends ContaoTestCase
             ],
         ];
 
+        $widget = new RootPageDependentSelect(RootPageDependentSelect::getAttributesFromDca($fieldConfig, $fieldConfig['name']));
+
         $expectedOutput =
             <<<'OUTPUT'
                 <select
@@ -111,8 +113,6 @@ class RootPageDependentSelectTest extends ContaoTestCase
                 OUTPUT;
 
         $minifiedExpectedOutput = preg_replace(['/\s\s|\n/', '/\s</'], ['', '<'], $expectedOutput);
-
-        $widget = new RootPageDependentSelect(RootPageDependentSelect::getAttributesFromDca($fieldConfig, $fieldConfig['name']));
 
         $this->assertSame($minifiedExpectedOutput, $widget->generate());
     }
