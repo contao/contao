@@ -45,16 +45,16 @@ class RootPageDependentSelect extends SelectMenu
 		return implode('', $fields);
 	}
 
-	protected function isSelected($option): string
+	protected function isSelected($arrOption): string
 	{
-		if (empty($this->varValue) && empty($_POST) && ($option['default'] ?? null))
+		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
 		{
-			return static::optionSelected((string) 1, 1);
+			return ' selected';
 		}
 
 		return static::optionSelected(
-			$option['value'] ?? null,
-			$this->varValue[$option['index']] ?? null
+			$arrOption['value'] ?? null,
+			$this->varValue[$arrOption['index']] ?? null
 		);
 	}
 
