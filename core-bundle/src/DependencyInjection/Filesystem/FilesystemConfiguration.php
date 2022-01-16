@@ -184,6 +184,8 @@ class FilesystemConfiguration
         );
 
         $definition->setFactory(new Reference('contao.filesystem.dbafs_factory'));
+        $definition->addTag('kernel.reset', ['method' => 'reset']);
+
         $this->container->setDefinition("contao.filesystem.dbafs.$virtualFilesystemName", $definition);
 
         // Register the DBAFS in the DbafsManager using the same prefix as the
