@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Security\Core\Security;
 
 class PreviewAuthenticationListenerTest extends TestCase
 {
@@ -33,10 +34,11 @@ class PreviewAuthenticationListenerTest extends TestCase
         $tokenChecker = $this->createMock(TokenChecker::class);
         $router = $this->createMock(UrlGeneratorInterface::class);
         $uriSigner = $this->createMock(UriSigner::class);
+        $security = $this->createMock(Security::class);
 
         $requestEvent = $this->getRequestEvent();
 
-        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $uriSigner);
+        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $uriSigner, $security);
         $listener($requestEvent);
 
         $this->assertNull($requestEvent->getResponse());
@@ -97,7 +99,7 @@ class PreviewAuthenticationListenerTest extends TestCase
 
         $requestEvent = $this->getRequestEvent($request);
 
-        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $uriSigner);
+        $listener = new PreviewAuthenticationListener($scopeMatcher, $tokenChecker, $router, $uriSigner, $this->createMock(Security::class));
         $listener($requestEvent);
 
         $this->assertInstanceOf(RedirectResponse::class, $requestEvent->getResponse());

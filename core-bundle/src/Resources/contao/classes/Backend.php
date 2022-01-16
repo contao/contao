@@ -941,7 +941,7 @@ abstract class Backend extends Controller
 		}
 
 		$image = Controller::getPageStatusIcon((object) $row);
-		$imageAttribute = trim($imageAttribute . ' data-icon="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'1'))) . '" data-icon-disabled="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>''))) . '"');
+		$imageAttribute = trim($imageAttribute . ' data-icon="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'1')))) . '" data-icon-disabled="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'')))) . '"');
 
 		// Return the image only
 		if ($blnReturnImage)
