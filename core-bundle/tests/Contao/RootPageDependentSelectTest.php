@@ -16,12 +16,6 @@ use Contao\PageModel;
 use Contao\RootPageDependentSelect;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
-use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolverInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectTest extends ContaoTestCase
@@ -51,13 +45,6 @@ class RootPageDependentSelectTest extends ContaoTestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('security.firewall.map', $this->createMock(FirewallMap::class));
-        $container->set('security.token_storage', $this->createMock(TokenStorageInterface::class));
-        $container->set('security.authentication.trust_resolver', $this->createMock(AuthenticationTrustResolverInterface::class));
-        $container->set('security.access.simple_role_voter', $this->createMock(RoleVoter::class));
-        $container->set('session', $this->createMock(SessionInterface::class));
-        $container->set('filesystem', $this->createMock(Filesystem::class));
-        $container->setParameter('contao.resources_paths', []);
         $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $pageAdapter]));
         $container->set('translator', $translator);
 
