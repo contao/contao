@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
-use Contao\CoreBundle\Event\RenderTemplateEvent;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\Twig\Event\EventsNodeVisitor;
+use Contao\CoreBundle\Twig\Event\RenderTemplateEvent;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;

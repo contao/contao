@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Event;
+namespace Contao\CoreBundle\Tests\Twig\Event;
 
-use Contao\CoreBundle\Event\CompileTemplateEvent;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Event\CompileTemplateEvent;
 use Twig\Node\BodyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;

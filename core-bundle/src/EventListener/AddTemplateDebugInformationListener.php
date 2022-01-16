@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\CoreBundle\Event\CompileTemplateEvent;
+use Contao\CoreBundle\Twig\Event\CompileTemplateEvent;
 
 /**
  * @internal

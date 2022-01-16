@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Event;
 
-use Contao\CoreBundle\Event\CompileTemplateEvent;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Event\CompileTemplateEvent;
 use Contao\CoreBundle\Twig\Event\EventsNodeVisitor;
 use Contao\CoreBundle\Twig\Event\RenderEventNode;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Event;
+namespace Contao\CoreBundle\Tests\Twig\Event;
 
-use Contao\CoreBundle\Event\RenderTemplateEvent;
+use Contao\CoreBundle\Twig\Event\RenderTemplateEvent;
 use PHPUnit\Framework\TestCase;
 
 class RenderTemplateEventTest extends TestCase

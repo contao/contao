@@ -10,9 +10,8 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Event;
+namespace Contao\CoreBundle\Twig\Event;
 
-use Contao\CoreBundle\Twig\Event\TemplateNameTrait;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
