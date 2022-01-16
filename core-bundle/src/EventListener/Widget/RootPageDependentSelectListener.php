@@ -12,27 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Widget;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectListener
 {
     private Connection $connection;
     private TranslatorInterface $translator;
-    private CsrfTokenManagerInterface $csrfTokenManager;
-    private string $csrfTokenName;
+    private ContaoCsrfTokenManager $csrfTokenManager;
 
-    public function __construct(Connection $connection, TranslatorInterface $translator, CsrfTokenManagerInterface $csrfTokenManager, string $csrfTokenName)
+    public function __construct(Connection $connection, TranslatorInterface $translator, ContaoCsrfTokenManager $csrfTokenManager)
     {
         $this->connection = $connection;
         $this->translator = $translator;
         $this->csrfTokenManager = $csrfTokenManager;
-        $this->csrfTokenName = $csrfTokenName;
     }
 
     /**
@@ -106,7 +104,7 @@ class RootPageDependentSelectListener
 
             $title = $this->translator->trans('tl_content.editalias', [$id], 'contao_content');
 
-            $wizards[$rootPage] = ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$id.'&amp;popup=1&amp;nb=1&amp;rt='.$this->csrfTokenManager->getToken($this->csrfTokenName)->getValue().'"
+            $wizards[$rootPage] = ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$id.'&amp;popup=1&amp;nb=1&amp;rt='.$this->csrfTokenManager->getDefaultTokenValue().'"
                     title="'.StringUtil::specialchars($title).'"
                     onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $title)).'\',\'url\':this.href});return false">'.Image::getHtml('alias.svg', $title).'</a>';
         }

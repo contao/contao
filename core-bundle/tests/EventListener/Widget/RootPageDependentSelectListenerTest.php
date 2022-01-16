@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\Widget;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener;
 use Contao\DataContainer;
 use Contao\System;
@@ -19,8 +20,6 @@ use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectListenerTest extends ContaoTestCase
@@ -30,8 +29,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'contao_csrf_token'
+            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
@@ -49,17 +47,10 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
             ->willReturn('title')
         ;
 
-        $token = $this->createMock(CsrfToken::class);
-        $token
-            ->expects($this->exactly(3))
-            ->method('getValue')
-        ;
-
-        $csrfTokenManager = $this->createMock(CsrfTokenManagerInterface::class);
+        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
         $csrfTokenManager
             ->expects($this->exactly(3))
-            ->method('getToken')
-            ->willReturn($token)
+            ->method('getDefaultTokenValue')
         ;
 
         System::setContainer($this->getContainerWithContaoConfiguration('/directory/project'));
@@ -68,7 +59,6 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
             $this->createMock(Connection::class),
             $translator,
             $csrfTokenManager,
-            'contao_csrf_token'
         );
 
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
@@ -89,8 +79,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'contao_csrf_token'
+            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $this->assertSame('foobar', $listener->saveCallback('foobar', $dataContainer));
@@ -105,8 +94,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'contao_csrf_token'
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $this->assertSame(
@@ -134,8 +122,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'contao_csrf_token'
+            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $this->assertSame(
@@ -174,8 +161,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
         $listener = new RootPageDependentSelectListener(
             $connection,
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(CsrfTokenManagerInterface::class),
-            'contao_csrf_token'
+            $this->createMock(ContaoCsrfTokenManager::class)
         );
 
         $this->assertSame(

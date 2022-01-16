@@ -475,7 +475,6 @@ services:
             - '@database_connection'
             - '@translator'
             - '@contao.csrf.token_manager'
-            - '%contao.csrf_token_name%'
 
     # Backwards compatibility
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
