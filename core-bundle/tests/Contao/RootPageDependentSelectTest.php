@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\RootPageDependentSelect;
 use Contao\System;
@@ -22,10 +23,20 @@ class RootPageDependentSelectTest extends ContaoTestCase
 {
     public function testRendersMultipleSelects(): void
     {
+        $mockPageModel = function (array $properties) {
+            $model = $this->mockClassWithProperties(PageModel::class);
+
+            foreach ($properties as $key => $property) {
+                $model->$key = $property;
+            }
+
+            return $model;
+        };
+
         $rootPages = [
-            (object) ['id' => 1, 'title' => 'Root Page 1', 'language' => 'en'],
-            (object) ['id' => 2, 'title' => 'Root Page 2', 'language' => 'de'],
-            (object) ['id' => 3, 'title' => 'Root Page 3', 'language' => 'fr'],
+            $mockPageModel(['id' => 1, 'title' => 'Root Page 1', 'language' => 'en']),
+            $mockPageModel(['id' => 2, 'title' => 'Root Page 2', 'language' => 'de']),
+            $mockPageModel(['id' => 3, 'title' => 'Root Page 3', 'language' => 'fr']),
         ];
 
         $pageAdapter = $this->mockAdapter(['findByType']);
@@ -33,7 +44,7 @@ class RootPageDependentSelectTest extends ContaoTestCase
             ->expects($this->once())
             ->method('findByType')
             ->with('root', ['order' => 'sorting'])
-            ->willReturn($rootPages)
+            ->willReturn(new Collection($rootPages, 'tl_page'))
         ;
 
         $translator = $this->createMock(TranslatorInterface::class);
