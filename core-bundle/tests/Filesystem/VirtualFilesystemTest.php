@@ -437,6 +437,13 @@ class VirtualFilesystemTest extends TestCase
             ->method('listContents')
         ;
 
+        $mountManager
+            ->expects($this->once())
+            ->method('fileSize')
+            ->willReturn(1024)
+            ->with('prefix/foo/bar/file')
+        ;
+
         $dbafsManager = $this->createMock(DbafsManager::class);
         $dbafsManager
             ->expects($this->once())
@@ -460,6 +467,8 @@ class VirtualFilesystemTest extends TestCase
             ['extra' => 'data'],
             $listedContents[0]->getExtraMetadata()
         );
+
+        $this->assertSame(1024, $listedContents[0]->getFileSize());
 
         // Normalize listing for comparison
         $listing = array_map(
