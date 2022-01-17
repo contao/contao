@@ -79,6 +79,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'sorting' => array
 		(
 			'mode'                    => DataContainer::MODE_TREE,
+			'rootPaste'               => true,
 			'showRootTrails'          => true,
 			'icon'                    => 'pagemounts.svg',
 			'paste_button_callback'   => array('tl_page', 'pastePage'),
@@ -823,6 +824,7 @@ class tl_page extends Backend
 			$root = $this->User->pagemounts;
 		}
 
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['rootPaste'] = false;
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
 		$security = System::getContainer()->get('security.helper');
 

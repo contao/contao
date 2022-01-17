@@ -3757,7 +3757,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$_buttons = '&nbsp;';
 
 		// Show paste button only if there are no root records specified
-		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && (!$this->root || ($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste'] ?? null)) && Input::get('act') != 'select')
+		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
 		{
 			// Call paste_button_callback (&$dc, $row, $table, $cr, $childs, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
@@ -4113,7 +4113,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Regular tree (on cut: disable buttons of the page and all its childs to avoid circular references)
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 				{
-					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || ($this->root && !$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] && \in_array($id, $this->root))) ? Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
+					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || (!$this->rootPaste && \in_array($id, $this->root))) ? Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
 					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id'])))) ? Image::getHtml('pasteinto_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
 				}
 
@@ -6199,6 +6199,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function initRoots()
 	{
 		$table = $this->strTable;
+		$this->rootPaste = $GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste'] ?? false;
 
 		// Get the IDs of all root records (tree view)
 		if ($this->treeView)
@@ -6213,6 +6214,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				if ($objIds->numRows > 0)
 				{
 					$this->root = $objIds->fetchEach('id');
+				}
+
+				if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste']))
+				{
+					trigger_deprecation('contao/core-bundle', '4.13', 'Implicitly setting "TL_DCA.%s.list.sorting.rootPaste" to true by leaving "TL_DCA.%s.list.sorting.root" empty has been deprecated and will no longer work in Contao 5.0. Set "rootPaste" to true instead.', $table, $table);
+					$this->rootPaste = true;
 				}
 			}
 
