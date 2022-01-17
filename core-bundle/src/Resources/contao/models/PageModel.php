@@ -288,6 +288,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
  * @method static integer countByIncludeLayout($val, array $opt=array())
+ * @method static integer countByLayout($val, array $opt=array())
  * @method static integer countBySubpageLayout($val, array $opt=array())
  * @method static integer countByIncludeCache($val, array $opt=array())
  * @method static integer countByCache($val, array $opt=array())
