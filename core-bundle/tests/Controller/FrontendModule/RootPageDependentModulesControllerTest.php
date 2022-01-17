@@ -69,8 +69,9 @@ class RootPageDependentModulesControllerTest extends TestCase
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('router', $router);
         $container->set('translator', $translator);
+        $container->setParameter('kernel.project_dir', \dirname(__DIR__, 3));
 
-        TemplateLoader::addFile('be_wildcard', __DIR__.'/../../../src/Resources/contao/templates/backend');
+        TemplateLoader::addFile('be_wildcard', 'src/Resources/contao/templates/backend');
 
         $controller = new RootPageDependentModulesController();
         $controller->setContainer($container);
