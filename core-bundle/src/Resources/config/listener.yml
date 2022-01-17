@@ -75,6 +75,13 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.listener.data_container.layout_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
+        arguments:
+            - '@database_connection'
+        tags:
+            - { name: kernel.reset, method: reset }
+
     contao.listener.data_container.member_groups:
         class: Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener
         arguments:

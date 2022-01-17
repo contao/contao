@@ -67,6 +67,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|array|null      $groups
  * @property string|boolean         $includeLayout
  * @property string|integer         $layout
+ * @property string|integer         $subpageLayout
  * @property string|boolean         $includeCache
  * @property string|integer|boolean $cache
  * @property string|boolean         $alwaysLoadFromCache
@@ -162,6 +163,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByGroups($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeLayout($val, array $opt=array())
  * @method static PageModel|null findOneByLayout($val, array $opt=array())
+ * @method static PageModel|null findOneBySubpageLayout($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeCache($val, array $opt=array())
  * @method static PageModel|null findOneByCache($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeChmod($val, array $opt=array())
@@ -222,6 +224,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByGroups($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeLayout($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLayout($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findBySubpageLayout($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeCache($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByCache($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeChmod($val, array $opt=array())
@@ -285,7 +288,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
  * @method static integer countByIncludeLayout($val, array $opt=array())
- * @method static integer countByLayout($val, array $opt=array())
+ * @method static integer countBySubpageLayout($val, array $opt=array())
  * @method static integer countByIncludeCache($val, array $opt=array())
  * @method static integer countByCache($val, array $opt=array())
  * @method static integer countByIncludeChmod($val, array $opt=array())
@@ -1184,7 +1187,7 @@ class PageModel extends Model
 					// Layout
 					if ($objParentPage->includeLayout && $this->layout === false)
 					{
-						$this->layout = $objParentPage->layout;
+						$this->layout = $objParentPage->subpageLayout ?: $objParentPage->layout;
 					}
 
 					// Protection
