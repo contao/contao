@@ -18,12 +18,11 @@ use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @Callback(table="tl_page", target="fields.layout.options")
- * @Callback(table="tl_page", target="fields.subpagesLayout.options")
+ * @Callback(table="tl_page", target="fields.subpageLayout.options")
  */
 class LayoutOptionsListener implements ResetInterface
 {
     private Connection $connection;
-
     private ?array $options = null;
 
     public function __construct(Connection $connection)

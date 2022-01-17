@@ -191,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'autoforward'                 => 'jumpTo',
 		'protected'                   => 'groups',
-		'includeLayout'               => 'layout,subpagesLayout',
+		'includeLayout'               => 'layout,subpageLayout',
 		'includeCache'                => 'clientCache,cache,alwaysLoadFromCache',
 		'includeChmod'                => 'cuser,cgroup,chmod',
 		'enforceTwoFactor'            => 'twoFactorJumpTo'
@@ -589,7 +589,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
-		'subpagesLayout' => array
+		'subpageLayout' => array
 		(
 			'exclude'                 => true,
 			'search'                  => true,
