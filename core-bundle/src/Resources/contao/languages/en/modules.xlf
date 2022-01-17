@@ -314,6 +314,12 @@
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
       </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.0">
+        <source>Root page dependent modules</source>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_module.1">
+        <source>Generates different modules depending on the root page</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

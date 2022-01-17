@@ -380,6 +380,15 @@
       <trans-unit id="tl_module.data.1">
         <source>These values are available as &lt;code&gt;$this->data&lt;/code&gt; in the template.</source>
       </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.0">
+        <source>Modules</source>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.1">
+        <source>Please select a module for every root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
+        <source>Module for "%s"</source>
+      </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
       </trans-unit>

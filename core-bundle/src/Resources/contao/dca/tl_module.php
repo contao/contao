@@ -125,6 +125,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
+		'root_page_dependent_modules' => '{title_legend},name,type;{config_legend},rootPageDependentModules;{template_legend:hide},customTpl;{protected_legend:hide},protected'
 	),
 
 	// Subpalettes
@@ -640,7 +641,14 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
-		)
+		),
+		'rootPageDependentModules' => array
+		(
+			'exclude'                 => true,
+			'inputType'               => 'rootPageDependentSelect',
+			'eval'                    => array('submitOnChange'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'sql'                     => 'blob NULL'
+		),
 	)
 );
 

@@ -62,6 +62,10 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController:
+        tags:
+            - { name: contao.frontend_module, category: miscellaneous }
+
     Contao\CoreBundle\Controller\FrontendModule\TemplateController:
         tags:
             - { name: contao.frontend_module, category: miscellaneous }

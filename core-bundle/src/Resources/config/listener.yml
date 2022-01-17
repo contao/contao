@@ -494,6 +494,13 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.widget.root_page_dependent_select:
+        class: Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener
+        arguments:
+            - '@database_connection'
+            - '@translator'
+            - '@contao.csrf.token_manager'
+
     # Backwards compatibility
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
         alias: contao.listener.data_container.content_composition
