@@ -9,6 +9,10 @@
         <source>FAQ</source>
         <target>FAQ</target>
       </trans-unit>
+      <trans-unit id="MSC.faqOverview">
+        <source>Back to the FAQ overview</source>
+        <target>FAQの概要に戻る</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

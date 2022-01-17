@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
-        <target>Шаблони - Templates</target>
+        <target>Шаблони</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Add or edit custom templates</source>
@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="MOD.member.1">
         <source>Manage member accounts (front end)</source>
-        <target>Управљање корисницима (фронт енд)</target>
+        <target>Управљање корисницима (ФронтЕнд)</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="MOD.user.1">
         <source>Manage user accounts (back end)</source>
-        <target>Управљање корисницима (бек енд)</target>
+        <target>Управљање корисницима (БекЕнд)</target>
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
@@ -87,11 +87,11 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
-        <target>Двоструки opt-in</target>
+        <target>Двострука аутентификација</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage double opt-in tokens</source>
-        <target>Управљање двоструким токенима за пријаву</target>
+        <target>Управљање токенима за двоструку аутентификацију</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="MOD.files.0">
         <source>File manager</source>
-        <target>Менаџер фајлова - File manager</target>
+        <target>Управљање фајловима</target>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
@@ -120,6 +120,12 @@
       <trans-unit id="MOD.settings.1">
         <source>Adjust the Contao configuration</source>
         <target>Прилагоди Contao кофнигурацију</target>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.0">
+        <source>Preview links</source>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.1">
+        <source>Manage preview links for the front end.</source>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -385,6 +391,14 @@
         <source>Allows you to add custom HTML code</source>
         <target>Додавање произвољног HTML кȏда</target>
       </trans-unit>
+      <trans-unit id="FMD.template.0">
+        <source>Custom template</source>
+        <target>Прилагођени шаблон</target>
+      </trans-unit>
+      <trans-unit id="FMD.template.1">
+        <source>Generates a module to insert a custom template.</source>
+        <target>Генерише модул за уметање у прилагођени шаблон.</target>
+      </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
         <target>RSS читач</target>
@@ -400,6 +414,12 @@
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
         <target>Генерисање формулара за постављање или измену аутентификације у два корака</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.0">
+        <source>Root page dependent modules</source>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_module.1">
+        <source>Generates different modules depending on the root page</source>
       </trans-unit>
     </body>
   </file>

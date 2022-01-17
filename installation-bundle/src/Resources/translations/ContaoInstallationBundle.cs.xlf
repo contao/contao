@@ -1,5 +1,5 @@
-<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file datatype="plaintext" original="src/Resources/translations/ContaoInstallationBundle.en.xlf" source-language="en" target-language="cs">
+<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="src/Resources/translations/ContaoInstallationBundle.en.xlf" target-language="cs">
     <body>
       <trans-unit id="1" resname="install_tool">
         <source>Contao install tool</source>
@@ -134,8 +134,7 @@
         <target>Prosím mějte na paměti, že aktualizační asistent zpracovává pouze tabulky začínající &lt;code&gt;tl_&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
-        <source>The database is up to date.</source>
-        <target>Databáze je aktuální.</target>
+        <source>The database is up-to-date.</source>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>
@@ -174,8 +173,7 @@
         <target>Import předlohy</target>
       </trans-unit>
       <trans-unit id="44" resname="template_import_explain">
-        <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
-        <target>Vyberte prosím soubor končící na &lt;em&gt;.sql&lt;/em&gt; z adresáře &lt;em&gt;templates&lt;/em&gt;. Všechny stávající data budou smazána! Pokud pouze chcete importovat vzhled, prosím použijte Správce témat v backendu Contaa.</target>
+        <source>Here you can import a &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>

@@ -446,8 +446,16 @@
         <target>نشانه‌دار</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
-        <target>کد HTML از یک متن نشانه‌دار تولید می‌کند.</target>
+        <source>Generates HTML code from a Markdown text.</source>
+        <target>کد HTML را از متن Markdown تولید می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+        <target>قالب اختصاصی</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
+        <target>یک المان برای درج در قالب اختصاصی تولید می‌کند.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -781,6 +789,14 @@
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
         <target>اگر بازدیدکننده‌ای برگه‌ای که وجود ندارد را درخواست کند برگه‌ی خطای 404 در عوض بارگذاری خواهد شد.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+        <target>503 سرویس در دسترس نیست</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>وقتی برگه‌ی ریشه در حالت نگهداری است، برگه‌ی خطا 503 برای تمامی درخواست‌ها نمایش داده می‌شود.</target>
+      </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
         <target>مجوزهای عمليات پرونده</target>
@@ -1112,6 +1128,14 @@
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
         <target>لطفا پرونده‌های CSVای که باید وارد شوند را بارگذاری نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+        <target>اندازه تصویر</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+        <target>اینجا می‌توانید ابعاد تصویر و روش تغییر اندازه را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
@@ -1937,10 +1961,6 @@
         <source>Contao version %s is available.</source>
         <target>کنتائو نسخه‌ی %s موجود می‌باشد</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-        <target>وضعیت نگهداشت در حال حاضر فعال می‌باشد.</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>شكستن جملات</target>
@@ -2658,8 +2678,8 @@
         <target>غیرفعال</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>ویرایشگر CSS داخلی منسوخ شده است و در یکی از نسخه‌ی آینده کنتائو حذف خواهد شد. لطفا استخراج برگ‌های سبک موجود را در نظر بگیری و آن‌ها را به صورت برگه‌های سبک خارجی به چیدمان برگه اضافه کنید.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>ویرایشگر CSS داخلی منسوخ شده است و در کنتائو 5.0 حذف خواهد شد! لطفا خارج کردن برگه‌های سبک فعلی و اضافه کردن آنها به عنوان برگه‌های سبک خارجی به چیدمان صفحه را را در نظر داشته باشید.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2720,6 +2740,12 @@
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
         <target>کپی URL</target>
+      </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

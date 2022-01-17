@@ -201,6 +201,22 @@
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
         <target>Ограничи дужину поља на одређени број знакова (текст) или бајтова ( код копирања фајлова).</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.0">
+        <source>Maximum image width</source>
+        <target>Максимална ширина слике</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.1">
+        <source>Here you can enter the maximum width for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Овде можете унети максималну ширину слике, у пикселима, која се копира на сервер. Унесите 0 ако желите да се користи подразумевана системска вредност.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.0">
+        <source>Maximum image height</source>
+        <target>Максимална висина слике</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.1">
+        <source>Here you can enter the maximum height for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Овде можете унети максималну висину слике, у пикселима, која се копира на сервер. Унесите 0 ако желите да се користи подразумевана системска вредност.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
         <target>Минимална вредност</target>

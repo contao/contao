@@ -51,9 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.robots.0">
         <source>Robots tag</source>
+        <target>Robotlar etiketi</target>
       </trans-unit>
       <trans-unit id="tl_faq.robots.1">
         <source>Here you can overwrite how search engines handle the FAQ.</source>
+        <target>Buradan arama motorlarının SSS'yi nasıl ele aldığının üzerine yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_faq.description.0">
         <source>Meta description</source>
@@ -105,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.meta_legend">
         <source>Metadata</source>
+        <target>Meta veri</target>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>

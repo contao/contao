@@ -201,6 +201,22 @@
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
         <target>Se inserisci un valore numerico, il campo avrà un limite a seconda del valore inserito. Se imposti un campo per il caricamento di files, puoi inserire un massimo di peso in Bytes (1MB = 1024 kB = 1024000 Bytes).</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.0">
+        <source>Maximum image width</source>
+        <target>Massima larghezza delle immagini</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.1">
+        <source>Here you can enter the maximum width for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Qui puoi inserire la larghezza massima per il caricamento delle immagini in pixel. Immettere 0 per utilizzare l'impostazione predefinita del sistema.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.0">
+        <source>Maximum image height</source>
+        <target>Massima altezza delle immagini</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.1">
+        <source>Here you can enter the maximum height for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Qui puoi inserire l'altezza massima per il caricamento delle immagini in pixel. Immettere 0 per utilizzare l'impostazione predefinita del sistema.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
         <target>Valore minimo</target>

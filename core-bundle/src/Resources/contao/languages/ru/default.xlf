@@ -446,8 +446,16 @@
         <target>Маркдаун (Markdown)</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
+        <source>Generates HTML code from a Markdown text.</source>
         <target>Создает HTML-код из маркдаун-текста.</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+        <target>Пользовательский шаблон</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
+        <target>Создает элемент для вставки пользовательского шаблона. </target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -781,6 +789,14 @@
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
         <target>Страница ошибка 404 выводится, когда посетитель пытается получить доступ к несуществующей странице.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+        <target>503 Сервис недоступен</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>Когда корневая страница находится в режиме обслуживания, для всех запросов выводится страница с ошибкой 503.</target>
+      </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
         <target>Разрешения на операции с файлами</target>
@@ -1112,6 +1128,14 @@
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
         <target>Выберите CSV-файлы для импорта.</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+        <target>Размер изображения</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+        <target>Введите ширину или высоту изображения для изменения размера или оба значения сразу, чтобы обрезать изображение. Если оставить поля пустыми, изображение будет показано в оригинальном размере.</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
@@ -1937,10 +1961,6 @@
         <source>Contao version %s is available.</source>
         <target>Доступна Contao версии %s.</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-        <target>Сейчас включен режим обслуживания.</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>Переход на новую строку</target>
@@ -2658,8 +2678,8 @@
         <target>Отключить</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Внутренний редактор CSS устарел и будет удален в одной из следующих версий Contao! Рассмотрите возможность экспорта существующих таблиц стилей и повторного их добавления в макет страницы в качестве внешних таблиц стилей.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Внутренний редактор CSS устарел и будет удален в Contao 5.0! Рассмотрите возможность экспорта существующих таблиц стилей и повторного их добавления в макет страницы в качестве внешних таблиц стилей.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2720,6 +2740,12 @@
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
         <target>Копировать URL</target>
+      </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

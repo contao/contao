@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="tl_user.news.0">
         <source>Allowed archives</source>
-        <target>Дозвољене архиве</target>
+        <target>Дозвољене категорије</target>
       </trans-unit>
       <trans-unit id="tl_user.news.1">
         <source>Here you can grant access to one or more news archives.</source>
-        <target>Овде можете одобрити приступ једној или више архива вести.</target>
+        <target>Овде можете одобрити приступ једној или више категорија вести.</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
         <source>News permissions</source>
