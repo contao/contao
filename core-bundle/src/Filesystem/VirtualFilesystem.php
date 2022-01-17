@@ -257,7 +257,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
      */
     private function doListContents(string $path, bool $deep, int $accessFlags): \Generator
     {
-        // Read from DBAFS, but enhance result with file metadata on demand
+        // Read from DBAFS but enhance result with file metadata on demand
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
             /** @var FilesystemItem $item */
             foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
@@ -270,13 +270,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                     continue;
                 }
 
-                yield $item
-                    ->withMetadataIfNotDefined(
-                        fn () => $this->mountManager->getLastModified($path),
-                        fn () => $this->mountManager->getFileSize($path),
-                        fn () => $this->mountManager->getMimeType($path),
-                    )
-                ;
+                yield $item->withMetadataIfNotDefined(
+                    fn () => $this->mountManager->getLastModified($path),
+                    fn () => $this->mountManager->getFileSize($path),
+                    fn () => $this->mountManager->getMimeType($path),
+                );
             }
 
             return;
@@ -289,9 +287,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
 
             yield $item
                 ->withPath(Path::makeRelative($path, $this->prefix))
-                ->withExtraMetadata(
-                    fn () => $this->dbafsManager->getExtraMetadata($path)
-                )
+                ->withExtraMetadata(fn () => $this->dbafsManager->getExtraMetadata($path))
             ;
         }
     }
