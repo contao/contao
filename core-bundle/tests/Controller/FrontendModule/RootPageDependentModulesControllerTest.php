@@ -21,6 +21,7 @@ use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
 use Contao\Template;
+use Contao\TemplateLoader;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,7 +69,8 @@ class RootPageDependentModulesControllerTest extends TestCase
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('router', $router);
         $container->set('translator', $translator);
-        $container->setParameter('contao.resources_paths', [__DIR__.'/../../Fixtures']);
+
+        TemplateLoader::addFile('be_wildcard', __DIR__.'/../../../src/Resources/contao/templates/backend');
 
         $controller = new RootPageDependentModulesController();
         $controller->setContainer($container);
