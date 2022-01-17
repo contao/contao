@@ -244,6 +244,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertSame('contao.filesystem.virtual.foo', (string) $dbafs->getArgument(0));
         $this->assertSame('contao.filesystem.hash_generator.foo', (string) $dbafs->getArgument(1));
         $this->assertSame('tl_foo', $dbafs->getArgument(2));
+        $this->assertTrue($definition->hasTag('kernel.reset'));
 
         // Registered at DbafsManager
         $this->assertSame(

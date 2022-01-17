@@ -257,10 +257,24 @@ class VirtualFilesystem implements VirtualFilesystemInterface
      */
     private function doListContents(string $path, bool $deep, int $accessFlags): \Generator
     {
-        // Read from DBAFS
+        // Read from DBAFS but enhance result with file metadata on demand
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
+            /** @var FilesystemItem $item */
             foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
-                yield $item->withPath(Path::makeRelative($item->getPath(), $this->prefix));
+                $path = $item->getPath();
+                $item = $item->withPath(Path::makeRelative($path, $this->prefix));
+
+                if (!$item->isFile()) {
+                    yield $item;
+
+                    continue;
+                }
+
+                yield $item->withMetadataIfNotDefined(
+                    fn () => $this->mountManager->getLastModified($path),
+                    fn () => $this->mountManager->getFileSize($path),
+                    fn () => $this->mountManager->getMimeType($path),
+                );
             }
 
             return;
@@ -269,11 +283,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         // Read from adapter, but enhance result with extra metadata on demand
         /** @var FilesystemItem $item */
         foreach ($this->mountManager->listContents($path, $deep) as $item) {
+            $path = $item->getPath();
+
             yield $item
-                ->withPath(Path::makeRelative($item->getPath(), $this->prefix))
-                ->withExtraMetadata(
-                    fn () => $this->dbafsManager->getExtraMetadata($item->getPath())
-                )
+                ->withPath(Path::makeRelative($path, $this->prefix))
+                ->withExtraMetadata(fn () => $this->dbafsManager->getExtraMetadata($path))
             ;
         }
     }

@@ -30,12 +30,12 @@ class FilesystemItem
     private $lastModified;
 
     /**
-     * @var int|\Closure(self):int
+     * @var int|\Closure(self):int|null
      */
     private $fileSize;
 
     /**
-     * @var string|\Closure(self):string
+     * @var string|\Closure(self):string|null
      */
     private $mimeType;
 
@@ -46,11 +46,11 @@ class FilesystemItem
 
     /**
      * @param int|(\Closure(self):int|null)|null $lastModified
-     * @param int|\Closure(self):int $fileSize
-     * @param string|\Closure(self):string $mimeType
+     * @param int|\Closure(self):int|null $fileSize
+     * @param string|\Closure(self):string|null $mimeType
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
      */
-    public function __construct(bool $isFile, string $path, $lastModified = 0, $fileSize = 0, $mimeType = '', $extraMetadata = [])
+    public function __construct(bool $isFile, string $path, $lastModified = null, $fileSize = null, $mimeType = null, $extraMetadata = [])
     {
         $this->isFile = $isFile;
         $this->path = $path;
@@ -105,6 +105,23 @@ class FilesystemItem
         );
     }
 
+    /**
+     * @param int|(\Closure(self):int|null)|null $lastModified
+     * @param int|\Closure(self):int|null $fileSize
+     * @param string|\Closure(self):string|null $mimeType
+     */
+    public function withMetadataIfNotDefined($lastModified, $fileSize, $mimeType): self
+    {
+        return new self(
+            $this->isFile,
+            $this->path,
+            $this->lastModified ?? $lastModified,
+            $this->fileSize ?? $fileSize,
+            $this->mimeType ?? $mimeType,
+            $this->extraMetadata,
+        );
+    }
+
     public function withPath(string $path): self
     {
         return new self(
@@ -131,7 +148,6 @@ class FilesystemItem
     {
         $this->resolveIfClosure($this->lastModified);
 
-        /** @var ?int */
         return $this->lastModified;
     }
 
@@ -140,8 +156,7 @@ class FilesystemItem
         $this->assertIsFile(__FUNCTION__);
         $this->resolveIfClosure($this->fileSize);
 
-        /** @var int */
-        return $this->fileSize;
+        return $this->fileSize ?? 0;
     }
 
     public function getMimeType(): string
@@ -149,8 +164,7 @@ class FilesystemItem
         $this->assertIsFile(__FUNCTION__);
         $this->resolveIfClosure($this->mimeType);
 
-        /** @var string */
-        return $this->mimeType;
+        return $this->mimeType ?? '';
     }
 
     public function getExtraMetadata(): array
@@ -158,7 +172,6 @@ class FilesystemItem
         $this->assertIsFile(__FUNCTION__);
         $this->resolveIfClosure($this->extraMetadata);
 
-        /** @var array */
         return $this->extraMetadata;
     }
 

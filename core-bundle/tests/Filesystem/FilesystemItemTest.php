@@ -163,4 +163,69 @@ class FilesystemItemTest extends TestCase
         $this->assertSame('foo/bar', $directoryItem->getPath());
         $this->assertSame(123450, $directoryItem->getLastModified());
     }
+
+    public function testWithMetadataIfNotDefined(): void
+    {
+        $item = new FilesystemItem(true, 'some/path');
+
+        $this->assertNull($item->getLastModified());
+        $this->assertSame(0, $item->getFileSize());
+        $this->assertSame('', $item->getMimeType());
+
+        $invocationCounts = [
+            'lastModified' => 0,
+            'fileSize' => 0,
+            'mimeType' => 0,
+        ];
+
+        $item = $item->withMetadataIfNotDefined(
+            static function () use (&$invocationCounts): int {
+                ++$invocationCounts['lastModified'];
+
+                return 123450;
+            },
+            static function () use (&$invocationCounts): int {
+                ++$invocationCounts['fileSize'];
+
+                return 1024;
+            },
+            static function () use (&$invocationCounts): string {
+                ++$invocationCounts['mimeType'];
+
+                return 'image/png';
+            },
+        );
+
+        // Accessing multiple times should cache the result
+        for ($i = 0; $i < 2; ++$i) {
+            $this->assertSame(123450, $item->getLastModified());
+            $this->assertSame(1024, $item->getFileSize());
+            $this->assertSame('image/png', $item->getMimeType());
+        }
+
+        foreach ($invocationCounts as $property => $invocationCount) {
+            $this->assertSame(1, $invocationCount, "invocation count of $property()");
+        }
+    }
+
+    public function testWithMetadataIfNotDefinedDoesNotOverwriteExistingValues(): void
+    {
+        $item = new FilesystemItem(
+            true,
+            'some/path',
+            123450,
+            static fn () => 1024,
+            'image/png'
+        );
+
+        $item = $item->withMetadataIfNotDefined(
+            static fn () => 98765,
+            2048,
+            null,
+        );
+
+        $this->assertSame(123450, $item->getLastModified());
+        $this->assertSame(1024, $item->getFileSize());
+        $this->assertSame('image/png', $item->getMimeType());
+    }
 }

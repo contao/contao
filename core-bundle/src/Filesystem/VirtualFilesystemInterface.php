@@ -111,6 +111,8 @@ interface VirtualFilesystemInterface
      *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
+     *
+     * @return iterable<FilesystemItem>
      */
     public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): iterable;
 
