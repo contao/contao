@@ -953,7 +953,7 @@ abstract class DataContainer extends Backend
 					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 					{
 						// Hide the toggle icon if the user does not have access to the field
-						if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $params['field']))
+						if (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field']))
 						{
 							continue;
 						}
@@ -978,7 +978,7 @@ abstract class DataContainer extends Backend
 							$state = $arrRow[$params['field']] ? 0 : 1;
 						}
 
-						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,' . $arrRow['id'] . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
 					}
 					else
 					{
@@ -1200,7 +1200,42 @@ abstract class DataContainer extends Backend
 					$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
 				}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+				parse_str(StringUtil::decodeEntities($v['href']), $params);
+
+				if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
+				{
+					// Hide the toggle icon if the user does not have access to the field
+					if (($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strPtable . '::' . $params['field']))
+					{
+						continue;
+					}
+
+					$icon = $v['icon'];
+					$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
+
+					if (false !== strpos($v['icon'], '/'))
+					{
+						$_icon = \dirname($v['icon']) . '/' . $_icon;
+					}
+
+					if ($icon == 'visible.svg')
+					{
+						$_icon = 'invisible.svg';
+					}
+
+					$state = $arrRow[$params['field']] ? 1 : 0;
+
+					if ($v['reverse'] ?? false)
+					{
+						$state = $arrRow[$params['field']] ? 0 : 1;
+					}
+
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this)">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+				}
+				else
+				{
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+				}
 			}
 		}
 

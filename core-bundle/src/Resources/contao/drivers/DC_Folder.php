@@ -14,7 +14,6 @@ use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
@@ -153,7 +152,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -762,8 +761,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			// Add a log entry
-			$this->log('File or folder "' . $source . '" has been moved to "' . $destination . '"', __METHOD__, ContaoContext::FILES);
+			System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been moved to "' . $destination . '"');
 		}
 
 		// Redirect
@@ -928,8 +926,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		// Add a log entry
-		$this->log('File or folder "' . $source . '" has been copied to "' . $destination . '"', __METHOD__, ContaoContext::FILES);
+		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been copied to "' . $destination . '"');
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -1051,8 +1048,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			Dbafs::deleteResource($source);
 		}
 
-		// Add a log entry
-		$this->log('File or folder "' . $source . '" has been deleted', __METHOD__, ContaoContext::FILES);
+		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been deleted');
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -2229,7 +2225,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
-			$this->log('Folder "' . $this->intId . '" has been protected', __METHOD__, ContaoContext::FILES);
+			System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $this->intId . '" has been protected');
 		}
 		else
 		{
@@ -2239,7 +2235,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
-			$this->log('The protection from folder "' . $this->intId . '" has been removed', __METHOD__, ContaoContext::FILES);
+			System::getContainer()->get('monolog.logger.contao.files')->info('The protection from folder "' . $this->intId . '" has been removed');
 		}
 
 		$this->redirect($this->getReferer());
@@ -2319,7 +2315,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$this->objActiveRecord = Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
-				$this->log('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created', __METHOD__, ContaoContext::FILES);
+				System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created');
 			}
 			else
 			{
@@ -2343,7 +2339,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					}
 				}
 
-				$this->log('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"', __METHOD__, ContaoContext::FILES);
+				System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"');
 			}
 
 			$strWebDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));

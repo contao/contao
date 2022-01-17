@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
+use Contao\MemberGroupModel;
 use Contao\Message;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -869,6 +870,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'invisible' => array
 		(
 			'exclude'                 => true,
+			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"
@@ -1155,7 +1157,7 @@ class tl_content extends Backend
 		$objSession = System::getContainer()->get('session');
 
 		// Prevent editing content elements with not allowed types
-		if (Input::get('act') == 'edit' || Input::get('act') == 'delete' || Input::get('act') == 'toggle' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
+		if (Input::get('act') == 'edit' || Input::get('act') == 'toggle' || Input::get('act') == 'delete' || (Input::get('act') == 'paste' && Input::get('mode') == 'copy'))
 		{
 			$objCes = $this->Database->prepare("SELECT type FROM tl_content WHERE id=?")
 									 ->execute(Input::get('id'));
@@ -1308,7 +1310,23 @@ class tl_content extends Backend
 		// Add the protection status
 		if ($arrRow['protected'])
 		{
-			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ')';
+			$groupIds = StringUtil::deserialize($arrRow['groups'], true);
+			$groupNames = array();
+
+			if (!empty($groupIds))
+			{
+				if (in_array(-1, array_map('intval', $groupIds), true))
+				{
+					$groupNames[] = $GLOBALS['TL_LANG']['MSC']['guests'];
+				}
+
+				if (null !== ($groups = MemberGroupModel::findMultipleByIds($groupIds)))
+				{
+					$groupNames += $groups->fetchEach('name');
+				}
+			}
+
+			$type .= ' (' . $GLOBALS['TL_LANG']['MSC']['protected'] . ($groupNames ? ': ' . implode(', ', $groupNames) : '') . ')';
 		}
 
 		// Add the headline level (see #5858)
@@ -2016,6 +2034,6 @@ class tl_content extends Backend
 			$icon = 'invisible.svg';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,' . $row['id'] . ')">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
+use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
@@ -20,6 +21,8 @@ use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
@@ -537,6 +540,92 @@ class ContaoCoreExtensionTest extends TestCase
             ['extra' => ['public-dir' => 'foo']],
             'foo',
         ];
+    }
+
+    public function testPrependsMonologConfigurationWithActionChannels(): void
+    {
+        $channels = [
+            'contao.access',
+            'contao.configuration',
+            'contao.cron',
+            'contao.email',
+            'contao.error',
+            'contao.files',
+            'contao.forms',
+            'contao.general',
+        ];
+
+        $monologExtension = $this->createMock(Extension::class);
+        $monologExtension
+            ->method('getAlias')
+            ->willReturn('monolog')
+        ;
+
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+            ])
+        );
+
+        $container->registerExtension($monologExtension);
+
+        $extension = new ContaoCoreExtension();
+        $extension->prepend($container);
+
+        $config = $container->getExtensionConfig('monolog');
+
+        $this->assertSame($channels, $config[0]['channels'] ?? []);
+    }
+
+    public function testDoesNotPrependMonologConfigurationWithoutMonologExtension(): void
+    {
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+            ])
+        );
+
+        $extension = new ContaoCoreExtension();
+        $extension->prepend($container);
+
+        $config = $container->getExtensionConfig('monolog');
+
+        $this->assertSame([], $config);
+    }
+
+    public function testConfiguresFilesystemDefaults(): void
+    {
+        $container = new ContainerBuilder(new ParameterBag([
+            'contao.upload_path' => 'upload/path',
+        ]));
+
+        $config = $this->createMock(FilesystemConfiguration::class);
+        $config
+            ->method('getContainer')
+            ->willReturn($container)
+        ;
+
+        $config
+            ->expects($this->once())
+            ->method('mountLocalAdapter')
+            ->with('upload/path', 'upload/path', 'files')
+        ;
+
+        $dbafsDefinition = $this->createMock(Definition::class);
+        $dbafsDefinition
+            ->expects($this->once())
+            ->method('addMethodCall')
+            ->with('setDatabasePathPrefix', ['upload/path'])
+        ;
+
+        $config
+            ->expects($this->once())
+            ->method('addDefaultDbafs')
+            ->with('files', 'tl_files')
+            ->willReturn($dbafsDefinition)
+        ;
+
+        (new ContaoCoreExtension())->configureFilesystem($config);
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder

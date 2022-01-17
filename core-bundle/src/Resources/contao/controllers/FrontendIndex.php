@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
@@ -163,7 +162,7 @@ class FrontendIndex extends Frontend
 		// Throw a 500 error if the result is still ambiguous
 		if ($objPage instanceof Collection && $objPage->count() > 1)
 		{
-			$this->log('More than one page matches ' . Environment::get('base') . Environment::get('request'), __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('More than one page matches ' . Environment::get('base') . Environment::get('request'));
 
 			throw new \LogicException('More than one page found: ' . Environment::get('uri'));
 		}
@@ -257,7 +256,7 @@ class FrontendIndex extends Frontend
 		// Check whether there are domain name restrictions
 		if ($objPage->domain && $objPage->domain != Environment::get('host'))
 		{
-			$this->log('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $objPage->id . '" was requested via "' . Environment::get('host') . '" but can only be accessed via "' . $objPage->domain . '" (' . Environment::get('base') . Environment::get('request') . ')');
 
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
@@ -278,7 +277,7 @@ class FrontendIndex extends Frontend
 
 				if ($user instanceof FrontendUser)
 				{
-					$this->log('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', $objPage->groups) . '" (current user groups: ' . implode(', ', StringUtil::deserialize($user->groups, true)) . ')', __METHOD__, ContaoContext::ERROR);
+					System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', $objPage->groups) . '" (current user groups: ' . implode(', ', StringUtil::deserialize($user->groups, true)) . ')');
 				}
 
 				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));

@@ -92,6 +92,12 @@
       <trans-unit id="MOD.settings.1">
         <source>Adjust the Contao configuration</source>
       </trans-unit>
+      <trans-unit id="MOD.preview_link.0">
+        <source>Preview links</source>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.1">
+        <source>Manage preview links for the front end.</source>
+      </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
       </trans-unit>
@@ -307,6 +313,12 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.0">
+        <source>Root page dependent modules</source>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_module.1">
+        <source>Generates different modules depending on the root page</source>
       </trans-unit>
     </body>
   </file>

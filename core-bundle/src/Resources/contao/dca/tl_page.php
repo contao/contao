@@ -13,7 +13,6 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
@@ -144,8 +143,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			),
 			'toggle' => array
 			(
+				'href'                => 'act=toggle&amp;field=published',
 				'icon'                => 'visible.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
 				'button_callback'     => array('tl_page', 'toggleIcon')
 			),
 			'show' => array
@@ -192,7 +191,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'autoforward'                 => 'jumpTo',
 		'protected'                   => 'groups',
-		'includeLayout'               => 'layout',
+		'includeLayout'               => 'layout,subpageLayout',
 		'includeCache'                => 'clientCache,cache,alwaysLoadFromCache',
 		'includeChmod'                => 'cuser,cgroup,chmod',
 		'enforceTwoFactor'            => 'twoFactorJumpTo'
@@ -319,7 +318,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['serpPreview'],
 			'exclude'                 => true,
 			'inputType'               => 'serpPreview',
-			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title')),
+			'eval'                    => array('url_callback'=>array('tl_page', 'getSerpUrl'), 'title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'tl_class'=>'clr'),
 			'sql'                     => null
 		),
 		'redirect' => array
@@ -586,8 +585,17 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_layout.name',
-			'options_callback'        => array('tl_page', 'getPageLayouts'),
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+		),
+		'subpageLayout' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'select',
+			'foreignKey'              => 'tl_layout.name',
+			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50', 'includeBlankOption'=>true, 'blankOptionLabel'=>&$GLOBALS['TL_LANG']['tl_page']['layout_inherit']),
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
 			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		),
@@ -721,6 +729,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'published' => array
 		(
 			'exclude'                 => true,
+			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
@@ -974,7 +983,7 @@ class tl_page extends Backend
 			{
 				if (!in_array($id, $pagemounts))
 				{
-					$this->log('Page ID ' . $id . ' was not mounted', __METHOD__, ContaoContext::ERROR);
+					System::getContainer()->get('monolog.logger.contao.error')->error('Page ID ' . $id . ' was not mounted');
 
 					$error = true;
 					break;
@@ -999,7 +1008,7 @@ class tl_page extends Backend
 				// In "edit multiple" mode, $ids contains only the parent ID, therefore check $id != $_GET['pid'] (see #5620)
 				if ($i == 0 && $id != Input::get('pid') && Input::get('act') != 'create' && !$security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $objPage->type))
 				{
-					$this->log('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages', __METHOD__, ContaoContext::ERROR);
+					System::getContainer()->get('monolog.logger.contao.error')->error('Not enough permissions to  ' . Input::get('act') . ' ' . $objPage->type . ' pages');
 
 					$error = true;
 					break;
@@ -1386,30 +1395,6 @@ class tl_page extends Backend
 	}
 
 	/**
-	 * Return all page layouts grouped by theme
-	 *
-	 * @return array
-	 */
-	public function getPageLayouts()
-	{
-		$objLayout = $this->Database->execute("SELECT l.id, l.name, t.name AS theme FROM tl_layout l LEFT JOIN tl_theme t ON l.pid=t.id ORDER BY t.name, l.name");
-
-		if ($objLayout->numRows < 1)
-		{
-			return array();
-		}
-
-		$return = array();
-
-		while ($objLayout->next())
-		{
-			$return[$objLayout->theme][$objLayout->id] = $objLayout->name;
-		}
-
-		return $return;
-	}
-
-	/**
 	 * Add an image to each page in the tree
 	 *
 	 * @param array         $row
@@ -1741,12 +1726,6 @@ class tl_page extends Backend
 	 */
 	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
 	{
-		if (Input::get('tid'))
-		{
-			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
-			$this->redirect($this->getReferer());
-		}
-
 		$security = System::getContainer()->get('security.helper');
 
 		// Check permissions AFTER checking the tid, so hacking attempts are logged
@@ -1755,7 +1734,7 @@ class tl_page extends Backend
 			return '';
 		}
 
-		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . ($row['published'] ? '' : 1);
+		$href .= '&amp;id=' . $row['id'];
 
 		if (!$row['published'])
 		{
@@ -1767,122 +1746,7 @@ class tl_page extends Backend
 			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
-	}
-
-	/**
-	 * Disable/enable a user group
-	 *
-	 * @param integer       $intId
-	 * @param boolean       $blnVisible
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
-	{
-		// Set the ID and action
-		Input::setGet('id', $intId);
-		Input::setGet('act', 'toggle');
-
-		if ($dc)
-		{
-			$dc->id = $intId; // see #8043
-		}
-
-		// Trigger the onload_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onload_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		// Check the field access
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_page::published'))
-		{
-			throw new AccessDeniedException('Not enough permissions to publish/unpublish page ID ' . $intId . '.');
-		}
-
-		$objRow = $this->Database->prepare("SELECT * FROM tl_page WHERE id=?")
-								 ->limit(1)
-								 ->execute($intId);
-
-		if ($objRow->numRows < 1)
-		{
-			throw new AccessDeniedException('Invalid page ID ' . $intId . '.');
-		}
-
-		// Set the current record
-		if ($dc)
-		{
-			$dc->activeRecord = $objRow;
-		}
-
-		$objVersions = new Versions('tl_page', $intId);
-		$objVersions->initialize();
-
-		// Trigger the save_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_page']['fields']['published']['save_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$blnVisible = $callback($blnVisible, $dc);
-				}
-			}
-		}
-
-		$time = time();
-
-		// Update the database
-		$this->Database->prepare("UPDATE tl_page SET tstamp=$time, published='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
-					   ->execute($intId);
-
-		if ($dc)
-		{
-			$dc->activeRecord->tstamp = $time;
-			$dc->activeRecord->published = ($blnVisible ? '1' : '');
-		}
-
-		// Trigger the onsubmit_callback
-		if (is_array($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'] as $callback)
-			{
-				if (is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($dc);
-				}
-				elseif (is_callable($callback))
-				{
-					$callback($dc);
-				}
-			}
-		}
-
-		$objVersions->create();
-
-		if ($dc)
-		{
-			$dc->invalidateCacheTags();
-		}
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="' . Image::getPath('visible.svg') . '" data-icon-disabled="' . Image::getPath('invisible.svg') . '" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 
 	/**

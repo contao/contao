@@ -17,6 +17,7 @@ use Contao\CoreBundle\Controller\BackendPreviewSwitchController;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -80,6 +81,33 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
         $this->assertSame('CONTAO', $response->getContent());
+    }
+
+    public function testAddsShareLinkToToolbar(): void
+    {
+        $controller = new BackendPreviewSwitchController(
+            $this->createMock(FrontendPreviewAuthenticator::class),
+            $this->mockTokenChecker(),
+            $this->createMock(Connection::class),
+            $this->mockSecurity(true),
+            $this->getTwigMock(),
+            $this->mockRouter(true),
+            $this->mockTokenManager(),
+        );
+
+        $request = $this->createMock(Request::class);
+        $request
+            ->method('isXmlHttpRequest')
+            ->willReturn(true)
+        ;
+
+        $request
+            ->method('isMethod')
+            ->with('GET')
+            ->willReturn(true)
+        ;
+
+        $controller($request);
     }
 
     /**
@@ -158,14 +186,30 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @return RouterInterface&MockObject
      */
-    private function mockRouter(): RouterInterface
+    private function mockRouter(bool $canShare = false, bool $isPreviewMode = true): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
-        $router
-            ->method('generate')
-            ->with('contao_backend_switch')
-            ->willReturn('/contao/preview_switch')
-        ;
+
+        if ($canShare) {
+            $router
+                ->expects($this->exactly(2))
+                ->method('generate')
+                ->withConsecutive(
+                    [
+                        'contao_backend',
+                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => $isPreviewMode ? '1' : '', 'rt' => 'csrf'],
+                    ],
+                    ['contao_backend_switch']
+                )
+                ->willReturn('/_contao/preview/1', '/contao/preview_switch')
+            ;
+        } else {
+            $router
+                ->method('generate')
+                ->with('contao_backend_switch')
+                ->willReturn('/contao/preview_switch')
+            ;
+        }
 
         return $router;
     }
@@ -192,7 +236,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @return Security&MockObject
      */
-    private function mockSecurity(): Security
+    private function mockSecurity(bool $canShare = false): Security
     {
         $user = $this->createMock(BackendUser::class);
 
@@ -201,6 +245,18 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ->method('getUser')
             ->willReturn($user)
         ;
+
+        if ($canShare) {
+            $security
+                ->expects($this->exactly(2))
+                ->method('isGranted')
+                ->withConsecutive(
+                    ['ROLE_ALLOWED_TO_SWITCH_MEMBER'],
+                    [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link']
+                )
+                ->willReturn(true, $canShare)
+            ;
+        }
 
         return $security;
     }
