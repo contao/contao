@@ -15,14 +15,18 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
+use Contao\Template;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentModulesControllerTest extends TestCase
 {
@@ -38,12 +42,78 @@ class RootPageDependentModulesControllerTest extends TestCase
         System::setContainer($this->container);
     }
 
+    public function testReturnsWildCardWhenBackendRequest(): void
+    {
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isBackendRequest')
+            ->willReturn(true)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+        ;
+
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->willReturn('Root Page Dependent Modules')
+        ;
+
+        $container = $this->mockContainer();
+        $container->set('contao.routing.scope_matcher', $scopeMatcher);
+        $container->set('router', $router);
+        $container->set('translator', $translator);
+        $container->setParameter('contao.resources_paths', [__DIR__.'/../../Fixtures']);
+
+        $controller = new RootPageDependentModulesController();
+        $controller->setContainer($container);
+
+        $response = $controller(new Request([], [], ['_scope' => 'backend']), $this->getModuleModel(), 'main');
+
+        $expectedOutput =
+            <<<'OUTPUT'
+                <div class="tl_gray">
+                    <span class="upper">### ROOT PAGE DEPENDENT MODULES ###</span>
+                </div>
+                OUTPUT;
+
+        $minifiedExpectedOutput = preg_replace(['/\s\s|\n/', '/\s</'], ['', '<'], $expectedOutput);
+
+        $this->assertSame($minifiedExpectedOutput, preg_replace(['/\s\s|\n/', '/\s</'], ['', '<'], $response->getContent()));
+    }
+
     public function testReturnsEmptyResponse(): void
     {
         $controller = new RootPageDependentModulesController();
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate());
+        $controller->setContainer($this->mockContainer());
 
         $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->getModuleModel(), 'main');
+
+        $this->assertSame('', $response->getContent());
+    }
+
+    public function testReturnsEmptyResponseWhenNoModulesConfigured(): void
+    {
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->rootId = '1';
+
+        $module = $this->mockClassWithProperties(ModuleModel::class);
+        $module->rootPageDependentModules = serialize([]);
+
+        $request = new Request([], [], ['_scope' => 'frontend', 'pageModel' => $page]);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $controller = new RootPageDependentModulesController();
+        $controller->setContainer($this->mockContainer($requestStack));
+
+        $response = $controller($request, $module, 'main');
 
         $this->assertSame('', $response->getContent());
     }
@@ -62,19 +132,33 @@ class RootPageDependentModulesControllerTest extends TestCase
         $requestStack->push($request);
 
         $controller = new RootPageDependentModulesController();
-        $controller->setContainer($this->mockContainerWithFrameworkTemplate($requestStack, 'example-content'));
+        $controller->setContainer($this->mockContainer($requestStack, 'example-content'));
 
         $response = $controller($request, $module, 'main');
 
         $this->assertSame('example-content', $response->getContent());
     }
 
-    private function mockContainerWithFrameworkTemplate(RequestStack $requestStack = null, string $content = ''): ContainerBuilder
+    public function testThrowsExceptionWhenGetResponseIsCalled(): void
+    {
+        $controller = new RootPageDependentModulesController();
+
+        $this->expectException(\LogicException::class);
+
+        $controller->getResponse(
+            $this->createMock(Template::class),
+            $this->createMock(ModuleModel::class),
+            new Request()
+        );
+    }
+
+    private function mockContainer(RequestStack $requestStack = null, string $content = null): ContainerBuilder
     {
         $controllerAdapter = $this->mockAdapter(['getFrontendModule']);
         $controllerAdapter
+            ->expects($content ? $this->once() : $this->never())
             ->method('getFrontendModule')
-            ->willReturn($content ?: '')
+            ->willReturn($content ?? '')
         ;
 
         $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
