@@ -68,7 +68,7 @@ class RootPageDependentSelect extends SelectMenu
 	{
 		$options = array();
 
-		foreach ($this->arrOptions as $key => $option)
+		foreach ($this->arrOptions as $option)
 		{
 			$option['index'] = $index;
 
@@ -79,26 +79,6 @@ class RootPageDependentSelect extends SelectMenu
 					StringUtil::specialchars($option['value']),
 					$this->isSelected($option),
 					$option['label']
-				);
-			}
-			else
-			{
-				$optionGroups = array();
-
-				foreach ($option as $optionGroup)
-				{
-					$optionGroups[] = sprintf(
-						'<option value="%s"%s>%s</option>',
-						StringUtil::specialchars($optionGroup['value']),
-						$this->isSelected($optionGroup),
-						$optionGroup['label']
-					);
-				}
-
-				$options[] = sprintf(
-					'<optgroup label="&nbsp;%s">%s</optgroup>',
-					StringUtil::specialchars($key),
-					implode('', $optionGroups)
 				);
 			}
 		}
