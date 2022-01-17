@@ -80,6 +80,13 @@ services:
         tags:
             - { name: contao.frontend_module, category: user }
 
+    Contao\CoreBundle\Controller\FeedController:
+        arguments:
+            - '@event_dispatcher'
+            - '@twig'
+        tags:
+            - controller.service_arguments
+
     Contao\CoreBundle\Controller\ImagesController:
         public: true
         arguments:

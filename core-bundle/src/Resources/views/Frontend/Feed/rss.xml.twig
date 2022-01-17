@@ -1,0 +1,38 @@
+{#<?xml version="1.0" encoding="{{ kernel.charset }}" ?>#}
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+    <atom:link href="{{ feed.link }}" rel="self" type="application/rss+xml" />
+    <title>{{ feed.title }}</title>
+{%  if feed.description %}
+    <description>{{ feed.description }}</description>
+{% endif %}
+    <link>{{ feed.link}}</link>
+    <language>{{ feed.language }}</language>
+    <pubDate>{{ feed.lastUpdated|date }}</pubDate>
+    <generator>Contao Open Source CMS</generator>
+
+    {% for item in feed.items %}
+        <item>
+            <title>{{ item.title }}</title>
+            <description><![CDATA[{{ item.description }}]]></description>
+            <link>{{ item.link }}</link>
+            <pubDate>{{ item.lastUpdated|date }}</pubDate>
+            {% if item.guid %}
+                <guid isPermaLink="false">{{ item.guid }}</guid>
+            {% else %}
+                <guid>{{ item.link }}</guid>
+            {% endif %}
+
+            {% if item.enclosures %}
+                {% for enclosure in item.enclosures %}
+                    {% if enclosure.media is same as('media:content') %}
+                        <media:content url="{{ enclosure.url }}" type="{{ enclosure.type }}" />
+                    {% else %}
+                        <enclosure url="{{ enclosure.url }}" type="{{ enclosure.type }}"{% if enclosure.length %} length="{{ enclosure.length }}"{% endif %} />';
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </item>
+    {% endfor %}
+</channel>
+</rss>

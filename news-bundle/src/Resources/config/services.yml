@@ -45,3 +45,10 @@ services:
             - '@security.helper'
         tags:
             - { name: contao.picker_provider, priority: 128 }
+
+    Contao\NewsBundle\EventListener\FeedListener:
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+        tags:
+            - { name: kernel.event_listener, event: 'contao.feed' }

@@ -22,6 +22,13 @@ final class ContaoCoreEvents
     public const BACKEND_MENU_BUILD = 'contao.backend_menu_build';
 
     /**
+     * The contao.feed event is triggered when a feed route is called.
+     *
+     * @see FeedEvent
+     */
+    public const FEED = 'contao.feed';
+
+    /**
      * The contao.generate_symlinks event is triggered when the symlinks are generated.
      *
      * @see GenerateSymlinksEvent
