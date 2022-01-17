@@ -85,6 +85,10 @@
         <source>Feed settings</source>
         <target>Feed instellingen</target>
       </trans-unit>
+      <trans-unit id="tl_news_feed.image_legend">
+        <source>Image settings</source>
+        <target>Afbeeldingseigenschappen</target>
+      </trans-unit>
       <trans-unit id="tl_news_feed.source_teaser">
         <source>News teasers</source>
         <target>Teasers van nieuwsberichten</target>

@@ -121,6 +121,12 @@
         <source>Adjust the Contao configuration</source>
         <target>Regola la configurazione di Contao</target>
       </trans-unit>
+      <trans-unit id="MOD.preview_link.0">
+        <source>Preview links</source>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.1">
+        <source>Manage preview links for the front end.</source>
+      </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
         <target>Manutenzione</target>
@@ -385,6 +391,14 @@
         <source>Allows you to add custom HTML code</source>
         <target>ti permette di aggiungere codice HTML personalizzato</target>
       </trans-unit>
+      <trans-unit id="FMD.template.0">
+        <source>Custom template</source>
+        <target>Template personalizzato</target>
+      </trans-unit>
+      <trans-unit id="FMD.template.1">
+        <source>Generates a module to insert a custom template.</source>
+        <target>Genera un modulo per inserire un template personalizzato</target>
+      </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
         <target>RSS Reader</target>
@@ -400,6 +414,12 @@
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
         <target>Genera un modulo per impostare o modificare l'autenticazione a due fattori</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.0">
+        <source>Root page dependent modules</source>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_module.1">
+        <source>Generates different modules depending on the root page</source>
       </trans-unit>
     </body>
   </file>

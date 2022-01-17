@@ -33,6 +33,12 @@
         <source>Add an image to the content element.</source>
         <target>Scegliendo questa opzione un'immagine sarà aggiunta all'elemento.</target>
       </trans-unit>
+      <trans-unit id="tl_content.showPreview.0">
+        <source>Show preview images</source>
+      </trans-unit>
+      <trans-unit id="tl_content.showPreview.1">
+        <source>Show preview images of the selected files.</source>
+      </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
         <target>Visualizza nel browser</target>
@@ -72,14 +78,6 @@
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Titolo dell'immagine (si possono utilizzare anche gli attributi (&lt;em&gt;titolo&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.0">
-        <source>Image size</source>
-        <target>Dimensioni immagine</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.1">
-        <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Se si inserisce solo la larghezza o l'altezza dell'immagine, essa verrà ridimensionata proporzionalmente. Se si immettono entrambe le misure e l'immagine supera i limiti, quest'ultima verrà tagliata. Se si lasciano vuoti i campi verrà visualizzata con la dimensione originale.</target>
       </trans-unit>
       <trans-unit id="tl_content.imagemargin.0">
         <source>Image margin</source>
@@ -304,6 +302,14 @@
       <trans-unit id="tl_content.markdownSource.sourceFile">
         <source>File</source>
         <target>File</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.0">
+        <source>Template data</source>
+        <target>Dati template</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>Questi valori sono disponibili come &lt;code&gt;$this-&gt;data&lt;/code&gt; all'interno del template.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -657,6 +663,9 @@
         <source>Download settings</source>
         <target>Impostazioni download</target>
       </trans-unit>
+      <trans-unit id="tl_content.preview_legend">
+        <source>Preview settings</source>
+      </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
         <target>Configurazione slider</target>
@@ -852,6 +861,10 @@
       <trans-unit id="tl_content.vimeo_byline">
         <source>Hide the author</source>
         <target>Nascondi il titolo</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_dnt">
+        <source>Prevent session data tracking</source>
+        <target>Impedisci il monitoraggio dei dati della sessione</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

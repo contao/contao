@@ -347,6 +347,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>Mallsökvägen &quot;%s&quot; får inte innehålla följande tecken: %s</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -445,8 +446,16 @@
         <target>Markdown</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
-        <target>Genererar HTML-kod från en markdown-text.</target>
+        <source>Generates HTML code from a Markdown text.</source>
+        <target>Genererar HTML-kod från en Markdown-text.</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+        <target>Anpassad mall</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
+        <target>Genererar ett element för att infoga en anpassad mall.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -780,6 +789,14 @@
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
         <target>Om en besökare begär en sida som inte finns, laddas en 404-felsida istället.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+        <target>503 Tjänst Otillgänglig</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>När en rotsida är i underhållsläge visas en 503-felsida för alla förfrågningar.</target>
+      </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
         <target>Filhanteringsbehörigheter</target>
@@ -1111,6 +1128,14 @@
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
         <target>Välj de CSV-filer som du vill importera från filarkivet.</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+        <target>Bildstorlek</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+        <target>Här kan du ställa in bildens dimensioner och omformateringsmetod.</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
@@ -1936,10 +1961,6 @@
         <source>Contao version %s is available.</source>
         <target>Contao-versionen %s är tillgänglig.</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-        <target>Underhållsläget är för närvarande aktiverat.</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>Radbrytning</target>
@@ -2646,6 +2667,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Det finns minst en användargrupp som ger behörighet till frontendmodulen &quot;Lista&quot; och dess &quot;list_*&quot;-fält. Eftersom de kan innehålla godtyckliga SQL-queries, har användare av dessa grupper implicit full kontroll över systemet!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2656,8 +2678,8 @@
         <target>Inaktivera</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Den interna CSS-redigeraren har upphört och tars bort i en av de nästa Contao-versionerna! Överväg att exportera dina befintliga formatmallar och lägga till dem på nytt i sidlayouten som externa style sheets.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Den interna CSS-redigeraren har fasats ut och kommer att tas bort i Contao 5.0! Överväg att exportera dina befintliga stilmallar och lägga till dem igen i sidlayouten som externa stilmallar.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2673,6 +2695,7 @@
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Här kan du begränsa det totala antalet artiklar. Ställ in 0 för att visa alla.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2717,6 +2740,12 @@
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
         <target>Kopiera URL</target>
+      </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

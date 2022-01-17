@@ -129,6 +129,12 @@
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
         <target>Questa impostazione definisce in quale pagina un utente sarà reindirizzato dopo una qualsiasi azione. (esempio: cliccando un link o inviando un modulo)</target>
       </trans-unit>
+      <trans-unit id="tl_module.overviewPage.0">
+        <source>Overview page</source>
+      </trans-unit>
+      <trans-unit id="tl_module.overviewPage.1">
+        <source>Select an overview page to include a link to it in the template.</source>
+      </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
         <target>Reindirizza all'ultima pagina visitata</target>
@@ -313,14 +319,6 @@
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
         <target>Apre l'immagine a schermo intero oppure il collegamento in una nuova finestra del browser</target>
       </trans-unit>
-      <trans-unit id="tl_module.imgSize.0">
-        <source>Image size</source>
-        <target>Dimensioni immagine</target>
-      </trans-unit>
-      <trans-unit id="tl_module.imgSize.1">
-        <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Se si inserisce solo la larghezza o l'altezza dell'immagine, essa verrà ridimensionata proporzionalmente. Se si immettono entrambe le misure e l'immagine supera i limiti, quest'ultima verrà tagliata. Se si lasciano vuoti i campi verrà visualizzata con la dimensione originale.</target>
-      </trans-unit>
       <trans-unit id="tl_module.useCaption.0">
         <source>Show caption</source>
         <target>Mosta nome e didascalia immagine</target>
@@ -441,6 +439,14 @@
         <source>Here you can define how to handle the deletion.</source>
         <target>Qui puoi definire come procedere con l'eliminazione.</target>
       </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>Elimina la directory principale</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>Elimina la directory principale quando l'account viene eliminato.</target>
+      </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.0">
         <source>Create a home directory</source>
         <target>Crea home directory</target>
@@ -488,6 +494,24 @@
       <trans-unit id="tl_module.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
         <target>È possibile utilizzare i caratteri jolly &lt;em&gt;##domain##&lt;/em&gt; (nome dominio), &lt;em&gt;##link##&lt;/em&gt; (link di attivazione) e qualsiasi proprietà membro (e.s. &lt;em&gt;##lastname##&lt;/em&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.data.0">
+        <source>Template data</source>
+        <target>Dati template</target>
+      </trans-unit>
+      <trans-unit id="tl_module.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>Questi valori sono disponibili come &lt;code&gt;$this-&gt;data&lt;/code&gt; all'interno del template.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.0">
+        <source>Modules</source>
+        <target>Moduli</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.1">
+        <source>Please select a module for every root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
+        <source>Module for &quot;%s&quot;</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

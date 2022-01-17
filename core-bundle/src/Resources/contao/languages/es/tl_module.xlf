@@ -129,6 +129,12 @@
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
         <target>Esta configuración define a qué pagina será redirigido un usuario tras cierta acción (por ejemplo, al hacer clic sobre un link o al enviar un formulario).</target>
       </trans-unit>
+      <trans-unit id="tl_module.overviewPage.0">
+        <source>Overview page</source>
+      </trans-unit>
+      <trans-unit id="tl_module.overviewPage.1">
+        <source>Select an overview page to include a link to it in the template.</source>
+      </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
         <target>Redirigir a la última página visitada</target>
@@ -313,14 +319,6 @@
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
         <target>Abrir la imagen de tamaño completo en una lightbox o el enlace en una ventana de navegador nueva.</target>
       </trans-unit>
-      <trans-unit id="tl_module.imgSize.0">
-        <source>Image size</source>
-        <target>tamaño de imagen</target>
-      </trans-unit>
-      <trans-unit id="tl_module.imgSize.1">
-        <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Si introduce solo ancho o solo alto, la imagen se redimensionará proporcionalmente. Si introduces ambas medidas, la imagen se recortará si es necesario. Si dejas ambos campos en blanco, se utilizará el tamaño original de la imagen.</target>
-      </trans-unit>
       <trans-unit id="tl_module.useCaption.0">
         <source>Show caption</source>
         <target>Mostrar nombre de imagen en el pie</target>
@@ -441,6 +439,12 @@
         <source>Here you can define how to handle the deletion.</source>
         <target>Permite definir cómo responder a las solicitudes de eliminación.</target>
       </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.0">
+        <source>Delete home directory</source>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+      </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.0">
         <source>Create a home directory</source>
         <target>Crear directorio principal</target>
@@ -488,6 +492,22 @@
       <trans-unit id="tl_module.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
         <target>Puede utilizar los comodines &lt;em&gt;##domain##&lt;/em&gt; (nombre de dominio), &lt;em&gt;##link##&lt;/em&gt; (enlace de activación) y cualquier propiedad de miembro (por ejemplo,  &lt;em&gt;##lastname##&lt;/em&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.data.0">
+        <source>Template data</source>
+      </trans-unit>
+      <trans-unit id="tl_module.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.0">
+        <source>Modules</source>
+        <target>Módulos</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.1">
+        <source>Please select a module for every root page.</source>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
+        <source>Module for &quot;%s&quot;</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

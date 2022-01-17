@@ -85,6 +85,10 @@
         <source>Feed settings</source>
         <target>Nastavení kanálu</target>
       </trans-unit>
+      <trans-unit id="tl_news_feed.image_legend">
+        <source>Image settings</source>
+        <target>Nastavení obrázku</target>
+      </trans-unit>
       <trans-unit id="tl_news_feed.source_teaser">
         <source>News teasers</source>
         <target>Ukázka novinky</target>

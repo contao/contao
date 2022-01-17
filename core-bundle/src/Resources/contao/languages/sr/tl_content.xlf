@@ -33,6 +33,12 @@
         <source>Add an image to the content element.</source>
         <target>Додавање слике у елемент садржаја.</target>
       </trans-unit>
+      <trans-unit id="tl_content.showPreview.0">
+        <source>Show preview images</source>
+      </trans-unit>
+      <trans-unit id="tl_content.showPreview.1">
+        <source>Show preview images of the selected files.</source>
+      </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
         <target>Прикажи у интернет прегледачу</target>
@@ -72,14 +78,6 @@
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Овде можете унети назив слике (атрибут &lt;em&gt;title&lt;/em&gt;).</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.0">
-        <source>Image size</source>
-        <target>Величина слике</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.1">
-        <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Овде можете да поставите димензије слике и мод за промену величине.</target>
       </trans-unit>
       <trans-unit id="tl_content.imagemargin.0">
         <source>Image margin</source>
@@ -291,9 +289,11 @@
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.0">
         <source>Markdown source</source>
+        <target>Извор Markdown-а</target>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.1">
         <source>Please choose the Markdown source.</source>
+        <target>Изаберите извор Markdown-а.</target>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceText">
         <source>Text</source>
@@ -301,6 +301,15 @@
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceFile">
         <source>File</source>
+        <target>Фајл</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.0">
+        <source>Template data</source>
+        <target>Подаци шаблона</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>Ове вредности су доступне у шаблону као &lt;code&gt;$this-&gt;data&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -654,6 +663,9 @@
         <source>Download settings</source>
         <target>Подешавања преузимања</target>
       </trans-unit>
+      <trans-unit id="tl_content.preview_legend">
+        <source>Preview settings</source>
+      </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
         <target>Подешавања слајдера</target>
@@ -784,6 +796,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>Аутоматски (унапред учитај комплетан видео)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -848,6 +861,10 @@
       <trans-unit id="tl_content.vimeo_byline">
         <source>Hide the author</source>
         <target>Сакриј аутора</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_dnt">
+        <source>Prevent session data tracking</source>
+        <target>Спречи праћење током сесије</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

@@ -446,8 +446,16 @@
         <target>Markdown</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
+        <source>Generates HTML code from a Markdown text.</source>
         <target>Erzeugt HTML-Code aus einem Markdown-Text.</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+        <target>Eigenes Template</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
+        <target>Erzeugt ein Element zum Einfügen eines eigenen Templates.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -781,6 +789,14 @@
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
         <target>Ruft ein Besucher eine nicht vorhandene Seite auf, wird stattdessen eine 404-Fehlerseite geladen.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+        <target>503 Dienst nicht verfügbar</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>Wenn sich eine Root-Seite im Wartungsmodus befindet, wird für alle Anfragen eine 503-Fehlerseite angezeigt.</target>
+      </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
         <target>Erlaubte Datei-Operationen</target>
@@ -1112,6 +1128,14 @@
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
         <target>Bitte laden Sie die zu importierenden CSV-Dateien hoch.</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+        <target>Bildgröße</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+        <target>Hier können Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
@@ -1937,10 +1961,6 @@
         <source>Contao version %s is available.</source>
         <target>Contao Version %s ist verfügbar.</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-        <target>Der Wartungsmodus ist aktiv.</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>Zeilenumbruch</target>
@@ -2658,8 +2678,8 @@
         <target>Deaktivieren</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Der interne CSS-Editor ist veraltet und wird in einer der nächsten Contao-Versionen entfernt! Bitte erwägen Sie, Ihre bestehenden Stylesheets zu exportieren und sie als externe Stylesheets im Seitenlayout einzubinden.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Der interne CSS-Editor ist veraltet und wird in Contao 5.0 entfernt! Bitte erwägen Sie, Ihre bestehenden Stylesheets zu exportieren und sie als externe Stylesheets im Seitenlayout einzubinden.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2720,6 +2740,14 @@
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
         <target>URL kopieren</target>
+      </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+        <target>URL teilen</target>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
+        <target>Ursprung</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

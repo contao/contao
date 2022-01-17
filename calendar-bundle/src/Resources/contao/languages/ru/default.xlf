@@ -85,6 +85,10 @@
         <source>Events</source>
         <target>События</target>
       </trans-unit>
+      <trans-unit id="MSC.eventOverview">
+        <source>Back to the event overview</source>
+        <target>Перейти к обзору событий</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -17,10 +17,6 @@
         <source>Description</source>
         <target>Popis</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceMode">
-        <source>Maintenance mode</source>
-        <target>Bezpečnostní režim</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Vyčistit data</target>
@@ -80,6 +76,12 @@
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
         <target>Odstraní automaticky vytvořené obrázky a pak vyčistí sdílené meziúložiště. Tím zmizí odkazy ke smazaným zdrojům.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.0">
+        <source>Purge the preview cache</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.1">
+        <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -164,10 +166,6 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Zkontrolovat poškozené odkazy</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.crawlMaintenance">
-        <source>Crawling is not possible while the maintenance mode is enabled.</source>
-        <target>Crawling není možné provádět, dokud je zapnutý Bezpečnostní mód</target>
       </trans-unit>
     </body>
   </file>

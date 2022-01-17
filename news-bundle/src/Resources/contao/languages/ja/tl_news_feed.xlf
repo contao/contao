@@ -85,6 +85,10 @@
         <source>Feed settings</source>
         <target>フィードの設定</target>
       </trans-unit>
+      <trans-unit id="tl_news_feed.image_legend">
+        <source>Image settings</source>
+        <target>画像の設定</target>
+      </trans-unit>
       <trans-unit id="tl_news_feed.source_teaser">
         <source>News teasers</source>
         <target>ニュースのティーザー</target>

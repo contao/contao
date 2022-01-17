@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>Dem Inhaltselement ein Bild hinzufügen.</target>
       </trans-unit>
+      <trans-unit id="tl_content.showPreview.0">
+        <source>Show preview images</source>
+        <target>Vorschaubilder anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.showPreview.1">
+        <source>Show preview images of the selected files.</source>
+        <target>Vorschaubilder der gewählten Dateien anzeigen.</target>
+      </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
         <target>Im Browser anzeigen</target>
@@ -72,14 +80,6 @@
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Hier können Sie den Titel des Bildes eingeben (&lt;em&gt;title&lt;/em&gt;-Attribut).</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.0">
-        <source>Image size</source>
-        <target>Bildgröße</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.1">
-        <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Hier können Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.</target>
       </trans-unit>
       <trans-unit id="tl_content.imagemargin.0">
         <source>Image margin</source>
@@ -304,6 +304,14 @@
       <trans-unit id="tl_content.markdownSource.sourceFile">
         <source>File</source>
         <target>Datei</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.0">
+        <source>Template data</source>
+        <target>Template-Daten</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>Sie können über &lt;code&gt;$this-&gt;data&lt;/code&gt; auf die Werte im Template zugreifen.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -657,6 +665,10 @@
         <source>Download settings</source>
         <target>Download-Einstellungen</target>
       </trans-unit>
+      <trans-unit id="tl_content.preview_legend">
+        <source>Preview settings</source>
+        <target>Vorschau-Einstellungen</target>
+      </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
         <target>Slider-Einstellungen</target>
@@ -852,6 +864,10 @@
       <trans-unit id="tl_content.vimeo_byline">
         <source>Hide the author</source>
         <target>Den Autor ausblenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_dnt">
+        <source>Prevent session data tracking</source>
+        <target>Sitzungsdaten nicht verfolgen</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

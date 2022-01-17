@@ -9,6 +9,14 @@
         <source>Please enter the page name.</source>
         <target>لطفا نام برگه را وارد نمایید.</target>
       </trans-unit>
+      <trans-unit id="tl_page.type.0">
+        <source>Page type</source>
+        <target>نوع برگه</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.1">
+        <source>Please choose the page type.</source>
+        <target>لطفا نوع برگه را انتخاب نمایید.</target>
+      </trans-unit>
       <trans-unit id="tl_page.alias.0">
         <source>Page alias</source>
         <target>نام مستعار برگه</target>
@@ -17,13 +25,29 @@
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
         <target>نام مستعار برگه مرجعی یکتا است که می‌تواند به جای شناسه عددی فراخوانی شود.</target>
       </trans-unit>
-      <trans-unit id="tl_page.type.0">
-        <source>Page type</source>
-        <target>نوع برگه</target>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>یک آیتم لازم است</target>
       </trans-unit>
-      <trans-unit id="tl_page.type.1">
-        <source>Please choose the page type.</source>
-        <target>لطفا نوع برگه را انتخاب نمایید.</target>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>اگر URL برگه شامل اسم مستعار آیتم نبود، ارور 404 را نمایش می‌دهد.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.0">
+        <source>Route path</source>
+        <target>تعیین کردن مسیر</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.1">
+        <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>پیش‌نمایشی از مسیر نهایی (شاید با متغییرها) برای تطابق با این برگه.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.0">
+        <source>Route priority</source>
+        <target>اولویت مسیریابی</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.1">
+        <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>به صورت اختیاری اولویت برای اثرگذاری روی ترتیب مسیریابی را تنظیم کنید. پیش‌فرض 0</target>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -48,6 +72,14 @@
       <trans-unit id="tl_page.robots.1">
         <source>Here you can define how search engines handle the page.</source>
         <target>اینجا می‌توانید نحوه برخورد موتورهای جستجو را با برگه مشخص کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.0">
+        <source>Maintenance mode</source>
+        <target>وضعیت نگهداشت</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.1">
+        <source>Show visitors a page that this website is currently being maintained.</source>
+        <target>به بازدیدکنندگان یک برگه نمایش می‌دهد که ایت وب‌سایت در حال حاضر در حالت نگه‌داشت می‌باشد.</target>
       </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
@@ -144,6 +176,30 @@
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
         <target>اینجا می‌توانید فرستنده‌ی ایمیل را برای ارسال ایمیل در این وب‌سایت بازنویسی کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.0">
+        <source>Enable rel=&quot;canonical&quot;</source>
+        <target>فعال کردن rel=&quot;canonical&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.1">
+        <source>Add rel=&quot;canonical&quot; tags to the website.</source>
+        <target>برچسب‌های rel=&quot;canonical&quot; را به وب‌سایت اضافه می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.0">
+        <source>Custom URL</source>
+        <target>URL اختصاصی</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.1">
+        <source>Here you can set a custom canonical URL.</source>
+        <target>اینجا می‌توانید بک URL کانونیکال اختصاصی تنظیم کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.0">
+        <source>Query parameters</source>
+        <target>پارامترهای پرس‌وجو</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.1">
+        <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
+        <target>به صورت پیش‌فرض، کنتائو پارامترهای پرس‌وجو را از URL کانونیکال حذف می‌کند. اینجا می‌توایند لیست جداشده با کاما از پارامترهای پرس‌وجو که باید حذف شوند را وارد کنید. از &quot;*&quot; به عنوان وایلدکارد استفاده کنید.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -257,6 +313,12 @@
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
         <target>می‌توانید چیدمان‌های برگه را با ماژول «پوسته» مدیریت کنید.</target>
       </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.0">
+        <source>Subpage layout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.1">
+        <source>Here you can select a different layout for subpages.</source>
+      </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
         <target>تنظیم مهلت‌های کش</target>
@@ -328,14 +390,6 @@
       <trans-unit id="tl_page.noSearch.1">
         <source>Exclude the page from the search index.</source>
         <target>خارج کردن برگه از ایندکس جستجو.</target>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.0">
-        <source>Require an item</source>
-        <target>یک آیتم لازم است</target>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.1">
-        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
-        <target>اگر URL برگه شامل اسم مستعار آیتم نبود، ارور 404 را نمایش می‌دهد.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -429,9 +483,17 @@
         <source>Name and type</source>
         <target>نام و نوع</target>
       </trans-unit>
+      <trans-unit id="tl_page.routing_legend">
+        <source>Routing</source>
+        <target>مسیریابی</target>
+      </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
         <target>فراداده</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonical_legend">
+        <source>Canonical URL</source>
+        <target>URL کانونیکال</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -517,6 +579,9 @@
         <source>Show never</source>
         <target>نمایش دادن هرگز</target>
       </trans-unit>
+      <trans-unit id="tl_page.layout_inherit">
+        <source>Inherit page layout</source>
+      </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
         <target>جدید</target>
@@ -572,6 +637,14 @@
       <trans-unit id="tl_page.legacyRouting">
         <source>Disable legacy routing mode to enable this configuration.</source>
         <target>حالت مسیریابی قدیمی را برای فعال کردن این پیکربندی، غیرفعال کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.0">
+        <source>Route conflicts</source>
+        <target>تضادهای مسیریابی</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.1">
+        <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>برگه‌های ذیل اسم مستعارهای مشابهی دارند که ممکن است با این صفحه در تضاد باشند. اگر URL به درستی حل نشد، سعی کنید اولویت مسیریابی را تغییر کنید.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

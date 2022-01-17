@@ -9,6 +9,14 @@
         <source>Please enter the page name.</source>
         <target>Введите имя страницы.</target>
       </trans-unit>
+      <trans-unit id="tl_page.type.0">
+        <source>Page type</source>
+        <target>Тип страницы</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.1">
+        <source>Please choose the page type.</source>
+        <target>Выберите тип страницы.</target>
+      </trans-unit>
       <trans-unit id="tl_page.alias.0">
         <source>Page alias</source>
         <target>Алиас страницы</target>
@@ -17,13 +25,29 @@
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
         <target>Алиас страницы является уникальной ссылкой на страницу, которую можно использовать вместо её ID.</target>
       </trans-unit>
-      <trans-unit id="tl_page.type.0">
-        <source>Page type</source>
-        <target>Тип страницы</target>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Требовать элемент</target>
       </trans-unit>
-      <trans-unit id="tl_page.type.1">
-        <source>Please choose the page type.</source>
-        <target>Выберите тип страницы.</target>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Вызывать ошибку 404 если URL-адрес страницы не содержит алиас элемента.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.0">
+        <source>Route path</source>
+        <target>Путь маршрута</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.1">
+        <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>Предварительный просмотр окончательного пути (возможно, с заполнителями), соответствующего этой странице.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.0">
+        <source>Route priority</source>
+        <target>Приоритет маршрута</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.1">
+        <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>При необходимости настройте приоритет, чтобы он влиял на порядок маршрутов. По умолчанию: 0</target>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -48,6 +72,14 @@
       <trans-unit id="tl_page.robots.1">
         <source>Here you can define how search engines handle the page.</source>
         <target>Вы можете выбрать как поисковым системам следует обрабатывать страницу.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.0">
+        <source>Maintenance mode</source>
+        <target>Режим обслуживания</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.1">
+        <source>Show visitors a page that this website is currently being maintained.</source>
+        <target>Показать посетителям страницу, на которой поддерживается этот веб-сайт, в настоящее время.</target>
       </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
@@ -144,6 +176,30 @@
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
         <target>Здесь можно переопределить транспорт почтовой рассылки, используемый для отправки сообщений электронной почты на этом веб-сайте.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.0">
+        <source>Enable rel=&quot;canonical&quot;</source>
+        <target>Включить rel=&quot;canonical&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.1">
+        <source>Add rel=&quot;canonical&quot; tags to the website.</source>
+        <target>Добавить rel=&quot;canonical&quot; теги на веб-сайт.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.0">
+        <source>Custom URL</source>
+        <target>Пользовательский URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.1">
+        <source>Here you can set a custom canonical URL.</source>
+        <target>Вы можете установить собственный канонический URL.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.0">
+        <source>Query parameters</source>
+        <target>Параметры запроса</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.1">
+        <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
+        <target>По умолчанию Contao удаляет параметры запроса из канонического URL-адреса. Вы можете добавить разделенный запятыми список параметров запроса для сохранения. Используйте &quot;*&quot; в качестве подстановочного знака.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -257,6 +313,12 @@
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
         <target>Вы можете управлять макетами страниц в модуле панели управления 'Темы'.</target>
       </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.0">
+        <source>Subpage layout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.1">
+        <source>Here you can select a different layout for subpages.</source>
+      </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
         <target>Время кеширования</target>
@@ -328,14 +390,6 @@
       <trans-unit id="tl_page.noSearch.1">
         <source>Exclude the page from the search index.</source>
         <target>Исключить страницу из поискового индекса.</target>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.0">
-        <source>Require an item</source>
-        <target>Требовать элемент</target>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.1">
-        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
-        <target>Вызывать ошибку 404 если URL-адрес страницы не содержит алиас элемента.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -429,9 +483,17 @@
         <source>Name and type</source>
         <target>Имя и тип</target>
       </trans-unit>
+      <trans-unit id="tl_page.routing_legend">
+        <source>Routing</source>
+        <target>Маршрутизация</target>
+      </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
         <target>Метаданные</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonical_legend">
+        <source>Canonical URL</source>
+        <target>Канонический URL </target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -517,6 +579,9 @@
         <source>Show never</source>
         <target>Никогда не показывать</target>
       </trans-unit>
+      <trans-unit id="tl_page.layout_inherit">
+        <source>Inherit page layout</source>
+      </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
         <target>Новый</target>
@@ -572,6 +637,14 @@
       <trans-unit id="tl_page.legacyRouting">
         <source>Disable legacy routing mode to enable this configuration.</source>
         <target>Отключите устаревший режим маршрутизации, чтобы включить эту конфигурацию.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.0">
+        <source>Route conflicts</source>
+        <target>Конфликты маршрутов</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.1">
+        <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>Следующие страницы имеют аналогичный алиас, который может конфликтовать с этой страницей. Если URL-адрес разрешен неправильно, попробуйте изменить приоритет маршрутов.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

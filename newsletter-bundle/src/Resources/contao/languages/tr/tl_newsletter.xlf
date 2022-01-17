@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the e-mail template of the channel.</source>
+        <target>Buradan kanalın e-posta şablonunu geçersiz kılabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -74,9 +75,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.0">
         <source>Mailer transport</source>
+        <target>Posta taşımacılığı</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.1">
         <source>Here you can override the default mailer transport of the channel.</source>
+        <target>Buradan kanalın varsayılan posta gönderimini geçersiz kılabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>
@@ -177,6 +180,9 @@
       <trans-unit id="tl_newsletter.rejected">
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
         <target>%s geçersiz e-posta adresi hizmet dışı bırakıldı (system log bölümüne bakınız).</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.skipped">
+        <source>%s e-mail address(es) has/have been skipped.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>
