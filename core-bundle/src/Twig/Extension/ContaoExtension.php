@@ -21,6 +21,7 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Twig\Runtime\HttpKernelRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
@@ -116,6 +117,14 @@ final class ContaoExtension extends AbstractExtension
                     return $includeFunctionCallable(...$args);
                 },
                 ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]
+            ),
+            new TwigFunction(
+                'contao_content_element',
+                [HttpKernelRuntime::class, 'resolveContentElement']
+            ),
+            new TwigFunction(
+                'contao_module',
+                [HttpKernelRuntime::class, 'resolveModule']
             ),
             new TwigFunction(
                 'contao_figure',

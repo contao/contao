@@ -945,6 +945,12 @@ services:
         arguments:
             - '@contao.image.studio.figure_renderer'
 
+    contao.twig.http_kernel_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\HttpKernelRuntime
+        arguments:
+            - '@contao.fragment.registry'
+            - '@contao.framework'
+
     contao.twig.filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
         arguments:
