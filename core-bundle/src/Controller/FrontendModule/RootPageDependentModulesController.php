@@ -23,14 +23,18 @@ class RootPageDependentModulesController extends AbstractFragmentController
 {
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
     {
-        $pageModel = $this->getPageModel();
-        $controller = $this->container->get('contao.framework')->getAdapter(Controller::class);
-        $modules = StringUtil::deserialize($model->rootPageDependentModules);
-        $content = '';
-
-        if (\is_array($modules) && \array_key_exists($pageModel->rootId, $modules)) {
-            $content = $controller->getFrontendModule($modules[$pageModel->rootId]);
+        if (!$pageModel = $this->getPageModel()) {
+            return new Response(''); // This can happen in the back end preview if no module has been selected
         }
+
+        $modules = StringUtil::deserialize($model->rootPageDependentModules);
+
+        if (empty($modules) || !\is_array($modules) || !\array_key_exists($pageModel->rootId, $modules)) {
+            return new Response(''); // No need for further processing if there are no modules
+        }
+
+        $controller = $this->container->get('contao.framework')->getAdapter(Controller::class);
+        $content = $controller->getFrontendModule($modules[$pageModel->rootId]);
 
         $this->tagResponse($model);
 
