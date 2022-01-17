@@ -161,7 +161,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'markdownSource_sourceText'   => 'code',
 		'markdownSource_sourceFile'   => 'singleSRC',
 		'showPreview'                 => 'size,fullsize,numberOfItems',
-		'overwriteFormSettings'       => '' // will be set by the OverwriteFormSettingsListener
+		'overwriteFormSettings'       => ''
 	),
 
 	// Fields
@@ -819,7 +819,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50', 'submitOnChange'=>true),
+			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'module' => array

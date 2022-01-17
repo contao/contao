@@ -67,13 +67,14 @@ class OverwriteFormSettingsListener
     public function getPlaceholderFromForm($varValue, DataContainer $dc)
     {
         $formId = $dc->activeRecord->form;
-        $formModel = $this->framework->getAdapter(FormModel::class);
 
         if (!$formId) {
             return $varValue;
         }
 
+        $formModel = $this->framework->getAdapter(FormModel::class);
         $form = $formModel->findById($formId);
+
         $formField = str_replace('form_', '', $dc->field);
 
         if (isset($form->{$formField})) {

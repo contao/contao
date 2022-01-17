@@ -305,12 +305,15 @@ abstract class Hybrid extends Frontend
 			return;
 		}
 
-		$fieldsToOverwrite = array_filter(array_keys($GLOBALS['TL_DCA']['tl_form']['fields']), static function ($fieldName)
-		{
-			$fieldConfig = $GLOBALS['TL_DCA']['tl_form']['fields'][$fieldName];
+		$fieldsToOverwrite = array_filter(
+			array_keys($GLOBALS['TL_DCA']['tl_form']['fields']),
+			static function ($fieldName)
+			{
+				$fieldConfig = $GLOBALS['TL_DCA']['tl_form']['fields'][$fieldName];
 
-			return isset($fieldConfig['eval']['formOverwritable']) && true === $fieldConfig['eval']['formOverwritable'];
-		});
+				return isset($fieldConfig['eval']['formOverwritable']) && true === $fieldConfig['eval']['formOverwritable'];
+			}
+		);
 
 		foreach ($fieldsToOverwrite as $fieldName)
 		{

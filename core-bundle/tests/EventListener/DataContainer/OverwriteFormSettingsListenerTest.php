@@ -100,8 +100,8 @@ class OverwriteFormSettingsListenerTest extends TestCase
     public function testGetPlaceholderFromForm(string $table): void
     {
         $GLOBALS['TL_DCA'][$table]['fields']['form_recipient']['eval']['placeholder'] = '';
-        $recipient = 'foo@bar.org';
 
+        $recipient = 'foo@bar.org';
         $contentModel = $this->mockClassWithProperties(ContentModel::class, ['form' => 1, 'form_recipient' => '']);
         $formModel = $this->mockClassWithProperties(FormModel::class, ['recipient' => $recipient]);
 
@@ -129,6 +129,8 @@ class OverwriteFormSettingsListenerTest extends TestCase
 
         $this->assertArrayHasKey('placeholder', $GLOBALS['TL_DCA'][$table]['fields']['form_recipient']['eval']);
         $this->assertSame($recipient, $GLOBALS['TL_DCA'][$table]['fields']['form_recipient']['eval']['placeholder']);
+
+        unset($GLOBALS['TL_DCA']);
     }
 
     public function getTables(): \Generator
