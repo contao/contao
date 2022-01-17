@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 use Contao\Controller;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
 use Contao\ModuleModel;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,11 +23,8 @@ class RootPageDependentModulesController extends AbstractFragmentController
 {
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
     {
-        /** @var PageModel $pageModel */
         $pageModel = $this->getPageModel();
-
         $controller = $this->container->get('contao.framework')->getAdapter(Controller::class);
-
         $modules = StringUtil::deserialize($model->rootPageDependentModules);
         $content = '';
 

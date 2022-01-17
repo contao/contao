@@ -646,7 +646,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'rootPageDependentSelect',
-			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50', 'includeBlankOption'=>true),
+			'eval'                    => array('submitOnChange'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => 'blob NULL'
 		),
 	)

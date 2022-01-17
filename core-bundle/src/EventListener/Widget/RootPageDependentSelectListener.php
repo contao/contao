@@ -45,8 +45,7 @@ class RootPageDependentSelectListener
         $rows = $this->connection->executeQuery(
             "SELECT m.id, m.name, m.type
             FROM tl_module m
-            WHERE m.type <> 'root_page_dependent_modules' AND
-                  m.pid = ?
+            WHERE m.type != 'root_page_dependent_modules' AND m.pid = ?
             ORDER BY m.name",
             [$dc->activeRecord->pid]
         );
@@ -105,8 +104,8 @@ class RootPageDependentSelectListener
             $title = $this->translator->trans('tl_content.editalias', [$id], 'contao_content');
 
             $wizards[$rootPage] = ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id='.$id.'&amp;popup=1&amp;nb=1&amp;rt='.$this->csrfTokenManager->getDefaultTokenValue().'"
-                    title="'.StringUtil::specialchars($title).'"
-                    onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $title)).'\',\'url\':this.href});return false">'.Image::getHtml('alias.svg', $title).'</a>';
+                title="'.StringUtil::specialchars($title).'"
+                onclick="Backend.openModalIframe({\'title\':\''.StringUtil::specialchars(str_replace("'", "\\'", $title)).'\',\'url\':this.href});return false">'.Image::getHtml('alias.svg', $title).'</a>';
         }
 
         return serialize($wizards);
@@ -122,7 +121,6 @@ class RootPageDependentSelectListener
         ');
 
         $rows = $statement->executeQuery();
-
         $pages = [];
 
         foreach ($rows->iterateAssociative() as $rootPage) {

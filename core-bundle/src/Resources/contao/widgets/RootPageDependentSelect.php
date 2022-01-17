@@ -29,11 +29,7 @@ class RootPageDependentSelect extends SelectMenu
 		$rootPages = $framework->getAdapter(PageModel::class)->findByType('root', array('order' => 'sorting'));
 		$wizard = StringUtil::deserialize($this->wizard);
 
-		$this->blankOptionLabel = $translator->trans(
-			sprintf('tl_module.%sBlankOptionLabel', $this->name),
-			array(),
-			'contao_module'
-		);
+		$this->blankOptionLabel = $translator->trans(sprintf('tl_module.%sBlankOptionLabel', $this->name), array(), 'contao_module');
 
 		foreach ($rootPages as $rootPage)
 		{
@@ -65,10 +61,7 @@ class RootPageDependentSelect extends SelectMenu
 			return ' selected';
 		}
 
-		return static::optionSelected(
-			$arrOption['value'] ?? null,
-			$this->varValue[$arrOption['index']] ?? null
-		);
+		return static::optionSelected($arrOption['value'] ?? null, $this->varValue[$arrOption['index']] ?? null);
 	}
 
 	private function getOptions(string $index): array

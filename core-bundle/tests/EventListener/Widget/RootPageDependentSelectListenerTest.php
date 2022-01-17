@@ -88,7 +88,6 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
     public function testSavesValuesRelatedToRootPage(): void
     {
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
-
         $connection = $this->mockGetRootPages();
 
         $listener = new RootPageDependentSelectListener(

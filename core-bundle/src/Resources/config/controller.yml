@@ -62,6 +62,10 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController:
+        tags:
+            - { name: contao.frontend_module, category: miscellaneous }
+
     Contao\CoreBundle\Controller\FrontendModule\TemplateController:
         tags:
             - { name: contao.frontend_module, category: miscellaneous }
@@ -69,10 +73,6 @@ services:
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
         tags:
             - { name: contao.frontend_module, category: user }
-
-    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController:
-        tags:
-            - { name: contao.frontend_module, category: miscellaneous }
 
     Contao\CoreBundle\Controller\ImagesController:
         public: true
