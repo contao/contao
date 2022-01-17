@@ -68,6 +68,7 @@ class PageModelTest extends ContaoTestCase
         parent::tearDown();
 
         Registry::getInstance()->reset();
+
         unset($GLOBALS['TL_MODELS']);
 
         // Reset database instance
@@ -314,6 +315,7 @@ class PageModelTest extends ContaoTestCase
     {
         $page = new PageModel();
         $page->pid = 42;
+
         $numberOfParents = \count($parents);
 
         // The last page has to be a root page for this test method to prevent
@@ -348,7 +350,7 @@ class PageModelTest extends ContaoTestCase
         yield 'no parent with an inheritable layout' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => '1', 'subpagesLayout' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => '1', 'subpageLayout' => '2']],
                 [['id' => '3', 'pid' => '0']],
             ],
             false,
@@ -357,7 +359,7 @@ class PageModelTest extends ContaoTestCase
         yield 'inherit layout from parent page' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpageLayout' => '']],
                 [['id' => '3', 'pid' => '0']],
             ],
             '1',
@@ -366,7 +368,7 @@ class PageModelTest extends ContaoTestCase
         yield 'inherit subpages layout from parent page' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpagesLayout' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpageLayout' => '2']],
                 [['id' => '3', 'pid' => '0']],
             ],
             '2',
@@ -374,9 +376,9 @@ class PageModelTest extends ContaoTestCase
 
         yield 'multiple parents with layouts' => [
             [
-                [['id' => '1', 'pid' => '2', 'includeLayout' => '', 'layout' => '1', 'subpagesLayout' => '1']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpagesLayout' => '3']],
-                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '4', 'subpagesLayout' => '']],
+                [['id' => '1', 'pid' => '2', 'includeLayout' => '', 'layout' => '1', 'subpageLayout' => '1']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpageLayout' => '3']],
+                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '4', 'subpageLayout' => '']],
             ],
             '3',
         ];
