@@ -4,6 +4,8 @@ services:
 
     _instanceof:
         Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
+            tags:
+                - { name: container.service_subscriber, id: contao.csrf.token_manager }
             calls:
                 - [setContainer, ['@Psr\Container\ContainerInterface']]
 
@@ -62,6 +64,7 @@ services:
         tags:
             - controller.service_arguments
             - { name: container.service_subscriber, id: contao.cron }
+            - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController:
         tags:
