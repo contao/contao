@@ -13,16 +13,20 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\Controller;
-use Contao\CoreBundle\Controller\AbstractFragmentController;
 use Contao\ModuleModel;
 use Contao\StringUtil;
+use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RootPageDependentModulesController extends AbstractFragmentController
+class RootPageDependentModulesController extends AbstractFrontendModuleController
 {
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
     {
+        if ($this->container->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
+            return $this->getBackendWildcard($model);
+        }
+
         if (!$pageModel = $this->getPageModel()) {
             return new Response('');
         }
@@ -39,5 +43,10 @@ class RootPageDependentModulesController extends AbstractFragmentController
         $this->tagResponse($model);
 
         return new Response($content);
+    }
+
+    public function getResponse(Template $template, ModuleModel $model, Request $request): Response
+    {
+        throw new \LogicException('This method should never be called');
     }
 }
