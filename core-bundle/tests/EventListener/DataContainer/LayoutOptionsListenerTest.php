@@ -77,7 +77,8 @@ class LayoutOptionsListenerTest extends TestCase
             ->willReturnOnConsecutiveCalls(
                 [
                     ['id' => 1, 'name' => 'Layout 1', 'theme' => 'Theme A'],
-                ], [
+                ],
+                [
                     ['id' => 2, 'name' => 'Layout 2', 'theme' => 'Theme A'],
                 ]
             )
