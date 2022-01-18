@@ -89,7 +89,7 @@
         "symfony/dotenv": "4.4.*",
         "symfony/event-dispatcher": "4.4.*",
         "symfony/expression-language": "4.4.*",
-        "symfony/filesystem": "4.4.*",
+        "symfony/filesystem": "^5.4",
         "symfony/finder": "4.4.*",
         "symfony/framework-bundle": "4.4.*",
         "symfony/http-client": "4.4.*",
@@ -117,7 +117,6 @@
         "twig/twig": "^2.7",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
-        "webmozart/path-util": "^2.2",
         "wikimedia/less.php": "^1.7"
     },
     "replace": {
