@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
+use Composer\InstalledVersions;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\PackageUtil;
-use PackageVersions\Versions;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -37,17 +37,17 @@ class AddPackagesPassTest extends TestCase
 
         $this->assertTrue($container->hasParameter('kernel.packages'));
 
-        $keys = array_keys(Versions::VERSIONS);
+        $installedRaw = array_merge(...array_map(static fn ($installed) => $installed['versions'], InstalledVersions::getAllRawData()));
         $packages = $container->getParameter('kernel.packages');
 
         $this->assertIsArray($packages);
-        $this->assertArrayHasKey($keys[0], $packages);
-        $this->assertArrayHasKey($keys[1], $packages);
-        $this->assertArrayHasKey($keys[2], $packages);
         $this->assertArrayNotHasKey('contao/test-bundle4', $packages);
 
-        $this->assertSame(PackageUtil::getVersion($keys[0]), $packages[$keys[0]]);
-        $this->assertSame(PackageUtil::getVersion($keys[1]), $packages[$keys[1]]);
-        $this->assertSame(PackageUtil::getVersion($keys[2]), $packages[$keys[2]]);
+        foreach ($installedRaw as $key => $version) {
+            if (isset($version['pretty_version'])) {
+                $this->assertArrayHasKey($key, $packages);
+                $this->assertSame(PackageUtil::getVersion($key), $packages[$key]);
+            }
+        }
     }
 }
