@@ -436,8 +436,9 @@ class InsertTags extends Controller
 							break;
 						}
 
-						// Do not generate URL for insert tags that don't need it
 						$strUrl = '';
+
+						// Do not generate URL for insert tags that don't need it
 						if (\in_array(strtolower($elements[0]), array('link', 'link_open', 'link_url'), true))
 						{
 							switch ($objNextPage->type)
