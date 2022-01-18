@@ -22,7 +22,7 @@ use Contao\CoreBundle\Composer\ScriptHandler;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ScriptHandlerTest extends TestCase
 {

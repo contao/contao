@@ -12,8 +12,8 @@ namespace Contao;
 
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Webmozart\PathUtil\Path;
 
 /**
  * Provide methods to handle input field "file tree".

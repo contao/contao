@@ -20,7 +20,7 @@ use Contao\ModuleArticleList;
 use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class TemplateLoaderTest extends TestCase
 {

@@ -12,7 +12,7 @@ namespace Contao;
 
 use Patchwork\Utf8;
 use Psr\Log\LogLevel;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Provides string manipulation methods

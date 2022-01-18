@@ -22,7 +22,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class ContaoCacheWarmerTest extends TestCase
 {
