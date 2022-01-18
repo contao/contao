@@ -129,10 +129,7 @@
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin",
-        "symfony": {
-            "require": "^4.4"
-        }
+        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {

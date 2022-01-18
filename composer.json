@@ -164,9 +164,6 @@
             "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
-        },
-        "symfony": {
-            "require": "^4.4"
         }
     },
     "autoload": {
