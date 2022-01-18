@@ -1629,11 +1629,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Consider the dynamic parent table (see #4867)
 			if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'])
 			{
-				$ptable = $GLOBALS['TL_DCA'][$v]['config']['ptable'];
-				$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
+				$cond = ($table === 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
 				$objDelete = $this->Database->prepare("SELECT id FROM $v WHERE pid=? AND $cond")
-											->execute($id, $ptable);
+											->execute($id, $table);
 			}
 			else
 			{
