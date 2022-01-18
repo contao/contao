@@ -27,7 +27,7 @@ class PageRoutingListenerTest extends TestCase
     /**
      * @dataProvider routePathProvider
      */
-    public function testGetsPathFromPageRoute(string $path, array $requirements, string $expected): void
+    public function testGetsPathFromPageRoute(string $path, array $requirements, array $expected): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
@@ -57,7 +57,7 @@ class PageRoutingListenerTest extends TestCase
             ->with(
                 '@ContaoCore/Backend/be_route_path.html.twig',
                 [
-                    'path' => $expected,
+                    'path_chunks' => $expected,
                 ]
             )
             ->willReturn('foobar')
@@ -74,37 +74,43 @@ class PageRoutingListenerTest extends TestCase
         yield 'Path without parameters' => [
             'foobar',
             [],
-            'foobar',
+            [['name' => 'foobar']],
         ];
 
         yield 'Ignores unknown parameters in path' => [
             'foo/bar/{baz}.html',
             [],
-            'foo/bar/{baz}.html',
+            [['name' => 'foo/bar/{baz}.html']],
         ];
 
         yield 'Ignores unknown parameters' => [
             'foo/bar/{baz}.html',
             ['bar' => 'baz'],
-            'foo/bar/{baz}.html',
+            [['name' => 'foo/bar/{baz}.html']],
         ];
 
         yield 'Replaces parameter' => [
             'foo/{bar}.html',
             ['bar' => '.+'],
-            'foo/{<span class="tl_tip" title=".+">bar</span>}.html',
+            [['name' => 'foo/'], ['name' => '{bar}', 'regex' => '.+'], ['name' => '.html']],
         ];
 
         yield 'Replaces parameters' => [
             'foo/{bar}/{baz}.html',
             ['bar' => '.+', 'baz' => '\d+'],
-            'foo/{<span class="tl_tip" title=".+">bar</span>}/{<span class="tl_tip" title="\d+">baz</span>}.html',
+            [
+                ['name' => 'foo/'],
+                ['name' => '{bar}', 'regex' => '.+'],
+                ['name' => '/'],
+                ['name' => '{baz}', 'regex' => '\d+'],
+                ['name' => '.html'],
+            ],
         ];
 
         yield 'Handles parameters starting with exclamation point' => [
             'foo/{!bar}.html',
             ['bar' => '.+'],
-            'foo/{<span class="tl_tip" title=".+">bar</span>}.html',
+            [['name' => 'foo/'], ['name' => '{bar}', 'regex' => '.+'], ['name' => '.html']],
         ];
     }
 
@@ -231,17 +237,17 @@ class PageRoutingListenerTest extends TestCase
                     'conflicts' => [
                         [
                             'page' => $aliasPages[0],
-                            'path' => 'foo',
+                            'path_chunks' => [['name' => 'foo']],
                             'editUrl' => 'editUrl',
                         ],
                         [
                             'page' => $aliasPages[1],
-                            'path' => 'bar',
+                            'path_chunks' => [['name' => 'bar']],
                             'editUrl' => 'editUrl',
                         ],
                         [
                             'page' => $aliasPages[2],
-                            'path' => 'baz',
+                            'path_chunks' => [['name' => 'baz']],
                             'editUrl' => 'editUrl',
                         ],
                     ],
