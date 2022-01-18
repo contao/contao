@@ -34,6 +34,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'security.firewall.map',
         'security.helper',
         'security.logout_url_generator',
+        'security.encoder_factory',
         'security.password_hasher_factory',
         'uri_signer',
     ];
