@@ -1,0 +1,7 @@
+{%- for chunk in path_chunks  -%}
+    {%- if chunk.regex is defined -%}
+        <span class="tl_tip" title="{{ chunk.regex }}">{{ chunk.name }}</span>
+    {%- else -%}
+        {{ chunk.name }}
+    {%- endif -%}
+{%- endfor -%}

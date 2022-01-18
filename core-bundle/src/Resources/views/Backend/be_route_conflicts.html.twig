@@ -20,7 +20,7 @@
                     <td colspan="1" class="tl_file_list">{{ conflict.page.title }}</td>
                     <td colspan="1" class="tl_file_list">{{ ('PTY.'~conflict.page.type~'.0')|trans([], 'contao_default') }}</td>
                     <td colspan="1" class="tl_file_list">{{ conflict.page.alias }}</td>
-                    <td colspan="1" class="tl_file_list">{{ conflict.path|raw }}</td>
+                    <td colspan="1" class="tl_file_list">{% include '@ContaoCore/Backend/_route_path.html.twig' with {path_chunks: conflict.path_chunks } %}</td>
                     <td colspan="1" class="tl_file_list">{{ conflict.page.routePriority }}</td>
                     <td class="tl_file_list tl_right_nowrap">
                         <a

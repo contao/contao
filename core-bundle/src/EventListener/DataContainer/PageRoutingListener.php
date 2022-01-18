@@ -19,7 +19,6 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\PageModel;
-use Contao\StringUtil;
 use Twig\Environment;
 
 class PageRoutingListener
@@ -49,7 +48,7 @@ class PageRoutingListener
         return $this->twig->render(
             '@ContaoCore/Backend/be_route_path.html.twig',
             [
-                'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel)),
+                'path_chunks' => $this->getPathChunks($this->pageRegistry->getRoute($pageModel)),
             ]
         );
     }
@@ -91,7 +90,7 @@ class PageRoutingListener
 
             $conflicts[] = [
                 'page' => $aliasPage,
-                'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($aliasPage)),
+                'path_chunks' => $this->getPathChunks($this->pageRegistry->getRoute($aliasPage)),
                 'editUrl' => $backendAdapter->addToUrl(sprintf('act=edit&id=%s&popup=1&nb=1', $aliasPage->id)),
             ];
         }
@@ -124,14 +123,33 @@ class PageRoutingListener
         return $url;
     }
 
-    private function getPathWithParameters(PageRoute $route): string
+    /**
+     * Splits the route's path into chunks.
+     *
+     * In case of a requirement, a key 'regex' will be set containing the
+     * regular expression that matches the requirement.
+     *
+     * @return array<array{name: string, regex?: string}>
+     */
+    private function getPathChunks(PageRoute $route): array
     {
-        $path = $route->getPath();
+        $requirements = $route->getRequirements();
 
-        foreach ($route->getRequirements() as $name => $regexp) {
-            $path = preg_replace('/{[!]?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'">$1</span>}', $path);
+        $requirementsRegex = implode('|', array_map('preg_quote', array_keys($requirements)));
+        $chunks = preg_split('({[!]?('.$requirementsRegex.')})', $route->getPath(), 0, PREG_SPLIT_DELIM_CAPTURE);
+
+        $pathChunks = [];
+
+        for ($i = 0; $i < \count($chunks); $i += 2) {
+            if (!empty($pathChunk = $chunks[$i])) {
+                $pathChunks[] = ['name' => $pathChunk];
+            }
+
+            if (!empty($requirement = ($chunks[$i + 1] ?? null))) {
+                $pathChunks[] = ['name' => '{'.$requirement.'}', 'regex' => $requirements[$requirement]];
+            }
         }
 
-        return $path;
+        return $pathChunks;
     }
 }
