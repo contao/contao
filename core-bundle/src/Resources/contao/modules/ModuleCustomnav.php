@@ -85,7 +85,8 @@ class ModuleCustomnav extends Module
 		$objTemplate->level = 'level_1';
 		$objTemplate->module = $this; // see #155
 
-		$security = System::getContainer()->get('security.helper');
+		$container = System::getContainer();
+		$security = $container->get('security.helper');
 		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		/** @var PageModel[] $objPages */
@@ -140,7 +141,7 @@ class ModuleCustomnav extends Module
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objModel->id . ': ' . $exception->getMessage());
+							$container->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objModel->id . ': ' . $exception->getMessage());
 
 							continue 2;
 						}
