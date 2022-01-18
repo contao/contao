@@ -436,56 +436,48 @@ class InsertTags extends Controller
 							break;
 						}
 
+						// Do not generate URL for insert tags that don't need it
+						$strUrl = '';
+						if (\in_array(strtolower($elements[0]), array('link', 'link_open', 'link_url'), true))
+						{
+							switch ($objNextPage->type)
+							{
+								case 'redirect':
+									$strUrl = $objNextPage->url;
+
+									if (strncasecmp($strUrl, 'mailto:', 7) === 0)
+									{
+										$strUrl = StringUtil::encodeEmail($strUrl);
+									}
+									break;
+
+								case 'forward':
+									if ($objNextPage->jumpTo)
+									{
+										$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
+									}
+									else
+									{
+										$objNext = PageModel::findFirstPublishedRegularByPid($objNextPage->id);
+									}
+
+									if ($objNext instanceof PageModel)
+									{
+										$strUrl = \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										break;
+									}
+									// no break
+
+								default:
+									$strUrl = \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									break;
+							}
+						}
+
 						$strName = $objNextPage->title;
 						$strTarget = $objNextPage->target ? ' target="_blank" rel="noreferrer noopener"' : '';
 						$strClass = $objNextPage->cssClass ? sprintf(' class="%s"', $objNextPage->cssClass) : '';
 						$strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
-
-						// Early return for tags that do not need the URL
-						switch (strtolower($elements[0]))
-						{
-							case 'link_title':
-								$arrCache[$strTag] = StringUtil::specialcharsAttribute($strTitle);
-								break 2;
-
-							case 'link_name':
-								$arrCache[$strTag] = StringUtil::specialcharsAttribute($strName);
-								break 2;
-						}
-
-						// Page type specific settings (thanks to Andreas Schempp)
-						switch ($objNextPage->type)
-						{
-							case 'redirect':
-								$strUrl = $objNextPage->url;
-
-								if (strncasecmp($strUrl, 'mailto:', 7) === 0)
-								{
-									$strUrl = StringUtil::encodeEmail($strUrl);
-								}
-								break;
-
-							case 'forward':
-								if ($objNextPage->jumpTo)
-								{
-									$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
-								}
-								else
-								{
-									$objNext = PageModel::findFirstPublishedRegularByPid($objNextPage->id);
-								}
-
-								if ($objNext instanceof PageModel)
-								{
-									$strUrl = \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
-									break;
-								}
-								// no break
-
-							default:
-								$strUrl = \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
-								break;
-						}
 					}
 
 					// Replace the tag
