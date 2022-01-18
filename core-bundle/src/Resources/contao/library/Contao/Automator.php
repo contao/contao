@@ -149,7 +149,7 @@ class Automator extends System
 		$this->purgePageCache();
 
 		// Add a log entry
-		$this->log('Purged the preview cache', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the preview cache');
 	}
 
 	/**
