@@ -102,6 +102,7 @@
         "symfony/process": "^5.4",
         "symfony/routing": "^5.4",
         "symfony/security-bundle": "^5.4",
+        "symfony/security-core": "^5.4",
         "symfony/string": "^5.4",
         "symfony/translation": "^5.4",
         "symfony/twig-bridge": "^5.4",
