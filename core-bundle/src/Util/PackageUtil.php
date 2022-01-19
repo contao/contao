@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Util;
 
-use PackageVersions\Versions;
+use Composer\InstalledVersions;
 
 /**
  * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0; use
@@ -27,8 +27,7 @@ class PackageUtil
     {
         trigger_deprecation('contao/core-bundle', '4.13', 'Using the PackageUtil::getVersion() method has been deprecated and will no longer work in Contao 5.0. Use the Composer\InstalledVersions class instead.');
 
-        /** @phpstan-ignore-next-line */
-        $version = Versions::getVersion($packageName);
+        $version = InstalledVersions::getPrettyVersion($packageName) ?? '';
 
         return static::parseVersion($version);
     }
@@ -60,7 +59,7 @@ class PackageUtil
     {
         trigger_deprecation('contao/core-bundle', '4.13', 'Using the PackageUtil::parseVersion() method has been deprecated and will no longer work in Contao 5.0. Use the Composer\InstalledVersions class instead.');
 
-        return ltrim(strstr($version, '@', true), 'v');
+        return ltrim(strstr($version.'@', '@', true), 'v');
     }
 
     /**

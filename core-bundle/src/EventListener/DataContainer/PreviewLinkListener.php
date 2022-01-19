@@ -81,7 +81,7 @@ class PreviewLinkListener
     {
         $input = $this->framework->getAdapter(Input::class);
         $user = $this->security->getUser();
-        $userId = $user instanceof BackendUser ? $user->id : 0;
+        $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
             $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy=?', $userId];
@@ -112,7 +112,9 @@ class PreviewLinkListener
                 case 'toggle':
                 case 'delete':
                 default:
-                    if ($dc->activeRecord->createdBy !== $userId) {
+                    $createdBy = (int) $this->connection->fetchOne('SELECT createdBy FROM tl_preview_link WHERE id=?', [$dc->id]);
+
+                    if ($createdBy !== $userId) {
                         throw new AccessDeniedException(sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
                     }
                     break;
