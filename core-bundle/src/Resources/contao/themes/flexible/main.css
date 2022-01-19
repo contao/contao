@@ -1070,7 +1070,7 @@ table.tl_listing {
 	float:right;
 	text-align:right;
 	margin-left:12px;
-	margin-top:-1px;
+	margin-bottom:-1px;
 }
 .tl_right button,.tl_content_right button {
 	margin:0;
