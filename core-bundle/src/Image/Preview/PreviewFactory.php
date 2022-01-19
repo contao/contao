@@ -28,7 +28,7 @@ use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\StringUtil;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class PreviewFactory
 {

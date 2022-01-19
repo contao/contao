@@ -28,7 +28,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\DependencyInjection\Container;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 abstract class AbstractFragmentMaker extends AbstractMaker
 {
