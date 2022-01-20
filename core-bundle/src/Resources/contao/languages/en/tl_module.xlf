@@ -84,7 +84,7 @@
         <source>Custom label</source>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
-        <source>Here you can enter a custom label for the drop-down menu.</source>
+        <source>Here you can enter a custom label for the dropdown menu or the back link.</source>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
