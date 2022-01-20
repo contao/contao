@@ -166,6 +166,35 @@ jobs:
                   python3 -m pip install --upgrade yamllint
                   /home/runner/.local/bin/yamllint .
 
+    require-checker:
+        name: Require Checker
+        runs-on: ubuntu-18.04
+        if: github.event_name == 'pull_request'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Install the dependencies
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer -dcore-bundle install --no-interaction --no-progress
+                  composer bin require-checker install --no-interaction --no-progress
+
+            - name: Run the require checker for contao/contao
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json --ansi
+
+            - name: Run the require checker for contao/core-bundle
+              run: tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json core-bundle/composer.json --ansi
+
     service-linter:
         name: Service Linter
         runs-on: ubuntu-18.04
