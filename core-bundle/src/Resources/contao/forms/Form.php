@@ -226,7 +226,10 @@ class Form extends Hybrid
 					elseif ($objWidget->submitInput())
 					{
 						$arrSubmitted[$objField->name] = $objWidget->value;
+
+						// $_SESSION access is governed by LazySessionAccess
 						$_SESSION['FORM_DATA'][$objField->name] = $objWidget->value;
+
 						unset($_POST[$objField->name]); // see #5474
 					}
 				}
@@ -260,6 +263,7 @@ class Form extends Hybrid
 		}
 
 		// Remove any uploads, if form did not validate (#1185)
+		// $_SESSION access is governed by LazySessionAccess
 		if ($doNotSubmit && $hasUpload && !empty($_SESSION['FILES']))
 		{
 			foreach ($_SESSION['FILES'] as $field => $upload)
@@ -432,6 +436,8 @@ class Form extends Hybrid
 			if (!empty($arrSubmitted['cc']))
 			{
 				$email->sendCc(Input::post('email', true));
+
+				// $_SESSION access is governed by LazySessionAccess
 				unset($_SESSION['FORM_DATA']['cc']);
 			}
 
@@ -454,6 +460,7 @@ class Form extends Hybrid
 			$uploaded = '';
 
 			// Attach uploaded files
+			// $_SESSION access is governed by LazySessionAccess
 			if (!empty($_SESSION['FILES']))
 			{
 				foreach ($_SESSION['FILES'] as $file)
@@ -504,6 +511,7 @@ class Form extends Hybrid
 			}
 
 			// Files
+			// $_SESSION access is governed by LazySessionAccess
 			if (!empty($_SESSION['FILES']))
 			{
 				foreach ($_SESSION['FILES'] as $k=>$v)
@@ -542,6 +550,7 @@ class Form extends Hybrid
 		}
 
 		// Store all values in the session
+		// $_SESSION access is governed by LazySessionAccess
 		foreach (array_keys($_POST) as $key)
 		{
 			$_SESSION['FORM_DATA'][$key] = $this->allowTags ? Input::postHtml($key, true) : Input::post($key, true);
@@ -612,6 +621,8 @@ class Form extends Hybrid
 		}
 
 		$arrMessageBox = array('TL_ERROR', 'TL_CONFIRM', 'TL_INFO');
+
+		// $_SESSION access is governed by LazySessionAccess
 		$_SESSION['FORM_DATA'] = \is_array($_SESSION['FORM_DATA']) ? $_SESSION['FORM_DATA'] : array();
 
 		foreach ($arrMessageBox as $tl)

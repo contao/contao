@@ -54,6 +54,7 @@ class Installer extends Controller
 			return '';
 		}
 
+		// $_SESSION access is governed by LazySessionAccess
 		$_SESSION['sql_commands'] = array();
 
 		$arrOperations = array
@@ -86,6 +87,8 @@ class Installer extends Controller
 				foreach ($sql_command[$command] as $vv)
 				{
 					$key = md5($vv);
+
+					// $_SESSION access is governed by LazySessionAccess
 					$_SESSION['sql_commands'][$key] = $vv;
 
 					$return .= '

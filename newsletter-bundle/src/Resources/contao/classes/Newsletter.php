@@ -117,6 +117,7 @@ class Newsletter extends Backend
 				// Check the e-mail address
 				if (!Validator::isEmail(Input::get('recipient', true)))
 				{
+					// $_SESSION access is governed by LazySessionAccess
 					$_SESSION['TL_PREVIEW_MAIL_ERROR'] = true;
 					$this->redirect($referer);
 				}
@@ -167,6 +168,7 @@ class Newsletter extends Backend
 					$this->Database->prepare("UPDATE tl_newsletter SET sent='1', date=? WHERE id=?")
 								   ->execute(time(), $objNewsletter->id);
 
+					// $_SESSION access is governed by LazySessionAccess
 					$_SESSION['REJECTED_RECIPIENTS'] = array();
 				}
 
@@ -197,6 +199,7 @@ class Newsletter extends Backend
 				$objSession->set('tl_newsletter_send', null);
 
 				// Deactivate rejected addresses
+				// $_SESSION access is governed by LazySessionAccess
 				if (!empty($_SESSION['REJECTED_RECIPIENTS']))
 				{
 					$intRejected = \count($_SESSION['REJECTED_RECIPIENTS']);
@@ -395,12 +398,14 @@ class Newsletter extends Backend
 		}
 		catch (\Swift_RfcComplianceException $e)
 		{
+			// $_SESSION access is governed by LazySessionAccess
 			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
 		}
 
 		// Rejected recipients
 		if ($objEmail->hasFailures())
 		{
+			// $_SESSION access is governed by LazySessionAccess
 			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
 		}
 
