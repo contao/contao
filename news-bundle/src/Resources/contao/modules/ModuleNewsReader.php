@@ -87,7 +87,7 @@ class ModuleNewsReader extends ModuleNews
 		if ($this->overviewPage)
 		{
 			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
-			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['newsOverview'];
+			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['newsOverview'];
 		}
 		else
 		{
