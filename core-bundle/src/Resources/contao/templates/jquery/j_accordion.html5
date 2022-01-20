@@ -1,6 +1,6 @@
 
-<script src="<?= $this->asset('js/jquery-ui.min.js', 'contao-components/jquery-ui') ?>"></script>
-<script>
+<script>contaoLoadAsyncScript(<?= json_encode($this->asset('js/jquery-ui.min.js', 'contao-components/jquery-ui')) ?>);</script>
+<script>contaoLoadAsyncScript(function() {
   jQuery(function($) {
     $(document).accordion({
       // Put custom options here
@@ -18,4 +18,4 @@
       }
     });
   });
-</script>
+});</script>
