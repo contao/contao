@@ -33,11 +33,9 @@
 
     <p class="info"><?= $this->info ?></p>
 
-    <?php if ($this->referer): ?>
-      <!-- indexer::stop -->
-      <p class="back"><a href="<?= $this->referer ?>" title="<?= $this->back ?>"><?= $this->back ?></a></p>
-      <!-- indexer::continue -->
-    <?php endif; ?>
+    <!-- indexer::stop -->
+    <p class="back"><a href="<?= $this->referer ?>" title="<?= $this->back ?>"><?= $this->back ?></a></p>
+    <!-- indexer::continue -->
   <?php endif; ?>
 
   <?php if ($this->allowComments): ?>

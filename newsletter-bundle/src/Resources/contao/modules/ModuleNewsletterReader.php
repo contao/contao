@@ -79,18 +79,9 @@ class ModuleNewsletterReader extends Module
 	{
 		$this->Template->content = '';
 
-		if ($this->overviewPage)
-		{
-			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
-			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['nl_overview'];
-		}
-		else
-		{
-			trigger_deprecation('contao/newsletter-bundle', '4.13', 'If you do not select an overview page in the newsletter reader module, the "go back" link will no longer be shown in Contao 5.0.');
-
-			$this->Template->referer = 'javascript:history.go(-1)';
-			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
-		}
+		// TODO: remove this in Contao 5
+		$this->Template->referer = 'javascript:history.go(-1)';
+		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 
 		$objNewsletter = NewsletterModel::findSentByParentAndIdOrAlias(Input::get('items'), $this->nl_channels);
 
