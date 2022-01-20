@@ -295,8 +295,8 @@
             "@service-linter",
             "@phpstan",
             "@psalm",
-            "@monorepo-tools",
-            "@require-checker-mono"
+            "@require-checker",
+            "@monorepo-tools"
         ],
         "cs-fixer": [
             "@ecs",
@@ -310,12 +310,7 @@
         "monorepo-tools": "tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
         "phpstan": "tools/phpstan/vendor/bin/phpstan analyze --ansi",
         "psalm": "tools/psalm/vendor/bin/psalm --no-suggestions",
-        "require-checker": [
-            "@require-checker-mono",
-            "@require-checker-core"
-        ],
-        "require-checker-mono": "tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json",
-        "require-checker-core": "tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json core-bundle/composer.json",
+        "require-checker": "tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json",
         "service-linter": "tools/service-linter/bin/lint-service-ids --ansi",
         "unit-tests": "vendor/bin/phpunit --colors=always"
     }
