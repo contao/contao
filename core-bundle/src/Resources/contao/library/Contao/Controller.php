@@ -733,6 +733,11 @@ abstract class Controller extends System
 			$sub += 4;
 		}
 
+		if ($objPage->type == 'root' && $objPage->maintenanceMode)
+		{
+			$sub = 2;
+		}
+
 		// Get the image name
 		if ($sub > 0)
 		{
