@@ -985,7 +985,7 @@ class Input
 			return $_POST[$strKey];
 		}
 
-		// $_SESSION access is governed by LazySessionAccess (#3971)
+		// Do not check for $request->hasPreviousSession() and early return here (see #3971)
 		if (isset($_SESSION['FORM_DATA'][$strKey]))
 		{
 			return ($strKey == 'FORM_SUBMIT') ? preg_replace('/^auto_/i', '', $_SESSION['FORM_DATA'][$strKey]) : $_SESSION['FORM_DATA'][$strKey];
