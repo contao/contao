@@ -270,10 +270,9 @@ class VirtualFilesystem implements VirtualFilesystemInterface
             return $this->dbafsManager->$method($path);
         }
 
-        return 'has' === $method ?
-            $this->mountManager->fileExists($path) || $this->mountManager->directoryExists($path) :
-            $this->mountManager->$method($path)
-        ;
+        return 'has' === $method
+            ? $this->mountManager->fileExists($path) || $this->mountManager->directoryExists($path)
+            : $this->mountManager->$method($path);
     }
 
     /**

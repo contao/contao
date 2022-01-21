@@ -103,9 +103,9 @@ class MountManager
                 return $adapter->directoryExists($adapterPath);
             }
 
-            // Flysystem version 2 has no support for directoryExists() - as a
-            // workaround, we list contents for the parent directory and check
-            // if the requested path is returned as a directory.
+            // Flysystem version 2 has no support for directoryExists(), so as
+            // a workaround, we list the contents of the parent directory and
+            // check if the requested path is returned as a directory.
             foreach ($adapter->listContents(Path::getDirectory($path), false) as $sibling) {
                 if ($sibling->path() === $path) {
                     return $sibling->isDir();
