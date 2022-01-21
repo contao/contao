@@ -61,7 +61,6 @@ class ContaoCoreExtension extends Extension
         $loader->load('services.yml');
         $loader->load('migrations.yml');
 
-        $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
         $container->setParameter('contao.web_dir', $config['web_dir']);
         $container->setParameter('contao.prepend_locale', $config['prepend_locale']);
         $container->setParameter('contao.encryption_key', $config['encryption_key']);
@@ -80,6 +79,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.image.imagine_options', $config['image']['imagine_options']);
         $container->setParameter('contao.image.reject_large_uploads', $config['image']['reject_large_uploads']);
         $container->setParameter('contao.security.two_factor.enforce_backend', $config['security']['two_factor']['enforce_backend']);
+        $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
 
         if (isset($config['localconfig'])) {
             $container->setParameter('contao.localconfig', $config['localconfig']);
