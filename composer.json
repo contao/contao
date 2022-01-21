@@ -89,7 +89,7 @@
         "symfony/dotenv": "4.4.*",
         "symfony/event-dispatcher": "4.4.*",
         "symfony/expression-language": "4.4.*",
-        "symfony/filesystem": "4.4.*",
+        "symfony/filesystem": "4.4.* || 5.4.*",
         "symfony/finder": "4.4.*",
         "symfony/framework-bundle": "4.4.*",
         "symfony/http-client": "4.4.*",
@@ -165,9 +165,6 @@
             "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
-        },
-        "symfony": {
-            "require": "^4.4"
         }
     },
     "autoload": {

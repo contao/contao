@@ -36,7 +36,7 @@
         "symfony/dotenv": "4.4.*",
         "symfony/doctrine-bridge": "4.4.*",
         "symfony/expression-language": "4.4.*",
-        "symfony/filesystem": "4.4.*",
+        "symfony/filesystem": "4.4.* || 5.4.*",
         "symfony/finder": "4.4.*",
         "symfony/framework-bundle": "4.4.*",
         "symfony/http-client": "4.4.*",
@@ -68,10 +68,7 @@
         "contao/tcpdf-bundle": "To export articles as PDF files"
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
-        "symfony": {
-            "require": "^4.4"
-        }
+        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
