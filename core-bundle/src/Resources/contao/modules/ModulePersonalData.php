@@ -277,7 +277,6 @@ class ModulePersonalData extends Module
 				elseif ($objWidget->submitInput())
 				{
 					// Store the form data
-					// $_SESSION access is governed by LazySessionAccess
 					$_SESSION['FORM_DATA'][$field] = $varValue;
 
 					// Set the correct empty value (see #6284, #6373)
@@ -340,8 +339,6 @@ class ModulePersonalData extends Module
 				foreach ($GLOBALS['TL_HOOKS']['updatePersonalData'] as $callback)
 				{
 					$this->import($callback[0]);
-
-					// $_SESSION access is governed by LazySessionAccess
 					$this->{$callback[0]}->{$callback[1]}($this->User, $_SESSION['FORM_DATA'], $this);
 				}
 			}

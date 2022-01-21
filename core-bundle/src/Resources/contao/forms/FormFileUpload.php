@@ -205,7 +205,6 @@ class FormFileUpload extends Widget implements \uploadable
 		// Store file in the session and optionally on the server
 		if (!$this->hasErrors())
 		{
-			// $_SESSION access is governed by LazySessionAccess
 			$_SESSION['FILES'][$this->strName] = $_FILES[$this->strName];
 
 			if ($this->storeFile)
@@ -285,7 +284,6 @@ class FormFileUpload extends Widget implements \uploadable
 					}
 
 					// Add the session entry (see #6986)
-					// $_SESSION access is governed by LazySessionAccess
 					$_SESSION['FILES'][$this->strName] = array
 					(
 						'name'     => $file['name'],

@@ -52,7 +52,6 @@ class ClearSessionDataListener
 
     private function clearLegacyAttributeBags(string $key): void
     {
-        // $_SESSION access is governed by LazySessionAccess
         if (!isset($_SESSION[$key])) {
             return;
         }
@@ -64,7 +63,6 @@ class ClearSessionDataListener
 
     private function clearLegacyFormData(): void
     {
-        // $_SESSION access is governed by LazySessionAccess
         if (isset($_SESSION['FORM_DATA']['SUBMITTED_AT'])) {
             $waitingTime = max(30, (int) ini_get('max_execution_time')) * 2;
 
