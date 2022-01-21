@@ -89,8 +89,6 @@ class ModuleRegistration extends Module
 			}
 		}
 
-		/** @var OptIn $optIn */
-		$optIn = System::getContainer()->get('contao.opt-in');
 		$strFormId = 'tl_registration_' . $this->id;
 
 		// Purge expired registrations (#3709)
