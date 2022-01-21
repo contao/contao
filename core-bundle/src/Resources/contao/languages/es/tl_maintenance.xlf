@@ -17,10 +17,6 @@
         <source>Description</source>
         <target>Descripción</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceMode">
-        <source>Maintenance mode</source>
-        <target>Modo mantenimiento</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Eliminar datos de sesión</target>
@@ -80,6 +76,12 @@
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
         <target>Elimina las imágenes generadas automáticamente y luego purga el caché compartido, por lo que no hay enlaces a recursos eliminados.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.0">
+        <source>Purge the preview cache</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.1">
+        <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -164,10 +166,6 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Comprobar si hay enlaces rotos</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.crawlMaintenance">
-        <source>Crawling is not possible while the maintenance mode is enabled.</source>
-        <target>No es posible rastrear mientras el modo de mantenimiento está habilitado.</target>
       </trans-unit>
     </body>
   </file>

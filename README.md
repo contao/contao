@@ -1,8 +1,8 @@
 <p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg"></p>
 
 <p align="center">
-<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=4.x" alt></a>
-<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/4.x/graph/badge.svg" alt></a>
+<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=4.13" alt></a>
+<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/4.13/graph/badge.svg" alt></a>
 <a href="https://packagist.org/packages/contao/contao"><img src="https://img.shields.io/packagist/v/contao/contao.svg" alt></a>
 </p>
 
@@ -44,7 +44,7 @@ composer create-project --no-install contao/managed-edition <directory> <branch>
 ```
 
 Replace `<directory>` with the directory you want to install the Managed
-Edition in (use `.` for the current one). Replace `<branch>` with `4.x-dev` if
+Edition in (use `.` for the current one). Replace `<branch>` with `5.x-dev` if
 you want to add a new feature or with `<lts-version>.x-dev` (currently
 `4.9.x-dev`) if you want to fix a bug.
 
@@ -53,12 +53,12 @@ loads the monorepo instead of the individual bundles:
 
 ```json
 "require": {
-    "php": "^7.4 || ^8.0",
-    "contao/contao": "4.x-dev"
+    "php": "^8.0",
+    "contao/contao": "5.x-dev"
 },
 ```
 
-Again, use `4.x-dev` if you want to add a new feature or `<lts-version>.x-dev`
+Again, use `5.x-dev` if you want to add a new feature or `<lts-version>.x-dev`
 if you want to fix a bug.
 
 Next, install the dependencies:

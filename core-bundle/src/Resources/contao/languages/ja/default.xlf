@@ -446,8 +446,16 @@
         <target>Markdown</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
-        <target>MarkdownのテキストからHTMLを生成します。</target>
+        <source>Generates HTML code from a Markdown text.</source>
+        <target>MarkdownのテキストからHTMLコードを生成します。</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+        <target>独自のテンプレート</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
+        <target>独自のテンプレートを挿入する要素を生成します。</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -781,6 +789,14 @@
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
         <target>存在しないページをアクセスすると、代わりに404のエラーページが読み込まれます。</target>
       </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+        <target>503 サービスの利用不可</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>ルートのページが保守モードのとき、503のエラーページをすべてのリクエストに表示します。</target>
+      </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
         <target>ファイル操作の権限</target>
@@ -1112,6 +1128,14 @@
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
         <target>インポートするCSVファイルをアップロードしてください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+        <target>画像の大きさ</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+        <target>画像の大きさとサイズ変更の方法を指定します。</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
@@ -1937,10 +1961,6 @@
         <source>Contao version %s is available.</source>
         <target>Contaoバージョン%sを利用可能です。</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-        <target>保守モードは現在有効です。</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>ワードラップ</target>
@@ -2658,8 +2678,8 @@
         <target>無効</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>内部のCSSエディターは非推奨になり、Contaoの次期バージョンのどこかで削除します!  既存のスタイルシートをエクスポートして、外部スタイルシートとしてページレイアウトに再追加することをご検討ください。</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>内部のCSSエディターは非推奨になり、Contao 5.0で削除します! 既存のスタイルシートをエクスポートして、外部スタイルシートとしてページレイアウトに再追加することをご検討ください。</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2720,6 +2740,12 @@
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
         <target>URLをコピー</target>
+      </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

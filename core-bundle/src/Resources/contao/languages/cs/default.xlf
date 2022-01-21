@@ -446,8 +446,16 @@
         <target>Markdown</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
+        <source>Generates HTML code from a Markdown text.</source>
         <target>Vytvořený HTML kód z markdownového textu</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+        <target>Vlastní předloha</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
+        <target>Vytvoří element pro vložení vlastní předlohy.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -781,6 +789,14 @@
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
         <target>Tato chybová stránka 404 se zobrazí, pokud se návštěvník pokusí zobrazit stránku, která neexistuje.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+        <target>503 Servis je nedostupný</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>Pokud se stránka nachází ve vývojářském módu, zobrazí se místo toho stránka 503.</target>
+      </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
         <target>Práva práce se souborem</target>
@@ -1111,6 +1127,14 @@
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
         <target>Prosím, vyberte CSV soubory, které chcete importovat z adresáře.</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+        <target>Velikost obrázku</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+        <target>Zde můžete zadat rozměry a metodu zobrazení obrázku.</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
@@ -1936,10 +1960,6 @@
         <source>Contao version %s is available.</source>
         <target>Je dostupná nová verze Contao %s</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-        <target>Contao právě běží v bezpečnostním módu.</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>Zalomení řádků</target>
@@ -2658,8 +2678,8 @@
         <target>Neaktivní</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Interní editor CSS byl vyřazen a bude odstraněn v jedné z následujících verzí Contaa! Prosím stáhněte si a přeneste dané soubory do příslušné složky instalace Contaa a přidejte je do Vzhledu stránek jako externí soubory CSS.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Interní editor CSS byl vyřazen a bude odstraněn v jedné z následující verzi Contaa 5.0! Prosím stáhněte si a přeneste dané soubory do příslušné složky instalace Contaa a přidejte je do Vzhledu stránek jako externí soubory CSS.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2720,6 +2740,12 @@
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
         <target>Zkopírovat URL</target>
+      </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

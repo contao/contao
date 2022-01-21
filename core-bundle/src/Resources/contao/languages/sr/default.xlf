@@ -347,6 +347,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>Путања шаблона &quot;%s&quot; не сме да садржи следеће знакове: %s</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -445,8 +446,16 @@
         <target>Markdown</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
+        <source>Generates HTML code from a Markdown text.</source>
         <target>Генерисање HTML кода из markdown текста.</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+        <target>Прилагођени шаблон</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
+        <target>Генерисање елемента за уметање у прилагођени шаблон.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -780,6 +789,14 @@
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
         <target>Ако посетилац затражи непостојећу страницу, биће приказана страница грешке 404.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+        <target>503 Сервис је недоступан.</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>Када је коренска страница у моду одржавања, страница 503 се приказује за све захтеве.</target>
+      </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
         <target>Дозволе за рад са фајловима</target>
@@ -1112,6 +1129,14 @@
         <source>Please upload the CSV files to be imported.</source>
         <target>Изаберите CSV фајлове за увоз.</target>
       </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+        <target>Величина слике</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+        <target>Овде можете да поставите димензије слике и мод за промену величине.</target>
+      </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
         <target>Запета</target>
@@ -1290,6 +1315,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_license">
         <source>License</source>
+        <target>Лиценца</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1477,6 +1503,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirm password</source>
+        <target>Потврди лозинку</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -1484,9 +1511,11 @@
       </trans-unit>
       <trans-unit id="MSC.showPassword">
         <source>Show password</source>
+        <target>Прикажи лозинку</target>
       </trans-unit>
       <trans-unit id="MSC.hidePassword">
         <source>Hide password</source>
+        <target>Сакриј лозинку</target>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -1502,7 +1531,7 @@
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
         <source>Your previous login was %s. Welcome back!</source>
-        <target>Ваша претходна пријава је била %s. Добродошли назад!</target>
+        <target>Ваша претходна пријава је била %s. Добро дошли назад!</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1514,7 +1543,7 @@
       </trans-unit>
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
-        <target>Изгледа да је ово први пут да се пријављујете. Добродошли у Contao!</target>
+        <target>Изгледа да је ово први пут да се пријављујете. Добро дошли у Contao!</target>
       </trans-unit>
       <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
@@ -1550,7 +1579,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Упознајте се детаљније о обрзању рада са  &lt;a href=&quot;https://contao.org/manual/administration-area.html#keyboard-shortcuts&quot; title=&quot;Keyboard shortcuts overview on contao.org&quot; target=&quot;_blank&quot;&gt;пречицама на тастатури&lt;/a&gt;.</target>
+        <target>Упознајте се детаљније о обрзању рада са  &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;пречицама на тастатури&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1932,10 +1961,6 @@
         <source>Contao version %s is available.</source>
         <target>Доступна је верзија Contao %s.</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-        <target>Тренутно је укључен режим за одржавање.</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>Преламање речи</target>
@@ -2006,7 +2031,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileManager">
         <source>File manager</source>
-        <target>Менаџер фајлова - File manager</target>
+        <target>Управљање фајловима</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
         <source>Site structure</source>
@@ -2082,6 +2107,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests</source>
+        <target>Гости</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2641,6 +2667,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Постоји барем једна корисничка група са одобрењем приступа Фронт Енд модулу &quot;Листинг&quot; и припадајућим пољима &quot;list_*&quot;. С обзиром да та поља могу да садрже арбитрарне SQL корисници ових група имплицитно имају приступ систему!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2651,8 +2678,8 @@
         <target>Онемогући</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Интерни уређивач CSS-а је превазиђен и биће уклоњен у некој од наредних верзија Contao! Размислите о томе да извезете постојеће стилове и поново их додате распореду страницу као вањске стилове.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Интерни CSS уређивач је застарио и биће уклоњен у верзији Contao 5.0! Размотрите извоз ваших постојећих стилова и додавање у распоред странице у форми вањских стилова.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2668,6 +2695,7 @@
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Овде можете ограничити број ставки. Поставите на 0 за приказ свих ставки.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2707,10 +2735,17 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Непозната опција: %s</target>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
         <target>Копирај URL</target>
+      </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

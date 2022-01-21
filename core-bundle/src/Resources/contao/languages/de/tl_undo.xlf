@@ -10,8 +10,8 @@
         <target>Name des zugehörigen Benutzers</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.0">
-        <source>Source table</source>
-        <target>Ursprungstabelle</target>
+        <source>Source</source>
+        <target>Quelle</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.1">
         <source>Name of the original table</source>
@@ -44,6 +44,10 @@
       <trans-unit id="tl_undo.undo">
         <source>Restore element ID %s</source>
         <target>Element ID %s wiederherstellen</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.parent_modal">
+        <source>Show origin of %s ID %s</source>
+        <target>Den Ursprung von %s ID %s anzeigen</target>
       </trans-unit>
     </body>
   </file>

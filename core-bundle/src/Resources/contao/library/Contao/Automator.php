@@ -148,8 +148,7 @@ class Automator extends System
 		// Also empty the shared cache so there are no links to deleted previews
 		$this->purgePageCache();
 
-		// Add a log entry
-		$this->log('Purged the preview cache', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the preview cache');
 	}
 
 	/**

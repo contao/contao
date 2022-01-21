@@ -31,6 +31,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'monolog.logger.contao',
         'security.authentication_utils',
         'security.authentication.trust_resolver',
+        'security.encoder_factory',
         'security.firewall.map',
         'security.helper',
         'security.logout_url_generator',

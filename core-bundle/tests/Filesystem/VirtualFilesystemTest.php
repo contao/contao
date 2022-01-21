@@ -508,6 +508,13 @@ class VirtualFilesystemTest extends TestCase
             ->method('listContents')
         ;
 
+        $mountManager
+            ->expects($this->once())
+            ->method('getFileSize')
+            ->willReturn(1024)
+            ->with('prefix/foo/bar/file')
+        ;
+
         $dbafsManager = $this->createMock(DbafsManager::class);
         $dbafsManager
             ->expects($this->once())
@@ -532,6 +539,8 @@ class VirtualFilesystemTest extends TestCase
             $listedContents[0]->getExtraMetadata()
         );
 
+        $this->assertSame(1024, $listedContents[0]->getFileSize());
+
         // Normalize listing for comparison
         $listing = array_map(
             static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
@@ -551,9 +560,9 @@ class VirtualFilesystemTest extends TestCase
                 new FilesystemItem(
                     true,
                     'prefix/foo/bar/file',
-                    0,
-                    0,
-                    '',
+                    null,
+                    null,
+                    null,
                     ['extra' => 'data']
                 ),
                 new FilesystemItem(false, 'prefix/foo/bar/things'),
@@ -570,9 +579,9 @@ class VirtualFilesystemTest extends TestCase
                 new FilesystemItem(
                     true,
                     'prefix/foo/bar/file',
-                    0,
-                    0,
-                    '',
+                    null,
+                    null,
+                    null,
                     ['extra' => 'data']
                 ),
                 new FilesystemItem(false, 'prefix/foo/bar/things'),

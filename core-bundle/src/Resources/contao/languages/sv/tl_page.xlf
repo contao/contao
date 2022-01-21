@@ -9,6 +9,14 @@
         <source>Please enter the page name.</source>
         <target>Sidans namn så som den visas i navigeringen, ska inte innehålla fler än 65 tecken.</target>
       </trans-unit>
+      <trans-unit id="tl_page.type.0">
+        <source>Page type</source>
+        <target>Sidtyp</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.1">
+        <source>Please choose the page type.</source>
+        <target>Ange en sidtyp beroende på sidans ändamål.</target>
+      </trans-unit>
       <trans-unit id="tl_page.alias.0">
         <source>Page alias</source>
         <target>Sidalias</target>
@@ -17,13 +25,26 @@
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
         <target>Sidalias är ett unik referensnamn som kan användas istället för sidans numeriska ID-nummer när man refererar till sidan.&lt;br /&gt;Detta är speciellt användbart om Contao använder statiska URLer.</target>
       </trans-unit>
-      <trans-unit id="tl_page.type.0">
-        <source>Page type</source>
-        <target>Sidtyp</target>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Kräva ett objekt</target>
       </trans-unit>
-      <trans-unit id="tl_page.type.1">
-        <source>Please choose the page type.</source>
-        <target>Ange en sidtyp beroende på sidans ändamål.</target>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Utlösa ett 404-fel om sidans URL inte innehåller ett objektalias.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.0">
+        <source>Route path</source>
+        <target>Ruttväg</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.1">
+        <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.0">
+        <source>Route priority</source>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.1">
+        <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -48,6 +69,14 @@
       <trans-unit id="tl_page.robots.1">
         <source>Here you can define how search engines handle the page.</source>
         <target>Här kan du specificera hur sökmotorer ska hantera sidan.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.0">
+        <source>Maintenance mode</source>
+        <target>Underhållsläge</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.1">
+        <source>Show visitors a page that this website is currently being maintained.</source>
+        <target>Visa besökare en sida som den här webbplatsen för närvarande underhålls.</target>
       </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
@@ -144,6 +173,30 @@
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
         <target>Här kan du åsidosätta posttransporten som används för att skicka e-post på denna webbplats.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.0">
+        <source>Enable rel=&quot;canonical&quot;</source>
+        <target>Gör det möjligt rel=&quot;canonical&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.1">
+        <source>Add rel=&quot;canonical&quot; tags to the website.</source>
+        <target>Lägg till rel=&quot;canonical&quot;-taggar på webbplatsen.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.0">
+        <source>Custom URL</source>
+        <target>Anpassad URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.1">
+        <source>Here you can set a custom canonical URL.</source>
+        <target>Här kan du ställa in en anpassad kanonisk URL.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.0">
+        <source>Query parameters</source>
+        <target>Query parametrar</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.1">
+        <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
+        <target>Som standard tar Contao bort query-parametrarna i den kanoniska URL:en. Här kan du lägga till en kommaseparerad lista med query-parametrar att bevara. Använd &quot;*&quot; som jokertecken.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -257,6 +310,12 @@
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
         <target>Du kan hantera sidlayouter med modulen &quot;Teman&quot;.</target>
       </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.0">
+        <source>Subpage layout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.1">
+        <source>Here you can select a different layout for subpages.</source>
+      </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
         <target>Ställ in cache-timeouts</target>
@@ -311,6 +370,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cgroup.1">
         <source>Please select a user group as the owner of the page.</source>
+        <target>Välj en användargrupp som ägare till sidan.</target>
       </trans-unit>
       <trans-unit id="tl_page.chmod.0">
         <source>Access rights</source>
@@ -327,14 +387,6 @@
       <trans-unit id="tl_page.noSearch.1">
         <source>Exclude the page from the search index.</source>
         <target>Om du väljer detta alternativ kommer denna sida att uteslutas från sökoperationer på hemsidan.</target>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.0">
-        <source>Require an item</source>
-        <target>Kräva ett objekt</target>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.1">
-        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
-        <target>Utlösa ett 404-fel om sidans URL inte innehåller ett objektalias.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -428,9 +480,16 @@
         <source>Name and type</source>
         <target>Namn och typ</target>
       </trans-unit>
+      <trans-unit id="tl_page.routing_legend">
+        <source>Routing</source>
+      </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
         <target>Metadata</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonical_legend">
+        <source>Canonical URL</source>
+        <target>Kanonisk URL</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -516,6 +575,9 @@
         <source>Show never</source>
         <target>Visa aldrig</target>
       </trans-unit>
+      <trans-unit id="tl_page.layout_inherit">
+        <source>Inherit page layout</source>
+      </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
         <target>Ny</target>
@@ -571,6 +633,12 @@
       <trans-unit id="tl_page.legacyRouting">
         <source>Disable legacy routing mode to enable this configuration.</source>
         <target>Inaktivera äldre routing-läge för att aktivera denna konfiguration.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.0">
+        <source>Route conflicts</source>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.1">
+        <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

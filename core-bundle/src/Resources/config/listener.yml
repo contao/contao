@@ -75,6 +75,13 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.listener.data_container.layout_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
+        arguments:
+            - '@database_connection'
+        tags:
+            - { name: kernel.reset, method: reset }
+
     contao.listener.data_container.member_groups:
         class: Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener
         arguments:
@@ -486,6 +493,13 @@ services:
         class: Contao\CoreBundle\EventListener\Widget\HttpUrlListener
         arguments:
             - '@translator'
+
+    contao.listener.widget.root_page_dependent_select:
+        class: Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener
+        arguments:
+            - '@database_connection'
+            - '@translator'
+            - '@contao.csrf.token_manager'
 
     # Backwards compatibility
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:

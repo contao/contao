@@ -39,19 +39,23 @@
       </trans-unit>
       <trans-unit id="tl_content.com_requireLogin.1">
         <source>Allow only authenticated members to create comments.</source>
+        <target>Yalnızca kimliği doğrulanmış üyelerin yorum oluşturmasına izin verin.</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.0">
         <source>Disable spam protection</source>
+        <target>Spam koruması devre dışı</target>
       </trans-unit>
       <trans-unit id="tl_content.com_disableCaptcha.1">
         <source>Here you can disable the spam protection (not recommended).</source>
+        <target>Burada spam korumasını devre dışı bırakabilirsiniz (tavsiye edilmez).</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.0">
         <source>Comments template</source>
-        <target>Yorum kalıbı</target>
+        <target>Yorumlar kalıbı</target>
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select a comments template.</source>
+        <target>Burada bir yorumlar şablonu seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

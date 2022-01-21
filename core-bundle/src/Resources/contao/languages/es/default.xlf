@@ -445,8 +445,13 @@
         <target>Markdown</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
-        <target>Genera código HTML desde un texto markdown</target>
+        <source>Generates HTML code from a Markdown text.</source>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -780,6 +785,12 @@
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
         <target>Si un visitante solicita una página que no existe, se cargará una página de error 404 en su lugar.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+      </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
         <target>Permisos de archivos</target>
@@ -1111,6 +1122,14 @@
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
         <target>Por favor selecciona los archivos CSV que deseas importar desde el directorio de archivos.</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+        <target>tamaño de imagen</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+        <target>Si introduce solo ancho o solo alto, la imagen se redimensionará proporcionalmente. Si introduces ambas medidas, la imagen se recortará si es necesario. Si dejas ambos campos en blanco, se utilizará el tamaño original de la imagen.</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
@@ -1936,10 +1955,6 @@
         <source>Contao version %s is available.</source>
         <target>Está disponible la versión %s de Contao.</target>
       </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-        <target>Actualmente está habilitado el modo de mantenimiento.</target>
-      </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
         <target>Ajuste de texto</target>
@@ -2656,8 +2671,7 @@
         <target>Desactivado</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>¡El editor CSS interno ha quedado obsoleto y se eliminará en una de las próximas versiones de Contao! Considere exportar sus hojas de estilo existentes y volver a agregarlas al diseño de página como hojas de estilo externas.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2717,6 +2731,12 @@
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
         <target>Copiar la URL</target>
+      </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

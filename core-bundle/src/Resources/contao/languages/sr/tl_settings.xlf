@@ -83,12 +83,15 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.0">
         <source>Allowed HTML attributes</source>
+        <target>Дозвољени HTML атрибути</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.1">
         <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+        <target>Листа дозвољених HTML атрибута који неће бити уклољени. Ако поставите звездицу са &lt;code&gt;*&lt;/code&gt;, то ће подразумевати све тагове или атрибуте. Џокери могу да се користе уз атрибуте употребом цртице као у примеру  &lt;code&gt;data-*&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>Дозвољавање &lt;code&gt;*&lt;/code&gt; атрибута може да доведе до напада искориштавањем XSS-а. Ово одобрите само ако су сви Бек Енд корисници поуздани!</target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
@@ -168,6 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
         <source>Here you can select a user group as the default owner of a page.</source>
+        <target>Овде можете изабрати корисничку групу као подразумеваног корисника странице.</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>

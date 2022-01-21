@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.pageTitle.1">
         <source>Here you can add a custom meta title to overwrite the default page title.</source>
+        <target>Tu lahko vnesete meta naziv po meri, ki bo prepisal privzetega za spletno stran.</target>
       </trans-unit>
       <trans-unit id="tl_faq.robots.0">
         <source>Robots tag</source>
@@ -61,6 +62,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
+        <target>Tu lahko vnesete meta opis po meri, ki bo prepisal privzetega za spletno stran.</target>
       </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>

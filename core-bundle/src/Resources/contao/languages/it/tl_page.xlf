@@ -9,6 +9,14 @@
         <source>Please enter the page name.</source>
         <target>Il nome della pagina viene mostrato come voce di menu nel sito</target>
       </trans-unit>
+      <trans-unit id="tl_page.type.0">
+        <source>Page type</source>
+        <target>Tipo pagina</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.1">
+        <source>Please choose the page type.</source>
+        <target>Selezionare il tipo pagina, a seconda del suo scopo</target>
+      </trans-unit>
       <trans-unit id="tl_page.alias.0">
         <source>Page alias</source>
         <target>Alias pagina</target>
@@ -17,13 +25,26 @@
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
         <target>L'alias è un riferimento univoco alla pagina che può essere usato, al posto dell'ID numerico, quando si richiamano le pagine. E' utile specialmente quando Contao usa gli URL statici</target>
       </trans-unit>
-      <trans-unit id="tl_page.type.0">
-        <source>Page type</source>
-        <target>Tipo pagina</target>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Richiedi un elemento</target>
       </trans-unit>
-      <trans-unit id="tl_page.type.1">
-        <source>Please choose the page type.</source>
-        <target>Selezionare il tipo pagina, a seconda del suo scopo</target>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Attivare un errore 404 se l'URL della pagina non contiene un alias dell'elemento.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.0">
+        <source>Route path</source>
+        <target>Percorso</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.1">
+        <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.0">
+        <source>Route priority</source>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.1">
+        <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -48,6 +69,14 @@
       <trans-unit id="tl_page.robots.1">
         <source>Here you can define how search engines handle the page.</source>
         <target>Definisci come deve essere gestita la pagina dai motori di ricerca</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.0">
+        <source>Maintenance mode</source>
+        <target>Modalità manutenzione</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.1">
+        <source>Show visitors a page that this website is currently being maintained.</source>
+        <target>Mostra ai visitatori una pagina di sito WEB in manutenzione.</target>
       </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
@@ -144,6 +173,30 @@
       <trans-unit id="tl_page.mailerTransport.1">
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
         <target>Qui è possibile sovrascrivere il mailer transport utilizzato per inviare e-mail su questo sito Web.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.0">
+        <source>Enable rel=&quot;canonical&quot;</source>
+        <target>Abilita rel=&quot;canonical&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.1">
+        <source>Add rel=&quot;canonical&quot; tags to the website.</source>
+        <target>Aggiungi tag rel=&quot;canonical&quot; al sito web.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.0">
+        <source>Custom URL</source>
+        <target>URL personalizzato</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.1">
+        <source>Here you can set a custom canonical URL.</source>
+        <target>Qui puoi impostare un URL canonico personalizzato.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.0">
+        <source>Query parameters</source>
+        <target>Parametri Query</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.1">
+        <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
+        <target>Come impostazione predefinita, Contao rimuove i parametri di query nell'URL canonico. Qui puoi aggiungere un elenco separato da virgole di parametri di query da preservare. Usa &quot;*&quot; come carattere jolly.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -257,6 +310,12 @@
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
         <target>Seleziona un layout. E' possibile gestire i layout utilizzando il modulo &lt;em&gt;layout di pagina&lt;/em&gt;</target>
       </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.0">
+        <source>Subpage layout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.1">
+        <source>Here you can select a different layout for subpages.</source>
+      </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
         <target>Imposta il timeout della cache</target>
@@ -328,14 +387,6 @@
       <trans-unit id="tl_page.noSearch.1">
         <source>Exclude the page from the search index.</source>
         <target>Non includere questa pagina nei risultati di ricerca</target>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.0">
-        <source>Require an item</source>
-        <target>Richiedi un elemento</target>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.1">
-        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
-        <target>Attivare un errore 404 se l'URL della pagina non contiene un alias dell'elemento.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -429,9 +480,16 @@
         <source>Name and type</source>
         <target>Nome e tipologia</target>
       </trans-unit>
+      <trans-unit id="tl_page.routing_legend">
+        <source>Routing</source>
+      </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
         <target>Metadati</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonical_legend">
+        <source>Canonical URL</source>
+        <target>Canonical URL</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -517,6 +575,9 @@
         <source>Show never</source>
         <target>Non mostrare mai</target>
       </trans-unit>
+      <trans-unit id="tl_page.layout_inherit">
+        <source>Inherit page layout</source>
+      </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
         <target>Nuovo</target>
@@ -572,6 +633,12 @@
       <trans-unit id="tl_page.legacyRouting">
         <source>Disable legacy routing mode to enable this configuration.</source>
         <target>Disabilitare la modalità di routing legacy per abilitare questa configurazione.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.0">
+        <source>Route conflicts</source>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.1">
+        <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

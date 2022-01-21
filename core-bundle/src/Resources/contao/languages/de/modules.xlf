@@ -121,6 +121,14 @@
         <source>Adjust the Contao configuration</source>
         <target>Die Contao-Konfiguration anpassen</target>
       </trans-unit>
+      <trans-unit id="MOD.preview_link.0">
+        <source>Preview links</source>
+        <target>Vorschau-Links</target>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.1">
+        <source>Manage preview links for the front end.</source>
+        <target>Vorschau-Links für das Frontend verwalten.</target>
+      </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
         <target>Systemwartung</target>
@@ -385,6 +393,14 @@
         <source>Allows you to add custom HTML code</source>
         <target>Erlaubt das Hinzufügen von eigenem HTML-Code</target>
       </trans-unit>
+      <trans-unit id="FMD.template.0">
+        <source>Custom template</source>
+        <target>Individuelles Template</target>
+      </trans-unit>
+      <trans-unit id="FMD.template.1">
+        <source>Generates a module to insert a custom template.</source>
+        <target>Erzeugt ein Modul zum Einfügen eines eigenen Templates.</target>
+      </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
         <target>RSS-Leser</target>
@@ -399,7 +415,15 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
-        <target>Erzeugt ein Formular zur Einrichtung der Zwei-Faktor-Authentifizierung.</target>
+        <target>Erzeugt ein Formular zur Einrichtung der Zwei-Faktor-Authentifizierung</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.0">
+        <source>Root page dependent modules</source>
+        <target>Startpunktabhängige Module</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_module.1">
+        <source>Generates different modules depending on the root page</source>
+        <target>Erzeugt abhängig vom Startpunkt verschiedene Module</target>
       </trans-unit>
     </body>
   </file>

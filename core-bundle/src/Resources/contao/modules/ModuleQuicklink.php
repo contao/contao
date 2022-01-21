@@ -82,7 +82,8 @@ class ModuleQuicklink extends Module
 		}
 
 		$items = array();
-		$security = System::getContainer()->get('security.helper');
+		$container = System::getContainer();
+		$security = $container->get('security.helper');
 		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		/** @var PageModel[] $objPages */
@@ -134,7 +135,7 @@ class ModuleQuicklink extends Module
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+							$container->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
 
 							continue 2;
 						}
@@ -156,7 +157,7 @@ class ModuleQuicklink extends Module
 		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
 

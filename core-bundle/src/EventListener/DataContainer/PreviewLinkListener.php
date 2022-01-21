@@ -21,7 +21,6 @@ use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
-use Contao\UserModel;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\UriSigner;
@@ -81,7 +80,7 @@ class PreviewLinkListener
     {
         $input = $this->framework->getAdapter(Input::class);
         $user = $this->security->getUser();
-        $userId = $user instanceof BackendUser ? $user->id : 0;
+        $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
             $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy=?', $userId];
@@ -112,7 +111,9 @@ class PreviewLinkListener
                 case 'toggle':
                 case 'delete':
                 default:
-                    if ($dc->activeRecord->createdBy !== $userId) {
+                    $createdBy = (int) $this->connection->fetchOne('SELECT createdBy FROM tl_preview_link WHERE id=?', [$dc->id]);
+
+                    if ($createdBy !== $userId) {
                         throw new AccessDeniedException(sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
                     }
                     break;
@@ -149,21 +150,12 @@ class PreviewLinkListener
      */
     public function formatColumnView(array $row, string $label, DataContainer $dc, array $args): array
     {
-        foreach ($GLOBALS['TL_DCA'][$dc->table]['list']['label']['fields'] as $i => $field) {
-            switch ($field) {
-                case 'url':
-                    $args[$i] = $row['expiresAt'] < time() ? sprintf('<span style="text-decoration:line-through">%s</span>', $args[$i]) : $args[$i];
-                    break;
-
-                case 'expiresAt':
-                    $args[$i] = $row['expiresAt'] < time() ? sprintf('<span style="color:#f00">%s</span>', $args[$i]) : $args[$i];
-                    break;
-
-                case 'createdBy':
-                    $user = $this->framework->getAdapter(UserModel::class);
-                    $args[$i] = $user->findByPk($row[$field])->name ?? $args[$i];
-                    break;
+        if ($row['expiresAt'] < time()) {
+            foreach ($args as &$arg) {
+                $arg = sprintf('<span class="tl_gray">%s</span>', $arg);
             }
+
+            unset($arg);
         }
 
         return $args;

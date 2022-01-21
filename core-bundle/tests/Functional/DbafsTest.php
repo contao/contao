@@ -69,7 +69,7 @@ class DbafsTest extends FunctionalTestCase
         // Write to the virtual filesystem; expect automatic syncing, thus no
         // changes when syncing
         $filesystem->write('file1', '1');
-        $filesystem->createDirectory('foo', );
+        $filesystem->createDirectory('foo');
         $filesystem->write('foo/file2', '2');
 
         $this->assertTrue($dbafs->sync()->isEmpty());

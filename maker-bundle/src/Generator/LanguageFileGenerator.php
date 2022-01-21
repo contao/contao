@@ -14,8 +14,8 @@ namespace Contao\MakerBundle\Generator;
 
 use Contao\MakerBundle\Config\XliffMerger;
 use Symfony\Bundle\MakerBundle\FileManager;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Webmozart\PathUtil\Path;
 
 class LanguageFileGenerator implements GeneratorInterface
 {

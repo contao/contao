@@ -17,10 +17,6 @@
         <source>Description</source>
         <target>Beschreibung</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceMode">
-        <source>Maintenance mode</source>
-        <target>Wartungsmodus</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Daten bereinigen</target>
@@ -80,6 +76,14 @@
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
         <target>Löscht die automatisch erstellten Bilder und leert anschließend den Shared-Cache, damit keine ungültigen Links zurück bleiben.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.0">
+        <source>Purge the preview cache</source>
+        <target>Vorschau-Cache leeren</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.1">
+        <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Löscht die automatisch erstellen Vorschaubilder und leert anschließend den Shared-Cache, damit keine ungültigen Links zurück bleiben</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -164,10 +168,6 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Nach defekten Links suchen</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.crawlMaintenance">
-        <source>Crawling is not possible while the maintenance mode is enabled.</source>
-        <target>Der Crawler ist im Wartungsmodus nicht verfügbar.</target>
       </trans-unit>
     </body>
   </file>

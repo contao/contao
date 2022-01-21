@@ -28,7 +28,7 @@ use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\StringUtil;
 use Symfony\Component\Filesystem\Filesystem;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class PreviewFactory
 {
@@ -509,7 +509,7 @@ class PreviewFactory
             ...array_values($previewOptions),
         ];
 
-        $hash = hash_hmac('sha256', md5(implode('|', $hashData)), $this->secret, true);
+        $hash = hash_hmac('sha256', implode('|', $hashData), $this->secret, true);
         $hash = strtolower(substr(StringUtil::encodeBase32($hash), 0, 16));
         $name = pathinfo($path, PATHINFO_FILENAME);
 
