@@ -436,38 +436,43 @@ class InsertTags extends Controller
 							break;
 						}
 
-						// Page type specific settings (thanks to Andreas Schempp)
-						switch ($objNextPage->type)
+						$strUrl = '';
+
+						// Do not generate URL for insert tags that don't need it
+						if (\in_array(strtolower($elements[0]), array('link', 'link_open', 'link_url'), true))
 						{
-							case 'redirect':
-								$strUrl = $objNextPage->url;
+							switch ($objNextPage->type)
+							{
+								case 'redirect':
+									$strUrl = $objNextPage->url;
 
-								if (strncasecmp($strUrl, 'mailto:', 7) === 0)
-								{
-									$strUrl = StringUtil::encodeEmail($strUrl);
-								}
-								break;
-
-							case 'forward':
-								if ($objNextPage->jumpTo)
-								{
-									$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
-								}
-								else
-								{
-									$objNext = PageModel::findFirstPublishedRegularByPid($objNextPage->id);
-								}
-
-								if ($objNext instanceof PageModel)
-								{
-									$strUrl = \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+									if (strncasecmp($strUrl, 'mailto:', 7) === 0)
+									{
+										$strUrl = StringUtil::encodeEmail($strUrl);
+									}
 									break;
-								}
-								// no break
 
-							default:
-								$strUrl = \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
-								break;
+								case 'forward':
+									if ($objNextPage->jumpTo)
+									{
+										$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
+									}
+									else
+									{
+										$objNext = PageModel::findFirstPublishedRegularByPid($objNextPage->id);
+									}
+
+									if ($objNext instanceof PageModel)
+									{
+										$strUrl = \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										break;
+									}
+									// no break
+
+								default:
+									$strUrl = \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									break;
+							}
 						}
 
 						$strName = $objNextPage->title;

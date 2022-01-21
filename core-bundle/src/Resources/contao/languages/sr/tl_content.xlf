@@ -363,9 +363,11 @@
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.0">
         <source>Total number of items</source>
+        <target>Укупан број ставки</target>
       </trans-unit>
       <trans-unit id="tl_content.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Овде можете ограничити број ставки. Поставите на 0 за приказ свих ставки.</target>
       </trans-unit>
       <trans-unit id="tl_content.sortBy.0">
         <source>Order by</source>
@@ -777,6 +779,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>Аутоматски (унапред учитај комплетан видео)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
