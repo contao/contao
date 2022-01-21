@@ -62,7 +62,11 @@ class LabelListener
     private function getTemplateData(string $table, array $row, array $originalRow): array
     {
         $dataContainer = $this->framework->getAdapter(DataContainer::class)->getDriverForTable($table);
-        $originalDC = new $dataContainer($table);
+        $ref = new \ReflectionClass($dataContainer);
+        $originalDC = $ref->newInstanceWithoutConstructor();
+        $originalDC->table = $table;
+        $originalDC->id = $originalRow['id'];
+        $originalDC->activeRecord = (object) $originalRow;
 
         $user = $this->framework->getAdapter(UserModel::class)->findById($row['pid']);
         $config = $this->framework->getAdapter(Config::class);
