@@ -488,7 +488,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '1',
             ]),
-            'regular.svg'
+            'regular.svg',
         ];
 
         yield 'Unpublished' => [
@@ -500,7 +500,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '',
             ]),
-            'regular_1.svg'
+            'regular_1.svg',
         ];
 
         yield 'Hidden in menu' => [
@@ -512,7 +512,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '1',
             ]),
-            'regular_2.svg'
+            'regular_2.svg',
         ];
 
         yield 'Unpublished and hidden from menu' => [
@@ -524,7 +524,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '',
             ]),
-            'regular_3.svg'
+            'regular_3.svg',
         ];
 
         yield 'Protected' => [
@@ -536,7 +536,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '1',
             ]),
-            'regular_4.svg'
+            'regular_4.svg',
         ];
 
         yield 'Unpublished and protected' => [
@@ -548,7 +548,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '',
             ]),
-            'regular_5.svg'
+            'regular_5.svg',
         ];
 
         yield 'Unpublished and protected and hidden from menu' => [
@@ -560,7 +560,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '',
             ]),
-            'regular_7.svg'
+            'regular_7.svg',
         ];
 
         yield 'Unpublished by stop date' => [
@@ -572,7 +572,7 @@ class ControllerTest extends TestCase
                 'stop' => '100',
                 'published' => '1',
             ]),
-            'regular_1.svg'
+            'regular_1.svg',
         ];
 
         yield 'Unpublished by start date' => [
@@ -584,7 +584,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '1',
             ]),
-            'regular_1.svg'
+            'regular_1.svg',
         ];
 
         yield 'Root page' => [
@@ -596,7 +596,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '1',
             ]),
-            'root.svg'
+            'root.svg',
         ];
 
         yield 'Unpublished root page' => [
@@ -608,7 +608,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '',
             ]),
-            'root_1.svg'
+            'root_1.svg',
         ];
 
         yield 'Hidden root page' => [
@@ -620,7 +620,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '1',
             ]),
-            'root.svg'
+            'root.svg',
         ];
 
         yield 'Protected root page' => [
@@ -632,7 +632,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '1',
             ]),
-            'root.svg'
+            'root.svg',
         ];
 
         yield 'Root in maintenance mode' => [
@@ -645,7 +645,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '1',
             ]),
-            'root_2.svg'
+            'root_2.svg',
         ];
 
         yield 'Unpublished root in maintenance mode' => [
@@ -658,7 +658,7 @@ class ControllerTest extends TestCase
                 'stop' => '',
                 'published' => '',
             ]),
-            'root_1.svg'
+            'root_1.svg',
         ];
     }
 }
