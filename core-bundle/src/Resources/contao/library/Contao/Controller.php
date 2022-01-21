@@ -733,6 +733,12 @@ abstract class Controller extends System
 			$sub += 4;
 		}
 
+		// Change icon if root page is published and in maintenance mode
+		if ($sub == 0 && $objPage->type == 'root' && $objPage->maintenanceMode)
+		{
+			$sub = 2;
+		}
+
 		// Get the image name
 		if ($sub > 0)
 		{
