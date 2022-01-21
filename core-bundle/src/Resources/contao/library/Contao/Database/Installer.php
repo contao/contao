@@ -86,7 +86,6 @@ class Installer extends Controller
 				foreach ($sql_command[$command] as $vv)
 				{
 					$key = md5($vv);
-
 					$_SESSION['sql_commands'][$key] = $vv;
 
 					$return .= '
