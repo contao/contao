@@ -53,6 +53,10 @@ class FragmentHandler extends BaseFragmentHandler
             throw new UnknownFragmentException(sprintf('Invalid fragment identifier "%s"', $uri->controller));
         }
 
+        if ($uri->isBackendScope()) {
+            $config->setRenderer('inline');
+        }
+
         $this->preHandleFragment($uri, $config);
 
         $renderer = $config->getRenderer();
