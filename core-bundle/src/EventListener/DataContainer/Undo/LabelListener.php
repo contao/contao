@@ -90,18 +90,22 @@ class LabelListener
      */
     private function renderPreview(array $row, DataContainer $dc)
     {
-        if (DataContainer::MODE_PARENT === ($GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? null)) {
-            $callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
+        try {
+            if (DataContainer::MODE_PARENT === ($GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? null)) {
+                $callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
 
-            if (\is_array($callback)) {
-                return System::importStatic($callback[0])->{$callback[1]}($row);
+                if (\is_array($callback)) {
+                    return System::importStatic($callback[0])->{$callback[1]}($row);
+                }
+
+                if (\is_callable($callback)) {
+                    return $callback($row);
+                }
             }
 
-            if (\is_callable($callback)) {
-                return $callback($row);
-            }
+            return $dc->generateRecordLabel($row, $dc->table);
+        } catch (\Throwable $exception) {
+            return '';
         }
-
-        return $dc->generateRecordLabel($row, $dc->table);
     }
 }
