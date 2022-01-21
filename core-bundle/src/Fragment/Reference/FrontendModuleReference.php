@@ -25,7 +25,7 @@ class FrontendModuleReference extends FragmentReference
     {
         parent::__construct(self::TAG_NAME.'.'.$model->type);
 
-        $this->attributes['moduleModel'] = $model->id;
+        $this->attributes['moduleModel'] = $model;
         $this->attributes['section'] = $section;
         $this->attributes['classes'] = $model->classes;
         $this->attributes['templateProperties'] = $templateProperties;

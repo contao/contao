@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Fragment;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
+use Contao\Model;
 use Contao\PageModel;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -85,6 +86,14 @@ class FragmentHandler extends BaseFragmentHandler
     {
         if (!isset($uri->attributes['pageModel']) && $this->hasGlobalPageObject()) {
             $uri->attributes['pageModel'] = $GLOBALS['objPage']->id;
+        }
+
+        if (!\in_array($config->getRenderer(), ['inline', 'forward'])) {
+            foreach ($uri->attributes as $k => $v) {
+                if ($v instanceof Model) {
+                    $uri->attributes[$k] = $v->{$v::getPk()};
+                }
+            }
         }
 
         if ($this->preHandlers->has($uri->controller)) {
