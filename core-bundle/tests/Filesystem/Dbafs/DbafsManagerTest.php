@@ -143,15 +143,20 @@ class DbafsManagerTest extends TestCase
         $manager->resolveUuid($uuid3, 'foo');
     }
 
-    public function testResourceExists(): void
+    public function testHasResource(): void
     {
         $dbafs = $this->createMock(DbafsInterface::class);
         $dbafs
             ->method('getRecord')
             ->willReturnCallback(
-                function (string $path): ?FilesystemItem {
-                    if (\in_array($path, ['bar/baz', 'bar.file'], true)) {
-                        return $this->createMock(FilesystemItem::class);
+                static function (string $path): ?FilesystemItem {
+                    $resources = [
+                        'bar/baz' => false,
+                        'bar.file' => true,
+                    ];
+
+                    if (null !== ($type = $resources[$path] ?? null)) {
+                        return new FilesystemItem($type, $path);
                     }
 
                     return null;
@@ -162,10 +167,21 @@ class DbafsManagerTest extends TestCase
         $manager = new DbafsManager();
         $manager->register($dbafs, 'foo');
 
-        $this->assertTrue($manager->resourceExists('foo/bar.file'));
-        $this->assertTrue($manager->resourceExists('foo/bar/baz'));
-        $this->assertFalse($manager->resourceExists('foo/other'));
-        $this->assertFalse($manager->resourceExists('foobar'));
+        $this->assertTrue($manager->has('foo/bar.file'));
+        $this->assertTrue($manager->fileExists('foo/bar.file'));
+        $this->assertFalse($manager->directoryExists('foo/bar.file'));
+
+        $this->assertTrue($manager->has('foo/bar/baz'));
+        $this->assertFalse($manager->fileExists('foo/bar/baz'));
+        $this->assertTrue($manager->directoryExists('foo/bar/baz'));
+
+        $this->assertFalse($manager->has('foo/other'));
+        $this->assertFalse($manager->fileExists('foo/other'));
+        $this->assertFalse($manager->directoryExists('foo/other'));
+
+        $this->assertFalse($manager->has('foobar'));
+        $this->assertFalse($manager->fileExists('foobar'));
+        $this->assertFalse($manager->directoryExists('foobar'));
     }
 
     public function testGetLastModified(): void

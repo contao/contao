@@ -18,15 +18,16 @@ namespace Contao\CoreBundle\Filesystem;
 class VirtualFilesystemException extends \RuntimeException
 {
     public const UNABLE_TO_CHECK_IF_FILE_EXISTS = 0;
-    public const UNABLE_TO_READ = 1;
-    public const UNABLE_TO_WRITE = 2;
-    public const UNABLE_TO_DELETE = 3;
-    public const UNABLE_TO_DELETE_DIRECTORY = 4;
-    public const UNABLE_TO_CREATE_DIRECTORY = 5;
-    public const UNABLE_TO_COPY = 6;
-    public const UNABLE_TO_MOVE = 7;
-    public const UNABLE_TO_LIST_CONTENTS = 8;
-    public const UNABLE_TO_RETRIEVE_METADATA = 9;
+    public const UNABLE_TO_CHECK_IF_DIRECTORY_EXISTS = 1;
+    public const UNABLE_TO_READ = 2;
+    public const UNABLE_TO_WRITE = 3;
+    public const UNABLE_TO_DELETE = 4;
+    public const UNABLE_TO_DELETE_DIRECTORY = 5;
+    public const UNABLE_TO_CREATE_DIRECTORY = 6;
+    public const UNABLE_TO_COPY = 7;
+    public const UNABLE_TO_MOVE = 8;
+    public const UNABLE_TO_LIST_CONTENTS = 9;
+    public const UNABLE_TO_RETRIEVE_METADATA = 10;
 
     private string $path;
 
@@ -48,6 +49,16 @@ class VirtualFilesystemException extends \RuntimeException
             $path,
             "Unable to check if a file exists at '$path'.",
             self::UNABLE_TO_CHECK_IF_FILE_EXISTS,
+            $previous
+        );
+    }
+
+    public static function unableToCheckIfDirectoryExists(string $path, \Throwable $previous = null): self
+    {
+        return new self(
+            $path,
+            "Unable to check if a directory exists at '$path'.",
+            self::UNABLE_TO_CHECK_IF_DIRECTORY_EXISTS,
             $previous
         );
     }

@@ -29,7 +29,21 @@ interface VirtualFilesystemInterface
      *
      * @throws VirtualFilesystemException
      */
+    public function has($location, int $accessFlags = self::NONE): bool;
+
+    /**
+     * @param string|Uuid $location
+     *
+     * @throws VirtualFilesystemException
+     */
     public function fileExists($location, int $accessFlags = self::NONE): bool;
+
+    /**
+     * @param string|Uuid $location
+     *
+     * @throws VirtualFilesystemException
+     */
+    public function directoryExists($location, int $accessFlags = self::NONE): bool;
 
     /**
      * @param string|Uuid $location

@@ -62,6 +62,10 @@ class MountManager
      */
     public function fileExists(string $path): bool
     {
+        if ('' === $path) {
+            return false;
+        }
+
         try {
             /** @var FilesystemAdapter $adapter */
             [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
@@ -74,6 +78,43 @@ class MountManager
             return $adapter->fileExists($adapterPath);
         } catch (FilesystemException $e) {
             throw VirtualFilesystemException::unableToCheckIfFileExists($path, $e);
+        }
+    }
+
+    /**
+     * @throws VirtualFilesystemException
+     */
+    public function directoryExists(string $path): bool
+    {
+        if ('' === $path) {
+            return false;
+        }
+
+        try {
+            /** @var FilesystemAdapter $adapter */
+            [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
+        } catch (\RuntimeException $e) {
+            // Tolerate non-existing mount-points
+            return false;
+        }
+
+        try {
+            if (method_exists($adapter, 'directoryExists')) {
+                return $adapter->directoryExists($adapterPath);
+            }
+
+            // Flysystem version 2 has no support for directoryExists(), so as
+            // a workaround, we list the contents of the parent directory and
+            // check if the requested path is returned as a directory.
+            foreach ($adapter->listContents(Path::getDirectory($path), false) as $sibling) {
+                if ($sibling->path() === $path) {
+                    return $sibling->isDir();
+                }
+            }
+
+            return false;
+        } catch (FilesystemException $e) {
+            throw VirtualFilesystemException::unableToCheckIfDirectoryExists($path, $e);
         }
     }
 

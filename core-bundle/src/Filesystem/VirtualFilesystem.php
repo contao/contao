@@ -58,36 +58,19 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return $this->readonly;
     }
 
+    public function has($location, int $accessFlags = self::NONE): bool
+    {
+        return $this->checkResourceExists($location, $accessFlags, 'has');
+    }
+
     public function fileExists($location, int $accessFlags = self::NONE): bool
     {
-        if ($location instanceof Uuid) {
-            if ($accessFlags & self::BYPASS_DBAFS) {
-                throw new \LogicException('Cannot use a UUID in combination with VirtualFilesystem::BYPASS_DBAFS to check if a file exists.');
-            }
+        return $this->checkResourceExists($location, $accessFlags, 'fileExists');
+    }
 
-            try {
-                $this->dbafsManager->resolveUuid($location, $this->prefix);
-            } catch (UnableToResolveUuidException $e) {
-                return false;
-            }
-
-            // Do not care about VirtualFilesystem::FORCE_SYNC at this point as
-            // the resource was already found.
-
-            return true;
-        }
-
-        $path = $this->resolve($location);
-
-        if ($accessFlags & self::FORCE_SYNC) {
-            $this->dbafsManager->sync($path);
-        }
-
-        if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
-            return $this->dbafsManager->resourceExists($path);
-        }
-
-        return $this->mountManager->fileExists($path);
+    public function directoryExists($location, int $accessFlags = self::NONE): bool
+    {
+        return $this->checkResourceExists($location, $accessFlags, 'directoryExists');
     }
 
     public function read($location): string
@@ -250,6 +233,46 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->ensureNotReadonly();
 
         $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
+    }
+
+    /**
+     * @param string|Uuid                          $location
+     * @param 'fileExists'|'directoryExists'|'has' $method
+     *
+     * @throws VirtualFilesystemException
+     */
+    private function checkResourceExists($location, int $accessFlags, string $method): bool
+    {
+        if ($location instanceof Uuid) {
+            if ($accessFlags & self::BYPASS_DBAFS) {
+                throw new \LogicException('Cannot use a UUID in combination with VirtualFilesystem::BYPASS_DBAFS to check if a resource exists.');
+            }
+
+            try {
+                $this->dbafsManager->resolveUuid($location, $this->prefix);
+            } catch (UnableToResolveUuidException $e) {
+                return false;
+            }
+
+            // Do not care about VirtualFilesystem::FORCE_SYNC at this point as
+            // the resource was already found.
+
+            return true;
+        }
+
+        $path = $this->resolve($location);
+
+        if ($accessFlags & self::FORCE_SYNC) {
+            $this->dbafsManager->sync($path);
+        }
+
+        if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
+            return $this->dbafsManager->$method($path);
+        }
+
+        return 'has' === $method
+            ? $this->mountManager->fileExists($path) || $this->mountManager->directoryExists($path)
+            : $this->mountManager->$method($path);
     }
 
     /**
