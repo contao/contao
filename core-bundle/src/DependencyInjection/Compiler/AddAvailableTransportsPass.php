@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Mailer\TransportConfig;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

@@ -13,7 +13,6 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Environment;
