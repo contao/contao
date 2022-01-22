@@ -211,6 +211,30 @@ class TranslatorTest extends TestCase
         $this->assertInstanceOf(MessageCatalogue::class, $catalogues[1]);
     }
 
+    public function testToleratesAdditionalParameters(): void
+    {
+        $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $adapter
+            ->method('loadLanguageFile')
+            ->with('default')
+        ;
+
+        $framework = $this->mockContaoFramework([System::class => $adapter]);
+
+        $translator = $this->createTranslator(null, $framework);
+
+        $GLOBALS['TL_LANG']['MSC']['foo1'] = '%s, %d';
+        $GLOBALS['TL_LANG']['MSC']['foo2'] = '%s, %d, %s and %b';
+
+        $this->assertSame('a, 1', $translator->trans('MSC.foo1', ['a', 1], 'contao_default'));
+        $this->assertSame('a, 1, ? and 0', $translator->trans('MSC.foo2', ['a', 1], 'contao_default'));
+
+        unset(
+            $GLOBALS['TL_LANG']['MSC']['foo1'],
+            $GLOBALS['TL_LANG']['MSC']['foo2'],
+        );
+    }
+
     private function createTranslator(TranslatorInterface $translator = null, ContaoFramework $framework = null, ResourceFinder $resourceFinder = null): Translator
     {
         if (null === $translator) {

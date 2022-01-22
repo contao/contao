@@ -61,6 +61,14 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
         $translated = $this->getCatalogue($locale)->get($id, $domain);
 
         if (!empty($parameters)) {
+            $placeholderCount = \count(preg_split('/%[bcdeEfFgGhHosuxX]/', $translated)) - 1;
+            $parameterCount = \count($parameters);
+
+            // Tolerate additional placeholders
+            if ($placeholderCount > $parameterCount) {
+                $parameters = array_merge($parameters, array_fill(1, $parameterCount, '?'));
+            }
+
             $translated = vsprintf($translated, $parameters);
         }
 
