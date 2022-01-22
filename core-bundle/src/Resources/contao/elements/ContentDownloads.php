@@ -105,8 +105,8 @@ class ContentDownloads extends ContentDownload
 
 		$objFiles = $this->objFiles;
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
-		$pageLanguage = $objPage ? $objPage->language : null;
-		$pageRootFallbackLanguage = $objPage ? $objPage->rootFallbackLanguage : null;
+		$pageLanguage = isset($objPage) ? $objPage->language : null;
+		$pageRootFallbackLanguage = isset($objPage) ? $objPage->rootFallbackLanguage : null;
 
 		// Get all files
 		while ($objFiles->next())
