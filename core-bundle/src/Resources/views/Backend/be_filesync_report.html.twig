@@ -1,0 +1,55 @@
+{% trans_default_domain 'contao_tl_files' %}
+
+{#  Header #}
+<div class="tl_message">
+    <p class="tl_confirm">{{ 'tl_files.syncComplete'|trans }}</p>
+</div>
+<div id="tl_buttons">
+    <a href="{{ referer }}" class="header_back" title="{{ 'MSC.backBTTitle'|trans(domain = 'contao_default') }}"
+       accesskey="b" onclick="Backend.getScrollOffset()">
+        {{ 'MSC.backBT'|trans(domain = 'contao_default') }}
+    </a>
+</div>
+
+{# Report #}
+<div id="sync-results">
+    <p>{{ 'tl_files.syncResult'|trans([
+            change_set.itemsToCreate|length,
+            change_set.itemsToUpdate|length,
+            change_set.itemsToDelete|length
+        ], 'contao_tl_files')|raw }}</p>
+</div>
+<div id="result-list">
+    {# Added resources #}
+    {% for added in change_set.itemsToCreate %}
+        <p class="tl_new">
+            {{ 'tl_files.syncAdded'|trans([added[constant('ATTR_PATH', change_set)]]) }}
+        </p>
+    {% endfor %}
+
+    {# Updated resources #}
+    {% for path, updated in change_set.itemsToUpdate %}
+        <p class="tl_info">
+            {% if updated[constant('ATTR_PATH', change_set)] is defined %}
+                {{ 'tl_files.syncMoved'|trans([path, updated[constant('ATTR_PATH', change_set)]]) }}
+            {% else %}
+                {{ 'tl_files.syncChanged'|trans([path]) }}
+            {% endif %}
+        </p>
+    {% endfor %}
+
+    {# Deleted resources #}
+    {% for deleted, type in change_set.itemsToDelete %}
+        <p class="tl_error">
+            {{ 'tl_files.syncDeleted'|trans([deleted]) }}
+        </p>
+    {% endfor %}
+</div>
+
+{# Footer #}
+<div class="tl_formbody_submit">
+    <div class="tl_submit_container">
+        <a href="{{ referer }}" class="tl_submit"
+           style="display:inline-block">{{ 'MSC.continue'|trans(domain = 'contao_default') }}</a>
+    </div>
+</div>
