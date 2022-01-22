@@ -407,6 +407,7 @@ services:
 
     contao.mailer.available_transports:
         class: Contao\CoreBundle\Mailer\AvailableTransports
+        public: true
         arguments:
             - '@?translator'
 
@@ -1020,6 +1021,7 @@ services:
     Contao\CoreBundle\Intl\Locales:
         alias: contao.intl.locales
         public: true # backwards compatibility
+    Contao\CoreBundle\Mailer\AvailableTransports: '@contao.mailer.available_transports'
     Contao\CoreBundle\OptIn\OptIn:
         alias: contao.opt_in
         public: true # backwards compatibility
