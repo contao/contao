@@ -105,6 +105,8 @@ class ContentDownloads extends ContentDownload
 
 		$objFiles = $this->objFiles;
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+		$pageLanguage = $objPage ? $objPage->language : null;
+		$pageRootFallbackLanguage = $objPage ? $objPage->rootFallbackLanguage : null;
 
 		// Get all files
 		while ($objFiles->next())
@@ -125,7 +127,7 @@ class ContentDownloads extends ContentDownload
 					continue;
 				}
 
-				$arrMeta = $this->getMetaData($objFiles->meta, $objPage->language);
+				$arrMeta = $this->getMetaData($objFiles->meta, $pageLanguage);
 
 				if (empty($arrMeta))
 				{
@@ -134,9 +136,9 @@ class ContentDownloads extends ContentDownload
 						continue;
 					}
 
-					if ($objPage->rootFallbackLanguage !== null)
+					if ($pageRootFallbackLanguage !== null)
 					{
-						$arrMeta = $this->getMetaData($objFiles->meta, $objPage->rootFallbackLanguage);
+						$arrMeta = $this->getMetaData($objFiles->meta, $pageRootFallbackLanguage);
 					}
 				}
 
@@ -208,7 +210,7 @@ class ContentDownloads extends ContentDownload
 						continue;
 					}
 
-					$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->language);
+					$arrMeta = $this->getMetaData($objSubfiles->meta, $pageLanguage);
 
 					if (empty($arrMeta))
 					{
@@ -217,9 +219,9 @@ class ContentDownloads extends ContentDownload
 							continue;
 						}
 
-						if ($objPage->rootFallbackLanguage !== null)
+						if ($pageRootFallbackLanguage !== null)
 						{
-							$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->rootFallbackLanguage);
+							$arrMeta = $this->getMetaData($objSubfiles->meta, $pageRootFallbackLanguage);
 						}
 					}
 
