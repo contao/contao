@@ -21,6 +21,7 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 
@@ -102,8 +103,9 @@ class InheritanceTest extends TestCase
 
         $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $themeNamespace, $connection);
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $projectDir);
+        $filesystem = $this->createMock(Filesystem::class);
 
-        $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'prod');
+        $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'cache', 'prod', $filesystem);
         $warmer->warmUp('');
 
         $environment = new Environment($loader);
