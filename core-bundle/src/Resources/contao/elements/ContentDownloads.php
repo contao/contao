@@ -227,7 +227,7 @@ class ContentDownloads extends ContentDownload
 					{
 						/** @var PageModel $objPage */
 						global $objPage;
-						
+
 						$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->language);
 
 						if (empty($arrMeta))
