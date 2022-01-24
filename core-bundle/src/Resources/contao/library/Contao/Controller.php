@@ -1180,6 +1180,8 @@ abstract class Controller extends System
 
 		$generate = static function ($route) use ($router)
 		{
+			trigger_deprecation('contao/core-bundle', '4.0', 'Using old backend paths has been deprecated in Contao 4.0 and will be removed in Contao 5. Use the backend routes instead.');
+
 			return substr($router->generate($route), \strlen(Environment::get('path')) + 1);
 		};
 
