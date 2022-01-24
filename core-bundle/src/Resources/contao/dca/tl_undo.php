@@ -113,6 +113,10 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		(
 			'search'                  => true,
 			'sql'                     => "mediumblob NULL"
+		),
+		'preview' => array
+		(
+			'sql'					  => "text NULL"
 		)
 	)
 );
