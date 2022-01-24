@@ -105,8 +105,6 @@ class ContentDownloads extends ContentDownload
 
 		$objFiles = $this->objFiles;
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
-		$pageLanguage = isset($objPage) ? $objPage->language : null;
-		$pageRootFallbackLanguage = isset($objPage) ? $objPage->rootFallbackLanguage : null;
 
 		// Get all files
 		while ($objFiles->next())
@@ -127,18 +125,28 @@ class ContentDownloads extends ContentDownload
 					continue;
 				}
 
-				$arrMeta = $this->getMetaData($objFiles->meta, $pageLanguage);
-
-				if (empty($arrMeta))
+				if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 				{
-					if ($this->metaIgnore)
-					{
-						continue;
-					}
+					$arrMeta = $this->getMetaData($objFiles->meta, $GLOBALS['TL_LANGUAGE']);
+				}
+				else
+				{
+					/** @var PageModel $objPage */
+					global $objPage;
 
-					if ($pageRootFallbackLanguage !== null)
+					$arrMeta = $this->getMetaData($objFiles->meta, $objPage->language);
+
+					if (empty($arrMeta))
 					{
-						$arrMeta = $this->getMetaData($objFiles->meta, $pageRootFallbackLanguage);
+						if ($this->metaIgnore)
+						{
+							continue;
+						}
+
+						if ($objPage->rootFallbackLanguage !== null)
+						{
+							$arrMeta = $this->getMetaData($objFiles->meta, $objPage->rootFallbackLanguage);
+						}
 					}
 				}
 
@@ -210,18 +218,28 @@ class ContentDownloads extends ContentDownload
 						continue;
 					}
 
-					$arrMeta = $this->getMetaData($objSubfiles->meta, $pageLanguage);
-
-					if (empty($arrMeta))
+					if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 					{
-						if ($this->metaIgnore)
-						{
-							continue;
-						}
+						$arrMeta = $this->getMetaData($objSubfiles->meta, $GLOBALS['TL_LANGUAGE']);
+					}
+					else
+					{
+						/** @var PageModel $objPage */
+						global $objPage;
+						
+						$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->language);
 
-						if ($pageRootFallbackLanguage !== null)
+						if (empty($arrMeta))
 						{
-							$arrMeta = $this->getMetaData($objSubfiles->meta, $pageRootFallbackLanguage);
+							if ($this->metaIgnore)
+							{
+								continue;
+							}
+
+							if ($objPage->rootFallbackLanguage !== null)
+							{
+								$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->rootFallbackLanguage);
+							}
 						}
 					}
 
