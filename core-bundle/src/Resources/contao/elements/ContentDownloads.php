@@ -104,6 +104,7 @@ class ContentDownloads extends ContentDownload
 		$auxDate = array();
 
 		$objFiles = $this->objFiles;
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 
 		// Get all files
