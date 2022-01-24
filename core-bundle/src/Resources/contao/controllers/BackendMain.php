@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
