@@ -83,6 +83,11 @@ class RecordPreviewListener
             }
         }
 
+        if ($GLOBALS['TL_DCA'][$dc->table]['list']['label']['showColumns'] ?? false) {
+            $args = $dc->generateRecordLabel($row, $dc->table);
+            return '<table><tr>'.join('', array_map(static function($arg) { return '<td>'.$arg.'</td>'; }, $args)).'</tr></table>';
+        }
+
         return $dc->generateRecordLabel($row, $dc->table);
     }
 }
