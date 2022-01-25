@@ -64,7 +64,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
             return 0;
         }
 
-        $io->success(sprintf('Successfully restored backup from "%s".', $config->getBackup()->getFilepath()));
+        $io->success(sprintf('Successfully restored backup from "%s".', $config->getBackup()->getFilename()));
 
         return 0;
     }

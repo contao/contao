@@ -42,7 +42,7 @@ class BackupListCommandTest extends TestCase
             [],
             <<<'OUTPUT'
                  --------------------- ----------- ------------------------------
-                  Created               Size        Path
+                  Created               Size        Name
                  --------------------- ----------- ------------------------------
                   2021-11-01 14:12:54   48.83 KiB   test__20211101141254.sql.gz
                   2021-10-31 14:12:54   5.73 MiB    test2__20211031141254.sql.gz
@@ -53,7 +53,7 @@ class BackupListCommandTest extends TestCase
 
         yield 'JSON format' => [
             ['--format' => 'json'],
-            '[{"createdAt":"2021-11-01T14:12:54+00:00","size":50000,"path":"test__20211101141254.sql.gz"},{"createdAt":"2021-10-31T14:12:54+00:00","size":6005000,"path":"test2__20211031141254.sql.gz"},{"createdAt":"2021-11-02T14:12:54+00:00","size":2764922,"path":"test3__20211102141254.sql.gz"}]',
+            '[{"createdAt":"2021-11-01T14:12:54+00:00","size":50000,"name":"test__20211101141254.sql.gz"},{"createdAt":"2021-10-31T14:12:54+00:00","size":6005000,"name":"test2__20211031141254.sql.gz"},{"createdAt":"2021-11-02T14:12:54+00:00","size":2764922,"name":"test3__20211102141254.sql.gz"}]',
         ];
     }
 
@@ -63,9 +63,9 @@ class BackupListCommandTest extends TestCase
     private function mockBackupManager(): BackupManager
     {
         $backups = [
-            $this->mockBackup('test__20211101141254.sql.gz', 50000),
-            $this->mockBackup('test2__20211031141254.sql.gz', 6005000),
-            $this->mockBackup('test3__20211102141254.sql.gz', 2764922),
+            $this->createBackup('test__20211101141254.sql.gz', 50000),
+            $this->createBackup('test2__20211031141254.sql.gz', 6005000),
+            $this->createBackup('test3__20211102141254.sql.gz', 2764922),
         ];
 
         $backupManager = $this->createMock(BackupManager::class);
@@ -78,22 +78,10 @@ class BackupListCommandTest extends TestCase
         return $backupManager;
     }
 
-    /**
-     * @return Backup&MockObject
-     */
-    private function mockBackup(string $filepath, int $size): Backup
+    private function createBackup(string $filename, int $size): Backup
     {
-        $backup = $this
-            ->getMockBuilder(Backup::class)
-            ->setConstructorArgs([$filepath])
-            ->onlyMethods(['getSize'])
-        ;
-
-        $backup = $backup->getMock();
-        $backup
-            ->method('getSize')
-            ->willReturn($size)
-        ;
+        $backup = new Backup($filename);
+        $backup->setSize($size);
 
         return $backup;
     }

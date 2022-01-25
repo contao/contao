@@ -41,7 +41,7 @@ class BackupListCommand extends AbstractBackupCommand
             return 0;
         }
 
-        $io->table(['Created', 'Size', 'Path'], $this->formatForTable($this->backupManager->listBackups()));
+        $io->table(['Created', 'Size', 'Name'], $this->formatForTable($this->backupManager->listBackups()));
 
         return 0;
     }
@@ -57,7 +57,7 @@ class BackupListCommand extends AbstractBackupCommand
             $formatted[] = [
                 $backup->getCreatedAt()->format('Y-m-d H:i:s'),
                 $this->getHumanReadableSize($backup),
-                $backup->getFilepath(),
+                $backup->getFilename(),
             ];
         }
 
@@ -83,6 +83,10 @@ class BackupListCommand extends AbstractBackupCommand
      */
     private function getHumanReadableSize(Backup $backup): string
     {
+        if (0 === $backup->getSize()) {
+            return '0 B';
+        }
+
         $base = log($backup->getSize()) / log(1024);
         $suffix = ['B', 'KiB', 'MiB', 'GiB', 'TiB'][(int) floor($base)];
 
