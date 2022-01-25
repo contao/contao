@@ -1361,7 +1361,7 @@ class PageModel extends Model
 
 			if (!$pageRegistry->isRoutable($this))
 			{
-				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id));
+				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
 			}
 
 			throw $e;
