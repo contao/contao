@@ -66,7 +66,7 @@ class LabelListener
         }
 
         return [
-            'preview' => $row['preview'],
+            'preview' => StringUtil::deserialize($row['preview']),
             'user' => $user,
             'row' => $row,
             'fromTable' => $table,

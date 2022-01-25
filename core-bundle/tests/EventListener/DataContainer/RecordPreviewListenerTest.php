@@ -113,7 +113,7 @@ class RecordPreviewListenerTest extends TestCase
         $row = [
             'id' => '42',
             'username' => 'foo',
-            'email' => 'foo@example.org'
+            'email' => 'foo@example.org',
         ];
 
         $framework = $this->mockContaoFramework([
@@ -144,7 +144,7 @@ class RecordPreviewListenerTest extends TestCase
             ->method('update')
             ->with(
                 'tl_undo',
-                ['preview' => '<table><tr><td>42</td><td>foo</td><td>foo@example.org</td></tr></table>'],
+                ['preview' => serialize(['42', 'foo', 'foo@example.org'])],
                 ['id' => '42']
             )
         ;

@@ -69,6 +69,44 @@ class LabelListenerTest extends TestCase
         $this->assertSame('<result>', $listener($row, '', $dc));
     }
 
+    public function testRendersUndoLabelForTabularRecords(): void
+    {
+        $row = $this->setupTabularDataSet();
+
+        $userModelAdapter = $this->mockAdapter(['findById']);
+        $userModel = $this->mockClassWithProperties(UserModel::class, [
+            'id' => 1,
+            'username' => 'k.jones',
+        ]);
+
+        $userModelAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->with(1)
+            ->willReturn($userModel)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            Backend::class => $this->mockAdapter(['addToUrl']),
+            Controller::class => $this->mockAdapter(['loadLanguageFile', 'loadDataContainer']),
+            Image::class => $this->mockAdapter(['getHtml']),
+            UserModel::class => $userModelAdapter,
+        ]);
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->willReturn('<result>')
+        ;
+
+        $dc = $this->createMock(DC_Table::class);
+
+        $listener = new LabelListener($framework, $twig);
+
+        $this->assertSame('<result>', $listener($row, '', $dc));
+    }
+
     private function setupDataSet(): array
     {
         $GLOBALS['BE_MOD']['content']['news'] = [
@@ -105,6 +143,44 @@ class LabelListenerTest extends TestCase
                 ],
             ]),
             'preview' => '<result>',
+        ];
+    }
+
+    private function setupTabularDataSet(): array
+    {
+        $GLOBALS['BE_MOD']['content']['members'] = [
+            'tables' => ['tl_user'],
+        ];
+
+        $GLOBALS['TL_LANG']['tl_undo']['parent_modal'] = 'Show origin of %s ID %s';
+
+        $GLOBALS['TL_DCA']['tl_user']['list'] = [
+            'label' => [
+                'showColumns' => true,
+                'fields' => ['username'],
+            ],
+            'sorting' => [
+                'mode' => DataContainer::MODE_SORTABLE,
+            ],
+        ];
+
+        $GLOBALS['TL_DCA']['tl_user']['fields']['headline'] = [
+            'inputType' => 'text',
+        ];
+
+        return [
+            'id' => 1,
+            'fromTable' => 'tl_user',
+            'pid' => 1,
+            'data' => serialize([
+                'tl_user' => [
+                    [
+                        'id' => 42,
+                        'username' => 'k.jones',
+                    ],
+                ],
+            ]),
+            'preview' => serialize(['h.lewis']),
         ];
     }
 }
