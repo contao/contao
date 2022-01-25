@@ -1390,7 +1390,22 @@ class PageModel extends Model
 		$this->loadDetails();
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+
+		try
+		{
+			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+		catch (RouteNotFoundException $e)
+		{
+			$pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+
+			if (!$pageRegistry->isRoutable($this))
+			{
+				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
+			}
+
+			throw $e;
+		}
 
 		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
@@ -1422,7 +1437,22 @@ class PageModel extends Model
 		$context->setBaseUrl($previewScript);
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+
+		try
+		{
+			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+		catch (RouteNotFoundException $e)
+		{
+			$pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+
+			if (!$pageRegistry->isRoutable($this))
+			{
+				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
+			}
+
+			throw $e;
+		}
 
 		$context->setBaseUrl($baseUrl);
 
