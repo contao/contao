@@ -457,7 +457,7 @@ abstract class Backend extends Controller
 			$this->Template->main .= $response;
 
 			// Add the name of the parent element
-			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != $arrTables[0])
+			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
 				$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
 										 ->limit(1)
@@ -474,7 +474,7 @@ abstract class Backend extends Controller
 			}
 
 			// Add the name of the submodule
-			$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1], Input::get('id')) . '</span>';
+			$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
 		}
 
 		// Default action
@@ -516,7 +516,7 @@ abstract class Backend extends Controller
 			}
 
 			// Add the name of the parent elements
-			if ($strTable && \in_array($strTable, $arrTables) && $strTable != $arrTables[0])
+			if ($strTable && \in_array($strTable, $arrTables) && $strTable != ($arrTables[0] ?? null))
 			{
 				$trail = array();
 
@@ -1148,7 +1148,7 @@ abstract class Backend extends Controller
       e.preventDefault();
       Backend.openModalSelector({
         "id": "tl_listing",
-        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0]) . ',
+        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? '') . ',
         "url": this.href + "&value=" + $("ctrl_' . $inputName . '").value,
         "callback": function(picker, value) {
           $("ctrl_' . $inputName . '").value = value.join(",");
