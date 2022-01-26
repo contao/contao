@@ -1479,7 +1479,8 @@ abstract class Controller extends System
 
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
-		} while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		}
+		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{

@@ -142,7 +142,8 @@ function strip_insert_tags($strString)
 	do
 	{
 		$strString = preg_replace('/{{[^{}]*}}/', '', $strString, -1, $count);
-	} while ($count > 0);
+	}
+	while ($count > 0);
 
 	return $strString;
 }
