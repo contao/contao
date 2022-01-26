@@ -27,15 +27,15 @@ class BackupManager
 
     private Connection $connection;
     private DumperInterface $dumper;
-    private VirtualFilesystemInterface $vfs;
+    private VirtualFilesystemInterface $backupsStorage;
     private array $tablesToIgnore;
     private RetentionPolicyInterface $retentionPolicy;
 
-    public function __construct(Connection $connection, DumperInterface $dumper, VirtualFilesystemInterface $vfs, array $tablesToIgnore, RetentionPolicyInterface $retentionPolicy)
+    public function __construct(Connection $connection, DumperInterface $dumper, VirtualFilesystemInterface $backupsStorage, array $tablesToIgnore, RetentionPolicyInterface $retentionPolicy)
     {
         $this->connection = $connection;
         $this->dumper = $dumper;
-        $this->vfs = $vfs;
+        $this->backupsStorage = $backupsStorage;
         $this->tablesToIgnore = $tablesToIgnore;
         $this->retentionPolicy = $retentionPolicy;
     }
@@ -84,7 +84,7 @@ class BackupManager
     {
         $backups = [];
 
-        foreach ($this->vfs->listContents('', false, VirtualFilesystemInterface::BYPASS_DBAFS) as $file) {
+        foreach ($this->backupsStorage->listContents('', false, VirtualFilesystemInterface::BYPASS_DBAFS) as $file) {
             if (!$file->isFile()) {
                 continue;
             }
@@ -123,12 +123,12 @@ class BackupManager
             throw new BackupManagerException('Cannot read stream of a non-existent backup.');
         }
 
-        return $this->vfs->readStream($backup->getFilename());
+        return $this->backupsStorage->readStream($backup->getFilename());
     }
 
     public function getBackupByName(string $fileName): ?Backup
     {
-        if (!$this->vfs->fileExists($fileName)) {
+        if (!$this->backupsStorage->fileExists($fileName)) {
             return null;
         }
 
@@ -146,7 +146,7 @@ class BackupManager
     private function updateBackupWithSize(Backup $backup): void
     {
         try {
-            $backup->setSize($this->vfs->getFileSize($backup->getFilename()));
+            $backup->setSize($this->backupsStorage->getFileSize($backup->getFilename()));
         } catch (\Exception $e) {
             $backup->setSize(0);
         }
@@ -178,7 +178,7 @@ class BackupManager
         $backup = $config->getBackup();
 
         // Ensure the target file exists and is empty
-        $this->vfs->write($backup->getFilename(), '');
+        $this->backupsStorage->write($backup->getFilename(), '');
 
         $tmpFile = (new Filesystem())->tempnam(sys_get_temp_dir(), 'ctobckupmgr');
         $fileHandle = fopen($tmpFile, 'r+w');
@@ -197,7 +197,7 @@ class BackupManager
             $this->tidyDirectory($config->getBackup());
             (new Filesystem())->remove($tmpFile);
         } catch (BackupManagerException $exception) {
-            $this->vfs->delete($backup->getFilename());
+            $this->backupsStorage->delete($backup->getFilename());
             (new Filesystem())->remove($tmpFile);
 
             throw $exception;
@@ -230,7 +230,7 @@ class BackupManager
             fwrite($fileHandle, deflate_add($deflateContext, '', ZLIB_FINISH));
         }
 
-        $this->vfs->writeStream($backup->getFilename(), $fileHandle);
+        $this->backupsStorage->writeStream($backup->getFilename(), $fileHandle);
         fclose($fileHandle);
 
         $this->updateBackupWithSize($backup);
@@ -240,13 +240,13 @@ class BackupManager
     {
         $backup = $config->getBackup();
 
-        if (!$this->vfs->fileExists($backup->getFilename())) {
+        if (!$this->backupsStorage->fileExists($backup->getFilename())) {
             throw new BackupManagerException(sprintf('Dump "%s" does not exist.', $backup->getFilename()));
         }
 
         $tmpFile = (new Filesystem())->tempnam(sys_get_temp_dir(), 'ctobckupmgr');
         $handle = fopen($tmpFile, 'w');
-        stream_copy_to_stream($this->vfs->readStream($backup->getFilename()), $handle);
+        stream_copy_to_stream($this->backupsStorage->readStream($backup->getFilename()), $handle);
         fclose($handle);
         $handle = gzopen($tmpFile, 'r');
 
@@ -290,7 +290,7 @@ class BackupManager
         $backupsToKeep = $this->retentionPolicy->apply($currentBackup, $allBackups);
 
         foreach (array_diff($allBackups, $backupsToKeep) as $backup) {
-            $this->vfs->delete($backup->getFilename());
+            $this->backupsStorage->delete($backup->getFilename());
         }
     }
 
