@@ -18,6 +18,7 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -1323,6 +1324,7 @@ class PageModel extends Model
 	 * @param string $strForceLang Force a certain language
 	 *
 	 * @throws RouteNotFoundException
+	 * @throws ResourceNotFoundException
 	 *
 	 * @return string A URL that can be used in the front end
 	 */
@@ -1349,7 +1351,22 @@ class PageModel extends Model
 		}
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
+
+		try
+		{
+			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
+		}
+		catch (RouteNotFoundException $e)
+		{
+			$pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+
+			if (!$pageRegistry->isRoutable($this))
+			{
+				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
+			}
+
+			throw $e;
+		}
 
 		// Make the URL relative to the base path
 		if (0 === strncmp($strUrl, '/', 1) && 0 !== strncmp($strUrl, '//', 2))
@@ -1366,6 +1383,7 @@ class PageModel extends Model
 	 * @param string $strParams An optional string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
+	 * @throws ResourceNotFoundException
 	 *
 	 * @return string An absolute URL that can be used in the front end
 	 */
@@ -1374,7 +1392,22 @@ class PageModel extends Model
 		$this->loadDetails();
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+
+		try
+		{
+			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+		catch (RouteNotFoundException $e)
+		{
+			$pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+
+			if (!$pageRegistry->isRoutable($this))
+			{
+				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
+			}
+
+			throw $e;
+		}
 
 		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
@@ -1385,6 +1418,7 @@ class PageModel extends Model
 	 * @param string $strParams An optional string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
+	 * @throws ResourceNotFoundException
 	 *
 	 * @return string The front end preview URL
 	 */
@@ -1406,7 +1440,22 @@ class PageModel extends Model
 		$context->setBaseUrl($previewScript);
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+
+		try
+		{
+			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+		catch (RouteNotFoundException $e)
+		{
+			$pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+
+			if (!$pageRegistry->isRoutable($this))
+			{
+				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
+			}
+
+			throw $e;
+		}
 
 		$context->setBaseUrl($baseUrl);
 
