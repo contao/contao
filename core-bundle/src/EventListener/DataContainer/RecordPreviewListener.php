@@ -43,11 +43,11 @@ class RecordPreviewListener
         }
 
         $GLOBALS['TL_DCA'][$table]['config']['ondelete_callback'][] = [
-            'contao.listener.data_container.record_preview', 'storePrerenderedRecordPreview',
+            'contao.listener.data_container.record_preview', 'storePrecompiledRecordPreview',
         ];
     }
 
-    public function storePrerenderedRecordPreview(DataContainer $dc, string $undoId): void
+    public function storePrecompiledRecordPreview(DataContainer $dc, string $undoId): void
     {
         try {
             $row = $this->connection
@@ -55,7 +55,7 @@ class RecordPreviewListener
                 ->fetchAssociative()
             ;
 
-            $preview = $this->renderPreview($dc, $row);
+            $preview = $this->compilePreview($dc, $row);
         } catch (\Exception $exception) {
             $preview = '';
         }
@@ -63,7 +63,7 @@ class RecordPreviewListener
         $this->connection->update('tl_undo', ['preview' => $preview], ['id' => $undoId]);
     }
 
-    private function renderPreview(DataContainer $dc, array $row): string
+    private function compilePreview(DataContainer $dc, array $row): string
     {
         if (DataContainer::MODE_PARENT === ($GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['mode'] ?? null)) {
             $callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;

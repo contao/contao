@@ -49,7 +49,7 @@ class RecordPreviewListenerTest extends TestCase
         }
     }
 
-    public function testGeneratesPreviewWithRecordLabelFunction(): void
+    public function testPrecompilesRecordPreviewWithLabelFunction(): void
     {
         $GLOBALS['TL_DCA']['tl_form']['list']['sorting']['mode'] = DataContainer::MODE_SORTED;
 
@@ -102,10 +102,10 @@ class RecordPreviewListenerTest extends TestCase
         ;
 
         $listener = new RecordPreviewListener($framework, $connection);
-        $listener->storePrerenderedRecordPreview($dataContainer, '42');
+        $listener->storePrecompiledRecordPreview($dataContainer, '42');
     }
 
-    public function testGeneratesPreviewWithRecordLabelFunctionAndShowColumns(): void
+    public function testPrecompilesRecordPreviewWithLabelFunctionAndShowColumns(): void
     {
         $GLOBALS['TL_DCA']['tl_user']['list']['sorting']['mode'] = DataContainer::MODE_SORTED;
         $GLOBALS['TL_DCA']['tl_user']['list']['label']['showColumns'] = true;
@@ -161,10 +161,10 @@ class RecordPreviewListenerTest extends TestCase
         ;
 
         $listener = new RecordPreviewListener($framework, $connection);
-        $listener->storePrerenderedRecordPreview($dataContainer, '42');
+        $listener->storePrecompiledRecordPreview($dataContainer, '42');
     }
 
-    public function testRendersRecordPreviewWithCallable(): void
+    public function testPrecompilesRecordPreviewWithCallable(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] = [
@@ -236,10 +236,10 @@ class RecordPreviewListenerTest extends TestCase
         ;
 
         $listener = new RecordPreviewListener($framework, $connection);
-        $listener->storePrerenderedRecordPreview($dataContainer, '42');
+        $listener->storePrecompiledRecordPreview($dataContainer, '42');
     }
 
-    public function testRendersRecordPreviewWithCallback(): void
+    public function testPrecompilesRecordPreviewWithCallback(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] = static fn () => '<record-preview>';
@@ -291,7 +291,7 @@ class RecordPreviewListenerTest extends TestCase
         ;
 
         $listener = new RecordPreviewListener($framework, $connection);
-        $listener->storePrerenderedRecordPreview($dataContainer, '42');
+        $listener->storePrecompiledRecordPreview($dataContainer, '42');
     }
 
     public function testHandlesExceptionsGracefully(): void
@@ -328,7 +328,7 @@ class RecordPreviewListenerTest extends TestCase
         ;
 
         $listener = new RecordPreviewListener($framework, $connection);
-        $listener->storePrerenderedRecordPreview($dataContainer, '42');
+        $listener->storePrecompiledRecordPreview($dataContainer, '42');
     }
 
     public function loadDataContainer(): \Generator
@@ -342,7 +342,7 @@ class RecordPreviewListenerTest extends TestCase
         yield 'Deletable data container' => [
             'tl_page',
             false,
-            [['contao.listener.data_container.record_preview', 'storePrerenderedRecordPreview']],
+            [['contao.listener.data_container.record_preview', 'storePrecompiledRecordPreview']],
         ];
     }
 }
