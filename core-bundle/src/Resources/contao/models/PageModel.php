@@ -1324,6 +1324,7 @@ class PageModel extends Model
 	 * @param string $strForceLang Force a certain language
 	 *
 	 * @throws RouteNotFoundException
+	 * @throws ResourceNotFoundException
 	 *
 	 * @return string A URL that can be used in the front end
 	 */
@@ -1382,6 +1383,7 @@ class PageModel extends Model
 	 * @param string $strParams An optional string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
+	 * @throws ResourceNotFoundException
 	 *
 	 * @return string An absolute URL that can be used in the front end
 	 */
@@ -1416,6 +1418,7 @@ class PageModel extends Model
 	 * @param string $strParams An optional string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
+	 * @throws ResourceNotFoundException
 	 *
 	 * @return string The front end preview URL
 	 */
