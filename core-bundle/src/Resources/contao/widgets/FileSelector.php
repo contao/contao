@@ -662,7 +662,8 @@ class FileSelector extends Widget
 			}
 
 			$path = \dirname($path);
-		} while ($path != '.');
+		}
+		while ($path != '.');
 
 		return true;
 	}
