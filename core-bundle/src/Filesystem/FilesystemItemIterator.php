@@ -57,9 +57,9 @@ class FilesystemItemIterator implements \IteratorAggregate
     }
 
     /**
-     * @return iterable<FilesystemItem>
+     * @return \Traversable<FilesystemItem>
      */
-    public function getIterator(): iterable
+    public function getIterator(): \Traversable
     {
         return $this->listing instanceof \Traversable ?
             $this->listing : new \ArrayIterator($this->listing);
