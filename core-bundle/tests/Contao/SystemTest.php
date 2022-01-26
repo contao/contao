@@ -23,9 +23,16 @@ class SystemTest extends TestCase
         parent::tearDown();
 
         unset($GLOBALS['TL_LANG']);
-        $systemReflection = new \ReflectionClass(System::class);
-        $systemReflection->setStaticPropertyValue('arrLanguageFiles', []);
-        $systemReflection->setStaticPropertyValue('objContainer', null);
+
+        $system = new \ReflectionClass(System::class);
+
+        $langProperty = $system->getProperty('arrLanguageFiles');
+        $langProperty->setAccessible(true);
+        $langProperty->setValue([]);
+
+        $containerProperty = $system->getProperty('objContainer');
+        $containerProperty->setAccessible(true);
+        $containerProperty->setValue(null);
 
         (new Filesystem())->remove($this->getTempDir());
     }
