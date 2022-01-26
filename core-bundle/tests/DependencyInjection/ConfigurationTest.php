@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -24,6 +25,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class ConfigurationTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @var Configuration
      */
@@ -231,6 +234,24 @@ class ConfigurationTest extends TestCase
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessageMatches('/The attribute name "data-App Name" must be a valid HTML attribute name./');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testTriggersContaoLocalconfigDeprecations(): void
+    {
+        $params = [
+            'contao' => [
+                'localconfig' => [
+                    'enableSearch' => false,
+                ],
+            ],
+        ];
+
+        $this->expectDeprecation('Since contao/core-bundle 4.12: Setting "contao.localconfig.enableSearch" has been deprecated. Use the "contao.search.default_indexer.enable" parameter instead.');
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }

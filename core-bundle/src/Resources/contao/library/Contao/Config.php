@@ -408,10 +408,7 @@ class Config
 	 */
 	public static function get($strKey)
 	{
-		if (isset(self::$arrDeprecated[$strKey]) || isset(self::$arrDeprecatedMap[$strKey]))
-		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
-		}
+		self::checkForDeprecation($strKey, sprintf('Using "%s(\'%s\', …)"', __METHOD__, $strKey));
 
 		return $GLOBALS['TL_CONFIG'][$strKey] ?? null;
 	}
@@ -424,12 +421,20 @@ class Config
 	 */
 	public static function set($strKey, $varValue)
 	{
-		if (isset(self::$arrDeprecated[$strKey]) || isset(self::$arrDeprecatedMap[$strKey]))
-		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
-		}
+		self::checkForDeprecation($strKey, sprintf('Using "%s(\'%s\', …)"', __METHOD__, $strKey));
 
 		$GLOBALS['TL_CONFIG'][$strKey] = $varValue;
+	}
+
+	/**
+	 * @internal
+	 */
+	public static function checkForDeprecation(string $strKey, string $strSubject): void
+	{
+		if (isset(self::$arrDeprecated[$strKey]) || isset(self::$arrDeprecatedMap[$strKey]))
+		{
+			trigger_deprecation('contao/core-bundle', '4.12', '%s has been deprecated. Use the "%s" parameter instead.', $strSubject, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
+		}
 	}
 
 	/**
