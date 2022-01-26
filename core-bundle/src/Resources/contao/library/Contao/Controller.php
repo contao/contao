@@ -77,7 +77,7 @@ abstract class Controller extends System
 			/** @var PageModel|null $objPage */
 			global $objPage;
 
-			if (null !== $objPage && $objPage->templateGroup)
+			if ($objPage->templateGroup ?? null)
 			{
 				if (Validator::isInsecurePath($objPage->templateGroup))
 				{
