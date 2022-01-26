@@ -85,6 +85,10 @@ class BackupManager
         $backups = [];
 
         foreach ($this->vfs->listContents('', false, VirtualFilesystemInterface::BYPASS_DBAFS) as $file) {
+            if (!$file->isFile()) {
+                continue;
+            }
+
             try {
                 $backup = new Backup($file->getPath());
             } catch (BackupManagerException $e) {
