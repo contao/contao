@@ -42,10 +42,6 @@ class RecordPreviewListener
             return;
         }
 
-        if (!isset($GLOBALS['TL_DCA'][$table]['config']['ondelete_callback'])) {
-            $GLOBALS['TL_DCA'][$table]['config']['ondelete_callback'] = [];
-        }
-
         $GLOBALS['TL_DCA'][$table]['config']['ondelete_callback'][] = [
             'contao.listener.data_container.record_preview', 'storePrerenderedRecordPreview',
         ];
