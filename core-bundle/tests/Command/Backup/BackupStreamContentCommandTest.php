@@ -12,24 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Command\Backup;
 
-use Contao\CoreBundle\Command\Backup\BackupListCommand;
 use Contao\CoreBundle\Command\Backup\BackupStreamContentCommand;
-use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\DumperInterface;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicyInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class BackupStreamContentCommandTest extends TestCase
 {
+    private VirtualFilesystemInterface $vfs;
+
     protected function setUp(): void
     {
         parent::setUp();

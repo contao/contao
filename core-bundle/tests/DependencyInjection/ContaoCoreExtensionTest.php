@@ -294,7 +294,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $sizes = $methodCalls[0][1];
 
-        $sortByKeyRecursive = static function (array & $array) use (&$sortByKeyRecursive): void {
+        $sortByKeyRecursive = static function (array &$array) use (&$sortByKeyRecursive): void {
             foreach ($array as &$value) {
                 if (\is_array($value)) {
                     $sortByKeyRecursive($value);

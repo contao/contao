@@ -23,6 +23,7 @@ use Contao\CoreBundle\Doctrine\Backup\RetentionPolicyInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
@@ -31,7 +32,7 @@ use Symfony\Component\Filesystem\Path;
 
 class BackupManagerTest extends ContaoTestCase
 {
-    private VirtualFilesystem $vfs;
+    private VirtualFilesystemInterface $vfs;
 
     protected function setUp(): void
     {
@@ -230,7 +231,7 @@ class BackupManagerTest extends ContaoTestCase
             ->method('apply')
         ;
 
-        $manager = $this->getBackupManager($this->mockConnection(true), $dumper, null, $retentionPolicy);
+        $manager = $this->getBackupManager($this->mockConnection(true), $dumper, $retentionPolicy);
         $config = $manager->createCreateConfig();
 
         try {
@@ -428,11 +429,6 @@ class BackupManagerTest extends ContaoTestCase
         }
 
         return $connection;
-    }
-
-    private function getBackupDir(): string
-    {
-        return Path::join($this->getTempDir(), 'backups');
     }
 
     private function getBackupManager(Connection $connection = null, DumperInterface $dumper = null, RetentionPolicyInterface $retentionPolicy = null): BackupManager
