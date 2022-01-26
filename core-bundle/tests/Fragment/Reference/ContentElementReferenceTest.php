@@ -20,7 +20,7 @@ class ContentElementReferenceTest extends TestCase
 {
     public function testCreatesTheControllerNameFromTheModelType(): void
     {
-        $model = new ContentModel();
+        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
         $model->type = 'foobar';
 
         $reference = new ContentElementReference($model);
@@ -30,7 +30,7 @@ class ContentElementReferenceTest extends TestCase
 
     public function testAddsTheSectionAttribute(): void
     {
-        $model = new ContentModel();
+        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
         $model->type = 'foobar';
 
         $reference = new ContentElementReference($model);

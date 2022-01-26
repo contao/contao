@@ -20,7 +20,7 @@ class FrontendModuleReferenceTest extends TestCase
 {
     public function testCreatesTheControllerNameFromTheModelType(): void
     {
-        $model = new ModuleModel();
+        $model = (new \ReflectionClass(ModuleModel::class))->newInstanceWithoutConstructor();
         $model->type = 'foobar';
 
         $reference = new FrontendModuleReference($model);
@@ -30,7 +30,7 @@ class FrontendModuleReferenceTest extends TestCase
 
     public function testAddsTheSectionAttribute(): void
     {
-        $model = new ModuleModel();
+        $model = (new \ReflectionClass(ModuleModel::class))->newInstanceWithoutConstructor();
         $model->type = 'foobar';
 
         $reference = new FrontendModuleReference($model);
