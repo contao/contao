@@ -157,7 +157,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($pathFrom, $pathTo);
     }
 
-    public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): iterable
+    public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): FilesystemItemIterator
     {
         $path = $this->resolve($location);
 
@@ -165,7 +165,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
             $this->dbafsManager->sync($path);
         }
 
-        return $this->doListContents($path, $deep, $accessFlags);
+        return new FilesystemItemIterator($this->doListContents($path, $deep, $accessFlags));
     }
 
     public function getLastModified($location, int $accessFlags = self::NONE): int
