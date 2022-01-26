@@ -30,6 +30,9 @@ class FilesystemItemIterator implements \IteratorAggregate
         $this->listing = $listing;
     }
 
+    /**
+     * @param callable(FilesystemItem):bool $filter
+     */
     public function filter(callable $filter): self
     {
         $listFiltered = static function (iterable $listing) use ($filter): \Generator {
