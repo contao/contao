@@ -28,7 +28,6 @@ use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Component\Filesystem\Path;
 
 class BackupManagerTest extends ContaoTestCase
 {
