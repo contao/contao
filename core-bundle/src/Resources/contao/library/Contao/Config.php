@@ -408,7 +408,7 @@ class Config
 	 */
 	public static function get($strKey)
 	{
-		self::checkForDeprecation($strKey, sprintf('Using "%s(\'%s\', …)"', __METHOD__, $strKey));
+		self::checkForDeprecation($strKey, sprintf('Using "%s(\'%s\')"', __METHOD__, $strKey));
 
 		return $GLOBALS['TL_CONFIG'][$strKey] ?? null;
 	}
