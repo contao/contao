@@ -70,7 +70,6 @@ class FilesystemItemIterator implements \IteratorAggregate
      */
     public function toArray(): array
     {
-        return $this->listing instanceof \Traversable ?
-            iterator_to_array($this->listing, false) : (array) $this->listing;
+        return iterator_to_array($this, false);
     }
 }
