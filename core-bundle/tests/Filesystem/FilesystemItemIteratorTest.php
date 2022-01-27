@@ -75,7 +75,7 @@ class FilesystemItemIteratorTest extends TestCase
         $iterator = new FilesystemItemIterator([$item]);
 
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage("Contao\\CoreBundle\\Filesystem\\FilesystemItemIterator can only iterate over elements of type Contao\\CoreBundle\\Filesystem\\FilesystemItem, got $expectedType.");
+        $this->expectExceptionMessage('Contao\CoreBundle\Filesystem\FilesystemItemIterator can only iterate over elements of type Contao\CoreBundle\Filesystem\FilesystemItem, got '.$expectedType);
 
         iterator_to_array($iterator);
     }
@@ -92,12 +92,6 @@ class FilesystemItemIteratorTest extends TestCase
      */
     private function assertSameItems(array $expected, array $actual): void
     {
-        $this->assertSame(
-            $expected,
-            array_map(
-                static fn (FilesystemItem $item): string => $item->getPath(),
-                $actual
-            )
-        );
+        $this->assertSame($expected, array_map(static fn (FilesystemItem $item): string => $item->getPath(), $actual));
     }
 }
