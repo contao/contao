@@ -61,8 +61,15 @@ class FilesystemItemIterator implements \IteratorAggregate
      */
     public function getIterator(): \Traversable
     {
-        return $this->listing instanceof \Traversable ?
-            $this->listing : new \ArrayIterator($this->listing);
+        foreach ($this->listing as $item) {
+            if (!$item instanceof FilesystemItem) {
+                $type = \is_object($item) ? \get_class($item) : \gettype($item);
+
+                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', __CLASS__, FilesystemItem::class, $type));
+            }
+
+            yield $item;
+        }
     }
 
     /**

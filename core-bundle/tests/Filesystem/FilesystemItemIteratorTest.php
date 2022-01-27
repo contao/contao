@@ -66,6 +66,27 @@ class FilesystemItemIteratorTest extends TestCase
     }
 
     /**
+     * @dataProvider provideInvalidItems
+     *
+     * @param mixed $item
+     */
+    public function testEnsuresTypeSafetyWhenIterating($item, string $expectedType): void
+    {
+        $iterator = new FilesystemItemIterator([$item]);
+
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage("Contao\\CoreBundle\\Filesystem\\FilesystemItemIterator can only iterate over elements of type Contao\\CoreBundle\\Filesystem\\FilesystemItem, got $expectedType.");
+
+        iterator_to_array($iterator);
+    }
+
+    public function provideInvalidItems(): \Generator
+    {
+        yield 'scalar' => [42, 'integer'];
+        yield 'object of wrong type' => [new \stdClass(), 'stdClass'];
+    }
+
+    /**
      * @param array<string>         $expected
      * @param array<FilesystemItem> $actual
      */
