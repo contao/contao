@@ -206,7 +206,8 @@ class ContentElementControllerTest extends TestCase
 
         $response = $controller(new Request(), $model, 'main');
 
-        $this->assertSame($expires, $response->getMaxAge());
+        $this->assertGreaterThan($expires - 10, $response->getMaxAge());
+        $this->assertLessThan($expires + 10, $response->getMaxAge());
     }
 
     public function testSetsTheSharedMaxAgeIfTheElementHasAStopDate(): void
@@ -225,7 +226,8 @@ class ContentElementControllerTest extends TestCase
 
         $response = $controller(new Request(), $model, 'main');
 
-        $this->assertSame($expires, $response->getMaxAge());
+        $this->assertGreaterThan($expires - 10, $response->getMaxAge());
+        $this->assertLessThan($expires + 10, $response->getMaxAge());
     }
 
     public function testDoesNotSetTheSharedMaxAgeIfTheElementHasNeitherAStartNorAStopDate(): void
