@@ -296,7 +296,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $identifier = ContaoTwigUtil::getIdentifier($shortNameOrIdentifier);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
-            throw new \LogicException("The template '$identifier' could not be found in the template hierarchy.");
+            throw new \LogicException(sprintf('The template "%s" could not be found in the template hierarchy.', $identifier));
         }
 
         // Find the next element in the hierarchy or use the first if it cannot be found
@@ -304,7 +304,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $next = array_values($chain)[false !== $index ? $index + 1 : 0] ?? null;
 
         if (null === $next) {
-            throw new \LogicException("The template '$sourcePath' does not have a parent '$identifier' it can extend from.");
+            throw new \LogicException(sprintf('The template "%s" does not have a parent "%s" it can extend from.', $sourcePath, $identifier));
         }
 
         return $next;
@@ -316,7 +316,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         $hierarchy = $this->getInheritanceChains($themeSlug);
 
         if (null === ($chain = $hierarchy[$identifier] ?? null)) {
-            throw new \LogicException("The template '$identifier' could not be found in the template hierarchy.");
+            throw new \LogicException(sprintf('The template "%s" could not be found in the template hierarchy.', $identifier));
         }
 
         return $chain[array_key_first($chain)];
@@ -363,7 +363,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
                 if (isset($templatesByNamespace[$namespace][$identifier])) {
                     $basePath = Path::getLongestCommonBasePath(...$this->paths[$namespace]);
 
-                    throw new \OutOfBoundsException("There cannot be more than one '$identifier' template in '$basePath'.");
+                    throw new \OutOfBoundsException(sprintf('There cannot be more than one "%s" template in "%s".', $identifier, $basePath));
                 }
 
                 $templatesByNamespace[$namespace][$identifier] = [$shortName, $templatePath];
