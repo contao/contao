@@ -16,6 +16,8 @@
     <p>{{ 'tl_files.syncResult'|trans([
             change_set.itemsToCreate|length,
             change_set.itemsToUpdate|length,
+            '-',
+            '-',
             change_set.itemsToDelete|length
         ], 'contao_tl_files')|raw }}</p>
 </div>
