@@ -1,5 +1,12 @@
 # API changes
 
+## Version 4.* to 5.0
+
+### Removed log_message()
+
+The function `log_message()` has been removed. Use the Symfony logger services instead.
+Consequently, also `Automator::rotateLogs()` has been removed.
+
 ## Version 4.* to 4.11
 
 Loading MooTools and jQuery from CDN is no longer supported, because it does
