@@ -12,7 +12,7 @@
 </div>
 
 {# Report #}
-<div id="sync-results">
+<div id="result-list">
     <p>{{ 'tl_files.syncResult'|trans([
             change_set.itemsToCreate|length,
             change_set.itemsToUpdate|length,
@@ -20,8 +20,7 @@
             '-',
             change_set.itemsToDelete|length
         ], 'contao_tl_files')|raw }}</p>
-</div>
-<div id="result-list">
+
     {# Added resources #}
     {% for added in change_set.itemsToCreate %}
         <p class="tl_new">
