@@ -21,6 +21,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
@@ -1191,7 +1192,7 @@ class DbafsTest extends TestCase
         $filesystem = $this->createMock(VirtualFilesystemInterface::class);
         $filesystem
             ->method('listContents')
-            ->willReturn([])
+            ->willReturn(new FilesystemItemIterator([]))
         ;
 
         $dbafs = $this->getDbafs(null, $filesystem);

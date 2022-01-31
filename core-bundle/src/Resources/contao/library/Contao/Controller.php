@@ -74,10 +74,10 @@ abstract class Controller extends System
 		// Check for a theme folder
 		if (\defined('TL_MODE') && TL_MODE == 'FE')
 		{
-			/** @var PageModel $objPage */
+			/** @var PageModel|null $objPage */
 			global $objPage;
 
-			if ($objPage->templateGroup)
+			if ($objPage->templateGroup ?? null)
 			{
 				if (Validator::isInsecurePath($objPage->templateGroup))
 				{
@@ -1479,7 +1479,8 @@ abstract class Controller extends System
 
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
-		} while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		}
+		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{

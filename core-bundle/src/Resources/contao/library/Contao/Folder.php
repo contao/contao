@@ -380,7 +380,8 @@ class Folder extends System
 			}
 
 			$path = \dirname($path);
-		} while ($path != '.');
+		}
+		while ($path != '.');
 
 		return false;
 	}
@@ -434,7 +435,8 @@ class Folder extends System
 			}
 
 			$path = \dirname($path);
-		} while ($path != '.');
+		}
+		while ($path != '.');
 
 		return false;
 	}
