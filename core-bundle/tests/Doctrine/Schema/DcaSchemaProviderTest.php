@@ -375,7 +375,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         return ['Value' => $map[$query]];
                     }
 
-                    throw new \RuntimeException("Test does not mirror actual query, got: '$query'");
+                    throw new \RuntimeException(sprintf('Test does not mirror actual query, got: "%s"', $query));
                 }
             )
         ;

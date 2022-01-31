@@ -46,7 +46,7 @@ class ThemeTest extends TestCase
         $themeNamespace = new ThemeNamespace();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Path '/foo/bar' must be relative.");
+        $this->expectExceptionMessage('Path "/foo/bar" must be relative.');
 
         $themeNamespace->generateSlug('/foo/bar');
     }
