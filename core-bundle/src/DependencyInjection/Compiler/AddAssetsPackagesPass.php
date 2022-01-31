@@ -91,10 +91,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
             && method_exists(InstalledVersions::class, 'getPrettyVersion')
         ) {
             $versions = InstalledVersions::getInstalledPackagesByType('contao-component');
-            $versions = array_combine(
-                $versions,
-                array_map([InstalledVersions::class, 'getPrettyVersion'], $versions)
-            );
+            $versions = array_combine($versions, array_map([InstalledVersions::class, 'getPrettyVersion'], $versions));
         } else {
             $versions = Versions::VERSIONS;
         }
