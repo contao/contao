@@ -226,7 +226,7 @@ class News extends Frontend
 				}
 				else
 				{
-					$strDescription = $objArticle->teaser;
+					$strDescription = $objArticle->teaser ?? '';
 				}
 
 				$strDescription = $container->get('contao.insert_tag.parser')->replaceInline($strDescription);
