@@ -49,7 +49,7 @@ class PackageUtil
      */
     public static function parseVersion(string $version): string
     {
-        return ltrim(strstr($version, '@', true), 'v');
+        return ltrim(strstr($version.'@', '@', true), 'v');
     }
 
     /**

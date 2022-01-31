@@ -32,7 +32,7 @@
         "ext-zlib": "*",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
-        "composer/package-versions-deprecated": "^1.8",
+        "composer/package-versions-deprecated": "^1.11.99.5",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.2",
         "contao-components/colorbox": "^1.6",
@@ -233,7 +233,6 @@
     "config": {
         "allow-plugins": {
             "bamarni/composer-bin-plugin": true,
-            "composer/package-versions-deprecated": true,
             "contao-components/installer": true,
             "contao/manager-plugin": true
         }
