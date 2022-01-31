@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Composer\InstalledVersions;
 use Contao\CoreBundle\Util\PackageUtil;
 use PackageVersions\Versions;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -84,7 +85,18 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         $packages = $container->getDefinition('assets.packages');
         $context = new Reference('contao.assets.assets_context');
 
-        foreach (Versions::VERSIONS as $name => $version) {
+        // The Versions::VERSIONS constant is empty since Composer 2.2.5
+        if (
+            method_exists(InstalledVersions::class, 'getInstalledPackagesByType')
+            && method_exists(InstalledVersions::class, 'getPrettyVersion')
+        ) {
+            $versions = InstalledVersions::getInstalledPackagesByType('contao-component');
+            $versions = array_combine($versions, array_map([InstalledVersions::class, 'getPrettyVersion'], $versions));
+        } else {
+            $versions = Versions::VERSIONS;
+        }
+
+        foreach ($versions as $name => $version) {
             if (0 !== strncmp('contao-components/', $name, 18)) {
                 continue;
             }
