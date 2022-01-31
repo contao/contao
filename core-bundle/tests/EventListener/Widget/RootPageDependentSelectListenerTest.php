@@ -20,6 +20,7 @@ use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectListenerTest extends ContaoTestCase
@@ -28,6 +29,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
     {
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
+            $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoCsrfTokenManager::class)
         );
@@ -57,6 +59,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
 
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
+            $this->createMock(UrlGeneratorInterface::class),
             $translator,
             $csrfTokenManager,
         );
@@ -78,6 +81,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
 
         $listener = new RootPageDependentSelectListener(
             $this->createMock(Connection::class),
+            $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoCsrfTokenManager::class)
         );
@@ -92,6 +96,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
 
         $listener = new RootPageDependentSelectListener(
             $connection,
+            $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoCsrfTokenManager::class),
         );
@@ -120,6 +125,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
 
         $listener = new RootPageDependentSelectListener(
             $connection,
+            $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoCsrfTokenManager::class)
         );
@@ -159,6 +165,7 @@ class RootPageDependentSelectListenerTest extends ContaoTestCase
 
         $listener = new RootPageDependentSelectListener(
             $connection,
+            $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoCsrfTokenManager::class)
         );

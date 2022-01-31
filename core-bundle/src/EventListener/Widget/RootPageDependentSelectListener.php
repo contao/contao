@@ -17,7 +17,6 @@ use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\StringUtil;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -109,7 +108,7 @@ class RootPageDependentSelectListener
             }
 
             $title = $this->translator->trans('tl_content.editalias', [$id], 'contao_content');
-            $href = $this->router->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$id, 'popup'=>'1', 'nb'=>'1', 'rt'=>$this->csrfTokenManager->getDefaultTokenValue()));
+            $href = $this->router->generate('contao_backend', ['do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$id, 'popup'=>'1', 'nb'=>'1', 'rt'=>$this->csrfTokenManager->getDefaultTokenValue()]);
 
             $wizards[$rootPage] = sprintf(
                 ' <a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
