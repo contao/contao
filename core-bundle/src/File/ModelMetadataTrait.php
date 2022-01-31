@@ -47,7 +47,7 @@ trait ModelMetadataTrait
 
         // Make sure we resolve insert tags pointing to files
         if (isset($data[Metadata::VALUE_URL])) {
-            $data[Metadata::VALUE_URL] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($data[Metadata::VALUE_URL]);
+            $data[Metadata::VALUE_URL] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($data[Metadata::VALUE_URL] ?? '');
         }
 
         // Strip superfluous fields by intersecting with tl_files.meta.eval.metaFields
