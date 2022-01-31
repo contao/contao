@@ -184,6 +184,34 @@ class AbstractPageRouteProviderTest extends TestCase
             -1,
         ];
 
+        yield 'Sorts route by route priority' => [
+            new Route('', ['pageModel' => $this->mockPageModel('de', false, false, 128, 1)]),
+            new Route('', ['pageModel' => $this->mockPageModel('de', false, false, 128, 10)]),
+            ['de', 'de'],
+            1,
+        ];
+
+        yield 'Sorts route with required parameters first (1)' => [
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '(/.+?)?']),
+            ['de', 'de'],
+            -1,
+        ];
+
+        yield 'Sorts route with required parameters first (2)' => [
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '(/.+?)?']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
+            ['de', 'de'],
+            1,
+        ];
+
+        yield 'Ignores required parameters with equal requirement' => [
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
+            ['de', 'de'],
+            0,
+        ];
+
         yield 'Sorts route by root page priority' => [
             new Route('', ['pageModel' => $this->mockPageModel('de-CH', false, false, 256)]),
             new Route('', ['pageModel' => $this->mockPageModel('de-DE', false, false, 100)]),
@@ -409,13 +437,14 @@ class AbstractPageRouteProviderTest extends TestCase
     /**
      * @return PageModel&MockObject
      */
-    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128): PageModel
+    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128, int $routePriority = 0): PageModel
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->type = $root ? 'root' : 'regular';
         $pageModel->rootLanguage = $language;
         $pageModel->rootIsFallback = $fallback;
         $pageModel->rootSorting = $rootSorting;
+        $pageModel->routePriority = $routePriority;
 
         return $pageModel;
     }
