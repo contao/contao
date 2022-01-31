@@ -24,7 +24,7 @@ use Contao\Image\ResizeCalculator;
 use Contao\ImagineSvg\Imagine as ImagineSvg;
 use Contao\System;
 use Imagine\Gd\Imagine as ImagineGd;
-use Psr\Log\NullLogger;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -1565,7 +1565,7 @@ class ImageTest extends TestCase
         $container->set('contao.image.legacy_resizer', $resizer);
         $container->set('contao.image.factory', $factory);
         $container->set('filesystem', new Filesystem());
-        $container->set('monolog.logger.contao', new NullLogger());
+        $container->set('contao.monolog.logger.error', $this->createMock(LoggerInterface::class));
 
         return $container;
     }

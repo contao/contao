@@ -187,7 +187,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         if ('FE' === $this->getMode() && ($session = $this->getSession()) && $this->request->hasPreviousSession()) {
             $session->start();
 
-            \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
+            \define('BE_USER_LOGGED_IN', $this->tokenChecker->isPreviewMode());
             \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
         } else {
             \define('BE_USER_LOGGED_IN', false);

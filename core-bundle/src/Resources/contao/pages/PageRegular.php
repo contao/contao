@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -268,7 +267,7 @@ class PageRegular extends Frontend
 		// Die if there is no layout
 		if (null === $objLayout)
 		{
-			$this->log('Could not find layout ID "' . $objPage->layout . '"', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not find layout ID "' . $objPage->layout . '"');
 
 			throw new NoLayoutSpecifiedException('No layout specified');
 		}

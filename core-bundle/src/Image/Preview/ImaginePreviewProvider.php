@@ -154,8 +154,8 @@ class ImaginePreviewProvider implements PreviewProviderInterface
             $magick->setResolution($resolution, $resolution);
 
             if (
-                'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))
-                && \is_callable([$magick, 'pingImage'])
+                \is_callable([$magick, 'pingImage'])
+                && 'pdf' === strtolower(pathinfo($sourcePath, PATHINFO_EXTENSION))
             ) {
                 $magick->pingImage($pagedPath);
 

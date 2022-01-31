@@ -14,9 +14,9 @@ namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Exception\NoActivePageFoundException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\ServiceAnnotation\Page;
 use Contao\PageModel;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -26,6 +26,13 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RootPageController extends AbstractController
 {
+    private ?LoggerInterface $logger;
+
+    public function __construct(LoggerInterface $logger = null)
+    {
+        $this->logger = $logger;
+    }
+
     public function __invoke(PageModel $pageModel): Response
     {
         $nextPage = $this->getNextPage((int) $pageModel->id);
@@ -41,11 +48,8 @@ class RootPageController extends AbstractController
             return $nextPage;
         }
 
-        if ($this->container->has('logger')) {
-            $this->container->get('logger')->error(
-                'No active page found under root page "'.$rootPageId.'"',
-                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
-            );
+        if ($this->logger) {
+            $this->logger->error('No active page found under root page "'.$rootPageId.'"');
         }
 
         throw new NoActivePageFoundException('No active page found under root page.');

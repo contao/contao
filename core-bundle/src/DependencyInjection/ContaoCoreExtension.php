@@ -20,6 +20,8 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
+use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
+use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -41,7 +43,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class ContaoCoreExtension extends Extension implements PrependExtensionInterface
+class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
 {
     public function getAlias(): string
     {
@@ -60,6 +62,22 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         // Prepend the backend route prefix to make it available for third-party bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
+
+        // Make sure channels for all Contao log actions are available
+        if ($container->hasExtension('monolog')) {
+            $container->prependExtensionConfig('monolog', [
+                'channels' => [
+                    'contao.access',
+                    'contao.configuration',
+                    'contao.cron',
+                    'contao.email',
+                    'contao.error',
+                    'contao.files',
+                    'contao.forms',
+                    'contao.general',
+                ],
+            ]);
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container): void
@@ -178,6 +196,26 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 $definition->addTag('contao.picker_provider', get_object_vars($attribute));
             }
         );
+    }
+
+    public function configureFilesystem(FilesystemConfiguration $config): void
+    {
+        $filesStorageName = 'files';
+
+        // TODO: Deprecate the 'contao.upload_path' config key. In the next
+        // major version, $uploadPath can then be replaced with 'files' and the
+        // redundant 'files' attribute removed when mounting the local adapter.
+        $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
+
+        $config
+            ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
+            ->addVirtualFilesystem($filesStorageName, $uploadPath)
+        ;
+
+        $config
+            ->addDefaultDbafs($filesStorageName, 'tl_files')
+            ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
+        ;
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void

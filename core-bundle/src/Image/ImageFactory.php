@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FilesModel;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\Image;
@@ -299,8 +298,7 @@ class ImageFactory implements ImageFactoryInterface
                         $file->importantPartWidth,
                         $file->importantPartHeight,
                         $image->getPath()
-                    ),
-                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::ERROR)]
+                    )
                 );
             }
 

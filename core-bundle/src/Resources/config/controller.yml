@@ -4,6 +4,8 @@ services:
 
     _instanceof:
         Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
+            tags:
+                - { name: container.service_subscriber, id: contao.csrf.token_manager }
             calls:
                 - [setContainer, ['@Psr\Container\ContainerInterface']]
 
@@ -37,6 +39,8 @@ services:
             - '@twig'
             - '@router'
             - '@contao.csrf.token_manager'
+            - '%contao.backend.attributes%'
+            - '%contao.backend.badge_title%'
         tags:
             - controller.service_arguments
 
@@ -59,6 +63,12 @@ services:
     Contao\CoreBundle\Controller\FrontendController:
         tags:
             - controller.service_arguments
+            - { name: container.service_subscriber, id: contao.cron }
+            - { name: container.service_subscriber, id: contao.csrf.token_manager }
+
+    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController:
+        tags:
+            - { name: contao.frontend_module, category: miscellaneous }
 
     Contao\CoreBundle\Controller\FrontendModule\TemplateController:
         tags:
@@ -98,7 +108,19 @@ services:
         arguments:
             - '@contao.framework'
 
-    Contao\CoreBundle\Controller\Page\RootPageController: ~
+    Contao\CoreBundle\Controller\Page\RootPageController:
+        arguments:
+            - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
+
+    Contao\CoreBundle\Controller\PreviewLinkController:
+        arguments:
+            - '@contao.security.frontend_preview_authenticator'
+            - '@uri_signer'
+            - '@database_connection'
+        tags:
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\RobotsTxtController:
         arguments:

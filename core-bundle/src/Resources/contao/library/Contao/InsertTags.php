@@ -14,7 +14,6 @@ use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Intl\Locales;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\Filesystem\Path;
@@ -383,7 +382,7 @@ class InsertTags extends Controller
 					}
 					catch (\InvalidArgumentException $exception)
 					{
-						$this->log('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage(), __METHOD__, ContaoContext::ERROR);
+						System::getContainer()->get('monolog.logger.contao.error')->error('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage());
 					}
 
 					if (\count($keys) == 2)
@@ -1144,7 +1143,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					$this->log('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, ContaoContext::ERROR);
+					System::getContainer()->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
 					break;
 			}
 
@@ -1259,7 +1258,7 @@ class InsertTags extends Controller
 								}
 							}
 
-							$this->log('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'), __METHOD__, ContaoContext::ERROR);
+							System::getContainer()->get('monolog.logger.contao.error')->error('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'));
 							break;
 					}
 				}

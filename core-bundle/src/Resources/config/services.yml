@@ -178,6 +178,26 @@ services:
         arguments:
             - '@doctrine.orm.default_entity_manager'
 
+    contao.filesystem.dbafs_factory:
+        class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
+        arguments:
+            - '@database_connection'
+            - '@event_dispatcher'
+
+    contao.filesystem.dbafs_manager:
+        class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
+
+    contao.filesystem.mount_manager:
+        class: Contao\CoreBundle\Filesystem\MountManager
+        arguments:
+            - ~
+
+    contao.filesystem.virtual_factory:
+        class: Contao\CoreBundle\Filesystem\VirtualFilesystemFactory
+        arguments:
+            - '@contao.filesystem.mount_manager'
+            - '@contao.filesystem.dbafs_manager'
+
     contao.fragment.forward_renderer:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
         arguments:
@@ -241,6 +261,8 @@ services:
             - '%contao.image.valid_extensions%'
             - '%kernel.project_dir%/%contao.upload_path%'
             - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
 
     contao.image.fallback_preview_provider:
         class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider

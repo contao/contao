@@ -236,6 +236,12 @@
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the "themes" module.</source>
       </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.0">
+        <source>Subpage layout</source>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.1">
+        <source>Here you can select a different layout for subpages.</source>
+      </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
       </trans-unit>
@@ -430,6 +436,9 @@
       </trans-unit>
       <trans-unit id="tl_page.map_never">
         <source>Show never</source>
+      </trans-unit>
+      <trans-unit id="tl_page.layout_inherit">
+        <source>Inherit page layout</source>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
