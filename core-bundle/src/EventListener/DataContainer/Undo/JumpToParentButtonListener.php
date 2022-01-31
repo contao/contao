@@ -69,7 +69,7 @@ class JumpToParentButtonListener
 
         return sprintf(
             '<a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\': this.href });return false">%s</a> ',
-            $backend->addToUrl($parentLinkParameters . '&popup=1'),
+            $backend->addToUrl($parentLinkParameters.'&popup=1'),
             StringUtil::specialchars($newTitle),
             StringUtil::specialchars($newTitle),
             $image->getHtml($icon, $label)
