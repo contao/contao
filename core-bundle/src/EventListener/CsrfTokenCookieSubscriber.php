@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Csrf\MemoryTokenStorage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -29,6 +30,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 {
     /**
+     * @var ContaoCsrfTokenManager
+     */
+    private $tokenManager;
+
+    /**
      * @var MemoryTokenStorage
      */
     private $tokenStorage;
@@ -38,8 +44,9 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
      */
     private $cookiePrefix;
 
-    public function __construct(MemoryTokenStorage $tokenStorage, string $cookiePrefix = 'csrf_')
+    public function __construct(ContaoCsrfTokenManager $tokenManager, MemoryTokenStorage $tokenStorage, string $cookiePrefix = 'csrf_')
     {
+        $this->tokenManager = $tokenManager;
         $this->tokenStorage = $tokenStorage;
         $this->cookiePrefix = $cookiePrefix;
     }
@@ -139,7 +146,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         }
 
         $content = $response->getContent();
-        $tokens = $this->tokenStorage->getUsedTokens();
+        $tokens = $this->tokenManager->getUsedTokenValues();
 
         if (!\is_string($content) || empty($tokens)) {
             return;
