@@ -60,7 +60,7 @@ class Dumper implements DumperInterface
     {
         foreach ($schemaManager->listViews() as $view) {
             yield sprintf('-- BEGIN VIEW %s', $view->getName());
-            yield $platform->getCreateViewSQL($view->getQuotedName($platform), $view->getSql()).';';
+            yield sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
         }
     }
 

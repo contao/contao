@@ -159,7 +159,7 @@ class DumperTest extends ContaoTestCase
                 'CREATE TABLE tl_page (foobar VARCHAR(255) NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
                 '-- BEGIN DATA tl_page',
                 '-- BEGIN VIEW view_name',
-                'CREATE VIEW view_name AS SELECT tl_page.id AS id FROM tl_page;',
+                'CREATE OR REPLACE VIEW view_name AS SELECT tl_page.id AS id FROM tl_page;',
                 'SET FOREIGN_KEY_CHECKS = 1;',
             ],
         ];
