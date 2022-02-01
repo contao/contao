@@ -702,7 +702,7 @@ class InsertTags extends Controller
 
 					if ($objUpdate->numRows)
 					{
-						$arrCache[$strTag] = Date::parse($elements[1] ?: ($objPage->datimFormat ?? Config::get('datimFormat')), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
+						$arrCache[$strTag] = Date::parse((isset($elements[1]) ? ($objPage->dateFormat ?? Config::get('dateFormat')) : Config::get('dateFormat')), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
 					}
 					break;
 
