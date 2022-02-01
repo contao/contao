@@ -448,6 +448,9 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'driver' => 'pdo_mysql',
+                            'options' => [
+                                1002 => '',
+                            ],
                         ],
                     ],
                 ],
@@ -486,6 +489,9 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'mysqli',
                             'host' => 'localhost',
+                            'options' => [
+                                3 => '',
+                            ],
                         ],
                     ],
                 ],
@@ -536,6 +542,7 @@ class PluginTest extends ContaoTestCase
                             'driver' => 'pdo_mysql',
                             'options' => [
                                 \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
+                                1002 => '',
                             ],
                         ],
                     ],
@@ -547,6 +554,55 @@ class PluginTest extends ContaoTestCase
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($extensionConfigs, $extensionConfig);
+    }
+
+    /**
+     * @dataProvider provideDatabaseDrivers
+     */
+    public function testEnablesStrictMode(string $driver, int $expectedOptionKey): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'driver' => $driver,
+                            'options' => [
+                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'options' => [
+                                    $expectedOptionKey => "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))",
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function provideDatabaseDrivers(): \Generator
+    {
+        yield 'pdo' => ['pdo_mysql', 1002];
+        yield 'mysqli' => ['mysqli', 3];
     }
 
     public function testUpdatesTheMailerTransport(): void

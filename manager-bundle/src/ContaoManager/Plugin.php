@@ -246,8 +246,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
 
                 $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
 
-                return $this->addDefaultDoctrineMapping($extensionConfigs, $container);
+                return $this->enableStrictMode($extensionConfigs);
         }
 
         return $extensionConfigs;
@@ -398,6 +399,52 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                                 'prefix' => 'App\Entity',
                                 'alias' => 'App',
                             ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Adds a default ORM mapping for the App namespace if none is configured.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function enableStrictMode(array $extensionConfigs): array
+    {
+        $driver = '';
+        $options = [];
+
+        foreach ($extensionConfigs as $config) {
+            if (null !== ($driverConfig = $config['dbal']['connections']['default']['driver'] ?? null)) {
+                $driver = $driverConfig;
+            }
+
+            if (null !== ($optionsConfig = $config['dbal']['connections']['default']['options'] ?? null)) {
+                $options = array_replace($options, $optionsConfig);
+            }
+        }
+
+        // Skip if driver is not supported
+        if (null === ($key = ['pdo_mysql' => 1002, 'mysqli' => 3][$driver] ?? null)) {
+            return $extensionConfigs;
+        }
+
+        // Skip if init command is already configured
+        if (isset($options[$key])) {
+            return $extensionConfigs;
+        }
+
+        // Enable strict mode
+        $extensionConfigs[] = [
+            'dbal' => [
+                'connections' => [
+                    'default' => [
+                        'options' => [
+                            $key => "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))",
                         ],
                     ],
                 ],
