@@ -26,30 +26,28 @@ class FrontendShare extends Frontend
 	 */
 	public function run()
 	{
-		if (($url = Input::get('u', true)) && !\is_string($url))
+		$url = Input::get('u', true);
+
+		if (!$url || !\is_string($url))
 		{
 			return new RedirectResponse('../');
 		}
 
-		if (($text = Input::get('t', true)) && !\is_string($text))
+		if (Input::get('p') == 'facebook')
+		{
+			return new RedirectResponse('https://www.facebook.com/sharer/sharer.php?p[url]=' . rawurlencode($url));
+		}
+
+		$text = Input::get('t', true);
+
+		if (!$text || !\is_string($text))
 		{
 			return new RedirectResponse('../');
 		}
 
-		switch (Input::get('p'))
+		if (Input::get('p') == 'twitter')
 		{
-			case 'facebook':
-				return new RedirectResponse(
-					'https://www.facebook.com/sharer/sharer.php'
-						. '?p[url]=' . rawurlencode($url)
-				);
-
-			case 'twitter':
-				return new RedirectResponse(
-					'https://twitter.com/intent/tweet'
-						. '?url=' . rawurlencode($url)
-						. '&text=' . rawurlencode($text)
-				);
+			return new RedirectResponse('https://twitter.com/intent/tweet?url=' . rawurlencode($url) . '&text=' . rawurlencode($text));
 		}
 
 		return new RedirectResponse('../');
