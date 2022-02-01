@@ -514,6 +514,9 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'url' => '%env(DATABASE_URL)%',
+                            'options' => [
+                                3 => '',
+                            ],
                         ],
                     ],
                 ],
@@ -559,18 +562,13 @@ class PluginTest extends ContaoTestCase
     /**
      * @dataProvider provideDatabaseDrivers
      */
-    public function testEnablesStrictMode(string $driver, int $expectedOptionKey): void
+    public function testEnablesStrictMode(array $connectionConfig, int $expectedOptionKey): void
     {
         $extensionConfigs = [
             [
                 'dbal' => [
                     'connections' => [
-                        'default' => [
-                            'driver' => $driver,
-                            'options' => [
-                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
-                            ],
-                        ],
+                        'default' => $connectionConfig,
                     ],
                 ],
             ],
@@ -601,8 +599,35 @@ class PluginTest extends ContaoTestCase
 
     public function provideDatabaseDrivers(): \Generator
     {
-        yield 'pdo' => ['pdo_mysql', 1002];
-        yield 'mysqli' => ['mysqli', 3];
+        yield 'pdo with driver' => [
+            [
+                'driver' => 'pdo_mysql',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with url' => [
+            [
+                'url' => 'pdo-mysql://user:secret@localhost/mydb',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'mysqli with driver' => [
+            [
+                'driver' => 'mysqli',
+            ],
+            3,
+        ];
+
+        yield 'mysqli with url' => [
+            [
+                'url' => 'mysqli://user:secret@localhost/mydb',
+            ],
+            3,
+        ];
     }
 
     public function testUpdatesTheMailerTransport(): void

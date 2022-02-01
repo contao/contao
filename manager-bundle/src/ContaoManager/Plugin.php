@@ -248,7 +248,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
 
-                return $this->enableStrictMode($extensionConfigs);
+                return $this->enableStrictMode($extensionConfigs, $container);
         }
 
         return $extensionConfigs;
@@ -413,9 +413,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
-    private function enableStrictMode(array $extensionConfigs): array
+    private function enableStrictMode(array $extensionConfigs, ContainerBuilder $container): array
     {
         $driver = '';
+        $url = null;
         $options = [];
 
         foreach ($extensionConfigs as $config) {
@@ -423,9 +424,17 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $driver = $driverConfig;
             }
 
+            if (null !== ($urlConfig = $config['dbal']['connections']['default']['url'] ?? null)) {
+                $url = $container->resolveEnvPlaceholders($urlConfig, true);
+            }
+
             if (null !== ($optionsConfig = $config['dbal']['connections']['default']['options'] ?? null)) {
                 $options = array_replace($options, $optionsConfig);
             }
+        }
+
+        if (null !== $url) {
+            $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
         }
 
         // Skip if driver is not supported
