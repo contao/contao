@@ -75,7 +75,7 @@ class ContaoCacheWarmerTest extends TestCase
         $this->assertFileExists(Path::join($this->getTempDir(), 'var/cache/contao/sql/tl_test.php'));
 
         $this->assertStringContainsString(
-            "\$GLOBALS['TL_TEST'] = true;",
+            "\$GLOBALS['TL_TEST'] = \\true;",
             file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/config/config.php'))
         );
 
@@ -85,7 +85,7 @@ class ContaoCacheWarmerTest extends TestCase
         );
 
         $this->assertStringContainsString(
-            "\$GLOBALS['TL_DCA']['tl_test'] = [\n",
+            "\$GLOBALS['TL_DCA']['tl_test'] = [",
             file_get_contents(Path::join($this->getTempDir(), 'var/cache/contao/dca/tl_test.php'))
         );
 
