@@ -35,7 +35,6 @@ class UrlMatcher extends RedirectableUrlMatcher implements FinalMatcherInterface
 
         $context = new RequestContext();
         $context->fromRequest($request);
-        $context->setHost($request->getHttpHost());
 
         $this->setContext($context);
 
