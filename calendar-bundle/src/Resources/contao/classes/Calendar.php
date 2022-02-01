@@ -209,6 +209,7 @@ class Calendar extends Frontend
 		ksort($this->arrEvents);
 
 		$container = System::getContainer();
+
 		/** @var RequestStack $requestStack */
 		$requestStack = System::getContainer()->get('request_stack');
 
