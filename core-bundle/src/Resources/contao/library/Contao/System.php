@@ -536,6 +536,30 @@ abstract class System
 			$GLOBALS['TL_LANG']['MSC']['textDirection'] = (\ResourceBundle::create($strLanguage, 'ICUDATA', true)['layout']['characters'] ?? null) === 'right-to-left' ? 'rtl' : 'ltr';
 		}
 
+		// Backwards compatibility
+		if ('languages' === $strName)
+		{
+			foreach (self::getContainer()->get(Locales::class)->getLocales($strLanguage) as $strLocale => $strLabel)
+			{
+				if (!isset($GLOBALS['TL_LANG']['LNG'][$strLocale]))
+				{
+					$GLOBALS['TL_LANG']['LNG'][$strLocale] = $strLabel;
+				}
+			}
+		}
+
+		// Backwards compatibility
+		if ('countries' === $strName)
+		{
+			foreach (self::getContainer()->get(Countries::class)->getCountries($strLanguage) as $strCountryCode => $strLabel)
+			{
+				if (!isset($GLOBALS['TL_LANG']['CNT'][strtolower($strCountryCode)]))
+				{
+					$GLOBALS['TL_LANG']['CNT'][strtolower($strCountryCode)] = $strLabel;
+				}
+			}
+		}
+
 		// HOOK: allow to load custom labels
 		if (isset($GLOBALS['TL_HOOKS']['loadLanguageFile']) && \is_array($GLOBALS['TL_HOOKS']['loadLanguageFile']))
 		{
