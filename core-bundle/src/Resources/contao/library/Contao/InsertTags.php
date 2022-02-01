@@ -237,7 +237,7 @@ class InsertTags extends Controller
 				// Date
 				case 'date':
 					$flags[] = 'attr';
-					$arrCache[$strTag] = Date::parse($elements[1] ?: ($objPage->dateFormat ?? Config::get('dateFormat')));
+					$arrCache[$strTag] = Date::parse((isset($elements[1]) ? ($objPage->dateFormat ?? Config::get('dateFormat')) : Config::get('dateFormat')));
 					break;
 
 				// Accessibility tags
