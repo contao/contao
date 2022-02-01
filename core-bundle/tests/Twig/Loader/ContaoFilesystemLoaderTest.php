@@ -504,7 +504,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         );
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage("The template '$corePath' does not have a parent 'text' it can extend from.");
+        $this->expectExceptionMessage('The template "'.$corePath.'" does not have a parent "text" it can extend from.');
 
         $loader->getDynamicParent('text.html.twig', $corePath);
     }
@@ -531,7 +531,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         yield 'invalid chain' => [
             'random',
             '/path/to/template/x.html.twig',
-            "The template 'random' could not be found in the template hierarchy.",
+            'The template "random" could not be found in the template hierarchy.',
         ];
 
         $templatePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/contao/templates/some/random/text.html.twig');
@@ -539,7 +539,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         yield 'last in chain' => [
             'text',
             $templatePath,
-            "The template '$templatePath' does not have a parent 'text' it can extend from.",
+            'The template "'.$templatePath.'" does not have a parent "text" it can extend from.',
         ];
     }
 
@@ -548,7 +548,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader = $this->getContaoFilesystemLoader();
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage("The template 'foo' could not be found in the template hierarchy.");
+        $this->expectExceptionMessage('The template "foo" could not be found in the template hierarchy.');
 
         $loader->getFirst('foo.html.twig');
     }

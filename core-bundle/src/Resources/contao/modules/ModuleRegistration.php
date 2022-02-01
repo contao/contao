@@ -354,11 +354,10 @@ class ModuleRegistration extends Module
 		$this->Template->categories = array_filter($arrGroups);
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['register']);
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$this->Template->captcha = $arrFields['captcha']['captcha'];
-
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 
 	/**

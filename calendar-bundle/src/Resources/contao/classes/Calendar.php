@@ -278,7 +278,7 @@ class Calendar extends Frontend
 					}
 					else
 					{
-						$strDescription = $event['teaser'];
+						$strDescription = $event['teaser'] ?? '';
 					}
 
 					$strDescription = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strDescription);
