@@ -409,7 +409,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Adds a default ORM mapping for the App namespace if none is configured.
+     * Enable SQL strict mode for PDO and mysql drivers by setting an init
+     * command unless already set.
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
