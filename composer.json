@@ -278,5 +278,13 @@
         "forum": "https://community.contao.org",
         "source": "https://github.com/contao/contao",
         "docs": "https://docs.contao.org"
+    },
+    "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true,
+            "composer/package-versions-deprecated": true,
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
+        }
     }
 }
