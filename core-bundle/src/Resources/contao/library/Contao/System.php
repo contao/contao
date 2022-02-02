@@ -462,7 +462,7 @@ abstract class System
 		}
 
 		// Return if the language file has been loaded already
-		if (!$blnNoCache && isset(static::$arrLanguageFiles[$strName][$strLanguage]))
+		if (!$blnNoCache && array_key_last(static::$arrLanguageFiles[$strName] ?? array()) === $strLanguage)
 		{
 			return;
 		}
@@ -486,6 +486,9 @@ abstract class System
 				$strLanguage = 'en';
 			}
 		}
+
+		// Unset to move the new array key to the last position
+		unset(static::$arrLanguageFiles[$strName][$strCacheKey]);
 
 		// Use a global cache variable to support nested calls
 		static::$arrLanguageFiles[$strName][$strCacheKey] = $strLanguage;

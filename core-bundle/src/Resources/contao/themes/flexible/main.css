@@ -255,6 +255,7 @@ body:not(.fullscreen) #container {
 .popup #main .content {
 	margin:0;
 	border:0;
+	overflow:auto;
 }
 
 /* Navigation */

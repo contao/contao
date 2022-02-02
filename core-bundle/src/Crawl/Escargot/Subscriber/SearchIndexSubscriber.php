@@ -195,18 +195,18 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function onTransportException(CrawlUri $crawlUri, TransportExceptionInterface $exception, ResponseInterface $response): void
     {
-        $this->logError($crawlUri, 'Could not request properly: '.$exception->getMessage());
+        $this->logWarning($crawlUri, 'Could not request properly: '.$exception->getMessage());
     }
 
     public function onHttpException(CrawlUri $crawlUri, HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk): void
     {
-        $this->logError($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
+        $this->logWarning($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
     }
 
-    private function logError(CrawlUri $crawlUri, string $message): void
+    private function logWarning(CrawlUri $crawlUri, string $message): void
     {
-        ++$this->stats['error'];
+        ++$this->stats['warning'];
 
-        $this->logWithCrawlUri($crawlUri, LogLevel::ERROR, sprintf('Broken link! %s.', $message));
+        $this->logWithCrawlUri($crawlUri, LogLevel::DEBUG, sprintf('Broken link! %s.', $message));
     }
 }
