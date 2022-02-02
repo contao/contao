@@ -2,6 +2,27 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.12.5] (2021-12-16)
+
+**Fixed issues:**
+
+- [#3673] Fix undefined array key "panelLayout" ([markocupic])
+
+## [4.12.4] (2021-12-02)
+
+**Fixed issues:**
+
+- [#3757] Fix two more service IDs ([leofeyer])
+- [#3755] Adjust the service ID of the new interest cohort listener ([leofeyer])
+- [#3754] Handle all driver exceptions in the template locator ([leofeyer])
+- [#3626] Support arbitrary classes as Twig context ([m-vo])
+- [#3739] Handle the routing exception in more navigation modules ([aschempp])
+- [#3715] Delete obsolete language files ([ausi])
+- [#3716] Fix backwards compatibility for label::LNG and CNT ([ausi])
+- [#3682] Fix type error when trying to copy website root ([fritzmg])
+- [#3678] Fix parameter name in tl_page::getTitleTag() ([SeverinGloeckle])
+- [#3507] Handle pages from PageRegistry in DebugPagesCommand ([SeverinGloeckle])
+
 ## [4.12.3] (2021-10-20)
 
 **Fixed issues:**
@@ -167,6 +188,8 @@ This project adheres to [Semantic Versioning].
 - [#2713] Mention removal of MediaElement.js in the UPGRADE.md file ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.12.5]: https://github.com/contao/contao/releases/tag/4.12.5
+[4.12.4]: https://github.com/contao/contao/releases/tag/4.12.4
 [4.12.3]: https://github.com/contao/contao/releases/tag/4.12.3
 [4.12.2]: https://github.com/contao/contao/releases/tag/4.12.2
 [4.12.1]: https://github.com/contao/contao/releases/tag/4.12.1
@@ -185,8 +208,21 @@ This project adheres to [Semantic Versioning].
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
+[markocupic]: https://github.com/markocupic
 [qzminski]: https://github.com/qzminski
+[SeverinGloeckle]: https://github.com/SeverinGloeckle
 [Toflar]: https://github.com/Toflar
+[#3673]: https://github.com/contao/contao/pull/3673
+[#3757]: https://github.com/contao/contao/pull/3757
+[#3755]: https://github.com/contao/contao/pull/3755
+[#3754]: https://github.com/contao/contao/pull/3754
+[#3626]: https://github.com/contao/contao/pull/3626
+[#3739]: https://github.com/contao/contao/pull/3739
+[#3715]: https://github.com/contao/contao/pull/3715
+[#3716]: https://github.com/contao/contao/pull/3716
+[#3682]: https://github.com/contao/contao/pull/3682
+[#3678]: https://github.com/contao/contao/pull/3678
+[#3507]: https://github.com/contao/contao/pull/3507
 [#3560]: https://github.com/contao/contao/pull/3560
 [#3583]: https://github.com/contao/contao/pull/3583
 [#3576]: https://github.com/contao/contao/pull/3576

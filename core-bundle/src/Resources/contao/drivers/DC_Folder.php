@@ -2238,7 +2238,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 		}
 
 		// Protect or unprotect the folder
-		if (file_exists($this->strRootDir . '/' . $this->intId . '/.public'))
+		if (is_file($this->strRootDir . '/' . $this->intId . '/.public'))
 		{
 			$objFolder = new Folder($this->intId);
 			$objFolder->protect();
@@ -2400,7 +2400,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// Make sure unique fields are unique
-			if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+			if ((!is_scalar($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 			{
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 			}
@@ -2464,7 +2464,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			}
 
 			// Save the value if there was no error
-			if (((string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue != $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
+			if ((!is_scalar($varValue) || (string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue != $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 			{
 				// If the field is a fallback field, empty all other columns
 				if ($varValue && ($arrData['eval']['fallback'] ?? null))
@@ -2473,7 +2473,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 				}
 
 				// Set the correct empty value (see #6284, #6373)
-				if ((string) $varValue === '')
+				if (is_scalar($varValue) && (string) $varValue === '')
 				{
 					$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
 				}
@@ -2779,7 +2779,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$protected = $blnProtected;
 
 			// Check whether the folder is public
-			if ($protected === true && \in_array('.public', $content))
+			if ($protected === true && \in_array('.public', $content) && !is_dir(Path::join($folders[$f], '.public')))
 			{
 				$protected = false;
 			}
@@ -2900,14 +2900,14 @@ class DC_Folder extends DataContainer implements \listable, \editable
 						}
 						else
 						{
-							$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($this->strRootDir), '', 'class="preview-image"');
+							$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($this->strRootDir), '', 'class="preview-image" loading="lazy"');
 						}
 
 						$importantPart = System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
 
 						if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
 						{
-							$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important"');
+							$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.image_factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important" loading="lazy"');
 						}
 					}
 					catch (RuntimeException $e)

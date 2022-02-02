@@ -32,6 +32,7 @@ class StringUtilTest extends TestCase
         $container->setParameter('kernel.cache_dir', $this->getFixturesDir().'/cache');
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.charset', 'UTF-8');
+        $container->setParameter('contao.sanitizer.allowed_url_protocols', ['http', 'https']);
         $container->set('request_stack', new RequestStack());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());

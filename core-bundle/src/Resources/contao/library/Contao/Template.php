@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
@@ -330,10 +329,6 @@ abstract class Template extends Controller
 		$response = new Response($this->strBuffer);
 		$response->headers->set('Content-Type', $this->strContentType);
 		$response->setCharset(System::getContainer()->getParameter('kernel.charset'));
-
-		// Mark this response to affect the caching of the current page but remove any default cache headers
-		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
-		$response->headers->remove('Cache-Control');
 
 		return $response;
 	}

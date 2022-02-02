@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
+use Contao\CoreBundle\Intl\Countries;
+use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -232,6 +234,32 @@ class InsertTags extends Controller
 						break;
 					}
 
+					if ($keys[0] == 'LNG' && \count($keys) == 2)
+					{
+						try
+						{
+							$arrCache[$strTag] = System::getContainer()->get(Locales::class)->getDisplayNames(array($keys[1]))[$keys[1]];
+							break;
+						}
+						catch (\Throwable $exception)
+						{
+							// Fall back to loading the label via $GLOBALS['TL_LANG']
+						}
+					}
+
+					if ($keys[0] == 'CNT' && \count($keys) == 2)
+					{
+						try
+						{
+							$arrCache[$strTag] = System::getContainer()->get(Countries::class)->getCountries()[strtoupper($keys[1])] ?? '';
+							break;
+						}
+						catch (\Throwable $exception)
+						{
+							// Fall back to loading the label via $GLOBALS['TL_LANG']
+						}
+					}
+
 					$file = $keys[0];
 
 					// Map the key (see #7217)
@@ -435,38 +463,43 @@ class InsertTags extends Controller
 							break;
 						}
 
-						// Page type specific settings (thanks to Andreas Schempp)
-						switch ($objNextPage->type)
+						$strUrl = '';
+
+						// Do not generate URL for insert tags that don't need it
+						if (\in_array(strtolower($elements[0]), array('link', 'link_open', 'link_url'), true))
 						{
-							case 'redirect':
-								$strUrl = $objNextPage->url;
+							switch ($objNextPage->type)
+							{
+								case 'redirect':
+									$strUrl = $objNextPage->url;
 
-								if (strncasecmp($strUrl, 'mailto:', 7) === 0)
-								{
-									$strUrl = StringUtil::encodeEmail($strUrl);
-								}
-								break;
-
-							case 'forward':
-								if ($objNextPage->jumpTo)
-								{
-									$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
-								}
-								else
-								{
-									$objNext = PageModel::findFirstPublishedRegularByPid($objNextPage->id);
-								}
-
-								if ($objNext instanceof PageModel)
-								{
-									$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+									if (strncasecmp($strUrl, 'mailto:', 7) === 0)
+									{
+										$strUrl = StringUtil::encodeEmail($strUrl);
+									}
 									break;
-								}
-								// no break
 
-							default:
-								$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
-								break;
+								case 'forward':
+									if ($objNextPage->jumpTo)
+									{
+										$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
+									}
+									else
+									{
+										$objNext = PageModel::findFirstPublishedRegularByPid($objNextPage->id);
+									}
+
+									if ($objNext instanceof PageModel)
+									{
+										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										break;
+									}
+									// no break
+
+								default:
+									$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									break;
+							}
 						}
 
 						$strName = $objNextPage->title;

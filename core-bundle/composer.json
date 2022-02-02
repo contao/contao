@@ -26,7 +26,7 @@
         "ext-zlib": "*",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
-        "composer/package-versions-deprecated": "^1.8",
+        "composer/package-versions-deprecated": "^1.11.99.5",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.2",
         "contao-components/colorbox": "^1.6",
@@ -98,6 +98,7 @@
         "symfony/routing": "^4.4 || ^5.2",
         "symfony/security-bundle": "^4.4 || ^5.2",
         "symfony/translation": "^4.4 || ^5.2",
+        "symfony/twig-bridge": "^4.4 || ^5.2",
         "symfony/twig-bundle": "^4.4 || ^5.2",
         "symfony/var-dumper": "^4.4 || ^5.2",
         "symfony/yaml": "^4.4 || ^5.2",
@@ -124,7 +125,7 @@
         "ext-fileinfo": "*",
         "contao/maintenance-bundle-deprecated": "^2.1.5",
         "contao/manager-plugin": "^2.3.1",
-        "contao/test-case": "^4.4",
+        "contao/test-case": "^4.5",
         "phpunit/phpunit": "^8.5",
         "symfony/browser-kit": "^4.4 || ^5.2",
         "symfony/http-client": "^4.4 || ^5.2",
@@ -134,10 +135,7 @@
         "contao/tcpdf-bundle": "To export articles as PDF files"
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin",
-        "symfony": {
-            "require": "^4.4 || ^5.2"
-        }
+        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {

@@ -31,11 +31,6 @@ class BackendMain extends Backend
 	protected $objAjax;
 
 	/**
-	 * @var BackendTemplate
-	 */
-	protected $Template;
-
-	/**
 	 * Initialize the controller
 	 *
 	 * 1. Import the user

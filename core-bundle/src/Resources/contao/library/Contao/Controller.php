@@ -53,6 +53,11 @@ use Symfony\Component\Finder\Glob;
 abstract class Controller extends System
 {
 	/**
+	 * @var Template
+	 */
+	protected $Template;
+
+	/**
 	 * @var array
 	 */
 	protected static $arrQueryCache = array();

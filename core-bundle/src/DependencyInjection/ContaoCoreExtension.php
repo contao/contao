@@ -84,6 +84,7 @@ class ContaoCoreExtension extends Extension
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
+        $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
 
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);

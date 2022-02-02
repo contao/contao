@@ -347,6 +347,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>Путања шаблона &quot;%s&quot; не сме да садржи следеће знакове: %s</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1290,6 +1291,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_license">
         <source>License</source>
+        <target>Лиценца</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1477,6 +1479,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirm password</source>
+        <target>Потврди лозинку</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -1484,9 +1487,11 @@
       </trans-unit>
       <trans-unit id="MSC.showPassword">
         <source>Show password</source>
+        <target>Прикажи лозинку</target>
       </trans-unit>
       <trans-unit id="MSC.hidePassword">
         <source>Hide password</source>
+        <target>Сакриј лозинку</target>
       </trans-unit>
       <trans-unit id="MSC.dateAdded.0">
         <source>Date added</source>
@@ -2006,7 +2011,7 @@
       </trans-unit>
       <trans-unit id="MSC.fileManager">
         <source>File manager</source>
-        <target>Менаџер фајлова - File manager</target>
+        <target>Управљање фајловима</target>
       </trans-unit>
       <trans-unit id="MSC.pageManager">
         <source>Site structure</source>
@@ -2082,6 +2087,7 @@
       </trans-unit>
       <trans-unit id="MSC.guests">
         <source>Guests</source>
+        <target>Гости</target>
       </trans-unit>
       <trans-unit id="MSC.updateMode">
         <source>Update mode</source>
@@ -2641,6 +2647,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Постоји барем једна корисничка група са одобрењем приступа Фронт Енд модулу &quot;Листинг&quot; и припадајућим пољима &quot;list_*&quot;. С обзиром да та поља могу да садрже арбитрарне SQL корисници ових група имплицитно имају приступ систему!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2668,6 +2675,7 @@
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Овде можете ограничити број ставки. Поставите на 0 за приказ свих ставки.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
@@ -2707,6 +2715,7 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Непозната опција: %s</target>
       </trans-unit>
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>

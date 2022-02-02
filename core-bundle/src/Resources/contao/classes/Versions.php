@@ -10,9 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
 use Contao\CoreBundle\Exception\ResponseException;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Provide methods to handle versioning.
@@ -458,7 +460,8 @@ class Versions extends Controller
 
 						if (\is_array($arrFields[$k]))
 						{
-							$blnIsBinary = $arrFields[$k]['type'] === BinaryType::class || $arrFields[$k]['type'] === BlobType::class;
+							// Detect binary fields using Doctrine's built-in types or Contao's BinaryStringType (see #3665)
+							$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB, BinaryStringType::NAME), true);
 						}
 						else
 						{

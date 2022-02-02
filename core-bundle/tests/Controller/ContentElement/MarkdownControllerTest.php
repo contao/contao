@@ -141,7 +141,7 @@ class MarkdownControllerTest extends ContaoTestCase
             ->willReturn($template)
         ;
 
-        $container = new Container();
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $framework);
 
         return $container;

@@ -109,7 +109,6 @@ class ApplicationTest extends ContaoTestCase
         /** @var array $commands */
         $commands = $application->all();
 
-        $this->assertCount(4, $commands);
         $this->assertArrayHasKey('config:get', $commands);
     }
 

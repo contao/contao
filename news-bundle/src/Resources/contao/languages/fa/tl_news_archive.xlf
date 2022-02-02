@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.sortOrder.1">
         <source>By default, comments are sorted ascending, starting with the oldest one.</source>
-        <target>به صورت پیش‌فرض، دیدگاه‌ها به صورت صعودی از قدیمی ترین مرتب می شوند.</target>
+        <target>به صورت پیش‌فرض، دیدگاه‌ها به صورت صعودی از قدیمی‌ترین مرتب می شوند.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.perPage.0">
         <source>Comments per page</source>

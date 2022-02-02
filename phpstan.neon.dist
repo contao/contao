@@ -36,6 +36,11 @@ parameters:
         - '#Call to an undefined method .*::transChoice\(\)\.#'
         - '#Trying to mock an undefined method transChoice\(\) on class Symfony\\Component\\Translation\\Translator\.#'
 
+        # Ignore the forward compatible phpDoc comments of the security component in Symfony 5.4
+        - '#expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given#'
+        - '#Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken constructor expects array<string>, string given#'
+        - '#''anon.'' and Symfony\\Component\\Security\\Core\\User\\UserInterface\|null will always evaluate to false#'
+
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true
