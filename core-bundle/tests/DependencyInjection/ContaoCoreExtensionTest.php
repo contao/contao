@@ -940,6 +940,9 @@ class ContaoCoreExtensionTest extends TestCase
         yield 'callback' => [AsCallback::class];
     }
 
+    /**
+     * @return \ReflectionClass<object>
+     */
     private function mockReflectionClass(): \ReflectionClass
     {
         $reflectionClass = $this->createMock(\ReflectionClass::class);
