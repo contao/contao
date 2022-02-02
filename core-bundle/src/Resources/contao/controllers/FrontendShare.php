@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Share a page via a social network.
@@ -30,7 +31,7 @@ class FrontendShare extends Frontend
 
 		if (!$url || !\is_string($url))
 		{
-			return new RedirectResponse('../');
+			throw new BadRequestHttpException('Parameter "u" missing');
 		}
 
 		if (Input::get('p') == 'facebook')
@@ -42,7 +43,7 @@ class FrontendShare extends Frontend
 
 		if (!$text || !\is_string($text))
 		{
-			return new RedirectResponse('../');
+			throw new BadRequestHttpException('Parameter "t" missing');
 		}
 
 		if (Input::get('p') == 'twitter')
@@ -50,7 +51,7 @@ class FrontendShare extends Frontend
 			return new RedirectResponse('https://twitter.com/intent/tweet?url=' . rawurlencode($url) . '&text=' . rawurlencode($text));
 		}
 
-		return new RedirectResponse('../');
+		throw new BadRequestHttpException(sprintf('Invalid action "%s"', Input::get('p')));
 	}
 }
 
