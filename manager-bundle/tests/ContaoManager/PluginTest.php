@@ -601,6 +601,22 @@ class PluginTest extends ContaoTestCase
     {
         yield 'pdo with driver' => [
             [
+                'driver' => 'mysql',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with driver alias mysql2' => [
+            [
+                'driver' => 'mysql2',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with driver alias pdo_mysql' => [
+            [
                 'driver' => 'pdo_mysql',
                 'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
             ],
@@ -608,6 +624,22 @@ class PluginTest extends ContaoTestCase
         ];
 
         yield 'pdo with url' => [
+            [
+                'url' => 'mysql://user:secret@localhost/mydb',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with url and driver alias mysql2' => [
+            [
+                'url' => 'mysql2://user:secret@localhost/mydb',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with url and driver alias pdo_mysql' => [
             [
                 'url' => 'pdo-mysql://user:secret@localhost/mydb',
                 'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
@@ -976,6 +1008,7 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'options' => [
                                 \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                1002 => '',
                             ],
                         ],
                     ],

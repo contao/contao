@@ -292,32 +292,15 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
-        $driver = null;
-        $url = null;
+        [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
-        foreach ($extensionConfigs as $extensionConfig) {
-            // Do not add PDO options if custom options have been defined
-            // Since this is merged recursively, we don't need to check other configs
-            if (isset($extensionConfig['dbal']['connections']['default']['options'][\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
-                return $extensionConfigs;
-            }
-
-            if (isset($extensionConfig['dbal']['connections']['default']['driver'])) {
-                $driver = $extensionConfig['dbal']['connections']['default']['driver'];
-            }
-
-            if (isset($extensionConfig['dbal']['connections']['default']['url'])) {
-                $url = $container->resolveEnvPlaceholders($extensionConfig['dbal']['connections']['default']['url'], true);
-            }
-        }
-
-        // If URL is set it overrides the driver option
-        if (null !== $url) {
-            $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
+        // Do not add PDO options if custom options have been defined
+        if (isset($options[\PDO::MYSQL_ATTR_MULTI_STATEMENTS])) {
+            return $extensionConfigs;
         }
 
         // Do not add PDO options if the selected driver is not mysql
-        if (null !== $driver && !\in_array($driver, ['pdo_mysql', 'mysql', 'mysql2'], true)) {
+        if (null !== $driver && 'mysql' !== $driver) {
             return $extensionConfigs;
         }
 
@@ -416,30 +399,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      */
     private function enableStrictMode(array $extensionConfigs, ContainerBuilder $container): array
     {
-        $driver = '';
-        $url = null;
-        $options = [];
-
-        foreach ($extensionConfigs as $config) {
-            if (null !== ($driverConfig = $config['dbal']['connections']['default']['driver'] ?? null)) {
-                $driver = $driverConfig;
-            }
-
-            if (null !== ($urlConfig = $config['dbal']['connections']['default']['url'] ?? null)) {
-                $url = $container->resolveEnvPlaceholders($urlConfig, true);
-            }
-
-            if (null !== ($optionsConfig = $config['dbal']['connections']['default']['options'] ?? null)) {
-                $options = array_replace($options, $optionsConfig);
-            }
-        }
-
-        if (null !== $url) {
-            $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
-        }
+        [$driver, $options] = $this->parseDbalDriverAndOptions($extensionConfigs, $container);
 
         // Skip if driver is not supported
-        if (null === ($key = ['pdo_mysql' => 1002, 'mysqli' => 3][$driver] ?? null)) {
+        if (null === ($key = ['mysql' => 1002, 'mysqli' => 3][$driver] ?? null)) {
             return $extensionConfigs;
         }
 
@@ -519,6 +482,42 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         ];
 
         return $extensionConfigs;
+    }
+
+    /**
+     * @return array{0: string|null, 1: array<string, mixed>}
+     */
+    private function parseDbalDriverAndOptions(array $extensionConfigs, ContainerBuilder $container): array
+    {
+        $driver = null;
+        $url = null;
+        $options = [];
+
+        foreach ($extensionConfigs as $config) {
+            if (null !== ($driverConfig = $config['dbal']['connections']['default']['driver'] ?? null)) {
+                $driver = $driverConfig;
+            }
+
+            if (null !== ($urlConfig = $config['dbal']['connections']['default']['url'] ?? null)) {
+                $url = $container->resolveEnvPlaceholders($urlConfig, true);
+            }
+
+            if (null !== ($optionsConfig = $config['dbal']['connections']['default']['options'] ?? null)) {
+                $options = array_replace($options, $optionsConfig);
+            }
+        }
+
+        // If URL is set it overrides the driver option
+        if (null !== $url) {
+            $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
+        }
+
+        // Normalize driver name
+        if (\in_array($driver, ['pdo_mysql', 'mysql2'], true)) {
+            $driver = 'mysql';
+        }
+
+        return [$driver, $options];
     }
 
     private function getDatabaseUrl(ContainerBuilder $container, array $extensionConfigs): string
