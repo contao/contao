@@ -35,12 +35,19 @@ class InputTest extends TestCase
         include __DIR__.'/../../src/Resources/contao/config/default.php';
 
         $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
+
         $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(
             array_merge(
                 unserialize($GLOBALS['TL_CONFIG']['allowedAttributes']),
                 [['key' => 'use', 'value' => 'xlink:href']]
             )
         );
+
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.charset', 'UTF-8');
+        $container->setParameter('contao.sanitizer.allowed_url_protocols', ['http', 'https', 'mailto', 'tel']);
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
@@ -422,11 +429,7 @@ class InputTest extends TestCase
     {
         $simpleTokenParser = new SimpleTokenParser(new ExpressionLanguage());
 
-        $container = new ContainerBuilder();
-        $container->set(SimpleTokenParser::class, $simpleTokenParser);
-        $container->setParameter('kernel.charset', 'UTF-8');
-
-        System::setContainer($container);
+        System::getContainer()->set(SimpleTokenParser::class, $simpleTokenParser);
 
         // Input encode the source
         Input::resetCache();

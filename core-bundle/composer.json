@@ -26,7 +26,7 @@
         "ext-zlib": "*",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
-        "composer/package-versions-deprecated": "^1.8",
+        "composer/package-versions-deprecated": "^1.11.99.5",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.2",
         "contao-components/colorbox": "^1.6",
@@ -135,10 +135,7 @@
         "contao/tcpdf-bundle": "To export articles as PDF files"
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin",
-        "symfony": {
-            "require": "^4.4 || ^5.2"
-        }
+        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {

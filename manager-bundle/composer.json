@@ -72,10 +72,7 @@
         "contao/tcpdf-bundle": "To export articles as PDF files"
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
-        "symfony": {
-            "require": "^4.4 || ^5.2"
-        }
+        "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
