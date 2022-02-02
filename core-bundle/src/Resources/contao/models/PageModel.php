@@ -709,6 +709,10 @@ class PageModel extends Model
 	 */
 	public static function findSimilarByAlias(self $pageModel)
 	{
+		if ('' === $pageModel->alias) {
+			return null;
+		}
+
 		$pageModel->loadDetails();
 
 		$t = static::$strTable;
