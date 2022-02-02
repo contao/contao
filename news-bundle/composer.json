@@ -38,10 +38,7 @@
         "symfony/phpunit-bridge": "^5.2"
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin",
-        "symfony": {
-            "require": "^4.4 || ^5.2"
-        }
+        "contao-manager-plugin": "Contao\\NewsBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {

@@ -377,10 +377,10 @@ class SearchIndexSubscriberTest extends TestCase
         yield 'Test reports transport exception responses' => [
             new TransportException('Could not resolve host or timeout'),
             $this->getResponse(true, 404),
-            LogLevel::ERROR,
+            LogLevel::DEBUG,
             'Broken link! Could not request properly: Could not resolve host or timeout.',
-            ['ok' => 0, 'warning' => 0, 'error' => 2],
-            ['ok' => 0, 'warning' => 0, 'error' => 1],
+            ['ok' => 0, 'warning' => 2, 'error' => 0],
+            ['ok' => 0, 'warning' => 1, 'error' => 0],
         ];
     }
 
@@ -446,19 +446,19 @@ class SearchIndexSubscriberTest extends TestCase
             new ClientException($this->getResponse(true, 404)),
             $this->getResponse(true, 404),
             new LastChunk(),
-            LogLevel::ERROR,
+            LogLevel::DEBUG,
             'Broken link! HTTP Status Code: 404.',
-            ['ok' => 0, 'warning' => 0, 'error' => 1],
+            ['ok' => 0, 'warning' => 1, 'error' => 0],
         ];
 
         yield 'Test reports responses that were not successful (with previous result)' => [
             new ClientException($this->getResponse(true, 404)),
             $this->getResponse(true, 404),
             new LastChunk(),
-            LogLevel::ERROR,
+            LogLevel::DEBUG,
             'Broken link! HTTP Status Code: 404.',
-            ['ok' => 0, 'warning' => 0, 'error' => 2],
-            ['ok' => 0, 'warning' => 0, 'error' => 1],
+            ['ok' => 0, 'warning' => 2, 'error' => 0],
+            ['ok' => 0, 'warning' => 1, 'error' => 0],
         ];
     }
 

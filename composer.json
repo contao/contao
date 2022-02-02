@@ -32,7 +32,7 @@
         "ext-zlib": "*",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
-        "composer/package-versions-deprecated": "^1.8",
+        "composer/package-versions-deprecated": "^1.11.99.5",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.2",
         "contao-components/colorbox": "^1.6",
@@ -262,9 +262,6 @@
             "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
             "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
             "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
-        },
-        "symfony": {
-            "require": "^4.4 || ^5.2"
         }
     },
     "scripts": {

@@ -29,10 +29,7 @@
         "symfony/http-client": "^4.4 || ^5.2"
     },
     "extra": {
-        "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin",
-        "symfony": {
-            "require": "^4.4 || ^5.2"
-        }
+        "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
