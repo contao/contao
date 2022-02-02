@@ -41,6 +41,11 @@ parameters:
         - '#Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken constructor expects array<string>, string given#'
         - '#''anon.'' and Symfony\\Component\\Security\\Core\\User\\UserInterface\|null will always evaluate to false#'
 
+        # Ignore incorrect assertSame detection for reference variables
+        -
+            message: '#Call to method .*::assertSame\(\) with .* will always evaluate to false\.#'
+            path: %currentWorkingDirectory%/core-bundle/tests/Contao/SystemTest.php
+
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false
     inferPrivatePropertyTypeFromConstructor: true

@@ -496,6 +496,12 @@ abstract class System
 		// Backwards compatibility
 		if ('languages' === $strName)
 		{
+			// Reset previously loaded languages without destroying references
+			foreach (array_keys($GLOBALS['TL_LANG']['LNG'] ?? array()) as $strLocale)
+			{
+				$GLOBALS['TL_LANG']['LNG'][$strLocale] = null;
+			}
+
 			foreach (self::getContainer()->get(Locales::class)->getLocales($strLanguage) as $strLocale => $strLabel)
 			{
 				$GLOBALS['TL_LANG']['LNG'][$strLocale] = $strLabel;
@@ -505,6 +511,12 @@ abstract class System
 		// Backwards compatibility
 		if ('countries' === $strName)
 		{
+			// Reset previously loaded countries without destroying references
+			foreach (array_keys($GLOBALS['TL_LANG']['CNT'] ?? array()) as $strLocale)
+			{
+				$GLOBALS['TL_LANG']['CNT'][$strLocale] = null;
+			}
+
 			foreach (self::getContainer()->get(Countries::class)->getCountries($strLanguage) as $strCountryCode => $strLabel)
 			{
 				$GLOBALS['TL_LANG']['CNT'][strtolower($strCountryCode)] = $strLabel;
