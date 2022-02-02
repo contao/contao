@@ -772,7 +772,8 @@ class ContaoCoreExtensionTest extends TestCase
                 'json',
                 true,
                 'html'
-            )
+            ),
+            new \ReflectionClass(ClassWithMethod::class)
         );
     }
 
@@ -795,7 +796,11 @@ class ContaoCoreExtensionTest extends TestCase
             ->with('contao.picker_provider', ['priority' => 32])
         ;
 
-        $autoConfiguredAttributes[AsPickerProvider::class]($definition, new AsPickerProvider(32));
+        $autoConfiguredAttributes[AsPickerProvider::class](
+            $definition,
+            new AsPickerProvider(32),
+            new \ReflectionClass(ClassWithMethod::class)
+        );
     }
 
     public function testRegistersAsCronjobAttribute(): void

@@ -163,16 +163,15 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             }
         );
 
-        foreach ([AsPage::class => 'contao.page', AsPickerProvider::class => 'contao.picker_provider'] as $attributeClass => $tag) {
-            $container->registerAttributeForAutoconfiguration(
-                $attributeClass,
-                static function (ChildDefinition $definition, object $attribute) use ($tag): void {
-                    $definition->addTag($tag, get_object_vars($attribute));
-                }
-            );
-        }
+        $attributesForAutoconfiguration = [
+            AsPage::class => 'contao.page',
+            AsPickerProvider::class => 'contao.picker_provider',
+            AsCronJob::class => 'contao.cronjob',
+            AsHook::class => 'contao.hook',
+            AsCallback::class => 'contao.callback',
+        ];
 
-        foreach ([AsCronJob::class => 'contao.cronjob', AsHook::class => 'contao.hook', AsCallback::class => 'contao.callback'] as $attributeClass => $tag) {
+        foreach ($attributesForAutoconfiguration as $attributeClass => $tag) {
             $container->registerAttributeForAutoconfiguration(
                 $attributeClass,
                 static function (ChildDefinition $definition, object $attribute, \Reflector $reflector) use ($attributeClass, $tag): void {
