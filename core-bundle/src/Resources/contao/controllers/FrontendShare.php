@@ -39,15 +39,15 @@ class FrontendShare extends Frontend
 			return new RedirectResponse('https://www.facebook.com/sharer/sharer.php?p[url]=' . rawurlencode($url));
 		}
 
-		$text = Input::get('t', true);
-
-		if (!$text || !\is_string($text))
-		{
-			throw new BadRequestHttpException('Parameter "t" missing');
-		}
-
 		if (Input::get('p') == 'twitter')
 		{
+			$text = Input::get('t', true);
+
+			if (!$text || !\is_string($text))
+			{
+				return new RedirectResponse('https://twitter.com/intent/tweet?url=' . rawurlencode($url));
+			}
+
 			return new RedirectResponse('https://twitter.com/intent/tweet?url=' . rawurlencode($url) . '&text=' . rawurlencode($text));
 		}
 
