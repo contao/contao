@@ -641,6 +641,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsContentElementAttribute(): void
     {
+        if (\PHP_VERSION_ID <= 80000) {
+            $this->markTestSkipped('Attributes support is only available since PHP8.');
+        }
+
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -679,6 +683,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsFrontendModuleAttribute(): void
     {
+        if (\PHP_VERSION_ID <= 80000) {
+            $this->markTestSkipped('Attributes support is only available since PHP8.');
+        }
+
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -717,6 +725,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsPageAttribute(): void
     {
+        if (\PHP_VERSION_ID <= 80000) {
+            $this->markTestSkipped('Attributes support is only available since PHP8.');
+        }
+
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -765,6 +777,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsPickerProviderAttribute(): void
     {
+        if (\PHP_VERSION_ID <= 80000) {
+            $this->markTestSkipped('Attributes support is only available since PHP8.');
+        }
+
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -783,6 +799,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsCronjobAttribute(): void
     {
+        if (\PHP_VERSION_ID <= 80000) {
+            $this->markTestSkipped('Attributes support is only available since PHP8.');
+        }
+
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -811,6 +831,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsHookAttribute(): void
     {
+        if (\PHP_VERSION_ID <= 80000) {
+            $this->markTestSkipped('Attributes support is only available since PHP8.');
+        }
+
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -839,6 +863,10 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsCallbackAttribute(): void
     {
+        if (\PHP_VERSION_ID <= 80000) {
+            $this->markTestSkipped('Attributes support is only available since PHP8.');
+        }
+
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -878,6 +906,10 @@ class ContaoCoreExtensionTest extends TestCase
      */
     public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
     {
+        if (\PHP_VERSION_ID <= 80000) {
+            $this->markTestSkipped('Attributes support is only available since PHP8.');
+        }
+
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
@@ -888,12 +920,15 @@ class ContaoCoreExtensionTest extends TestCase
             ->method('addTag')
         ;
 
+        $attribute = new \stdClass();
+        $attribute->method = 'bar';
+
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage($attributeClass.' attribute cannot declare a method on "Contao\Foo::bar()".');
 
         $autoConfiguredAttributes[$attributeClass](
             $definition,
-            new AsCronJob('daily', 'bar'),
+            $attribute,
             $this->mockReflectionMethod()
         );
     }
