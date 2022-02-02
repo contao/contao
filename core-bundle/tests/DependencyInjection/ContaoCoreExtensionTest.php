@@ -12,16 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
+use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
+use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
@@ -626,6 +637,305 @@ class ContaoCoreExtensionTest extends TestCase
         ;
 
         (new ContaoCoreExtension())->configureFilesystem($config);
+    }
+
+    public function testRegistersAsContentElementAttribute(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+
+        $this->assertArrayHasKey(AsContentElement::class, $autoConfiguredAttributes);
+
+        $definition = $this->createMock(ChildDefinition::class);
+        $definition
+            ->expects($this->once())
+            ->method('addTag')
+            ->with(
+                ContentElementReference::TAG_NAME,
+                [
+                    ['foo' => 'bar'],
+                    'type' => 'foo',
+                    'category' => 'bar',
+                    'template' => 'a_template',
+                    'method' => 'aMethod',
+                    'renderer' => 'inline',
+                ]
+            )
+        ;
+
+        $autoConfiguredAttributes[AsContentElement::class](
+            $definition,
+            new AsContentElement(
+                'foo',
+                'bar',
+                'a_template',
+                'aMethod',
+                'inline',
+                ['foo' => 'bar']
+            )
+        );
+    }
+
+    public function testRegistersAsFrontendModuleAttribute(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+
+        $this->assertArrayHasKey(AsFrontendModule::class, $autoConfiguredAttributes);
+
+        $definition = $this->createMock(ChildDefinition::class);
+        $definition
+            ->expects($this->once())
+            ->method('addTag')
+            ->with(
+                FrontendModuleReference::TAG_NAME,
+                [
+                    ['foo' => 'bar'],
+                    'type' => 'foo',
+                    'category' => 'bar',
+                    'template' => 'a_template',
+                    'method' => 'aMethod',
+                    'renderer' => 'inline',
+                ]
+            )
+        ;
+
+        $autoConfiguredAttributes[AsFrontendModule::class](
+            $definition,
+            new AsFrontendModule(
+                'foo',
+                'bar',
+                'a_template',
+                'aMethod',
+                'inline',
+                ['foo' => 'bar']
+            )
+        );
+    }
+
+    public function testRegistersAsPageAttribute(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+
+        $this->assertArrayHasKey(AsPage::class, $autoConfiguredAttributes);
+
+        $definition = $this->createMock(ChildDefinition::class);
+        $definition
+            ->expects($this->once())
+            ->method('addTag')
+            ->with(
+                'contao.page',
+                [
+                    'type' => 'foo',
+                    'path' => '{some}/path',
+                    'requirements' => ['some' => '\d'],
+                    'options' => ['utf8' => true],
+                    'defaults' => [
+                        '_scope' => 'backend',
+                        '_locale' => 'en',
+                        '_format' => 'json',
+                    ],
+                    'methods' => ['GET'],
+                    'contentComposition' => true,
+                    'urlSuffix' => 'html',
+                ]
+            )
+        ;
+
+        $autoConfiguredAttributes[AsPage::class](
+            $definition,
+            new AsPage(
+                'foo',
+                '{some}/path',
+                ['some' => '\d'],
+                ['utf8' => true],
+                ['_scope' => 'backend'],
+                ['GET'],
+                'en',
+                'json',
+                true,
+                'html'
+            )
+        );
+    }
+
+    public function testRegistersAsPickerProviderAttribute(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+
+        $this->assertArrayHasKey(AsPickerProvider::class, $autoConfiguredAttributes);
+
+        $definition = $this->createMock(ChildDefinition::class);
+        $definition
+            ->expects($this->once())
+            ->method('addTag')
+            ->with('contao.picker_provider', ['priority' => 32])
+        ;
+
+        $autoConfiguredAttributes[AsPickerProvider::class]($definition, new AsPickerProvider(32));
+    }
+
+    public function testRegistersAsCronjobAttribute(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+
+        $this->assertArrayHasKey(AsCronJob::class, $autoConfiguredAttributes);
+
+        $definition = $this->createMock(ChildDefinition::class);
+        $definition
+            ->expects($this->exactly(2))
+            ->method('addTag')
+            ->with('contao.cronjob', ['interval' => 'daily', 'method' => 'bar'])
+        ;
+
+        $autoConfiguredAttributes[AsCronJob::class](
+            $definition,
+            new AsCronJob('daily', 'bar'),
+            $this->mockReflectionClass()
+        );
+
+        $autoConfiguredAttributes[AsCronJob::class](
+            $definition,
+            new AsCronJob('daily'),
+            $this->mockReflectionMethod()
+        );
+    }
+
+    public function testRegistersAsHookAttribute(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+
+        $this->assertArrayHasKey(AsHook::class, $autoConfiguredAttributes);
+
+        $definition = $this->createMock(ChildDefinition::class);
+        $definition
+            ->expects($this->exactly(2))
+            ->method('addTag')
+            ->with('contao.hook', ['hook' => 'activateAccount', 'priority' => 32, 'method' => 'bar'])
+        ;
+
+        $autoConfiguredAttributes[AsHook::class](
+            $definition,
+            new AsHook('activateAccount', 'bar', 32),
+            $this->mockReflectionClass()
+        );
+
+        $autoConfiguredAttributes[AsHook::class](
+            $definition,
+            new AsHook('activateAccount', null, 32),
+            $this->mockReflectionMethod()
+        );
+    }
+
+    public function testRegistersAsCallbackAttribute(): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+
+        $this->assertArrayHasKey(AsCallback::class, $autoConfiguredAttributes);
+
+        $definition = $this->createMock(ChildDefinition::class);
+        $definition
+            ->expects($this->exactly(2))
+            ->method('addTag')
+            ->with(
+                'contao.callback',
+                [
+                    'table' => 'tl_foo',
+                    'target' => 'list.label.label',
+                    'priority' => 32,
+                    'method' => 'bar',
+                ]
+            )
+        ;
+
+        $autoConfiguredAttributes[AsCallback::class](
+            $definition,
+            new AsCallback('tl_foo', 'list.label.label', 'bar', 32),
+            $this->mockReflectionClass()
+        );
+
+        $autoConfiguredAttributes[AsCallback::class](
+            $definition,
+            new AsCallback('tl_foo', 'list.label.label', null, 32),
+            $this->mockReflectionMethod()
+        );
+    }
+
+    /**
+     * @dataProvider provideAttributesForMethods
+     */
+    public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
+    {
+        $container = $this->getContainerBuilder();
+        (new ContaoCoreExtension())->load([], $container);
+        $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
+
+        $definition = $this->createMock(ChildDefinition::class);
+        $definition
+            ->expects($this->never())
+            ->method('addTag')
+        ;
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage($attributeClass.' attribute cannot declare a method on "Contao\Foo::bar()".');
+
+        $autoConfiguredAttributes[$attributeClass](
+            $definition,
+            new AsCronJob('daily', 'bar'),
+            $this->mockReflectionMethod()
+        );
+    }
+
+    public function provideAttributesForMethods(): \Generator
+    {
+        yield 'cronjob' => [AsCronJob::class];
+        yield 'hook' => [AsHook::class];
+        yield 'callback' => [AsCallback::class];
+    }
+
+    private function mockReflectionClass(): \ReflectionClass
+    {
+        $reflectionClass = $this->createMock(\ReflectionClass::class);
+        $reflectionClass
+            ->expects($this->never())
+            ->method('getName')
+        ;
+
+        return $reflectionClass;
+    }
+
+    private function mockReflectionMethod(): \ReflectionMethod
+    {
+        $reflectionClass = $this->createMock(\ReflectionClass::class);
+        $reflectionClass
+            ->method('getName')
+            ->willReturn('Contao\Foo')
+        ;
+
+        $reflectionMethod = $this->createMock(\ReflectionMethod::class);
+        $reflectionMethod
+            ->method('getDeclaringClass')
+            ->willReturn($reflectionClass)
+        ;
+
+        $reflectionMethod
+            ->method('getName')
+            ->willReturn('bar')
+        ;
+
+        return $reflectionMethod;
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder
