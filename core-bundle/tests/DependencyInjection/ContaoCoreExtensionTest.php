@@ -27,6 +27,7 @@ use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Contao\CoreBundle\Tests\Fixtures\ClassWithMethod;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -813,19 +814,19 @@ class ContaoCoreExtensionTest extends TestCase
         $definition
             ->expects($this->exactly(2))
             ->method('addTag')
-            ->with('contao.cronjob', ['interval' => 'daily', 'method' => 'bar'])
+            ->with('contao.cronjob', ['interval' => 'daily', 'method' => 'someMethod'])
         ;
 
         $autoConfiguredAttributes[AsCronJob::class](
             $definition,
-            new AsCronJob('daily', 'bar'),
-            $this->mockReflectionClass()
+            new AsCronJob('daily', 'someMethod'),
+            new \ReflectionClass(ClassWithMethod::class)
         );
 
         $autoConfiguredAttributes[AsCronJob::class](
             $definition,
             new AsCronJob('daily'),
-            $this->mockReflectionMethod()
+            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod')
         );
     }
 
@@ -845,19 +846,19 @@ class ContaoCoreExtensionTest extends TestCase
         $definition
             ->expects($this->exactly(2))
             ->method('addTag')
-            ->with('contao.hook', ['hook' => 'activateAccount', 'priority' => 32, 'method' => 'bar'])
+            ->with('contao.hook', ['hook' => 'activateAccount', 'priority' => 32, 'method' => 'someMethod'])
         ;
 
         $autoConfiguredAttributes[AsHook::class](
             $definition,
-            new AsHook('activateAccount', 'bar', 32),
-            $this->mockReflectionClass()
+            new AsHook('activateAccount', 'someMethod', 32),
+            new \ReflectionClass(ClassWithMethod::class)
         );
 
         $autoConfiguredAttributes[AsHook::class](
             $definition,
             new AsHook('activateAccount', null, 32),
-            $this->mockReflectionMethod()
+            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod')
         );
     }
 
@@ -883,21 +884,21 @@ class ContaoCoreExtensionTest extends TestCase
                     'table' => 'tl_foo',
                     'target' => 'list.label.label',
                     'priority' => 32,
-                    'method' => 'bar',
+                    'method' => 'someMethod',
                 ]
             )
         ;
 
         $autoConfiguredAttributes[AsCallback::class](
             $definition,
-            new AsCallback('tl_foo', 'list.label.label', 'bar', 32),
-            $this->mockReflectionClass()
+            new AsCallback('tl_foo', 'list.label.label', 'someMethod', 32),
+            new \ReflectionClass(ClassWithMethod::class)
         );
 
         $autoConfiguredAttributes[AsCallback::class](
             $definition,
             new AsCallback('tl_foo', 'list.label.label', null, 32),
-            $this->mockReflectionMethod()
+            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod')
         );
     }
 
@@ -921,15 +922,15 @@ class ContaoCoreExtensionTest extends TestCase
         ;
 
         $attribute = new \stdClass();
-        $attribute->method = 'bar';
+        $attribute->method = 'someMethod';
 
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage($attributeClass.' attribute cannot declare a method on "Contao\Foo::bar()".');
+        $this->expectExceptionMessage($attributeClass.' attribute cannot declare a method on "Contao\CoreBundle\Tests\Fixtures\ClassWithMethod::someMethod()".');
 
         $autoConfiguredAttributes[$attributeClass](
             $definition,
             $attribute,
-            $this->mockReflectionMethod()
+            (new \ReflectionClass(ClassWithMethod::class))->getMethod('someMethod')
         );
     }
 
@@ -938,42 +939,6 @@ class ContaoCoreExtensionTest extends TestCase
         yield 'cronjob' => [AsCronJob::class];
         yield 'hook' => [AsHook::class];
         yield 'callback' => [AsCallback::class];
-    }
-
-    /**
-     * @return \ReflectionClass<object>
-     */
-    private function mockReflectionClass(): \ReflectionClass
-    {
-        $reflectionClass = $this->createMock(\ReflectionClass::class);
-        $reflectionClass
-            ->expects($this->never())
-            ->method('getName')
-        ;
-
-        return $reflectionClass;
-    }
-
-    private function mockReflectionMethod(): \ReflectionMethod
-    {
-        $reflectionClass = $this->createMock(\ReflectionClass::class);
-        $reflectionClass
-            ->method('getName')
-            ->willReturn('Contao\Foo')
-        ;
-
-        $reflectionMethod = $this->createMock(\ReflectionMethod::class);
-        $reflectionMethod
-            ->method('getDeclaringClass')
-            ->willReturn($reflectionClass)
-        ;
-
-        $reflectionMethod
-            ->method('getName')
-            ->willReturn('bar')
-        ;
-
-        return $reflectionMethod;
     }
 
     private function getContainerBuilder(array $params = null): ContainerBuilder
