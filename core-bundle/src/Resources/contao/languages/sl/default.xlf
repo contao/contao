@@ -2617,8 +2617,8 @@
         <target>Onemogoči</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Notranji urejevalnik CSS je zastarel in bo odstranjen v eni od naslednjih različic Contaa! Prosimo, razmislite o izvozu vaših obstoječih CSS in ponovnem uvozu v predlogo strani v obliki zunanjih datotek CSS.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Notranji urejevalnik CSS je zastarel in bo odstranjen v Contao 5.0! Prosimo, razmislite o izvozu obstoječih slogovnih predlog in ponovni vključitvi kot zunanje datoteke v postavitvi strani.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
