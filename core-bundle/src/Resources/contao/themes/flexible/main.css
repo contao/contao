@@ -2162,6 +2162,10 @@ fieldset.collapsed > legend {
 .tl_listing .odd .tl_undo_preview .limit_toggler {
 	background-color:#fafafc;
 }
+.tl_undo_preview img {
+	max-width: 100%;
+	height: auto;
+}
 
 /* Tablet */
 @media (max-width:991px) {
