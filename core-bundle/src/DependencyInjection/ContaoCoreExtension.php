@@ -181,6 +181,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                         if (isset($tagAttributes['method'])) {
                             throw new LogicException(sprintf('%s attribute cannot declare a method on "%s::%s()".', $attributeClass, $reflector->getDeclaringClass()->getName(), $reflector->getName()));
                         }
+
                         $tagAttributes['method'] = $reflector->getName();
                     }
 
