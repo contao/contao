@@ -311,6 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_page.requireItem.1">
         <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Sproži napako 404, kadar naslov URL ne vključuje aliasa.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
