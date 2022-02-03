@@ -99,13 +99,13 @@ class ModuleCalendar extends Events
 		// Create the date object
 		try
 		{
-			if (Input::get('month'))
+			if (($month = Input::get('month')) && \is_string($month))
 			{
-				$this->Date = new Date(Input::get('month'), 'Ym');
+				$this->Date = new Date($month, 'Ym');
 			}
-			elseif (Input::get('day'))
+			elseif (($day = Input::get('day')) && \is_string($day))
 			{
-				$this->Date = new Date(Input::get('day'), 'Ymd');
+				$this->Date = new Date($day, 'Ymd');
 			}
 			else
 			{
