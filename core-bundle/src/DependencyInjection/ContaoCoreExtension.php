@@ -36,6 +36,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -163,40 +164,32 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             }
         );
 
-        $container->registerAttributeForAutoconfiguration(
-            AsCronJob::class,
-            static function (ChildDefinition $definition, AsCronJob $attribute): void {
-                $definition->addTag('contao.cronjob', get_object_vars($attribute));
-            }
-        );
+        $attributesForAutoconfiguration = [
+            AsPage::class => 'contao.page',
+            AsPickerProvider::class => 'contao.picker_provider',
+            AsCronJob::class => 'contao.cronjob',
+            AsHook::class => 'contao.hook',
+            AsCallback::class => 'contao.callback',
+        ];
 
-        $container->registerAttributeForAutoconfiguration(
-            AsHook::class,
-            static function (ChildDefinition $definition, AsHook $attribute): void {
-                $definition->addTag('contao.hook', get_object_vars($attribute));
-            }
-        );
+        foreach ($attributesForAutoconfiguration as $attributeClass => $tag) {
+            $container->registerAttributeForAutoconfiguration(
+                $attributeClass,
+                static function (ChildDefinition $definition, object $attribute, \Reflector $reflector) use ($attributeClass, $tag): void {
+                    $tagAttributes = get_object_vars($attribute);
 
-        $container->registerAttributeForAutoconfiguration(
-            AsCallback::class,
-            static function (ChildDefinition $definition, AsCallback $attribute): void {
-                $definition->addTag('contao.callback', get_object_vars($attribute));
-            }
-        );
+                    if ($reflector instanceof \ReflectionMethod) {
+                        if (isset($tagAttributes['method'])) {
+                            throw new LogicException(sprintf('%s attribute cannot declare a method on "%s::%s()".', $attributeClass, $reflector->getDeclaringClass()->getName(), $reflector->getName()));
+                        }
 
-        $container->registerAttributeForAutoconfiguration(
-            AsPage::class,
-            static function (ChildDefinition $definition, AsPage $attribute): void {
-                $definition->addTag('contao.page', get_object_vars($attribute));
-            }
-        );
+                        $tagAttributes['method'] = $reflector->getName();
+                    }
 
-        $container->registerAttributeForAutoconfiguration(
-            AsPickerProvider::class,
-            static function (ChildDefinition $definition, AsPickerProvider $attribute): void {
-                $definition->addTag('contao.picker_provider', get_object_vars($attribute));
-            }
-        );
+                    $definition->addTag($tag, $tagAttributes);
+                }
+            );
+        }
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void
