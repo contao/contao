@@ -29,6 +29,11 @@ parameters:
             message: '#PHPDoc tag @param references unknown parameter: \$options#'
             path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
 
+        # Ignore incorrect assertSame detection for reference variables
+        -
+            message: '#Call to method .*::assertSame\(\) with .* will always evaluate to false\.#'
+            path: %currentWorkingDirectory%/core-bundle/tests/Contao/SystemTest.php
+
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return typehint\.#'
 
@@ -40,11 +45,6 @@ parameters:
         - '#expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given#'
         - '#Symfony\\Component\\Security\\Core\\Authentication\\Token\\UsernamePasswordToken constructor expects array<string>, string given#'
         - '#''anon.'' and Symfony\\Component\\Security\\Core\\User\\UserInterface\|null will always evaluate to false#'
-
-        # Ignore incorrect assertSame detection for reference variables
-        -
-            message: '#Call to method .*::assertSame\(\) with .* will always evaluate to false\.#'
-            path: %currentWorkingDirectory%/core-bundle/tests/Contao/SystemTest.php
 
     treatPhpDocTypesAsCertain: false
     checkGenericClassInNonGenericObjectType: false

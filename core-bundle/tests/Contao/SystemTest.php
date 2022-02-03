@@ -321,6 +321,7 @@ class SystemTest extends TestCase
     {
         $container = $this->getContainerWithContaoConfiguration($tmpDir);
         $container->setParameter('contao.resources_paths', ["$tmpDir/contao"]);
+
         $container->set('contao.framework', $this->mockContaoFramework([
             System::class => new Adapter(System::class),
         ]));
@@ -343,25 +344,31 @@ class SystemTest extends TestCase
             new ResourceFinder(["$tmpDir/contao"])
         );
 
-        $container->set(Locales::class, new Locales(
-            $translator,
-            new RequestStack(),
-            $container->get('contao.framework'),
-            ['de', 'en', 'fr'],
-            ['de', 'en', 'fr'],
-            [],
-            [],
-            'de'
-        ));
+        $container->set(
+            Locales::class,
+            new Locales(
+                $translator,
+                new RequestStack(),
+                $container->get('contao.framework'),
+                ['de', 'en', 'fr'],
+                ['de', 'en', 'fr'],
+                [],
+                [],
+                'de'
+            )
+        );
 
-        $container->set(Countries::class, new Countries(
-            $translator,
-            new RequestStack(),
-            $container->get('contao.framework'),
-            ['DE', 'US', 'FR'],
-            [],
-            'de'
-        ));
+        $container->set(
+            Countries::class,
+            new Countries(
+                $translator,
+                new RequestStack(),
+                $container->get('contao.framework'),
+                ['DE', 'US', 'FR'],
+                [],
+                'de'
+            )
+        );
 
         return $container;
     }
