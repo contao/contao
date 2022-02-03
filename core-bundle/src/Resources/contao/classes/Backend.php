@@ -516,7 +516,7 @@ abstract class Backend extends Controller
 			}
 
 			// Add the name of the parent elements
-			if ($strTable && \in_array($strTable, $arrTables) && $strTable != ($arrTables[0] ?? null))
+			if ($strTable && \in_array($strTable, $arrTables) && $strTable != $arrTables[0])
 			{
 				$trail = array();
 
