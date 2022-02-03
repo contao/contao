@@ -17,10 +17,6 @@
         <source>Description</source>
         <target>شرح</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceMode">
-        <source>Maintenance mode</source>
-        <target>وضعیت نگهداشت</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>پاک‌سازی داده‌ها</target>
@@ -80,6 +76,12 @@
       <trans-unit id="tl_maintenance_jobs.images.1">
         <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
         <target>تصاویری که به صورت خودکار تولید شده‌اند را حذف می‌کند و سپس کش مشترک را پاک‌سازی می‌کند، تا پیوندی به منابع پاک شده، وجود نداشته باشد.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.0">
+        <source>Purge the preview cache</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.1">
+        <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
@@ -164,10 +166,6 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>بررسی لینک‌های شکسته</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.crawlMaintenance">
-        <source>Crawling is not possible while the maintenance mode is enabled.</source>
-        <target>در حالت فعال بودن نگهداشت  خزیدن امکان‌پذیر نیست.</target>
       </trans-unit>
     </body>
   </file>

@@ -10,8 +10,8 @@
         <target>関連するユーザーの名前</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.0">
-        <source>Source table</source>
-        <target>元のテーブル</target>
+        <source>Source</source>
+        <target>ソース</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.1">
         <source>Name of the original table</source>
@@ -44,6 +44,9 @@
       <trans-unit id="tl_undo.undo">
         <source>Restore element ID %s</source>
         <target>ID %sの要素を復元</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.parent_modal">
+        <source>Show origin of %s ID %s</source>
       </trans-unit>
     </body>
   </file>

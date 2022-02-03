@@ -15,11 +15,11 @@
       </trans-unit>
       <trans-unit id="MSC.empty">
         <source>There are no news items for this period.</source>
-        <target>آیتم خبری برای این دوره وجود ندارد.</target>
+        <target>آیتمی برای این دوره وجود ندارد.</target>
       </trans-unit>
       <trans-unit id="MSC.emptyList">
         <source>Currently there are no news items.</source>
-        <target>در حال حاضر آیتم‌های خبری وجود ندارند.</target>
+        <target>در حال حاضر آیتمی وجود ندارند.</target>
       </trans-unit>
       <trans-unit id="MSC.comments">
         <source>Comments</source>
@@ -44,6 +44,10 @@
       <trans-unit id="MSC.newsPicker">
         <source>News</source>
         <target>اخبار</target>
+      </trans-unit>
+      <trans-unit id="MSC.newsOverview">
+        <source>Back to the news overview</source>
+        <target>بازگشت به بررسی کلی اخبار</target>
       </trans-unit>
     </body>
   </file>

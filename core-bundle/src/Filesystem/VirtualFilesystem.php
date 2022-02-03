@@ -58,36 +58,19 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return $this->readonly;
     }
 
+    public function has($location, int $accessFlags = self::NONE): bool
+    {
+        return $this->checkResourceExists($location, $accessFlags, 'has');
+    }
+
     public function fileExists($location, int $accessFlags = self::NONE): bool
     {
-        if ($location instanceof Uuid) {
-            if ($accessFlags & self::BYPASS_DBAFS) {
-                throw new \LogicException('Cannot use a UUID in combination with VirtualFilesystem::BYPASS_DBAFS to check if a file exists.');
-            }
+        return $this->checkResourceExists($location, $accessFlags, 'fileExists');
+    }
 
-            try {
-                $this->dbafsManager->resolveUuid($location, $this->prefix);
-            } catch (UnableToResolveUuidException $e) {
-                return false;
-            }
-
-            // Do not care about VirtualFilesystem::FORCE_SYNC at this point as
-            // the resource was already found.
-
-            return true;
-        }
-
-        $path = $this->resolve($location);
-
-        if ($accessFlags & self::FORCE_SYNC) {
-            $this->dbafsManager->sync($path);
-        }
-
-        if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
-            return $this->dbafsManager->resourceExists($path);
-        }
-
-        return $this->mountManager->fileExists($path);
+    public function directoryExists($location, int $accessFlags = self::NONE): bool
+    {
+        return $this->checkResourceExists($location, $accessFlags, 'directoryExists');
     }
 
     public function read($location): string
@@ -174,7 +157,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($pathFrom, $pathTo);
     }
 
-    public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): iterable
+    public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): FilesystemItemIterator
     {
         $path = $this->resolve($location);
 
@@ -182,7 +165,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
             $this->dbafsManager->sync($path);
         }
 
-        return $this->doListContents($path, $deep, $accessFlags);
+        return new FilesystemItemIterator($this->doListContents($path, $deep, $accessFlags));
     }
 
     public function getLastModified($location, int $accessFlags = self::NONE): int
@@ -253,6 +236,46 @@ class VirtualFilesystem implements VirtualFilesystemInterface
     }
 
     /**
+     * @param string|Uuid                          $location
+     * @param 'fileExists'|'directoryExists'|'has' $method
+     *
+     * @throws VirtualFilesystemException
+     */
+    private function checkResourceExists($location, int $accessFlags, string $method): bool
+    {
+        if ($location instanceof Uuid) {
+            if ($accessFlags & self::BYPASS_DBAFS) {
+                throw new \LogicException('Cannot use a UUID in combination with VirtualFilesystem::BYPASS_DBAFS to check if a resource exists.');
+            }
+
+            try {
+                $this->dbafsManager->resolveUuid($location, $this->prefix);
+            } catch (UnableToResolveUuidException $e) {
+                return false;
+            }
+
+            // Do not care about VirtualFilesystem::FORCE_SYNC at this point as
+            // the resource was already found.
+
+            return true;
+        }
+
+        $path = $this->resolve($location);
+
+        if ($accessFlags & self::FORCE_SYNC) {
+            $this->dbafsManager->sync($path);
+        }
+
+        if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
+            return $this->dbafsManager->$method($path);
+        }
+
+        return 'has' === $method
+            ? $this->mountManager->fileExists($path) || $this->mountManager->directoryExists($path)
+            : $this->mountManager->$method($path);
+    }
+
+    /**
      * @return \Generator<FilesystemItem>
      */
     private function doListContents(string $path, bool $deep, int $accessFlags): \Generator
@@ -303,11 +326,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         ;
 
         if (Path::isAbsolute($path)) {
-            throw new \OutOfBoundsException("Virtual filesystem path '$path' cannot be absolute.");
+            throw new \OutOfBoundsException(sprintf('Virtual filesystem path "%s" cannot be absolute.', $path));
         }
 
         if (str_starts_with($path, '..')) {
-            throw new \OutOfBoundsException("Virtual filesystem path '$path' must not escape the filesystem boundary.");
+            throw new \OutOfBoundsException(sprintf('Virtual filesystem path "%s" must not escape the filesystem boundary.', $path));
         }
 
         return Path::join($this->prefix, $path);

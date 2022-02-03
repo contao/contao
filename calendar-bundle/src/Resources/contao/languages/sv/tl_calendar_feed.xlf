@@ -85,6 +85,10 @@
         <source>Feed settings</source>
         <target>Flödesinställningar</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_feed.image_legend">
+        <source>Image settings</source>
+        <target>Bildinställningar</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_feed.source_teaser">
         <source>Event teasers</source>
         <target>Händelsernas ingresser</target>

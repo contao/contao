@@ -74,7 +74,7 @@ class DbafsManagerTest extends TestCase
                 'files' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
                 'files/media' => $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE),
             ],
-            "The transitive feature(s) 'last modified' and 'file size' must be supported for any DBAFS with a path prefix 'files/media', because they are also supported for 'files'.",
+            'The transitive feature(s) "last modified" and "file size" must be supported for any DBAFS with a path prefix "files/media", because they are also supported for "files".',
         ];
 
         yield 'should ignore valid configurations in between' => [
@@ -84,7 +84,7 @@ class DbafsManagerTest extends TestCase
                 'abc/def' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
                 'files/media' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE),
             ],
-            "The transitive feature(s) 'file size' must be supported for any DBAFS with a path prefix 'files/media', because they are also supported for 'files'.",
+            'The transitive feature(s) "file size" must be supported for any DBAFS with a path prefix "files/media", because they are also supported for "files".',
         ];
 
         yield 'make sure nested folders work as well' => [
@@ -92,7 +92,7 @@ class DbafsManagerTest extends TestCase
                 'foo' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE),
                 'foo/bar/baz' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
             ],
-            "The transitive feature(s) 'mime type' must be supported for any DBAFS with a path prefix 'foo/bar/baz', because they are also supported for 'foo'.",
+            'The transitive feature(s) "mime type" must be supported for any DBAFS with a path prefix "foo/bar/baz", because they are also supported for "foo".',
         ];
 
         yield 'adding a less specific one that covers more than the children should be reported' => [
@@ -100,7 +100,7 @@ class DbafsManagerTest extends TestCase
                 'foo/bar' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
                 '' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
             ],
-            "The transitive feature(s) 'last modified' must be supported for any DBAFS with a path prefix 'foo/bar', because they are also supported for ''.",
+            'The transitive feature(s) "last modified" must be supported for any DBAFS with a path prefix "foo/bar", because they are also supported for "".',
         ];
     }
 
@@ -143,15 +143,20 @@ class DbafsManagerTest extends TestCase
         $manager->resolveUuid($uuid3, 'foo');
     }
 
-    public function testResourceExists(): void
+    public function testHasResource(): void
     {
         $dbafs = $this->createMock(DbafsInterface::class);
         $dbafs
             ->method('getRecord')
             ->willReturnCallback(
-                function (string $path): ?FilesystemItem {
-                    if (\in_array($path, ['bar/baz', 'bar.file'], true)) {
-                        return $this->createMock(FilesystemItem::class);
+                static function (string $path): ?FilesystemItem {
+                    $resources = [
+                        'bar/baz' => false,
+                        'bar.file' => true,
+                    ];
+
+                    if (null !== ($type = $resources[$path] ?? null)) {
+                        return new FilesystemItem($type, $path);
                     }
 
                     return null;
@@ -162,10 +167,21 @@ class DbafsManagerTest extends TestCase
         $manager = new DbafsManager();
         $manager->register($dbafs, 'foo');
 
-        $this->assertTrue($manager->resourceExists('foo/bar.file'));
-        $this->assertTrue($manager->resourceExists('foo/bar/baz'));
-        $this->assertFalse($manager->resourceExists('foo/other'));
-        $this->assertFalse($manager->resourceExists('foobar'));
+        $this->assertTrue($manager->has('foo/bar.file'));
+        $this->assertTrue($manager->fileExists('foo/bar.file'));
+        $this->assertFalse($manager->directoryExists('foo/bar.file'));
+
+        $this->assertTrue($manager->has('foo/bar/baz'));
+        $this->assertFalse($manager->fileExists('foo/bar/baz'));
+        $this->assertTrue($manager->directoryExists('foo/bar/baz'));
+
+        $this->assertFalse($manager->has('foo/other'));
+        $this->assertFalse($manager->fileExists('foo/other'));
+        $this->assertFalse($manager->directoryExists('foo/other'));
+
+        $this->assertFalse($manager->has('foobar'));
+        $this->assertFalse($manager->fileExists('foobar'));
+        $this->assertFalse($manager->directoryExists('foobar'));
     }
 
     public function testGetLastModified(): void
@@ -352,7 +368,7 @@ class DbafsManagerTest extends TestCase
         $manager->register($dbafs2, 'foo/bar');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("No resource exists for the given path 'foo/bar/baz'.");
+        $this->expectExceptionMessage('No resource exists for the given path "foo/bar/baz".');
 
         $manager->setExtraMetadata('foo/bar/baz', ['some' => 'value']);
     }

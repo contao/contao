@@ -202,6 +202,22 @@
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
         <target>Ограничение длины поля определенным количеством символов (текст) или байт (загрузка файлов).</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.0">
+        <source>Maximum image width</source>
+        <target>Максимальная ширина изображения</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.1">
+        <source>Here you can enter the maximum width for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Вы можете ввести максимальную ширину загружаемого на сервер изображения в пикселах. Введите 0, чтобы использовать системное значение по умолчанию.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.0">
+        <source>Maximum image height</source>
+        <target>Максимальная высота изображения</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.1">
+        <source>Here you can enter the maximum height for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Вы можете ввести максимальную высоту загружаемого на сервер изображения в пикселах. Введите 0, чтобы использовать системное значение по умолчанию.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
         <target>Минимальное значение</target>

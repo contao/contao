@@ -181,6 +181,9 @@
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
         <target>Se ha/han desactivado la(s) direcciones de correo electrónico %s no válidas.</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.skipped">
+        <source>%s e-mail address(es) has/have been skipped.</source>
+      </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>
         <target>No hay suscripciones activas a este canal</target>

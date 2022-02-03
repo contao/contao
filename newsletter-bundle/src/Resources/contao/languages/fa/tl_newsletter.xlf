@@ -181,6 +181,9 @@
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
         <target>%s نشانی ایمیل غیرفعال شده است (گزارش سیستم را ببینید).</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.skipped">
+        <source>%s e-mail address(es) has/have been skipped.</source>
+      </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>
         <target>در حال حاضر مشترکی در این خبرنامه وجود ندارد.</target>

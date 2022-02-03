@@ -201,6 +201,22 @@
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
         <target>Zde můžete určit maximální počet znaků (text) nebo velikost (nahrávání souborů).</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.0">
+        <source>Maximum image width</source>
+        <target>Maximální šířka obrázku</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.1">
+        <source>Here you can enter the maximum width for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Tady můžete zadat maximální šířku obrázku v pixelech, které se budou přenášet na server. Zadáte-li 0, použijí se výchozí hodnoty systému.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.0">
+        <source>Maximum image height</source>
+        <target>Maximální výška obrázku</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.1">
+        <source>Here you can enter the maximum height for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Tady můžete zadat maximální výšku obrázku v pixelech, které se budou přenášet na server. Zadáte-li 0, použijí se výchozí hodnoty systému.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
         <target>Minimální délka</target>

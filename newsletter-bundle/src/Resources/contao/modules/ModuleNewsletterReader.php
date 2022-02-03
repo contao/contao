@@ -82,7 +82,7 @@ class ModuleNewsletterReader extends Module
 		if ($this->overviewPage)
 		{
 			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
-			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['nl_overview'];
+			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['nl_overview'];
 		}
 		else
 		{

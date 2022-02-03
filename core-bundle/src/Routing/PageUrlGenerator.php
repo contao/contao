@@ -85,7 +85,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
                 $route->getRequirements(),
                 $compiledRoute->getTokens(),
                 $parameters,
-                $name,
+                $route->getDefault('_canonical_route') ?: $name,
                 $referenceType,
                 $compiledRoute->getHostTokens(),
                 $route->getSchemes()

@@ -201,6 +201,22 @@
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
         <target>Limite la longueur du champ à un certain nombre de caractères (texte) ou octets (envoi de fichiers).</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.0">
+        <source>Maximum image width</source>
+        <target>Largeur maximale des images</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.1">
+        <source>Here you can enter the maximum width for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Ici, Vous pouvez saisir ici la largeur maximale en pixels pour les images téléversées. Entrez 0 pour utiliser la valeur par défaut du système.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.0">
+        <source>Maximum image height</source>
+        <target>Hauteur maximale des images</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.1">
+        <source>Here you can enter the maximum height for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Ici, Vous pouvez saisir ici la hauteur maximale en pixels pour les images téléversées. Entrez 0 pour utiliser la valeur par défaut du système.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
         <target>Valeur minimum</target>

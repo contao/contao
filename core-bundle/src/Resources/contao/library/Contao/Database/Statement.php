@@ -155,7 +155,7 @@ class Statement
 		$arrParamNames = array_map(
 			static function ($strName)
 			{
-				if (!preg_match('/^[A-Za-z0-9_$]+$/', $strName))
+				if (!preg_match('/^(?:[A-Za-z0-9_$]+|`[^`]+`)$/', $strName))
 				{
 					throw new \RuntimeException(sprintf('Invalid column name "%s" in %s()', $strName, __METHOD__));
 				}

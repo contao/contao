@@ -604,7 +604,7 @@ class Email
 			}
 		}
 
-		$context = null;
+		$context = array();
 
 		if ($this->strLogFile !== ContaoContext::EMAIL)
 		{

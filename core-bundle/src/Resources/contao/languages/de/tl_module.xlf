@@ -129,6 +129,14 @@
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
         <target>Bitte wählen Sie die Seite aus, zu der Besucher beim Anklicken eines Links oder Abschicken eines Formulars weitergeleitet werden.</target>
       </trans-unit>
+      <trans-unit id="tl_module.overviewPage.0">
+        <source>Overview page</source>
+        <target>Übersichtsseite</target>
+      </trans-unit>
+      <trans-unit id="tl_module.overviewPage.1">
+        <source>Select an overview page to include a link to it in the template.</source>
+        <target>Wählen Sie eine Übersichtsseite aus, um einen Link zu dieser Seite im Template auszugeben.</target>
+      </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
         <target>Zur zuletzt besuchten Seite</target>
@@ -313,14 +321,6 @@
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
         <target>Großansicht des Bildes in einer Lightbox bzw. den Link in einem neuem Browserfenster öffnen.</target>
       </trans-unit>
-      <trans-unit id="tl_module.imgSize.0">
-        <source>Image size</source>
-        <target>Bildgröße</target>
-      </trans-unit>
-      <trans-unit id="tl_module.imgSize.1">
-        <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Hier können Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.</target>
-      </trans-unit>
       <trans-unit id="tl_module.useCaption.0">
         <source>Show caption</source>
         <target>Bildunterschrift anzeigen</target>
@@ -441,6 +441,14 @@
         <source>Here you can define how to handle the deletion.</source>
         <target>Hier legen Sie fest, wie die Löschung ausgeführt wird.</target>
       </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>Home-Verzeichnis löschen</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>Das Home-Verzeichnis löschen, wenn das Konto gelöscht wird.</target>
+      </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.0">
         <source>Create a home directory</source>
         <target>Ein Home-Verzeichnis anlegen</target>
@@ -488,6 +496,26 @@
       <trans-unit id="tl_module.reg_password.1">
         <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
         <target>Sie können die Platzhalter &lt;em&gt;##domain##&lt;/em&gt; (Domainname), &lt;em&gt;##link##&lt;/em&gt; (Aktivierungslink) sowie alle Mitgliedsdaten (z.B. &lt;em&gt;##lastname##&lt;/em&gt;) verwenden.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.data.0">
+        <source>Template data</source>
+        <target>Template-Daten</target>
+      </trans-unit>
+      <trans-unit id="tl_module.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>Sie können über &lt;code&gt;$this-&gt;data&lt;/code&gt; auf die Werte im Template zugreifen.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.0">
+        <source>Modules</source>
+        <target>Module</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.1">
+        <source>Please select a module for every root page.</source>
+        <target>Bitte wählen Sie ein Modul für jede Root-Seite.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
+        <source>Module for &quot;%s&quot;</source>
+        <target>Modul für &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

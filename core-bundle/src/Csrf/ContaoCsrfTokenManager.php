@@ -25,6 +25,9 @@ class ContaoCsrfTokenManager extends CsrfTokenManager
     private string $csrfCookiePrefix;
     private ?string $defaultTokenName;
 
+    /**
+     * @param string|RequestStack|callable|null $namespace
+     */
     public function __construct(RequestStack $requestStack, string $csrfCookiePrefix, TokenGeneratorInterface $generator = null, TokenStorageInterface $storage = null, $namespace = null, string $defaultTokenName = null)
     {
         $this->requestStack = $requestStack;

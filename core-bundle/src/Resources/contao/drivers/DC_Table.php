@@ -1019,11 +1019,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Consider the dynamic parent table (see #4867)
 				if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 				{
-					$ptable = $GLOBALS['TL_DCA'][$v]['config']['ptable'];
-					$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
+					$cond = ($table === 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
 					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND $cond" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting" : ""))
-												->execute($id, $ptable);
+												->execute($id, $table);
 				}
 				else
 				{
@@ -1596,11 +1595,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Consider the dynamic parent table (see #4867)
 			if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 			{
-				$ptable = $GLOBALS['TL_DCA'][$v]['config']['ptable'];
-				$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
+				$cond = ($table === 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
 				$objDelete = $this->Database->prepare("SELECT id FROM $v WHERE pid=? AND $cond")
-											->execute($id, $ptable);
+											->execute($id, $table);
 			}
 			else
 			{
@@ -3141,7 +3139,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make sure unique fields are unique
-		if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+		if ((!is_scalar($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 		{
 			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
@@ -3222,7 +3220,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Save the value if there was no error
-		if (((string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue !== $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
+		if ((!is_scalar($varValue) || (string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue !== $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 		{
 			$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
 			$arrTypes = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
@@ -3243,7 +3241,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Set the correct empty value (see #6284, #6373)
-			if ((string) $varValue === '')
+			if (is_scalar($varValue) && (string) $varValue === '')
 			{
 				$varValue = $varEmpty;
 			}
@@ -3711,7 +3709,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($this->visibleRootTrails))
 		{
 			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE pid=0 AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? 'ORDER BY sorting' : ''))
+			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE pid=0 AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting' : ''))
 											 ->execute()
 											 ->fetchEach('id');
 		}
@@ -6209,7 +6207,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Unless there are any root records specified, use all records with parent ID 0
 			if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) || $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] === false)
 			{
-				$objIds = $this->Database->execute("SELECT id FROM $table WHERE pid=0");
+				$objIds = $this->Database->execute("SELECT id FROM $table WHERE pid=0" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting' : ''));
 
 				if ($objIds->numRows > 0)
 				{

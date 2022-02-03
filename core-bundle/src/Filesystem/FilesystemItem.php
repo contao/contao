@@ -178,7 +178,7 @@ class FilesystemItem
     private function assertIsFile(string $method): void
     {
         if (!$this->isFile) {
-            throw new \LogicException("Cannot call $method() on a non-file filesystem item.");
+            throw new \LogicException(sprintf('Cannot call %s() on a non-file filesystem item.', $method));
         }
     }
 

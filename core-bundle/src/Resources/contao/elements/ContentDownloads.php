@@ -71,7 +71,7 @@ class ContentDownloads extends ContentDownload
 		$file = Input::get('file', true);
 
 		// Send the file to the browser (see #4632 and #8375)
-		if ($file && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
+		if ($file && \is_string($file) && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
 		{
 			while ($this->objFiles->next())
 			{
@@ -97,13 +97,11 @@ class ContentDownloads extends ContentDownload
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
-		global $objPage;
-
 		$files = array();
 		$auxDate = array();
 
 		$objFiles = $this->objFiles;
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 
 		// Get all files
@@ -125,18 +123,28 @@ class ContentDownloads extends ContentDownload
 					continue;
 				}
 
-				$arrMeta = $this->getMetaData($objFiles->meta, $objPage->language);
-
-				if (empty($arrMeta))
+				if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 				{
-					if ($this->metaIgnore)
-					{
-						continue;
-					}
+					$arrMeta = $this->getMetaData($objFiles->meta, $GLOBALS['TL_LANGUAGE']);
+				}
+				else
+				{
+					/** @var PageModel $objPage */
+					global $objPage;
 
-					if ($objPage->rootFallbackLanguage !== null)
+					$arrMeta = $this->getMetaData($objFiles->meta, $objPage->language);
+
+					if (empty($arrMeta))
 					{
-						$arrMeta = $this->getMetaData($objFiles->meta, $objPage->rootFallbackLanguage);
+						if ($this->metaIgnore)
+						{
+							continue;
+						}
+
+						if ($objPage->rootFallbackLanguage !== null)
+						{
+							$arrMeta = $this->getMetaData($objFiles->meta, $objPage->rootFallbackLanguage);
+						}
 					}
 				}
 
@@ -208,18 +216,28 @@ class ContentDownloads extends ContentDownload
 						continue;
 					}
 
-					$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->language);
-
-					if (empty($arrMeta))
+					if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 					{
-						if ($this->metaIgnore)
-						{
-							continue;
-						}
+						$arrMeta = $this->getMetaData($objSubfiles->meta, $GLOBALS['TL_LANGUAGE']);
+					}
+					else
+					{
+						/** @var PageModel $objPage */
+						global $objPage;
 
-						if ($objPage->rootFallbackLanguage !== null)
+						$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->language);
+
+						if (empty($arrMeta))
 						{
-							$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->rootFallbackLanguage);
+							if ($this->metaIgnore)
+							{
+								continue;
+							}
+
+							if ($objPage->rootFallbackLanguage !== null)
+							{
+								$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->rootFallbackLanguage);
+							}
 						}
 					}
 

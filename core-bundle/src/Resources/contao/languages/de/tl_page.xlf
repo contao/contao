@@ -9,6 +9,14 @@
         <source>Please enter the page name.</source>
         <target>Bitte geben Sie den Namen der Seite ein.</target>
       </trans-unit>
+      <trans-unit id="tl_page.type.0">
+        <source>Page type</source>
+        <target>Seitentyp</target>
+      </trans-unit>
+      <trans-unit id="tl_page.type.1">
+        <source>Please choose the page type.</source>
+        <target>Bitte wählen Sie den Typ der Seite aus.</target>
+      </trans-unit>
       <trans-unit id="tl_page.alias.0">
         <source>Page alias</source>
         <target>Seitenalias</target>
@@ -17,13 +25,29 @@
         <source>The page alias is a unique reference to the page which can be called instead of its numeric ID.</source>
         <target>Der Seitenalias ist eine eindeutige Referenz, die anstelle der numerischen Seiten-ID aufgerufen werden kann.</target>
       </trans-unit>
-      <trans-unit id="tl_page.type.0">
-        <source>Page type</source>
-        <target>Seitentyp</target>
+      <trans-unit id="tl_page.requireItem.0">
+        <source>Require an item</source>
+        <target>Element erforderlich</target>
       </trans-unit>
-      <trans-unit id="tl_page.type.1">
-        <source>Please choose the page type.</source>
-        <target>Bitte wählen Sie den Typ der Seite aus.</target>
+      <trans-unit id="tl_page.requireItem.1">
+        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
+        <target>Zeigt die Fehlerseite 404, wenn die URL kein Alias zu einem Element enthält.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.0">
+        <source>Route path</source>
+        <target>Routen-Pfad</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePath.1">
+        <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>Vorschau des endgültigen Pfads (möglicherweise mit Platzhaltern), der zu dieser Seite passt.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.0">
+        <source>Route priority</source>
+        <target>Routenpriorität</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routePriority.1">
+        <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>Optional kann die Priorität konfiguriert werden, um die Reihenfolge der Routen zu beeinflussen. Standard: 0</target>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -48,6 +72,14 @@
       <trans-unit id="tl_page.robots.1">
         <source>Here you can define how search engines handle the page.</source>
         <target>Hier legen Sie fest, wie Suchmaschinen die Seite behandeln.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.0">
+        <source>Maintenance mode</source>
+        <target>Wartungsmodus</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maintenanceMode.1">
+        <source>Show visitors a page that this website is currently being maintained.</source>
+        <target>Besuchern eine Seite anzeigen, dass diese Website gerade gewartet wird.</target>
       </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
@@ -145,6 +177,30 @@
         <source>Here you can override the mailer transport used to send e-mails on this website.</source>
         <target>Hier können Sie den Mailer-Transport überschreiben, der für den E-Mail-Versand auf dieser Webseite verwendet wird.</target>
       </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.0">
+        <source>Enable rel=&quot;canonical&quot;</source>
+        <target>rel=&quot;canonical&quot; aktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCanonical.1">
+        <source>Add rel=&quot;canonical&quot; tags to the website.</source>
+        <target>Der Website rel=&quot;canonical&quot;-Tags hinzufügen.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.0">
+        <source>Custom URL</source>
+        <target>Individuelle URL</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalLink.1">
+        <source>Here you can set a custom canonical URL.</source>
+        <target>Hier können Sie eine individuelle kanonische URL setzen.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.0">
+        <source>Query parameters</source>
+        <target>Query-Parameter</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonicalKeepParams.1">
+        <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
+        <target>Standardmäßig entfernt Contao die Query-Parameter in der kanonischen URL. Hier können Sie eine kommagetrennte Liste von Query-Parametern hinzufügen, die erhalten bleiben sollen. Verwenden Sie &quot;*&quot; als Platzhalter.</target>
+      </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
         <target>E-Mail-Adresse des Webseiten-Administrators</target>
@@ -199,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to aliases for this root page.</source>
-        <target>Geben Sie ein URL-Präfix (z.B. die Sprache) ein, das allen Seitenaliasen unterhalb dieser Root-Seite vorangestellt wird.</target>
+        <target>Geben Sie ein URL-Präfix (z.B. die Sprache) ein, das allen Seitenaliasen unterhalb dieses Startpunkts vorangestellt wird.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -256,6 +312,14 @@
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
         <target>Seitenlayouts können mit dem Modul &quot;Themes&quot; verwaltet werden.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.0">
+        <source>Subpage layout</source>
+        <target>Unterseitenlayout</target>
+      </trans-unit>
+      <trans-unit id="tl_page.subpageLayout.1">
+        <source>Here you can select a different layout for subpages.</source>
+        <target>Hier können Sie ein abweichendes Layout für Unterseiten auswählen.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
@@ -328,14 +392,6 @@
       <trans-unit id="tl_page.noSearch.1">
         <source>Exclude the page from the search index.</source>
         <target>Diese Seite nicht in den Suchindex aufnehmen.</target>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.0">
-        <source>Require an item</source>
-        <target>Element erforderlich</target>
-      </trans-unit>
-      <trans-unit id="tl_page.requireItem.1">
-        <source>Trigger a 404 error if the page URL does not contain an item alias.</source>
-        <target>Zeigt die Fehlerseite 404, wenn die URL kein Alias zu einem Element enthält.</target>
       </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
@@ -429,9 +485,17 @@
         <source>Name and type</source>
         <target>Name und Typ</target>
       </trans-unit>
+      <trans-unit id="tl_page.routing_legend">
+        <source>Routing</source>
+        <target>Routing</target>
+      </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
         <target>Metadaten</target>
+      </trans-unit>
+      <trans-unit id="tl_page.canonical_legend">
+        <source>Canonical URL</source>
+        <target>Kanonische URL</target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -517,6 +581,10 @@
         <source>Show never</source>
         <target>Nie anzeigen</target>
       </trans-unit>
+      <trans-unit id="tl_page.layout_inherit">
+        <source>Inherit page layout</source>
+        <target>Seitenlayout vererben</target>
+      </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
         <target>Neu</target>
@@ -572,6 +640,14 @@
       <trans-unit id="tl_page.legacyRouting">
         <source>Disable legacy routing mode to enable this configuration.</source>
         <target>Deaktivieren Sie den Legacy-Routing-Modus, um diese Einstellung zu aktivieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.0">
+        <source>Route conflicts</source>
+        <target>Routenkonflikte</target>
+      </trans-unit>
+      <trans-unit id="tl_page.routeConflicts.1">
+        <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>Folgende Seiten haben einen ähnlichen Alias, der mit dieser Seite in Konflikt geraten kann. Wenn die URL nicht korrekt aufgelöst wird, versuchen Sie, die Priorität der Routen zu ändern.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

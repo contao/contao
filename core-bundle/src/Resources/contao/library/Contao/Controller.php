@@ -74,10 +74,10 @@ abstract class Controller extends System
 		// Check for a theme folder
 		if (\defined('TL_MODE') && TL_MODE == 'FE')
 		{
-			/** @var PageModel $objPage */
+			/** @var PageModel|null $objPage */
 			global $objPage;
 
-			if ($objPage->templateGroup)
+			if ($objPage->templateGroup ?? null)
 			{
 				if (Validator::isInsecurePath($objPage->templateGroup))
 				{
@@ -731,6 +731,12 @@ abstract class Controller extends System
 		if ($objPage->protected && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404', 'error_503')))
 		{
 			$sub += 4;
+		}
+
+		// Change icon if root page is published and in maintenance mode
+		if ($sub == 0 && $objPage->type == 'root' && $objPage->maintenanceMode)
+		{
+			$sub = 2;
 		}
 
 		// Get the image name
@@ -1473,7 +1479,8 @@ abstract class Controller extends System
 
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
-		} while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		}
+		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
