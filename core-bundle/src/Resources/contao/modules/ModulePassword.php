@@ -74,6 +74,8 @@ class ModulePassword extends Module
 			}
 		}
 
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+
 		// Set new password
 		if (strncmp(Input::get('token'), 'pw-', 3) === 0)
 		{
@@ -174,7 +176,6 @@ class ModulePassword extends Module
 		$this->Template->email = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['emailAddress']);
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['requestPassword']);
 		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 
 	/**
