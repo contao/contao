@@ -660,8 +660,8 @@ class ContaoCoreExtensionTest extends TestCase
                 ContentElementReference::TAG_NAME,
                 [
                     ['foo' => 'bar'],
-                    'type' => 'foo',
                     'category' => 'bar',
+                    'type' => 'foo',
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
@@ -672,8 +672,8 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsContentElement::class](
             $definition,
             new AsContentElement(
-                'foo',
                 'bar',
+                'foo',
                 'a_template',
                 'aMethod',
                 'inline',
@@ -702,8 +702,8 @@ class ContaoCoreExtensionTest extends TestCase
                 FrontendModuleReference::TAG_NAME,
                 [
                     ['foo' => 'bar'],
-                    'type' => 'foo',
                     'category' => 'bar',
+                    'type' => 'foo',
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
@@ -714,8 +714,8 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsFrontendModule::class](
             $definition,
             new AsFrontendModule(
-                'foo',
                 'bar',
+                'foo',
                 'a_template',
                 'aMethod',
                 'inline',
