@@ -458,7 +458,7 @@ abstract class System
 		}
 
 		// Return if the language file has been loaded already
-		if (!$blnNoCache && isset(static::$arrLanguageFiles[$strName][$strLanguage]))
+		if (!$blnNoCache && array_key_last(static::$arrLanguageFiles[$strName] ?? array()) === $strLanguage)
 		{
 			return;
 		}
@@ -483,8 +483,41 @@ abstract class System
 			}
 		}
 
+		// Unset to move the new array key to the last position
+		unset(static::$arrLanguageFiles[$strName][$strCacheKey]);
+
 		// Use a global cache variable to support nested calls
 		static::$arrLanguageFiles[$strName][$strCacheKey] = $strLanguage;
+
+		// Backwards compatibility
+		if ('languages' === $strName)
+		{
+			// Reset previously loaded languages without destroying references
+			foreach (array_keys($GLOBALS['TL_LANG']['LNG'] ?? array()) as $strLocale)
+			{
+				$GLOBALS['TL_LANG']['LNG'][$strLocale] = null;
+			}
+
+			foreach (self::getContainer()->get('contao.intl.locales')->getLocales($strLanguage) as $strLocale => $strLabel)
+			{
+				$GLOBALS['TL_LANG']['LNG'][$strLocale] = $strLabel;
+			}
+		}
+
+		// Backwards compatibility
+		if ('countries' === $strName)
+		{
+			// Reset previously loaded countries without destroying references
+			foreach (array_keys($GLOBALS['TL_LANG']['CNT'] ?? array()) as $strLocale)
+			{
+				$GLOBALS['TL_LANG']['CNT'][$strLocale] = null;
+			}
+
+			foreach (self::getContainer()->get('contao.intl.countries')->getCountries($strLanguage) as $strCountryCode => $strLabel)
+			{
+				$GLOBALS['TL_LANG']['CNT'][strtolower($strCountryCode)] = $strLabel;
+			}
+		}
 
 		// Fall back to English
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
