@@ -71,7 +71,7 @@ class ContentDownloads extends ContentElement
 		$file = Input::get('file', true);
 
 		// Send the file to the browser (see #4632 and #8375)
-		if ($file && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
+		if ($file && \is_string($file) && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
 		{
 			while ($this->objFiles->next())
 			{

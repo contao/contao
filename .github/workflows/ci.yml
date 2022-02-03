@@ -221,8 +221,6 @@ jobs:
             - name: Install the dependencies
               run: |
                   composer install --ignore-platform-req=php --no-interaction --no-progress
-                  # TODO: Remove the next line once Symfony 5.3.7 was released
-                  composer require "symfony/http-foundation:5.3.*@dev" --ignore-platform-req=php --no-interaction --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
