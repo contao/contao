@@ -71,7 +71,7 @@ class InheritanceTest extends TestCase
         $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle');
 
         $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage("There cannot be more than one 'foo' template in '$bundlePath/templates'.");
+        $this->expectExceptionMessage('There cannot be more than one "foo" template in "'.$bundlePath.'/templates".');
 
         $this->getDemoEnvironment(['InvalidBundle' => ['path' => $bundlePath]]);
     }

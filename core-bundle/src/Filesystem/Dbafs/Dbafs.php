@@ -167,11 +167,11 @@ class Dbafs implements DbafsInterface, ResetInterface
     public function setExtraMetadata(string $path, array $metadata): void
     {
         if (null === ($record = $this->getRecord($path))) {
-            throw new \InvalidArgumentException("Record for path '$path' does not exist.");
+            throw new \InvalidArgumentException(sprintf('Record for path "%s" does not exist.', $path));
         }
 
         if (!$record->isFile()) {
-            throw new \LogicException("Can only set extra metadata for files, directory given under '$path'.");
+            throw new \LogicException(sprintf('Can only set extra metadata for files, directory given under "%s".', $path));
         }
 
         $row = [
@@ -871,11 +871,11 @@ class Dbafs implements DbafsInterface, ResetInterface
                 $path = trim(Path::canonicalize($path));
 
                 if (Path::isAbsolute($path)) {
-                    throw new \InvalidArgumentException("Absolute path '$path' is not allowed when synchronizing.");
+                    throw new \InvalidArgumentException(sprintf('Absolute path "%s" is not allowed when synchronizing.', $path));
                 }
 
                 if (0 === strpos($path, '.')) {
-                    throw new \InvalidArgumentException("Dot path '$path' is not allowed when synchronizing.");
+                    throw new \InvalidArgumentException(sprintf('Dot path "%s" is not allowed when synchronizing.', $path));
                 }
 
                 return $path;

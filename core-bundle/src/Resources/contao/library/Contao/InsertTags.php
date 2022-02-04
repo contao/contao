@@ -12,8 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\InsertTag\ChunkedText;
-use Contao\CoreBundle\Intl\Countries;
-use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\Filesystem\Path;
@@ -237,7 +235,7 @@ class InsertTags extends Controller
 				// Date
 				case 'date':
 					$flags[] = 'attr';
-					$arrCache[$strTag] = Date::parse($elements[1] ?: ($objPage->dateFormat ?? Config::get('dateFormat')));
+					$arrCache[$strTag] = Date::parse($elements[1] ?? ($objPage->dateFormat ?? Config::get('dateFormat')));
 					break;
 
 				// Accessibility tags
@@ -301,7 +299,7 @@ class InsertTags extends Controller
 					{
 						try
 						{
-							$arrCache[$strTag] = System::getContainer()->get(Locales::class)->getDisplayNames(array($keys[1]))[$keys[1]];
+							$arrCache[$strTag] = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array($keys[1]))[$keys[1]];
 							break;
 						}
 						catch (\Throwable $exception)
@@ -314,7 +312,7 @@ class InsertTags extends Controller
 					{
 						try
 						{
-							$arrCache[$strTag] = System::getContainer()->get(Countries::class)->getCountries()[strtoupper($keys[1])] ?? '';
+							$arrCache[$strTag] = System::getContainer()->get('contao.intl.countries')->getCountries()[strtoupper($keys[1])] ?? '';
 							break;
 						}
 						catch (\Throwable $exception)
@@ -526,38 +524,43 @@ class InsertTags extends Controller
 							break;
 						}
 
-						// Page type specific settings (thanks to Andreas Schempp)
-						switch ($objNextPage->type)
+						$strUrl = '';
+
+						// Do not generate URL for insert tags that don't need it
+						if (\in_array(strtolower($elements[0]), array('link', 'link_open', 'link_url'), true))
 						{
-							case 'redirect':
-								$strUrl = $objNextPage->url;
+							switch ($objNextPage->type)
+							{
+								case 'redirect':
+									$strUrl = $objNextPage->url;
 
-								if (strncasecmp($strUrl, 'mailto:', 7) === 0)
-								{
-									$strUrl = StringUtil::encodeEmail($strUrl);
-								}
-								break;
-
-							case 'forward':
-								if ($objNextPage->jumpTo)
-								{
-									$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
-								}
-								else
-								{
-									$objNext = PageModel::findFirstPublishedRegularByPid($objNextPage->id);
-								}
-
-								if ($objNext instanceof PageModel)
-								{
-									$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+									if (strncasecmp($strUrl, 'mailto:', 7) === 0)
+									{
+										$strUrl = StringUtil::encodeEmail($strUrl);
+									}
 									break;
-								}
-								// no break
 
-							default:
-								$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
-								break;
+								case 'forward':
+									if ($objNextPage->jumpTo)
+									{
+										$objNext = PageModel::findPublishedById($objNextPage->jumpTo);
+									}
+									else
+									{
+										$objNext = PageModel::findFirstPublishedRegularByPid($objNextPage->id);
+									}
+
+									if ($objNext instanceof PageModel)
+									{
+										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										break;
+									}
+									// no break
+
+								default:
+									$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									break;
+							}
 						}
 
 						$strName = $objNextPage->title;
@@ -702,7 +705,7 @@ class InsertTags extends Controller
 
 					if ($objUpdate->numRows)
 					{
-						$arrCache[$strTag] = Date::parse($elements[1] ?: ($objPage->datimFormat ?? Config::get('datimFormat')), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
+						$arrCache[$strTag] = Date::parse($elements[1] ?? ($objPage->datimFormat ?? Config::get('datimFormat')), max($objUpdate->tc, $objUpdate->tn, $objUpdate->te));
 					}
 					break;
 

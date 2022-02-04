@@ -156,7 +156,7 @@ class FigureRendererTest extends TestCase
         $figureRenderer = $this->getFigureRenderer();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches("/Invalid Contao template name '.*'\\./");
+        $this->expectExceptionMessageMatches('/Invalid Contao template name ".*"\./');
 
         $figureRenderer->render(1, null, [], $invalidTemplate);
     }

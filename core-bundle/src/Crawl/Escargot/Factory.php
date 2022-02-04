@@ -194,19 +194,10 @@ class Factory
 
     private function validateSubscribers(array $selectedSubscribers): array
     {
-        $msg = sprintf(
-            'You have to specify at least one valid subscriber name. Valid subscribers are: %s',
-            implode(', ', $this->getSubscriberNames())
-        );
-
-        if (0 === \count($selectedSubscribers)) {
-            throw new \InvalidArgumentException($msg);
-        }
-
         $selectedSubscribers = array_intersect($this->getSubscriberNames(), $selectedSubscribers);
 
         if (0 === \count($selectedSubscribers)) {
-            throw new \InvalidArgumentException($msg);
+            throw new \InvalidArgumentException('You have to specify at least one valid subscriber name. Valid subscribers are: '.implode(', ', $this->getSubscriberNames()));
         }
 
         return $selectedSubscribers;
