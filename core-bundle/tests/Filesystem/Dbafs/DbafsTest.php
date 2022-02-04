@@ -316,7 +316,7 @@ class DbafsTest extends TestCase
         $dbafs = $this->getDbafs($connection);
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Record for path \'some/invalid/path\' does not exist.');
+        $this->expectExceptionMessage('Record for path "some/invalid/path" does not exist.');
 
         $dbafs->setExtraMetadata('some/invalid/path', []);
     }
@@ -334,7 +334,7 @@ class DbafsTest extends TestCase
         $dbafs = $this->getDbafs($connection);
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Can only set extra metadata for files, directory given under \'some/directory\'.');
+        $this->expectExceptionMessage('Can only set extra metadata for files, directory given under "some/directory".');
 
         $dbafs->setExtraMetadata('some/directory', []);
     }
@@ -489,22 +489,22 @@ class DbafsTest extends TestCase
     {
         yield 'absolute path to file' => [
             ['foo', '/path/to/foo'],
-            "Absolute path '/path/to/foo' is not allowed when synchronizing.",
+            'Absolute path "/path/to/foo" is not allowed when synchronizing.',
         ];
 
         yield 'absolute path to directory' => [
             ['foo', '/path/to/foo/**'],
-            "Absolute path '/path/to/foo/**' is not allowed when synchronizing.",
+            'Absolute path "/path/to/foo/**" is not allowed when synchronizing.',
         ];
 
         yield 'unresolved relative path to file' => [
             ['../some/where'],
-            "Dot path '../some/where' is not allowed when synchronizing.",
+            'Dot path "../some/where" is not allowed when synchronizing.',
         ];
 
         yield 'unresolved relative path to directory' => [
             ['../some/where/**'],
-            "Dot path '../some/where/**' is not allowed when synchronizing.",
+            'Dot path "../some/where/**" is not allowed when synchronizing.',
         ];
     }
 
