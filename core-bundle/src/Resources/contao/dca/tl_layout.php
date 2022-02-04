@@ -560,6 +560,6 @@ class tl_layout extends Backend
 			ArrayUtil::arrayInsert($array, $i, 'layout.css');
 		}
 
-		return $array;
+		return serialize($array);
 	}
 }
