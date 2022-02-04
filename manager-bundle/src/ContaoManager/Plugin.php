@@ -392,8 +392,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Enable SQL strict mode for PDO and mysql drivers by setting an init
-     * command unless already set.
+     * Enables the SQL strict mode for PDO and MySQL drivers.
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
@@ -507,12 +506,12 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             }
         }
 
-        // If URL is set it overrides the driver option
+        // If URL is set, it overrides the driver option
         if (null !== $url) {
             $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
         }
 
-        // Normalize driver name
+        // Normalize the driver name
         if (\in_array($driver, ['pdo_mysql', 'mysql2'], true)) {
             $driver = 'mysql';
         }
