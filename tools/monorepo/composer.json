@@ -1,5 +1,8 @@
 {
     "require": {
         "contao/monorepo-tools": "dev-main"
+    },
+    "conflict": {
+        "composer/semver": "3.2.8"
     }
 }
