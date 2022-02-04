@@ -24,7 +24,6 @@ use Doctrine\DBAL\Connection;
 class RecordPreviewListener
 {
     private ContaoFramework $framework;
-
     private Connection $connection;
 
     public function __construct(ContaoFramework $framework, Connection $connection)
@@ -80,9 +79,7 @@ class RecordPreviewListener
         }
 
         if ($GLOBALS['TL_DCA'][$dc->table]['list']['label']['showColumns'] ?? false) {
-            $args = $dc->generateRecordLabel($row, $dc->table);
-
-            return serialize($args);
+            return serialize($dc->generateRecordLabel($row, $dc->table));
         }
 
         return $dc->generateRecordLabel($row, $dc->table);

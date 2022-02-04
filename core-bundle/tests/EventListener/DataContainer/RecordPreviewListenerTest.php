@@ -38,8 +38,8 @@ class RecordPreviewListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework();
         $connection = $this->createMock(Connection::class);
-        $listener = new RecordPreviewListener($framework, $connection);
 
+        $listener = new RecordPreviewListener($framework, $connection);
         $listener->registerDeleteCallbacks($table);
 
         if ($notDeletable) {
@@ -74,12 +74,14 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_form')
             ->willReturn('tl_form')
         ;
+
         $connection
             ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT * FROM tl_form WHERE id = ?', ['42'])
             ->willReturn($result)
         ;
+
         $connection
             ->expects($this->once())
             ->method('update')
@@ -94,6 +96,7 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
             'table' => 'tl_form',
         ]);
+
         $dataContainer
             ->expects($this->once())
             ->method('generateRecordLabel')
@@ -133,12 +136,14 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_user')
             ->willReturn('tl_user')
         ;
+
         $connection
             ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT * FROM tl_user WHERE id = ?', ['42'])
             ->willReturn($result)
         ;
+
         $connection
             ->expects($this->once())
             ->method('update')
@@ -153,6 +158,7 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
             'table' => 'tl_user',
         ]);
+
         $dataContainer
             ->expects($this->once())
             ->method('generateRecordLabel')
@@ -167,9 +173,7 @@ class RecordPreviewListenerTest extends TestCase
     public function testPrecompilesRecordPreviewWithCallable(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
-        $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] = [
-            'childRecordListener', 'callback',
-        ];
+        $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] = ['childRecordListener', 'callback'];
 
         $row = [
             'id' => '42',
@@ -186,6 +190,7 @@ class RecordPreviewListenerTest extends TestCase
         $systemAdapter = $this->mockAdapter([
             'importStatic',
         ]);
+
         $systemAdapter
             ->expects($this->once())
             ->method('importStatic')
@@ -210,12 +215,14 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_content')
             ->willReturn('tl_content')
         ;
+
         $connection
             ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT * FROM tl_content WHERE id = ?', ['42'])
             ->willReturn($result)
         ;
+
         $connection
             ->expects($this->once())
             ->method('update')
@@ -230,6 +237,7 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
             'table' => 'tl_content',
         ]);
+
         $dataContainer
             ->expects($this->never())
             ->method('generateRecordLabel')
@@ -265,12 +273,14 @@ class RecordPreviewListenerTest extends TestCase
             ->with('tl_content')
             ->willReturn('tl_content')
         ;
+
         $connection
             ->expects($this->once())
             ->method('executeQuery')
             ->with('SELECT * FROM tl_content WHERE id = ?', ['42'])
             ->willReturn($result)
         ;
+
         $connection
             ->expects($this->once())
             ->method('update')
@@ -285,6 +295,7 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
             'table' => 'tl_content',
         ]);
+
         $dataContainer
             ->expects($this->never())
             ->method('generateRecordLabel')
@@ -308,6 +319,7 @@ class RecordPreviewListenerTest extends TestCase
             ->method('executeQuery')
             ->willThrowException(new \Exception('exception'))
         ;
+
         $connection
             ->expects($this->once())
             ->method('update')
@@ -322,6 +334,7 @@ class RecordPreviewListenerTest extends TestCase
             'id' => '42',
             'table' => 'tl_form',
         ]);
+
         $dataContainer
             ->expects($this->never())
             ->method('generateRecordLabel')

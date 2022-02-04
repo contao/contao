@@ -30,9 +30,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class JumpToParentButtonListener
 {
     private ContaoFramework $framework;
-
     private Connection $connection;
-
     private TranslatorInterface $translator;
 
     public function __construct(ContaoFramework $framework, Connection $connection, TranslatorInterface $translator)

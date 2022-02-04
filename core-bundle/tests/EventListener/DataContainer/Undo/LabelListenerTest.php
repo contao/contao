@@ -63,7 +63,6 @@ class LabelListenerTest extends TestCase
         ;
 
         $dc = $this->createMock(DC_Table::class);
-
         $listener = new LabelListener($framework, $twig);
 
         $this->assertSame('<result>', $listener($row, '', $dc));
@@ -101,7 +100,6 @@ class LabelListenerTest extends TestCase
         ;
 
         $dc = $this->createMock(DC_Table::class);
-
         $listener = new LabelListener($framework, $twig);
 
         $this->assertSame('<result>', $listener($row, '', $dc));

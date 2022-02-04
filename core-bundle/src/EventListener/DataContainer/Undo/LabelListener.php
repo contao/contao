@@ -29,7 +29,6 @@ use Twig\Environment;
 class LabelListener
 {
     private ContaoFramework $framework;
-
     private Environment $twig;
 
     public function __construct(ContaoFramework $framework, Environment $twig)
