@@ -38,6 +38,7 @@ class SortedIterator extends \SplHeap
 	 *
 	 * @return integer Negative value if $b is less than $a, positive value if $b is greater than $a or 0 if they are equal
 	 */
+	#[\ReturnTypeWillChange]
 	public function compare($value1, $value2)
 	{
 		return strcmp($value2->getRealpath(), $value1->getRealpath());
