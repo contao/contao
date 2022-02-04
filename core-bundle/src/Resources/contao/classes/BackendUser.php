@@ -303,7 +303,7 @@ class BackendUser extends User
 		}
 
 		// Inherit CHMOD settings
-		if (!isset($row['includeChmod']) || !$row['includeChmod'])
+		if (!$row['includeChmod'])
 		{
 			$pid = $row['pid'];
 
