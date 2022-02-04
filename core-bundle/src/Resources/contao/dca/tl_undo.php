@@ -116,6 +116,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		),
 		'preview' => array
 		(
+			'eval'                    => array('doNotShow'=>true),
 			'sql'                     => "mediumblob NULL"
 		)
 	)
