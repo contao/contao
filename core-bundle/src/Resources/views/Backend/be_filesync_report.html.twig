@@ -5,27 +5,16 @@
     <p class="tl_confirm">{{ 'tl_files.syncComplete'|trans }}</p>
 </div>
 <div id="tl_buttons">
-    <a href="{{ referer }}" class="header_back" title="{{ 'MSC.backBTTitle'|trans(domain = 'contao_default') }}"
-       accesskey="b" onclick="Backend.getScrollOffset()">
-        {{ 'MSC.backBT'|trans(domain = 'contao_default') }}
-    </a>
+    <a href="{{ referer }}" class="header_back" title="{{ 'MSC.backBTTitle'|trans({}, 'contao_default') }}" accesskey="b" onclick="Backend.getScrollOffset()">{{ 'MSC.backBT'|trans({}, 'contao_default') }}</a>
 </div>
 
 {# Report #}
 <div id="result-list">
-    <p>{{ 'tl_files.syncResult'|trans([
-            change_set.itemsToCreate|length,
-            change_set.itemsToUpdate|length,
-            '-',
-            '-',
-            change_set.itemsToDelete|length
-        ], 'contao_tl_files')|raw }}</p>
+    <p>{{ 'tl_files.syncResult'|trans([change_set.itemsToCreate|length, change_set.itemsToUpdate|length, '-', '-', change_set.itemsToDelete|length], 'contao_tl_files')|raw }}</p>
 
     {# Added resources #}
     {% for added in change_set.itemsToCreate %}
-        <p class="tl_new">
-            {{ 'tl_files.syncAdded'|trans([added[constant('ATTR_PATH', change_set)]]) }}
-        </p>
+        <p class="tl_new">{{ 'tl_files.syncAdded'|trans([added[constant('ATTR_PATH', change_set)]]) }}</p>
     {% endfor %}
 
     {# Updated resources #}
@@ -41,16 +30,13 @@
 
     {# Deleted resources #}
     {% for deleted, type in change_set.itemsToDelete %}
-        <p class="tl_error">
-            {{ 'tl_files.syncDeleted'|trans([deleted]) }}
-        </p>
+        <p class="tl_error">{{ 'tl_files.syncDeleted'|trans([deleted]) }}</p>
     {% endfor %}
 </div>
 
 {# Footer #}
 <div class="tl_formbody_submit">
     <div class="tl_submit_container">
-        <a href="{{ referer }}" class="tl_submit"
-           style="display:inline-block">{{ 'MSC.continue'|trans(domain = 'contao_default') }}</a>
+        <a href="{{ referer }}" class="tl_submit" style="display:inline-block">{{ 'MSC.continue'|trans({}, 'contao_default') }}</a>
     </div>
 </div>
