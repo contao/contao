@@ -502,7 +502,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             }
 
             if (null !== ($optionsConfig = $config['dbal']['connections']['default']['options'] ?? null)) {
-                $options = array_replace($options, $optionsConfig);
+                $options[] = $optionsConfig;
             }
         }
 
@@ -516,7 +516,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $driver = 'mysql';
         }
 
-        return [$driver, $options];
+        return [$driver, array_replace([], ...$options)];
     }
 
     private function getDatabaseUrl(ContainerBuilder $container, array $extensionConfigs): string
