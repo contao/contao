@@ -46,6 +46,13 @@ class SitemapListener
         /** @var NewsArchiveModel $newsArchiveModel */
         $newsArchiveModelAdapter = $this->framework->getAdapter(NewsArchiveModel::class);
 
+        // Get all news archives
+        $archives = $newsArchiveModelAdapter->findAll();
+
+        if (null === $archives) {
+            return;
+        }
+
         /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
 
@@ -57,13 +64,6 @@ class SitemapListener
 
         /** @var News $newsAdapter */
         $newsAdapter = $this->framework->getAdapter(News::class);
-
-        // Get all news archives
-        $archives = $newsArchiveModelAdapter->findAll();
-
-        if (null === $archives) {
-            return;
-        }
 
         $rootPageIds = array_map('intval', $sitemapEvent->getRootPageIds());
 
