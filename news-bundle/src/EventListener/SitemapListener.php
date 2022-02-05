@@ -23,9 +23,9 @@ use Contao\PageModel;
 use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
 
 /**
- * @internal
- *
  * @ServiceTag("kernel.event_listener", event=ContaoCoreEvents::SITEMAP)
+ *
+ * @internal
  */
 class SitemapListener
 {
