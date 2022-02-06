@@ -10,22 +10,24 @@
 
 {# Report #}
 <div id="result-list">
-    <p>{{ 'tl_files.syncResult'|trans([change_set.itemsToCreate|length, change_set.itemsToUpdate|length, '-', '-', change_set.itemsToDelete|length], 'contao_tl_files')|raw }}</p>
+    {% set modified = change_set.itemsToUpdate|filter(updated => updated[constant('ATTR_HASH', change_set)] is defined) %}
+    {% set moved = change_set.itemsToUpdate|filter(updated => updated[constant('ATTR_PATH', change_set)] is defined) %}
+
+    <p>{{ 'tl_files.syncResult'|trans([change_set.itemsToCreate|length, modified|length, '-', moved|length, change_set.itemsToDelete|length], 'contao_tl_files')|raw }}</p>
 
     {# Added resources #}
     {% for added in change_set.itemsToCreate %}
         <p class="tl_new">{{ 'tl_files.syncAdded'|trans([added[constant('ATTR_PATH', change_set)]]) }}</p>
     {% endfor %}
 
-    {# Updated resources #}
-    {% for path, updated in change_set.itemsToUpdate %}
-        <p class="tl_info">
-            {% if updated[constant('ATTR_PATH', change_set)] is defined %}
-                {{ 'tl_files.syncMoved'|trans([path, updated[constant('ATTR_PATH', change_set)]]) }}
-            {% else %}
-                {{ 'tl_files.syncChanged'|trans([path]) }}
-            {% endif %}
-        </p>
+    {# Modified resources #}
+    {% for path, updated in modified %}
+        <p class="tl_info">{{ 'tl_files.syncChanged'|trans([path]) }}</p>
+    {% endfor %}
+
+    {# Moved resources #}
+    {% for path, updated in moved %}
+        <p class="tl_info">{{ 'tl_files.syncMoved'|trans([path, updated[constant('ATTR_PATH', change_set)]]) }}</p>
     {% endfor %}
 
     {# Deleted resources #}
