@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Model\Collection;
 use Contao\UserModel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -66,7 +65,7 @@ class UserListCommand extends Command
                 // no break
 
             case 'txt':
-                if (0 === $users->count()) {
+                if (0 === count($users)) {
                     $io->note('No accounts found.');
 
                     return 0;
@@ -90,20 +89,23 @@ class UserListCommand extends Command
         return 0;
     }
 
-    private function getUsers(bool $onlyAdmins = false): Collection
+    private function getUsers(bool $onlyAdmins = false): array
     {
         $this->framework->initialize();
 
         $userModel = $this->framework->getAdapter(UserModel::class);
+        $usersModels = $onlyAdmins ? $userModel->findBy('admin', '1') : $userModel->findAll();
 
-        if ($onlyAdmins) {
-            return $userModel->findBy('admin', '1');
+        $users = array();
+
+        foreach ($usersModels ?? [] as $user) {
+            $users[] = $user->row();
         }
 
-        return $userModel->findAll() ?? new Collection([], "");
+        return $users;
     }
 
-    private function formatTableRows(Collection $users, array &$columns): array
+    private function formatTableRows(array $users, array &$columns): array
     {
         if ([] === $columns) {
             $columns = ['username', 'name', 'admin', 'dateAdded', 'lastLogin'];
@@ -117,14 +119,14 @@ class UserListCommand extends Command
                     $check = '\\' === \DIRECTORY_SEPARATOR ? '1' : "\xE2\x9C\x94";
 
                     if (\in_array($field, ['tstamp', 'dateAdded', 'lastLogin'], true)) {
-                        return $user->{$field} ? date('Y-m-d H:i:s', (int) $user->{$field}) : '';
+                        return $user[$field] ? date('Y-m-d H:i:s', (int) $user[$field]) : '';
                     }
 
                     if (\in_array($field, ['admin', 'pwChange', 'disable', 'useTwoFactor', 'locked'], true)) {
-                        return $user->{$field} ? $check : '';
+                        return $user[$field] ? $check : '';
                     }
 
-                    return $user->{$field} ?? '';
+                    return $user[$field] ?? '';
                 },
                 $columns
             );
@@ -133,15 +135,15 @@ class UserListCommand extends Command
         return $rows;
     }
 
-    private function formatJson(Collection $users, array $columns): array
+    private function formatJson(array $users, array $columns): array
     {
         if ([] === $columns) {
-            return $users->fetchAll();
+            return $users;
         }
 
         $data = [];
 
-        foreach ($users->fetchAll() as $user) {
+        foreach ($users as $user) {
             $data[] = array_filter(
                 $user,
                 static fn ($key) => \in_array($key, $columns, true),
