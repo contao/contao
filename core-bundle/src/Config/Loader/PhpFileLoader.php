@@ -136,7 +136,7 @@ class PhpFileLoader extends Loader
         $namespaceNode = $namespaceResolver->getNameContext()->getNamespace();
         $namespace = null !== $namespaceNode ? $namespaceNode->toString() : '';
 
-        // Force GC collection in order to reduce total memory required when building the cache // see https://github.com/contao/contao/issues/4069
+        // Force GC collection to reduce the total memory required when building the cache (see #4069)
         gc_collect_cycles();
 
         return [$code, $namespace];
