@@ -89,8 +89,6 @@ class AutomatorCommand extends Command
      */
     private function generateCommandMap(): array
     {
-        $this->framework->initialize();
-
         $commands = [];
 
         // Find all public methods

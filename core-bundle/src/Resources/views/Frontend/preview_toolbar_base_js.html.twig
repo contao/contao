@@ -275,6 +275,7 @@
 
             if (document.createElement('datalist') && window.HTMLDataListElement) {
                 const userField = form.querySelector('input[name="user"]');
+                let timer;
 
                 if (userField) {
                     userField.addEventListener('input', function () {
@@ -282,22 +283,28 @@
                             return;
                         }
 
-                        const body = {
-                            FORM_SUBMIT: 'datalist_members',
-                            REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
-                            value: userField.value
-                        };
+                        if (timer) {
+                            clearTimeout(timer);
+                        }
 
-                        const userList = form.querySelector('datalist[id="userlist"]');
+                        timer = setTimeout(function () {
+                            const body = {
+                                FORM_SUBMIT: 'datalist_members',
+                                REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
+                                value: userField.value
+                            };
 
-                        request('POST', form.action, new URLSearchParams(body), function () {
-                            userList.innerHTML = '';
-                            JSON.parse(this.response).forEach(item => {
-                                const option = document.createElement('option');
-                                option.value = item;
-                                userList.appendChild(option);
-                            });
-                        }, false);
+                            const userList = form.querySelector('datalist[id="userlist"]');
+
+                            request('POST', form.action, new URLSearchParams(body), function () {
+                                userList.innerHTML = '';
+                                JSON.parse(this.response).forEach(item => {
+                                    const option = document.createElement('option');
+                                    option.value = item;
+                                    userList.appendChild(option);
+                                });
+                            }, false);
+                        }, 300);
                     });
                 }
             }

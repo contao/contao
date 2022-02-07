@@ -38,7 +38,7 @@ class Idna
 	 */
 	public static function encode($strDomain)
 	{
-		if (!$strDomain)
+		if (!$strDomain || !\is_string($strDomain))
 		{
 			return '';
 		}
@@ -64,7 +64,7 @@ class Idna
 	 */
 	public static function decode($strDomain)
 	{
-		if (!$strDomain)
+		if (!$strDomain || !\is_string($strDomain))
 		{
 			return '';
 		}
@@ -90,7 +90,7 @@ class Idna
 	 */
 	public static function encodeEmail($strEmail)
 	{
-		if (!$strEmail)
+		if (!$strEmail || !\is_string($strEmail))
 		{
 			return '';
 		}
@@ -135,7 +135,7 @@ class Idna
 	 */
 	public static function decodeEmail($strEmail)
 	{
-		if (!$strEmail)
+		if (!$strEmail || !\is_string($strEmail))
 		{
 			return '';
 		}

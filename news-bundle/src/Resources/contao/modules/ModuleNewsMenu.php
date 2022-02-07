@@ -226,7 +226,14 @@ class ModuleNewsMenu extends ModuleNews
 		// Create the date object
 		try
 		{
-			$this->Date = Input::get('day') ? new Date(Input::get('day'), 'Ymd') : new Date();
+			if (($day = Input::get('day')) && \is_string($day))
+			{
+				$this->Date = new Date($day, 'Ymd');
+			}
+			else
+			{
+				$this->Date = new Date();
+			}
 		}
 		catch (\OutOfBoundsException $e)
 		{
