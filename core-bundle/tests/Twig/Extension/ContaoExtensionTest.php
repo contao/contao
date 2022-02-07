@@ -16,6 +16,8 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Event\EventsNodeVisitor;
+use Contao\CoreBundle\Twig\Event\RenderTemplateEvent;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
@@ -24,6 +26,7 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -45,10 +48,11 @@ class ContaoExtensionTest extends TestCase
     {
         $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();
 
-        $this->assertCount(2, $nodeVisitors);
+        $this->assertCount(3, $nodeVisitors);
 
         $this->assertInstanceOf(ContaoEscaperNodeVisitor::class, $nodeVisitors[0]);
         $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[1]);
+        $this->assertInstanceOf(EventsNodeVisitor::class, $nodeVisitors[2]);
     }
 
     public function testAddsTheTokenParsers(): void
@@ -147,7 +151,11 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        $extension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class));
+        $extension = new ContaoExtension(
+            $environment,
+            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(EventDispatcherInterface::class)
+        );
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The Twig\Extension\CoreExtension class was expected to register the "include" Twig function but did not.');
@@ -298,13 +306,37 @@ class ContaoExtensionTest extends TestCase
         unset($GLOBALS['TL_LANG']);
     }
 
+    public function testDispatchRenderEvent(): void
+    {
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->willReturnCallback(
+                function (RenderTemplateEvent $event): RenderTemplateEvent {
+                    $this->assertSame('foo.html.twig', $event->getName());
+                    $event->setValue('foo', 'bar');
+
+                    return $event;
+                }
+            )
+        ;
+
+        $extension = $this->getContaoExtension(null, null, $eventDispatcher);
+
+        $context = $extension->dispatchRenderEvent('foo.html.twig', ['some' => 'context']);
+
+        $this->assertSame(['some' => 'context', 'foo' => 'bar'], $context);
+    }
+
     /**
      * @param Environment&MockObject $environment
      */
-    private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
+    private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null, EventDispatcherInterface $eventDispatcher = null): ContaoExtension
     {
         $environment ??= $this->createMock(Environment::class);
         $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
+        $eventDispatcher ??= $this->createMock(EventDispatcherInterface::class);
 
         $environment
             ->method('getExtension')
@@ -314,6 +346,6 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension($environment, $hierarchy);
+        return new ContaoExtension($environment, $hierarchy, $eventDispatcher);
     }
 }

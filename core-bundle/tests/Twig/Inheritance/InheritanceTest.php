@@ -21,6 +21,7 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 
@@ -108,7 +109,7 @@ class InheritanceTest extends TestCase
 
         $environment = new Environment($loader);
 
-        $contaoExtension = new ContaoExtension($environment, $loader);
+        $contaoExtension = new ContaoExtension($environment, $loader, $this->createMock(EventDispatcherInterface::class));
         $environment->addExtension($contaoExtension);
 
         return $environment;

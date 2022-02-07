@@ -24,13 +24,6 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  */
 final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
 {
-    private string $extensionName;
-
-    public function __construct(string $extensionName)
-    {
-        $this->extensionName = $extensionName;
-    }
-
     public function getPriority(): int
     {
         return 0;
@@ -70,6 +63,6 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
         }
 
         $node->setNode('blocks', new Node($blockNodes));
-        $node->setNode('body', new PhpTemplateProxyNode($this->extensionName));
+        $node->setNode('body', new PhpTemplateProxyNode());
     }
 }

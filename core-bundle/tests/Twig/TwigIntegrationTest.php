@@ -19,6 +19,7 @@ use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\FormTextField;
 use Contao\System;
 use Contao\TemplateLoader;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
@@ -62,7 +63,13 @@ class TwigIntegrationTest extends TestCase
         TemplateLoader::addFile('form_textfield', 'templates');
 
         $environment = new Environment(new ArrayLoader(['@Contao/form_textfield.html.twig' => $content]));
-        $environment->addExtension(new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class)));
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(EventDispatcherInterface::class),
+            )
+        );
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);

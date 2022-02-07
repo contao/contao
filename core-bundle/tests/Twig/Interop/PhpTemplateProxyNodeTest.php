@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Twig\Compiler;
 use Twig\Environment;
@@ -24,7 +23,7 @@ class PhpTemplateProxyNodeTest extends TestCase
     {
         $compiler = new Compiler($this->createMock(Environment::class));
 
-        (new PhpTemplateProxyNode(ContaoExtension::class))->compile($compiler);
+        (new PhpTemplateProxyNode())->compile($compiler);
 
         $expectedSource = <<<'SOURCE'
             echo $this->extensions["Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension"]->renderLegacyTemplate(
