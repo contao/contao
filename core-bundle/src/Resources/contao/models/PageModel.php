@@ -709,7 +709,8 @@ class PageModel extends Model
 	 */
 	public static function findSimilarByAlias(self $pageModel)
 	{
-		if ('' === $pageModel->alias) {
+		if ('' === $pageModel->alias)
+		{
 			return null;
 		}
 

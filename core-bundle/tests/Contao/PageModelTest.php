@@ -327,6 +327,7 @@ class PageModelTest extends ContaoTestCase
             'id' => 1,
             'alias' => '',
         ]);
+
         $sourcePage
             ->expects($this->never())
             ->method('loadDetails')
