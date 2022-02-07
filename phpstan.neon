@@ -51,6 +51,11 @@ parameters:
                 - %currentWorkingDirectory%/core-bundle/src/Framework/ContaoFrameworkInterface.php
                 - %currentWorkingDirectory%/core-bundle/src/Framework/FrameworkAwareInterface.php
 
+        -
+            # Ignore incorrect assertSame detection for reference variables
+            message: '#Call to method .*::assertSame\(\) with .* will always evaluate to false\.#'
+            path: %currentWorkingDirectory%/core-bundle/tests/Contao/SystemTest.php
+
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 

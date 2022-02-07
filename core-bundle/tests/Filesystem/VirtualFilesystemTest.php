@@ -127,17 +127,17 @@ class VirtualFilesystemTest extends TestCase
     {
         yield 'relative path up' => [
             '../other/resource',
-            'Virtual filesystem path \'../other/resource\' must not escape the filesystem boundary.',
+            'Virtual filesystem path "../other/resource" must not escape the filesystem boundary.',
         ];
 
         yield 'relative path with .. in the middle' => [
             'some/../../other/resource',
-            'Virtual filesystem path \'../other/resource\' must not escape the filesystem boundary.',
+            'Virtual filesystem path "../other/resource" must not escape the filesystem boundary.',
         ];
 
         yield 'absolute path' => [
             '/some/place',
-            'Virtual filesystem path \'/some/place\' cannot be absolute.',
+            'Virtual filesystem path "/some/place" cannot be absolute.',
         ];
     }
 
