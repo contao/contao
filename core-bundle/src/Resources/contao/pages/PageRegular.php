@@ -23,6 +23,13 @@ use Symfony\Component\HttpFoundation\Response;
 class PageRegular extends Frontend
 {
 	/**
+	 * @var Template
+	 *
+	 * @todo Remove in Contao 5.0
+	 */
+	protected $Template;
+
+	/**
 	 * Generate a regular page
 	 *
 	 * @param PageModel $objPage
