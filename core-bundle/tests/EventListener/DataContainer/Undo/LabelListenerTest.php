@@ -123,9 +123,7 @@ class LabelListenerTest extends TestCase
             ],
         ];
 
-        $GLOBALS['TL_DCA']['tl_news']['fields']['headline'] = [
-            'inputType' => 'text',
-        ];
+        $GLOBALS['TL_DCA']['tl_news']['fields']['headline'] = ['inputType' => 'text'];
 
         return [
             'id' => 1,
@@ -162,9 +160,7 @@ class LabelListenerTest extends TestCase
             ],
         ];
 
-        $GLOBALS['TL_DCA']['tl_user']['fields']['headline'] = [
-            'inputType' => 'text',
-        ];
+        $GLOBALS['TL_DCA']['tl_user']['fields']['headline'] = ['inputType' => 'text'];
 
         return [
             'id' => 1,

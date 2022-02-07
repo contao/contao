@@ -42,7 +42,8 @@ class RecordPreviewListener
         }
 
         $GLOBALS['TL_DCA'][$table]['config']['ondelete_callback'][] = [
-            'contao.listener.data_container.record_preview', 'storePrecompiledRecordPreview',
+            'contao.listener.data_container.record_preview',
+            'storePrecompiledRecordPreview',
         ];
     }
 
@@ -68,9 +69,7 @@ class RecordPreviewListener
             $callback = $GLOBALS['TL_DCA'][$dc->table]['list']['sorting']['child_record_callback'] ?? null;
 
             if (\is_array($callback)) {
-                $system = $this->framework->getAdapter(System::class);
-
-                return $system->importStatic($callback[0])->{$callback[1]}($row);
+                return $this->framework->getAdapter(System::class)->importStatic($callback[0])->{$callback[1]}($row);
             }
 
             if (\is_callable($callback)) {
