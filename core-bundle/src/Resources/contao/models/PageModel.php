@@ -1246,6 +1246,14 @@ class PageModel extends Model
 			$this->rootUseSSL = $objParentPage->useSSL;
 			$this->rootFallbackLanguage = $objParentPage->language;
 
+			if ($objParentPage->addonDns) {
+				$request = System::getContainer()->get('request_stack')->getMainRequest();
+
+				if ($request && \in_array($request->getHost(), explode(',', $objParentPage->addonDns))) {
+					$this->domain = $request->getHost();
+				}
+			}
+
 			// Store the fallback language (see #6874)
 			if (!$objParentPage->fallback)
 			{

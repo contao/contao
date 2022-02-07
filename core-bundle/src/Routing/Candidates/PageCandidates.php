@@ -62,7 +62,7 @@ class PageCandidates extends AbstractCandidates
 
         $candidates[] = '/';
 
-        $queryBuilder->orWhere("type='root' AND (dns=:httpHost OR dns='')");
+        $queryBuilder->orWhere("type='root' AND (dns=:httpHost OR dns='' OR FIND_IN_SET(:httpHost, addonDns)");
         $queryBuilder->setParameter('httpHost', $httpHost);
 
         return true;

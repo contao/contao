@@ -116,6 +116,12 @@
       <trans-unit id="tl_page.dns.1">
         <source>Here you can restrict the access to the website to a certain domain name.</source>
       </trans-unit>
+      <trans-unit id="tl_page.addonDns.0">
+        <source>Add-on domains</source>
+      </trans-unit>
+      <trans-unit id="tl_page.addonDns.1">
+        <source>Optionally enter a comma-separated list of add-on domains for this website.</source>
+      </trans-unit>
       <trans-unit id="tl_page.staticFiles.0">
         <source>Files URL</source>
       </trans-unit>

@@ -288,7 +288,7 @@ class RouteProvider extends AbstractPageRouteProvider
         $models = [];
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns=''))"], $httpHost);
+        $pages = $pageModel->findBy(["(tl_page.type='root' AND (tl_page.dns=? OR tl_page.dns='' OR FIND_IN_SET(?, tl_page.addonDns)))"], [$httpHost, $httpHost]);
 
         if ($pages instanceof Collection) {
             $models = $pages->getModels();
