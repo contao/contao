@@ -160,6 +160,8 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->booleanNode('webp_lossless')
                         ->end()
+                        ->booleanNode('flatten')
+                        ->end()
                         ->scalarNode('interlace')
                             ->defaultValue(ImageInterface::INTERLACE_PLANE)
                         ->end()
