@@ -34,12 +34,14 @@ jobs:
             - name: Generate the coverage report
               run: php -d pcov.enabled=1 vendor/bin/phpunit --testsuite=coverage --coverage-clover=clover.xml --colors=always
 
+            - name: List
+              run: ls -la
+
             - name: Upload the coverage report
               uses: codecov/codecov-action@v2
               with:
                   files: ./clover.xml
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                  version: "v0.1.15"
+                  verbose: true
                   fail_ci_if_error: true
 
 #    ecs:
