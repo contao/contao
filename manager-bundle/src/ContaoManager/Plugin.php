@@ -416,7 +416,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 'connections' => [
                     'default' => [
                         'options' => [
-                            $key => "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))",
+                            $key => "SET SESSION sql_mode=CONCAT(@@sql_mode, IF(INSTR(@@sql_mode, 'STRICT_'), '', ',TRADITIONAL'))",
                         ],
                     ],
                 ],
