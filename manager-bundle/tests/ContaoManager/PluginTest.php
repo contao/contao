@@ -582,7 +582,7 @@ class PluginTest extends ContaoTestCase
                         'connections' => [
                             'default' => [
                                 'options' => [
-                                    $expectedOptionKey => "SET SESSION sql_mode=(SELECT CONCAT(@@sql_mode, ',TRADITIONAL'))",
+                                    $expectedOptionKey => "SET SESSION sql_mode=CONCAT(@@sql_mode, IF(INSTR(@@sql_mode, 'STRICT_'), '', ',TRADITIONAL'))",
                                 ],
                             ],
                         ],
