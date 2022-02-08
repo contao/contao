@@ -298,7 +298,7 @@ class Picker extends Widget
 
 	protected function getRelatedTable(): string
 	{
-		if (substr($this->context ?? '', 0, 3) === 'dc.')
+		if (0 === strpos($this->context ?? '', 'dc.'))
 		{
 			return substr($this->context, 3);
 		}

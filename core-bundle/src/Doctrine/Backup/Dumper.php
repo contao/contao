@@ -18,7 +18,6 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Types\BinaryType;
 
 class Dumper implements DumperInterface
 {
@@ -61,7 +60,7 @@ class Dumper implements DumperInterface
     {
         foreach ($schemaManager->listViews() as $view) {
             yield sprintf('-- BEGIN VIEW %s', $view->getName());
-            yield $platform->getCreateViewSQL($view->getQuotedName($platform), $view->getSql()).';';
+            yield sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
         }
     }
 
@@ -81,11 +80,7 @@ class Dumper implements DumperInterface
         $values = [];
 
         foreach ($table->getColumns() as $column) {
-            if ($column->getType() instanceof BinaryType) {
-                $values[] = sprintf('HEX(`%s`) AS `%s`', $column->getName(), $column->getName());
-            } else {
-                $values[] = sprintf('`%s` AS `%s`', $column->getName(), $column->getName());
-            }
+            $values[] = sprintf('`%s` AS `%s`', $column->getName(), $column->getName());
         }
 
         $rows = $connection->executeQuery(sprintf('SELECT %s FROM `%s`', implode(', ', $values), $table->getName()));
@@ -117,8 +112,16 @@ class Dumper implements DumperInterface
             return 'NULL';
         }
 
-        if ($column->getType() instanceof BinaryType) {
-            return sprintf('UNHEX(%s)', $connection->quote($value));
+        // non-ASCII values
+        if (
+            \is_string($value)
+            && preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\xFF]/', $value)
+            && (
+                !\in_array(strtolower($column->getPlatformOptions()['charset'] ?? ''), ['utf8', 'utf8mb4'], true)
+                || !preg_match('//u', $value)
+            )
+        ) {
+            return '0x'.bin2hex($value);
         }
 
         return $connection->quote($value);

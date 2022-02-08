@@ -29,7 +29,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
-        "phpunit/phpunit": "^8.5",
+        "phpunit/phpunit": "^9.3",
         "symfony/phpunit-bridge": "^5.3"
     },
     "conflict": {
@@ -45,6 +45,12 @@
         "psr-4": {
             "Contao\\MakerBundle\\Fixtures\\": "tests/Fixtures/src/",
             "Contao\\MakerBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
         }
     },
     "extra": {

@@ -53,7 +53,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
     public function testCommandRegular(): void
     {
         foreach ($this->webFiles as $file) {
-            $this->assertFileNotExists($this->getTempDir().'/public/'.$file->getFilename());
+            $this->assertFileDoesNotExist($this->getTempDir().'/public/'.$file->getFilename());
         }
 
         $commandTester = new CommandTester($this->command);
@@ -110,7 +110,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $this->assertFileNotExists($this->getTempDir().'/public/app_dev.php');
+        $this->assertFileDoesNotExist($this->getTempDir().'/public/app_dev.php');
     }
 
     public function testCommandRemovesInstallPhp(): void
@@ -120,7 +120,7 @@ class InstallWebDirCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $this->assertFileNotExists($this->getTempDir().'/public/install.php');
+        $this->assertFileDoesNotExist($this->getTempDir().'/public/install.php');
     }
 
     public function testUsesACustomTargetDirectory(): void
