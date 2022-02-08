@@ -67,8 +67,7 @@ class BackupManagerTest extends ContaoTestCase
         $backup = Backup::createNewAtPath($this->getBackupDir());
 
         $manager = $this->getBackupManager();
-        $manager->createRestoreConfig();
-        $config = $manager->createCreateConfig();
+        $config = $manager->createRestoreConfig();
 
         $this->assertSame(['foobar'], $config->getTablesToIgnore());
         $this->assertSame($backup->getFilepath(), $config->getBackup()->getFilepath());
