@@ -2743,9 +2743,11 @@
       </trans-unit>
       <trans-unit id="MSC.shareURL">
         <source>Share URL</source>
+        <target>Дељење URL</target>
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+        <target>Надређено</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
