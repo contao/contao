@@ -2658,8 +2658,8 @@
         <target>Disabilita</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>L'editor CSS interno è stato deprecato e verrà rimosso in una delle prossime versioni di Contao! Considera di esportare i fogli di stile esistenti e di aggiungerli nuovamente al layout di pagina come fogli di stile esterni.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>L'editor CSS interno è stato deprecato e verrà rimosso in Contao 5.0! Considera di esportare i tuoi fogli di stile esistenti e di aggiungerli nuovamente al layout di pagina come fogli di stile esterni.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

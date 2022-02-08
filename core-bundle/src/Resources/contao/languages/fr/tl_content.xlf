@@ -291,9 +291,11 @@
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.0">
         <source>Markdown source</source>
+        <target>Source Markdown</target>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.1">
         <source>Please choose the Markdown source.</source>
+        <target>Veuillez choisir la source du Markdown.</target>
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceText">
         <source>Text</source>
@@ -301,6 +303,7 @@
       </trans-unit>
       <trans-unit id="tl_content.markdownSource.sourceFile">
         <source>File</source>
+        <target>Fichier</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -784,6 +787,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>
+        <target>Auto (précharger la vidéo en entier)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.metadata">
         <source>Metadata (preload the metadata only)</source>
@@ -823,6 +827,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_rel">
         <source>Limit related videos to the same channel</source>
+        <target>Limiter les vidéos suggérées à la même chaîne</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>

@@ -2659,7 +2659,7 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>内部のCSSエディターは非推奨になり、Contao 5.0で削除します! 既存のスタイルシートをエクスポートして、外部スタイルシートとしてページレイアウトに再追加することをご検討ください。</target>
+        <target>内部のCSSエディターは非推奨になり、Contao 5.0で削除します! 既存のスタイルシートをエクスポートして、外部スタイルシートとしてページのレイアウトに再追加することをご検討ください。</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
