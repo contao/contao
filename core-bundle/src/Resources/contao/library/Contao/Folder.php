@@ -585,16 +585,14 @@ class Folder extends System
 		$arrReturn = array();
 
 		// Scan directory
-		if (is_dir($strFolder)) {
-			foreach (scandir($strFolder, SCANDIR_SORT_ASCENDING) as $strFile)
+		foreach (scandir($strFolder, SCANDIR_SORT_ASCENDING) as $strFile)
+		{
+			if ($strFile == '.' || $strFile == '..')
 			{
-				if ($strFile == '.' || $strFile == '..')
-				{
-					continue;
-				}
-
-				$arrReturn[] = $strFile;
+				continue;
 			}
+
+			$arrReturn[] = $strFile;
 		}
 
 		// Cache the result
