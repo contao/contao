@@ -53,7 +53,7 @@ class ResultTest extends TestCase
             }
         }
 
-        $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
+        PHP_MAJOR_VERSION < 8 ? $this->expectNotice() : $this->expectWarning();
 
         $results[1]->fetchField();
     }
@@ -95,7 +95,7 @@ class ResultTest extends TestCase
             $this->assertSame('value1', $result->fetchField());
         }
 
-        $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
+        PHP_MAJOR_VERSION < 8 ? $this->expectNotice() : $this->expectWarning();
 
         $results[1]->fetchField(1);
     }
@@ -142,7 +142,7 @@ class ResultTest extends TestCase
             $this->assertSame('value2', $result->fetchField());
         }
 
-        $this->expectException(PHP_MAJOR_VERSION < 8 ? Notice::class : Warning::class);
+        PHP_MAJOR_VERSION < 8 ? $this->expectNotice() : $this->expectWarning();
 
         $results[1]->fetchField(1);
     }

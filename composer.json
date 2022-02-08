@@ -159,7 +159,7 @@
         "composer/composer": "^2.0",
         "contao/test-case": "^4.5",
         "league/flysystem-memory": "^2.0 || ^3.0",
-        "phpunit/phpunit": "^8.5",
+        "phpunit/phpunit": "^9.0",
         "symfony/browser-kit": "^5.4",
         "symfony/phpunit-bridge": "^5.4"
     },
