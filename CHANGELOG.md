@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.26] (2022-02-08)
+
+**Fixed issues:**
+
+- [#4045] Correctly strip all CSRF token occurrences ([ausi])
+- [#4075] Remove the `Controller::$Template` property ([leofeyer])
+- [#4072] Reduce memory consumption when warming up cache ([Toflar])
+- [#4067] Correctly handle null values in DCs ([ausi])
+
 ## [4.9.25] (2022-02-03)
 
 **Fixed issues:**
@@ -824,6 +833,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.26]: https://github.com/contao/contao/releases/tag/4.9.26
 [4.9.25]: https://github.com/contao/contao/releases/tag/4.9.25
 [4.9.24]: https://github.com/contao/contao/releases/tag/4.9.24
 [4.9.23]: https://github.com/contao/contao/releases/tag/4.9.23
@@ -888,6 +898,10 @@ This project adheres to [Semantic Versioning].
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
 [zonky2]: https://github.com/zonky2
+[#4045]: https://github.com/contao/contao/pull/4045
+[#4075]: https://github.com/contao/contao/pull/4075
+[#4072]: https://github.com/contao/contao/pull/4072
+[#4067]: https://github.com/contao/contao/pull/4067
 [#3997]: https://github.com/contao/contao/pull/3997
 [#4056]: https://github.com/contao/contao/pull/4056
 [#3857]: https://github.com/contao/contao/pull/3857
