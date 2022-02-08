@@ -55,7 +55,7 @@
         "contao/imagine-svg": "^1.0",
         "contao/manager-plugin": "^2.6.2",
         "doctrine/collections": "^1.5",
-        "doctrine/dbal": "^3.2",
+        "doctrine/dbal": "^3.3",
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/orm": "^2.10",
         "doctrine/persistence": "^2.0",
