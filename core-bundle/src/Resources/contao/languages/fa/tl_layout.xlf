@@ -315,19 +315,19 @@
       </trans-unit>
       <trans-unit id="tl_layout.addJQuery.0">
         <source>Include jQuery</source>
-        <target>گنجاندن جی‌کوئری</target>
+        <target>گنجاندن jQuery</target>
       </trans-unit>
       <trans-unit id="tl_layout.addJQuery.1">
         <source>Include the jQuery library in the layout.</source>
-        <target>کتابخانه جی‌کوئری را در چیدمان می‌گنجاند.</target>
+        <target>کتابخانه jQuery را در چیدمان می‌گنجاند.</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery.0">
         <source>jQuery templates</source>
-        <target>قالب‌های جی‌کوئری</target>
+        <target>قالب‌های jQuery</target>
       </trans-unit>
       <trans-unit id="tl_layout.jquery.1">
         <source>Here you can select one or more jQuery templates.</source>
-        <target>اینجا می‌توانید یک یا چند قابل جی‌کوئری را انتخاب نمایید.</target>
+        <target>اینجا می‌توانید یک یا چند قابل jQuery را انتخاب نمایید.</target>
       </trans-unit>
       <trans-unit id="tl_layout.addMooTools.0">
         <source>Include MooTools</source>
@@ -443,7 +443,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.jquery_legend">
         <source>jQuery</source>
-        <target>جی‌کوئری</target>
+        <target>jQuery</target>
       </trans-unit>
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>

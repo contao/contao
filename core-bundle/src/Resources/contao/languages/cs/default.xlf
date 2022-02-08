@@ -2658,7 +2658,7 @@
         <target>Neaktivní</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
         <target>Interní editor CSS byl vyřazen a bude odstraněn v jedné z následujících verzí Contaa! Prosím stáhněte si a přeneste dané soubory do příslušné složky instalace Contaa a přidejte je do Vzhledu stránek jako externí soubory CSS.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">

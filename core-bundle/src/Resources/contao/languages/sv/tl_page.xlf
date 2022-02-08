@@ -311,6 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cgroup.1">
         <source>Please select a user group as the owner of the page.</source>
+        <target>Välj en användargrupp som ägare till sidan.</target>
       </trans-unit>
       <trans-unit id="tl_page.chmod.0">
         <source>Access rights</source>

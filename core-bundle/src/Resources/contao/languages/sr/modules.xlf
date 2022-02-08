@@ -43,7 +43,7 @@
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
-        <target>Шаблони - Templates</target>
+        <target>Шаблони</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Add or edit custom templates</source>
@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Account manager</source>
-        <target>Менаџер налога</target>
+        <target>Управљање налозима</target>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
@@ -59,7 +59,7 @@
       </trans-unit>
       <trans-unit id="MOD.member.1">
         <source>Manage member accounts (front end)</source>
-        <target>Управљање корисницима (фронт енд)</target>
+        <target>Управљање корисницима (ФронтЕнд)</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
@@ -75,7 +75,7 @@
       </trans-unit>
       <trans-unit id="MOD.user.1">
         <source>Manage user accounts (back end)</source>
-        <target>Управљање корисницима (бек енд)</target>
+        <target>Управљање корисницима (БекЕнд)</target>
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
@@ -87,11 +87,11 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
-        <target>Двоструки opt-in</target>
+        <target>Двострука аутентификација</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage double opt-in tokens</source>
-        <target>Управљање двоструким токенима за пријаву</target>
+        <target>Управљање токенима за двоструку аутентификацију</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>

@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
-        <target>テーマ、フロントエンドモジュール、ページレイアウト、画像サイズを管理</target>
+        <target>テーマ、フロントエンドモジュール、ページのレイアウト、画像サイズを管理</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -171,7 +171,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_layout">
         <source>Page layouts</source>
-        <target>ページレイアウト</target>
+        <target>ページのレイアウト</target>
       </trans-unit>
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
@@ -195,7 +195,7 @@
       </trans-unit>
       <trans-unit id="MOD.layout">
         <source>Page layouts</source>
-        <target>ページレイアウト</target>
+        <target>ページのレイアウト</target>
       </trans-unit>
       <trans-unit id="MOD.image_sizes">
         <source>Image sizes</source>

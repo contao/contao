@@ -347,6 +347,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>Mallsökvägen &quot;%s&quot; får inte innehålla följande tecken: %s</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2646,6 +2647,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Det finns minst en användargrupp som ger behörighet till frontendmodulen &quot;Lista&quot; och dess &quot;list_*&quot;-fält. Eftersom de kan innehålla godtyckliga SQL-queries, har användare av dessa grupper implicit full kontroll över systemet!</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2656,8 +2658,8 @@
         <target>Inaktivera</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Den interna CSS-redigeraren har upphört och tars bort i en av de nästa Contao-versionerna! Överväg att exportera dina befintliga formatmallar och lägga till dem på nytt i sidlayouten som externa style sheets.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Den interna CSS-redigeraren har fasats ut och kommer att tas bort i Contao 5.0! Överväg att exportera dina befintliga stilmallar och lägga till dem igen i sidlayouten som externa stilmallar.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2673,6 +2675,7 @@
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Här kan du begränsa det totala antalet artiklar. Ställ in 0 för att visa alla.</target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>

@@ -2658,8 +2658,8 @@
         <target>غیرفعال</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>ویرایشگر CSS داخلی منسوخ شده است و در یکی از نسخه‌ی آینده کنتائو حذف خواهد شد. لطفا استخراج برگ‌های سبک موجود را در نظر بگیری و آن‌ها را به صورت برگه‌های سبک خارجی به چیدمان برگه اضافه کنید.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>ویرایشگر CSS داخلی منسوخ شده است و در کنتائو 5.0 حذف خواهد شد! لطفا خارج کردن برگه‌های سبک فعلی و اضافه کردن آنها به عنوان برگه‌های سبک خارجی به چیدمان صفحه را را در نظر داشته باشید.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

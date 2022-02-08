@@ -2620,8 +2620,7 @@
         <target>Atspējot</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Iekšējais CSS redaktors ir novecojis un tiks noņemts kādā no nākamajām Contao versijām! Lūdzu, apsveriet iespēju eksportēt esošās stila lapas un atkārtoti pievienot tās lapas izkārtojumam kā ārējās stila lapas.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

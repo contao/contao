@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.12.6] (2022-02-08)
+
+**Fixed issues:**
+
+- [#4076] Trigger a deprecation if an old `contao.localconfig` key is used ([leofeyer])
+- [#4043] Fix BC for `TL_LANG.LNG` and `TL_LANG.CNT` ([ausi])
+- [#4033] Fix some more PHP8 issues ([aschempp])
+- [#3947] Remove the routing error log in breadcrumb module ([aschempp])
+- [#3983] Fix array to string conversion in tl_layout ([fritzmg])
+- [#3791] Add annotations that generating page URLs can throw an exception ([aschempp])
+
 ## [4.12.5] (2021-12-16)
 
 **Fixed issues:**
@@ -188,6 +199,7 @@ This project adheres to [Semantic Versioning].
 - [#2713] Mention removal of MediaElement.js in the UPGRADE.md file ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.12.6]: https://github.com/contao/contao/releases/tag/4.12.6
 [4.12.5]: https://github.com/contao/contao/releases/tag/4.12.5
 [4.12.4]: https://github.com/contao/contao/releases/tag/4.12.4
 [4.12.3]: https://github.com/contao/contao/releases/tag/4.12.3
@@ -212,6 +224,12 @@ This project adheres to [Semantic Versioning].
 [qzminski]: https://github.com/qzminski
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
 [Toflar]: https://github.com/Toflar
+[#4076]: https://github.com/contao/contao/pull/4076
+[#4043]: https://github.com/contao/contao/pull/4043
+[#4033]: https://github.com/contao/contao/pull/4033
+[#3947]: https://github.com/contao/contao/pull/3947
+[#3983]: https://github.com/contao/contao/pull/3983
+[#3791]: https://github.com/contao/contao/pull/3791
 [#3673]: https://github.com/contao/contao/pull/3673
 [#3757]: https://github.com/contao/contao/pull/3757
 [#3755]: https://github.com/contao/contao/pull/3755

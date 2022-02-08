@@ -247,15 +247,15 @@
       </trans-unit>
       <trans-unit id="tl_page.includeLayout.1">
         <source>Assign a page layout to the page and its subpages.</source>
-        <target>ページとその下位のページにページレイアウトを割り当てます。</target>
+        <target>ページとその下位のページにページのレイアウトを割り当てます。</target>
       </trans-unit>
       <trans-unit id="tl_page.layout.0">
         <source>Page layout</source>
-        <target>ページレイアウト</target>
+        <target>ページのレイアウト</target>
       </trans-unit>
       <trans-unit id="tl_page.layout.1">
         <source>You can manage page layouts with the &quot;themes&quot; module.</source>
-        <target>ページレイアウトは「テーマ」のモジュールで管理できます。</target>
+        <target>ページのレイアウトは「テーマ」のモジュールで管理できます。</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
