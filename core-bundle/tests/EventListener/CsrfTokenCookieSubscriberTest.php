@@ -161,9 +161,9 @@ class CsrfTokenCookieSubscriberTest extends TestCase
 
         $response = new Response(
             '<html><body><form>'
-            .'<input name="REQUEST_TOKEN" value="'.$tokenValue1.'">'
-            .'<input name="REQUEST_TOKEN" value="'.$tokenValue2.'">'
-            .'</form></body></html>',
+                .'<input name="REQUEST_TOKEN" value="'.$tokenValue1.'">'
+                .'<input name="REQUEST_TOKEN" value="'.$tokenValue2.'">'
+                .'</form></body></html>',
             200,
             ['Content-Type' => 'text/html', 'Content-Length' => 1234]
         );
