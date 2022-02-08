@@ -28,6 +28,6 @@ class ContaoCacheClearerTest extends TestCase
         $clearer = new ContaoCacheClearer($fs);
         $clearer->clear($this->getTempDir());
 
-        $this->assertFileNotExists($this->getTempDir().'/contao/config');
+        $this->assertFileDoesNotExist($this->getTempDir().'/contao/config');
     }
 }

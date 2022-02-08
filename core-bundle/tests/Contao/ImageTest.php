@@ -1474,7 +1474,7 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(50)->setTargetHeight(50);
         $imageObj->executeResize();
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '(^assets/images/.*dummy.*.jpg$)',
             $imageObj->getResizedPath(),
             'Hook should not get called for cached images'

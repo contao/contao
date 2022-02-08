@@ -58,16 +58,16 @@ class SymlinksCommandTest extends TestCase
 
         $this->assertSame(0, $code);
 
-        $this->assertNotRegExp('# public/files +files #', $display);
-        $this->assertRegExp('# public/files/public +files/public #', $display);
-        $this->assertRegExp('# public/system/modules/foobar/html/foo/bar +Skipped because system/modules/foobar/html will be symlinked\. #', $display);
-        $this->assertRegExp('# public/system/modules/foobar/assets +system/modules/foobar/assets #', $display);
-        $this->assertRegExp('# public/system/modules/foobar/html +system/modules/foobar/html #', $display);
-        $this->assertRegExp('# vendor/contao/test-bundle/Resources/contao/themes/default #', $display);
-        $this->assertRegExp('# system/themes/flexible +vendor/contao/test-bundle/Resources/contao/themes/flexible #', $display);
-        $this->assertRegExp('# public/assets +assets #', $display);
-        $this->assertRegExp('# public/system/themes +system/themes #', $display);
-        $this->assertRegExp('# system/logs +var/logs #', $display);
+        $this->assertDoesNotMatchRegularExpression('# public/files +files #', $display);
+        $this->assertMatchesRegularExpression('# public/files/public +files/public #', $display);
+        $this->assertMatchesRegularExpression('# public/system/modules/foobar/html/foo/bar +Skipped because system/modules/foobar/html will be symlinked\. #', $display);
+        $this->assertMatchesRegularExpression('# public/system/modules/foobar/assets +system/modules/foobar/assets #', $display);
+        $this->assertMatchesRegularExpression('# public/system/modules/foobar/html +system/modules/foobar/html #', $display);
+        $this->assertMatchesRegularExpression('# vendor/contao/test-bundle/Resources/contao/themes/default #', $display);
+        $this->assertMatchesRegularExpression('# system/themes/flexible +vendor/contao/test-bundle/Resources/contao/themes/flexible #', $display);
+        $this->assertMatchesRegularExpression('# public/assets +assets #', $display);
+        $this->assertMatchesRegularExpression('# public/system/themes +system/themes #', $display);
+        $this->assertMatchesRegularExpression('# system/logs +var/logs #', $display);
 
         $this->assertFileExists(Path::join(self::getTempDir(), 'public/files/public'));
         $this->assertDirectoryExists(Path::join(self::getTempDir(), 'public/system/modules/foobar'));
