@@ -408,9 +408,9 @@ class Config
 	 */
 	public static function get($strKey)
 	{
-		if (isset(self::$arrDeprecated[$strKey]) || isset(self::$arrDeprecatedMap[$strKey]))
+		if ($newKey = self::getNewKey($strKey))
 		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
+			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
 		}
 
 		return $GLOBALS['TL_CONFIG'][$strKey] ?? null;
@@ -424,12 +424,26 @@ class Config
 	 */
 	public static function set($strKey, $varValue)
 	{
-		if (isset(self::$arrDeprecated[$strKey]) || isset(self::$arrDeprecatedMap[$strKey]))
+		if ($newKey = self::getNewKey($strKey))
 		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
+			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
 		}
 
 		$GLOBALS['TL_CONFIG'][$strKey] = $varValue;
+	}
+
+	/**
+	 * Return the new key if the existing one is deprecated
+	 *
+	 * @internal
+	 *
+	 * @param string $strKey The short key
+	 *
+	 * @return string|null
+	 */
+	public static function getNewKey($strKey)
+	{
+		return self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey] ?? null;
 	}
 
 	/**
