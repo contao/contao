@@ -54,8 +54,10 @@ abstract class Controller extends System
 {
 	/**
 	 * @var Template
+	 *
+	 * @todo: Add in Contao 5.0
 	 */
-	protected $Template;
+	//protected $Template;
 
 	/**
 	 * @var array
