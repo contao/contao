@@ -100,7 +100,7 @@ class UserListCommand extends Command
             return $userModel->findBy('admin', '1');
         }
 
-        return $userModel->findAll() ?? new Collection([], "");
+        return $userModel->findAll();
     }
 
     private function formatTableRows(Collection $users, array &$columns): array
