@@ -327,7 +327,7 @@ class SystemTest extends TestCase
         ]));
 
         $innerTranslator = new class() implements TranslatorInterface, TranslatorBagInterface {
-            public function getCatalogue($locale = null)
+            public function getCatalogue($locale = null): MessageCatalogue
             {
                 return new MessageCatalogue($locale);
             }
