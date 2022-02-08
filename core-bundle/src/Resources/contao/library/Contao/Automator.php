@@ -14,7 +14,6 @@ use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCacheBundle\CacheManager;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\NullOutput;
-use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Provide methods to run automated jobs.
