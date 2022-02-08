@@ -135,8 +135,12 @@ class UserListCommand extends Command
 
     private function formatJson(?Collection $users, array $columns): array
     {
+        if (!$users) {
+            return [];
+        }
+
         if ([] === $columns) {
-            return $users ? $users->fetchAll() : [];
+            return $users->fetchAll();
         }
 
         $data = [];
