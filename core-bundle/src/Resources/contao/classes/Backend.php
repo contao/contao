@@ -474,7 +474,14 @@ abstract class Backend extends Controller
 			}
 
 			// Add the name of the submodule
-			$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
+			if (isset($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1]))
+			{
+				$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
+			}
+			else
+			{
+				$this->Template->headline .= ' <span>' . Input::get('key') . '</span>';
+			}
 		}
 
 		// Default action
