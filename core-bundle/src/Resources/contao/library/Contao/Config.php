@@ -435,6 +435,8 @@ class Config
 	/**
 	 * Return the new key if the existing one is deprecated
 	 *
+	 * @internal
+	 *
 	 * @param string $strKey The short key
 	 *
 	 * @return string|null
