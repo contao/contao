@@ -53,7 +53,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
         return $this->usedTokenValues;
     }
 
-    public function getToken(string $tokenId): CsrfToken
+    public function getToken($tokenId): CsrfToken
     {
         $token = parent::getToken($tokenId);
         $this->usedTokenValues[] = $token->getValue();
@@ -61,7 +61,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
         return $token;
     }
 
-    public function refreshToken(string $tokenId): CsrfToken
+    public function refreshToken($tokenId): CsrfToken
     {
         $token = parent::refreshToken($tokenId);
         $this->usedTokenValues[] = $token->getValue();
