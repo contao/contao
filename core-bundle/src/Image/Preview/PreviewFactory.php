@@ -324,7 +324,7 @@ class PreviewFactory
                     $this->getPreviewSizeFromWidthHeightDensities(
                         $sizeItem['width'] ?? 0,
                         $sizeItem['height'] ?? 0,
-                        $sizeItem['densities'],
+                        $sizeItem['densities'] ?? '',
                     ),
                 );
             }
