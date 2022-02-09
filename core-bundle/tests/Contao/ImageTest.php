@@ -1565,7 +1565,7 @@ class ImageTest extends TestCase
         $container->set('contao.image.legacy_resizer', $resizer);
         $container->set('contao.image.factory', $factory);
         $container->set('filesystem', new Filesystem());
-        $container->set('contao.monolog.logger.error', $this->createMock(LoggerInterface::class));
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
 
         return $container;
     }
