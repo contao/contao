@@ -189,7 +189,6 @@ class PreviewFactoryTest extends TestCase
                     [
                         'width' => 50,
                         'height' => 123,
-                        'densities' => '0.5x',
                     ],
                 ],
             ],
