@@ -597,6 +597,7 @@ class Folder extends System
 				$arrReturn[] = $strFile;
 			}
 		}
+
 		// Cache the result
 		if (!$blnUncached)
 		{
