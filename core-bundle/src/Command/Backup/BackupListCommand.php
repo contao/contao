@@ -41,21 +41,35 @@ class BackupListCommand extends AbstractBackupCommand
             return 0;
         }
 
-        $io->table(['Created', 'Size', 'Name'], $this->formatForTable($this->backupManager->listBackups()));
+        $timeZone = new \DateTimeZone(date_default_timezone_get());
+
+        $io->table(
+            [sprintf('Created (%s)', $this->getFormattedTimeZoneOffset($timeZone)), 'Size', 'Name'],
+            $this->formatForTable($this->backupManager->listBackups(), $timeZone)
+        );
 
         return 0;
+    }
+
+    private function getFormattedTimeZoneOffset(\DateTimeZone $timeZone): string
+    {
+        $offset = $timeZone->getOffset(new \DateTime('now', new \DateTimeZone('UTC'))) / 3600;
+        $formatted = str_pad(str_replace(['.', '-', '+'], [':', '', ''], sprintf('%05.2F', $offset)), 5, '0', STR_PAD_LEFT);
+
+        return ($offset >= 0 ? '+' : '-').$formatted;
     }
 
     /**
      * @param array<Backup> $backups
      */
-    private function formatForTable(array $backups): array
+    private function formatForTable(array $backups, \DateTimeZone $timeZone): array
     {
         $formatted = [];
 
         foreach ($backups as $backup) {
+            $localeDateTime = new \DateTime('@'.$backup->getCreatedAt()->getTimestamp(), $timeZone);
             $formatted[] = [
-                $backup->getCreatedAt()->format('Y-m-d H:i:s'),
+                $localeDateTime->format('Y-m-d H:i:s'),
                 $this->getHumanReadableSize($backup),
                 $backup->getFilename(),
             ];
