@@ -414,6 +414,9 @@ h2.sub_headline {
 	padding:8px 10px 8px 30px;
 	background-position:9px 9px;
 }
+.tl_error strong,.tl_confirm strong,.tl_info strong,.tl_new strong {
+	color:inherit;
+}
 
 /* Filter */
 .tl_panel,.tl_version_panel {
