@@ -673,7 +673,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsContentElement::class](
             $definition,
             /*
-             * TODO: Use attributes syntax directly once we're >PHP 8 only
+             * TODO: Construct object directly once we're on PHP 8 only and can use named parameters
              *
              * new AsContentElement(
              *     type: 'content_element/text',
@@ -721,7 +721,7 @@ class ContaoCoreExtensionTest extends TestCase
         $autoConfiguredAttributes[AsFrontendModule::class](
             $definition,
             /*
-             * TODO: Use attributes syntax directly once we're >PHP 8 only
+             * TODO: Construct object directly once we're on PHP 8 only and can use named parameters
              *
              * new AsFrontendModule(
              *     type: 'frontend_module/navigation',
