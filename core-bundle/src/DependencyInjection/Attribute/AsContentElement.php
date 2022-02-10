@@ -20,10 +20,10 @@ class AsContentElement
 {
     public array $attributes;
 
-    public function __construct(string $category, string $type = null, string $template = null, string $method = null, string $renderer = null, array ...$attributes)
+    public function __construct(string $type = null, string $category = 'miscellaneous', string $template = null, string $method = null, string $renderer = null, ...$attributes)
     {
-        $attributes['category'] = $category;
         $attributes['type'] = $type;
+        $attributes['category'] = $category;
         $attributes['template'] = $template;
         $attributes['method'] = $method;
         $attributes['renderer'] = $renderer;
