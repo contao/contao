@@ -730,8 +730,8 @@ class Dbafs implements DbafsInterface, ResetInterface
                     continue;
                 }
 
-                // Ignore file markers
-                if (self::FILE_MARKER_PUBLIC === basename($path)) {
+                // Ignore dot files
+                if (0 === strpos(basename($path), '.')) {
                     continue;
                 }
 
