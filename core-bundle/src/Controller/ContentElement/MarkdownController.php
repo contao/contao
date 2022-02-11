@@ -17,6 +17,7 @@ use Contao\ContentModel;
 use Contao\FilesModel;
 use Contao\Input;
 use Contao\Template;
+use League\CommonMark\ConverterInterface;
 use League\CommonMark\Environment\Environment;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
@@ -25,7 +26,6 @@ use League\CommonMark\Extension\Strikethrough\StrikethroughExtension;
 use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Extension\TaskList\TaskListExtension;
 use League\CommonMark\MarkdownConverter;
-use League\CommonMark\MarkdownConverterInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,7 +60,7 @@ class MarkdownController extends AbstractContentElementController
      * If you want to provide an extension with additional logic, consider providing your own special
      * content element for that.
      */
-    protected function createConverter(ContentModel $model, Request $request): MarkdownConverterInterface
+    protected function createConverter(ContentModel $model, Request $request): ConverterInterface
     {
         $environment = new Environment([
             'external_link' => [
