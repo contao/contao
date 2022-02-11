@@ -421,7 +421,7 @@
         <source>Root page dependent modules</source>
         <target>Startpunktabhängige Module</target>
       </trans-unit>
-      <trans-unit id="FMD.root_page_dependent_module.1">
+      <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
         <target>Erzeugt abhängig vom Startpunkt verschiedene Module</target>
       </trans-unit>

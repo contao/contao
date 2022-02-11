@@ -210,9 +210,9 @@ class PictureTest extends TestCase
         $this->assertSame(100, $pictureData['img']['height']);
         $this->assertCount(1, explode(',', $pictureData['img']['src']));
         $this->assertCount(3, explode(',', $pictureData['img']['srcset']));
-        $this->assertRegExp('(\.jpg\s+1x(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\.jpg\s+0\.5x(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\.jpg\s+2x(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+1x(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+0\.5x(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+2x(,|$))', $pictureData['img']['srcset']);
         $this->assertSame([], $pictureData['sources']);
     }
 
@@ -241,9 +241,9 @@ class PictureTest extends TestCase
         $this->assertSame('100vw', $pictureData['img']['sizes']);
         $this->assertCount(1, explode(',', $pictureData['img']['src']));
         $this->assertCount(3, explode(',', $pictureData['img']['srcset']));
-        $this->assertRegExp('(\.jpg\s+100w(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\.jpg\s+50w(,|$))', $pictureData['img']['srcset']);
-        $this->assertRegExp('(\.jpg\s+200w(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+100w(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+50w(,|$))', $pictureData['img']['srcset']);
+        $this->assertMatchesRegularExpression('(\.jpg\s+200w(,|$))', $pictureData['img']['srcset']);
         $this->assertSame([], $pictureData['sources']);
     }
 

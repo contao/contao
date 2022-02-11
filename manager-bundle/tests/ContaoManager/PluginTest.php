@@ -448,6 +448,9 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'driver' => 'pdo_mysql',
+                            'options' => [
+                                1002 => '',
+                            ],
                         ],
                     ],
                 ],
@@ -486,6 +489,9 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'driver' => 'mysqli',
                             'host' => 'localhost',
+                            'options' => [
+                                3 => '',
+                            ],
                         ],
                     ],
                 ],
@@ -508,6 +514,9 @@ class PluginTest extends ContaoTestCase
                     'connections' => [
                         'default' => [
                             'url' => '%env(DATABASE_URL)%',
+                            'options' => [
+                                3 => '',
+                            ],
                         ],
                     ],
                 ],
@@ -536,6 +545,7 @@ class PluginTest extends ContaoTestCase
                             'driver' => 'pdo_mysql',
                             'options' => [
                                 \PDO::MYSQL_ATTR_MULTI_STATEMENTS => true,
+                                1002 => '',
                             ],
                         ],
                     ],
@@ -547,6 +557,109 @@ class PluginTest extends ContaoTestCase
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
 
         $this->assertSame($extensionConfigs, $extensionConfig);
+    }
+
+    /**
+     * @dataProvider provideDatabaseDrivers
+     */
+    public function testEnablesStrictMode(array $connectionConfig, int $expectedOptionKey): void
+    {
+        $extensionConfigs = [
+            [
+                'dbal' => [
+                    'connections' => [
+                        'default' => $connectionConfig,
+                    ],
+                ],
+            ],
+        ];
+
+        $expect = array_merge(
+            $extensionConfigs,
+            [
+                [
+                    'dbal' => [
+                        'connections' => [
+                            'default' => [
+                                'options' => [
+                                    $expectedOptionKey => "SET SESSION sql_mode=CONCAT(@@sql_mode, IF(INSTR(@@sql_mode, 'STRICT_'), '', ',TRADITIONAL'))",
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
+
+        $this->assertSame($expect, $extensionConfig);
+    }
+
+    public function provideDatabaseDrivers(): \Generator
+    {
+        yield 'pdo with driver' => [
+            [
+                'driver' => 'mysql',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with driver alias mysql2' => [
+            [
+                'driver' => 'mysql2',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with driver alias pdo_mysql' => [
+            [
+                'driver' => 'pdo_mysql',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with url' => [
+            [
+                'url' => 'mysql://user:secret@localhost/mydb',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with url and driver alias mysql2' => [
+            [
+                'url' => 'mysql2://user:secret@localhost/mydb',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'pdo with url and driver alias pdo_mysql' => [
+            [
+                'url' => 'pdo-mysql://user:secret@localhost/mydb',
+                'options' => [\PDO::MYSQL_ATTR_MULTI_STATEMENTS => false],
+            ],
+            1002,
+        ];
+
+        yield 'mysqli with driver' => [
+            [
+                'driver' => 'mysqli',
+            ],
+            3,
+        ];
+
+        yield 'mysqli with url' => [
+            [
+                'url' => 'mysqli://user:secret@localhost/mydb',
+            ],
+            3,
+        ];
     }
 
     public function testUpdatesTheMailerTransport(): void
@@ -895,6 +1008,7 @@ class PluginTest extends ContaoTestCase
                         'default' => [
                             'options' => [
                                 \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
+                                1002 => '',
                             ],
                         ],
                     ],

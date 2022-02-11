@@ -50,8 +50,10 @@ abstract class Controller extends System
 {
 	/**
 	 * @var Template
+	 *
+	 * @todo: Add in Contao 5.0
 	 */
-	protected $Template;
+	//protected $Template;
 
 	/**
 	 * @var array
@@ -1744,7 +1746,7 @@ abstract class Controller extends System
 
 		if (null === $figure)
 		{
-			System::getContainer()->get('contao.monolog.logger.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
+			System::getContainer()->get('monolog.logger.contao.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
 
 			// Fall back to apply a sparse data set instead of failing (BC)
 			foreach ($createFallBackTemplateData() as $key => $value)

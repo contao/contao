@@ -350,7 +350,7 @@ body:not(.fullscreen) #container {
 }
 #main_headline span {
 	display:inline-block;
-	max-width:30%;
+	max-width:25%;
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
@@ -413,6 +413,9 @@ h2.sub_headline {
 	margin:1px 0;
 	padding:8px 10px 8px 30px;
 	background-position:9px 9px;
+}
+.tl_error strong,.tl_confirm strong,.tl_info strong,.tl_new strong {
+	color:inherit;
 }
 
 /* Filter */
@@ -1043,7 +1046,7 @@ table.tl_listing {
 .tl_content h1,.tl_content h2,.tl_content h3,.tl_content h4,.tl_content h5,.tl_content h6 {
 	font-size:.875rem;
 }
-.tl_content img,.selector_container img {
+.tl_content img,.selector_container img,.tl_undo_preview img {
 	max-width:320px;
 	height:auto;
 }

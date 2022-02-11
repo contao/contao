@@ -1474,7 +1474,7 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(50)->setTargetHeight(50);
         $imageObj->executeResize();
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '(^assets/images/.*dummy.*.jpg$)',
             $imageObj->getResizedPath(),
             'Hook should not get called for cached images'
@@ -1565,7 +1565,7 @@ class ImageTest extends TestCase
         $container->set('contao.image.legacy_resizer', $resizer);
         $container->set('contao.image.factory', $factory);
         $container->set('filesystem', new Filesystem());
-        $container->set('contao.monolog.logger.error', $this->createMock(LoggerInterface::class));
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
 
         return $container;
     }

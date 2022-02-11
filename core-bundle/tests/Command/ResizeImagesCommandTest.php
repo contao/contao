@@ -54,7 +54,7 @@ class ResizeImagesCommandTest extends TestCase
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertRegExp('/Resized 0 images/', $display);
+        $this->assertMatchesRegularExpression('/Resized 0 images/', $display);
     }
 
     public function testResizesImages(): void
@@ -83,9 +83,9 @@ class ResizeImagesCommandTest extends TestCase
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertRegExp('/image1.jpg/', $display);
-        $this->assertRegExp('/image2.jpg/', $display);
-        $this->assertRegExp('/Resized 2 images/', $display);
+        $this->assertMatchesRegularExpression('/image1.jpg/', $display);
+        $this->assertMatchesRegularExpression('/image2.jpg/', $display);
+        $this->assertMatchesRegularExpression('/Resized 2 images/', $display);
     }
 
     public function testTimeLimit(): void
@@ -124,10 +124,10 @@ class ResizeImagesCommandTest extends TestCase
         ClockMock::withClockMock(false);
 
         $this->assertSame(0, $code);
-        $this->assertRegExp('/image1.jpg/', $display);
-        $this->assertRegExp('/Time limit of 0.5 seconds reached/', $display);
-        $this->assertRegExp('/Resized 1 images/', $display);
-        $this->assertNotRegExp('/image2.jpg/', $display);
+        $this->assertMatchesRegularExpression('/image1.jpg/', $display);
+        $this->assertMatchesRegularExpression('/Time limit of 0.5 seconds reached/', $display);
+        $this->assertMatchesRegularExpression('/Resized 1 images/', $display);
+        $this->assertDoesNotMatchRegularExpression('/image2.jpg/', $display);
     }
 
     private function getCommand(ImageFactoryInterface $factory = null, DeferredResizerInterface $resizer = null, DeferredImageStorageInterface $storage = null): ResizeImagesCommand

@@ -26,6 +26,13 @@ use Symfony\Component\HttpFoundation\Response;
 class PageRegular extends Frontend
 {
 	/**
+	 * @var Template
+	 *
+	 * @todo Remove in Contao 5.0
+	 */
+	protected $Template;
+
+	/**
 	 * @var ResponseContext
 	 */
 	protected $responseContext;
