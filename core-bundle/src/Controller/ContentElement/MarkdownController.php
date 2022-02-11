@@ -48,7 +48,7 @@ class MarkdownController extends AbstractContentElementController
 
         $config = $this->getContaoAdapter(Config::class);
         $input = $this->getContaoAdapter(Input::class);
-        $html = $this->createConverter($model, $request)->convertToHtml($markdown)->getContent();
+        $html = $this->createConverter($model, $request)->convert($markdown)->getContent();
 
         $template->content = $input->stripTags($html, $config->get('allowedTags'), $config->get('allowedAttributes'));
 

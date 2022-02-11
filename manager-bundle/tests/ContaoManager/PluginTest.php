@@ -53,7 +53,7 @@ class PluginTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
-    private $globalsBackup = [];
+    private array $globalsBackup = [];
 
     protected function setUp(): void
     {
