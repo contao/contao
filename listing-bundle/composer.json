@@ -47,6 +47,12 @@
             "src/Resources/contao/templates/"
         ]
     },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
+        }
+    },
     "extra": {
         "contao-manager-plugin": "Contao\\ListingBundle\\ContaoManager\\Plugin"
     }

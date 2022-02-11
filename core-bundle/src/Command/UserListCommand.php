@@ -66,7 +66,7 @@ class UserListCommand extends Command
                 // no break
 
             case 'txt':
-                if (0 === $users->count()) {
+                if (!$users || 0 === $users->count()) {
                     $io->note('No accounts found.');
 
                     return 0;
@@ -90,7 +90,7 @@ class UserListCommand extends Command
         return 0;
     }
 
-    private function getUsers(bool $onlyAdmins = false): Collection
+    private function getUsers(bool $onlyAdmins = false): ?Collection
     {
         $this->framework->initialize();
 
@@ -133,8 +133,12 @@ class UserListCommand extends Command
         return $rows;
     }
 
-    private function formatJson(Collection $users, array $columns): array
+    private function formatJson(?Collection $users, array $columns): array
     {
+        if (!$users) {
+            return [];
+        }
+
         if ([] === $columns) {
             return $users->fetchAll();
         }

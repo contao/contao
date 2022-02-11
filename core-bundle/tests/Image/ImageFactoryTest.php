@@ -744,7 +744,7 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [50, 50, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '(/images/.*dummy.*.jpg$)',
             $image->getPath(),
             'Hook should not get called for cached images'
@@ -823,7 +823,7 @@ class ImageFactoryTest extends TestCase
 
         $image = $imageFactory->create($path, [100, 100, ResizeConfiguration::MODE_CROP]);
 
-        $this->assertRegExp('(/images/.*dummy.*.jpg$)', $image->getPath(), 'Empty hook should be ignored');
+        $this->assertMatchesRegularExpression('(/images/.*dummy.*.jpg$)', $image->getPath(), 'Empty hook should be ignored');
         $this->assertSame(100, $image->getDimensions()->getSize()->getWidth());
         $this->assertSame(100, $image->getDimensions()->getSize()->getHeight());
 
