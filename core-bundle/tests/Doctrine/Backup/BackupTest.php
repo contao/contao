@@ -39,10 +39,7 @@ class BackupTest extends ContaoTestCase
 
     public function testCreateNew(): void
     {
-        $backup = Backup::createNew();
-
-        $this->assertSame(0, $backup->getSize());
-        $this->assertInstanceOf(\DateTimeInterface::class, $backup->getCreatedAt());
+        $this->assertSame(0, Backup::createNew()->getSize());
     }
 
     /**
