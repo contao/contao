@@ -348,7 +348,7 @@ class ControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag.parser', $insertTagParser);
-        $container->set('contao.monolog.logger.error', $logger);
+        $container->set('monolog.logger.contao.error', $logger);
 
         System::setContainer($container);
 

@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
@@ -205,27 +205,27 @@ class DcaSchemaProvider
                 break;
 
             case 'tinytext':
-                $length = MySQLPlatform::LENGTH_LIMIT_TINYTEXT;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT;
                 break;
 
             case 'text':
-                $length = MySQLPlatform::LENGTH_LIMIT_TEXT;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_TEXT;
                 break;
 
             case 'mediumtext':
-                $length = MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT;
                 break;
 
             case 'tinyblob':
-                $length = MySQLPlatform::LENGTH_LIMIT_TINYBLOB;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_TINYBLOB;
                 break;
 
             case 'blob':
-                $length = MySQLPlatform::LENGTH_LIMIT_BLOB;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_BLOB;
                 break;
 
             case 'mediumblob':
-                $length = MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB;
                 break;
 
             case 'tinyint':

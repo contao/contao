@@ -451,11 +451,11 @@
       </trans-unit>
       <trans-unit id="CTE.template.0">
         <source>Custom template</source>
-        <target>Eigenes Template</target>
+        <target>Individuelles Template</target>
       </trans-unit>
       <trans-unit id="CTE.template.1">
         <source>Generates an element to insert a custom template.</source>
-        <target>Erzeugt ein Element zum Einfügen eines eigenen Templates.</target>
+        <target>Erzeugt ein Element zum Einfügen eines individuellen Templates.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>

@@ -124,6 +124,8 @@ services:
             - '@contao.csrf.token_storage'
             - ~
             - '%contao.csrf_token_name%'
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage
@@ -407,6 +409,7 @@ services:
 
     contao.mailer.available_transports:
         class: Contao\CoreBundle\Mailer\AvailableTransports
+        public: true
         arguments:
             - '@?translator'
 
@@ -1011,6 +1014,7 @@ services:
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
+    Contao\CoreBundle\Image\Preview\PreviewFactory: '@contao.image.preview_factory'
     Contao\CoreBundle\Image\Studio\Studio:
         alias: contao.image.studio
         public: true # backwards compatibility
@@ -1020,6 +1024,9 @@ services:
         public: true # backwards compatibility
     Contao\CoreBundle\Intl\Locales:
         alias: contao.intl.locales
+        public: true # backwards compatibility
+    Contao\CoreBundle\Mailer\AvailableTransports:
+        alias: contao.mailer.available_transports
         public: true # backwards compatibility
     Contao\CoreBundle\OptIn\OptIn:
         alias: contao.opt_in

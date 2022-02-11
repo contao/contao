@@ -84,11 +84,11 @@ class CombinerTest extends ContaoTestCase
 
         $combinedFile = $combiner->getCombinedFile('https://cdn.example.com/');
 
-        $this->assertRegExp('#^https://cdn.example.com/assets/css/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$#', $combinedFile);
+        $this->assertMatchesRegularExpression('#^https://cdn.example.com/assets/css/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$#', $combinedFile);
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/css\/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$/', $combinedFile);
+        $this->assertMatchesRegularExpression('/^assets\/css\/file1\.css,file2\.css,file3\.css-[a-z0-9]+\.css$/', $combinedFile);
 
         $this->assertStringEqualsFile(
             $this->getTempDir().'/'.$combinedFile,
@@ -269,7 +269,7 @@ class CombinerTest extends ContaoTestCase
 
         $combinedFile = $combiner->getCombinedFile();
 
-        $this->assertRegExp('/^assets\/js\/file1\.js,file2\.js-[a-z0-9]+\.js$/', $combinedFile);
+        $this->assertMatchesRegularExpression('/^assets\/js\/file1\.js,file2\.js-[a-z0-9]+\.js$/', $combinedFile);
         $this->assertStringEqualsFile($this->getTempDir().'/'.$combinedFile, "file1();\nfile2();\n");
 
         System::getContainer()->setParameter('kernel.debug', true);

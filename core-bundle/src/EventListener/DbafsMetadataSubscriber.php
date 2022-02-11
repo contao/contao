@@ -74,7 +74,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $metadata = array_map(
                 static function (Metadata $metadata) use ($event): array {
                     if (null !== ($uuid = $metadata->getUuid()) && $uuid !== ($recordUuid = $event->getUuid()->toRfc4122())) {
-                        throw new \LogicException("The UUID stored in the file metadata ($uuid) does not match the one of the record ($recordUuid).");
+                        throw new \LogicException(sprintf('The UUID stored in the file metadata (%s) does not match the one of the record (%s).', $uuid, $recordUuid));
                     }
 
                     return array_diff_key($metadata->all(), [Metadata::VALUE_UUID => null]);
@@ -86,7 +86,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             RetrieveDbafsMetadataEvent::class => ['enhanceMetadata'],

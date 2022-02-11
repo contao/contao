@@ -33,7 +33,7 @@ class SearchIndexerPassTest extends TestCase
         $container->setDefinition('contao.search.super-indexer', $definition);
 
         $container->setDefinition('contao.listener.search_index', new Definition());
-        $container->setDefinition('contao.crawl.escargot_subscriber.search_index', new Definition());
+        $container->setDefinition('contao.crawl.escargot.search_index_subscriber', new Definition());
 
         $pass = new SearchIndexerPass();
         $pass->process($container);
@@ -45,7 +45,7 @@ class SearchIndexerPassTest extends TestCase
         $this->assertInstanceOf(Reference::class, $methodCalls[0][1][0]);
 
         $this->assertTrue($container->hasDefinition('contao.listener.search_index'));
-        $this->assertTrue($container->hasDefinition('contao.crawl.escargot_subscriber.search_index'));
+        $this->assertTrue($container->hasDefinition('contao.crawl.escargot.search_index_subscriber'));
         $this->assertTrue($container->hasAlias('contao.search.indexer'));
         $this->assertTrue($container->getAlias('contao.search.indexer')->isPublic());
     }
@@ -59,14 +59,14 @@ class SearchIndexerPassTest extends TestCase
         $container->setDefinition('contao.search.delegating_indexer', $delegatingDefinition);
 
         $container->setDefinition('contao.listener.search_index', new Definition());
-        $container->setDefinition('contao.crawl.escargot_subscriber.search_index', new Definition());
+        $container->setDefinition('contao.crawl.escargot.search_index_subscriber', new Definition());
 
         $pass = new SearchIndexerPass();
         $pass->process($container);
 
         $this->assertFalse($container->hasDefinition('contao.search.delegating_indexer'));
         $this->assertFalse($container->hasDefinition('contao.listener.search_index'));
-        $this->assertFalse($container->hasDefinition('contao.crawl.escargot_subscriber.search_index'));
+        $this->assertFalse($container->hasDefinition('contao.crawl.escargot.search_index_subscriber'));
         $this->assertFalse($container->hasAlias('contao.search.indexer'));
     }
 }

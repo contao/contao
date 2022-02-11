@@ -40,18 +40,19 @@ use Symfony\Component\HttpFoundation\Session\Session;
  *         }
  *     }
  *
- * @property Automator                $Automator   The automator object
- * @property Config                   $Config      The config object
- * @property Database                 $Database    The database object
- * @property Environment              $Environment The environment object
- * @property Files                    $Files       The files object
- * @property Input                    $Input       The input object
- * @property Installer                $Installer   The database installer object
- * @property Updater                  $Updater     The database updater object
- * @property Messages                 $Messages    The messages object
- * @property Session                  $Session     The session object
- * @property StyleSheets              $StyleSheets The style sheets object
- * @property BackendUser|FrontendUser $User        The user object
+ * @property Automator                        $Automator   The automator object
+ * @property Config                           $Config      The config object
+ * @property Database                         $Database    The database object
+ * @property Environment                      $Environment The environment object
+ * @property Files                            $Files       The files object
+ * @property Input                            $Input       The input object
+ * @property Installer                        $Installer   The database installer object
+ * @property Updater                          $Updater     The database updater object
+ * @property Messages                         $Messages    The messages object
+ * @property Session                          $Session     The session object
+ * @property StyleSheets                      $StyleSheets The style sheets object
+ * @property BackendTemplate|FrontendTemplate $Template    The template object (TODO: remove this line in Contao 5.0)
+ * @property BackendUser|FrontendUser         $User        The user object
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -458,7 +459,7 @@ abstract class System
 		}
 
 		// Return if the language file has been loaded already
-		if (!$blnNoCache && isset(static::$arrLanguageFiles[$strName][$strLanguage]))
+		if (!$blnNoCache && array_key_last(static::$arrLanguageFiles[$strName] ?? array()) === $strLanguage)
 		{
 			return;
 		}
@@ -483,8 +484,41 @@ abstract class System
 			}
 		}
 
+		// Unset to move the new array key to the last position
+		unset(static::$arrLanguageFiles[$strName][$strCacheKey]);
+
 		// Use a global cache variable to support nested calls
 		static::$arrLanguageFiles[$strName][$strCacheKey] = $strLanguage;
+
+		// Backwards compatibility
+		if ('languages' === $strName)
+		{
+			// Reset previously loaded languages without destroying references
+			foreach (array_keys($GLOBALS['TL_LANG']['LNG'] ?? array()) as $strLocale)
+			{
+				$GLOBALS['TL_LANG']['LNG'][$strLocale] = null;
+			}
+
+			foreach (self::getContainer()->get('contao.intl.locales')->getLocales($strLanguage) as $strLocale => $strLabel)
+			{
+				$GLOBALS['TL_LANG']['LNG'][$strLocale] = $strLabel;
+			}
+		}
+
+		// Backwards compatibility
+		if ('countries' === $strName)
+		{
+			// Reset previously loaded countries without destroying references
+			foreach (array_keys($GLOBALS['TL_LANG']['CNT'] ?? array()) as $strLocale)
+			{
+				$GLOBALS['TL_LANG']['CNT'][$strLocale] = null;
+			}
+
+			foreach (self::getContainer()->get('contao.intl.countries')->getCountries($strLanguage) as $strCountryCode => $strLabel)
+			{
+				$GLOBALS['TL_LANG']['CNT'][strtolower($strCountryCode)] = $strLabel;
+			}
+		}
 
 		// Fall back to English
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);

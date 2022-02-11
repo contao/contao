@@ -110,7 +110,7 @@ class ContaoCacheWarmerTest extends TestCase
         $warmer = $this->getCacheWarmer(null, null, 'empty-bundle');
         $warmer->warmUp(Path::join($this->getTempDir(), 'other'));
 
-        $this->assertFileNotExists(Path::join($this->getTempDir(), 'var/cache/contao'));
+        $this->assertFileDoesNotExist(Path::join($this->getTempDir(), 'var/cache/contao'));
     }
 
     public function testDoesNotCreateTheCacheFolderIfTheInstallationIsIncomplete(): void
@@ -130,7 +130,7 @@ class ContaoCacheWarmerTest extends TestCase
         $warmer = $this->getCacheWarmer($connection, $framework);
         $warmer->warmUp(Path::join($this->getTempDir(), 'var/cache/contao'));
 
-        $this->assertFileNotExists(Path::join($this->getTempDir(), 'var/cache/contao'));
+        $this->assertFileDoesNotExist(Path::join($this->getTempDir(), 'var/cache/contao'));
     }
 
     private function getCacheWarmer(Connection $connection = null, ContaoFramework $framework = null, string $bundle = 'test-bundle'): ContaoCacheWarmer

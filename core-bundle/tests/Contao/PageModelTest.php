@@ -306,6 +306,38 @@ class PageModelTest extends ContaoTestCase
         ];
     }
 
+    public function testDoesNotFindSimilarIfAliasIsEmpty(): void
+    {
+        PageModel::reset();
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->never())
+            ->method('execute')
+        ;
+
+        $database
+            ->expects($this->never())
+            ->method('execute')
+        ;
+
+        $this->mockDatabase($database);
+
+        $sourcePage = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 1,
+            'alias' => '',
+        ]);
+
+        $sourcePage
+            ->expects($this->never())
+            ->method('loadDetails')
+        ;
+
+        $result = PageModel::findSimilarByAlias($sourcePage);
+
+        $this->assertNull($result);
+    }
+
     /**
      * @param bool|string $expectedLayout
      *

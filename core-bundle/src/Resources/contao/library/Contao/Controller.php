@@ -50,8 +50,10 @@ abstract class Controller extends System
 {
 	/**
 	 * @var Template
+	 *
+	 * @todo: Add in Contao 5.0
 	 */
-	protected $Template;
+	//protected $Template;
 
 	/**
 	 * @var array
@@ -74,10 +76,10 @@ abstract class Controller extends System
 		// Check for a theme folder
 		if (\defined('TL_MODE') && TL_MODE == 'FE')
 		{
-			/** @var PageModel $objPage */
+			/** @var PageModel|null $objPage */
 			global $objPage;
 
-			if ($objPage->templateGroup)
+			if ($objPage->templateGroup ?? null)
 			{
 				if (Validator::isInsecurePath($objPage->templateGroup))
 				{
@@ -1479,7 +1481,8 @@ abstract class Controller extends System
 
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
-		} while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		}
+		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1743,7 +1746,7 @@ abstract class Controller extends System
 
 		if (null === $figure)
 		{
-			System::getContainer()->get('contao.monolog.logger.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
+			System::getContainer()->get('monolog.logger.contao.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
 
 			// Fall back to apply a sparse data set instead of failing (BC)
 			foreach ($createFallBackTemplateData() as $key => $value)
