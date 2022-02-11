@@ -839,6 +839,7 @@ class DbafsTest extends TestCase
         $filesystem11->write('new/'.Dbafs::FILE_MARKER_PUBLIC, '');
         $filesystem11->createDirectory('ignored');
         $filesystem11->write('ignored/'.Dbafs::FILE_MARKER_EXCLUDED, '');
+        $filesystem11->write('ignored/.DS_Store', '');
         $filesystem11->move('file1', 'new/file1');
         $filesystem11->move('file2', 'new/new-name');
         $filesystem11->delete('bar/file5a');

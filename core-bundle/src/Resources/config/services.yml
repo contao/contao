@@ -157,7 +157,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.doctrine.backup.dumper'
-            - ~
+            - '@contao.filesystem.virtual.backups'
             - ~
             - '@contao.doctrine.backup.retention_policy'
 
@@ -188,6 +188,7 @@ services:
 
     contao.filesystem.dbafs_manager:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
+        public: true
 
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
@@ -965,6 +966,7 @@ services:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.loader.template_locator'
             - '%kernel.project_dir%'
+            - '%kernel.cache_dir%'
             - '%kernel.environment%'
         tags:
             - { name: kernel.cache_warmer }

@@ -100,7 +100,7 @@ class MigrateCommand extends Command
         if (!$asJson) {
             $this->io->info(sprintf(
                 'Creating a database dump to "%s" with the default options. Use --no-backup to disable this feature.',
-                $config->getBackup()->getFilepath()
+                $config->getBackup()->getFilename()
             ));
         }
 

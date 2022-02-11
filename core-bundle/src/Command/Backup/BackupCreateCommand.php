@@ -56,7 +56,7 @@ class BackupCreateCommand extends AbstractBackupCommand
             return 0;
         }
 
-        $io->success(sprintf('Successfully created an SQL dump at "%s".', $config->getBackup()->getFilepath()));
+        $io->success(sprintf('Successfully created SQL dump "%s".', $config->getBackup()->getFilename()));
 
         return 0;
     }

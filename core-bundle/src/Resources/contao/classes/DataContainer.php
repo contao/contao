@@ -954,7 +954,7 @@ abstract class DataContainer extends Backend
 						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
 					}
 
-					parse_str(StringUtil::decodeEntities($v['href']), $params);
+					parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
 
 					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 					{
@@ -1615,6 +1615,13 @@ abstract class DataContainer extends Backend
 	 */
 	public static function getDriverForTable(string $table): string
 	{
+		if (!isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer']))
+		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Passing an unknown table name to DataContainer::getDriverForTable() will trigger an InvalidArgumentException in Contao 5.0.');
+
+			return '';
+		}
+
 		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
 
 		if (false === strpos($dataContainer, '\\'))
