@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 <?php if ($use_attributes): ?>
-#[AsFrontendModule("<?= $elementName ?>", category: "<?= $category ?>")]
+#[AsFrontendModule(category: "<?= $category ?>")]
 <?php else: ?>
 /**
  * @FrontendModule("<?= $elementName ?>", category="<?= $category ?>")
