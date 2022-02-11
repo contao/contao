@@ -47,11 +47,15 @@
           <element key="time-sensitive">
             <array>
               <element key="0"><string>Contao\CoreBundle\Command</string></element>
-              <element key="1"><string>Contao\CoreBundle\Tests\Command</string></element>
+              <element key="1"><string>Contao\CoreBundle\Controller\ContentElement</string></element>
               <element key="2"><string>Contao\CoreBundle\Cron\Command</string></element>
-              <element key="3"><string>Contao\CoreBundle\Tests\Cron</string></element>
-              <element key="4"><string>Contao\CoreBundle\EventListener</string></element>
-              <element key="5"><string>Contao\CoreBundle\Tests\EventListener</string></element>
+              <element key="3"><string>Contao\CoreBundle\EventListener\DataContainer</string></element>
+              <element key="4"><string>Contao\CoreBundle\Security\Authentication\Provider</string></element>
+              <element key="5"><string>Contao\CoreBundle\Tests\Command</string></element>
+              <element key="6"><string>Contao\CoreBundle\Tests\Controller\ContentElement</string></element>
+              <element key="7"><string>Contao\CoreBundle\Tests\Cron</string></element>
+              <element key="8"><string>Contao\CoreBundle\Tests\Security\Authentication\Provider</string></element>
+              <element key="9"><string>Contao\CoreBundle\Tests\Security\Authentication\RememberMe</string></element>
             </array>
           </element>
         </array>
