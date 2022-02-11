@@ -24,15 +24,15 @@ use Doctrine\DBAL\Result;
 
 class RecordPreviewListenerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_DCA']);
-    }
-
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
 
+        unset($GLOBALS['TL_DCA']);
+    }
+
+    protected function tearDown(): void
+    {
         unset($GLOBALS['TL_DCA']);
     }
 
@@ -52,7 +52,7 @@ class RecordPreviewListenerTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([
-            DataContainer::class => $dcAdapter
+            DataContainer::class => $dcAdapter,
         ]);
 
         $connection = $this->createMock(Connection::class);
@@ -60,7 +60,7 @@ class RecordPreviewListenerTest extends TestCase
         $listener = new RecordPreviewListener($framework, $connection);
         $listener->registerDeleteCallbacks($table);
 
-        if ($expected === null) {
+        if (null === $expected) {
             $this->assertArrayNotHasKey('ondelete_callback', $GLOBALS['TL_DCA'][$table]['config']);
         } else {
             $this->assertArrayHasKey('ondelete_callback', $GLOBALS['TL_DCA'][$table]['config']);
@@ -77,7 +77,7 @@ class RecordPreviewListenerTest extends TestCase
         ];
 
         $framework = $this->mockContaoFramework([
-            System::class => $this->createMock(System::class)
+            System::class => $this->createMock(System::class),
         ]);
 
         $result = $this->createMock(Result::class);
