@@ -67,7 +67,8 @@ class BackupListCommand extends AbstractBackupCommand
         $formatted = [];
 
         foreach ($backups as $backup) {
-            $localeDateTime = new \DateTime('@'.$backup->getCreatedAt()->getTimestamp(), $timeZone);
+            $localeDateTime = clone $backup->getCreatedAt();
+            $localeDateTime->setTimezone($timeZone);
 
             $formatted[] = [
                 $localeDateTime->format('Y-m-d H:i:s'),
