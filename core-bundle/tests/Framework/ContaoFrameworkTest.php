@@ -314,6 +314,10 @@ class ContaoFrameworkTest extends TestCase
         $this->addToAssertionCount(1); // does not throw an exception
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testOverridesTheErrorLevel(): void
     {
         $request = Request::create('/contao/login');
@@ -380,6 +384,9 @@ class ContaoFrameworkTest extends TestCase
 
     /**
      * @dataProvider getInstallRoutes
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testAllowsTheInstallationToBeIncompleteInTheInstallTool(string $route): void
     {
@@ -410,6 +417,8 @@ class ContaoFrameworkTest extends TestCase
         $adapterCache = $ref->getProperty('adapterCache');
         $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
+
+        $_GET = [];
 
         $framework->initialize();
 
@@ -692,6 +701,10 @@ class ContaoFrameworkTest extends TestCase
         $adapterCache = $ref->getProperty('adapterCache');
         $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
+
+        $isInitialized = $ref->getProperty('initialized');
+        $isInitialized->setAccessible(true);
+        $isInitialized->setValue(false);
 
         return $framework;
     }

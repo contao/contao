@@ -211,6 +211,8 @@ class ContaoDataCollectorTest extends TestCase
             ],
             $collector->getLegacyRouting()['hooks']
         );
+
+        unset($GLOBALS['TL_HOOKS']);
     }
 
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void

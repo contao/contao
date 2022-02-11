@@ -35,9 +35,14 @@ class ContaoKernelTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
+    private $globalsBackup = [];
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->globalsBackup['_SERVER'] = $_SERVER ?? null;
+        $this->globalsBackup['_ENV'] = $_ENV ?? null;
 
         // Reset the ContaoKernel static properties
         $reflection = new \ReflectionClass(ContaoKernel::class);
@@ -86,6 +91,14 @@ class ContaoKernelTest extends ContaoTestCase
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace/var');
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace/var');
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace/var');
+
+        foreach ($this->globalsBackup as $key => $value) {
+            if (null === $value) {
+                unset($GLOBALS[$key]);
+            } else {
+                $GLOBALS[$key] = $value;
+            }
+        }
     }
 
     public function testResetsTheBundleLoaderOnShutdown(): void

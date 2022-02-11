@@ -50,6 +50,7 @@ class WidgetTest extends TestCase
         $method = $class->getMethod('getPost');
         $method->setAccessible(true);
 
+        $_GET = [];
         $_POST = [$input => $value];
         Input::resetCache();
         Input::initialize();

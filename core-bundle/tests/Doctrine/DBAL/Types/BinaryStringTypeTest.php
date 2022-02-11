@@ -25,7 +25,11 @@ class BinaryStringTypeTest extends TestCase
     {
         parent::setUpBeforeClass();
 
-        Type::addType(BinaryStringType::NAME, BinaryStringType::class);
+        if (Type::hasType(BinaryStringType::NAME)) {
+            Type::overrideType(BinaryStringType::NAME, BinaryStringType::class);
+        } else {
+            Type::addType(BinaryStringType::NAME, BinaryStringType::class);
+        }
     }
 
     protected function setUp(): void

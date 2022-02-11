@@ -103,6 +103,13 @@ class CombinerTest extends ContaoTestCase
             'file1.css?v='.$hash.'"><link rel="stylesheet" href="file2.css?v='.$hash.'" media="screen"><link rel="stylesheet" href="file3.css?v='.$hash.'" media="screen',
             $combiner->getCombinedFile()
         );
+
+        $this->filesystem->remove([
+            $this->getTempDir().'/file1.css',
+            $this->getTempDir().'/public/file2.css',
+            $this->getTempDir().'/file3.css',
+            $this->getTempDir().'/public/file3.css',
+        ]);
     }
 
     public function testFixesTheFilePaths(): void
@@ -245,6 +252,12 @@ class CombinerTest extends ContaoTestCase
             'assets/css/file1.scss.css?v='.$hash1.'"><link rel="stylesheet" href="assets/css/file2.scss.css?v='.$hash2,
             $combiner->getCombinedFile()
         );
+
+        $this->filesystem->remove([
+            $this->getTempDir().'/file1.scss',
+            $this->getTempDir().'/file1_sub.scss',
+            $this->getTempDir().'/file2.scss',
+        ]);
     }
 
     public function testCombinesJsFiles(): void
@@ -278,5 +291,10 @@ class CombinerTest extends ContaoTestCase
         $hash2 = substr(md5((string) $mtime2), 0, 8);
 
         $this->assertSame('file1.js?v='.$hash1.'"></script><script src="file2.js?v='.$hash2, $combiner->getCombinedFile());
+
+        $this->filesystem->remove([
+            $this->getTempDir().'/file1.js',
+            $this->getTempDir().'/public/file2.js',
+        ]);
     }
 }

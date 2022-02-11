@@ -549,7 +549,20 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplate(): void
     {
+        $imageFactory = new ImageFactory(
+            $this->createMock(ResizerInterface::class),
+            $this->createMock(ImagineInterface::class),
+            $this->createMock(ImagineInterface::class),
+            new Filesystem(),
+            $this->createMock(ContaoFramework::class),
+            false,
+            ['jpeg_quality' => 80],
+            ['jpg', 'svg'],
+            $this->getFixturesDir()
+        );
+
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
+        $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);
 
@@ -570,9 +583,22 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplateDataDoesNotOverwriteHref(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures')
-        ));
+        $imageFactory = new ImageFactory(
+            $this->createMock(ResizerInterface::class),
+            $this->createMock(ImagineInterface::class),
+            $this->createMock(ImagineInterface::class),
+            new Filesystem(),
+            $this->createMock(ContaoFramework::class),
+            false,
+            ['jpeg_quality' => 80],
+            ['jpg', 'svg'],
+            $this->getFixturesDir()
+        );
+
+        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
+        $container->set('contao.image.factory', $imageFactory);
+
+        System::setContainer($container);
 
         $template = new \stdClass();
 

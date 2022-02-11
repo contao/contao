@@ -384,7 +384,7 @@ class FigureBuilderTest extends TestCase
 
         $image = $this->createMock(ImageInterface::class);
         $image
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getPath')
             ->willReturn($absoluteFilePath)
         ;

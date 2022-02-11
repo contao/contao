@@ -248,6 +248,9 @@ jobs:
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
+            - name: Run the unit tests in reverse order
+              run: vendor/bin/phpunit --order-by=reverse --colors=always
+
     nightly:
         name: PHP 8.2
         runs-on: ubuntu-latest

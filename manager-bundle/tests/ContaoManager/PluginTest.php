@@ -75,6 +75,8 @@ class PluginTest extends ContaoTestCase
             }
         }
 
+        Plugin::autoloadModules('');
+
         parent::tearDown();
     }
 
