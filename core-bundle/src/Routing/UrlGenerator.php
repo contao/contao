@@ -70,8 +70,9 @@ class UrlGenerator implements UrlGeneratorInterface
         $scheme = $context->getScheme();
         $httpPort = $context->getHttpPort();
         $httpsPort = $context->getHttpsPort();
+        $locale = $context->getParameter('_locale');
 
-        $this->prepareLocale($parameters);
+        $this->prepareLocale($parameters, $context);
         $this->prepareAlias($name, $parameters);
         $this->prepareDomain($context, $parameters, $referenceType);
 
@@ -88,6 +89,7 @@ class UrlGenerator implements UrlGeneratorInterface
         $context->setScheme($scheme);
         $context->setHttpPort($httpPort);
         $context->setHttpsPort($httpsPort);
+        $context->setParameter('_locale', $locale);
 
         return $url;
     }
@@ -95,10 +97,14 @@ class UrlGenerator implements UrlGeneratorInterface
     /**
      * Removes the locale parameter if it is disabled.
      */
-    private function prepareLocale(array &$parameters): void
+    private function prepareLocale(array &$parameters, RequestContext $context): void
     {
         if (!$this->prependLocale && \array_key_exists('_locale', $parameters)) {
             unset($parameters['_locale']);
+            return;
+        }
+        if ($this->prependLocale && $context->hasParameter('_locale')) {
+            $context->setParameter('_locale', str_replace('_', '-', $context->getParameter('_locale')));
         }
     }
 
