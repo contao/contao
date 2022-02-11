@@ -972,7 +972,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     private function skipTestIfAttributesAreNotSupported(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
+        if (\PHP_VERSION_ID < 80000) {
             $this->markTestSkipped('Attributes support is only available since PHP8.');
         }
     }
