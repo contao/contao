@@ -281,6 +281,9 @@
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
       </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+      </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
       </trans-unit>

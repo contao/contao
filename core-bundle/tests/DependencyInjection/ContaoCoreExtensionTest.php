@@ -642,9 +642,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsContentElementAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -659,9 +657,10 @@ class ContaoCoreExtensionTest extends TestCase
             ->with(
                 ContentElementReference::TAG_NAME,
                 [
-                    ['foo' => 'bar'],
-                    'type' => 'foo',
-                    'category' => 'bar',
+                    'foo' => 'bar',
+                    'baz' => 42,
+                    'type' => 'content_element/text',
+                    'category' => 'miscellaneous',
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
@@ -671,22 +670,20 @@ class ContaoCoreExtensionTest extends TestCase
 
         $autoConfiguredAttributes[AsContentElement::class](
             $definition,
-            new AsContentElement(
-                'foo',
-                'bar',
-                'a_template',
-                'aMethod',
-                'inline',
-                ['foo' => 'bar']
-            )
+            new AsContentElement(...[
+                'type' => 'content_element/text',
+                'template' => 'a_template',
+                'method' => 'aMethod',
+                'renderer' => 'inline',
+                'foo' => 'bar',
+                'baz' => 42,
+            ])
         );
     }
 
     public function testRegistersAsFrontendModuleAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -701,9 +698,10 @@ class ContaoCoreExtensionTest extends TestCase
             ->with(
                 FrontendModuleReference::TAG_NAME,
                 [
-                    ['foo' => 'bar'],
-                    'type' => 'foo',
-                    'category' => 'bar',
+                    'foo' => 'bar',
+                    'baz' => 42,
+                    'type' => 'frontend_module/navigation',
+                    'category' => 'miscellaneous',
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
@@ -713,22 +711,20 @@ class ContaoCoreExtensionTest extends TestCase
 
         $autoConfiguredAttributes[AsFrontendModule::class](
             $definition,
-            new AsFrontendModule(
-                'foo',
-                'bar',
-                'a_template',
-                'aMethod',
-                'inline',
-                ['foo' => 'bar']
-            )
+            new AsFrontendModule(...[
+                'type' => 'frontend_module/navigation',
+                'template' => 'a_template',
+                'method' => 'aMethod',
+                'renderer' => 'inline',
+                'foo' => 'bar',
+                'baz' => 42,
+            ])
         );
     }
 
     public function testRegistersAsPageAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -779,9 +775,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsPickerProviderAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -805,9 +799,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsCronjobAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -837,9 +829,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsHookAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -869,9 +859,7 @@ class ContaoCoreExtensionTest extends TestCase
 
     public function testRegistersAsCallbackAttribute(): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -912,9 +900,7 @@ class ContaoCoreExtensionTest extends TestCase
      */
     public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
     {
-        if (\PHP_VERSION_ID <= 80000) {
-            $this->markTestSkipped('Attributes support is only available since PHP8.');
-        }
+        $this->skipTestIfAttributesAreNotSupported();
 
         $container = $this->getContainerBuilder();
         (new ContaoCoreExtension())->load([], $container);
@@ -968,5 +954,12 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load($params, $container);
 
         return $container;
+    }
+
+    private function skipTestIfAttributesAreNotSupported(): void
+    {
+        if (\PHP_VERSION_ID < 80000) {
+            $this->markTestSkipped('Attributes support is only available since PHP8.');
+        }
     }
 }
