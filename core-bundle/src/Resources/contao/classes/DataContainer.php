@@ -1612,6 +1612,8 @@ abstract class DataContainer extends Backend
 	 * @param string $table
 	 *
 	 * @return string
+	 *
+	 * @todo Change the return type to ?string in Contao 5.0
 	 */
 	public static function getDriverForTable(string $table): string
 	{
