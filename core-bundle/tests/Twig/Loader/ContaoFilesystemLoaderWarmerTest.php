@@ -73,7 +73,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         $locator = $this->mockTemplateLocator($themePaths, $resourcesPaths);
 
         $warmer = $this->getContaoFilesystemLoaderWarmer($loader, $locator);
-
         $warmer->warmUp();
     }
 
@@ -98,7 +97,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         ;
 
         $warmer = $this->getContaoFilesystemLoaderWarmer($loader);
-
         $warmer->refresh();
     }
 
@@ -116,7 +114,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         ;
 
         $warmer = $this->getContaoFilesystemLoaderWarmer($loader, null, 'dev');
-
         $warmer->onKernelRequest($this->createMock(RequestEvent::class));
     }
 
@@ -134,7 +131,6 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         ;
 
         $warmer = $this->getContaoFilesystemLoaderWarmer($loader);
-
         $warmer->onKernelRequest($this->createMock(RequestEvent::class));
     }
 

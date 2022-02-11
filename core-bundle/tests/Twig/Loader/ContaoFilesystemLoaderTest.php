@@ -324,7 +324,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader = $this->getContaoFilesystemLoader(null, $locator);
 
         $this->getContaoFilesystemLoaderWarmer($loader, $locator, $projectDir)->warmUp();
-
         $this->mockFilemtime($mtimeMappings);
 
         if ($expectWarning) {
@@ -386,10 +385,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader = $this->getContaoFilesystemLoader(null, $locator);
 
         $this->getContaoFilesystemLoaderWarmer($loader, $locator, $projectDir)->warmUp();
-
-        $this->mockFilemtime([
-            Path::join($projectDir, 'templates/my/theme/text.html.twig') => $expired,
-        ]);
+        $this->mockFilemtime([Path::join($projectDir, 'templates/my/theme/text.html.twig') => $expired]);
 
         $page = new \stdClass();
         $page->templateGroup = 'templates/my/theme';
@@ -696,13 +692,6 @@ class ContaoFilesystemLoaderTest extends TestCase
     {
         $filesystem = $this->createMock(Filesystem::class);
 
-        return new ContaoFilesystemLoaderWarmer(
-            $loader,
-            $locator,
-            $projectDir,
-            'cache',
-            'prod',
-            $filesystem
-        );
+        return new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'cache', 'prod', $filesystem);
     }
 }
