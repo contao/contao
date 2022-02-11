@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\ContentText;
 use Contao\Controller;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\FormTextField;
 use Contao\ModuleArticleList;
 use Contao\System;
@@ -51,7 +52,10 @@ class TemplateLoaderTest extends TestCase
 
         $GLOBALS['TL_LANG']['MSC']['global'] = 'global';
 
-        System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set(TemplateHierarchyInterface::class, $this->createMock(TemplateHierarchyInterface::class));
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
@@ -254,6 +258,39 @@ class TemplateLoaderTest extends TestCase
             [
                 'mod_article-custom' => 'mod_article-custom (global)',
                 'mod_article_custom' => 'mod_article_custom (global)',
+            ],
+            Controller::getTemplateGroup('mod_article_')
+        );
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testReturnsACustomTwigTemplate(): void
+    {
+        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
+        $templateHierarchy
+            ->method('getInheritanceChains')
+            ->willReturn([
+                'mod_article' => ['some/path/mod_article.html.twig' => '@Contao_Global/mod_article.html.twig'],
+                'mod_foo' => ['some/path/mod_foo.html.twig' => '@Contao_Global/mod_foo.html.twig'],
+                'mod_article_custom' => ['some/path/mod_article_custom.html.twig' => '@Contao_Global/mod_article_custom.html.twig'],
+            ])
+        ;
+
+        System::getContainer()->set(TemplateHierarchyInterface::class, $templateHierarchy);
+
+        $this->assertSame(
+            [
+                'mod_article' => 'mod_article',
+                'mod_article_custom' => 'mod_article_custom',
+            ],
+            Controller::getTemplateGroup('mod_article')
+        );
+
+        $this->assertSame(
+            [
+                'mod_article_custom' => 'mod_article_custom',
             ],
             Controller::getTemplateGroup('mod_article_')
         );

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -134,7 +135,24 @@ abstract class Controller extends System
 		$arrMapper['mod'][] = 'newsletter'; // TODO: remove in Contao 5.0
 
 		// Get the default templates
-		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
+		$templateHierarchy = System::getContainer()->get(TemplateHierarchyInterface::class);
+		$identifierPattern = sprintf(
+			'/^%s%s/',
+			preg_quote($strPrefix, '/'),
+			substr($strPrefix, -1) !== '_' ? '($|_)' : ''
+		);
+
+		$prefixedFiles = array_merge(
+			array_filter(
+				array_keys($templateHierarchy->getInheritanceChains()),
+				static fn (string $identifier): bool => 1 === preg_match($identifierPattern, $identifier),
+			),
+			// Merge with the templates from the TemplateLoader for backward
+			// compatibility in case someone added templates manually
+			TemplateLoader::getPrefixedFiles($strPrefix),
+		);
+
+		foreach ($prefixedFiles as $strTemplate)
 		{
 			if ($strTemplate != $strPrefix)
 			{
