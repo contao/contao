@@ -53,11 +53,29 @@ class PluginTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
+    private $globalsBackup = [];
+
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->globalsBackup['_SERVER'] = $_SERVER ?? null;
+        $this->globalsBackup['_ENV'] = $_ENV ?? null;
+
         unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL']);
+    }
+
+    protected function tearDown(): void
+    {
+        foreach ($this->globalsBackup as $key => $value) {
+            if (null === $value) {
+                unset($GLOBALS[$key]);
+            } else {
+                $GLOBALS[$key] = $value;
+            }
+        }
+
+        parent::tearDown();
     }
 
     public function testDependsOnCoreBundlePlugin(): void
