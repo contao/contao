@@ -350,7 +350,7 @@ body:not(.fullscreen) #container {
 }
 #main_headline span {
 	display:inline-block;
-	max-width:30%;
+	max-width:25%;
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
@@ -413,6 +413,9 @@ h2.sub_headline {
 	margin:1px 0;
 	padding:8px 10px 8px 30px;
 	background-position:9px 9px;
+}
+.tl_error strong,.tl_confirm strong,.tl_info strong,.tl_new strong {
+	color:inherit;
 }
 
 /* Filter */
