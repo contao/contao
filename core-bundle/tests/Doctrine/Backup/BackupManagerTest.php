@@ -99,6 +99,7 @@ class BackupManagerTest extends ContaoTestCase
         $this->vfs->write('backup__20211101141254.zip', ''); // incorrect file extension
 
         $manager = $this->getBackupManager();
+
         $this->assertCount(0, $manager->listBackups());
     }
 
@@ -109,11 +110,9 @@ class BackupManagerTest extends ContaoTestCase
     {
         $connection = $this->mockConnection($autoCommitEnabled);
         $dumper = $this->mockDumper($connection);
-
-        $manager = $this->getBackupManager($connection, $dumper);
-
         $backup = Backup::createNew(\DateTime::createFromFormat(\DateTimeInterface::ATOM, '2021-11-03T13:36:00+00:00'));
 
+        $manager = $this->getBackupManager($connection, $dumper);
         $config = (new CreateConfig($backup))->withGzCompression(false);
         $manager->create($config);
 
@@ -186,6 +185,7 @@ class BackupManagerTest extends ContaoTestCase
 
         $backupNew = Backup::createNew();
         $backupExisting = Backup::createNew(new \DateTime('-1 day'));
+
         $this->vfs->write($backupExisting->getFilename(), '');
 
         $retentionPolicy = $this->createMock(RetentionPolicyInterface::class);
@@ -208,7 +208,6 @@ class BackupManagerTest extends ContaoTestCase
 
         $manager = $this->getBackupManager($connection, $dumper, $retentionPolicy);
         $config = $manager->createCreateConfig();
-
         $manager->create($config);
 
         $this->assertCount(1, $manager->listBackups());
@@ -223,6 +222,7 @@ class BackupManagerTest extends ContaoTestCase
             ->method('dump')
             ->willThrowException(new BackupManagerException('Error!'))
         ;
+
         $retentionPolicy = $this->createMock(RetentionPolicyInterface::class);
         $retentionPolicy
             ->expects($this->never())
@@ -266,7 +266,6 @@ class BackupManagerTest extends ContaoTestCase
         $this->expectExceptionMessage(sprintf('Dump "%s" does not exist.', $backup->getFilename()));
 
         $manager = $this->getBackupManager($this->mockConnection(true));
-
         $manager->restore(new RestoreConfig($backup));
     }
 
@@ -299,6 +298,7 @@ class BackupManagerTest extends ContaoTestCase
         $this->expectExceptionMessage('Query wrong.');
 
         $backup = Backup::createNew();
+
         $this->vfs->write(
             $backup->getFilename(),
             <<<'BACKUP'
@@ -316,7 +316,6 @@ class BackupManagerTest extends ContaoTestCase
         ;
 
         $manager = $this->getBackupManager($connection);
-
         $manager->restore(new RestoreConfig($backup));
     }
 

@@ -31,6 +31,7 @@ class BackupListCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $code = $commandTester->execute($arguments);
         $normalizedOutput = preg_replace("/\\s+\n/", "\n", $commandTester->getDisplay(true));
+
         $expectedOutput = str_replace(
             '<TIMEZONE>',
             BackupListCommand::getFormattedTimeZoneOffset(new \DateTimeZone(date_default_timezone_get())),
