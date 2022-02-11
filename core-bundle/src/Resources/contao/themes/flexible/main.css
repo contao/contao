@@ -350,7 +350,7 @@ body:not(.fullscreen) #container {
 }
 #main_headline span {
 	display:inline-block;
-	max-width:30%;
+	max-width:25%;
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
