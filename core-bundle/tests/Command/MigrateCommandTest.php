@@ -75,7 +75,7 @@ class MigrateCommandTest extends TestCase
             $expected = [];
 
             if ($backupsEnabled) {
-                $expected[] = ['type' => 'backup-result', 'createdAt' => '2021-11-01T14:12:54+00:00', 'size' => 0, 'path' => 'valid_backup_filename__20211101141254.sql'];
+                $expected[] = ['type' => 'backup-result', 'createdAt' => '2021-11-01T14:12:54+00:00', 'size' => 0, 'name' => 'valid_backup_filename__20211101141254.sql'];
             }
 
             $expected = array_merge(

@@ -349,7 +349,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
         $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
-        $this->assertSame('%kernel.project_dir%/var/backups', $definition->getArgument(2));
+        $this->assertEquals(new Reference('contao.filesystem.virtual.backups'), $definition->getArgument(2));
         $this->assertSame(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'], $definition->getArgument(3));
         $this->assertEquals(new Reference('contao.doctrine.backup.retention_policy'), $definition->getArgument(4));
 
@@ -363,7 +363,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 'contao' => [
                     'backup' => [
-                        'directory' => 'somewhere/else',
                         'ignore_tables' => ['foobar'],
                         'keep_max' => 10,
                         'keep_intervals' => ['1D', '2D', '7D', '14D', '1M', '1Y'],
@@ -377,7 +376,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(new Reference('database_connection'), $definition->getArgument(0));
         $this->assertEquals(new Reference('contao.doctrine.backup.dumper'), $definition->getArgument(1));
-        $this->assertSame('somewhere/else', $definition->getArgument(2));
+        $this->assertEquals(new Reference('contao.filesystem.virtual.backups'), $definition->getArgument(2));
         $this->assertSame(['foobar'], $definition->getArgument(3));
         $this->assertEquals(new Reference('contao.doctrine.backup.retention_policy'), $definition->getArgument(4));
 
@@ -618,9 +617,12 @@ class ContaoCoreExtensionTest extends TestCase
         ;
 
         $config
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('mountLocalAdapter')
-            ->with('upload/path', 'upload/path', 'files')
+            ->withConsecutive(
+                ['upload/path', 'upload/path', 'files'],
+                ['var/backups', 'backups', 'backups'],
+            )
         ;
 
         $dbafsDefinition = $this->createMock(Definition::class);

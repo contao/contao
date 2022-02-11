@@ -157,7 +157,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.doctrine.backup.dumper'
-            - ~
+            - '@contao.filesystem.virtual.backups'
             - ~
             - '@contao.doctrine.backup.retention_policy'
 

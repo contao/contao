@@ -12,43 +12,32 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Doctrine\Backup;
 
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
-
 class Backup
 {
     public const DATETIME_FORMAT = 'YmdHis';
-    public const VALID_BACKUP_NAME_REGEX = '@^.*__(\d{4}\d{2}\d{2}\d{2}\d{2}\d{2})\.sql(\.gz)?$@';
+    public const VALID_BACKUP_NAME_REGEX = '@^[^/]*__(\d{4}\d{2}\d{2}\d{2}\d{2}\d{2})\.sql(\.gz)?$@';
 
-    private string $filepath;
+    private string $filename;
     private \DateTimeInterface $createdAt;
+    private int $size = 0;
 
-    public function __construct(string $filepath)
+    /**
+     * @throws BackupManagerException
+     */
+    public function __construct(string $filename)
     {
-        $this->filepath = self::validateFilePath($filepath);
-        $this->createdAt = self::extractDatetime($filepath);
+        $this->filename = self::validateFileName($filename);
+        $this->createdAt = self::extractDatetime($filename);
     }
 
     public function __toString(): string
     {
-        return sprintf('[Backup]: %s', $this->getFilepath());
+        return sprintf('[Backup]: %s', $this->getFilename());
     }
 
-    /**
-     * Returns the size in bytes.
-     */
-    public function getSize(): int
+    public function getFilename(): string
     {
-        if (!(new Filesystem())->exists($this->getFilepath())) {
-            return 0;
-        }
-
-        return (int) filesize($this->getFilepath());
-    }
-
-    public function getFilepath(): string
-    {
-        return $this->filepath;
+        return $this->filename;
     }
 
     public function getCreatedAt(): \DateTimeInterface
@@ -56,17 +45,27 @@ class Backup
         return $this->createdAt;
     }
 
-    public static function createNewAtPath(string $targetPath, \DateTime $dateTime = null): self
+    /**
+     * Size of the backup in bytes.
+     */
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+
+    public function setSize(int $size): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public static function createNew(\DateTime $dateTime = null): self
     {
         $now = $dateTime ?? new \DateTime('now');
         $now->setTimezone(new \DateTimeZone('UTC'));
 
-        $targetPath = rtrim($targetPath, '/');
-        $filepath = sprintf('%s/backup__%s.sql.gz', $targetPath, $now->format(self::DATETIME_FORMAT));
-
-        (new Filesystem())->dumpFile($filepath, '');
-
-        return new self($filepath);
+        return new self(sprintf('backup__%s.sql.gz', $now->format(self::DATETIME_FORMAT)));
     }
 
     public function toArray(): array
@@ -74,7 +73,7 @@ class Backup
         return [
             'createdAt' => $this->getCreatedAt()->format(\DateTimeInterface::ATOM),
             'size' => $this->getSize(),
-            'path' => $this->getFilepath(),
+            'name' => $this->getFilename(),
         ];
     }
 
@@ -87,12 +86,12 @@ class Backup
         return \DateTime::createFromFormat(self::DATETIME_FORMAT, $matches[1], new \DateTimeZone('UTC'));
     }
 
-    private static function validateFilePath(string $filepath): string
+    private static function validateFileName(string $filename): string
     {
-        if (!preg_match(self::VALID_BACKUP_NAME_REGEX, $filepath)) {
-            throw new BackupManagerException(sprintf('The filepath "%s" does not match "%s"', $filepath, self::VALID_BACKUP_NAME_REGEX));
+        if (!preg_match(self::VALID_BACKUP_NAME_REGEX, $filename)) {
+            throw new BackupManagerException(sprintf('The filename "%s" does not match "%s"', $filename, self::VALID_BACKUP_NAME_REGEX));
         }
 
-        return Path::normalize($filepath);
+        return $filename;
     }
 }
