@@ -385,7 +385,7 @@ class RecordPreviewListenerTest extends TestCase
         ];
 
         yield 'Deletable extended table data container' => [
-            'tl_page',
+            'tl_custom',
             'ExtendedTable',
             DC_ExtendedTableStub::class,
             false,
