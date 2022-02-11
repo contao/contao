@@ -2,6 +2,30 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.0-RC3] (2022-02-11)
+
+**New features:**
+
+- [#3990] Fast manual file sync for the back end ([m-vo])
+- [#4004] Support virtual filesystem in CLI backup management ([Toflar])
+- [#4042] Enable SQL strict mode by default ([m-vo])
+
+**Fixed issues:**
+
+- [#4099] Do not store record preview for DC_Folder instances ([bezin])
+- [#4114] Allow DCAs without driver ([leofeyer])
+- [#4113] Return an empty string if there is no driver ([leofeyer])
+- [#4112] Skip all dot files when syncing the DBAFS ([m-vo])
+- [#4103] Fix the color of bold strings inside error messages ([leofeyer])
+- [#3992] Automatically generate Twig IDE auto-completion mappings ([m-vo])
+- [#4096] Fix an undefiend array key ([richardhj])
+- [#4065] Fix order of parameters in AsContentElement and AsFrontendModule constructors ([m-vo])
+- [#4078] Fix 'Purge the preview cache' (path not found) ([AlexanderWillner])
+- [#4095] Fix the logger service calls ([SeverinGloeckle])
+- [#4094] Fix missing fallback for densities in preview factory ([m-vo])
+- [#4093] Allow autowiring of preview factory ([m-vo])
+- [#4074] Fix `contao:user:list` with empty database ([AlexanderWillner])
+
 ## [4.13.0-RC2] (2022-02-08)
 
 **New features:**
@@ -190,8 +214,10 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[AlexanderWillner]: https://github.com/AlexanderWillner
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bezin]: https://github.com/bezin
@@ -209,6 +235,22 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [xprojects-de]: https://github.com/xprojects-de
+[#3990]: https://github.com/contao/contao/pull/3990
+[#4004]: https://github.com/contao/contao/pull/4004
+[#4042]: https://github.com/contao/contao/pull/4042
+[#4099]: https://github.com/contao/contao/pull/4099
+[#4114]: https://github.com/contao/contao/pull/4114
+[#4113]: https://github.com/contao/contao/pull/4113
+[#4112]: https://github.com/contao/contao/pull/4112
+[#4103]: https://github.com/contao/contao/pull/4103
+[#3992]: https://github.com/contao/contao/pull/3992
+[#4096]: https://github.com/contao/contao/pull/4096
+[#4065]: https://github.com/contao/contao/pull/4065
+[#4078]: https://github.com/contao/contao/pull/4078
+[#4095]: https://github.com/contao/contao/pull/4095
+[#4094]: https://github.com/contao/contao/pull/4094
+[#4093]: https://github.com/contao/contao/pull/4093
+[#4074]: https://github.com/contao/contao/pull/4074
 [#4012]: https://github.com/contao/contao/pull/4012
 [#4052]: https://github.com/contao/contao/pull/4052
 [#4046]: https://github.com/contao/contao/pull/4046
