@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\RecordPreviewListener;
+use Contao\CoreBundle\Fixtures\Contao\DC_ExtendedTableStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
+use Contao\DC_Folder;
 use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -32,19 +34,31 @@ class RecordPreviewListenerTest extends TestCase
     /**
      * @dataProvider loadDataContainer
      */
-    public function testRegistersDeleteCallbackOnDeletableDataContainers(string $table, bool $notDeletable, ?array $expected): void
+    public function testRegistersDeleteCallbackOnDeletableDataContainers(string $table, string $dataContainer, string $driver, bool $notDeletable, ?array $expected): void
     {
         $GLOBALS['TL_DCA'][$table]['config']['notDeletable'] = $notDeletable;
+        $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] = $dataContainer;
 
-        $framework = $this->mockContaoFramework();
+        $dcAdapter = $this->mockAdapter(['getDriverForTable']);
+        $dcAdapter
+            ->method('getDriverForTable')
+            ->with($table)
+            ->willReturn($driver)
+        ;
+
+        $framework = $this->mockContaoFramework([
+            DataContainer::class => $dcAdapter,
+        ]);
+
         $connection = $this->createMock(Connection::class);
 
         $listener = new RecordPreviewListener($framework, $connection);
         $listener->registerDeleteCallbacks($table);
 
-        if ($notDeletable) {
+        if (null === $expected) {
             $this->assertArrayNotHasKey('ondelete_callback', $GLOBALS['TL_DCA'][$table]['config']);
         } else {
+            $this->assertArrayHasKey('ondelete_callback', $GLOBALS['TL_DCA'][$table]['config']);
             $this->assertSame($expected, $GLOBALS['TL_DCA'][$table]['config']['ondelete_callback']);
         }
     }
@@ -346,14 +360,34 @@ class RecordPreviewListenerTest extends TestCase
 
     public function loadDataContainer(): \Generator
     {
-        yield 'Non-deletable data container' => [
+        yield 'Not a table data container' => [
+            'tl_files',
+            'Folder',
+            DC_Folder::class,
+            false,
+            null,
+        ];
+
+        yield 'Non-deletable table data container' => [
             'tl_optin',
+            'Table',
+            DC_Table::class,
             true,
             null,
         ];
 
-        yield 'Deletable data container' => [
+        yield 'Deletable table data container' => [
             'tl_page',
+            'Table',
+            DC_Table::class,
+            false,
+            [['contao.listener.data_container.record_preview', 'storePrecompiledRecordPreview']],
+        ];
+
+        yield 'Deletable extended table data container' => [
+            'tl_custom',
+            'ExtendedTable',
+            DC_ExtendedTableStub::class,
             false,
             [['contao.listener.data_container.record_preview', 'storePrecompiledRecordPreview']],
         ];
