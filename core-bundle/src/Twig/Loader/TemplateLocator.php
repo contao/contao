@@ -30,6 +30,7 @@ class TemplateLocator
     private string $projectDir;
     private ThemeNamespace $themeNamespace;
     private Connection $connection;
+    private Filesystem $filesystem;
 
     /**
      * @var array<string,string>
@@ -48,6 +49,7 @@ class TemplateLocator
         $this->bundlesMetadata = $bundlesMetadata;
         $this->themeNamespace = $themeNamespace;
         $this->connection = $connection;
+        $this->filesystem = new Filesystem();
     }
 
     /**
@@ -192,8 +194,6 @@ class TemplateLocator
 
     private function isNamespaceRoot(string $path): bool
     {
-        return (new Filesystem())->exists(
-            Path::join($path, self::FILE_MARKER_NAMESPACE_ROOT)
-        );
+        return $this->filesystem->exists(Path::join($path, self::FILE_MARKER_NAMESPACE_ROOT));
     }
 }
