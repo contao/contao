@@ -731,7 +731,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 }
 
                 // Ignore dot files
-                if (strpos(basename($path), '.') === 0) {
+                if (0 === strpos(basename($path), '.')) {
                     continue;
                 }
 
