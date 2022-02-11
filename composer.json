@@ -224,7 +224,6 @@
             "core-bundle/src/Resources/contao/languages/",
             "core-bundle/src/Resources/contao/templates/",
             "core-bundle/src/Resources/contao/themes/",
-            "core-bundle/tests/DependencyInjection/AttributesFactory.php",
             "faq-bundle/src/Resources/contao/config/",
             "faq-bundle/src/Resources/contao/dca/",
             "faq-bundle/src/Resources/contao/languages/",

@@ -668,23 +668,16 @@ class ContaoCoreExtensionTest extends TestCase
             )
         ;
 
-        require_once __DIR__.'/AttributesFactory.php';
-
         $autoConfiguredAttributes[AsContentElement::class](
             $definition,
-            /*
-             * TODO: Construct object directly once we're on PHP 8 only and can use named parameters
-             *
-             * new AsContentElement(
-             *     type: 'content_element/text',
-             *     template: 'a_template',
-             *     method:'aMethod',
-             *     renderer: 'inline',
-             *     foo: 'bar',
-             *     baz: 42,
-             * )
-             */
-            AttributesFactory::getAsContentElement(),
+            new AsContentElement(...[
+                'type' => 'content_element/text',
+                'template' => 'a_template',
+                'method' => 'aMethod',
+                'renderer' => 'inline',
+                'foo' => 'bar',
+                'baz' => 42,
+            ])
         );
     }
 
@@ -716,23 +709,16 @@ class ContaoCoreExtensionTest extends TestCase
             )
         ;
 
-        require_once __DIR__.'/AttributesFactory.php';
-
         $autoConfiguredAttributes[AsFrontendModule::class](
             $definition,
-            /*
-             * TODO: Construct object directly once we're on PHP 8 only and can use named parameters
-             *
-             * new AsFrontendModule(
-             *     type: 'frontend_module/navigation',
-             *     template: 'a_template',
-             *     method:'aMethod',
-             *     renderer: 'inline',
-             *     foo: 'bar',
-             *     baz: 42,
-             * )
-             */
-            AttributesFactory::getAsFrontendModule(),
+            new AsFrontendModule(...[
+                'type' => 'frontend_module/navigation',
+                'template' => 'a_template',
+                'method' => 'aMethod',
+                'renderer' => 'inline',
+                'foo' => 'bar',
+                'baz' => 42,
+            ])
         );
     }
 
