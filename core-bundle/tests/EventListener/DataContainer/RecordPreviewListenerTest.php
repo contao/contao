@@ -31,11 +31,6 @@ class RecordPreviewListenerTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_DCA']);
-    }
-
     /**
      * @dataProvider loadDataContainer
      */
