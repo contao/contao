@@ -188,6 +188,7 @@ services:
 
     contao.filesystem.dbafs_manager:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
+        public: true
 
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
