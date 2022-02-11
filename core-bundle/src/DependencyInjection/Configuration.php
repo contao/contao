@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\Config;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ResizeConfiguration;
@@ -62,6 +63,19 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->variableNode('localconfig')
                     ->info('Allows to set TL_CONFIG variables, overriding settings stored in localconfig.php. Changes in the Contao back end will not have any effect.')
+                    ->validate()
+                        ->always(
+                            static function (array $options): array {
+                                foreach (array_keys($options) as $option) {
+                                    if ($newKey = Config::getNewKey($option)) {
+                                        trigger_deprecation('contao/core-bundle', '4.12', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
+                                    }
+                                }
+
+                                return $options;
+                            }
+                        )
+                    ->end()
                 ->end()
                 ->arrayNode('locales')
                     ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')

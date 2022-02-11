@@ -79,7 +79,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
+        $this->assertMatchesRegularExpression('/No resource could be located at path .*/', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -215,7 +215,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
+        $this->assertMatchesRegularExpression('/No resource could be located at path .*/', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -255,7 +255,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
+        $this->assertMatchesRegularExpression('/No resource could be located at path .*/', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);

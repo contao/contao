@@ -39,12 +39,15 @@
       </trans-unit>
       <trans-unit id="tl_page.routePath.1">
         <source>A preview of the final path (possibly with placeholders) to match this page.</source>
+        <target>Una vista previa de la ruta final (posiblemente con marcadores de posición) para que coincida con esta página.</target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.0">
         <source>Route priority</source>
+        <target>Prioridad de ruta </target>
       </trans-unit>
       <trans-unit id="tl_page.routePriority.1">
         <source>Optionally configure the priority to affect the order of routes. Default: 0</source>
+        <target>Configure opcionalmente la prioridad para afectar el orden de las rutas. Predeterminado: 0</target>
       </trans-unit>
       <trans-unit id="tl_page.pageTitle.0">
         <source>Page title</source>
@@ -76,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.1">
         <source>Show visitors a page that this website is currently being maintained.</source>
+        <target>Muestre a los visitantes una página que este sitio web se está manteniendo actualmente.</target>
       </trans-unit>
       <trans-unit id="tl_page.description.0">
         <source>Page description</source>
@@ -175,6 +179,7 @@
       </trans-unit>
       <trans-unit id="tl_page.enableCanonical.0">
         <source>Enable rel=&quot;canonical&quot;</source>
+        <target>Habilitar rel=&quot;canonical&quot;</target>
       </trans-unit>
       <trans-unit id="tl_page.enableCanonical.1">
         <source>Add rel=&quot;canonical&quot; tags to the website.</source>

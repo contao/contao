@@ -66,8 +66,7 @@ class BackupManagerTest extends ContaoTestCase
         $this->vfs->write(Backup::createNew(new \DateTime('-1 day'))->getFilename(), '');
 
         $manager = $this->getBackupManager();
-        $manager->createRestoreConfig();
-        $config = $manager->createCreateConfig();
+        $config = $manager->createRestoreConfig();
 
         $this->assertSame(['foobar'], $config->getTablesToIgnore());
     }

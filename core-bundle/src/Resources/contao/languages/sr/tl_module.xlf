@@ -131,9 +131,11 @@
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
+        <target>Преглед странице</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.1">
         <source>Select an overview page to include a link to it in the template.</source>
+        <target>Изабери страницу прегледа која ће да укључи линк према себи у шаблону.</target>
       </trans-unit>
       <trans-unit id="tl_module.redirectBack.0">
         <source>Redirect to last page visited</source>
@@ -509,9 +511,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every root page.</source>
+        <target>Изаберите модул за сваку коренску страну.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Module for &quot;%s&quot;</source>
+        <target>Модул за &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

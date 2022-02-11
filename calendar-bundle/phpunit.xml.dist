@@ -1,32 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
-         colors="true"
-         bootstrap="vendor/autoload.php"
->
-    <php>
-        <ini name="error_reporting" value="-1" />
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0" />
-        <env name="SYMFONY_PATCH_TYPE_DECLARATIONS" value="deprecations=0" />
-    </php>
-
-    <testsuites>
-        <testsuite name="calendar-bundle">
-            <directory>./tests</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory>./src</directory>
-            <exclude>
-                <directory>./src/Resources</directory>
-            </exclude>
-        </whitelist>
-    </filter>
-
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-    </listeners>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" colors="true" bootstrap="vendor/autoload.php">
+  <coverage>
+    <include>
+      <directory>./src</directory>
+    </include>
+    <exclude>
+      <directory>./src/Resources</directory>
+    </exclude>
+  </coverage>
+  <php>
+    <ini name="error_reporting" value="-1"/>
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"/>
+    <env name="SYMFONY_PATCH_TYPE_DECLARATIONS" value="deprecations=0"/>
+  </php>
+  <testsuites>
+    <testsuite name="calendar-bundle">
+      <directory>./tests</directory>
+    </testsuite>
+  </testsuites>
+  <listeners>
+    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
+  </listeners>
 </phpunit>

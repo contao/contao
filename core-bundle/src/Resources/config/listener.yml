@@ -47,6 +47,7 @@ services:
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber
         arguments:
+            - '@contao.csrf.token_manager'
             - '@contao.csrf.token_storage'
             - '%contao.csrf_cookie_prefix%'
         tags:
@@ -139,6 +140,12 @@ services:
             - '@uri_signer'
             - '%contao.preview_script%'
 
+    contao.listener.data_container.record_preview:
+        class: Contao\CoreBundle\EventListener\DataContainer\RecordPreviewListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+
     contao.listener.data_container.reset_custom_template:
         class: Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener
         arguments:
@@ -162,8 +169,6 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\LabelListener
         arguments:
             - '@contao.framework'
-            - '@database_connection'
-            - '@translator'
             - '@twig'
 
     contao.listener.data_container.validate_custom_rgxp:

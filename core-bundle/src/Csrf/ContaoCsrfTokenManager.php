@@ -18,12 +18,18 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
-class ContaoCsrfTokenManager extends CsrfTokenManager
+class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
 {
     private RequestStack $requestStack;
     private string $csrfCookiePrefix;
     private ?string $defaultTokenName;
+
+    /**
+     * @var array<int, string>
+     */
+    private array $usedTokenValues = [];
 
     /**
      * @param string|RequestStack|callable|null $namespace
@@ -35,6 +41,30 @@ class ContaoCsrfTokenManager extends CsrfTokenManager
         $this->defaultTokenName = $defaultTokenName;
 
         parent::__construct($generator, $storage, $namespace);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    public function getUsedTokenValues(): array
+    {
+        return $this->usedTokenValues;
+    }
+
+    public function getToken($tokenId): CsrfToken
+    {
+        $token = parent::getToken($tokenId);
+        $this->usedTokenValues[] = $token->getValue();
+
+        return $token;
+    }
+
+    public function refreshToken($tokenId): CsrfToken
+    {
+        $token = parent::refreshToken($tokenId);
+        $this->usedTokenValues[] = $token->getValue();
+
+        return $token;
     }
 
     public function isTokenValid(CsrfToken $token): bool
@@ -73,5 +103,10 @@ class ContaoCsrfTokenManager extends CsrfTokenManager
         }
 
         return $this->getToken($this->defaultTokenName)->getValue();
+    }
+
+    public function reset(): void
+    {
+        $this->usedTokenValues = [];
     }
 }
