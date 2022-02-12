@@ -2749,6 +2749,10 @@
         <source>Parent</source>
         <target>Parent</target>
       </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
+        <target>Manuale</target>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>

@@ -190,6 +190,15 @@ body:not(.fullscreen) #header .inner {
 #tmenu .icon-logout {
 	background:url("icons/exit_dark.svg") 20px center no-repeat;
 }
+#tmenu .icon-manual {
+	width:16px;
+	margin-bottom:-2px;
+	position:relative;
+	background:url("icons/manual.svg") center center no-repeat;
+	overflow:hidden;
+	white-space:nowrap;
+	text-indent:28px; /* 16px width + 12px padding */
+}
 
 /* Container */
 #container {
