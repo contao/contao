@@ -17,6 +17,7 @@ use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageError401;
 use Contao\PageError403;
 use Contao\PageError404;
@@ -27,11 +28,10 @@ use Contao\PageRedirect;
 use Contao\PageRegular;
 use Contao\PageRoot;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
-class DebugPagesCommandTest extends ContaoTestCase
+class DebugPagesCommandTest extends TestCase
 {
     public function testNameAndArguments(): void
     {

@@ -29,6 +29,33 @@ use Twig\Environment;
 
 class AbstractBackendControllerTest extends TestCase
 {
+    private $globalsBackup;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->globalsBackup['_SERVER'] = $_SERVER ?? null;
+        $this->globalsBackup['_ENV'] = $_ENV ?? null;
+    }
+
+    protected function tearDown(): void
+    {
+        foreach ($this->globalsBackup as $key => $value) {
+            if (null === $value) {
+                unset($GLOBALS[$key]);
+            } else {
+                $GLOBALS[$key] = $value;
+            }
+        }
+
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE']);
+        $_GET = [];
+        $_POST = [];
+
+        parent::tearDown();
+    }
+
     public function testAddsAndMergesBackendContext(): void
     {
         $controller = new class() extends AbstractBackendController {
@@ -83,9 +110,6 @@ class AbstractBackendControllerTest extends TestCase
         $controller->setContainer($container);
 
         $this->assertSame('<custom_be_main>', $controller->fooAction()->getContent());
-
-        // Cleanup
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $_SERVER['HTTP_USER_AGENT'], $_SERVER['HTTP_HOST'], $_GET, $_POST);
     }
 
     private function getContainerWithDefaultConfiguration(array $expectedContext): ContainerBuilder

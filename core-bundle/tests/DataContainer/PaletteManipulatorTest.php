@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\DataContainer;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DataContainer\PaletteNotFoundException;
 use Contao\CoreBundle\DataContainer\PalettePositionException;
-use PHPUnit\Framework\TestCase;
+use Contao\CoreBundle\Tests\TestCase;
 
 class PaletteManipulatorTest extends TestCase
 {

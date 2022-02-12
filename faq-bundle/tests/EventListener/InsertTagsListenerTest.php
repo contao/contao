@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Tests\EventListener;
 
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
-use Contao\TestCase\ContaoTestCase;
 
-class InsertTagsListenerTest extends ContaoTestCase
+class InsertTagsListenerTest extends TestCase
 {
     public function testReplacesTheFaqTags(): void
     {

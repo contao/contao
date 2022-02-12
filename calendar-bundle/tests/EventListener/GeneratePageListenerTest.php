@@ -15,14 +15,14 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\GeneratePageListener;
 use Contao\CalendarFeedModel;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\Template;
-use Contao\TestCase\ContaoTestCase;
 
-class GeneratePageListenerTest extends ContaoTestCase
+class GeneratePageListenerTest extends TestCase
 {
     public function testAddsTheCalendarFeedLink(): void
     {

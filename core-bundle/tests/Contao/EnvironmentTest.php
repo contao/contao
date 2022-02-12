@@ -25,10 +25,14 @@ class EnvironmentTest extends TestCase
     use ExpectDeprecationTrait;
 
     private string $projectDir;
+    private array $globalsBackup;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->globalsBackup['_SERVER'] = $_SERVER ?? null;
+        $this->globalsBackup['_ENV'] = $_ENV ?? null;
 
         $this->projectDir = strtr($this->getFixturesDir(), '\\', '/');
 
@@ -50,6 +54,19 @@ class EnvironmentTest extends TestCase
 
         require __DIR__.'/../../src/Resources/contao/config/default.php';
         require __DIR__.'/../../src/Resources/contao/config/agents.php';
+    }
+
+    protected function tearDown(): void
+    {
+        foreach ($this->globalsBackup as $key => $value) {
+            if (null === $value) {
+                unset($GLOBALS[$key]);
+            } else {
+                $GLOBALS[$key] = $value;
+            }
+        }
+
+        parent::tearDown();
     }
 
     /**

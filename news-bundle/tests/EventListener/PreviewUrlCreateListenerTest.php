@@ -14,13 +14,13 @@ namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
 use Contao\NewsModel;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class PreviewUrlCreateListenerTest extends ContaoTestCase
+class PreviewUrlCreateListenerTest extends TestCase
 {
     public function testCreatesThePreviewUrl(): void
     {

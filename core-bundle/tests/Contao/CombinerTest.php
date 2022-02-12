@@ -14,11 +14,11 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Combiner;
 use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-class CombinerTest extends ContaoTestCase
+class CombinerTest extends TestCase
 {
     private Filesystem $filesystem;
 

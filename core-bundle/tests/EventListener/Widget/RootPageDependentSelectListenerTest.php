@@ -14,15 +14,15 @@ namespace Contao\CoreBundle\Tests\EventListener\Widget;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class RootPageDependentSelectListenerTest extends ContaoTestCase
+class RootPageDependentSelectListenerTest extends TestCase
 {
     public function testDoesNotAddWizardWhenNoValuesSet(): void
     {

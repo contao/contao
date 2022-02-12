@@ -435,7 +435,7 @@ class InputTest extends TestCase
         Input::resetCache();
         $_POST = ['html' => $source];
         $html = Input::postHtml('html', true);
-        unset($_POST);
+        $_POST = [];
         Input::resetCache();
 
         $this->assertSame($expected, $simpleTokenParser->parse($html, $tokens));

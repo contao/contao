@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Database\Result;
 use Contao\Database\Statement;
@@ -20,13 +21,12 @@ use Contao\Model\Registry;
 use Contao\Module;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ModuleTest extends ContaoTestCase
+class ModuleTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
@@ -63,14 +63,14 @@ class ModuleTest extends ContaoTestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         Registry::getInstance()->reset();
 
         // Reset database instance
         $property = (new \ReflectionClass(Database::class))->getProperty('arrInstances');
         $property->setAccessible(true);
         $property->setValue([]);
+
+        parent::tearDown();
     }
 
     /**

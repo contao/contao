@@ -16,12 +16,12 @@ use Contao\ArticleModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class PreviewUrlCreateListenerTest extends ContaoTestCase
+class PreviewUrlCreateListenerTest extends TestCase
 {
     public function testCreatesThePreviewUrlForPages(): void
     {

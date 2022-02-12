@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
@@ -20,9 +21,8 @@ use Contao\NewsBundle\EventListener\GeneratePageListener;
 use Contao\NewsFeedModel;
 use Contao\PageModel;
 use Contao\Template;
-use Contao\TestCase\ContaoTestCase;
 
-class GeneratePageListenerTest extends ContaoTestCase
+class GeneratePageListenerTest extends TestCase
 {
     public function testAddsTheNewsFeedLink(): void
     {

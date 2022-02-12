@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\EventListener;
 
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\News;
 use Contao\NewsBundle\EventListener\InsertTagsListener;
 use Contao\NewsFeedModel;
 use Contao\NewsModel;
-use Contao\TestCase\ContaoTestCase;
 
-class InsertTagsListenerTest extends ContaoTestCase
+class InsertTagsListenerTest extends TestCase
 {
     public function testReplacesTheNewsFeedTag(): void
     {

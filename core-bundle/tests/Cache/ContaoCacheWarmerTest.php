@@ -41,6 +41,8 @@ class ContaoCacheWarmerTest extends TestCase
         parent::tearDown();
 
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'var/cache/contao'));
+
+        unset($GLOBALS['TL_TEST']);
     }
 
     public function testCreatesTheCacheFolder(): void

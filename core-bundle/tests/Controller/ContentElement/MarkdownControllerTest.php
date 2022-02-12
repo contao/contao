@@ -16,17 +16,17 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class MarkdownControllerTest extends ContaoTestCase
+class MarkdownControllerTest extends TestCase
 {
     public function testWithCodeInput(): void
     {

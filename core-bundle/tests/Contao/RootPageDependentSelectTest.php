@@ -12,14 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\RootPageDependentSelect;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class RootPageDependentSelectTest extends ContaoTestCase
+class RootPageDependentSelectTest extends TestCase
 {
     public function testRendersMultipleSelects(): void
     {

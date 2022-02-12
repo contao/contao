@@ -65,8 +65,6 @@ class PageModelTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         Registry::getInstance()->reset();
 
         unset($GLOBALS['TL_MODELS']);
@@ -75,6 +73,8 @@ class PageModelTest extends TestCase
         $property = (new \ReflectionClass(Database::class))->getProperty('arrInstances');
         $property->setAccessible(true);
         $property->setValue([]);
+
+        parent::tearDown();
     }
 
     public function testCreatingEmptyPageModel(): void

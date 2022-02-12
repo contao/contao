@@ -16,7 +16,7 @@ use Contao\CalendarBundle\Picker\EventPickerProvider;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Picker\PickerConfig;
-use Contao\TestCase\ContaoTestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
@@ -24,7 +24,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class EventPickerProviderTest extends ContaoTestCase
+class EventPickerProviderTest extends TestCase
 {
     public function testCreatesTheMenuItem(): void
     {

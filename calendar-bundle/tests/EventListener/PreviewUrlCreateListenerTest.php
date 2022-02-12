@@ -16,11 +16,11 @@ use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\TestCase\ContaoTestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class PreviewUrlCreateListenerTest extends ContaoTestCase
+class PreviewUrlCreateListenerTest extends TestCase
 {
     public function testCreatesThePreviewUrl(): void
     {

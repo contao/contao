@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\System;
 use Contao\Widget;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -59,6 +59,7 @@ class WidgetTest extends TestCase
 
         // Restore the error reporting level
         error_reporting($errorReporting);
+        $_POST = [];
     }
 
     public function postProvider(): \Generator

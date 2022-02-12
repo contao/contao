@@ -22,6 +22,8 @@ class PaginationTest extends TestCase
 {
     protected function setUp(): void
     {
+        parent::setUp();
+
         $GLOBALS['TL_LANG']['MSC']['first'] = 'First';
         $GLOBALS['TL_LANG']['MSC']['previous'] = 'Previous';
         $GLOBALS['TL_LANG']['MSC']['next'] = 'Next';
@@ -30,13 +32,12 @@ class PaginationTest extends TestCase
         $GLOBALS['TL_LANG']['MSC']['goToPage'] = 'Go to';
 
         System::setContainer($this->getContainerWithContaoConfiguration());
-
-        parent::setUp();
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG'], $GLOBALS['_GET']);
+        unset($GLOBALS['TL_LANG']);
+        $_GET = [];
 
         Input::resetCache();
         Input::resetUnusedGet();

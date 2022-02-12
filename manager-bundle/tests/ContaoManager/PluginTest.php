@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
@@ -21,7 +22,6 @@ use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
 use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
-use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
@@ -49,7 +49,7 @@ use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 /**
  * @backupGlobals enabled
  */
-class PluginTest extends ContaoTestCase
+class PluginTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
