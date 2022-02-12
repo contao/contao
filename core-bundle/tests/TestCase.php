@@ -46,11 +46,36 @@ abstract class TestCase extends ContaoTestCase
         $prop->setAccessible(true);
         $prop->setValue([]);
 
-        unset($_SESSION);
-        unset($_POST);
-        unset($_GET);
+        unset($_SESSION, $GLOBALS['TL_HEAD'], $GLOBALS['TL_CONFIG'], $GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $GLOBALS['TL_MIME'], $GLOBALS['TL_DCA'], $GLOBALS['TL_HOOKS'], $GLOBALS['BE_MOD'], $GLOBALS['FE_MOD'], $GLOBALS['TL_USERNAME'], $GLOBALS['objPage']);
+
+        static::resetStaticProperties();
 
         parent::tearDown();
+    }
+
+    protected static function resetStaticProperties(array $classNames = null): void
+    {
+        $classNames ??= array_filter(
+            get_declared_classes(),
+            static fn ($class) => 0 === strncmp('Contao\\', $class, 7)
+                && 0 !== strncmp('Contao\\TestCase\\', $class, 16)
+                && !preg_match('/^Contao\\\\[^\\\\]+\\\\Tests\\\\/', $class)
+        );
+
+        foreach ($classNames as $class) {
+            foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
+                if (!$property->isInitialized()) {
+                    continue;
+                }
+
+                if ($property->getValue() === $property->getDefaultValue() || !$property->hasDefaultValue()) {
+                    continue;
+                }
+
+                $property->setAccessible(true);
+                $property->setValue($property->getDefaultValue());
+            }
+        }
     }
 
     protected function getFixturesDir(): string
