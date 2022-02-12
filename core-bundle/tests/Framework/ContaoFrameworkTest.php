@@ -45,6 +45,8 @@ class ContaoFrameworkTest extends TestCase
     {
         unset($GLOBALS['TL_HOOKS']);
 
+        ini_restore('intl.default_locale');
+
         parent::tearDown();
     }
 

@@ -23,17 +23,19 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
     private string $globalKeys;
     private string $globals;
     private string $staticMembers;
+    private string $phpIni;
 
     public function executeBeforeTest(string $test): void
     {
         $this->globalKeys = $this->buildGlobalKeys();
         $this->globals = $this->buildGlobals();
         $this->staticMembers = $this->buildStaticMembers();
+        $this->phpIni = $this->buildPhpIni();
     }
 
     public function executeAfterTest(string $test, float $time): void
     {
-        foreach (['globalKeys', 'globals', 'staticMembers'] as $member) {
+        foreach (['globalKeys', 'globals', 'staticMembers', 'phpIni'] as $member) {
             if ($this->$member !== ($after = $this->{'build'.$member}())) {
                 throw new ExpectationFailedException(sprintf("\nUnexpected change to global state in %s\n%s", $test, $this->diff($this->$member, $after)));
             }
@@ -53,6 +55,11 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
     private function buildGlobals(): string
     {
         return print_r($GLOBALS, true);
+    }
+
+    private function buildPhpIni(): string
+    {
+        return print_r(ini_get_all(null, false), true);
     }
 
     private function buildStaticMembers(): string
