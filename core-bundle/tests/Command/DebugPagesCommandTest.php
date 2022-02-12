@@ -79,7 +79,7 @@ class DebugPagesCommandTest extends ContaoTestCase
         $commandTester = new CommandTester($command);
         $commandTester->execute([]);
 
-        $this->assertSame($expectedOutput, $commandTester->getDisplay(true));
+        $this->assertSame($expectedOutput, preg_replace('/ +(?=\n)/', '', $commandTester->getDisplay(true)));
 
         unset($GLOBALS['TL_PTY']);
     }
@@ -105,18 +105,18 @@ class DebugPagesCommandTest extends ContaoTestCase
                 Contao Pages
                 ============
 
-                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- --------- 
-                  Type        Path   URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                             Options  
-                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- --------- 
-                  error_401   *      *            no                    -                -              -                                                                    -        
-                  error_403   *      *            no                    -                -              -                                                                    -        
-                  error_404   *      *            no                    -                -              -                                                                    -        
-                  forward     *      *            no                    -                -              -                                                                    -        
-                  logout      *      *            no                    -                -              -                                                                    -        
-                  redirect    *      *            no                    -                -              -                                                                    -        
-                  regular     *      *            yes                   -                -              -                                                                    -        
-                  root        foo    .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController   -        
-                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- --------- 
+                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- ---------
+                  Type        Path   URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                             Options
+                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- ---------
+                  error_401   *      *            no                    -                -              -                                                                    -
+                  error_403   *      *            no                    -                -              -                                                                    -
+                  error_404   *      *            no                    -                -              -                                                                    -
+                  forward     *      *            no                    -                -              -                                                                    -
+                  logout      *      *            no                    -                -              -                                                                    -
+                  redirect    *      *            no                    -                -              -                                                                    -
+                  regular     *      *            yes                   -                -              -                                                                    -
+                  root        foo    .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController   -
+                 ----------- ------ ------------ --------------------- ---------------- -------------- -------------------------------------------------------------------- ---------
 
 
                 OUTPUT
@@ -137,14 +137,14 @@ class DebugPagesCommandTest extends ContaoTestCase
                 Contao Pages
                 ============
 
-                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 
-                  Type      Path      URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                                      Options       
-                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 
-                  bar       foo/bar   .html        no                    -                -              _controller : Contao\CoreBundle\Fixtures\Controller\Page\TestPageController   -             
-                  baz       *         *            no                    -                page : \d+     -                                                                             utf8 : false  
-                  regular   *         *            yes                   -                -              -                                                                             -             
-                  root      foo       .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController            -             
-                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- -------------- 
+                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- --------------
+                  Type      Path      URL Suffix   Content Composition   Route Enhancer   Requirements   Defaults                                                                      Options
+                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- --------------
+                  bar       foo/bar   .html        no                    -                -              _controller : Contao\CoreBundle\Fixtures\Controller\Page\TestPageController   -
+                  baz       *         *            no                    -                page : \d+     -                                                                             utf8 : false
+                  regular   *         *            yes                   -                -              -                                                                             -
+                  root      foo       .php         no                    -                -              _controller : Contao\CoreBundle\Controller\Page\RootPageController            -
+                 --------- --------- ------------ --------------------- ---------------- -------------- ----------------------------------------------------------------------------- --------------
 
 
                 OUTPUT
