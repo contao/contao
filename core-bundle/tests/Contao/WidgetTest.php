@@ -33,6 +33,13 @@ class WidgetTest extends TestCase
         System::setContainer($container);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Input::class]);
+
+        parent::tearDown();
+    }
+
     /**
      * @param array<string>|string $value
      *

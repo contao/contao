@@ -17,6 +17,7 @@ use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\InsertTags;
 use Contao\System;
 
 class InsertTagParserTest extends TestCase
@@ -29,6 +30,13 @@ class InsertTagParserTest extends TestCase
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
 
         System::setContainer($container);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([InsertTags::class]);
+
+        parent::tearDown();
     }
 
     public function testReplace(): void

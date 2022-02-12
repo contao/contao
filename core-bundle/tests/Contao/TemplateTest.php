@@ -44,9 +44,11 @@ class TemplateTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
+
+        $this->resetStaticProperties([ContaoFramework::class]);
+
+        parent::tearDown();
     }
 
     public function testReplacesTheVariables(): void

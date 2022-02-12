@@ -17,6 +17,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\System;
 
@@ -39,6 +40,8 @@ class MetadataTest extends TestCase
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);
+
+        $this->resetStaticProperties([DcaLoader::class]);
 
         parent::tearDown();
     }

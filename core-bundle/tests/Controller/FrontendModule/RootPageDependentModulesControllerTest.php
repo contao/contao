@@ -43,6 +43,13 @@ class RootPageDependentModulesControllerTest extends TestCase
         System::setContainer($this->container);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([TemplateLoader::class]);
+
+        parent::tearDown();
+    }
+
     public function testReturnsWildCardWhenBackendRequest(): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);

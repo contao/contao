@@ -20,6 +20,7 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
+use Contao\InsertTags;
 use Contao\System;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -28,6 +29,13 @@ use Twig\TwigFunction;
 
 class ContaoEscaperNodeVisitorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([InsertTags::class]);
+
+        parent::tearDown();
+    }
+
     public function testPriority(): void
     {
         $visitor = new ContaoEscaperNodeVisitor(static fn () => []);

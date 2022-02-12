@@ -20,6 +20,8 @@ use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\PageModel;
 use Contao\System;
@@ -31,6 +33,13 @@ use Symfony\Component\HttpFoundation\Request;
 class ControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class]);
+
+        parent::tearDown();
+    }
 
     /**
      * @group legacy

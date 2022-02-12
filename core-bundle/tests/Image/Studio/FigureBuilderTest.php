@@ -24,6 +24,7 @@ use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeOptions;
@@ -41,6 +42,8 @@ class FigureBuilderTest extends TestCase
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);
+
+        $this->resetStaticProperties([DcaLoader::class]);
 
         parent::tearDown();
     }

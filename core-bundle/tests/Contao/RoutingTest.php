@@ -18,6 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\Frontend;
+use Contao\Input;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
@@ -71,6 +72,8 @@ class RoutingTest extends TestCase
 
         unset($GLOBALS['TL_AUTO_ITEM']);
         $_GET = [];
+
+        $this->resetStaticProperties([Input::class, Environment::class]);
 
         parent::tearDown();
     }

@@ -15,6 +15,7 @@ namespace Contao\ManagerBundle\Tests\Console;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\Console\ContaoApplication;
+use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Symfony\Component\Console\Input\ArgvInput;
 
@@ -39,6 +40,8 @@ class ContaoApplicationTest extends TestCase
                 $GLOBALS[$key] = $value;
             }
         }
+
+        $this->resetStaticProperties([Plugin::class, ContaoKernel::class]);
 
         parent::tearDown();
     }

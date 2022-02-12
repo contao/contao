@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\ContentText;
 use Contao\Controller;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\FormTextField;
 use Contao\ModuleArticleList;
 use Contao\System;
@@ -56,13 +58,15 @@ class TemplateLoaderTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
 
         TemplateLoader::reset();
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_CTE'], $GLOBALS['TL_FFL'], $GLOBALS['FE_MOD']);
+
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class]);
+
+        parent::tearDown();
     }
 
     public function testReturnsACustomTemplateInTemplates(): void

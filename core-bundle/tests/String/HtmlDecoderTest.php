@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
+use Contao\InsertTags;
 use Contao\System;
 
 class HtmlDecoderTest extends TestCase
@@ -36,6 +37,13 @@ class HtmlDecoderTest extends TestCase
         $container->set('contao.security.token_checker', $tokenChecker);
 
         System::setContainer($container);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Input::class, InsertTags::class]);
+
+        parent::tearDown();
     }
 
     /**

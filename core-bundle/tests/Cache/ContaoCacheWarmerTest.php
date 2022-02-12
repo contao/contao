@@ -17,6 +17,8 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
@@ -41,6 +43,8 @@ class ContaoCacheWarmerTest extends TestCase
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'var/cache/contao'));
 
         unset($GLOBALS['TL_TEST'], $GLOBALS['TL_DCA']);
+
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class]);
 
         parent::tearDown();
     }

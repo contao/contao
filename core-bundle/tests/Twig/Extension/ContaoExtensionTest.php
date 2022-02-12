@@ -41,6 +41,13 @@ use Twig\TwigFunction;
 
 class ContaoExtensionTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([ContaoFramework::class]);
+
+        parent::tearDown();
+    }
+
     public function testAddsTheNodeVisitors(): void
     {
         $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();

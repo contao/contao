@@ -85,8 +85,6 @@ class ContaoKernelTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         $filesystem = new Filesystem();
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace/var');
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace/var');
@@ -99,6 +97,10 @@ class ContaoKernelTest extends TestCase
                 $GLOBALS[$key] = $value;
             }
         }
+
+        $this->resetStaticProperties([ManagerPlugin::class, ContaoKernel::class]);
+
+        parent::tearDown();
     }
 
     public function testResetsTheBundleLoaderOnShutdown(): void

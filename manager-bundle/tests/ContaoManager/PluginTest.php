@@ -77,6 +77,8 @@ class PluginTest extends TestCase
 
         Plugin::autoloadModules('');
 
+        $this->resetStaticProperties([Plugin::class]);
+
         parent::tearDown();
     }
 

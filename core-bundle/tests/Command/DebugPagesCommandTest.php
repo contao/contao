@@ -18,6 +18,8 @@ use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\PageError401;
 use Contao\PageError403;
 use Contao\PageError404;
@@ -33,6 +35,13 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DebugPagesCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class]);
+
+        parent::tearDown();
+    }
+
     public function testNameAndArguments(): void
     {
         $framework = $this->mockContaoFramework();

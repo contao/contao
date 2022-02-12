@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Controller\AbstractBackendController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
 use Contao\System;
 use Doctrine\DBAL\Driver\Connection;
@@ -52,6 +54,8 @@ class AbstractBackendControllerTest extends TestCase
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE']);
         $_GET = [];
         $_POST = [];
+
+        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class]);
 
         parent::tearDown();
     }
