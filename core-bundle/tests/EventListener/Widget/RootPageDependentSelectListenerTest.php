@@ -24,6 +24,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectListenerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testDoesNotAddWizardWhenNoValuesSet(): void
     {
         $listener = new RootPageDependentSelectListener(

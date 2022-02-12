@@ -24,6 +24,13 @@ use Contao\Template;
 
 class GeneratePageListenerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HEAD']);
+
+        parent::tearDown();
+    }
+
     public function testAddsTheNewsFeedLink(): void
     {
         $GLOBALS['TL_HEAD'] = [];

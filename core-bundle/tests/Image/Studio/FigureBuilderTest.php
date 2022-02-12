@@ -38,6 +38,13 @@ use Symfony\Component\Filesystem\Path;
 
 class FigureBuilderTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testFromFilesModel(): void
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();

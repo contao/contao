@@ -36,6 +36,13 @@ class MetadataTest extends TestCase
         ];
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testCreateAndAccessMetadataContainer(): void
     {
         $metadata = new Metadata([

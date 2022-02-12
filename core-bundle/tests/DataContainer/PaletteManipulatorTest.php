@@ -19,6 +19,13 @@ use Contao\CoreBundle\Tests\TestCase;
 
 class PaletteManipulatorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testPrependsAFieldToAPalette(): void
     {
         $pm = PaletteManipulator::create()

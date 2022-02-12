@@ -38,11 +38,11 @@ class ContaoCacheWarmerTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'var/cache/contao'));
 
-        unset($GLOBALS['TL_TEST']);
+        unset($GLOBALS['TL_TEST'], $GLOBALS['TL_DCA']);
+
+        parent::tearDown();
     }
 
     public function testCreatesTheCacheFolder(): void

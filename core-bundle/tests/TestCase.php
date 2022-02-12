@@ -30,23 +30,11 @@ abstract class TestCase extends ContaoTestCase
      */
     protected function tearDown(): void
     {
-        $prop = (new \ReflectionClass(Files::class))->getProperty('objInstance');
-        $prop->setAccessible(true);
-        $prop->setValue(null);
-
-        $prop = (new \ReflectionClass(System::class))->getProperty('arrSingletons');
-        $prop->setAccessible(true);
-        $prop->setValue([]);
-
-        $prop = (new \ReflectionClass(System::class))->getProperty('objContainer');
-        $prop->setAccessible(true);
-        $prop->setValue(null);
-
-        $prop = (new \ReflectionClass(Model::class))->getProperty('arrClassNames');
-        $prop->setAccessible(true);
-        $prop->setValue([]);
-
-        unset($_SESSION, $GLOBALS['TL_HEAD'], $GLOBALS['TL_CONFIG'], $GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $GLOBALS['TL_MIME'], $GLOBALS['TL_DCA'], $GLOBALS['TL_HOOKS'], $GLOBALS['BE_MOD'], $GLOBALS['FE_MOD'], $GLOBALS['TL_USERNAME'], $GLOBALS['objPage']);
+        unset(
+            $GLOBALS['TL_CONFIG'],
+            $GLOBALS['TL_MIME'],
+            $GLOBALS['TL_LANG'],
+        );
 
         static::resetStaticProperties();
 

@@ -28,6 +28,13 @@ class DataContainerCallbackListenerTest extends TestCase
         $this->listener = new DataContainerCallbackListener();
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testRegistersCallbacks(): void
     {
         $GLOBALS['TL_DCA']['tl_page'] = [];

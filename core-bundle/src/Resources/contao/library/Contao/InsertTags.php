@@ -111,7 +111,7 @@ class InsertTags extends Controller
 	private function executeReplace(string $strBuffer, bool $blnCache)
 	{
 		/** @var PageModel $objPage */
-		global $objPage;
+		$objPage = $GLOBALS['objPage'] ?? null;
 
 		$container = System::getContainer();
 

@@ -28,6 +28,13 @@ class LegacyRoutingListenerTest extends TestCase
         $GLOBALS['TL_DCA'] = [];
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testDisablesTheRoutingFields(): void
     {
         $GLOBALS['TL_DCA']['tl_page']['fields']['urlPrefix']['eval'] = [];
