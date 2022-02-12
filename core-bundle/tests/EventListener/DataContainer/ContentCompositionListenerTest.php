@@ -39,13 +39,6 @@ class ContentCompositionListenerTest extends TestCase
 {
     private ContentCompositionListener $listener;
 
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_DCA']);
-
-        parent::tearDown();
-    }
-
     /**
      * @var Security&MockObject
      */
@@ -131,6 +124,13 @@ class ContentCompositionListenerTest extends TestCase
             $this->connection,
             $this->requestStack
         );
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
     }
 
     public function testDoesNotRenderThePageArticlesOperationIfUserDoesNotHaveAccess(): void
