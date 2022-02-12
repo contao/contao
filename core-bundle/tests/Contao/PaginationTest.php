@@ -16,6 +16,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\Pagination;
+use Contao\System;
 
 class PaginationTest extends TestCase
 {
@@ -28,12 +29,14 @@ class PaginationTest extends TestCase
         $GLOBALS['TL_LANG']['MSC']['totalPages'] = 'Total';
         $GLOBALS['TL_LANG']['MSC']['goToPage'] = 'Go to';
 
+        System::setContainer($this->getContainerWithContaoConfiguration());
+
         parent::setUp();
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG'], $_GET['page']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['_GET']);
 
         Input::resetCache();
         Input::resetUnusedGet();

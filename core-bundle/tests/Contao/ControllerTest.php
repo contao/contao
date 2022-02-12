@@ -25,6 +25,7 @@ use Contao\PageModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
 class ControllerTest extends TestCase
@@ -185,6 +186,8 @@ class ControllerTest extends TestCase
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag.parser', $insertTagParser);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
+
+        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
 
         System::setContainer($container);
 

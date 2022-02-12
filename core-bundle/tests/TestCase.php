@@ -38,9 +38,17 @@ abstract class TestCase extends ContaoTestCase
         $prop->setAccessible(true);
         $prop->setValue([]);
 
+        $prop = (new \ReflectionClass(System::class))->getProperty('objContainer');
+        $prop->setAccessible(true);
+        $prop->setValue(null);
+
         $prop = (new \ReflectionClass(Model::class))->getProperty('arrClassNames');
         $prop->setAccessible(true);
         $prop->setValue([]);
+
+        unset($_SESSION);
+        unset($_POST);
+        unset($_GET);
 
         parent::tearDown();
     }

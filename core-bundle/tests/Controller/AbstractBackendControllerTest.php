@@ -53,6 +53,8 @@ class AbstractBackendControllerTest extends TestCase
 
         $_SERVER['HTTP_USER_AGENT'] = 'Contao/Foo';
         $_SERVER['HTTP_HOST'] = 'localhost';
+        $_GET = [];
+        $_POST = [];
 
         if (!\defined('TL_FILES_URL')) {
             \define('TL_FILES_URL', '');
@@ -83,7 +85,7 @@ class AbstractBackendControllerTest extends TestCase
         $this->assertSame('<custom_be_main>', $controller->fooAction()->getContent());
 
         // Cleanup
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $_SERVER['HTTP_USER_AGENT'], $_SERVER['HTTP_HOST']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $_SERVER['HTTP_USER_AGENT'], $_SERVER['HTTP_HOST'], $_GET, $_POST);
     }
 
     private function getContainerWithDefaultConfiguration(array $expectedContext): ContainerBuilder

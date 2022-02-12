@@ -19,6 +19,7 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
@@ -55,6 +56,8 @@ class MarkdownControllerTest extends ContaoTestCase
             HTML;
 
         $container = $this->mockContainer($expectedHtml);
+
+        System::setContainer($container);
 
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';
