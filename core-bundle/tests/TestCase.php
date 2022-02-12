@@ -64,6 +64,8 @@ abstract class TestCase extends ContaoTestCase
 
         foreach ($classNames as $class) {
             foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
+                $property->setAccessible(true);
+
                 if (!$property->isInitialized()) {
                     continue;
                 }
@@ -72,7 +74,6 @@ abstract class TestCase extends ContaoTestCase
                     continue;
                 }
 
-                $property->setAccessible(true);
                 $property->setValue($property->getDefaultValue());
             }
         }
