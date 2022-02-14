@@ -100,6 +100,8 @@ class ContaoKernelTest extends TestCase
 
         $this->resetStaticProperties([ManagerPlugin::class, ContaoKernel::class]);
 
+        putenv('SHELL_VERBOSITY');
+
         parent::tearDown();
     }
 
