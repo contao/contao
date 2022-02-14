@@ -121,12 +121,38 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
         $data = [];
 
         foreach (get_declared_classes() as $class) {
-            if (0 !== strncmp('Contao\\', $class, 7) || 0 === strncmp('Contao\\TestCase\\', $class, 16)) {
-                continue;
+            foreach ([
+                'Contao\\TestCase\\',
+                'Doctrine\Instantiator\\',
+                'Imagine\\',
+                'Mock_',
+                'PHPUnit\\',
+                'ScssPhp\\',
+                'SebastianBergmann\\',
+                'Symfony\Bridge\PhpUnit\\',
+                'Symfony\Component\Cache\Adapter\\',
+                'Symfony\Component\Config\Resource\ComposerResource',
+                'Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag',
+                'Symfony\Component\ErrorHandler\\',
+                'Symfony\Component\Filesystem\\',
+                'Symfony\Component\HttpClient\Internal\CurlClientState',
+                'Symfony\Component\Mime\Address',
+                'Symfony\Component\String\\',
+                'Symfony\Component\VarDumper\\',
+                'Symfony\Component\Yaml\\',
+                'Webmozart\PathUtil\\',
+            ] as $ignorePrefix) {
+                if (0 === strncmp("$ignorePrefix\\", $class, \strlen($ignorePrefix))) {
+                    continue 2;
+                }
             }
 
             foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
                 if (!$property->isInitialized()) {
+                    continue;
+                }
+
+                if (0 === strncmp('__phpunit', $property->getName(), 9)) {
                     continue;
                 }
 
