@@ -17,10 +17,18 @@ use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class DebugFragmentsCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Table::class]);
+
+        parent::tearDown();
+    }
+
     public function testNameAndArguments(): void
     {
         $command = new DebugFragmentsCommand();

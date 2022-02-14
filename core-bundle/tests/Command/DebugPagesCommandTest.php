@@ -30,6 +30,7 @@ use Contao\PageRedirect;
 use Contao\PageRegular;
 use Contao\PageRoot;
 use Contao\System;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -37,7 +38,7 @@ class DebugPagesCommandTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Table::class]);
 
         parent::tearDown();
     }

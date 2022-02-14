@@ -38,6 +38,7 @@ class ContaoKernelTest extends TestCase
     use ExpectDeprecationTrait;
 
     private array $globalsBackup;
+    private $shellVerbosityBackup;
 
     protected function setUp(): void
     {
@@ -45,6 +46,7 @@ class ContaoKernelTest extends TestCase
 
         $this->globalsBackup['_SERVER'] = $_SERVER;
         $this->globalsBackup['_ENV'] = $_ENV;
+        $this->shellVerbosityBackup = getenv('SHELL_VERBOSITY');
 
         // Reset the ContaoKernel static properties
         $reflection = new \ReflectionClass(ContaoKernel::class);
@@ -100,9 +102,9 @@ class ContaoKernelTest extends TestCase
             }
         }
 
-        $this->resetStaticProperties([ManagerPlugin::class, ContaoKernel::class, Request::class, EnvPlaceholderParameterBag::class, ClassExistenceResource::class]);
+        putenv('SHELL_VERBOSITY'.(false === $this->shellVerbosityBackup ? '' : '='.$this->shellVerbosityBackup));
 
-        putenv('SHELL_VERBOSITY');
+        $this->resetStaticProperties([ManagerPlugin::class, ContaoKernel::class, Request::class, EnvPlaceholderParameterBag::class, ClassExistenceResource::class]);
 
         parent::tearDown();
     }

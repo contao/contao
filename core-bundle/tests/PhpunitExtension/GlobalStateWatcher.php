@@ -122,7 +122,8 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 
         foreach (get_declared_classes() as $class) {
             foreach ([
-                'Contao\\TestCase\\',
+                'Composer\InstalledVersions',
+                'Contao\TestCase\\',
                 'Doctrine\Instantiator\\',
                 'Imagine\\',
                 'Mock_',

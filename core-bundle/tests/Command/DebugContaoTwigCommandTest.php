@@ -17,11 +17,19 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Path;
 
 class DebugContaoTwigCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Table::class]);
+
+        parent::tearDown();
+    }
+
     public function testNameAndArguments(): void
     {
         $command = $this->getCommand();

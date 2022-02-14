@@ -18,10 +18,18 @@ use Contao\Model\Collection;
 use Contao\UserModel;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class UserListCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Table::class]);
+
+        parent::tearDown();
+    }
+
     public function testDefinition(): void
     {
         $command = $this->getCommand();

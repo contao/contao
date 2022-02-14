@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -38,8 +39,6 @@ class SymlinksCommandTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove([
             Path::join($this->getTempDir(), 'public'),
             Path::join($this->getTempDir(), 'system/config'),
@@ -47,6 +46,10 @@ class SymlinksCommandTest extends TestCase
             Path::join($this->getTempDir(), 'system/themes'),
             Path::join($this->getTempDir(), 'var'),
         ]);
+
+        $this->resetStaticProperties([Table::class]);
+
+        parent::tearDown();
     }
 
     public function testSymlinksTheContaoFolders(): void

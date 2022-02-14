@@ -25,9 +25,6 @@ use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Roave\BetterReflection\BetterReflection;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Terminal;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -65,10 +62,6 @@ abstract class TestCase extends ContaoTestCase
                 Registry::class,
                 Model::class,
                 PageModel::class,
-
-                Terminal::class,
-                Table::class,
-                ProgressBar::class,
             ]);
         }
 
