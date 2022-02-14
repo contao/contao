@@ -52,7 +52,7 @@ class AbstractBackendControllerTest extends TestCase
             }
         }
 
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $GLOBALS['TL_MIME']);
         $_GET = [];
         $_POST = [];
 

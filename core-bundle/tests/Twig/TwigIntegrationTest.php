@@ -49,7 +49,7 @@ class TwigIntegrationTest extends TestCase
 
         TemplateLoader::reset();
 
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL'], $GLOBALS['TL_MIME']);
 
         $this->resetStaticProperties([System::class, Config::class]);
 

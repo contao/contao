@@ -29,7 +29,7 @@ class ContaoContextTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
 
         $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Registry::class, System::class, Config::class]);
 

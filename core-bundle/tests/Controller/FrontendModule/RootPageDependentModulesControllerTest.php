@@ -46,6 +46,8 @@ class RootPageDependentModulesControllerTest extends TestCase
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_MIME']);
+
         $this->resetStaticProperties([TemplateLoader::class, System::class, Config::class]);
 
         parent::tearDown();

@@ -36,10 +36,7 @@ abstract class TestCase extends ContaoTestCase
 
     protected function tearDown(): void
     {
-        unset(
-            $GLOBALS['TL_CONFIG'],
-            $GLOBALS['TL_MIME'],
-        );
+        unset($GLOBALS['TL_CONFIG']);
 
         parent::tearDown();
     }

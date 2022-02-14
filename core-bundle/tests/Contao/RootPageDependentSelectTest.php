@@ -24,6 +24,8 @@ class RootPageDependentSelectTest extends TestCase
 {
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_MIME']);
+
         $this->resetStaticProperties([System::class, Config::class]);
 
         parent::tearDown();

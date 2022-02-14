@@ -43,7 +43,7 @@ class ContaoCacheWarmerTest extends TestCase
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'var/cache/contao'));
 
-        unset($GLOBALS['TL_TEST'], $GLOBALS['TL_DCA'], $GLOBALS['TL_LANG']);
+        unset($GLOBALS['TL_TEST'], $GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
 
         $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
 

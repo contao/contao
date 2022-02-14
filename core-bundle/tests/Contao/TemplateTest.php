@@ -47,6 +47,8 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
 
+        unset($GLOBALS['TL_MIME']);
+
         $this->resetStaticProperties([ContaoFramework::class, System::class, Config::class]);
 
         parent::tearDown();

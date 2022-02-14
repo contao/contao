@@ -42,6 +42,8 @@ class HtmlDecoderTest extends TestCase
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_MIME']);
+
         $this->resetStaticProperties([Input::class, InsertTags::class, System::class, Config::class]);
 
         parent::tearDown();

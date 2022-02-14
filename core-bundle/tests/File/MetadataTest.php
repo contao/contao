@@ -40,7 +40,7 @@ class MetadataTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
 
         $this->resetStaticProperties([DcaLoader::class, System::class, Config::class]);
 
