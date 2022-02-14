@@ -14,17 +14,17 @@ namespace Contao\ManagerBundle\Tests\Command;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoManager\Plugin as CoreBundlePlugin;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\Command\DebugPluginsCommand;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\ManagerBundle\Tests\Fixtures\ContaoManager\Plugin as FixturesPlugin;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\NewsBundle\ContaoNewsBundle;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
-class DebugPluginsCommandTest extends ContaoTestCase
+class DebugPluginsCommandTest extends TestCase
 {
     public function testNameAndArguments(): void
     {

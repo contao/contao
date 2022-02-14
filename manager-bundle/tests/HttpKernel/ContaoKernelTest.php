@@ -26,7 +26,9 @@ use Contao\ManagerPlugin\PluginLoader;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Resource\ClassExistenceResource;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -98,7 +100,7 @@ class ContaoKernelTest extends TestCase
             }
         }
 
-        $this->resetStaticProperties([ManagerPlugin::class, ContaoKernel::class]);
+        $this->resetStaticProperties([ManagerPlugin::class, ContaoKernel::class, Request::class, EnvPlaceholderParameterBag::class, ClassExistenceResource::class]);
 
         putenv('SHELL_VERBOSITY');
 

@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Command;
 
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\Command\MaintenanceModeCommand;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;

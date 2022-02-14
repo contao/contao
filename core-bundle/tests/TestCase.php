@@ -24,6 +24,9 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -58,13 +61,17 @@ abstract class TestCase extends ContaoTestCase
             Registry::class,
             Model::class,
             PageModel::class,
+
+            Terminal::class,
+            Table::class,
+            ProgressBar::class,
         ]);
 
         parent::tearDown();
     }
 
     /**
-     * @param array<int, class-string>|null $classNames
+     * @param array<int, class-string|array>|null $classNames
      */
     protected function resetStaticProperties(array $classNames = null): void
     {
@@ -76,7 +83,18 @@ abstract class TestCase extends ContaoTestCase
         );
 
         foreach ($classNames as $class) {
+            $methods = null;
+
+            if (\is_array($class)) {
+                $methods = $class[1];
+                $class = $class[0];
+            }
+
             foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
+                if (null !== $methods && !\in_array($property->getName(), $methods, true)) {
+                    continue;
+                }
+
                 $property->setAccessible(true);
 
                 if (!$property->isInitialized()) {

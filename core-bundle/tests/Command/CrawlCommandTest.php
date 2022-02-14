@@ -14,9 +14,9 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\CrawlCommand;
 use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Tests\TestCase;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;

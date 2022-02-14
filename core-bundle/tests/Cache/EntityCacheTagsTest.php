@@ -21,12 +21,21 @@ use Contao\CoreBundle\Tests\Fixtures\Entity\Comment;
 use Contao\CoreBundle\Tests\Fixtures\Entity\Tag;
 use Contao\Model\Collection;
 use Contao\PageModel;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCache\ResponseTagger;
 
 class EntityCacheTagsTest extends DoctrineTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
+
+        parent::tearDown();
+    }
+
     public function testGetTagForEntityClass(): void
     {
         $entityCacheTags = $this->getEntityCacheTags();
