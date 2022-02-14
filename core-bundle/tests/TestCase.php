@@ -31,9 +31,15 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 abstract class TestCase extends ContaoTestCase
 {
-    /**
-     * This method is called after each test.
-     */
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        if (!\defined('TL_FILES_URL')) {
+            \define('TL_FILES_URL', '');
+        }
+    }
+
     protected function tearDown(): void
     {
         unset(

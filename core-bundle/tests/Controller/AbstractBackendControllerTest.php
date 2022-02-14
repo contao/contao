@@ -87,10 +87,6 @@ class AbstractBackendControllerTest extends TestCase
         $_GET = [];
         $_POST = [];
 
-        if (!\defined('TL_FILES_URL')) {
-            \define('TL_FILES_URL', '');
-        }
-
         $expectedContext = [
             'version' => 'my version',
             'headline' => 'dashboard',
