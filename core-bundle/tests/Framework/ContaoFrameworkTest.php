@@ -427,8 +427,6 @@ class ContaoFrameworkTest extends TestCase
         $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
 
-        $_GET = [];
-
         $framework->initialize();
 
         $this->addToAssertionCount(1); // does not throw an exception

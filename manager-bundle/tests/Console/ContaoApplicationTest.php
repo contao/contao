@@ -21,26 +21,16 @@ use Symfony\Component\Console\Input\ArgvInput;
 
 class ContaoApplicationTest extends TestCase
 {
-    private array $globalsBackup;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->globalsBackup['_SERVER'] = $_SERVER;
-        $this->globalsBackup['_ENV'] = $_ENV;
+        $this->backupServerEnvGetPost();
     }
 
     protected function tearDown(): void
     {
-        foreach ($this->globalsBackup as $key => $value) {
-            if (null === $value) {
-                unset($GLOBALS[$key]);
-            } else {
-                $GLOBALS[$key] = $value;
-            }
-        }
-
+        $this->restoreServerEnvGetPost();
         $this->resetStaticProperties([Plugin::class, ContaoKernel::class]);
 
         parent::tearDown();

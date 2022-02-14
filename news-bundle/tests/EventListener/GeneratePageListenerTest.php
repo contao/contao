@@ -33,8 +33,6 @@ class GeneratePageListenerTest extends TestCase
 
     public function testAddsTheNewsFeedLink(): void
     {
-        $GLOBALS['TL_HEAD'] = [];
-
         $newsFeedModel = $this->mockClassWithProperties(NewsFeedModel::class);
         $newsFeedModel->feedBase = 'http://localhost/';
         $newsFeedModel->alias = 'news';
@@ -63,21 +61,17 @@ class GeneratePageListenerTest extends TestCase
 
     public function testDoesNotAddTheNewsFeedLinkIfThereAreNoFeeds(): void
     {
-        $GLOBALS['TL_HEAD'] = [];
-
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->newsfeeds = '';
 
         $listener = new GeneratePageListener($this->mockContaoFramework());
         $listener($this->createMock(PageModel::class), $layoutModel);
 
-        $this->assertEmpty($GLOBALS['TL_HEAD']);
+        $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
     }
 
     public function testDoesNotAddTheNewsFeedLinkIfThereAreNoModels(): void
     {
-        $GLOBALS['TL_HEAD'] = [];
-
         $adapters = [
             NewsFeedModel::class => $this->mockConfiguredAdapter(['findByIds' => null]),
         ];
@@ -88,6 +82,6 @@ class GeneratePageListenerTest extends TestCase
         $listener = new GeneratePageListener($this->mockContaoFramework($adapters));
         $listener($this->createMock(PageModel::class), $layoutModel);
 
-        $this->assertEmpty($GLOBALS['TL_HEAD']);
+        $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
     }
 }

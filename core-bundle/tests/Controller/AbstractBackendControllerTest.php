@@ -32,30 +32,18 @@ use Twig\Environment;
 
 class AbstractBackendControllerTest extends TestCase
 {
-    private array $globalsBackup;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->globalsBackup['_SERVER'] = $_SERVER;
-        $this->globalsBackup['_ENV'] = $_ENV;
+        $this->backupServerEnvGetPost();
     }
 
     protected function tearDown(): void
     {
-        foreach ($this->globalsBackup as $key => $value) {
-            if (null === $value) {
-                unset($GLOBALS[$key]);
-            } else {
-                $GLOBALS[$key] = $value;
-            }
-        }
-
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $GLOBALS['TL_MIME']);
-        $_GET = [];
-        $_POST = [];
 
+        $this->restoreServerEnvGetPost();
         $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class, System::class, Config::class]);
 
         parent::tearDown();
@@ -85,8 +73,6 @@ class AbstractBackendControllerTest extends TestCase
 
         $_SERVER['HTTP_USER_AGENT'] = 'Contao/Foo';
         $_SERVER['HTTP_HOST'] = 'localhost';
-        $_GET = [];
-        $_POST = [];
 
         $expectedContext = [
             'version' => 'my version',

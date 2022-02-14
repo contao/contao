@@ -37,54 +37,15 @@ class ContaoKernelTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    private array $globalsBackup;
     private $shellVerbosityBackup;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->globalsBackup['_SERVER'] = $_SERVER;
-        $this->globalsBackup['_ENV'] = $_ENV;
+        $this->backupServerEnvGetPost();
+
         $this->shellVerbosityBackup = getenv('SHELL_VERBOSITY');
-
-        // Reset the ContaoKernel static properties
-        $reflection = new \ReflectionClass(ContaoKernel::class);
-
-        $prop = $reflection->getProperty('projectDir');
-        $prop->setAccessible(true);
-        $prop->setValue(null);
-
-        // Reset the manager-bundle Plugin static properties
-        $reflection = new \ReflectionClass(ManagerPlugin::class);
-
-        $prop = $reflection->getProperty('autoloadModules');
-        $prop->setAccessible(true);
-        $prop->setValue(null);
-
-        // Reset the Request static properties
-        $reflection = new \ReflectionClass(Request::class);
-
-        $prop = $reflection->getProperty('trustedProxies');
-        $prop->setAccessible(true);
-        $prop->setValue([]);
-
-        $prop = $reflection->getProperty('trustedHostPatterns');
-        $prop->setAccessible(true);
-        $prop->setValue([]);
-
-        $prop = $reflection->getProperty('trustedHeaderSet');
-        $prop->setAccessible(true);
-        $prop->setValue(-1);
-
-        $prop = $reflection->getProperty('httpMethodParameterOverride');
-        $prop->setAccessible(true);
-        $prop->setValue(false);
-
-        $filesystem = new Filesystem();
-        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithAppNamespace/var');
-        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace/var');
-        $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace/var');
     }
 
     protected function tearDown(): void
@@ -94,16 +55,9 @@ class ContaoKernelTest extends TestCase
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithInvalidNamespace/var');
         $filesystem->remove(__DIR__.'/../Fixtures/HttpKernel/WithMixedNamespace/var');
 
-        foreach ($this->globalsBackup as $key => $value) {
-            if (null === $value) {
-                unset($GLOBALS[$key]);
-            } else {
-                $GLOBALS[$key] = $value;
-            }
-        }
-
         putenv('SHELL_VERBOSITY'.(false === $this->shellVerbosityBackup ? '' : '='.$this->shellVerbosityBackup));
 
+        $this->restoreServerEnvGetPost();
         $this->resetStaticProperties([ManagerPlugin::class, ContaoKernel::class, Request::class, EnvPlaceholderParameterBag::class, ClassExistenceResource::class]);
 
         parent::tearDown();

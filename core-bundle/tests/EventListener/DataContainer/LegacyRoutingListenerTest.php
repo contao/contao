@@ -20,14 +20,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LegacyRoutingListenerTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $GLOBALS['TL_HOOKS'] = [];
-        $GLOBALS['TL_DCA'] = [];
-    }
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_DCA']);

@@ -25,6 +25,8 @@ abstract class TestCase extends ContaoTestCase
 {
     private static array $betterReflectionCache = [];
 
+    private array $backupServerEnvGetPost = [];
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -39,6 +41,24 @@ abstract class TestCase extends ContaoTestCase
         unset($GLOBALS['TL_CONFIG']);
 
         parent::tearDown();
+    }
+
+    protected function backupServerEnvGetPost(): void
+    {
+        $this->backupServerEnvGetPost = [
+            '_SERVER' => $_SERVER,
+            '_ENV' => $_ENV,
+            '_GET' => $_GET,
+            '_POST' => $_POST,
+        ];
+    }
+
+    protected function restoreServerEnvGetPost(): void
+    {
+        $_SERVER = $this->backupServerEnvGetPost['_SERVER'] ?? $_SERVER;
+        $_ENV = $this->backupServerEnvGetPost['_ENV'] ?? $_ENV;
+        $_GET = $this->backupServerEnvGetPost['_GET'] ?? [];
+        $_POST = $this->backupServerEnvGetPost['_POST'] ?? [];
     }
 
     /**

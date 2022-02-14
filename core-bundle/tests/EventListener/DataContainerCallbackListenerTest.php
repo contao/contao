@@ -23,8 +23,6 @@ class DataContainerCallbackListenerTest extends TestCase
     {
         parent::setUp();
 
-        $GLOBALS['TL_DCA'] = [];
-
         $this->listener = new DataContainerCallbackListener();
     }
 
@@ -470,7 +468,7 @@ class DataContainerCallbackListenerTest extends TestCase
             ]
         );
 
-        $this->assertArrayNotHasKey('tl_page', $GLOBALS['TL_DCA']);
+        $this->assertArrayNotHasKey('tl_page', $GLOBALS['TL_DCA'] ?? []);
 
         $this->listener->onLoadDataContainer('tl_page');
 

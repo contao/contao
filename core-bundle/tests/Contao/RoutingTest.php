@@ -35,14 +35,11 @@ class RoutingTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    private array $globalsBackup;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->globalsBackup['_SERVER'] = $_SERVER;
-        $this->globalsBackup['_ENV'] = $_ENV;
+        $this->backupServerEnvGetPost();
 
         $GLOBALS['TL_CONFIG']['urlSuffix'] = '.html';
         $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
@@ -56,23 +53,14 @@ class RoutingTest extends TestCase
 
         System::setContainer($container);
 
-        $_GET = [];
         $GLOBALS['TL_AUTO_ITEM'] = ['items'];
     }
 
     protected function tearDown(): void
     {
-        foreach ($this->globalsBackup as $key => $value) {
-            if (null === $value) {
-                unset($GLOBALS[$key]);
-            } else {
-                $GLOBALS[$key] = $value;
-            }
-        }
-
         unset($GLOBALS['TL_AUTO_ITEM']);
-        $_GET = [];
 
+        $this->restoreServerEnvGetPost();
         $this->resetStaticProperties([Input::class, Environment::class, System::class]);
 
         parent::tearDown();

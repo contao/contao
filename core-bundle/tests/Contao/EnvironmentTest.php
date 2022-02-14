@@ -25,14 +25,12 @@ class EnvironmentTest extends TestCase
     use ExpectDeprecationTrait;
 
     private string $projectDir;
-    private array $globalsBackup;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->globalsBackup['_SERVER'] = $_SERVER;
-        $this->globalsBackup['_ENV'] = $_ENV;
+        $this->backupServerEnvGetPost();
 
         $this->projectDir = strtr($this->getFixturesDir(), '\\', '/');
 
@@ -58,14 +56,7 @@ class EnvironmentTest extends TestCase
 
     protected function tearDown(): void
     {
-        foreach ($this->globalsBackup as $key => $value) {
-            if (null === $value) {
-                unset($GLOBALS[$key]);
-            } else {
-                $GLOBALS[$key] = $value;
-            }
-        }
-
+        $this->restoreServerEnvGetPost();
         $this->resetStaticProperties([Environment::class, System::class]);
 
         parent::tearDown();
