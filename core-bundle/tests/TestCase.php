@@ -71,17 +71,10 @@ abstract class TestCase extends ContaoTestCase
     }
 
     /**
-     * @param array<int, class-string|array>|null $classNames
+     * @param array<int, class-string|array> $classNames
      */
-    protected function resetStaticProperties(array $classNames = null): void
+    protected function resetStaticProperties(array $classNames): void
     {
-        $classNames ??= array_filter(
-            get_declared_classes(),
-            static fn ($class) => 0 === strncmp('Contao\\', $class, 7)
-                && 0 !== strncmp('Contao\\TestCase\\', $class, 16)
-                && !preg_match('/^Contao\\\\[^\\\\]+\\\\Tests\\\\/', $class)
-        );
-
         foreach ($classNames as $class) {
             $methods = null;
 
@@ -101,7 +94,23 @@ abstract class TestCase extends ContaoTestCase
                     continue;
                 }
 
-                if ($property->getValue() === $property->getDefaultValue() || !$property->hasDefaultValue()) {
+                // getDefaultValue() is only supported in PHP 8
+                if (method_exists($property, 'getDefaultValue') && method_exists($property, 'hasDefaultValue')) {
+                    $hasDefaultValue = $property->hasDefaultValue();
+                    $defaultValue = $property->getDefaultValue();
+                } else {
+                    $hasDefaultValue = \array_key_exists(
+                        $property->getDeclaringClass()->getDefaultProperties(),
+                        $property->getName(),
+                    );
+
+                    $defaultValue = $hasDefaultValue
+                        ? $property->getDeclaringClass()->getDefaultProperties()[$property->getName()]
+                        : null
+                    ;
+                }
+
+                if (!$hasDefaultValue || $property->getValue() === $defaultValue) {
                     continue;
                 }
 
