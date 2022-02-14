@@ -28,7 +28,7 @@ class ContaoContextTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Registry::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Registry::class, System::class]);
 
         parent::tearDown();
     }

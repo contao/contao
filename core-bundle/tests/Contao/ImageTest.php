@@ -65,6 +65,8 @@ class ImageTest extends TestCase
 
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
 
+        $this->resetStaticProperties([System::class]);
+
         unset($GLOBALS['TL_CONFIG']);
     }
 

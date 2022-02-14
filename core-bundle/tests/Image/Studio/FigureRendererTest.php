@@ -29,6 +29,13 @@ use Twig\Environment;
 
 class FigureRendererTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testConfiguresBuilder(): void
     {
         $metadata = new Metadata([]);

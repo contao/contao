@@ -66,7 +66,7 @@ class ModuleTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Registry::class, DcaExtractor::class, DcaLoader::class, Database::class, Model::class]);
+        $this->resetStaticProperties([Registry::class, DcaExtractor::class, DcaLoader::class, Database::class, Model::class, System::class]);
 
         parent::tearDown();
     }

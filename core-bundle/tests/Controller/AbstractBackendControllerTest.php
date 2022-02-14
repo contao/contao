@@ -55,7 +55,7 @@ class AbstractBackendControllerTest extends TestCase
         $_GET = [];
         $_POST = [];
 
-        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class]);
+        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class, System::class]);
 
         parent::tearDown();
     }

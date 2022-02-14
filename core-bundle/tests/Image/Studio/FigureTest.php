@@ -31,6 +31,13 @@ use Symfony\Component\Filesystem\Path;
 
 class FigureTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testGetImage(): void
     {
         $image = $this->createMock(ImageResult::class);

@@ -44,7 +44,7 @@ class ContaoCacheWarmerTest extends TestCase
 
         unset($GLOBALS['TL_TEST'], $GLOBALS['TL_DCA']);
 
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class]);
 
         parent::tearDown();
     }

@@ -34,7 +34,7 @@ class InsertTagParserTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([InsertTags::class]);
+        $this->resetStaticProperties([InsertTags::class, System::class]);
 
         parent::tearDown();
     }

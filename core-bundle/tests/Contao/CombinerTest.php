@@ -45,6 +45,13 @@ class CombinerTest extends TestCase
         System::setContainer($container);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testCombinesCssFiles(): void
     {
         $this->filesystem->dumpFile($this->getTempDir().'/file1.css', 'file1 { background: url("foo.bar") }');

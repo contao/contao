@@ -73,7 +73,7 @@ class PageModelTest extends TestCase
 
         PageModel::reset();
 
-        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class]);
+        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class, System::class]);
 
         parent::tearDown();
     }

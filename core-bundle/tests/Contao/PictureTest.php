@@ -62,6 +62,13 @@ class PictureTest extends TestCase
         System::setContainer($this->getContainerWithImageServices());
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     /**
      * @group legacy
      */

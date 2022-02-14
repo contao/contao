@@ -39,7 +39,7 @@ class DebugPagesCommandTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Table::class, Terminal::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Table::class, Terminal::class, System::class]);
 
         parent::tearDown();
     }

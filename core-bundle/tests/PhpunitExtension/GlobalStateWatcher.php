@@ -154,6 +154,10 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                     continue;
                 }
 
+                if ($property->getDeclaringClass()->getName() !== $class) {
+                    continue;
+                }
+
                 if (0 === strncmp('__phpunit', $property->getName(), 9)) {
                     continue;
                 }

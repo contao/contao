@@ -41,7 +41,7 @@ class HtmlDecoderTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Input::class, InsertTags::class]);
+        $this->resetStaticProperties([Input::class, InsertTags::class, System::class]);
 
         parent::tearDown();
     }

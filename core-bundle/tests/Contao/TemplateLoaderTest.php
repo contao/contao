@@ -64,7 +64,7 @@ class TemplateLoaderTest extends TestCase
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_CTE'], $GLOBALS['TL_FFL'], $GLOBALS['FE_MOD']);
 
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class]);
 
         parent::tearDown();
     }

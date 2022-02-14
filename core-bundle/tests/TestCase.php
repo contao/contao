@@ -80,6 +80,10 @@ abstract class TestCase extends ContaoTestCase
                     continue;
                 }
 
+                if ($property->getDeclaringClass()->getName() !== $class) {
+                    continue;
+                }
+
                 $property->setAccessible(true);
 
                 if (!$property->isInitialized()) {

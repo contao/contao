@@ -43,7 +43,7 @@ class FigureBuilderTest extends TestCase
     {
         unset($GLOBALS['TL_DCA']);
 
-        $this->resetStaticProperties([DcaLoader::class]);
+        $this->resetStaticProperties([DcaLoader::class, System::class]);
 
         parent::tearDown();
     }
