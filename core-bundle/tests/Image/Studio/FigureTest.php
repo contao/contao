@@ -19,6 +19,8 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\File;
+use Contao\Files;
 use Contao\FrontendTemplate;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ResizerInterface;
@@ -33,7 +35,7 @@ class FigureTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([System::class]);
+        $this->resetStaticProperties([System::class, File::class, Files::class]);
 
         parent::tearDown();
     }

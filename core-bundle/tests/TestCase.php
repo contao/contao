@@ -16,8 +16,6 @@ use Contao\Config;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\Dbafs;
-use Contao\File;
-use Contao\Files;
 use Contao\TestCase\ContaoTestCase;
 use Roave\BetterReflection\BetterReflection;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -50,8 +48,6 @@ abstract class TestCase extends ContaoTestCase
             $this->resetStaticProperties([
                 Config::class,
                 Dbafs::class,
-                Files::class,
-                File::class,
             ]);
         }
 

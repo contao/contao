@@ -19,6 +19,7 @@ use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image\PictureGenerator;
 use Contao\Image\ResizeCalculator;
@@ -64,7 +65,7 @@ class PictureTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([System::class]);
+        $this->resetStaticProperties([System::class, File::class, Files::class]);
 
         parent::tearDown();
     }

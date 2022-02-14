@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\Files;
 use Contao\GdImage;
 use Contao\System;
 
@@ -28,7 +29,7 @@ class GdImageTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([System::class]);
+        $this->resetStaticProperties([System::class, Files::class]);
 
         parent::tearDown();
     }

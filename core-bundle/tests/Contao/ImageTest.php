@@ -17,6 +17,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image;
 use Contao\Image\DeferredImageInterface;
@@ -65,7 +66,7 @@ class ImageTest extends TestCase
 
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
 
-        $this->resetStaticProperties([System::class]);
+        $this->resetStaticProperties([System::class, File::class, Files::class]);
 
         unset($GLOBALS['TL_CONFIG']);
     }
