@@ -26,7 +26,7 @@ class LabelListenerTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD'], $GLOBALS['TL_LANG']);
 
         parent::tearDown();
     }

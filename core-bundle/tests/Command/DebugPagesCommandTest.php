@@ -40,6 +40,8 @@ class DebugPagesCommandTest extends TestCase
 {
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_LANG']);
+
         $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Table::class, Terminal::class, System::class, Config::class]);
 
         parent::tearDown();

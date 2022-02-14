@@ -27,6 +27,13 @@ class TranslatorTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG']);
+
+        parent::tearDown();
+    }
+
     /**
      * @dataProvider decoratedTranslatorDomainProvider
      */

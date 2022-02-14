@@ -70,7 +70,7 @@ class PageModelTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MODELS']);
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_LANG']);
 
         PageModel::reset();
 

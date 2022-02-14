@@ -37,6 +37,8 @@ class ControllerTest extends TestCase
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_LANG']);
+
         $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
 
         parent::tearDown();

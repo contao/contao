@@ -39,7 +39,6 @@ abstract class TestCase extends ContaoTestCase
         unset(
             $GLOBALS['TL_CONFIG'],
             $GLOBALS['TL_MIME'],
-            $GLOBALS['TL_LANG'],
         );
 
         parent::tearDown();

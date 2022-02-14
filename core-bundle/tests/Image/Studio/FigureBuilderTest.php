@@ -42,7 +42,7 @@ class FigureBuilderTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_DCA']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG']);
 
         $this->resetStaticProperties([DcaLoader::class, System::class, Config::class]);
 

@@ -29,6 +29,8 @@ class ContaoContextTest extends TestCase
 {
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_LANG']);
+
         $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Registry::class, System::class, Config::class]);
 
         parent::tearDown();

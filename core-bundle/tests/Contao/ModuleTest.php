@@ -67,6 +67,8 @@ class ModuleTest extends TestCase
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_LANG']);
+
         $this->resetStaticProperties([Registry::class, DcaExtractor::class, DcaLoader::class, Database::class, Model::class, System::class, Config::class]);
 
         parent::tearDown();
