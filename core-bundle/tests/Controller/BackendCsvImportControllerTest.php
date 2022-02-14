@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
+use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
@@ -49,7 +50,7 @@ class BackendCsvImportControllerTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([System::class]);
+        $this->resetStaticProperties([System::class, Config::class]);
 
         parent::tearDown();
     }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\BackendUser;
+use Contao\Config;
 use Contao\CoreBundle\Controller\AbstractBackendController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
@@ -55,7 +56,7 @@ class AbstractBackendControllerTest extends TestCase
         $_GET = [];
         $_POST = [];
 
-        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class, System::class]);
+        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class, System::class, Config::class]);
 
         parent::tearDown();
     }

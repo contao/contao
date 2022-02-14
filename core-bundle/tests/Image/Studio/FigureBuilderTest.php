@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\Config;
 use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
@@ -43,7 +44,7 @@ class FigureBuilderTest extends TestCase
     {
         unset($GLOBALS['TL_DCA']);
 
-        $this->resetStaticProperties([DcaLoader::class, System::class]);
+        $this->resetStaticProperties([DcaLoader::class, System::class, Config::class]);
 
         parent::tearDown();
     }

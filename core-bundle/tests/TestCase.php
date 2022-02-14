@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests;
 
-use Contao\Config;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\TestCase\ContaoTestCase;
@@ -42,12 +41,6 @@ abstract class TestCase extends ContaoTestCase
             $GLOBALS['TL_MIME'],
             $GLOBALS['TL_LANG'],
         );
-
-        if (false === $this->runTestInSeparateProcess) {
-            $this->resetStaticProperties([
-                Config::class,
-            ]);
-        }
 
         parent::tearDown();
     }

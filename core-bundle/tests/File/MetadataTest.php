@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\File;
 
+use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -41,7 +42,7 @@ class MetadataTest extends TestCase
     {
         unset($GLOBALS['TL_DCA']);
 
-        $this->resetStaticProperties([DcaLoader::class, System::class]);
+        $this->resetStaticProperties([DcaLoader::class, System::class, Config::class]);
 
         parent::tearDown();
     }

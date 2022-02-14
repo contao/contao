@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\ContentText;
 use Contao\Controller;
 use Contao\CoreBundle\Tests\TestCase;
@@ -64,7 +65,7 @@ class TemplateLoaderTest extends TestCase
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_CTE'], $GLOBALS['TL_FFL'], $GLOBALS['FE_MOD']);
 
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
 
         parent::tearDown();
     }

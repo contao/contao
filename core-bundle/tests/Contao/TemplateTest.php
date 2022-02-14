@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -46,7 +47,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
 
-        $this->resetStaticProperties([ContaoFramework::class, System::class]);
+        $this->resetStaticProperties([ContaoFramework::class, System::class, Config::class]);
 
         parent::tearDown();
     }

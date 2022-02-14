@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\String;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -41,7 +42,7 @@ class HtmlDecoderTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Input::class, InsertTags::class, System::class]);
+        $this->resetStaticProperties([Input::class, InsertTags::class, System::class, Config::class]);
 
         parent::tearDown();
     }

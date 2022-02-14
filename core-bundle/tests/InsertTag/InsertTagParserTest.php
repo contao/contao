@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\InsertTag;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -34,7 +35,7 @@ class InsertTagParserTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([InsertTags::class, System::class]);
+        $this->resetStaticProperties([InsertTags::class, System::class, Config::class]);
 
         parent::tearDown();
     }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Cache;
 
+use Contao\Config;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -44,7 +45,7 @@ class ContaoCacheWarmerTest extends TestCase
 
         unset($GLOBALS['TL_TEST'], $GLOBALS['TL_DCA']);
 
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
 
         parent::tearDown();
     }

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -31,7 +32,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([InsertTags::class, System::class]);
+        $this->resetStaticProperties([InsertTags::class, System::class, Config::class]);
 
         parent::tearDown();
     }

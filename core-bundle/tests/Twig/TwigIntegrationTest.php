@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig;
 
+use Contao\Config;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -50,7 +51,7 @@ class TwigIntegrationTest extends TestCase
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL']);
 
-        $this->resetStaticProperties([System::class]);
+        $this->resetStaticProperties([System::class, Config::class]);
 
         parent::tearDown();
     }

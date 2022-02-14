@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\Config;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactory;
@@ -35,7 +36,7 @@ class FigureTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([System::class, File::class, Files::class]);
+        $this->resetStaticProperties([System::class, File::class, Files::class, Config::class]);
 
         parent::tearDown();
     }

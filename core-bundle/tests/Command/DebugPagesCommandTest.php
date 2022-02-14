@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Command;
 
+use Contao\Config;
 use Contao\CoreBundle\Command\DebugPagesCommand;
 use Contao\CoreBundle\Controller\Page\RootPageController;
 use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
@@ -39,7 +40,7 @@ class DebugPagesCommandTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Table::class, Terminal::class, System::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Table::class, Terminal::class, System::class, Config::class]);
 
         parent::tearDown();
     }

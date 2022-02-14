@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
+use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController;
@@ -45,7 +46,7 @@ class RootPageDependentModulesControllerTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([TemplateLoader::class, System::class]);
+        $this->resetStaticProperties([TemplateLoader::class, System::class, Config::class]);
 
         parent::tearDown();
     }
