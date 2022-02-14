@@ -153,7 +153,7 @@ class PreviewLinkListener
             return;
         }
 
-        $row = $this->connection->fetchAssociative("SELECT * FROM tl_preview_link WHERE id=?", [$dc->id]);
+        $row = $this->connection->fetchAssociative('SELECT * FROM tl_preview_link WHERE id=?', [$dc->id]);
 
         if ($row['expiresAt'] < time()) {
             $message->addError($this->translator->trans('tl_preview_link.hintExpired', [], 'contao_tl_preview_link'));
@@ -167,7 +167,7 @@ class PreviewLinkListener
                 [
                     $clipboard['content'],
                     StringUtil::specialchars(json_encode($clipboard)),
-                    $clipboard['content']
+                    $clipboard['content'],
                 ],
                 'contao_tl_preview_link'
             ));
@@ -231,7 +231,7 @@ class PreviewLinkListener
         return [
             'content' => $url,
             'title' => $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link'),
-            'message' => $this->translator->trans('tl_preview_link.share.2', [], 'contao_tl_preview_link')
+            'message' => $this->translator->trans('tl_preview_link.share.2', [], 'contao_tl_preview_link'),
         ];
     }
 }
