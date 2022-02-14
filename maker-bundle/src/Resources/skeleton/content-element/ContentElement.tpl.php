@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: "<?= $category ?>")]
 <?php else: ?>
 /**
- * @ContentElement("<?= $elementName ?>", category="<?= $category ?>")
+ * @ContentElement(category="<?= $category ?>")
  */
 <?php endif; ?>
 class <?= $className ?> extends AbstractContentElementController

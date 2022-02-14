@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsFrontendModule(category: "<?= $category ?>")]
 <?php else: ?>
 /**
- * @FrontendModule("<?= $elementName ?>", category="<?= $category ?>")
+ * @FrontendModule(category="<?= $category ?>")
  */
 <?php endif; ?>
 class <?= $className ?> extends AbstractFrontendModuleController
