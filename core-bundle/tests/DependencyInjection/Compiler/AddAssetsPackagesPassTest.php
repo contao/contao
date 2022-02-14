@@ -27,7 +27,7 @@ use Symfony\Component\Filesystem\Path;
 
 class AddAssetsPackagesPassTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

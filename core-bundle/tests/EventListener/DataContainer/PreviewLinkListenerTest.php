@@ -28,7 +28,7 @@ use Symfony\Component\Security\Core\Security;
 
 class PreviewLinkListenerTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

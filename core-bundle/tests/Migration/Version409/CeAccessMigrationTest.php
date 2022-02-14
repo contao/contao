@@ -24,7 +24,7 @@ use Doctrine\DBAL\Types\Type;
 
 class CeAccessMigrationTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -39,7 +39,7 @@ class CeAccessMigrationTest extends TestCase
         ];
     }
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         unset($GLOBALS['TL_CTE'], $GLOBALS['TL_FFL']);
 

@@ -87,10 +87,10 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 
     private function buildFileSystem(): string
     {
-        $root = dirname(__DIR__, 3);
+        $root = \dirname(__DIR__, 3);
 
         $files = array_map(
-            fn($path) => substr($path, \strlen($root) + 1),
+            static fn ($path) => substr($path, \strlen($root) + 1),
             glob("$root/*-bundle/tests/**/*"),
         );
 
@@ -109,7 +109,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
         return print_r(
             array_filter(
                 getenv(),
-                fn ($key) => !\in_array($key, ['SYMFONY_DEPRECATIONS_SERIALIZE', 'SYMFONY_EXPECTED_DEPRECATIONS_SERIALIZE'], true),
+                static fn ($key) => !\in_array($key, ['SYMFONY_DEPRECATIONS_SERIALIZE', 'SYMFONY_EXPECTED_DEPRECATIONS_SERIALIZE'], true),
                 ARRAY_FILTER_USE_KEY,
             ),
             true
