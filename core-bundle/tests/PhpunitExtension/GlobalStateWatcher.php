@@ -16,7 +16,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Runner\AfterTestHook;
 use PHPUnit\Runner\BeforeTestHook;
 use SebastianBergmann\Diff\Differ;
-use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
+use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
 
 final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 {
@@ -25,6 +25,9 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
     private string $staticMembers;
     private string $phpIni;
     private string $setFunctions;
+    private string $fileSystem;
+    private string $constants;
+    private string $env;
 
     public function executeBeforeTest(string $test): void
     {
@@ -33,25 +36,32 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
         $this->staticMembers = $this->buildStaticMembers();
         $this->phpIni = $this->buildPhpIni();
         $this->setFunctions = $this->buildSetFunctions();
+        $this->fileSystem = $this->buildFileSystem();
+        $this->constants = $this->buildConstants();
+        $this->env = $this->buildEnv();
     }
 
     public function executeAfterTest(string $test, float $time): void
     {
-        foreach (['globalKeys', 'globals', 'staticMembers', 'phpIni', 'setFunctions'] as $member) {
+        foreach (['globalKeys', 'globals', 'staticMembers', 'phpIni', 'setFunctions', 'fileSystem', 'constants', 'env'] as $member) {
             if ($this->$member !== ($after = $this->{'build'.$member}())) {
-                throw new ExpectationFailedException(sprintf("\nUnexpected change to global state in %s\n%s", $test, $this->diff($this->$member, $after)));
+                throw new ExpectationFailedException(sprintf("\nUnexpected change to global state (%s) in %s\n%s", $member, $test, $this->diff($this->$member, $after)));
             }
         }
     }
 
     private function diff($before, $after): string
     {
-        return (new Differ(new UnifiedDiffOutputBuilder("--- Before\n+++ After\n")))->diff($before, $after);
+        return (new Differ(new StrictUnifiedDiffOutputBuilder([
+            'contextLines' => 10,
+            'fromFile' => 'before',
+            'toFile' => 'after',
+        ])))->diff($before, $after);
     }
 
     private function buildGlobalKeys(): string
     {
-        return implode("\n", array_keys($GLOBALS))."\n";
+        return "\$GLOBALS['".implode("']\n\$GLOBALS['", array_keys($GLOBALS))."']\n";
     }
 
     private function buildGlobals(): string
@@ -71,7 +81,39 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
             'error_reporting' => error_reporting(),
             'date_default_timezone_get' => date_default_timezone_get(),
             'mb_internal_encoding' => mb_internal_encoding(),
+            'umask' => umask(),
         ], true);
+    }
+
+    private function buildFileSystem(): string
+    {
+        $root = dirname(__DIR__, 3);
+
+        $files = array_map(
+            fn($path) => substr($path, \strlen($root) + 1),
+            glob("$root/*-bundle/tests/**/*"),
+        );
+
+        sort($files);
+
+        return implode("\n", $files);
+    }
+
+    private function buildConstants(): string
+    {
+        return print_r(get_defined_constants(), true);
+    }
+
+    private function buildEnv(): string
+    {
+        return print_r(
+            array_filter(
+                getenv(),
+                fn ($key) => !\in_array($key, ['SYMFONY_DEPRECATIONS_SERIALIZE', 'SYMFONY_EXPECTED_DEPRECATIONS_SERIALIZE'], true),
+                ARRAY_FILTER_USE_KEY,
+            ),
+            true
+        );
     }
 
     private function buildStaticMembers(): string
