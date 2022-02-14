@@ -50,7 +50,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
         }
     }
 
-    private function diff($before, $after): string
+    private function diff(string $before, string $after): string
     {
         return (new Differ(new StrictUnifiedDiffOutputBuilder([
             'contextLines' => 10,

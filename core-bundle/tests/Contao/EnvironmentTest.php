@@ -31,8 +31,8 @@ class EnvironmentTest extends TestCase
     {
         parent::setUp();
 
-        $this->globalsBackup['_SERVER'] = $_SERVER ?? null;
-        $this->globalsBackup['_ENV'] = $_ENV ?? null;
+        $this->globalsBackup['_SERVER'] = $_SERVER;
+        $this->globalsBackup['_ENV'] = $_ENV;
 
         $this->projectDir = strtr($this->getFixturesDir(), '\\', '/');
 

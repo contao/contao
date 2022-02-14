@@ -31,14 +31,14 @@ use Twig\Environment;
 
 class AbstractBackendControllerTest extends TestCase
 {
-    private $globalsBackup;
+    private array $globalsBackup;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->globalsBackup['_SERVER'] = $_SERVER ?? null;
-        $this->globalsBackup['_ENV'] = $_ENV ?? null;
+        $this->globalsBackup['_SERVER'] = $_SERVER;
+        $this->globalsBackup['_ENV'] = $_ENV;
     }
 
     protected function tearDown(): void

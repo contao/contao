@@ -37,14 +37,14 @@ class ContaoKernelTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    private $globalsBackup = [];
+    private array $globalsBackup;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->globalsBackup['_SERVER'] = $_SERVER ?? null;
-        $this->globalsBackup['_ENV'] = $_ENV ?? null;
+        $this->globalsBackup['_SERVER'] = $_SERVER;
+        $this->globalsBackup['_ENV'] = $_ENV;
 
         // Reset the ContaoKernel static properties
         $reflection = new \ReflectionClass(ContaoKernel::class);

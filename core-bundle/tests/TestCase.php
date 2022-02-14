@@ -100,8 +100,8 @@ abstract class TestCase extends ContaoTestCase
                     $defaultValue = $property->getDefaultValue();
                 } else {
                     $hasDefaultValue = \array_key_exists(
-                        $property->getDeclaringClass()->getDefaultProperties(),
                         $property->getName(),
+                        $property->getDeclaringClass()->getDefaultProperties(),
                     );
 
                     $defaultValue = $hasDefaultValue
