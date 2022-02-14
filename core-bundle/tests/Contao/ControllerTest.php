@@ -233,4 +233,37 @@ class ControllerTest extends TestCase
             ];
         }
     }
+
+    public function testCachesOldBackendPaths(): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->exactly(2))
+            ->method('generate')
+            ->withConsecutive(['contao_backend'], ['contao_backend_file'])
+            ->willReturn('/contao', '/contao/file')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('router', $router);
+        System::setContainer($container);
+
+        Environment::reset();
+        Environment::set('path', '');
+        Environment::set('base', '');
+
+        $ref = new \ReflectionClass(Controller::class);
+        $method = $ref->getMethod('replaceOldBePaths');
+        $method->setAccessible(true);
+
+        $this->assertSame(
+            $method->invoke(null, 'This is a template with link to <a href="/contao/main.php">backend main</a> and <a href="/contao/main.php?do=articles">articles</a>'),
+            'This is a template with link to <a href="/contao">backend main</a> and <a href="/contao?do=articles">articles</a>'
+        );
+
+        $this->assertSame(
+            $method->invoke(null, 'Link to <a href="/contao/main.php">backend main</a> and <a href="/contao/file.php?x=y">files</a>'),
+            'Link to <a href="/contao">backend main</a> and <a href="/contao/file?x=y">files</a>'
+        );
+    }
 }

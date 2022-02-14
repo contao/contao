@@ -55,6 +55,11 @@ abstract class Controller extends System
 	protected static $arrQueryCache = array();
 
 	/**
+	 * @var array
+	 */
+	private static $arrOldBePathCache = array();
+
+	/**
 	 * Find a particular template file and return its path
 	 *
 	 * @param string $strTemplate The name of the template
@@ -1210,6 +1215,7 @@ abstract class Controller extends System
 	 */
 	protected static function replaceOldBePaths($strContext)
 	{
+		$arrCache = &self::$arrOldBePathCache;
 		$arrMapper = array
 		(
 			'contao/confirm.php'   => 'contao_backend_confirm',
@@ -1223,11 +1229,16 @@ abstract class Controller extends System
 			'contao/preview.php'   => 'contao_backend_preview',
 		);
 
-		$replace = static function ($matches) use ($arrMapper)
+		$replace = static function ($matches) use ($arrMapper, &$arrCache)
 		{
-			$router = System::getContainer()->get('router');
+			$key = $matches[0];
 
-			return substr($router->generate($arrMapper[$matches[0]]), \strlen(Environment::get('path')) + 1);
+			if (!isset($arrCache[$key])) {
+				$router = System::getContainer()->get('router');
+				$arrCache[$key] = substr($router->generate($arrMapper[$key]), \strlen(Environment::get('path')) + 1);
+			}
+
+			return $arrCache[$key];
 		};
 
 		$regex = '('.implode('|', array_map('preg_quote', array_keys($arrMapper))).')';
@@ -1435,6 +1446,12 @@ abstract class Controller extends System
 	{
 		$loader = new DcaLoader($strTable);
 		$loader->load($blnNoCache);
+	}
+
+	public static function reset()
+	{
+		self::$arrQueryCache = array();
+		self::$arrOldBePathCache = array();
 	}
 
 	/**
