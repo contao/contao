@@ -348,10 +348,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         return $extensionConfigs;
     }
 
-    
     /**
-     * Adds '^/.*': SAMEORIGIN to nelmio_security.clickjacking.paths
-     * 
+     * Adds '^/.*': SAMEORIGIN to nelmio_security.clickjacking.paths.
+     *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
     private function checkClickJackingPaths(array $extensionConfigs, ContainerBuilder $container): array
@@ -365,9 +364,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $extensionConfigs[] = [
             'clickjacking' => [
                 'paths' => [
-                    '^/.*' => 'SAMEORIGIN'
-                ]
-            ]
+                    '^/.*' => 'SAMEORIGIN',
+                ],
+            ],
         ];
 
         return $extensionConfigs;

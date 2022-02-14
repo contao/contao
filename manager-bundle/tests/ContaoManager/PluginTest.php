@@ -599,7 +599,7 @@ class PluginTest extends ContaoTestCase
                 'clickjacking' => [
                     'paths' => [
                         '^/foobar/' => 'DENY',
-                        '^/.*' => 'ALLOW'
+                        '^/.*' => 'ALLOW',
                     ],
                 ],
             ],
