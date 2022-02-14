@@ -18,13 +18,14 @@ use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class FilesyncCommandTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Table::class]);
+        $this->resetStaticProperties([Table::class, Terminal::class]);
 
         parent::tearDown();
     }

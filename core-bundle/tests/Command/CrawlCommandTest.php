@@ -19,6 +19,7 @@ use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -31,7 +32,7 @@ class CrawlCommandTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([ProgressBar::class]);
+        $this->resetStaticProperties([ProgressBar::class, Terminal::class]);
 
         parent::tearDown();
     }

@@ -21,6 +21,7 @@ use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ImageInterface;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -39,7 +40,7 @@ class ResizeImagesCommandTest extends TestCase
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
 
-        $this->resetStaticProperties([Process::class, Table::class]);
+        $this->resetStaticProperties([Process::class, Table::class, Terminal::class]);
 
         parent::tearDown();
     }
