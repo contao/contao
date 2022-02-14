@@ -248,8 +248,38 @@ jobs:
               env:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
+    reverse:
+        name: PHP 8.1 reverse order
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Initialize the database
+              run: |
+                  sudo /etc/init.d/mysql start
+                  mysql -uroot -proot -e "CREATE database contao_test"
+
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Install the dependencies
+              run: composer install --no-interaction --no-progress
+
             - name: Run the unit tests in reverse order
               run: vendor/bin/phpunit --order-by=reverse --colors=always
+
+            - name: Run the functional tests in reverse order
+              run: vendor/bin/phpunit --testsuite=functional --order-by=reverse --colors=always
+              env:
+                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     nightly:
         name: PHP 8.2
@@ -412,6 +442,35 @@ jobs:
 
             - name: Validate the composer.json files
               run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi
+
+    inspect:
+        name: Inspect unit tests
+        runs-on: ubuntu-latest
+        #if: github.event_name == 'schedule'
+        continue-on-error: true
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Checkout
+              uses: actions/checkout@v1
+
+            - name: Install the dependencies
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer bin isolated-tests install --no-interaction --no-progress
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
+
+            - name: Run the unit tests isolated
+              run: tools/isolated-tests/bin/run-tests-isolated --ansi
 
     monorepo-split:
         name: Monorepo Split
