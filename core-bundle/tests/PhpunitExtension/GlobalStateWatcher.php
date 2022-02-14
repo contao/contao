@@ -123,6 +123,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
         foreach (get_declared_classes() as $class) {
             foreach ([
                 'Composer\InstalledVersions',
+                'Contao\CoreBundle\Util\LocaleUtil',
                 'Contao\TestCase\\',
                 'Doctrine\Instantiator\\',
                 'Imagine\\',

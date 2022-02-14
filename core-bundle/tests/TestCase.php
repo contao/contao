@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests;
 use Contao\Config;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Dbafs;
 use Contao\File;
 use Contao\Files;
@@ -53,7 +52,6 @@ abstract class TestCase extends ContaoTestCase
         if (false === $this->runTestInSeparateProcess) {
             $this->resetStaticProperties([
                 Config::class,
-                LocaleUtil::class,
                 Dbafs::class,
                 Files::class,
                 File::class,
