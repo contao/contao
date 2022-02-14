@@ -22,9 +22,9 @@ use Symfony\Component\Filesystem\Path;
 
 class SymlinksCommandTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $filesystem = new Filesystem();
 

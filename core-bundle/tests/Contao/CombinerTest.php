@@ -22,21 +22,15 @@ class CombinerTest extends TestCase
 {
     private Filesystem $filesystem;
 
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        $fs = new Filesystem();
-        $fs->mkdir(static::getTempDir().'/assets/css');
-        $fs->mkdir(static::getTempDir().'/public');
-        $fs->mkdir(static::getTempDir().'/system/tmp');
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->filesystem = new Filesystem();
+
+        $this->filesystem->mkdir($this->getTempDir().'/assets/css');
+        $this->filesystem->mkdir($this->getTempDir().'/public');
+        $this->filesystem->mkdir($this->getTempDir().'/system/tmp');
 
         $context = $this->createMock(ContaoContext::class);
         $context

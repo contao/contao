@@ -34,9 +34,9 @@ class ImageTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $filesystem = new Filesystem();
 
@@ -50,11 +50,6 @@ class ImageTest extends TestCase
         }
 
         $filesystem->mkdir(Path::join(static::getTempDir(), 'system/tmp'));
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
 
         System::setContainer($this->getContainerWithImageServices());
 

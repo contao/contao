@@ -28,9 +28,9 @@ use Symfony\Component\Filesystem\Path;
 
 class ContaoCacheWarmerTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    public function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         (new Filesystem())->mkdir([
             Path::join(self::getTempDir(), 'var/cache'),

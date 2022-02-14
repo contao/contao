@@ -44,9 +44,9 @@ class ImageFactoryTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $filesystem = new Filesystem();
 
@@ -56,11 +56,6 @@ class ImageFactoryTest extends TestCase
                 Path::join(self::getTempDir(), $directory)
             );
         }
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
 
         System::setContainer($this->getContainerWithContaoConfiguration(self::getTempDir()));
     }
