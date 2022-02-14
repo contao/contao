@@ -249,7 +249,7 @@ jobs:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     reverse:
-        name: PHP 8.1 reverse order
+        name: PHP 8.1 Reverse Order
         runs-on: ubuntu-latest
         if: github.event_name != 'push'
         steps:
@@ -434,9 +434,9 @@ jobs:
               run: tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi
 
     inspect:
-        name: Inspect unit tests
+        name: Inspect Unit Tests
         runs-on: ubuntu-latest
-        #if: github.event_name == 'schedule'
+        if: github.event_name == 'schedule'
         continue-on-error: true
         steps:
             - name: Setup PHP
