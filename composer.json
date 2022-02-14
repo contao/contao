@@ -305,7 +305,7 @@
             "@ecs-legacy",
             "@ecs-templates"
         ],
-        "ecs": "tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/config/default.php --fix --ansi",
+        "ecs": "tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests tools/*/src --config tools/ecs/config/default.php --fix --ansi",
         "ecs-legacy": "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --fix --ansi",
         "ecs-templates": "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --fix --ansi",
         "functional-tests": "vendor/bin/phpunit --testsuite=functional --colors=always",
