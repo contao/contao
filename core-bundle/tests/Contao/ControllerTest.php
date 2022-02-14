@@ -167,7 +167,7 @@ class ControllerTest extends TestCase
     {
         $router = $this->createMock(RouterInterface::class);
         $router
-            ->expects($this->exactly(count($routes)))
+            ->expects($this->exactly(\count($routes)))
             ->method('generate')
             ->withConsecutive(
                 ...array_map(
@@ -221,15 +221,15 @@ class ControllerTest extends TestCase
         ];
 
         $pathMap = [
-            'contao/confirm.php'   => 'contao_backend_confirm',
-            'contao/file.php'      => 'contao_backend_file',
-            'contao/help.php'      => 'contao_backend_help',
-            'contao/index.php'     => 'contao_backend_login',
-            'contao/main.php'      => 'contao_backend',
-            'contao/page.php'      => 'contao_backend_page',
-            'contao/password.php'  => 'contao_backend_password',
-            'contao/popup.php'     => 'contao_backend_popup',
-            'contao/preview.php'   => 'contao_backend_preview',
+            'contao/confirm.php' => 'contao_backend_confirm',
+            'contao/file.php' => 'contao_backend_file',
+            'contao/help.php' => 'contao_backend_help',
+            'contao/index.php' => 'contao_backend_login',
+            'contao/main.php' => 'contao_backend',
+            'contao/page.php' => 'contao_backend_page',
+            'contao/password.php' => 'contao_backend_password',
+            'contao/popup.php' => 'contao_backend_popup',
+            'contao/preview.php' => 'contao_backend_preview',
         ];
 
         foreach ($pathMap as $old => $new) {
