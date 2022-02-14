@@ -262,11 +262,6 @@ jobs:
               env:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Initialize the database
-              run: |
-                  sudo /etc/init.d/mysql start
-                  mysql -uroot -proot -e "CREATE database contao_test"
-
             - name: Checkout
               uses: actions/checkout@v1
 
@@ -275,11 +270,6 @@ jobs:
 
             - name: Run the unit tests in reverse order
               run: vendor/bin/phpunit --order-by=reverse --colors=always
-
-            - name: Run the functional tests in reverse order
-              run: vendor/bin/phpunit --testsuite=functional --order-by=reverse --colors=always
-              env:
-                  DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     nightly:
         name: PHP 8.2
