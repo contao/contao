@@ -54,6 +54,8 @@ class InputTest extends TestCase
     {
         unset($GLOBALS['TL_CONFIG']);
 
+        $this->resetStaticProperties([System::class]);
+
         parent::tearDown();
     }
 

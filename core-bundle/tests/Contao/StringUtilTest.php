@@ -48,7 +48,7 @@ class StringUtilTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Input::class]);
+        $this->resetStaticProperties([Input::class, System::class]);
 
         parent::tearDown();
     }

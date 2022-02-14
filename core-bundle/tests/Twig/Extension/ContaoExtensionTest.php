@@ -43,7 +43,7 @@ class ContaoExtensionTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([ContaoFramework::class]);
+        $this->resetStaticProperties([ContaoFramework::class, System::class]);
 
         parent::tearDown();
     }

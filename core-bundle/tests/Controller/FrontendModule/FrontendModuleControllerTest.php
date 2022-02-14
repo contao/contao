@@ -38,6 +38,13 @@ class FrontendModuleControllerTest extends TestCase
         System::setContainer($this->container);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testCreatesTheTemplateFromTheClassName(): void
     {
         $controller = new TestController();

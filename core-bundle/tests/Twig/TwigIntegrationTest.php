@@ -44,13 +44,15 @@ class TwigIntegrationTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
 
         TemplateLoader::reset();
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL']);
+
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
     }
 
     public function testRendersWidgets(): void

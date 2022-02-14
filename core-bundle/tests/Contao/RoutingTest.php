@@ -73,7 +73,7 @@ class RoutingTest extends TestCase
         unset($GLOBALS['TL_AUTO_ITEM']);
         $_GET = [];
 
-        $this->resetStaticProperties([Input::class, Environment::class]);
+        $this->resetStaticProperties([Input::class, Environment::class, System::class]);
 
         parent::tearDown();
     }

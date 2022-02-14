@@ -45,7 +45,7 @@ class RootPageDependentModulesControllerTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([TemplateLoader::class]);
+        $this->resetStaticProperties([TemplateLoader::class, System::class]);
 
         parent::tearDown();
     }

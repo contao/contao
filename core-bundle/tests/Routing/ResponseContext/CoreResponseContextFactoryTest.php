@@ -31,6 +31,13 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactoryTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testResponseContext(): void
     {
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);

@@ -62,9 +62,11 @@ class ImageFactoryTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
+
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
     }
 
     public function testCreatesAnImageObjectFromAnImagePath(): void

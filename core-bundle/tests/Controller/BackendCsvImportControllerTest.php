@@ -47,6 +47,13 @@ class BackendCsvImportControllerTest extends TestCase
         System::setContainer($container);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testRendersTheListWizardMarkup(): void
     {
         $request = new Request();

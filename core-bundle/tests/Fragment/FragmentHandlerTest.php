@@ -39,6 +39,13 @@ class FragmentHandlerTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testThrowsAnExceptionIfTheFragmentNameIsInvalid(): void
     {
         $fragmentHandler = $this->getFragmentHandler();

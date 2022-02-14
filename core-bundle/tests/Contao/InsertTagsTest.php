@@ -44,6 +44,8 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
+        $this->resetStaticProperties([System::class]);
+
         parent::tearDown();
     }
 

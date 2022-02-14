@@ -42,6 +42,8 @@ class PaginationTest extends TestCase
         Input::resetCache();
         Input::resetUnusedGet();
 
+        $this->resetStaticProperties([System::class]);
+
         parent::tearDown();
     }
 

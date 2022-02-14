@@ -22,7 +22,6 @@ use Contao\Files;
 use Contao\Model;
 use Contao\Model\Registry;
 use Contao\PageModel;
-use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Roave\BetterReflection\BetterReflection;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -53,7 +52,6 @@ abstract class TestCase extends ContaoTestCase
 
         if (false === $this->runTestInSeparateProcess) {
             $this->resetStaticProperties([
-                System::class,
                 Config::class,
                 LocaleUtil::class,
                 Dbafs::class,
@@ -79,6 +77,10 @@ abstract class TestCase extends ContaoTestCase
             if (\is_array($class)) {
                 $methods = $class[1];
                 $class = $class[0];
+            }
+
+            if (!class_exists($class, false)) {
+                continue;
             }
 
             foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_STATIC) as $property) {

@@ -36,7 +36,7 @@ class ControllerTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class]);
 
         parent::tearDown();
     }

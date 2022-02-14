@@ -66,7 +66,7 @@ class EnvironmentTest extends TestCase
             }
         }
 
-        $this->resetStaticProperties([Environment::class]);
+        $this->resetStaticProperties([Environment::class, System::class]);
 
         parent::tearDown();
     }

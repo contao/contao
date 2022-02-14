@@ -26,6 +26,13 @@ class GdImageTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testCreatesImagesFromResources(): void
     {
         $resource = imagecreate(1, 1);

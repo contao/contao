@@ -27,6 +27,8 @@ class ModelArgumentResolverTest extends TestCase
     {
         unset($GLOBALS['objPage']);
 
+        $this->resetStaticProperties([System::class]);
+
         parent::tearDown();
     }
 

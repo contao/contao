@@ -46,7 +46,7 @@ class TemplateTest extends TestCase
     {
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
 
-        $this->resetStaticProperties([ContaoFramework::class]);
+        $this->resetStaticProperties([ContaoFramework::class, System::class]);
 
         parent::tearDown();
     }

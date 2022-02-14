@@ -28,6 +28,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MarkdownControllerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testWithCodeInput(): void
     {
         $container = $this->mockContainer('<h1>Headline</h1>'."\n");

@@ -21,6 +21,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testRendersMultipleSelects(): void
     {
         $rootPages = [

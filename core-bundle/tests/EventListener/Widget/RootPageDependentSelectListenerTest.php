@@ -28,6 +28,8 @@ class RootPageDependentSelectListenerTest extends TestCase
     {
         unset($GLOBALS['TL_DCA']);
 
+        $this->resetStaticProperties([System::class]);
+
         parent::tearDown();
     }
 
