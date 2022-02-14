@@ -24,6 +24,13 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ControllerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Controller::reset();
+    }
+
     public function testReturnsTheTimeZones(): void
     {
         $timeZones = System::getTimeZones();
