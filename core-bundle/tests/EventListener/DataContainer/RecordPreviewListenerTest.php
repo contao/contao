@@ -122,10 +122,9 @@ class RecordPreviewListenerTest extends TestCase
         $listener->storePrecompiledRecordPreview($dataContainer, '42');
     }
 
-    public function testPrecompilesRecordPreviewWithLabelFunctionAndShowColumns(): void
+    public function testPrecompilesRecordPreviewWithArrayReturnValue(): void
     {
         $GLOBALS['TL_DCA']['tl_user']['list']['sorting']['mode'] = DataContainer::MODE_SORTED;
-        $GLOBALS['TL_DCA']['tl_user']['list']['label']['showColumns'] = true;
 
         $row = [
             'id' => '42',
