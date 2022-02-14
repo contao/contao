@@ -24,6 +24,7 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
+use Roave\BetterReflection\BetterReflection;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
@@ -34,6 +35,8 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 abstract class TestCase extends ContaoTestCase
 {
+    private static array $betterReflectionCache = [];
+
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
@@ -51,21 +54,23 @@ abstract class TestCase extends ContaoTestCase
             $GLOBALS['TL_LANG'],
         );
 
-        $this->resetStaticProperties([
-            System::class,
-            Config::class,
-            LocaleUtil::class,
-            Dbafs::class,
-            Files::class,
-            File::class,
-            Registry::class,
-            Model::class,
-            PageModel::class,
+        if (false === $this->runTestInSeparateProcess) {
+            $this->resetStaticProperties([
+                System::class,
+                Config::class,
+                LocaleUtil::class,
+                Dbafs::class,
+                Files::class,
+                File::class,
+                Registry::class,
+                Model::class,
+                PageModel::class,
 
-            Terminal::class,
-            Table::class,
-            ProgressBar::class,
-        ]);
+                Terminal::class,
+                Table::class,
+                ProgressBar::class,
+            ]);
+        }
 
         parent::tearDown();
     }
@@ -94,27 +99,13 @@ abstract class TestCase extends ContaoTestCase
                     continue;
                 }
 
-                // getDefaultValue() is only supported in PHP 8
-                if (method_exists($property, 'getDefaultValue') && method_exists($property, 'hasDefaultValue')) {
-                    $hasDefaultValue = $property->hasDefaultValue();
-                    $defaultValue = $property->getDefaultValue();
-                } else {
-                    $hasDefaultValue = \array_key_exists(
-                        $property->getName(),
-                        $property->getDeclaringClass()->getDefaultProperties(),
-                    );
-
-                    $defaultValue = $hasDefaultValue
-                        ? $property->getDeclaringClass()->getDefaultProperties()[$property->getName()]
-                        : null
-                    ;
-                }
+                [$hasDefaultValue, $defaultValue] = $this->getDefaultStaticProperty($property);
 
                 if (!$hasDefaultValue || $property->getValue() === $defaultValue) {
                     continue;
                 }
 
-                $property->setValue($property->getDefaultValue());
+                $property->setValue($defaultValue);
             }
         }
     }
@@ -154,5 +145,33 @@ abstract class TestCase extends ContaoTestCase
         $session->registerBag($feBag);
 
         return $session;
+    }
+
+    private function getDefaultStaticProperty(\ReflectionProperty $property): array
+    {
+        // See https://github.com/php/php-src/commit/3eb97a456648c739533d92c81102cb919eab01c9
+        if (\PHP_VERSION_ID >= 80100) {
+            return [$property->hasDefaultValue(), $property->getDefaultValue()];
+        }
+
+        $class = $property->getDeclaringClass()->getName();
+        $name = $property->getName();
+        $cacheKey = $class.'::'.$name;
+
+        if (isset(self::$betterReflectionCache[$cacheKey])) {
+            return self::$betterReflectionCache[$cacheKey];
+        }
+
+        if (method_exists(BetterReflection::class, 'reflector')) {
+            $betterProperty = (new BetterReflection())->reflector()->reflectClass($class)->getProperty($name);
+        } else {
+            /** @phpstan-ignore-next-line */
+            $betterProperty = (new BetterReflection())->classReflector()->reflect($class)->getProperty($name);
+        }
+
+        return self::$betterReflectionCache[$cacheKey] = [
+            $betterProperty->isDefault(),
+            $betterProperty->getDefaultValue(),
+        ];
     }
 }
