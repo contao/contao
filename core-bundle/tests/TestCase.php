@@ -42,7 +42,7 @@ abstract class TestCase extends ContaoTestCase
     }
 
     /**
-     * @param array<int, class-string|array> $classNames
+     * @param array<int, class-string|array{0: class-string, 1: array<int, string>}> $classNames
      */
     protected function resetStaticProperties(array $classNames): void
     {
