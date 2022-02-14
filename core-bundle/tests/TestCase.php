@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests;
 use Contao\Config;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
-use Contao\Dbafs;
 use Contao\TestCase\ContaoTestCase;
 use Roave\BetterReflection\BetterReflection;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -47,7 +46,6 @@ abstract class TestCase extends ContaoTestCase
         if (false === $this->runTestInSeparateProcess) {
             $this->resetStaticProperties([
                 Config::class,
-                Dbafs::class,
             ]);
         }
 

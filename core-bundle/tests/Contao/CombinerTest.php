@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\Combiner;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Dbafs;
 use Contao\Files;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
@@ -48,7 +49,7 @@ class CombinerTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([System::class, Files::class]);
+        $this->resetStaticProperties([System::class, Files::class, Dbafs::class]);
 
         parent::tearDown();
     }
