@@ -17,6 +17,7 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
+use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -27,7 +28,7 @@ class ContaoContextTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class]);
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, Registry::class]);
 
         parent::tearDown();
     }

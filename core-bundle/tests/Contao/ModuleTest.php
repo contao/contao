@@ -19,6 +19,7 @@ use Contao\Database\Result;
 use Contao\Database\Statement;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
+use Contao\Model;
 use Contao\Model\Registry;
 use Contao\Module;
 use Contao\PageModel;
@@ -65,7 +66,7 @@ class ModuleTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([Registry::class, DcaExtractor::class, DcaLoader::class, Database::class]);
+        $this->resetStaticProperties([Registry::class, DcaExtractor::class, DcaLoader::class, Database::class, Model::class]);
 
         parent::tearDown();
     }

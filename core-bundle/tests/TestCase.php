@@ -18,9 +18,6 @@ use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\Dbafs;
 use Contao\File;
 use Contao\Files;
-use Contao\Model;
-use Contao\Model\Registry;
-use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use Roave\BetterReflection\BetterReflection;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -55,9 +52,6 @@ abstract class TestCase extends ContaoTestCase
                 Dbafs::class,
                 Files::class,
                 File::class,
-                Registry::class,
-                Model::class,
-                PageModel::class,
             ]);
         }
 

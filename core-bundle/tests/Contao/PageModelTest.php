@@ -20,6 +20,7 @@ use Contao\Database\Statement;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\Input;
+use Contao\Model;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Contao\PageModel;
@@ -70,7 +71,9 @@ class PageModelTest extends TestCase
     {
         unset($GLOBALS['TL_MODELS']);
 
-        $this->resetStaticProperties([Registry::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class]);
+        PageModel::reset();
+
+        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class]);
 
         parent::tearDown();
     }
