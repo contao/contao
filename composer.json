@@ -32,7 +32,7 @@
         "ext-pdo": "*",
         "ext-session": "*",
         "ext-zlib": "*",
-        "composer-runtime-api": "^2.0",
+        "composer-runtime-api": "^2.0.14",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
         "contao-components/ace": "^1.2",
