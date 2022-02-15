@@ -133,7 +133,15 @@ class FilesystemConfiguration
 
         $path = $this->container->getParameterBag()->resolveValue($path);
 
-        $this->mountAdapter('local', ['directory' => $path], $mountPath, $name);
+        $this->mountAdapter(
+            'local',
+            [
+                'directory' => $path,
+                'skip_links' => true,
+            ],
+            $mountPath,
+            $name
+        );
 
         return $this;
     }

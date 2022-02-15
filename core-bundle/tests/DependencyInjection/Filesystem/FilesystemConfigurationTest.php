@@ -177,7 +177,7 @@ class FilesystemConfigurationTest extends TestCase
         $adapterDefinitionFactory = $this->createMock(AdapterDefinitionFactory::class);
         $adapterDefinitionFactory
             ->method('createDefinition')
-            ->with('local', ['directory' => $expected])
+            ->with('local', ['directory' => $expected, 'skip_links' => true])
             ->willReturn($this->createMock(Definition::class))
         ;
 
@@ -269,6 +269,12 @@ class FilesystemConfigurationTest extends TestCase
 
         $config->addDefaultDbafs('foo', 'tl_foo');
     }
+
+    // todo
+//    public function testCreatesMountsForSymlinks(): void
+//    {
+//
+//    }
 
     private function getConfigurationWithAdapterDefinitionFactory(ContainerBuilder $container, AdapterDefinitionFactory $adapterDefinitionFactory): FilesystemConfiguration
     {
