@@ -78,6 +78,12 @@ abstract class TestCase extends ContaoTestCase
                 continue;
             }
 
+            if (null === $properties && \is_callable([$class, 'reset']) && method_exists($class, 'reset')) {
+                $class::reset();
+
+                continue;
+            }
+
             foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
                 if (null !== $properties && !\in_array($property->getName(), $properties, true)) {
                     continue;

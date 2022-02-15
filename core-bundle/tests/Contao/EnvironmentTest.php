@@ -57,7 +57,7 @@ class EnvironmentTest extends TestCase
     protected function tearDown(): void
     {
         $this->restoreServerEnvGetPost();
-        $this->resetStaticProperties([Environment::class, System::class]);
+        $this->resetStaticProperties([Environment::class, [Environment::class, 'strSapi'], System::class]);
 
         parent::tearDown();
     }
