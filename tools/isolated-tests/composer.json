@@ -5,10 +5,6 @@
     "type": "library",
     "authors": [
         {
-            "name": "Leo Feyer",
-            "homepage": "https://github.com/leofeyer"
-        },
-        {
             "name": "Martin Auswöger",
             "homepage": "https://au.si/"
         }

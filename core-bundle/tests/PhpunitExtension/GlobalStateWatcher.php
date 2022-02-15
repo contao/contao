@@ -52,11 +52,13 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 
     private function diff(string $before, string $after): string
     {
-        return (new Differ(new StrictUnifiedDiffOutputBuilder([
+        $options = [
             'contextLines' => 10,
             'fromFile' => 'before',
             'toFile' => 'after',
-        ])))->diff($before, $after);
+        ];
+
+        return (new Differ(new StrictUnifiedDiffOutputBuilder($options)))->diff($before, $after);
     }
 
     private function buildGlobalKeys(): string
@@ -76,13 +78,16 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 
     private function buildSetFunctions(): string
     {
-        return print_r([
-            'setlocale' => setlocale(LC_ALL, '0'),
-            'error_reporting' => error_reporting(),
-            'date_default_timezone_get' => date_default_timezone_get(),
-            'mb_internal_encoding' => mb_internal_encoding(),
-            'umask' => umask(),
-        ], true);
+        return print_r(
+            [
+                'setlocale' => setlocale(LC_ALL, '0'),
+                'error_reporting' => error_reporting(),
+                'date_default_timezone_get' => date_default_timezone_get(),
+                'mb_internal_encoding' => mb_internal_encoding(),
+                'umask' => umask(),
+            ],
+            true
+        );
     }
 
     private function buildFileSystem(): string

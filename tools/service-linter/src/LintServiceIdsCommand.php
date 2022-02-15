@@ -25,6 +25,7 @@ use Symfony\Component\Yaml\Yaml;
 class LintServiceIdsCommand extends Command
 {
     public string $projectDir;
+
     protected static $defaultName = 'contao:lint-service-ids';
 
     /**
