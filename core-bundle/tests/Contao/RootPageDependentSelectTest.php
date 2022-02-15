@@ -52,7 +52,7 @@ class RootPageDependentSelectTest extends TestCase
             ->expects($this->once())
             ->method('trans')
             ->with('tl_module.rootPageDependentModulesBlankOptionLabel', [], 'contao_module')
-            ->willReturn('Please choose your module for %s')
+            ->willReturn('Choose module for "%s"')
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
@@ -83,27 +83,29 @@ class RootPageDependentSelectTest extends TestCase
                     class="tl_select tl_chosen"
                     onfocus="Backend.getScrollOffset()"
                 >
-                    <option value="">Please choose your module for Root Page 1 (en)</option>
+                    <option value="">Choose module for "Root Page 1"</option>
                     <option value="10">Module-10</option>
                     <option value="20">Module-20</option>
-                    <option value="30">Module-30</option></select
-                ><select
+                    <option value="30">Module-30</option>
+                </select>
+                <select
                     name="rootPageDependentModules[]"
                     id="ctrl_rootPageDependentModules-2"
                     class="tl_select tl_chosen"
                     onfocus="Backend.getScrollOffset()"
                 >
-                    <option value="">Please choose your module for Root Page 2 (de)</option>
+                    <option value="">Choose module for "Root Page 2"</option>
                     <option value="10">Module-10</option>
                     <option value="20">Module-20</option>
-                    <option value="30">Module-30</option></select
-                ><select
+                    <option value="30">Module-30</option>
+                </select>
+                <select
                     name="rootPageDependentModules[]"
                     id="ctrl_rootPageDependentModules-3"
                     class="tl_select tl_chosen"
                     onfocus="Backend.getScrollOffset()"
                 >
-                    <option value="">Please choose your module for Root Page 3 (fr)</option>
+                    <option value="">Choose module for "Root Page 3"</option>
                     <option value="10">Module-10</option>
                     <option value="20">Module-20</option>
                     <option value="30">Module-30</option>
