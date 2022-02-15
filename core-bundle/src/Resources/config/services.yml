@@ -933,7 +933,7 @@ services:
         public: true
         arguments:
             - '@twig'
-            - '@contao.twig.filesystem_loader'
+            - '@contao.twig.hierarchy'
 
     contao.twig.fail_tolerant_filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader
@@ -970,6 +970,10 @@ services:
         tags:
             - { name: kernel.cache_warmer }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    contao.twig.hierarchy:
+        alias: 'contao.twig.filesystem_loader'
+        public: true
 
     contao.twig.insert_tag_runtime:
         class: Contao\CoreBundle\Twig\Runtime\InsertTagRuntime
@@ -1042,9 +1046,6 @@ services:
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
-    Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface:
-        alias: contao.twig.filesystem_loader
-        public: true
 
     # Backwards compatibility
     contao.cache.clear_internal:

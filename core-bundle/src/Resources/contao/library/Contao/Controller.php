@@ -18,7 +18,6 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -135,7 +134,7 @@ abstract class Controller extends System
 		$arrMapper['mod'][] = 'newsletter'; // TODO: remove in Contao 5.0
 
 		// Get the default templates
-		$templateHierarchy = System::getContainer()->get(TemplateHierarchyInterface::class);
+		$templateHierarchy = System::getContainer()->get('contao.twig.hierarchy');
 		$identifierPattern = sprintf(
 			'/^%s%s/',
 			preg_quote($strPrefix, '/'),
