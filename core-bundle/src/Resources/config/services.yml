@@ -972,7 +972,7 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
     contao.twig.hierarchy:
-        alias: 'contao.twig.filesystem_loader'
+        alias: contao.twig.filesystem_loader
         public: true
 
     contao.twig.insert_tag_runtime:
