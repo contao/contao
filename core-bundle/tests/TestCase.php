@@ -78,13 +78,21 @@ abstract class TestCase extends ContaoTestCase
                 continue;
             }
 
-            if (null === $properties && \is_callable([$class, 'reset']) && method_exists($class, 'reset')) {
+            $reflectionClass = new \ReflectionClass($class);
+
+            if (
+                null === $properties
+                && \is_callable([$class, 'reset'])
+                && method_exists($class, 'reset')
+                && $reflectionClass->getMethod('reset')->isStatic()
+                && 0 === \count($reflectionClass->getMethod('reset')->getParameters())
+            ) {
                 $class::reset();
 
                 continue;
             }
 
-            foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
+            foreach ($reflectionClass->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
                 if (null !== $properties && !\in_array($property->getName(), $properties, true)) {
                     continue;
                 }
