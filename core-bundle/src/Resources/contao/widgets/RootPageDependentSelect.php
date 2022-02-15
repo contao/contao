@@ -74,7 +74,8 @@ class RootPageDependentSelect extends SelectMenu
 
 			if (isset($option['value']))
 			{
-				if ($this->isSelected($option)) {
+				if ($this->isSelected($option))
+				{
 					$option['label'] = sprintf(
 						'%s <span style="color:#999;padding-left:3px">[%s]</span>',
 						$option['label'],
