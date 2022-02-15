@@ -45,12 +45,13 @@ class RunTestsIsolatedCommand extends Command
         $this->setDescription('Runs the unit tests isolated from each other.');
         $this->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3');
 
-        $this->setHelp(<<<EOT
-            The command runs each unit test completely isolated from the others, starting
-            a new PHPUnit process for each test class, method, or data set. This gives us
-            "real" isolation rather than shared state, unlike the PHPUnit option
-            --process-isolation does.
-            EOT
+        $this->setHelp(
+            <<<'EOT'
+                The command runs each unit test completely isolated from the others, starting
+                a new PHPUnit process for each test class, method, or data set. This gives us
+                "real" isolation rather than shared state, unlike the PHPUnit option
+                --process-isolation does.
+                EOT
         );
     }
 
