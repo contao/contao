@@ -949,6 +949,7 @@ services:
             - '@contao.image.studio.figure_renderer'
 
     contao.twig.filesystem_loader:
+        public: true
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
         arguments:
             - '@cache.system'
@@ -1042,9 +1043,6 @@ services:
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
-    Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface:
-        alias: contao.twig.filesystem_loader
-        public: true
 
     # Backwards compatibility
     contao.cache.clear_internal:
