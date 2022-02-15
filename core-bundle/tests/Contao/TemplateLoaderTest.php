@@ -53,7 +53,7 @@ class TemplateLoaderTest extends TestCase
         $GLOBALS['TL_LANG']['MSC']['global'] = 'global';
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set(TemplateHierarchyInterface::class, $this->createMock(TemplateHierarchyInterface::class));
+        $container->set('contao.twig.filesystem_loader', $this->createMock(TemplateHierarchyInterface::class));
 
         System::setContainer($container);
     }
@@ -278,7 +278,7 @@ class TemplateLoaderTest extends TestCase
             ])
         ;
 
-        System::getContainer()->set(TemplateHierarchyInterface::class, $templateHierarchy);
+        System::getContainer()->set('contao.twig.filesystem_loader', $templateHierarchy);
 
         $this->assertSame(
             [
