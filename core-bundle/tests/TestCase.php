@@ -67,10 +67,10 @@ abstract class TestCase extends ContaoTestCase
     protected function resetStaticProperties(array $classNames): void
     {
         foreach ($classNames as $class) {
-            $methods = null;
+            $properties = null;
 
             if (\is_array($class)) {
-                $methods = $class[1];
+                $properties = $class[1];
                 $class = $class[0];
             }
 
@@ -79,7 +79,7 @@ abstract class TestCase extends ContaoTestCase
             }
 
             foreach ((new \ReflectionClass($class))->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
-                if (null !== $methods && !\in_array($property->getName(), $methods, true)) {
+                if (null !== $properties && !\in_array($property->getName(), $properties, true)) {
                     continue;
                 }
 
