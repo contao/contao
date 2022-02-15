@@ -246,7 +246,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 return $extensionConfigs;
 
             case 'nelmio_security':
-                return $this->checkClickJackingPaths($extensionConfigs, $container);
+                return $this->checkClickJackingPaths($extensionConfigs);
         }
 
         return $extensionConfigs;
@@ -353,7 +353,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
-    private function checkClickJackingPaths(array $extensionConfigs, ContainerBuilder $container): array
+    private function checkClickJackingPaths(array $extensionConfigs): array
     {
         foreach ($extensionConfigs as $extensionConfig) {
             if (isset($extensionConfig['clickjacking']['paths']['^/.*'])) {
