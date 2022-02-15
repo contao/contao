@@ -42,8 +42,19 @@ class RunTestsIsolatedCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Runs every test isolated from the other.');
-        $this->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3');
+        $this->setDescription(
+            'Runs every test completely isolated from the other by starting a '
+            .'new phpunit process for every test class, method or data set. '
+            .'This gets us “real” isolation and no shared state at all in '
+            .'contrast to the phpunit --process-isolation option.'
+        );
+        $this->addOption(
+            'depth',
+            null,
+            InputOption::VALUE_REQUIRED,
+            '1 for test classes, 2 for test methods, 3 for every single provider data set',
+            '3',
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
