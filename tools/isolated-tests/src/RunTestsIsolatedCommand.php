@@ -110,8 +110,10 @@ class RunTestsIsolatedCommand extends Command
             $filter = preg_quote($test);
             $output->writeln("> vendor/bin/phpunit --filter '".str_replace("'", '\'"\'"\'', $filter)."'");
 
+            $buffer = new BufferedOutput();
+
             try {
-                $this->executeCommand(array_merge($php, [$phpunit, '--extensions', GlobalStateWatcher::class, '--filter', $filter], $commandFlags), $buffer = new BufferedOutput());
+                $this->executeCommand(array_merge($php, [$phpunit, '--extensions', GlobalStateWatcher::class, '--filter', $filter], $commandFlags), $buffer);
 
                 // Clear previously written line
                 $output->write("\e[1A\e[K");
