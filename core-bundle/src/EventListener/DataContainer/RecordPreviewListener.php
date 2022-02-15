@@ -84,10 +84,6 @@ class RecordPreviewListener
 
         $preview = $dc->generateRecordLabel($row, $dc->table);
 
-        if ($GLOBALS['TL_DCA'][$dc->table]['list']['label']['showColumns'] ?? false) {
-            return serialize($preview);
-        }
-
-        return \is_array($preview) ? implode(' ', $preview) : $preview;
+        return \is_array($preview) ? serialize($preview) : $preview;
     }
 }

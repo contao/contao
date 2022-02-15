@@ -242,7 +242,7 @@ class RecordPreviewListenerTest extends TestCase
             ->method('update')
             ->with(
                 'tl_undo',
-                ['preview' => implode(' ', $args)],
+                ['preview' => serialize($args)],
                 ['id' => '42']
             )
         ;
