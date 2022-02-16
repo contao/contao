@@ -30,6 +30,13 @@ class RootPageControllerTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testRedirectsToTheFirstChildPage(): void
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);

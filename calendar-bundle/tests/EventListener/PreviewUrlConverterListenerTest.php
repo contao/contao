@@ -22,6 +22,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PreviewUrlConverterListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testConvertsThePreviewUrl(): void
     {
         $request = new Request();

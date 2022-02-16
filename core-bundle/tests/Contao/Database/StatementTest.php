@@ -25,6 +25,13 @@ class StatementTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     /**
      * @group legacy
      * @dataProvider getDeprecatedSetQueries

@@ -26,6 +26,13 @@ class XliffFileLoaderTest extends TestCase
         $this->loader = new XliffFileLoader($this->getFixturesDir());
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG']);
+
+        parent::tearDown();
+    }
+
     public function testSupportsXlfFiles(): void
     {
         $this->assertTrue(

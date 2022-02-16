@@ -28,9 +28,9 @@ use Symfony\Component\Security\Core\Security;
 
 class PreviewLinkListenerTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         ClockMock::register(PreviewLinkListener::class);
     }
