@@ -140,7 +140,7 @@ class PreviewLinkListener
     }
 
     /**
-     * Add hint and modify buttons in edit view.
+     * Adds a hint and modifies the edit view buttons.
      *
      * @Callback(table="tl_preview_link", target="config.onload")
      */
@@ -157,10 +157,10 @@ class PreviewLinkListener
 
         if ($row['expiresAt'] < time()) {
             $message->addError($this->translator->trans('tl_preview_link.hintExpired', [], 'contao_tl_preview_link'));
-        } elseif (0 === (int) $row['tstamp'] || !$row['published']) {
+        } elseif (0 === (int) $row['tstamp']) {
             $message->addNew($this->translator->trans('tl_preview_link.hintSave', [], 'contao_tl_preview_link'));
         } else {
-            $clipboard = $this->generateClipboardData($row['id']);
+            $clipboard = $this->generateClipboardData((int) $row['id']);
 
             $message->addInfo($this->translator->trans(
                 'tl_preview_link.hintEdit',
@@ -212,7 +212,7 @@ class PreviewLinkListener
             return Image::getHtml(str_replace('.svg', '_.svg', $icon), $label);
         }
 
-        $clipboard = $this->generateClipboardData($row['id']);
+        $clipboard = $this->generateClipboardData((int) $row['id']);
 
         return sprintf(
             '<a href="%s" target="_blank" title="%s" data-to-clipboard="%s">%s</a> ',
@@ -223,15 +223,14 @@ class PreviewLinkListener
         );
     }
 
-    private function generateClipboardData(string $id): array
+    private function generateClipboardData(int $id): array
     {
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
-        $url = $this->uriSigner->sign($url);
 
         return [
-            'content' => $url,
+            'content' => $this->uriSigner->sign($url),
             'title' => $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link'),
-            'message' => $this->translator->trans('tl_preview_link.share.2', [], 'contao_tl_preview_link'),
+            'message' => $this->translator->trans('tl_preview_link.clipboard', [], 'contao_tl_preview_link'),
         ];
     }
 }

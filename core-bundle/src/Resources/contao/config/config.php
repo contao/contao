@@ -232,7 +232,7 @@ $GLOBALS['BE_MOD'] = array
 		'preview_link' => array
 		(
 			'tables'                  => array('tl_preview_link'),
-			'javascript' => 'bundles/contaocore/clipboard.min.js'
+			'javascript'              => 'bundles/contaocore/clipboard.min.js'
 		),
 		'opt_in' => array
 		(
