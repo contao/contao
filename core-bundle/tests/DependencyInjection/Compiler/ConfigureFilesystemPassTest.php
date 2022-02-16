@@ -25,6 +25,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Process\Process;
 
 class ConfigureFilesystemPassTest extends TestCase
 {
@@ -77,24 +78,15 @@ class ConfigureFilesystemPassTest extends TestCase
      */
     public function testCreatesMountsForSymlinks(string $target, string $link): void
     {
-        if ('\\' === \DIRECTORY_SEPARATOR && Path::isRelative($target)) {
-            $this->markTestSkipped('Skip testing relative symlinks on windows');
-        }
-
         $tempDir = $this->getTempDir();
+        $target = str_replace('<root>', $tempDir, $target);
 
         // Setup directories with symlink
         $filesystem = new Filesystem();
-
         $filesystem->mkdir(Path::join($tempDir, 'files'));
         $filesystem->dumpFile(Path::join($tempDir, 'vendor/foo/dummy.txt'), 'dummy');
 
-        chdir(Path::join($tempDir, 'files'));
-
-        /* @phpstan-ignore-next-line because we need to create relative
-         *  symlinks and cannot use the Symfony Filesystem for that
-         */
-        symlink($target, $link);
+        $this->createSymlink($target, $link, Path::join($tempDir, 'files'));
 
         $container = new ContainerBuilder(
             new ParameterBag([
@@ -129,22 +121,37 @@ class ConfigureFilesystemPassTest extends TestCase
         $this->assertSame('dummy', $mountManager->read('files/foo/dummy.txt'));
 
         // Cleanup
-        $filesystem->remove(Path::join($this->getTempDir(), 'files'));
-        $filesystem->remove(Path::join($this->getTempDir(), 'vendor'));
+        $filesystem->remove(Path::join($tempDir, 'files'));
+        $filesystem->remove(Path::join($tempDir, 'vendor'));
     }
 
     public function provideSymlinks(): \Generator
     {
-        $tempDir = $this->getTempDir();
-
         yield 'absolute symlink' => [
-            Path::join($tempDir, 'vendor/foo'),
-            Path::join($tempDir, 'files/foo'),
+            '<root>/vendor/foo',
+            'foo',
         ];
 
         yield 'symlink relative to the files directory' => [
             '../vendor/foo',
             'foo',
         ];
+    }
+
+    private function createSymlink(string $target, string $link, string $cwd): void
+    {
+        if ('\\' === \DIRECTORY_SEPARATOR) {
+            $target = str_replace('/', '\\', $target);
+            $link = str_replace('/', '\\', $link);
+
+            Process::fromShellCommandline('mklink /d "${:link}" "${:target}"', $cwd)
+                ->mustRun(null, ['link' => $link, 'target' => $target])
+            ;
+        } else {
+            chdir($cwd);
+
+            /** @phpstan-ignore-next-line because we need to create relative symlinks and cannot use the Symfony Filesystem for that */
+            symlink($target, $link);
+        }
     }
 }

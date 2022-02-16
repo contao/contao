@@ -139,7 +139,7 @@ class FilesystemConfiguration
                 'directory' => $path,
                 'skip_links' => true,
             ],
-            $mountPath,
+            Path::normalize($mountPath),
             $name
         );
 
