@@ -261,6 +261,8 @@
                     let timer;
 
                     userField.addEventListener('input', function () {
+                        userField.setCustomValidity('');
+
                         if (userField.value.length < 2) {
                             return;
                         }
