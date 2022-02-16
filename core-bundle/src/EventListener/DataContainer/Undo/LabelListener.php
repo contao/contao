@@ -64,8 +64,14 @@ class LabelListener
             $parent = ['table' => $originalRow['ptable'], 'id' => $originalRow['pid']];
         }
 
+        $preview = StringUtil::deserialize($row['preview']);
+
+        if (\is_array($preview) && !($GLOBALS['TL_DCA'][$table]['list']['label']['showColumns'] ?? false)) {
+            $preview = implode(' ', $preview);
+        }
+
         return [
-            'preview' => StringUtil::deserialize($row['preview']),
+            'preview' => $preview,
             'user' => $user,
             'row' => $row,
             'fromTable' => $table,
