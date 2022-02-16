@@ -233,11 +233,6 @@ services:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }
 
-    contao.listener.purge_expired_member_registrations:
-        class: Contao\CoreBundle\EventListener\PurgeExpiredMemberRegistrationsListener
-        arguments:
-            - '@contao.framework'
-
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
         arguments:

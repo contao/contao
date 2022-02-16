@@ -235,13 +235,9 @@ class Automator extends System
 
 	/**
 	 * Purge registrations that have not been activated within 24 hours
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
 	 */
 	public function purgeRegistrations()
 	{
-		@trigger_error(sprintf('Using "%s" has been deprecated and will be removed in Contao 5.0. Use MemberModel::findExpiredRegistrations() to find and delete expired registrations instead.', __METHOD__), E_USER_DEPRECATED);
-
 		$objMember = MemberModel::findExpiredRegistrations();
 
 		if ($objMember === null)
@@ -260,13 +256,9 @@ class Automator extends System
 
 	/**
 	 * Purge opt-in tokens
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
 	 */
 	public function purgeOptInTokens()
 	{
-		@trigger_error(sprintf('Using "%s" has been deprecated and will be removed in Contao 5.0. Use the "contao.opt-in" service instead.', __METHOD__), E_USER_DEPRECATED);
-
 		/** @var OptIn $optIn */
 		$optIn = System::getContainer()->get('contao.opt-in');
 		$optIn->purgeTokens();
