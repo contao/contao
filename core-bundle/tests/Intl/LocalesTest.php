@@ -36,10 +36,11 @@ class LocalesTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         \Locale::setDefault('');
+        ini_restore('intl.default_locale');
         unset($GLOBALS['TL_HOOKS']);
+
+        parent::tearDown();
     }
 
     public function testGetsLocaleIds(): void

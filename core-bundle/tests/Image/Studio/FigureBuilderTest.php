@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\Config;
 use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
@@ -24,6 +25,7 @@ use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeOptions;
@@ -38,6 +40,15 @@ use Symfony\Component\Filesystem\Path;
 
 class FigureBuilderTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([DcaLoader::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testFromFilesModel(): void
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
@@ -384,7 +395,7 @@ class FigureBuilderTest extends TestCase
 
         $image = $this->createMock(ImageInterface::class);
         $image
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getPath')
             ->willReturn($absoluteFilePath)
         ;

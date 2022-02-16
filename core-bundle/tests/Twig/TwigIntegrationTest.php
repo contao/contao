@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig;
 
+use Contao\Config;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -44,13 +45,15 @@ class TwigIntegrationTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'templates'));
 
         TemplateLoader::reset();
 
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL']);
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([System::class, Config::class]);
+
+        parent::tearDown();
     }
 
     public function testRendersWidgets(): void

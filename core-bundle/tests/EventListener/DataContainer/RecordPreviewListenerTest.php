@@ -24,11 +24,11 @@ use Doctrine\DBAL\Result;
 
 class RecordPreviewListenerTest extends TestCase
 {
-    public static function tearDownAfterClass(): void
+    protected function tearDown(): void
     {
-        parent::tearDownAfterClass();
-
         unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
     }
 
     /**

@@ -15,14 +15,14 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\TemplateController;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
-class TemplateControllerTest extends ContaoTestCase
+class TemplateControllerTest extends TestCase
 {
     public function testWithDataInput(): void
     {

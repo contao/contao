@@ -17,7 +17,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\TestCase\ContaoTestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -25,7 +25,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class BackendMenuListenerTest extends ContaoTestCase
+class BackendMenuListenerTest extends TestCase
 {
     public function testBuildsTheMainMenu(): void
     {

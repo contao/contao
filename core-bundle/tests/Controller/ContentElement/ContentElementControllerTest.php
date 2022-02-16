@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
+use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
@@ -38,6 +39,15 @@ class ContentElementControllerTest extends TestCase
         $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
 
         System::setContainer($this->container);
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([System::class, Config::class]);
+
+        parent::tearDown();
     }
 
     public function testCreatesTheTemplateFromTheClassName(): void

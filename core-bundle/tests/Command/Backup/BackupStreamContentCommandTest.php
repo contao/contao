@@ -24,6 +24,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class BackupStreamContentCommandTest extends TestCase
@@ -38,6 +39,13 @@ class BackupStreamContentCommandTest extends TestCase
             new MountManager(new InMemoryFilesystemAdapter()),
             $this->createMock(DbafsManager::class)
         );
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
     }
 
     public function testStreamsFileProperly(): void

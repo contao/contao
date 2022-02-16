@@ -951,6 +951,7 @@ services:
 
     contao.twig.filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
+        public: true
         arguments:
             - '@cache.system'
             - '@contao.twig.loader.template_locator'

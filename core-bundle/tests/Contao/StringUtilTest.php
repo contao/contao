@@ -46,6 +46,13 @@ class StringUtilTest extends TestCase
         System::setContainer($container);
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Input::class, System::class]);
+
+        parent::tearDown();
+    }
+
     public function testGeneratesAliases(): void
     {
         $this->assertSame('foo', StringUtil::generateAlias('foo'));
