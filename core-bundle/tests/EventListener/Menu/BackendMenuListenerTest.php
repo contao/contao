@@ -245,14 +245,21 @@ class BackendMenuListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertCount(3, $children);
         $this->assertSame(['manual', 'alerts', 'submenu', 'burger'], array_keys($children));
 
         // Manual
         $this->assertSame('MSC.manual', $children['manual']->getLabel());
         $this->assertSame('https://to.contao.org/manual', $children['manual']->getUri());
-        $this->assertSame(['class' => 'icon-manual'], $children['manual']->getLinkAttributes());
-        $this->assertSame(['translation_domain' => 'contao_default'], $children['manual']->getExtras());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
+
+        $this->assertSame(
+            [
+                'class' => 'icon-manual',
+                'title' => 'MSC.manual',
+                'target' => '_blank',
+            ],
+            $children['manual']->getLinkAttributes()
+        );
 
         // Alerts
         $this->assertSame('MSC.systemMessages <sup>1</sup>', $children['alerts']->getLabel());
