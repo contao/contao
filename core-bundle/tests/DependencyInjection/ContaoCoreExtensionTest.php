@@ -477,6 +477,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertEquals(
             [
+                new Reference('contao.csrf.token_manager'),
                 new Reference('contao.csrf.token_storage'),
                 new Reference('%contao.csrf_cookie_prefix%'),
             ],

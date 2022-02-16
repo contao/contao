@@ -39,8 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.index.1">
         <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt; and &lt;code&gt;tl_search_index&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
-        <target>&lt;code&gt;tl_seach&lt;/code&gt;と&lt;code&gt;tl_search_index&lt;/code&gt; のテーブルを切り捨てます。その後、検索のインデックスを再構築しなければな
-りません(上を参照)。</target>
+        <target>&lt;code&gt;tl_seach&lt;/code&gt;と&lt;code&gt;tl_search_index&lt;/code&gt; のテーブルを切り捨てます。その後、検索のインデックスを再構築しなければなりません(上を参照)。</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.undo.0">
         <source>Purge the undo table</source>

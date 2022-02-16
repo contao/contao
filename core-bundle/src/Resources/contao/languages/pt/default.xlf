@@ -2607,8 +2607,7 @@ Download %s</target>
         <target>Desactivar</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>O editor de CSS interno encontra-se descontinuado e será removido numa próxima versão do Contao! Por favor considere exportar as suas folhas de estilo e adicioná-las posteriormente ao page layout como folhas de estilo externas.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

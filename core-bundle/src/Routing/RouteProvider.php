@@ -249,7 +249,7 @@ class RouteProvider implements RouteProviderInterface
         $defaults = $this->getRouteDefaults($page);
         $defaults['parameters'] = '';
 
-        $requirements = ['parameters' => '(/.+)?'];
+        $requirements = ['parameters' => '(/.+?)?'];
         $path = sprintf('/%s{parameters}%s', $page->alias ?: $page->id, $this->urlSuffix);
 
         if ($this->prependLocale) {

@@ -1471,7 +1471,7 @@
       </trans-unit>
       <trans-unit id="MSC.lastLogin.1">
         <source>Your previous login was %s. Welcome back!</source>
-        <target>Ваша претходна пријава је била %s. Добродошли назад!</target>
+        <target>Ваша претходна пријава је била %s. Добро дошли назад!</target>
       </trans-unit>
       <trans-unit id="MSC.currentLogin.0">
         <source>Last login</source>
@@ -1483,7 +1483,7 @@
       </trans-unit>
       <trans-unit id="MSC.firstLogin">
         <source>This seems to be your first login. Welcome to Contao!</source>
-        <target>Изгледа да је ово први пут да се пријављујете. Добродошли у Contao!</target>
+        <target>Изгледа да је ово први пут да се пријављујете. Добро дошли у Contao!</target>
       </trans-unit>
       <trans-unit id="MSC.loginAttempts">
         <source>Login attempts</source>
@@ -1519,7 +1519,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Упознајте се детаљније о обрзању рада са  &lt;a href=&quot;https://contao.org/manual/administration-area.html#keyboard-shortcuts&quot; title=&quot;Keyboard shortcuts overview on contao.org&quot; target=&quot;_blank&quot;&gt;пречицама на тастатури&lt;/a&gt;.</target>
+        <target>Упознајте се детаљније о обрзању рада са  &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;пречицама на тастатури&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2626,8 +2626,8 @@
         <target>Онемогући</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>Интерни уређивач CSS-а је превазиђен и биће уклоњен у некој од наредних верзија Contao! Размислите о томе да извезете постојеће стилове и поново их додате распореду страницу као вањске стилове.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>Интерни CSS уређивач је застарио и биће уклоњен у верзији Contao 5.0! Размотрите извоз ваших постојећих стилова и додавање у распоред странице у форми вањских стилова.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

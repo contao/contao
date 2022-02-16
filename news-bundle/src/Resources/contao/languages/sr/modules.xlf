@@ -39,19 +39,19 @@
       </trans-unit>
       <trans-unit id="FMD.newsarchive.0">
         <source>News archive</source>
-        <target>Архива вести</target>
+        <target>Категорија вести</target>
       </trans-unit>
       <trans-unit id="FMD.newsarchive.1">
         <source>Adds a news archive to the page</source>
-        <target>Додавање архиве вести на страницу</target>
+        <target>Додавање категорије вести на страницу</target>
       </trans-unit>
       <trans-unit id="FMD.newsmenu.0">
         <source>News archive menu</source>
-        <target>Избор архиве вести</target>
+        <target>Избор категорије вести</target>
       </trans-unit>
       <trans-unit id="FMD.newsmenu.1">
         <source>Generates a navigation menu to browse the news archive</source>
-        <target>Генерисање навигационог менија за преглед архиве вести</target>
+        <target>Генерисање навигационог менија за преглед категорија вести</target>
       </trans-unit>
     </body>
   </file>

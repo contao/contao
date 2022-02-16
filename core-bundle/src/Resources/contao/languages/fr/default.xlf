@@ -1451,6 +1451,7 @@
       </trans-unit>
       <trans-unit id="MSC.confirm.0">
         <source>Confirm password</source>
+        <target>Confirmez le mot de passe</target>
       </trans-unit>
       <trans-unit id="MSC.confirm.1">
         <source>Please confirm the password.</source>
@@ -2614,6 +2615,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Il y a au moins un groupe d'utilisateurs qui accorde la permission au module frontend &quot;Listing&quot; et à ses champs &quot;list_*&quot;. Comme ils peuvent contenir des requêtes SQL arbitraires, les utilisateurs de ces groupes ont implicitement le contrôle total du système !</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2624,8 +2626,8 @@
         <target>Désactiver</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>L'éditeur CSS interne est obsolète et sera supprimé dans l'une des prochaines versions de Contao! Veuillez envisager d'exporter vos feuilles de style existantes et de les rajouter à la mise en page en tant que feuilles de style externes.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>L'éditeur de CSS interne a été déprécié et sera supprimé dans Contao 5.0 ! Veuillez envisager d'exporter vos feuilles de style existantes et de les ajouter à vos modèles de page en tant que feuilles de style externes.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2669,6 +2671,7 @@
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
+        <target>Option inconnue: %s</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
