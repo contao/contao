@@ -53,8 +53,8 @@ class ConfigureFilesystemPass implements CompilerPassInterface
     {
         $parameterBag = $container->getParameterBag();
 
-        $projectDir = $parameterBag->resolveString($parameterBag->get('kernel.project_dir'));
-        $uploadDir = $parameterBag->resolveString($parameterBag->get('contao.upload_path'));
+        $projectDir = $parameterBag->resolveValue($parameterBag->get('kernel.project_dir'));
+        $uploadDir = $parameterBag->resolveValue($parameterBag->get('contao.upload_path'));
 
         $finder = (new Finder())->in($projectDir)->path("/^$uploadDir/");
 
