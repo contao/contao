@@ -26,6 +26,7 @@ use Contao\Model\Collection;
  * @property string|integer    $maxItems
  * @property string            $feedBase
  * @property string|null       $description
+ * @property string|integer    $imgSize
  *
  * @property string $feedName
  *
