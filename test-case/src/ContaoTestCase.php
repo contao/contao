@@ -19,6 +19,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Roave\BetterReflection\BetterReflection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Filesystem\Filesystem;
@@ -32,6 +33,16 @@ abstract class ContaoTestCase extends TestCase
      * @var array
      */
     private static $tempDirs = [];
+
+    /**
+     * @var array
+     */
+    private static $betterReflectionCache = [];
+
+    /**
+     * @var array
+     */
+    private $backupServerEnvGetPost = [];
 
     public static function tearDownAfterClass(): void
     {
@@ -226,6 +237,112 @@ abstract class ContaoTestCase extends TestCase
         ;
 
         return $tokenStorage;
+    }
+
+    protected function backupServerEnvGetPost(): void
+    {
+        $this->backupServerEnvGetPost = [
+            '_SERVER' => $_SERVER,
+            '_ENV' => $_ENV,
+            '_GET' => $_GET,
+            '_POST' => $_POST,
+        ];
+    }
+
+    protected function restoreServerEnvGetPost(): void
+    {
+        $_SERVER = $this->backupServerEnvGetPost['_SERVER'] ?? $_SERVER;
+        $_ENV = $this->backupServerEnvGetPost['_ENV'] ?? $_ENV;
+        $_GET = $this->backupServerEnvGetPost['_GET'] ?? [];
+        $_POST = $this->backupServerEnvGetPost['_POST'] ?? [];
+    }
+
+    /**
+     * @param array<int, class-string|array{0: class-string, 1: array<int, string>}> $classNames
+     */
+    protected function resetStaticProperties(array $classNames): void
+    {
+        foreach ($classNames as $class) {
+            $properties = null;
+
+            if (\is_array($class)) {
+                $properties = $class[1];
+                $class = $class[0];
+            }
+
+            if (!class_exists($class, false)) {
+                continue;
+            }
+
+            $reflectionClass = new \ReflectionClass($class);
+
+            if (
+                null === $properties
+                && \is_callable([$class, 'reset'])
+                && method_exists($class, 'reset')
+                && $reflectionClass->getMethod('reset')->isStatic()
+                && 0 === \count($reflectionClass->getMethod('reset')->getParameters())
+            ) {
+                $class::reset();
+
+                continue;
+            }
+
+            foreach ($reflectionClass->getProperties(\ReflectionProperty::IS_STATIC) as $property) {
+                if (null !== $properties && !\in_array($property->getName(), $properties, true)) {
+                    continue;
+                }
+
+                if ($property->getDeclaringClass()->getName() !== $class) {
+                    continue;
+                }
+
+                $property->setAccessible(true);
+
+                if (!$property->isInitialized()) {
+                    continue;
+                }
+
+                [$hasDefaultValue, $defaultValue] = $this->getDefaultStaticProperty($property);
+
+                if (!$hasDefaultValue || $property->getValue() === $defaultValue) {
+                    continue;
+                }
+
+                $property->setValue($defaultValue);
+            }
+        }
+    }
+
+    private function getDefaultStaticProperty(\ReflectionProperty $property): array
+    {
+        // See https://github.com/php/php-src/commit/3eb97a456648c739533d92c81102cb919eab01c9
+        if (\PHP_VERSION_ID >= 80100) {
+            return [$property->hasDefaultValue(), $property->getDefaultValue()];
+        }
+
+        if (!class_exists(BetterReflection::class)) {
+            throw new \RuntimeException('To use the ContaoTestCase::resetStaticProperties() method on PHP 8.0 or lower please install "roave/better-reflection".');
+        }
+
+        $class = $property->getDeclaringClass()->getName();
+        $name = $property->getName();
+        $cacheKey = $class.'::'.$name;
+
+        if (isset(self::$betterReflectionCache[$cacheKey])) {
+            return self::$betterReflectionCache[$cacheKey];
+        }
+
+        if (method_exists(BetterReflection::class, 'reflector')) {
+            $betterProperty = (new BetterReflection())->reflector()->reflectClass($class)->getProperty($name);
+        } else {
+            $betterProperty = (new BetterReflection())->classReflector()->reflect($class)->getProperty($name);
+        }
+
+        return self::$betterReflectionCache[$cacheKey] = [
+            $betterProperty->isDefault(),
+            $betterProperty->getDefaultValue(),
+        ];
     }
 
     /**
