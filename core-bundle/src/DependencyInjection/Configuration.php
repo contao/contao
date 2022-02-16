@@ -125,6 +125,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
                 ->append($this->addCrawlNode())
+                ->append($this->addSanitizerNode())
             ->end()
         ;
 
@@ -158,6 +159,9 @@ class Configuration implements ConfigurationInterface
                         ->integerNode('webp_quality')
                         ->end()
                         ->booleanNode('webp_lossless')
+                        ->end()
+                        ->booleanNode('flatten')
+                            ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
                         ->end()
                         ->scalarNode('interlace')
                             ->defaultValue(ImageInterface::INTERLACE_PLANE)
@@ -412,6 +416,33 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
                     ->prototype('scalar')->end()
                     ->defaultValue([])
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addSanitizerNode(): NodeDefinition
+    {
+        return (new TreeBuilder('sanitizer'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_url_protocols')
+                    ->prototype('scalar')->end()
+                    ->defaultValue(['http', 'https', 'ftp', 'mailto', 'tel', 'data', 'skype', 'whatsapp'])
+                    ->validate()
+                        ->always(
+                            static function (array $protocols): array {
+                                foreach ($protocols as $protocol) {
+                                    if (!preg_match('/^[a-z][a-z0-9\-+.]*$/i', (string) $protocol)) {
+                                        throw new \InvalidArgumentException(sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
+                                    }
+                                }
+
+                                return $protocols;
+                            }
+                        )
+                    ->end()
                 ->end()
             ->end()
         ;

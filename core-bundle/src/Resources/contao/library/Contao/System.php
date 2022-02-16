@@ -51,7 +51,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * @property Messages                         $Messages    The messages object
  * @property Session                          $Session     The session object
  * @property StyleSheets                      $StyleSheets The style sheets object
- * @property BackendTemplate|FrontendTemplate $Template    The template object
+ * @property BackendTemplate|FrontendTemplate $Template    The template object (TODO: remove this line in Contao 5.0)
  * @property BackendUser|FrontendUser         $User        The user object
  *
  * @author Leo Feyer <https://github.com/leofeyer>
@@ -461,7 +461,7 @@ abstract class System
 		}
 
 		// Return if the language file has been loaded already
-		if (!$blnNoCache && isset(static::$arrLanguageFiles[$strName][$strLanguage]))
+		if (!$blnNoCache && array_key_last(static::$arrLanguageFiles[$strName] ?? array()) === $strLanguage)
 		{
 			return;
 		}
@@ -485,6 +485,9 @@ abstract class System
 				$strLanguage = 'en';
 			}
 		}
+
+		// Unset to move the new array key to the last position
+		unset(static::$arrLanguageFiles[$strName][$strCacheKey]);
 
 		// Use a global cache variable to support nested calls
 		static::$arrLanguageFiles[$strName][$strCacheKey] = $strLanguage;

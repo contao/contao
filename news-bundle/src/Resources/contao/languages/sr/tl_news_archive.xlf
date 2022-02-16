@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.title.1">
         <source>Please enter a news archive title.</source>
-        <target>Унесите назив архиве вести.</target>
+        <target>Унесите назив категорије вести.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.0">
         <source>Redirect page</source>
@@ -83,7 +83,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.protected.0">
         <source>Protect archive</source>
-        <target>Заштити архиву</target>
+        <target>Заштити категорију</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.protected.1">
         <source>Show news items to certain member groups only.</source>
@@ -95,7 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.groups.1">
         <source>These groups will be able to see the news items in this archive.</source>
-        <target>Чланови ових група могу да виде ставке вести у овој архиви.</target>
+        <target>Чланови ових група могу да виде ставке вести у овој категорији.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.tstamp.0">
         <source>Revision date</source>
@@ -147,35 +147,35 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
-        <target>Креирај нову архиву вести</target>
+        <target>Креирај нову категорију вести</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.show">
         <source>Show the details of news archive ID %s</source>
-        <target>Прикажи детаље архиве вести  ID%s</target>
+        <target>Прикажи детаље категорије вести  ID%s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
-        <target>Уреди архиву вести %s</target>
+        <target>Уреди категорију вести %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editheader">
         <source>Edit the settings of news archive ID %s</source>
-        <target>Уреди подешавања архиве вести ID %s</target>
+        <target>Уреди подешавања категорије вести ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.editmeta">
         <source>Edit the news archive settings</source>
-        <target>Уреди подешавања архиве вести</target>
+        <target>Уреди подешавања категорије вести</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>
-        <target>Копирај архиву вести  ID </target>
+        <target>Копирај категорију вести ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.delete">
         <source>Delete news archive ID %s</source>
-        <target>Обриши архиву вести ID %s</target>
+        <target>Обриши категорију вести ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.comments">
         <source>Show comments of news archive ID %s</source>
-        <target>Прикажи коментаре архиве вести ID %s</target>
+        <target>Прикажи коментаре категорије вести ID %s</target>
       </trans-unit>
     </body>
   </file>

@@ -2,6 +2,58 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.26] (2022-02-08)
+
+**Fixed issues:**
+
+- [#4045] Correctly strip all CSRF token occurrences ([ausi])
+- [#4075] Remove the `Controller::$Template` property ([leofeyer])
+- [#4072] Reduce memory consumption when warming up cache ([Toflar])
+- [#4067] Correctly handle null values in DCs ([ausi])
+
+## [4.9.25] (2022-02-03)
+
+**Fixed issues:**
+
+- [#3997] Fix several array to string conversions ([leofeyer])
+- [#4056] Fix merging cssID from ContentModule to FrontendModuleController ([ameotoko])
+- [#3857] Fix fragments in RSS feeds ([fritzmg])
+- [#3800] Fix routing with local domain and port ([bezin])
+- [#4009] Fix long content being cut off in the back end popup ([qzminski])
+- [#4031] Backport 'Replace phpunit/token-stream with nikic/php-parser' ([m-vo])
+- [#4020] Fix compatibility with Composer 2.2.5 ([ausi])
+- [#4013] Reload translations if the language changes ([ausi])
+- [#3984] Add the config.allow-plugins settings to the composer.json files ([leofeyer])
+- [#3971] Fix `Input::post()` for form data ([fritzmg])
+- [#3981] Reduce the scope of the authentication listener ([fritzmg])
+- [#3790] Add a debounce wrapper to the username autosuggester ([ameotoko])
+- [#3488] Add a configuration for allowed URL protocols ([MarkejN])
+- [#3910] Fix the ScriptHandlers for Composer 2.3 ([fritzmg])
+- [#3915] Do not generate URLs for insert tags that don’t need it ([aschempp])
+- [#3842] Simplify expression in Crawl\Escargot\Factory ([m-vo])
+- [#3966] Add compatibility with symfony/filesystem 5.4 ([ausi])
+- [#3939] Fix duplicating child records with dynamic ptable ([dmolineus])
+- [#3876] Correctly handle array values in DCs ([aschempp])
+- [#3882] Do not initialize the framework to get the Automator commands ([aschempp])
+- [#3877] Enforce final newline in HTML5 templates ([aschempp])
+- [#3836] Report HTTP exceptions as warnings for the crawler instead of errors ([Toflar])
+- [#3867] Serialize array value before saving ([bytehead])
+- [#3841] Remove an unused setup method ([aschempp])
+
+## [4.9.24] (2021-12-16)
+
+**Fixed issues:**
+
+- [#3822] Add a Template property to the Controller class ([leofeyer])
+- [#3815] Enable image lazy loading in file manager ([fritzmg])
+- [#3803] Fix infinite 4.8.0 migration when custom templates are present ([fritzmg])
+- [#3792] Fix more PHP8 warnings ([aschempp])
+- [#3788] Clarify internal style sheets deprecation ([fritzmg])
+- [#3787] Do not sort the referrers ([leofeyer])
+- [#3781] Fix unknown "ansi_to_html" filter error ([fritzmg])
+- [#3759] Unify the MakeServicesPublicPass ([bytehead])
+- [#3758] Add transitive dependency on symfony/twig-bridge ([richardhj])
+
 ## [4.9.23] (2021-12-02)
 
 **Fixed issues:**
@@ -781,6 +833,9 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.26]: https://github.com/contao/contao/releases/tag/4.9.26
+[4.9.25]: https://github.com/contao/contao/releases/tag/4.9.25
+[4.9.24]: https://github.com/contao/contao/releases/tag/4.9.24
 [4.9.23]: https://github.com/contao/contao/releases/tag/4.9.23
 [4.9.22]: https://github.com/contao/contao/releases/tag/4.9.22
 [4.9.21]: https://github.com/contao/contao/releases/tag/4.9.21
@@ -813,6 +868,7 @@ This project adheres to [Semantic Versioning].
 [CVE-2021-35210]: https://github.com/contao/contao/security/advisories/GHSA-h58v-c6rf-g9f7
 [CVE-2020-25768]: https://github.com/contao/contao/security/advisories/GHSA-f7wm-x4gw-6m23
 [AlexejKossmann]: https://github.com/AlexejKossmann
+[ameotoko]: https://github.com/ameotoko
 [AndreasA]: https://github.com/AndreasA
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -842,6 +898,43 @@ This project adheres to [Semantic Versioning].
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
 [zonky2]: https://github.com/zonky2
+[#4045]: https://github.com/contao/contao/pull/4045
+[#4075]: https://github.com/contao/contao/pull/4075
+[#4072]: https://github.com/contao/contao/pull/4072
+[#4067]: https://github.com/contao/contao/pull/4067
+[#3997]: https://github.com/contao/contao/pull/3997
+[#4056]: https://github.com/contao/contao/pull/4056
+[#3857]: https://github.com/contao/contao/pull/3857
+[#3800]: https://github.com/contao/contao/pull/3800
+[#4009]: https://github.com/contao/contao/pull/4009
+[#4031]: https://github.com/contao/contao/pull/4031
+[#4020]: https://github.com/contao/contao/pull/4020
+[#4013]: https://github.com/contao/contao/pull/4013
+[#3984]: https://github.com/contao/contao/pull/3984
+[#3971]: https://github.com/contao/contao/pull/3971
+[#3981]: https://github.com/contao/contao/pull/3981
+[#3790]: https://github.com/contao/contao/pull/3790
+[#3488]: https://github.com/contao/contao/pull/3488
+[#3910]: https://github.com/contao/contao/pull/3910
+[#3915]: https://github.com/contao/contao/pull/3915
+[#3842]: https://github.com/contao/contao/pull/3842
+[#3966]: https://github.com/contao/contao/pull/3966
+[#3939]: https://github.com/contao/contao/pull/3939
+[#3876]: https://github.com/contao/contao/pull/3876
+[#3882]: https://github.com/contao/contao/pull/3882
+[#3877]: https://github.com/contao/contao/pull/3877
+[#3836]: https://github.com/contao/contao/pull/3836
+[#3867]: https://github.com/contao/contao/pull/3867
+[#3841]: https://github.com/contao/contao/pull/3841
+[#3822]: https://github.com/contao/contao/pull/3822
+[#3815]: https://github.com/contao/contao/pull/3815
+[#3803]: https://github.com/contao/contao/pull/3803
+[#3792]: https://github.com/contao/contao/pull/3792
+[#3788]: https://github.com/contao/contao/pull/3788
+[#3787]: https://github.com/contao/contao/pull/3787
+[#3781]: https://github.com/contao/contao/pull/3781
+[#3759]: https://github.com/contao/contao/pull/3759
+[#3758]: https://github.com/contao/contao/pull/3758
 [#3741]: https://github.com/contao/contao/pull/3741
 [#3732]: https://github.com/contao/contao/pull/3732
 [#3738]: https://github.com/contao/contao/pull/3738

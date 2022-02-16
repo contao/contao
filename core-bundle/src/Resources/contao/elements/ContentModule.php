@@ -43,14 +43,14 @@ class ContentModule extends ContentElement
 			return '';
 		}
 
-		if (is_a($strClass, ContentProxy::class, true))
+		if (is_a($strClass, ModuleProxy::class, true))
 		{
 			if (!empty($this->cssID[1]))
 			{
 				$objModel->classes = array_merge((array) $objModel->classes, array($this->cssID[1]));
 			}
 
-			/** @var ContentProxy $proxy */
+			/** @var ModuleProxy $proxy */
 			$proxy = new $strClass($objModel, $this->strColumn);
 
 			if (!empty($this->cssID[0]))

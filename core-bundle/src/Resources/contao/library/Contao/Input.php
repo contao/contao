@@ -985,14 +985,7 @@ class Input
 			return $_POST[$strKey];
 		}
 
-		$request = System::getContainer()->get('request_stack')->getMasterRequest();
-
-		// Return if the session has not been started before
-		if ($request === null || !$request->hasPreviousSession())
-		{
-			return null;
-		}
-
+		// Do not check for $request->hasPreviousSession() and early return here (see #3971)
 		if (isset($_SESSION['FORM_DATA'][$strKey]))
 		{
 			return ($strKey == 'FORM_SUBMIT') ? preg_replace('/^auto_/i', '', $_SESSION['FORM_DATA'][$strKey]) : $_SESSION['FORM_DATA'][$strKey];
