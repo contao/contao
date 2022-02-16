@@ -134,22 +134,17 @@ abstract class Controller extends System
 		$arrMapper['mod'][] = 'comment_form'; // TODO: remove in Contao 5.0
 		$arrMapper['mod'][] = 'newsletter'; // TODO: remove in Contao 5.0
 
-		// Get the default templates
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
-		$identifierPattern = sprintf(
-			'/^%s%s/',
-			preg_quote($strPrefix, '/'),
-			substr($strPrefix, -1) !== '_' ? '($|_)' : ''
-		);
+		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
 
 		$prefixedFiles = array_merge(
 			array_filter(
 				array_keys($templateHierarchy->getInheritanceChains()),
 				static fn (string $identifier): bool => 1 === preg_match($identifierPattern, $identifier),
 			),
-			// Merge with the templates from the TemplateLoader for backward
-			// compatibility in case someone added templates manually
+			// Merge with the templates from the TemplateLoader for backwards
+			// compatibility in case someone has added templates manually
 			TemplateLoader::getPrefixedFiles($strPrefix),
 		);
 

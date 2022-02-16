@@ -950,8 +950,8 @@ services:
             - '@contao.image.studio.figure_renderer'
 
     contao.twig.filesystem_loader:
-        public: true
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
+        public: true
         arguments:
             - '@cache.system'
             - '@contao.twig.loader.template_locator'
