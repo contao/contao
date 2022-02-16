@@ -157,7 +157,7 @@
         "ext-fileinfo": "*",
         "bamarni/composer-bin-plugin": "^1.4",
         "composer/composer": "^2.0",
-        "contao/test-case": "^4.5",
+        "contao/test-case": "^4.6",
         "league/flysystem-memory": "^2.0 || ^3.0",
         "phpunit/phpunit": "^9.3",
         "roave/better-reflection": "^4.12.2 || ^5.0",
