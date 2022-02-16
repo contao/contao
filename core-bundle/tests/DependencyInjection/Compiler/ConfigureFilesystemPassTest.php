@@ -14,16 +14,30 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
+use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Tests\Fixtures\Filesystem\FilesystemConfiguringExtension;
 use Contao\CoreBundle\Tests\TestCase;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 class ConfigureFilesystemPassTest extends TestCase
 {
     public function testCallsExtensionsToConfigureTheFilesystem(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
+        $container
+            ->method('getParameterBag')
+            ->willReturn(new ParameterBag([
+                'kernel.project_dir' => $this->getTempDir(),
+                'contao.upload_path' => '',
+            ]))
+        ;
 
         $configureFilesystemExtensions = [];
 
@@ -56,5 +70,80 @@ class ConfigureFilesystemPassTest extends TestCase
         ;
 
         (new ConfigureFilesystemPass())->process($container);
+    }
+
+    /**
+     * @dataProvider provideSymlinks
+     */
+    public function testCreatesMountsForSymlinks(string $target, string $link): void
+    {
+        if ('\\' === \DIRECTORY_SEPARATOR && Path::isRelative($target)) {
+            $this->markTestSkipped('Skip testing relative symlinks on windows');
+        }
+
+        $tempDir = $this->getTempDir();
+
+        // Setup directories with symlink
+        $filesystem = new Filesystem();
+
+        $filesystem->mkdir(Path::join($tempDir, 'files'));
+        $filesystem->dumpFile(Path::join($tempDir, 'vendor/foo/dummy.txt'), 'dummy');
+
+        chdir(Path::join($tempDir, 'files'));
+
+        /* @phpstan-ignore-next-line because we need to create relative
+         *  symlinks and cannot use the Symfony Filesystem for that
+         */
+        symlink($target, $link);
+
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => $tempDir,
+                'contao.upload_path' => 'files',
+            ])
+        );
+
+        $container->setDefinition(
+            $mountManagerId = 'contao.filesystem.mount_manager',
+            $mountManagerDefinition = new Definition(MountManager::class)
+        )->setPublic(true);
+
+        (new ConfigureFilesystemPass())->process($container);
+
+        $methodCalls = $mountManagerDefinition->getMethodCalls();
+
+        $this->assertCount(1, $methodCalls);
+        $this->assertSame('mount', $methodCalls[0][0]);
+
+        [$reference, $mountPath] = $methodCalls[0][1];
+        $this->assertInstanceOf(Reference::class, $reference);
+        $this->assertSame('files/foo', $mountPath);
+
+        $adapter = $container->get((string) $reference);
+        $this->assertInstanceOf(LocalFilesystemAdapter::class, $adapter);
+        $this->assertSame('dummy', $adapter->read('dummy.txt'));
+
+        $container->compile();
+
+        $mountManager = $container->get($mountManagerId);
+        $this->assertSame('dummy', $mountManager->read('files/foo/dummy.txt'));
+
+        // Cleanup
+        $filesystem->remove($this->getTempDir());
+    }
+
+    public function provideSymlinks(): \Generator
+    {
+        $tempDir = $this->getTempDir();
+
+        yield 'absolute symlink' => [
+            Path::join($tempDir, 'vendor/foo'),
+            Path::join($tempDir, 'files/foo'),
+        ];
+
+        yield 'symlink relative to the files directory' => [
+            '../vendor/foo',
+            'foo',
+        ];
     }
 }

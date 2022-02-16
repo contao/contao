@@ -270,12 +270,6 @@ class FilesystemConfigurationTest extends TestCase
         $config->addDefaultDbafs('foo', 'tl_foo');
     }
 
-    // todo
-//    public function testCreatesMountsForSymlinks(): void
-//    {
-//
-//    }
-
     private function getConfigurationWithAdapterDefinitionFactory(ContainerBuilder $container, AdapterDefinitionFactory $adapterDefinitionFactory): FilesystemConfiguration
     {
         $config = new FilesystemConfiguration($container);
