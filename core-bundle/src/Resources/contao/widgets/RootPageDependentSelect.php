@@ -33,9 +33,8 @@ class RootPageDependentSelect extends SelectMenu
 
 		foreach ($rootPages as $rootPage)
 		{
-			$label = sprintf('%s', $rootPage->title);
-			$this->arrOptions[0]['label'] = sprintf($this->blankOptionLabel, $label);
-			$this->strLabel = $label;
+			$this->arrOptions[0]['label'] = sprintf($this->blankOptionLabel, $rootPage->title);
+			$this->strLabel = $rootPage->title;
 
 			$fields[] = sprintf(
 				'<select name="%s[]" id="ctrl_%s" class="%s%s"%s onfocus="Backend.getScrollOffset()">%s</select>%s',
