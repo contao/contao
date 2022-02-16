@@ -117,7 +117,7 @@ class ConfigureFilesystemPassTest extends TestCase
 
         [$reference, $mountPath] = $methodCalls[0][1];
         $this->assertInstanceOf(Reference::class, $reference);
-        $this->assertSame('files/foo', $mountPath);
+        $this->assertSame('files/foo', Path::normalize($mountPath));
 
         $adapter = $container->get((string) $reference);
         $this->assertInstanceOf(LocalFilesystemAdapter::class, $adapter);
