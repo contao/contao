@@ -29,6 +29,25 @@ use Symfony\Component\Process\Process;
 
 class ConfigureFilesystemPassTest extends TestCase
 {
+    /**
+     * @var string|false
+     */
+    private $cwdBackup = false;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->cwdBackup = getcwd();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        chdir($this->cwdBackup);
+    }
+
     public function testCallsExtensionsToConfigureTheFilesystem(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
