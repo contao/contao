@@ -129,7 +129,8 @@ class ConfigureFilesystemPassTest extends TestCase
         $this->assertSame('dummy', $mountManager->read('files/foo/dummy.txt'));
 
         // Cleanup
-        $filesystem->remove($this->getTempDir());
+        $filesystem->remove(Path::join($this->getTempDir(), 'files'));
+        $filesystem->remove(Path::join($this->getTempDir(), 'vendor'));
     }
 
     public function provideSymlinks(): \Generator
