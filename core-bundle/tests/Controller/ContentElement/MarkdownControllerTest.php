@@ -16,17 +16,25 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
-use Contao\TestCase\ContaoTestCase;
+use Contao\System;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class MarkdownControllerTest extends ContaoTestCase
+class MarkdownControllerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testWithCodeInput(): void
     {
         $container = $this->mockContainer('<h1>Headline</h1>'."\n");
@@ -55,6 +63,8 @@ class MarkdownControllerTest extends ContaoTestCase
             HTML;
 
         $container = $this->mockContainer($expectedHtml);
+
+        System::setContainer($container);
 
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
         $contentModel->markdownSource = 'sourceText';

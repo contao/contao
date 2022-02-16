@@ -237,7 +237,7 @@ abstract class Controller extends System
 			{
 				$objTheme = ThemeModel::findAll(array('order'=>'name'));
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 				$objTheme = null;
 			}

@@ -12,15 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\RootPageDependentSelect;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class RootPageDependentSelectTest extends ContaoTestCase
+class RootPageDependentSelectTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testRendersMultipleSelects(): void
     {
         $rootPages = [

@@ -12,11 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Cache;
 
+use Contao\Config;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
@@ -26,9 +29,9 @@ use Symfony\Component\Filesystem\Path;
 
 class ContaoCacheWarmerTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         (new Filesystem())->mkdir([
             Path::join(self::getTempDir(), 'var/cache'),
@@ -38,9 +41,13 @@ class ContaoCacheWarmerTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'var/cache/contao'));
+
+        unset($GLOBALS['TL_TEST'], $GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
+
+        parent::tearDown();
     }
 
     public function testCreatesTheCacheFolder(): void

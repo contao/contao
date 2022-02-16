@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\Config;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
@@ -21,6 +22,8 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\File;
+use Contao\Files;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -29,6 +32,15 @@ use Twig\Environment;
 
 class FigureRendererTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([System::class, File::class, Files::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testConfiguresBuilder(): void
     {
         $metadata = new Metadata([]);

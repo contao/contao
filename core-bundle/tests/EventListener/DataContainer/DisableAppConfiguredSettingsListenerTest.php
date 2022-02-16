@@ -17,10 +17,21 @@ use Contao\CoreBundle\ServiceAnnotation\Callback;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DisableAppConfiguredSettingsListenerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
+
+        parent::tearDown();
+    }
+
     public function testAnnotatedCallbacks(): void
     {
         $listener = $this->createListener();
