@@ -15,11 +15,18 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\InsertTagsListener;
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\Events;
+use Contao\TestCase\ContaoTestCase;
 
-class InsertTagsListenerTest extends TestCase
+class InsertTagsListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testReplacesTheCalendarFeedTag(): void
     {
         $feedModel = $this->mockClassWithProperties(CalendarFeedModel::class);

@@ -14,14 +14,21 @@ namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\News;
 use Contao\NewsBundle\EventListener\PreviewUrlConvertListener;
 use Contao\NewsModel;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
-class PreviewUrlConverterListenerTest extends TestCase
+class PreviewUrlConverterListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testConvertsThePreviewUrl(): void
     {
         $request = new Request();

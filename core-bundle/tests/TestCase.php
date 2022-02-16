@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\TestCase\ContaoTestCase;
-use Roave\BetterReflection\BetterReflection;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

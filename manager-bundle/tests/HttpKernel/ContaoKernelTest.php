@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\HttpKernel;
 
 use AppBundle\AppBundle;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerBundle\ContaoManager\Plugin as ManagerPlugin;
 use Contao\ManagerBundle\ContaoManagerBundle;
@@ -23,6 +22,7 @@ use Contao\ManagerPlugin\Bundle\BundleLoader;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
+use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -33,7 +33,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 
-class ContaoKernelTest extends TestCase
+class ContaoKernelTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 

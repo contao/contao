@@ -16,12 +16,19 @@ use Contao\CalendarBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CalendarEventsModel;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Tests\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class PreviewUrlCreateListenerTest extends TestCase
+class PreviewUrlCreateListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testCreatesThePreviewUrl(): void
     {
         $requestStack = new RequestStack();

@@ -16,7 +16,7 @@ use Contao\CalendarBundle\Picker\EventPickerProvider;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Picker\PickerConfig;
-use Contao\CoreBundle\Tests\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
@@ -24,8 +24,15 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class EventPickerProviderTest extends TestCase
+class EventPickerProviderTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testCreatesTheMenuItem(): void
     {
         $config = json_encode([

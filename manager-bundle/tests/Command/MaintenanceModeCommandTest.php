@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Command;
 
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\Command\MaintenanceModeCommand;
+use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Terminal;
@@ -21,7 +21,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Twig\Environment;
 
-class MaintenanceModeCommandTest extends TestCase
+class MaintenanceModeCommandTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 

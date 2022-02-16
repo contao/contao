@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\Command;
 
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\Command\InstallWebDirCommand;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-class InstallWebDirCommandTest extends TestCase
+class InstallWebDirCommandTest extends ContaoTestCase
 {
     private InstallWebDirCommand $command;
     private Filesystem $filesystem;

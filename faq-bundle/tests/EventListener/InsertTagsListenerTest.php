@@ -12,14 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Tests\EventListener;
 
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\FaqBundle\EventListener\InsertTagsListener;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
+use Contao\TestCase\ContaoTestCase;
 
-class InsertTagsListenerTest extends TestCase
+class InsertTagsListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testReplacesTheFaqTags(): void
     {
         $page = $this->createMock(PageModel::class);

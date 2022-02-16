@@ -15,18 +15,18 @@ namespace Contao\CalendarBundle\Tests\EventListener;
 use Contao\CalendarBundle\EventListener\GeneratePageListener;
 use Contao\CalendarFeedModel;
 use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\Template;
+use Contao\TestCase\ContaoTestCase;
 
-class GeneratePageListenerTest extends TestCase
+class GeneratePageListenerTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HEAD']);
+        unset($GLOBALS['TL_CONFIG'], $GLOBALS['TL_HEAD']);
 
         parent::tearDown();
     }

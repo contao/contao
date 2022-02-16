@@ -15,11 +15,11 @@ namespace Contao\CalendarBundle\Tests\ContaoManager;
 use Contao\CalendarBundle\ContaoCalendarBundle;
 use Contao\CalendarBundle\ContaoManager\Plugin;
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
+use Contao\TestCase\ContaoTestCase;
 
-class PluginTest extends TestCase
+class PluginTest extends ContaoTestCase
 {
     public function testReturnsTheBundles(): void
     {

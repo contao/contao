@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\ManagerBundle\Tests\Console;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Tests\TestCase;
 use Contao\ManagerBundle\Console\ContaoApplication;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\Console\Input\ArgvInput;
 
-class ContaoApplicationTest extends TestCase
+class ContaoApplicationTest extends ContaoTestCase
 {
     protected function setUp(): void
     {
