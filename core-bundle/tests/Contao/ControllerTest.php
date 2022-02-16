@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
@@ -20,16 +21,28 @@ use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\PageModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
 class ControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
 
     /**
      * @group legacy
@@ -185,6 +198,8 @@ class ControllerTest extends TestCase
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag.parser', $insertTagParser);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
+
+        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
 
         System::setContainer($container);
 

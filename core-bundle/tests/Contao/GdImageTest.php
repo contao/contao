@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\Files;
 use Contao\GdImage;
 use Contao\System;
 
@@ -24,6 +25,13 @@ class GdImageTest extends TestCase
         parent::setUp();
 
         System::setContainer($this->getContainerWithContaoConfiguration($this->getTempDir()));
+    }
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class, Files::class]);
+
+        parent::tearDown();
     }
 
     public function testCreatesImagesFromResources(): void

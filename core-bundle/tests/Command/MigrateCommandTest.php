@@ -23,6 +23,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -30,6 +31,13 @@ use Symfony\Component\Filesystem\Path;
 class MigrateCommandTest extends TestCase
 {
     use ExpectDeprecationTrait;
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
+    }
 
     /**
      * @dataProvider getOutputFormats

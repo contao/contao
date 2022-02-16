@@ -18,6 +18,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image as ContaoImage;
 use Contao\Image\DeferredImageInterface;
@@ -44,9 +45,9 @@ class ImageFactoryTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $filesystem = new Filesystem();
 
@@ -56,20 +57,17 @@ class ImageFactoryTest extends TestCase
                 Path::join(self::getTempDir(), $directory)
             );
         }
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
 
         System::setContainer($this->getContainerWithContaoConfiguration(self::getTempDir()));
     }
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
+
+        $this->resetStaticProperties([System::class, File::class, Files::class]);
+
+        parent::tearDown();
     }
 
     public function testCreatesAnImageObjectFromAnImagePath(): void

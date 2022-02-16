@@ -23,6 +23,13 @@ use Twig\Error\RuntimeError;
 
 class ContaoEscaperTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     /**
      * @param string|int $input
      *
