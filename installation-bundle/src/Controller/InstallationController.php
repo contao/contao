@@ -321,14 +321,27 @@ class InstallationController implements ContainerAwareInterface
             ));
         }
 
+        $connection = ConnectionFactory::create($parameters);
         $installTool = $this->container->get('contao_installation.install_tool');
-        $installTool->setConnection(ConnectionFactory::create($parameters));
+        $installTool->setConnection($connection);
 
         if (!$installTool->canConnectToDatabase($parameters['parameters']['database_name'])) {
             return $this->render('database.html.twig', array_merge(
                 $parameters,
                 ['database_error' => $this->trans('database_could_not_connect')]
             ));
+        }
+
+        $databaseVersion = null;
+
+        try {
+            $databaseVersion = $connection->getWrappedConnection()->getServerVersion();
+        } catch (\Throwable $exception) {
+            // Ignore server version detection errors
+        }
+
+        if ($databaseVersion) {
+            $parameters['parameters']['database_version'] = $databaseVersion;
         }
 
         $dumper = new ParameterDumper($this->getContainerParameter('kernel.project_dir'));
