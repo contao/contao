@@ -48,8 +48,6 @@ class InstallCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
     }
 

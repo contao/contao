@@ -39,8 +39,6 @@ class SetDotEnvCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this
             ->addArgument('key', InputArgument::REQUIRED, 'The variable name')
             ->addArgument('value', InputArgument::REQUIRED, 'The new value')

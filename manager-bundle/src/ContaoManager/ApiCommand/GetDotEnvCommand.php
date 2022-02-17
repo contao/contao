@@ -39,8 +39,6 @@ class GetDotEnvCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this->addArgument('key', InputArgument::OPTIONAL, 'The variable name');
     }
 

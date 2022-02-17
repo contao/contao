@@ -39,8 +39,6 @@ class RemoveDotEnvCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this->addArgument('key', InputArgument::REQUIRED, 'The variable name');
     }
 

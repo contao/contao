@@ -43,8 +43,6 @@ class DebugDcaCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this->addArgument('table', InputArgument::REQUIRED, 'The table name');
     }
 

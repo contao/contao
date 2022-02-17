@@ -38,8 +38,6 @@ class GenerateJwtCookieCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this->addOption('debug', null, InputOption::VALUE_NONE, 'Enable debug mode in the JWT cookie');
     }
 

@@ -38,8 +38,6 @@ class SetConfigCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this->addArgument('json', InputArgument::REQUIRED, 'The configuration as JSON string');
     }
 

@@ -38,8 +38,6 @@ class ParseJwtCookieCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this->addArgument('content', InputArgument::REQUIRED, 'The JWT cookie content');
     }
 

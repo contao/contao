@@ -59,8 +59,6 @@ class BackupStreamContentCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the backup')
             ->setHidden(true)

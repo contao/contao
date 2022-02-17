@@ -56,8 +56,6 @@ class ContaoSetupCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this->setHidden(true);
     }
 
