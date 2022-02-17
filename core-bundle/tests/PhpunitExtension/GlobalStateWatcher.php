@@ -189,7 +189,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                     $value = \get_class($value);
                 }
 
-                $data["$class::{$property->name}"] = $value;
+                $data["$class::$property->name"] = $value;
             }
         }
 
