@@ -32,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		'sorting' => array
 		(
 			'mode'                    => 2,
-			'fields'                  => array('tstamp'),
+			'fields'                  => array('tstamp', 'id'),
 			'panelLayout'             => 'filter;sort,search,limit'
 		),
 		'label' => array
@@ -71,6 +71,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 	(
 		'id' => array
 		(
+			'flag'                    => 12,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'tstamp' => array
