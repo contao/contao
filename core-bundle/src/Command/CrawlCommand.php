@@ -45,7 +45,7 @@ use Terminal42\Escargot\Subscriber\SubscriberInterface;
 class CrawlCommand extends Command
 {
     protected static $defaultName = 'contao:crawl';
-    protected static $defaultDescription = 'Crawls the Contao root pages with the desired subscribers';
+    protected static $defaultDescription = 'Crawls the Contao root pages with the desired subscribers.';
 
     private Factory $escargotFactory;
     private Filesystem $filesystem;
