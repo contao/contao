@@ -43,6 +43,8 @@ class RunTestsIsolatedCommand extends Command
 
     protected function configure(): void
     {
+        parent::configure();
+
         $this->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3');
 
         $this->setHelp(

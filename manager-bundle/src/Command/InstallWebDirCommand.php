@@ -43,9 +43,9 @@ class InstallWebDirCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
-        ;
+        parent::configure();
+
+        $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

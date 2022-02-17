@@ -44,9 +44,9 @@ class AutomatorCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()))
-        ;
+        parent::configure();
+
+        $this->addArgument('task', InputArgument::OPTIONAL, "The name of the task:\n  - ".implode("\n  - ", $this->getCommands()));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

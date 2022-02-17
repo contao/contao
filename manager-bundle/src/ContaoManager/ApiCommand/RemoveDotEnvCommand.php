@@ -41,9 +41,7 @@ class RemoveDotEnvCommand extends Command
     {
         parent::configure();
 
-        $this
-            ->addArgument('key', InputArgument::REQUIRED, 'The variable name')
-        ;
+        $this->addArgument('key', InputArgument::REQUIRED, 'The variable name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

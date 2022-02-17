@@ -30,9 +30,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
     {
         parent::configure();
 
-        $this
-            ->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.')
-        ;
+        $this->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

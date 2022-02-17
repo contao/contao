@@ -41,9 +41,7 @@ class GetDotEnvCommand extends Command
     {
         parent::configure();
 
-        $this
-            ->addArgument('key', InputArgument::OPTIONAL, 'The variable name')
-        ;
+        $this->addArgument('key', InputArgument::OPTIONAL, 'The variable name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

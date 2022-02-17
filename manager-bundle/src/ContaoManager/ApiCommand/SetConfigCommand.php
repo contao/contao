@@ -40,9 +40,7 @@ class SetConfigCommand extends Command
     {
         parent::configure();
 
-        $this
-            ->addArgument('json', InputArgument::REQUIRED, 'The configuration as JSON string')
-        ;
+        $this->addArgument('json', InputArgument::REQUIRED, 'The configuration as JSON string');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

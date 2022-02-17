@@ -43,9 +43,9 @@ class DebugDcaCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('table', InputArgument::REQUIRED, 'The table name')
-        ;
+        parent::configure();
+
+        $this->addArgument('table', InputArgument::REQUIRED, 'The table name');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
