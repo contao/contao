@@ -136,6 +136,7 @@ services:
             - '@database_connection'
             - '@security.helper'
             - '@request_stack'
+            - '@translator'
             - '@router'
             - '@uri_signer'
             - '%contao.preview_script%'

@@ -108,6 +108,7 @@ class BackendPreviewSwitchController
                     'act' => 'create',
                     'showUnpublished' => $showUnpublished ? '1' : '',
                     'rt' => $this->tokenManager->getDefaultTokenValue(),
+                    'nb' => '1', // Do not show the "Save & Close" button
                 ]
             );
         }
