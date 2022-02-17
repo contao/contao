@@ -16,6 +16,7 @@ use Contao\ManagerBundle\Command\InstallWebDirCommand;
 use Contao\ManagerBundle\HttpKernel\ContaoKernel;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -39,9 +40,11 @@ class InstallWebDirCommandTest extends ContaoTestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         $this->filesystem->remove($this->getTempDir().'/public');
+
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
     }
 
     public function testNameAndArguments(): void

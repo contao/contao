@@ -17,7 +17,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendMenuListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\TestCase\ContaoTestCase;
+use Contao\CoreBundle\Tests\TestCase;
 use Knp\Menu\MenuFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -25,7 +25,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class BackendMenuListenerTest extends ContaoTestCase
+class BackendMenuListenerTest extends TestCase
 {
     public function testBuildsTheMainMenu(): void
     {
@@ -245,8 +245,21 @@ class BackendMenuListenerTest extends ContaoTestCase
 
         $children = $tree->getChildren();
 
-        $this->assertCount(3, $children);
-        $this->assertSame(['alerts', 'submenu', 'burger'], array_keys($children));
+        $this->assertSame(['manual', 'alerts', 'submenu', 'burger'], array_keys($children));
+
+        // Manual
+        $this->assertSame('MSC.manual', $children['manual']->getLabel());
+        $this->assertSame('https://to.contao.org/manual', $children['manual']->getUri());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
+
+        $this->assertSame(
+            [
+                'class' => 'icon-manual',
+                'title' => 'MSC.manual',
+                'target' => '_blank',
+            ],
+            $children['manual']->getLinkAttributes()
+        );
 
         // Alerts
         $this->assertSame('MSC.systemMessages <sup>1</sup>', $children['alerts']->getLabel());

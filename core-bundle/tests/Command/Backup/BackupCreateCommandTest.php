@@ -19,10 +19,18 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class BackupCreateCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
+    }
+
     /**
      * @dataProvider successfulCommandRunProvider
      */

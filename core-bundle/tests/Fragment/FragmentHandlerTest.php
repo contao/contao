@@ -39,6 +39,13 @@ class FragmentHandlerTest extends TestCase
         System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testThrowsAnExceptionIfTheFragmentNameIsInvalid(): void
     {
         $fragmentHandler = $this->getFragmentHandler();
@@ -115,11 +122,12 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
 
-        $GLOBALS['objPage'] = new PageModel();
-        $GLOBALS['objPage']->id = 42;
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
         $fragmentHandler->render($uri);
+
+        unset($GLOBALS['objPage']);
     }
 
     public function testDoesNotOverrideAGivenPageId(): void
@@ -135,11 +143,12 @@ class FragmentHandlerTest extends TestCase
 
         $renderers = $this->mockServiceLocatorWithRenderer('inline', [$callback]);
 
-        $GLOBALS['objPage'] = new PageModel();
-        $GLOBALS['objPage']->id = 42;
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
 
         $fragmentHandler = $this->getFragmentHandler($fragmentRegistry, $renderers);
         $fragmentHandler->render($uri);
+
+        unset($GLOBALS['objPage']);
     }
 
     public function testExecutesThePreHandlers(): void

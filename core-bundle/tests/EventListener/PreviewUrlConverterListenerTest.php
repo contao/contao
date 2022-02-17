@@ -18,8 +18,8 @@ use Contao\CoreBundle\EventListener\PreviewUrlConvertListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
-class PreviewUrlConverterListenerTest extends ContaoTestCase
+class PreviewUrlConverterListenerTest extends TestCase
 {
     public function testConvertsThePreviewUrlWithUrl(): void
     {

@@ -24,11 +24,11 @@ use Twig\Environment;
 
 class LabelListenerTest extends TestCase
 {
-    public static function tearDownAfterClass(): void
+    protected function tearDown(): void
     {
-        parent::tearDownAfterClass();
+        unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD'], $GLOBALS['TL_LANG']);
 
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_DCA']);
+        parent::tearDown();
     }
 
     public function testRendersUndoLabel(): void

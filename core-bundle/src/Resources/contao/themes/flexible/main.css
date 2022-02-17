@@ -172,7 +172,7 @@ body:not(.fullscreen) #header .inner {
 	position: absolute;
 	top:-5px;
 }
-#tmenu .icon-alert {
+#tmenu .icon-alert,#tmenu .icon-manual {
 	width:16px;
 	margin-bottom:-2px;
 	position:relative;
@@ -180,6 +180,9 @@ body:not(.fullscreen) #header .inner {
 	overflow:hidden;
 	white-space:nowrap;
 	text-indent:28px; /* 16px width + 12px padding */
+}
+#tmenu .icon-manual {
+	background:url("icons/manual.svg") center center no-repeat;
 }
 #tmenu .icon-profile {
 	background:url("icons/profile_dark.svg") 20px center no-repeat;

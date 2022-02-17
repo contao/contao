@@ -24,9 +24,9 @@ use Doctrine\DBAL\Types\Type;
 
 class CeAccessMigrationTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $GLOBALS['TL_CTE'] = [
             'texts' => [
@@ -39,11 +39,11 @@ class CeAccessMigrationTest extends TestCase
         ];
     }
 
-    public static function tearDownAfterClass(): void
+    protected function tearDown(): void
     {
-        parent::tearDownAfterClass();
-
         unset($GLOBALS['TL_CTE'], $GLOBALS['TL_FFL']);
+
+        parent::tearDown();
     }
 
     public function testActivatesTheFieldsInAllUserGroups(): void

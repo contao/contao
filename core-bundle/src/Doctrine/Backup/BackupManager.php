@@ -105,7 +105,13 @@ class BackupManager
      */
     public function create(CreateConfig $config): void
     {
-        $this->executeTransactional(fn () => $this->doCreate($config));
+        try {
+            $this->connection->transactional(fn () => $this->doCreate($config));
+        } catch (BackupManagerException $e) {
+            throw $e;
+        } catch (\Throwable $t) {
+            throw new BackupManagerException($t->getMessage(), 0, $t);
+        }
     }
 
     /**
@@ -136,7 +142,13 @@ class BackupManager
      */
     public function restore(RestoreConfig $config): void
     {
-        $this->executeTransactional(fn () => $this->doRestore($config));
+        try {
+            $this->doRestore($config);
+        } catch (BackupManagerException $e) {
+            throw $e;
+        } catch (\Throwable $t) {
+            throw new BackupManagerException($t->getMessage(), 0, $t);
+        }
     }
 
     private function updateBackupWithSize(Backup $backup): void
@@ -145,27 +157,6 @@ class BackupManager
             $backup->setSize($this->backupsStorage->getFileSize($backup->getFilename()));
         } catch (\Exception $e) {
             $backup->setSize(0);
-        }
-    }
-
-    private function executeTransactional(\Closure $func): void
-    {
-        $isAutoCommit = $this->connection->isAutoCommit();
-
-        if ($isAutoCommit) {
-            $this->connection->setAutoCommit(false);
-        }
-
-        try {
-            $this->connection->transactional($func);
-        } catch (BackupManagerException $e) {
-            throw $e;
-        } catch (\Throwable $t) {
-            throw new BackupManagerException($t->getMessage(), 0, $t);
-        } finally {
-            if ($isAutoCommit) {
-                $this->connection->setAutoCommit(true);
-            }
         }
     }
 

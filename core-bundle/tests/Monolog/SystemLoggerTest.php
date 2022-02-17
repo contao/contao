@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Monolog;
+namespace Contao\CoreBundle\Tests\Monolog;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\SystemLogger;

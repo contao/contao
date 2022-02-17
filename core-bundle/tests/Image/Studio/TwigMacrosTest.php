@@ -31,20 +31,6 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 class TwigMacrosTest extends TestCase
 {
     /**
-     * @var string
-     */
-    private static $macros;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        self::$macros = file_get_contents(
-            Path::canonicalize(__DIR__.'/../../../src/Resources/views/Image/Studio/_macros.html.twig')
-        );
-    }
-
-    /**
      * @dataProvider provideAttributes
      */
     public function testHtmlAttributesMacro(string $attributes, string $expected): void
@@ -586,7 +572,9 @@ class TwigMacrosTest extends TestCase
     private function renderMacro(string $call, array $context = [], ResponseContextAccessor $responseContextAccessor = null): string
     {
         $templates = [
-            '_macros.html.twig' => self::$macros,
+            '_macros.html.twig' => file_get_contents(
+                Path::canonicalize(__DIR__.'/../../../src/Resources/views/Image/Studio/_macros.html.twig')
+            ),
             'test.html.twig' => "{% import \"_macros.html.twig\" as studio %}{{ studio.$call }}",
         ];
 

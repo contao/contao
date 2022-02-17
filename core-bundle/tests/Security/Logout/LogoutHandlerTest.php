@@ -30,6 +30,13 @@ class LogoutHandlerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_USERNAME']);
+
+        parent::tearDown();
+    }
+
     public function testAddsTheLogEntry(): void
     {
         $framework = $this->mockContaoFramework();

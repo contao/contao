@@ -12,21 +12,26 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Database\Result;
 use Contao\Database\Statement;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\Input;
+use Contao\Model;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
-class PageModelTest extends ContaoTestCase
+class PageModelTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
@@ -65,16 +70,13 @@ class PageModelTest extends ContaoTestCase
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        PageModel::reset();
+
+        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class, System::class, Config::class]);
+
         parent::tearDown();
-
-        Registry::getInstance()->reset();
-
-        unset($GLOBALS['TL_MODELS']);
-
-        // Reset database instance
-        $property = (new \ReflectionClass(Database::class))->getProperty('arrInstances');
-        $property->setAccessible(true);
-        $property->setValue([]);
     }
 
     public function testCreatingEmptyPageModel(): void

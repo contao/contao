@@ -20,6 +20,13 @@ use Contao\TestCase\ContaoTestCase;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testReplacesTheFaqTags(): void
     {
         $page = $this->createMock(PageModel::class);
