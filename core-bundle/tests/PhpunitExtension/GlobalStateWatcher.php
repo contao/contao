@@ -85,6 +85,14 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'date_default_timezone_get' => date_default_timezone_get(),
                 'mb_internal_encoding' => mb_internal_encoding(),
                 'umask' => umask(),
+                'getcwd' => getcwd(),
+                'ob_get_level' => ob_get_level(),
+                'libxml_get_errors' => libxml_get_errors(),
+                'stream_get_wrappers' => stream_get_wrappers(),
+                'stream_get_filters' => stream_get_filters(),
+                'preg_last_error' => preg_last_error(),
+                'http_response_code' => http_response_code(),
+                'headers_list' => headers_list(),
             ],
             true
         );
