@@ -43,9 +43,9 @@ class ConfigureFilesystemPassTest extends TestCase
 
     protected function tearDown(): void
     {
-        parent::tearDown();
-
         chdir($this->cwdBackup);
+
+        parent::tearDown();
     }
 
     public function testCallsExtensionsToConfigureTheFilesystem(): void
@@ -114,10 +114,13 @@ class ConfigureFilesystemPassTest extends TestCase
             ])
         );
 
-        $container->setDefinition(
-            $mountManagerId = 'contao.filesystem.mount_manager',
-            $mountManagerDefinition = new Definition(MountManager::class)
-        )->setPublic(true);
+        $container
+            ->setDefinition(
+                $mountManagerId = 'contao.filesystem.mount_manager',
+                $mountManagerDefinition = new Definition(MountManager::class)
+            )
+            ->setPublic(true)
+        ;
 
         (new ConfigureFilesystemPass())->process($container);
 
@@ -127,16 +130,19 @@ class ConfigureFilesystemPassTest extends TestCase
         $this->assertSame('mount', $methodCalls[0][0]);
 
         [$reference, $mountPath] = $methodCalls[0][1];
+
         $this->assertInstanceOf(Reference::class, $reference);
         $this->assertSame('files/foo', Path::normalize($mountPath));
 
         $adapter = $container->get((string) $reference);
+
         $this->assertInstanceOf(LocalFilesystemAdapter::class, $adapter);
         $this->assertSame('dummy', $adapter->read('dummy.txt'));
 
         $container->compile();
 
         $mountManager = $container->get($mountManagerId);
+
         $this->assertSame('dummy', $mountManager->read('files/foo/dummy.txt'));
 
         // Cleanup
@@ -169,7 +175,7 @@ class ConfigureFilesystemPassTest extends TestCase
         } else {
             chdir($cwd);
 
-            /** @phpstan-ignore-next-line because we need to create relative symlinks and cannot use the Symfony Filesystem for that */
+            /** @phpstan-ignore-next-line because we need to create relative symlinks and cannot use the Symfony file system for that */
             symlink($target, $link);
         }
     }
