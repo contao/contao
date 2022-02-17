@@ -2,6 +2,28 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.0] (2022-02-17)
+
+**New features:**
+
+- [#4123] Add a link to the Contao manual in the back end ([MDevster])
+
+**Fixed issues:**
+
+- [#4151] Make the `crontao.cron` service lazy ([aschempp])
+- [#4149] Use static description for commands ([m-vo])
+- [#4133] Improve the preview links back end ([aschempp])
+- [#4141] Support symlinks in the upload directory ([m-vo])
+- [#4145] Fix time sensitive tests ([ausi])
+- [#4126] Check return type of generateLabelRecord method ([bezin])
+- [#4143] Do not use transactions for restoring backups ([ausi])
+- [#4139] Adjust labels for root page dependent modules ([bytehead])
+- [#4121] Show custom Twig templates in the back end dropdowns ([m-vo])
+- [#4140] Add feed image size property doc comment ([bezin])
+- [#4136] Increase the minimum version of the Composer runtime API ([dmolineus])
+- [#4117] Do not add the element name to the PHP attribute in the maker bundle ([leofeyer])
+- [#4134] Remove custom template option ([bytehead])
+
 ## [4.13.0-RC3] (2022-02-11)
 
 **New features:**
@@ -214,6 +236,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.0]: https://github.com/contao/contao/releases/tag/4.13.0
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
@@ -223,11 +246,13 @@ This project adheres to [Semantic Versioning].
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
 [dennisbohn]: https://github.com/dennisbohn
+[dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
+[MDevster]: https://github.com/MDevster
 [qzminski]: https://github.com/qzminski
 [rabauss]: https://github.com/rabauss
 [richardhj]: https://github.com/richardhj
@@ -235,6 +260,20 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [xprojects-de]: https://github.com/xprojects-de
+[#4123]: https://github.com/contao/contao/pull/4123
+[#4151]: https://github.com/contao/contao/pull/4151
+[#4149]: https://github.com/contao/contao/pull/4149
+[#4133]: https://github.com/contao/contao/pull/4133
+[#4141]: https://github.com/contao/contao/pull/4141
+[#4145]: https://github.com/contao/contao/pull/4145
+[#4126]: https://github.com/contao/contao/pull/4126
+[#4143]: https://github.com/contao/contao/pull/4143
+[#4139]: https://github.com/contao/contao/pull/4139
+[#4121]: https://github.com/contao/contao/pull/4121
+[#4140]: https://github.com/contao/contao/pull/4140
+[#4136]: https://github.com/contao/contao/pull/4136
+[#4117]: https://github.com/contao/contao/pull/4117
+[#4134]: https://github.com/contao/contao/pull/4134
 [#3990]: https://github.com/contao/contao/pull/3990
 [#4004]: https://github.com/contao/contao/pull/4004
 [#4042]: https://github.com/contao/contao/pull/4042

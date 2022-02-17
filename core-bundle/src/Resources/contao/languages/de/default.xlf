@@ -373,6 +373,10 @@
         <source>Generates a headline (h1 - h6).</source>
         <target>Erzeugt eine Überschrift (h1 - h6).</target>
       </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>Verschiedenes</target>
+      </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
         <target>Text</target>
@@ -667,7 +671,7 @@
       </trans-unit>
       <trans-unit id="FFL.select.1">
         <source>A single- or multi-line drop-down menu.</source>
-        <target>Ein ein- oder mehrzeiliges Drop-Down-Menü.</target>
+        <target>Ein ein- oder mehrzeiliges Dropdown-Menü.</target>
       </trans-unit>
       <trans-unit id="FFL.radio.0">
         <source>Radio button menu</source>
@@ -2748,6 +2752,10 @@
       <trans-unit id="MSC.parent">
         <source>Parent</source>
         <target>Ursprung</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
+        <target>Handbuch</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

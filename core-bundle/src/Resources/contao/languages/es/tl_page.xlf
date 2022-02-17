@@ -183,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_page.enableCanonical.1">
         <source>Add rel=&quot;canonical&quot; tags to the website.</source>
+        <target>Agregue etiquetas rel=&quot;canonical&quot; al sitio web.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.0">
         <source>Custom URL</source>
@@ -190,12 +191,15 @@
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
         <source>Here you can set a custom canonical URL.</source>
+        <target>Aquí puede establecer una URL canónica personalizada.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
+        <target>Parámetros Query</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.1">
         <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>
+        <target>De forma predeterminada, Contao elimina los parámetros de consulta en la URL canónica. Aquí puede agregar una lista separada por comas de parámetros de consulta para conservar. Utilice &quot;*&quot; como marcador de posición.</target>
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.0">
         <source>E-mail address of the website administrator</source>
@@ -311,9 +315,11 @@
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.0">
         <source>Subpage layout</source>
+        <target>Diseño de subpágina</target>
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.1">
         <source>Here you can select a different layout for subpages.</source>
+        <target>Aquí puede seleccionar un diseño diferente para las subpáginas.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
@@ -369,6 +375,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cgroup.1">
         <source>Please select a user group as the owner of the page.</source>
+        <target>Seleccione un grupo de usuarios como propietario de la página. </target>
       </trans-unit>
       <trans-unit id="tl_page.chmod.0">
         <source>Access rights</source>
@@ -480,6 +487,7 @@
       </trans-unit>
       <trans-unit id="tl_page.routing_legend">
         <source>Routing</source>
+        <target>Enrutamiento </target>
       </trans-unit>
       <trans-unit id="tl_page.meta_legend">
         <source>Metadata</source>
@@ -487,6 +495,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonical_legend">
         <source>Canonical URL</source>
+        <target>URL canónica </target>
       </trans-unit>
       <trans-unit id="tl_page.system_legend">
         <source>System settings</source>
@@ -574,6 +583,7 @@
       </trans-unit>
       <trans-unit id="tl_page.layout_inherit">
         <source>Inherit page layout</source>
+        <target>Heredar diseño de página</target>
       </trans-unit>
       <trans-unit id="tl_page.new.0">
         <source>New</source>
@@ -633,9 +643,11 @@
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
+        <target>Conflictos de ruta</target>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+        <target>Las siguientes páginas tienen un alias similar que puede entrar en conflicto con esta página. Si la URL no se resuelve correctamente, intente cambiar la prioridad de las rutas.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>
