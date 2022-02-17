@@ -98,6 +98,7 @@ services:
     contao.cron:
         class: Contao\CoreBundle\Cron\Cron
         public: true
+        lazy: true # Defer creating the Doctrine repository in case the DB connection is not configured
         arguments:
             - '@contao.repository.cron_job'
             - '@doctrine.orm.entity_manager'
