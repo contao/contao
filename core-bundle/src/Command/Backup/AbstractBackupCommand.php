@@ -35,8 +35,6 @@ abstract class AbstractBackupCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
         $this
             ->addArgument('name', InputArgument::OPTIONAL, 'The name of the backup')
             ->addOption('ignore-tables', 'i', InputOption::VALUE_OPTIONAL, 'A comma-separated list of database tables to ignore. Defaults to the backup configuration (contao.backup.ignore_tables). You can use the prefixes "+" and "-" to modify the existing configuration (e.g. "+tl_user" would add "tl_user" to the existing list).')

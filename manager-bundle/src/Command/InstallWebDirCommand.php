@@ -27,6 +27,9 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class InstallWebDirCommand extends Command
 {
+    protected static $defaultName = 'contao:install-web-dir';
+    protected static $defaultDescription = 'Installs the files in the public directory.';
+
     private ?Filesystem $fs = null;
     private ?SymfonyStyle $io = null;
     private string $projectDir;
@@ -40,11 +43,7 @@ class InstallWebDirCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setName('contao:install-web-dir')
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
-            ->setDescription('Installs the files in the public directory')
-        ;
+        $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -27,6 +27,7 @@ class LintServiceIdsCommand extends Command
     public string $projectDir;
 
     protected static $defaultName = 'contao:lint-service-ids';
+    protected static $defaultDescription = 'Checks the Contao service IDs.';
 
     /**
      * Strip from name if the alias is part of the namespace.
@@ -69,11 +70,6 @@ class LintServiceIdsCommand extends Command
         parent::__construct();
 
         $this->projectDir = $projectDir;
-    }
-
-    protected function configure(): void
-    {
-        $this->setDescription('Checks the Contao service IDs.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

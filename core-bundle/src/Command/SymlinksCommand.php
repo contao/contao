@@ -36,6 +36,7 @@ use Symfony\Component\Finder\SplFileInfo;
 class SymlinksCommand extends Command
 {
     protected static $defaultName = 'contao:symlinks';
+    protected static $defaultDescription = 'Symlinks the public resources into the public directory.';
 
     private array $rows = [];
     private string $projectDir;
@@ -59,10 +60,7 @@ class SymlinksCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('target', InputArgument::OPTIONAL, 'The target directory')
-            ->setDescription('Symlinks the public resources into the public directory.')
-        ;
+        $this->addArgument('target', InputArgument::OPTIONAL, 'The target directory');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
