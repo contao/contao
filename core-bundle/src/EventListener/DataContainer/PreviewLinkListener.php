@@ -230,7 +230,6 @@ class PreviewLinkListener
         return [
             'content' => $this->uriSigner->sign($url),
             'title' => $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link'),
-            'message' => $this->translator->trans('tl_preview_link.clipboard', [], 'contao_tl_preview_link'),
         ];
     }
 }

@@ -28,8 +28,6 @@ window.addEventListener('DOMContentLoaded', function () {
             } else {
                 clipboardFallback();
             }
-
-            Backend.openModalWindow(380, data.title, '<div style="padding: 20px 12px">'+data.message+'</div>');
         });
     });
 });
