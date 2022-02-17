@@ -24,6 +24,7 @@ use Symfony\Component\Process\Process;
 class RunTestsIsolatedCommand extends Command
 {
     protected static $defaultName = 'contao:run-tests-isolated';
+    protected static $defaultDescription = 'Runs the unit tests isolated from each other.';
 
     /**
      * @var string|false
@@ -42,7 +43,6 @@ class RunTestsIsolatedCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Runs the unit tests isolated from each other.');
         $this->addOption('depth', null, InputOption::VALUE_REQUIRED, '1 for test classes, 2 for test methods, 3 for every single provider data set', '3');
 
         $this->setHelp(

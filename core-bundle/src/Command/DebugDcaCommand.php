@@ -30,6 +30,7 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 class DebugDcaCommand extends Command
 {
     protected static $defaultName = 'debug:dca';
+    protected static $defaultDescription = 'Dumps the DCA configuration for a table.';
 
     private ContaoFramework $framework;
 
@@ -44,7 +45,6 @@ class DebugDcaCommand extends Command
     {
         $this
             ->addArgument('table', InputArgument::REQUIRED, 'The table name')
-            ->setDescription('Dumps the DCA configuration for a table.')
         ;
     }
 

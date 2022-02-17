@@ -31,6 +31,7 @@ use Symfony\Component\Filesystem\Path;
 class MigrateCommand extends Command
 {
     protected static $defaultName = 'contao:migrate';
+    protected static $defaultDescription = 'Executes migrations and updates the database schema.';
 
     private MigrationCollection $migrations;
     private FileLocator $fileLocator;
@@ -61,7 +62,6 @@ class MigrateCommand extends Command
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Show pending migrations and schema updates without executing them.')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, ndjson)', 'txt')
             ->addOption('no-backup', null, InputOption::VALUE_NONE, 'Disable the database backup which is created by default before executing the migrations.')
-            ->setDescription('Executes migrations and updates the database schema.')
         ;
     }
 

@@ -25,6 +25,9 @@ use Symfony\Component\Filesystem\Path;
  */
 class RemoveDotEnvCommand extends Command
 {
+    protected static $defaultName = 'dot-env:remove';
+    protected static $defaultDescription = 'Removes a parameter from the .env file.';
+
     private string $projectDir;
 
     public function __construct(Application $application)
@@ -39,8 +42,6 @@ class RemoveDotEnvCommand extends Command
         parent::configure();
 
         $this
-            ->setName('dot-env:remove')
-            ->setDescription('Removes a parameter from the .env file.')
             ->addArgument('key', InputArgument::REQUIRED, 'The variable name')
         ;
     }

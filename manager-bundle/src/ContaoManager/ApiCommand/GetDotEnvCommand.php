@@ -25,6 +25,9 @@ use Symfony\Component\Filesystem\Path;
  */
 class GetDotEnvCommand extends Command
 {
+    protected static $defaultName = 'dot-env:get';
+    protected static $defaultDescription = 'Reads a parameter from the .env file.';
+
     private string $projectDir;
 
     public function __construct(Application $application)
@@ -39,8 +42,6 @@ class GetDotEnvCommand extends Command
         parent::configure();
 
         $this
-            ->setName('dot-env:get')
-            ->setDescription('Reads a parameter from the .env file.')
             ->addArgument('key', InputArgument::OPTIONAL, 'The variable name')
         ;
     }

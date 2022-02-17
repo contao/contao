@@ -25,6 +25,9 @@ use Symfony\Component\Filesystem\Path;
  */
 class SetDotEnvCommand extends Command
 {
+    protected static $defaultName = 'dot-env:set';
+    protected static $defaultDescription = 'Writes a parameter to the .env file.';
+
     private string $projectDir;
 
     public function __construct(Application $application)
@@ -39,8 +42,6 @@ class SetDotEnvCommand extends Command
         parent::configure();
 
         $this
-            ->setName('dot-env:set')
-            ->setDescription('Writes a parameter to the .env file.')
             ->addArgument('key', InputArgument::REQUIRED, 'The variable name')
             ->addArgument('value', InputArgument::REQUIRED, 'The new value')
         ;

@@ -24,6 +24,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SetConfigCommand extends Command
 {
+    protected static $defaultName = 'config:set';
+    protected static $defaultDescription = 'Sets the Contao Manager configuration from a JSON string.';
+
     private ManagerConfig $managerConfig;
 
     public function __construct(Application $application)
@@ -38,8 +41,6 @@ class SetConfigCommand extends Command
         parent::configure();
 
         $this
-            ->setName('config:set')
-            ->setDescription('Sets the Contao Manager configuration from a JSON string.')
             ->addArgument('json', InputArgument::REQUIRED, 'The configuration as JSON string')
         ;
     }
