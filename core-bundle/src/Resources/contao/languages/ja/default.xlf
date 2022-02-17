@@ -373,6 +373,10 @@
         <source>Generates a headline (h1 - h6).</source>
         <target>見出し(h1からh6)を生成します。</target>
       </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>その他</target>
+      </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
         <target>テキスト</target>
@@ -2748,6 +2752,9 @@
       <trans-unit id="MSC.parent">
         <source>Parent</source>
         <target>親</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

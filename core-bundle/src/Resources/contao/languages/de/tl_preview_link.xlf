@@ -89,6 +89,22 @@
         <source>30 days</source>
         <target>30 Tage</target>
       </trans-unit>
+      <trans-unit id="tl_preview_link.hintNew">
+        <source>To add a preview link, use the &quot;Share URL&quot; button in the front end preview toolbar.</source>
+        <target>Um einen Vorschaulink hinzuzufügen, verwenden Sie die Schaltfläche &quot;URL teilen&quot; in der Toolbar der Frontend-Vorschau.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintSave">
+        <source>Please save this record to generate the preview link.</source>
+        <target>Bitte speichern Sie diesen Datensatz, um den Vorschaulink zu erzeugen.</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintEdit">
+        <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
+        <target>Vorschaulink: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintExpired">
+        <source>This preview link has expired and can no longer be shared.</source>
+        <target>Dieser Vorschaulink ist abgelaufen und kann nicht mehr geteilt werden.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

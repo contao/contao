@@ -35,6 +35,7 @@
       </trans-unit>
       <trans-unit id="tl_content.showPreview.0">
         <source>Show preview images</source>
+        <target>نمایش تصاویر پیش‌نمایش</target>
       </trans-unit>
       <trans-unit id="tl_content.showPreview.1">
         <source>Show preview images of the selected files.</source>
@@ -665,6 +666,7 @@
       </trans-unit>
       <trans-unit id="tl_content.preview_legend">
         <source>Preview settings</source>
+        <target>تنظیمات پیش‌نمایش</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
