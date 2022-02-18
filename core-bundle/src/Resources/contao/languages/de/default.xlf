@@ -659,7 +659,7 @@
       </trans-unit>
       <trans-unit id="FFL.select.1">
         <source>A single- or multi-line drop-down menu.</source>
-        <target>Ein ein- oder mehrzeiliges Drop-Down-Menü.</target>
+        <target>Ein ein- oder mehrzeiliges Dropdown-Menü.</target>
       </trans-unit>
       <trans-unit id="FFL.radio.0">
         <source>Radio button menu</source>
