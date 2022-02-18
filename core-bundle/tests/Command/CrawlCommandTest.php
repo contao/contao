@@ -14,10 +14,12 @@ namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\CrawlCommand;
 use Contao\CoreBundle\Crawl\Escargot\Factory;
+use Contao\CoreBundle\Tests\TestCase;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -28,6 +30,13 @@ use Terminal42\Escargot\Queue\InMemoryQueue;
 
 class CrawlCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([ProgressBar::class, Terminal::class]);
+
+        parent::tearDown();
+    }
+
     public function testAbortsWithInvalidJobId(): void
     {
         $escargotFactory = $this->mockInvalidEscargotFactory(new InvalidJobIdException(), true);

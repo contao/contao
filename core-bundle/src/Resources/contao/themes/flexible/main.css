@@ -172,7 +172,7 @@ body:not(.fullscreen) #header .inner {
 	position: absolute;
 	top:-5px;
 }
-#tmenu .icon-alert {
+#tmenu .icon-alert,#tmenu .icon-manual {
 	width:16px;
 	margin-bottom:-2px;
 	position:relative;
@@ -180,6 +180,9 @@ body:not(.fullscreen) #header .inner {
 	overflow:hidden;
 	white-space:nowrap;
 	text-indent:28px; /* 16px width + 12px padding */
+}
+#tmenu .icon-manual {
+	background:url("icons/manual.svg") center center no-repeat;
 }
 #tmenu .icon-profile {
 	background:url("icons/profile_dark.svg") 20px center no-repeat;
@@ -350,7 +353,7 @@ body:not(.fullscreen) #container {
 }
 #main_headline span {
 	display:inline-block;
-	max-width:30%;
+	max-width:25%;
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
@@ -413,6 +416,9 @@ h2.sub_headline {
 	margin:1px 0;
 	padding:8px 10px 8px 30px;
 	background-position:9px 9px;
+}
+.tl_error strong,.tl_confirm strong,.tl_info strong,.tl_new strong {
+	color:inherit;
 }
 
 /* Filter */

@@ -29,6 +29,6 @@ class BundleCacheClearerTest extends ContaoTestCase
         $clearer = new BundleCacheClearer($fs);
         $clearer->clear($this->getTempDir());
 
-        $this->assertFileNotExists($this->getTempDir().'/bundles.map');
+        $this->assertFileDoesNotExist($this->getTempDir().'/bundles.map');
     }
 }

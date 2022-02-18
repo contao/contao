@@ -35,6 +35,13 @@ class SitemapControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HOOKS']);
+
+        parent::tearDown();
+    }
+
     public function testNoSitemapIfNoRootPageFound(): void
     {
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);

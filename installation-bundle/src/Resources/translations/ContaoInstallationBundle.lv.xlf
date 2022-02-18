@@ -135,6 +135,7 @@
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>
+        <target>Datubāze ir aktuāla.</target>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>

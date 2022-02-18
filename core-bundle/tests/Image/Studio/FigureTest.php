@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\Config;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactory;
@@ -19,6 +20,8 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\File;
+use Contao\Files;
 use Contao\FrontendTemplate;
 use Contao\Image\ImageDimensions;
 use Contao\Image\ResizerInterface;
@@ -31,6 +34,15 @@ use Symfony\Component\Filesystem\Path;
 
 class FigureTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([System::class, File::class, Files::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testGetImage(): void
     {
         $image = $this->createMock(ImageResult::class);
@@ -549,7 +561,20 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplate(): void
     {
+        $imageFactory = new ImageFactory(
+            $this->createMock(ResizerInterface::class),
+            $this->createMock(ImagineInterface::class),
+            $this->createMock(ImagineInterface::class),
+            new Filesystem(),
+            $this->createMock(ContaoFramework::class),
+            false,
+            ['jpeg_quality' => 80],
+            ['jpg', 'svg'],
+            $this->getFixturesDir()
+        );
+
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
+        $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);
 
@@ -570,9 +595,22 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplateDataDoesNotOverwriteHref(): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration(
-            Path::canonicalize(__DIR__.'/../../Fixtures')
-        ));
+        $imageFactory = new ImageFactory(
+            $this->createMock(ResizerInterface::class),
+            $this->createMock(ImagineInterface::class),
+            $this->createMock(ImagineInterface::class),
+            new Filesystem(),
+            $this->createMock(ContaoFramework::class),
+            false,
+            ['jpeg_quality' => 80],
+            ['jpg', 'svg'],
+            $this->getFixturesDir()
+        );
+
+        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
+        $container->set('contao.image.factory', $imageFactory);
+
+        System::setContainer($container);
 
         $template = new \stdClass();
 

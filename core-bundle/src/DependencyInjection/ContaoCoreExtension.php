@@ -194,6 +194,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     public function configureFilesystem(FilesystemConfiguration $config): void
     {
+        // User uploads
         $filesStorageName = 'files';
 
         // TODO: Deprecate the 'contao.upload_path' config key. In the next
@@ -209,6 +210,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $config
             ->addDefaultDbafs($filesStorageName, 'tl_files')
             ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
+        ;
+
+        // Backups
+        $config
+            ->mountLocalAdapter('var/backups', 'backups', 'backups')
+            ->addVirtualFilesystem('backups', 'backups')
         ;
     }
 
@@ -410,7 +417,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $retentionPolicy->setArgument(1, $config['backup']['keep_intervals']);
 
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
-        $dbDumper->setArgument(2, $config['backup']['directory']);
         $dbDumper->setArgument(3, $config['backup']['ignore_tables']);
     }
 

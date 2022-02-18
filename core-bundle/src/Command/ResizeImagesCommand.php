@@ -43,6 +43,7 @@ use Symfony\Component\Process\Process;
 class ResizeImagesCommand extends Command
 {
     protected static $defaultName = 'contao:resize-images';
+    protected static $defaultDescription = 'Resizes deferred images that have not been processed yet.';
 
     private ImageFactoryInterface $imageFactory;
     private ?DeferredResizerInterface $resizer;
@@ -75,7 +76,6 @@ class ResizeImagesCommand extends Command
             ->addOption('image', null, InputArgument::OPTIONAL, 'Image name to resize a single image')
             ->addOption('no-sub-process', null, InputOption::VALUE_NONE, 'Do not start a sub process per resize')
             ->addOption('preserve-missing', null, InputOption::VALUE_NONE, 'Do not delete deferred image references to images that no longer exist')
-            ->setDescription('Resizes deferred images that have not been processed yet.')
         ;
     }
 
