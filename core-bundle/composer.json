@@ -21,7 +21,7 @@
         "docs": "https://docs.contao.org"
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "ext-dom": "*",
         "ext-filter": "*",
         "ext-gd": "*",
@@ -61,7 +61,7 @@
         "dragonmantank/cron-expression": "^2.3",
         "friendsofsymfony/http-cache": "^2.6",
         "friendsofsymfony/http-cache-bundle": "^2.6",
-        "imagine/imagine": "^1.0",
+        "imagine/imagine": "^1.2.4",
         "knplabs/knp-menu": "^3.1",
         "knplabs/knp-menu-bundle": "^3.0",
         "knplabs/knp-time-bundle": "^1.11",
