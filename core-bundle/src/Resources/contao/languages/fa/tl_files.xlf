@@ -170,8 +170,7 @@
         <target>هماهنگ‌سازی کامل شده است</target>
       </trans-unit>
       <trans-unit id="tl_files.syncResult">
-        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %s unchanged | %s moved | %s deleted</source>
-        <target>&lt;strong&gt;نتیجه:&lt;/strong&gt; %s اضافه شد | %s تغییر یافت | %s بدون تغییر | %s جابجا شد | %s deleted</target>
+        <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
       </trans-unit>
       <trans-unit id="tl_files.syncShowUnchanged">
         <source>Show unchanged</source>

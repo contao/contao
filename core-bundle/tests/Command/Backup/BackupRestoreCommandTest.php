@@ -19,10 +19,18 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\RestoreConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class BackupRestoreCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
+    }
+
     /**
      * @dataProvider successfulCommandRunProvider
      */
@@ -78,7 +86,7 @@ class BackupRestoreCommandTest extends TestCase
             [],
             function (RestoreConfig $config) {
                 $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
+                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
                 $this->assertFalse($config->ignoreOriginCheck());
 
                 return true;
@@ -90,7 +98,7 @@ class BackupRestoreCommandTest extends TestCase
             ['--ignore-tables' => 'foo,bar'],
             function (RestoreConfig $config) {
                 $this->assertSame(['bar', 'foo'], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
+                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
                 $this->assertFalse($config->ignoreOriginCheck());
 
                 return true;
@@ -98,23 +106,23 @@ class BackupRestoreCommandTest extends TestCase
             '[OK] Successfully restored backup from "test__20211101141254.sql.gz".',
         ];
 
-        yield 'Different target file' => [
-            ['file' => 'somewhere/else/file__20211101141254.sql'],
+        yield 'Specific backup' => [
+            ['name' => 'file__20211101141254.sql'],
             function (RestoreConfig $config) {
                 $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('somewhere/else/file__20211101141254.sql', $config->getBackup()->getFilepath());
+                $this->assertSame('file__20211101141254.sql', $config->getBackup()->getFilename());
                 $this->assertFalse($config->ignoreOriginCheck());
 
                 return true;
             },
-            '[OK] Successfully restored backup from "somewhere/else/file__20211101141254.sql".',
+            '[OK] Successfully restored backup from "file__20211101141254.sql".',
         ];
 
         yield 'Force restore' => [
             ['--force' => true],
             function (RestoreConfig $config) {
                 $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
+                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
                 $this->assertTrue($config->ignoreOriginCheck());
 
                 return true;
@@ -126,12 +134,12 @@ class BackupRestoreCommandTest extends TestCase
             ['--format' => 'json'],
             function (RestoreConfig $config) {
                 $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
+                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
                 $this->assertFalse($config->ignoreOriginCheck());
 
                 return true;
             },
-            '{"createdAt":"2021-11-01T14:12:54+00:00","size":100,"path":"test__20211101141254.sql.gz"}',
+            '{"createdAt":"2021-11-01T14:12:54+00:00","size":100,"name":"test__20211101141254.sql.gz"}',
         ];
     }
 
@@ -140,16 +148,8 @@ class BackupRestoreCommandTest extends TestCase
      */
     private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager
     {
-        $backup = $this->getMockBuilder(Backup::class)
-            ->setConstructorArgs(['test__20211101141254.sql.gz'])
-            ->onlyMethods(['getSize'])
-        ;
-
-        $backup = $backup->getMock();
-        $backup
-            ->method('getSize')
-            ->willReturn(100)
-        ;
+        $backup = new Backup('test__20211101141254.sql.gz');
+        $backup->setSize(100);
 
         $backupManager = $this->createMock(BackupManager::class);
         $backupManager

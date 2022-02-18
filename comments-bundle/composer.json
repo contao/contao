@@ -21,7 +21,7 @@
         "docs": "https://docs.contao.org"
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "contao/core-bundle": "self.version",
         "symfony/http-kernel": "^5.4"
     },
@@ -46,6 +46,12 @@
             "src/Resources/contao/languages/",
             "src/Resources/contao/templates/"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
+        }
     },
     "extra": {
         "contao-manager-plugin": "Contao\\CommentsBundle\\ContaoManager\\Plugin"

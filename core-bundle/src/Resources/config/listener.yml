@@ -36,8 +36,7 @@ services:
     contao.listener.command_scheduler:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
-            - !service_locator
-              contao.cron: '@contao.cron'
+            - '@contao.cron'
             - '@contao.framework'
             - '@database_connection'
             - '%fragment.path%'
@@ -136,6 +135,7 @@ services:
             - '@database_connection'
             - '@security.helper'
             - '@request_stack'
+            - '@translator'
             - '@router'
             - '@uri_signer'
             - '%contao.preview_script%'

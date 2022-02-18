@@ -24,6 +24,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ParseJwtCookieCommand extends Command
 {
+    protected static $defaultName = 'jwt-cookie:parse';
+    protected static $defaultDescription = 'Parses the content of the preview entry point cookie.';
+
     private JwtManager $jwtManager;
 
     public function __construct(Application $application, JwtManager $jwtManager = null)
@@ -35,13 +38,7 @@ class ParseJwtCookieCommand extends Command
 
     protected function configure(): void
     {
-        parent::configure();
-
-        $this
-            ->setName('jwt-cookie:parse')
-            ->addArgument('content', InputArgument::REQUIRED, 'The JWT cookie content')
-            ->setDescription('Parses the content of the preview entry point cookie.')
-        ;
+        $this->addArgument('content', InputArgument::REQUIRED, 'The JWT cookie content');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

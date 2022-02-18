@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 
@@ -38,6 +39,10 @@ class RecordPreviewListener
     public function registerDeleteCallbacks(string $table): void
     {
         if ($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false) {
+            return;
+        }
+
+        if (!is_a($this->framework->getAdapter(DataContainer::class)->getDriverForTable($table), DC_Table::class, true)) {
             return;
         }
 
@@ -77,10 +82,8 @@ class RecordPreviewListener
             }
         }
 
-        if ($GLOBALS['TL_DCA'][$dc->table]['list']['label']['showColumns'] ?? false) {
-            return serialize($dc->generateRecordLabel($row, $dc->table));
-        }
+        $preview = $dc->generateRecordLabel($row, $dc->table);
 
-        return $dc->generateRecordLabel($row, $dc->table);
+        return \is_array($preview) ? serialize($preview) : $preview;
     }
 }

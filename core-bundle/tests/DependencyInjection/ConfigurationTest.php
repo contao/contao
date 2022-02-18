@@ -293,7 +293,7 @@ class ConfigurationTest extends TestCase
             }
 
             if (\is_string($key) && !$value->isDeprecated()) {
-                $this->assertRegExp('/^[a-z][a-z_]+[a-z]$/', $key);
+                $this->assertMatchesRegularExpression('/^[a-z][a-z_]+[a-z]$/', $key);
             }
         }
     }

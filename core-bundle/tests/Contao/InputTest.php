@@ -30,8 +30,6 @@ class InputTest extends TestCase
     {
         parent::setUp();
 
-        $GLOBALS['TL_CONFIG'] = [];
-
         include __DIR__.'/../../src/Resources/contao/config/default.php';
 
         $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
@@ -53,6 +51,8 @@ class InputTest extends TestCase
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_CONFIG']);
+
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
@@ -435,7 +435,7 @@ class InputTest extends TestCase
         Input::resetCache();
         $_POST = ['html' => $source];
         $html = Input::postHtml('html', true);
-        unset($_POST);
+        $_POST = [];
         Input::resetCache();
 
         $this->assertSame($expected, $simpleTokenParser->parse($html, $tokens));

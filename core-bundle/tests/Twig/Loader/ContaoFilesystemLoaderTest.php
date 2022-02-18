@@ -23,6 +23,7 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Twig\Error\LoaderError;
 
@@ -321,8 +322,8 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $locator = $this->getTemplateLocator($projectDir);
         $loader = $this->getContaoFilesystemLoader(null, $locator);
-        (new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod'))->warmUp();
 
+        $this->getContaoFilesystemLoaderWarmer($loader, $locator, $projectDir)->warmUp();
         $this->mockFilemtime($mtimeMappings);
 
         if ($expectWarning) {
@@ -382,11 +383,9 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $locator = $this->getTemplateLocator($projectDir, ['templates/my/theme']);
         $loader = $this->getContaoFilesystemLoader(null, $locator);
-        (new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod'))->warmUp();
 
-        $this->mockFilemtime([
-            Path::join($projectDir, 'templates/my/theme/text.html.twig') => $expired,
-        ]);
+        $this->getContaoFilesystemLoaderWarmer($loader, $locator, $projectDir)->warmUp();
+        $this->mockFilemtime([Path::join($projectDir, 'templates/my/theme/text.html.twig') => $expired]);
 
         $page = new \stdClass();
         $page->templateGroup = 'templates/my/theme';
@@ -423,8 +422,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $locator = $this->getTemplateLocator($projectDir, $themePaths, $bundles, $bundlesMetadata);
         $loader = $this->getContaoFilesystemLoader(null, $locator);
 
-        $warmer = new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod');
-        $warmer->warmUp();
+        $this->getContaoFilesystemLoaderWarmer($loader, $locator, $projectDir)->warmUp();
 
         $expectedChains = [
             'text' => [
@@ -518,7 +516,8 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $locator = $this->getTemplateLocator($projectDir);
         $loader = $this->getContaoFilesystemLoader(null, $locator);
-        (new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'prod'))->warmUp();
+
+        $this->getContaoFilesystemLoaderWarmer($loader, $locator, $projectDir)->warmUp();
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage($expectedException);
@@ -687,5 +686,12 @@ class ContaoFilesystemLoaderTest extends TestCase
             new ThemeNamespace(),
             '/',
         );
+    }
+
+    private function getContaoFilesystemLoaderWarmer(ContaoFilesystemLoader $loader, TemplateLocator $locator, string $projectDir): ContaoFilesystemLoaderWarmer
+    {
+        $filesystem = $this->createMock(Filesystem::class);
+
+        return new ContaoFilesystemLoaderWarmer($loader, $locator, $projectDir, 'cache', 'prod', $filesystem);
     }
 }

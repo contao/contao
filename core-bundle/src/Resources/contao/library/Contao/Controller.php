@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -133,8 +134,21 @@ abstract class Controller extends System
 		$arrMapper['mod'][] = 'comment_form'; // TODO: remove in Contao 5.0
 		$arrMapper['mod'][] = 'newsletter'; // TODO: remove in Contao 5.0
 
-		// Get the default templates
-		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
+		/** @var TemplateHierarchyInterface $templateHierarchy */
+		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
+		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
+
+		$prefixedFiles = array_merge(
+			array_filter(
+				array_keys($templateHierarchy->getInheritanceChains()),
+				static fn (string $identifier): bool => 1 === preg_match($identifierPattern, $identifier),
+			),
+			// Merge with the templates from the TemplateLoader for backwards
+			// compatibility in case someone has added templates manually
+			TemplateLoader::getPrefixedFiles($strPrefix),
+		);
+
+		foreach ($prefixedFiles as $strTemplate)
 		{
 			if ($strTemplate != $strPrefix)
 			{
@@ -218,7 +232,7 @@ abstract class Controller extends System
 			{
 				$objTheme = ThemeModel::findAll(array('order'=>'name'));
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 				$objTheme = null;
 			}
@@ -1746,7 +1760,7 @@ abstract class Controller extends System
 
 		if (null === $figure)
 		{
-			System::getContainer()->get('contao.monolog.logger.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
+			System::getContainer()->get('monolog.logger.contao.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
 
 			// Fall back to apply a sparse data set instead of failing (BC)
 			foreach ($createFallBackTemplateData() as $key => $value)
