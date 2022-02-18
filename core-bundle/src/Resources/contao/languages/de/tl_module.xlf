@@ -111,7 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
         <source>Here you can enter a custom label for the drop-down menu.</source>
-        <target>Hier können Sie eine individuelle Bezeichnung für das Drop-Down-Menü eingeben.</target>
+        <target>Hier können Sie eine individuelle Bezeichnung für das Dropdown-Menü eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>

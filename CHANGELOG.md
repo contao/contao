@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.12.7] (2022-02-18)
+
+**Fixed issues:**
+
+- [#4106] Fix trailing slashes in URL when requireItem is enabled ([aschempp])
+- [#4003] Fix invalid array access if labels are not defined ([m-vo])
+
 ## [4.12.6] (2022-02-08)
 
 **Fixed issues:**
@@ -199,6 +206,7 @@ This project adheres to [Semantic Versioning].
 - [#2713] Mention removal of MediaElement.js in the UPGRADE.md file ([fritzmg])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.12.7]: https://github.com/contao/contao/releases/tag/4.12.7
 [4.12.6]: https://github.com/contao/contao/releases/tag/4.12.6
 [4.12.5]: https://github.com/contao/contao/releases/tag/4.12.5
 [4.12.4]: https://github.com/contao/contao/releases/tag/4.12.4
@@ -224,6 +232,8 @@ This project adheres to [Semantic Versioning].
 [qzminski]: https://github.com/qzminski
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
 [Toflar]: https://github.com/Toflar
+[#4106]: https://github.com/contao/contao/pull/4106
+[#4003]: https://github.com/contao/contao/pull/4003
 [#4076]: https://github.com/contao/contao/pull/4076
 [#4043]: https://github.com/contao/contao/pull/4043
 [#4033]: https://github.com/contao/contao/pull/4033

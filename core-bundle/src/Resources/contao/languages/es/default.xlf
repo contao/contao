@@ -347,6 +347,7 @@
       </trans-unit>
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
+        <target>La ruta de la plantilla &quot;%s&quot; no debe contener los siguientes caracteres: %s</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2646,6 +2647,7 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module &quot;Listing&quot; and its &quot;list_*&quot; fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <target>Hay al menos un grupo de usuarios que otorga permiso para el módulo front-end &quot;Listing&quot; y sus campos &quot;list_*&quot;. Dado que pueden contener consultas SQL arbitrarias, los usuarios de estos grupos implícitamente tienen control total sobre el sistema.</target>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2657,6 +2659,7 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>¡El editor de CSS interno ha quedado obsoleto y se eliminará en Contao 5.0! Considere exportar sus hojas de estilo existentes y volver a agregarlas al diseño de página como hojas de estilo externas.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2672,6 +2675,7 @@
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.1">
         <source>Here you can limit the total number of items. Set to 0 to show all.</source>
+        <target>Aquí puede limitar el número total de artículos. Establecer en 0 para mostrar todo. </target>
       </trans-unit>
       <trans-unit id="MSC.clearTrustedDevices">
         <source>Clear trusted devices</source>
