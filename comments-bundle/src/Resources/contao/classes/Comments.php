@@ -106,7 +106,6 @@ class Comments extends Frontend
 
 				$objPartial->datim = Date::parse($objPage->datimFormat, $objComments->date);
 				$objPartial->date = Date::parse($objPage->dateFormat, $objComments->date);
-				$objPartial->class = (($count < 1) ? ' first' : '') . (($count >= ($total - 1)) ? ' last' : '') . (($count % 2 == 0) ? ' even' : ' odd');
 				$objPartial->by = $GLOBALS['TL_LANG']['MSC']['com_by'];
 				$objPartial->id = 'c' . $objComments->id;
 				$objPartial->timestamp = $objComments->date;
