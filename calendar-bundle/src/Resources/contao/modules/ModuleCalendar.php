@@ -202,15 +202,6 @@ class ModuleCalendar extends Events
 			$strClass = '';
 			$intCurrentDay = ($i + $this->cal_startDay) % 7;
 
-			if ($i == 0)
-			{
-				$strClass .= ' col_first';
-			}
-			elseif ($i == 6)
-			{
-				$strClass .= ' col_last';
-			}
-
 			if ($intCurrentDay == 0 || $intCurrentDay == 6)
 			{
 				$strClass .= ' weekend';
@@ -266,12 +257,7 @@ class ModuleCalendar extends Events
 			$intCurrentDay = ($i + $this->cal_startDay) % 7;
 
 			$strWeekClass = 'week_' . $intWeek;
-			$strWeekClass .= ($intWeek == 0) ? ' first' : '';
-			$strWeekClass .= ($intWeek == ($intNumberOfRows - 1)) ? ' last' : '';
-
 			$strClass = ($intCurrentDay < 2) ? ' weekend' : '';
-			$strClass .= ($i == 1 || $i == 8 || $i == 15 || $i == 22 || $i == 29 || $i == 36) ? ' col_first' : '';
-			$strClass .= ($i == 7 || $i == 14 || $i == 21 || $i == 28 || $i == 35 || $i == 42) ? ' col_last' : '';
 
 			// Add timestamp to all cells
 			$arrDays[$strWeekClass][$i]['timestamp'] = strtotime(($intDay - 1) . ' day', $this->Date->monthBegin);
