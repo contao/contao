@@ -131,12 +131,12 @@ class ModuleChangePassword extends Module
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
+			$objWidget->rowClass = 'row_' . $row;
 
 			// Increase the row count if it is a password field
 			if ($objWidget instanceof FormPassword)
 			{
-				$objWidget->rowClassConfirm = 'row_' . ++$row . ((($row % 2) == 0) ? ' even' : ' odd');
+				$objWidget->rowClassConfirm = 'row_' . ++$row;
 			}
 
 			++$row;
@@ -219,7 +219,7 @@ class ModuleChangePassword extends Module
 
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
-		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
+		$this->Template->rowLast = 'row_' . $row;
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
