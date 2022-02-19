@@ -67,37 +67,11 @@ class ContentTable extends ContentElement
 		// Table body
 		for ($j=0; $j<$limit; $j++)
 		{
-			$class_tr = '';
-
-			if ($j == 0)
-			{
-				$class_tr .= ' row_first';
-			}
-
-			if ($j == ($limit - 1))
-			{
-				$class_tr .= ' row_last';
-			}
-
-			$class_eo = (($j % 2) == 0) ? ' odd' : ' even';
-
 			foreach ($rows[$j] as $i=>$v)
 			{
-				$class_td = '';
-
-				if ($i == 0)
-				{
-					$class_td .= ' col_first';
-				}
-
-				if ($i == (\count($rows[$j]) - 1))
-				{
-					$class_td .= ' col_last';
-				}
-
-				$arrBody['row_' . $j . $class_tr . $class_eo][] = array
+				$arrBody['row_' . $j][] = array
 				(
-					'class' => 'col_' . $i . $class_td,
+					'class' => 'col_' . $i,
 					'content' => ((string) $v !== '' ? $this->nl2br($v) : '&nbsp;')
 				);
 			}
