@@ -139,12 +139,11 @@ class ModuleNewsMenu extends ModuleNews
 			$arrItems[$intYear]['link'] = $intYear;
 			$arrItems[$intYear]['href'] = $this->strUrl . '?year=' . $intDate;
 			$arrItems[$intYear]['title'] = StringUtil::specialchars($intYear . ' (' . $quantity . ')');
-			$arrItems[$intYear]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 			$arrItems[$intYear]['isActive'] = (Input::get('year') == $intDate);
 			$arrItems[$intYear]['quantity'] = $quantity;
 		}
 
-		$this->Template->yearly = true;
+		$this->Template = true;
 		$this->Template->items = $arrItems;
 		$this->Template->showQuantity = (bool) $this->news_showQuantity;
 	}
@@ -192,7 +191,6 @@ class ModuleNewsMenu extends ModuleNews
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
 				$arrItems[$intYear][$intMonth]['href'] = $this->strUrl . '?month=' . $intDate;
 				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear . ' (' . $quantity . ')');
-				$arrItems[$intYear][$intMonth]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 				$arrItems[$intYear][$intMonth]['isActive'] = (Input::get('month') == $intDate);
 				$arrItems[$intYear][$intMonth]['quantity'] = $quantity;
 			}
@@ -328,12 +326,7 @@ class ModuleNewsMenu extends ModuleNews
 			$intCurrentDay = ($i + $this->news_startDay) % 7;
 
 			$strWeekClass = 'week_' . $intWeek;
-			$strWeekClass .= ($intWeek == 0) ? ' first' : '';
-			$strWeekClass .= ($intWeek == ($intNumberOfRows - 1)) ? ' last' : '';
-
 			$strClass = ($intCurrentDay < 2) ? ' weekend' : '';
-			$strClass .= ($i == 1 || $i == 8 || $i == 15 || $i == 22 || $i == 29 || $i == 36) ? ' col_first' : '';
-			$strClass .= ($i == 7 || $i == 14 || $i == 21 || $i == 28 || $i == 35 || $i == 42) ? ' col_last' : '';
 
 			// Empty cell
 			if ($intDay < 1 || $intDay > $intDaysInMonth)
