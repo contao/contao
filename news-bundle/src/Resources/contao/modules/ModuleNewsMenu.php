@@ -143,7 +143,7 @@ class ModuleNewsMenu extends ModuleNews
 			$arrItems[$intYear]['quantity'] = $quantity;
 		}
 
-		$this->Template = true;
+		$this->Template->yearly = true;
 		$this->Template->items = $arrItems;
 		$this->Template->showQuantity = (bool) $this->news_showQuantity;
 	}
