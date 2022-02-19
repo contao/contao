@@ -208,9 +208,6 @@ class ModuleBreadcrumb extends Module
 			);
 		}
 
-		// Mark the first element (see #4833)
-		$items[0]['class'] = 'first';
-
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['generateBreadcrumb']) && \is_array($GLOBALS['TL_HOOKS']['generateBreadcrumb']))
 		{

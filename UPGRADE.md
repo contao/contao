@@ -1,5 +1,29 @@
 # API changes
 
+## Version 4.* to 5.0
+
+### CSS classes "first", "last", "even" and "odd"
+
+The CSS classes "first", "last", "even" and "odd" are no longer applied anywhere.
+Use CSS selectors instead.
+
+### Template changes
+
+The items in the `ce_list` template no longer consist of an associative array
+containing the list item's CSS class and content. Instead it will only be the content.
+
+```php
+<!-- OLD -->
+<?php foreach ($this->items as $item): ?>
+  <li<?php if ($item['class']): ?> class="<?= $item['class'] ?>"<?php endif; ?>><?= $item['content'] ?></li>
+<?php endforeach; ?>
+
+<!-- NEW -->
+<?php foreach ($this->items as $item): ?>
+  <li><?= $item ?></li>
+<?php endforeach; ?>
+```
+
 ## Version 4.* to 4.11
 
 Loading MooTools and jQuery from CDN is no longer supported, because it does
