@@ -311,7 +311,6 @@ class ModuleEventlist extends Events
 			{
 				$headerCount = 0;
 				$objTemplate->header = true;
-				$objTemplate->classHeader = ((($dayCount % 2) == 0) ? ' even' : ' odd') . (($dayCount == 0) ? ' first' : '') . (($event['firstDate'] == $arrEvents[($limit-1)]['firstDate']) ? ' last' : '');
 				$strDate = $event['firstDate'];
 
 				++$dayCount;
@@ -326,8 +325,8 @@ class ModuleEventlist extends Events
 			$objTemplate->hasReader = $event['source'] == 'default';
 
 			// Add the template variables
-			$objTemplate->classList = $event['class'] . ((($headerCount % 2) == 0) ? ' even' : ' odd') . (($headerCount == 0) ? ' first' : '') . ($blnIsLastEvent ? ' last' : '') . ' cal_' . $event['parent'];
-			$objTemplate->classUpcoming = $event['class'] . ((($eventCount % 2) == 0) ? ' even' : ' odd') . (($eventCount == 0) ? ' first' : '') . ((($offset + $eventCount + 1) >= $limit) ? ' last' : '') . ' cal_' . $event['parent'];
+			$objTemplate->classList = $event['class'] . ' cal_' . $event['parent'];
+			$objTemplate->classUpcoming = $event['class'] . ' cal_' . $event['parent'];
 			$objTemplate->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
 			$objTemplate->more = $GLOBALS['TL_LANG']['MSC']['more'];
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
