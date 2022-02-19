@@ -282,7 +282,7 @@ class ModuleListing extends Module
 				'link' => $strField,
 				'href' => (StringUtil::ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
 				'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
-				'class' => $class . (($i == 0) ? ' col_first' : '') . ((($i + 1) == \count($arrFields)) ? ' col_last' : '')
+				'class' => $class
 			);
 		}
 
@@ -293,7 +293,7 @@ class ModuleListing extends Module
 		for ($i=0, $c=\count($arrRows); $i<$c; $i++)
 		{
 			$j = 0;
-			$class = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i + 1) == \count($arrRows)) ? ' row_last' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
+			$class = 'row_' . $i;
 
 			foreach ($arrRows[$i] as $k=>$v)
 			{
@@ -320,7 +320,7 @@ class ModuleListing extends Module
 				(
 					'raw' => $v,
 					'content' => $value ?: '&nbsp;',
-					'class' => 'col_' . $j . (($j++ == 0) ? ' col_first' : '') . ($this->list_info ? '' : (($j >= (\count($arrRows[$i]) - 1)) ? ' col_last' : '')),
+					'class' => 'col_' . $j,
 					'id' => $arrRows[$i][$this->strPk],
 					'field' => $k,
 					'url' => $strUrl . $strVarConnector . 'show=' . $arrRows[$i][$this->strPk],
@@ -390,7 +390,7 @@ class ModuleListing extends Module
 				continue;
 			}
 
-			$class = 'row_' . ++$count . (($count == 0) ? ' row_first' : '') . (($count >= ($limit - 1)) ? ' row_last' : '') . ((($count % 2) == 0) ? ' even' : ' odd');
+			$class = 'row_' . ++$count;
 
 			$arrFields[$k] = array
 			(

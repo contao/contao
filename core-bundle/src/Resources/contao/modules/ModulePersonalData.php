@@ -193,7 +193,7 @@ class ModulePersonalData extends Module
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
+			$objWidget->rowClass = 'row_' . $row;
 
 			// Increase the row count if it is a password field
 			if ($objWidget instanceof FormPassword)
@@ -203,7 +203,7 @@ class ModulePersonalData extends Module
 					$objWidget->mandatory = false;
 				}
 
-				$objWidget->rowClassConfirm = 'row_' . ++$row . ((($row % 2) == 0) ? ' even' : ' odd');
+				$objWidget->rowClassConfirm = 'row_' . ++$row;
 			}
 
 			// Validate the form data
@@ -397,7 +397,7 @@ class ModulePersonalData extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
-		$this->Template->rowLast = 'row_' . $row . ((($row % 2) == 0) ? ' even' : ' odd');
+		$this->Template->rowLast = 'row_' . $row;
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }

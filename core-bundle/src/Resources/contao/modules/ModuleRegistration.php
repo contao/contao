@@ -199,12 +199,12 @@ class ModuleRegistration extends Module
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
+			$objWidget->rowClass = 'row_' . $i;
 
 			// Increase the row count if it's a password field
 			if ($objWidget instanceof FormPassword)
 			{
-				$objWidget->rowClassConfirm = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
+				$objWidget->rowClassConfirm = 'row_' . ++$i;
 			}
 
 			// Validate input
@@ -318,14 +318,14 @@ class ModuleRegistration extends Module
 		// Captcha
 		if (!$this->disableCaptcha)
 		{
-			$objCaptcha->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
+			$objCaptcha->rowClass = 'row_' . $i;
 			$strCaptcha = $objCaptcha->parse();
 
 			$this->Template->fields .= $strCaptcha;
 			$arrFields['captcha']['captcha'] = ($arrFields['captcha']['captcha'] ?? '') . $strCaptcha;
 		}
 
-		$this->Template->rowLast = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
+		$this->Template->rowLast = 'row_' . ++$i;
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->hasError = $doNotSubmit;
 
