@@ -164,7 +164,7 @@ class Form extends Hybrid
 
 				$arrData['decodeEntities'] = true;
 				$arrData['allowHtml'] = $this->allowTags;
-				$arrData['rowClass'] = 'row_' . $row . (($row == 0) ? ' row_first' : (($row == ($max_row - 1)) ? ' row_last' : '')) . ((($row % 2) == 0) ? ' even' : ' odd');
+				$arrData['rowClass'] = 'row_' . $row;
 
 				// Increase the row count if it's a password field
 				if ($objField->type == 'password')
@@ -172,7 +172,7 @@ class Form extends Hybrid
 					++$row;
 					++$max_row;
 
-					$arrData['rowClassConfirm'] = 'row_' . $row . (($row == ($max_row - 1)) ? ' row_last' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
+					$arrData['rowClassConfirm'] = 'row_' . $row;
 				}
 
 				// Submit buttons do not use the name attribute
