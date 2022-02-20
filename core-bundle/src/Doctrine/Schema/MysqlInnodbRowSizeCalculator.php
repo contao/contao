@@ -27,12 +27,20 @@ class MysqlInnodbRowSizeCalculator
 
     public function getMysqlRowSize(Table $table): int
     {
-        $charset = $table->hasOption('charset') ? $table->getOption('charset') : 'utf8mb4';
+        $tableCharset = $table->hasOption('charset') ? $table->getOption('charset') : 'utf8mb4';
 
         $size = 0;
 
         foreach ($table->getColumns() as $column) {
-            $size += $this->getMysqlColumnSizeBits($column, $column->toArray()['charset'] ?? $charset);
+            $charset = $tableCharset;
+
+            if ($column->toArray()['charset'] ?? null) {
+                $charset = $column->toArray()['charset'];
+            } elseif ($column->toArray()['collation'] ?? null) {
+                $charset = explode('_', $column->toArray()['collation'])[0];
+            }
+
+            $size += $this->getMysqlColumnSizeBits($column, $charset);
         }
 
         return (int) ceil($size / 8);
@@ -40,7 +48,7 @@ class MysqlInnodbRowSizeCalculator
 
     public function getInnodbRowSize(Table $table): int
     {
-        $charset = $table->hasOption('charset') ? $table->getOption('charset') : 'utf8mb4';
+        $tableCharset = $table->hasOption('charset') ? $table->getOption('charset') : 'utf8mb4';
         $engine = $table->hasOption('engine') ? $table->getOption('engine') : 'InnoDB';
         $rowFormat = $table->hasOption('row_format') ? $table->getOption('row_format') : 'DYNAMIC';
 
@@ -52,7 +60,15 @@ class MysqlInnodbRowSizeCalculator
         $size = 25 * 8;
 
         foreach ($table->getColumns() as $column) {
-            $size += $this->getInnodbColumnSizeBits($column, $column->toArray()['charset'] ?? $charset, $rowFormat);
+            $charset = $tableCharset;
+
+            if ($column->toArray()['charset'] ?? null) {
+                $charset = $column->toArray()['charset'];
+            } elseif ($column->toArray()['collation'] ?? null) {
+                $charset = explode('_', $column->toArray()['collation'])[0];
+            }
+
+            $size += $this->getInnodbColumnSizeBits($column, $charset, $rowFormat);
         }
 
         return (int) ceil($size / 8);
