@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\Filesystem\Filesystem;
-
 /**
  * A class to access the file system
  *
@@ -91,7 +89,7 @@ class Files
 			return true;
 		}
 
-		return mkdir($this->strRootDir . '/' . $strDirectory);
+		return mkdir($this->strRootDir . '/' . $strDirectory, 0777, true);
 	}
 
 	/**
@@ -158,7 +156,10 @@ class Files
 	{
 		$this->validate($strFile);
 
-		(new Filesystem())->mkdir(\dirname($this->strRootDir . '/' . $strFile));
+		if ($strMode[0] !== 'r')
+		{
+			$this->mkdir(\dirname($strFile));
+		}
 
 		return fopen($this->strRootDir . '/' . $strFile, $strMode);
 	}
