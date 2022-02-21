@@ -308,6 +308,12 @@
       <trans-unit id="tl_page.sitemap.1">
         <source>Here you can define whether the page is shown in the HTML sitemap.</source>
       </trans-unit>
+      <trans-unit id="tl_page.xml.0">
+        <source>Show in XML sitemap</source>
+      </trans-unit>
+      <trans-unit id="tl_page.xml.1">
+        <source>Here you can define whether the page is shown in the XML sitemap.</source>
+      </trans-unit>
       <trans-unit id="tl_page.hide.0">
         <source>Hide in navigation</source>
       </trans-unit>

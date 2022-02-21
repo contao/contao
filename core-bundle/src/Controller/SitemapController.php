@@ -141,7 +141,7 @@ class SitemapController extends AbstractController
             if (
                 $isPublished
                 && !$pageModel->requireItem
-                && 'noindex,nofollow' !== $pageModel->robots
+                && ('noindex,nofollow' !== $pageModel->robots && 'map_never' !== $pageModel->xml || 'map_always' === $pageModel->xml)
                 && $this->pageRegistry->supportsContentComposition($pageModel)
                 && $this->pageRegistry->isRoutable($pageModel)
                 && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
