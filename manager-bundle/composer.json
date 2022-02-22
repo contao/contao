@@ -21,7 +21,7 @@
         "docs": "https://docs.contao.org"
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "ext-json": "*",
         "contao/core-bundle": "self.version",
         "contao/installation-bundle": "self.version",
@@ -64,8 +64,9 @@
     },
     "require-dev": {
         "composer/composer": "^2.0",
-        "contao/test-case": "^4.4",
-        "phpunit/phpunit": "^8.5",
+        "contao/test-case": "^4.6",
+        "contao/news-bundle": "self.version",
+        "phpunit/phpunit": "^9.3",
         "symfony/phpunit-bridge": "^5.4"
     },
     "suggest": {
@@ -85,6 +86,12 @@
         "bin/contao-console",
         "bin/contao-setup"
     ],
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
+        }
+    },
     "extra": {
         "contao-manager-plugin": "Contao\\ManagerBundle\\ContaoManager\\Plugin"
     }

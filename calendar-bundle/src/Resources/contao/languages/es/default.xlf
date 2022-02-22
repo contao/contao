@@ -87,6 +87,7 @@
       </trans-unit>
       <trans-unit id="MSC.eventOverview">
         <source>Back to the event overview</source>
+        <target>Volver al resumen del evento</target>
       </trans-unit>
     </body>
   </file>

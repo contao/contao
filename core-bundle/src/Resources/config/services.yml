@@ -98,6 +98,7 @@ services:
     contao.cron:
         class: Contao\CoreBundle\Cron\Cron
         public: true
+        lazy: true # Defer creating the Doctrine repository in case the DB connection is not configured
         arguments:
             - '@contao.repository.cron_job'
             - '@doctrine.orm.entity_manager'
@@ -157,7 +158,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.doctrine.backup.dumper'
-            - ~
+            - '@contao.filesystem.virtual.backups'
             - ~
             - '@contao.doctrine.backup.retention_policy'
 
@@ -188,6 +189,7 @@ services:
 
     contao.filesystem.dbafs_manager:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
+        public: true
 
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
@@ -950,6 +952,7 @@ services:
 
     contao.twig.filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
+        public: true
         arguments:
             - '@cache.system'
             - '@contao.twig.loader.template_locator'
@@ -965,6 +968,7 @@ services:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.loader.template_locator'
             - '%kernel.project_dir%'
+            - '%kernel.cache_dir%'
             - '%kernel.environment%'
         tags:
             - { name: kernel.cache_warmer }
@@ -1013,6 +1017,7 @@ services:
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
+    Contao\CoreBundle\Image\Preview\PreviewFactory: '@contao.image.preview_factory'
     Contao\CoreBundle\Image\Studio\Studio:
         alias: contao.image.studio
         public: true # backwards compatibility

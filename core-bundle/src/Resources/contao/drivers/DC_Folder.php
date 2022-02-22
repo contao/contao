@@ -2472,8 +2472,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * Synchronize the file system with the database
 	 *
 	 * @return string
-	 *
-	 * @throws AccessDeniedException
 	 */
 	public function sync()
 	{
@@ -2482,86 +2480,18 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return '';
 		}
 
-		$this->loadLanguageFile('tl_files');
+		$container = System::getContainer();
 
 		// Synchronize
-		$strLog = Dbafs::syncFiles();
+		$changeSet = $container->get('contao.filesystem.dbafs_manager')->sync();
 
-		// Show the results
-		$arrMessages = array();
-		$arrCounts   = array('Added'=>0, 'Changed'=>0, 'Unchanged'=>0, 'Moved'=>0, 'Deleted'=>0);
-
-		// Read the log file
-		$fh = fopen($this->strRootDir . '/' . $strLog, 'r');
-
-		while (($buffer = fgets($fh)) !== false)
-		{
-			list($type, $file) = explode('] ', trim(substr($buffer, 1)), 2);
-
-			// Add a message depending on the type
-			switch ($type)
-			{
-				case 'Added':
-					$arrMessages[] = '<p class="tl_new">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncAdded'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				case 'Changed':
-					$arrMessages[] = '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncChanged'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				case 'Unchanged':
-					$arrMessages[] = '<p class="tl_confirm hidden">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncUnchanged'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				case 'Moved':
-					list($source, $target) = explode(' to ', $file, 2);
-					$arrMessages[] = '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncMoved'], StringUtil::specialchars($source), StringUtil::specialchars($target)) . '</p>';
-					break;
-
-				case 'Deleted':
-					$arrMessages[] = '<p class="tl_error">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncDeleted'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				default:
-					$arrMessages[] = '<p class="tl_error">' . StringUtil::specialchars($buffer) . '</p>';
-					break;
-			}
-
-			++$arrCounts[$type];
-		}
-
-		// Close the log file
-		unset($buffer);
-		fclose($fh);
-
-		// Confirm
-		Message::addConfirmation($GLOBALS['TL_LANG']['tl_files']['syncComplete']);
-
-		$return = Message::generate() . '
-<div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
-</div>
-<div id="sync-results">
-  <p class="left">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncResult'], System::getFormattedNumber($arrCounts['Added'], 0), System::getFormattedNumber($arrCounts['Changed'], 0), System::getFormattedNumber($arrCounts['Unchanged'], 0), System::getFormattedNumber($arrCounts['Moved'], 0), System::getFormattedNumber($arrCounts['Deleted'], 0)) . '</p>
-  <p class="right"><input type="checkbox" id="show-hidden" class="tl_checkbox" onclick="Backend.toggleUnchanged()"> <label for="show-hidden">' . $GLOBALS['TL_LANG']['tl_files']['syncShowUnchanged'] . '</label></p>
-</div>
-<div id="result-list">';
-
-		// Add the messages
-		foreach ($arrMessages as $strMessage)
-		{
-			$return .= "\n  " . $strMessage;
-		}
-
-		$return .= '
-</div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
-  <a href="' . $this->getReferer(true) . '" class="tl_submit" style="display:inline-block">' . $GLOBALS['TL_LANG']['MSC']['continue'] . '</a>
-</div>
-</div>';
-
-		return $return;
+		return $container->get('twig')->render(
+			'@ContaoCore/Backend/be_filesync_report.html.twig',
+			array(
+				'change_set' => $changeSet,
+				'referer' => $this->getReferer(true),
+			)
+		);
 	}
 
 	/**

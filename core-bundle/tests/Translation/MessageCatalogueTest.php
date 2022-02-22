@@ -27,6 +27,13 @@ class MessageCatalogueTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG']);
+
+        parent::tearDown();
+    }
+
     public function testPassesLocaleFromParent(): void
     {
         $catalogue = $this->createCatalogue();

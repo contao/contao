@@ -603,7 +603,7 @@ class Versions extends Controller
 	}
 
 	/**
-	 * Render the versions dropdown menu
+	 * Render the versions drop-down menu
 	 *
 	 * @return string
 	 */

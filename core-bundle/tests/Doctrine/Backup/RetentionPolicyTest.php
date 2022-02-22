@@ -49,7 +49,7 @@ class RetentionPolicyTest extends ContaoTestCase
         // Backups are to be passed on sorted according to the interface
         usort($allBackups, static fn (Backup $a, Backup $b) => $b->getCreatedAt() <=> $a->getCreatedAt());
 
-        $toKeep = array_map(static fn (Backup $backup) => $backup->getFilepath(), $retentionPolicy->apply($latestBackup, $allBackups));
+        $toKeep = array_map(static fn (Backup $backup) => $backup->getFilename(), $retentionPolicy->apply($latestBackup, $allBackups));
 
         $this->assertSame($expectedBackupFilePathsToKeep, $toKeep);
     }

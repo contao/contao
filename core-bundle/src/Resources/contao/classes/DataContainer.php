@@ -954,7 +954,7 @@ abstract class DataContainer extends Backend
 						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
 					}
 
-					parse_str(StringUtil::decodeEntities($v['href']), $params);
+					parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
 
 					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 					{
@@ -1612,9 +1612,16 @@ abstract class DataContainer extends Backend
 	 * @param string $table
 	 *
 	 * @return string
+	 *
+	 * @todo Change the return type to ?string in Contao 5.0
 	 */
 	public static function getDriverForTable(string $table): string
 	{
+		if (!isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer']))
+		{
+			return '';
+		}
+
 		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
 
 		if (false === strpos($dataContainer, '\\'))

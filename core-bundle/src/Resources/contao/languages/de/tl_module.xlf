@@ -110,8 +110,8 @@
         <target>Individuelle Bezeichnung</target>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
-        <source>Here you can enter a custom label for the drop-down menu.</source>
-        <target>Hier können Sie eine individuelle Bezeichnung für das Drop-Down-Menü eingeben.</target>
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+        <target>Hier können Sie eine individuelle Bezeichnung für das Dropdown-Menü oder den Link zur Übersicht eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -514,8 +514,8 @@
         <target>Bitte wählen Sie ein Modul für jede Root-Seite.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Module for &quot;%s&quot;</source>
-        <target>Modul für &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot;</source>
+        <target>Modul wählen für &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

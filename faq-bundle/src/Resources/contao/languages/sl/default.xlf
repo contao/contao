@@ -11,6 +11,7 @@
       </trans-unit>
       <trans-unit id="MSC.faqOverview">
         <source>Back to the FAQ overview</source>
+        <target>Nazaj na pregled nastavitev za ta FAQ</target>
       </trans-unit>
     </body>
   </file>

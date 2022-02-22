@@ -123,9 +123,11 @@
       </trans-unit>
       <trans-unit id="MOD.preview_link.0">
         <source>Preview links</source>
+        <target>Povezave za predogled</target>
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
         <source>Manage preview links for the front end.</source>
+        <target>Upravljaj povezave za predogled spletne strani.</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -393,6 +395,7 @@
       </trans-unit>
       <trans-unit id="FMD.template.0">
         <source>Custom template</source>
+        <target>Predloga po meri</target>
       </trans-unit>
       <trans-unit id="FMD.template.1">
         <source>Generates a module to insert a custom template.</source>
@@ -416,8 +419,9 @@
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
       </trans-unit>
-      <trans-unit id="FMD.root_page_dependent_module.1">
+      <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
+        <target>Ustvarijo se različni moduli odvisni od vrhnje strani</target>
       </trans-unit>
     </body>
   </file>
