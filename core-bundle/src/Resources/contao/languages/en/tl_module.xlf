@@ -230,12 +230,6 @@
       <trans-unit id="tl_module.singleSRC.1">
         <source>Please select a file from the files directory.</source>
       </trans-unit>
-      <trans-unit id="tl_module.url.0">
-        <source>URL</source>
-      </trans-unit>
-      <trans-unit id="tl_module.url.1">
-        <source>Please enter the URL (http://…) of the Flash movie.</source>
-      </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
       </trans-unit>
