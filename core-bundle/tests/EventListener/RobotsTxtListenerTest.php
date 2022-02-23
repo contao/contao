@@ -123,9 +123,7 @@ class RobotsTxtListenerTest extends TestCase
             ->expects($this->once())
             ->method('add')
             ->with($this->callback(
-                static function (Directive $directive) use ($routePrefix) {
-                    return ((string) $directive) === 'disallow:'.$routePrefix.'/';
-                }
+                static fn (Directive $directive) => ((string) $directive) === 'disallow:'.$routePrefix.'/'
             ))
         ;
 
