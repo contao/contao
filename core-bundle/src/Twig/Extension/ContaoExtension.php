@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
@@ -58,6 +59,9 @@ final class ContaoExtension extends AbstractExtension
 
         // Use our escaper on all templates in the `@Contao` and `@Contao_*` namespaces
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
+
+        // Mark HtmlAttributes class as safe as it escapes it output itself
+        $escaperExtension->addSafeClass(HtmlAttributes::class, ['html']);
     }
 
     /**
@@ -116,6 +120,10 @@ final class ContaoExtension extends AbstractExtension
                     return $includeFunctionCallable(...$args);
                 },
                 ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]
+            ),
+            new TwigFunction(
+                'html_attributes',
+                static fn (array $attributes = []): HtmlAttributes => new HtmlAttributes($attributes),
             ),
             new TwigFunction(
                 'contao_figure',
