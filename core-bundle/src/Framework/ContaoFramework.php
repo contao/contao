@@ -359,7 +359,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         if (!$this->getAdapter(Config::class)->isComplete()) {
-            throw new RedirectResponseException($this->urlGenerator->generate('contao_install'));
+            throw new RedirectResponseException($this->urlGenerator->generate('contao_install', [], UrlGeneratorInterface::ABSOLUTE_URL));
         }
     }
 
