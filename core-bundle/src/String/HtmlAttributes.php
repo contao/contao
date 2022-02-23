@@ -69,7 +69,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
 
         foreach ($matches as [1 => $name, 2 => $value]) {
             try {
-                $instance->set($name, $value);
+                $instance->set($name, html_entity_decode($value ?? '', ENT_QUOTES));
             } catch (\InvalidArgumentException $exception) {
                 // Skip invalid attributes
             }

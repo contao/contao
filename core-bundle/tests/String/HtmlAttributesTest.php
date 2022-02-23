@@ -25,6 +25,10 @@ class HtmlAttributesTest extends TestCase
         $attributes = HtmlAttributes::fromString($attributeString);
 
         $this->assertSame($expectedAttributes, iterator_to_array($attributes));
+
+        $attributes = HtmlAttributes::fromString($attributes->toString());
+
+        $this->assertSame($expectedAttributes, iterator_to_array($attributes));
     }
 
     public function provideAttributeStrings(): \Generator
@@ -67,6 +71,11 @@ class HtmlAttributesTest extends TestCase
         yield 'skip unclosed attributes completely' => [
             'foo="bar" baz="42 bar=\'123\'> <div class=H4x0r',
             ['foo' => 'bar'],
+        ];
+
+        yield 'decode values' => [
+            'foo=&quot; bar="b&auml;z"',
+            ['foo' => '"', 'bar' => 'bäz'],
         ];
 
         yield 'no attributes' => [
