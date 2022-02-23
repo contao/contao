@@ -125,7 +125,7 @@ class ModuleWizard extends Widget
 						$cols[] = $v['id'];
 						$positions[$v['id']] = $v['position'];
 
-						// Add custom layout section reference
+						// Add custom layout section reference #4207
 						$GLOBALS['TL_LANG']['COLS'][$v['id']] = $v['title'];
 					}
 				}
