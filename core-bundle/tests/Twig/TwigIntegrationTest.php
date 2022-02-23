@@ -87,6 +87,7 @@ class TwigIntegrationTest extends TestCase
               <h1{{ html_attributes() }}>
                 <span{{ html_attributes({'data-x': 'y'}).setIfExists('style', style).set('data-bar', 'bar') }}>{{ headline }}</span>
               </h1>
+              <p{{ html_attributes(paragraph_attributes) }}>{{ text }}</p>
             </div>
             TEMPLATE;
 
@@ -95,6 +96,7 @@ class TwigIntegrationTest extends TestCase
               <h1>
                 <span data-x="y" data-bar="bar">Test headline</span>
               </h1>
+              <p class="rte">Some text</p>
             </div>
             TEMPLATE;
 
@@ -105,8 +107,10 @@ class TwigIntegrationTest extends TestCase
             'test.html.twig',
             [
                 'attributes' => ['class' => 'block', 'data-thing' => 42],
+                'paragraph_attributes' => ' class="rte"',
                 'style' => '',
                 'headline' => 'Test headline',
+                'text' => 'Some text',
             ]
         );
 
