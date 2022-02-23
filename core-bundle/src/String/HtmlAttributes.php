@@ -24,9 +24,9 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     private array $attributes = [];
 
     /**
-     * @param array<string, string|int|bool|\Stringable|null> $attributes
+     * @param iterable<string, string|int|bool|\Stringable|null> $attributes
      */
-    public function __construct(array $attributes = [])
+    public function __construct(iterable $attributes = [])
     {
         foreach ($attributes as $name => $value) {
             $this->set($name, $value);

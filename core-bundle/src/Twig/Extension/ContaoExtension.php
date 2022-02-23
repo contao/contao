@@ -123,7 +123,7 @@ final class ContaoExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'html_attributes',
-                static fn (array|string $attributes = null): HtmlAttributes => \is_string($attributes) ? HtmlAttributes::fromString($attributes) : new HtmlAttributes($attributes ?? []),
+                static fn (iterable|string $attributes = null): HtmlAttributes => \is_string($attributes) ? HtmlAttributes::fromString($attributes) : new HtmlAttributes($attributes ?? []),
             ),
             new TwigFunction(
                 'contao_figure',

@@ -60,23 +60,30 @@ class HtmlAttributesTest extends TestCase
         ];
     }
 
-    public function testCreatesAttributesFromArray(): void
+    public function testCreatesAttributesFromIterable(): void
     {
-        $attributes = new HtmlAttributes([
+        $properties = [
             'foO_bAr' => 'bar',
             'bar-bar' => 42,
             'BAZ123' => true,
             'other' => null,
-        ]);
+        ];
+
+        $expectedProperties = [
+            'foo_bar' => 'bar',
+            'bar-bar' => '42',
+            'baz123' => '',
+            'other' => '',
+        ];
 
         $this->assertSame(
-            [
-                'foo_bar' => 'bar',
-                'bar-bar' => '42',
-                'baz123' => '',
-                'other' => '',
-            ],
-            iterator_to_array($attributes),
+            $expectedProperties,
+            iterator_to_array(new HtmlAttributes($properties))
+        );
+
+        $this->assertSame(
+            $expectedProperties,
+            iterator_to_array(new HtmlAttributes(new \ArrayIterator($properties)))
         );
     }
 
