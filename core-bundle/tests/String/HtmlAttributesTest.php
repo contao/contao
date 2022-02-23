@@ -49,6 +49,26 @@ class HtmlAttributesTest extends TestCase
             ['foo' => 'bar', 'baz' => '42'],
         ];
 
+        yield 'new lines and tabs' => [
+            "\n\t\rfoo\n\t\r=\n\t\rbar\n\t\rbaz\n\t\r=\n\t\r'42'\n\t\r",
+            ['foo' => 'bar', 'baz' => '42'],
+        ];
+
+        yield 'special html parsing rules' => [
+            "/X===.._-/\n/y/",
+            ['x' => '==.._-/', 'y' => ''],
+        ];
+
+        yield 'skip closing and keep opening tags as per html parsing rules' => [
+            '>foo=<bar>baz>/</<ignore=<this-one',
+            ['foo' => '<bar', 'baz' => ''],
+        ];
+
+        yield 'skip unclosed attributes completely' => [
+            'foo="bar" baz="42 bar=\'123\'> <div class=H4x0r',
+            ['foo' => 'bar'],
+        ];
+
         yield 'no attributes' => [
             '',
             [],
@@ -90,12 +110,11 @@ class HtmlAttributesTest extends TestCase
     /**
      * @dataProvider provideInvalidAttributeNames
      */
-    public function testRejectsInvalidAttributeNamesWhenParsingString(string $name): void
+    public function testSkipsInvalidAttributeNamesWhenParsingString(string $name): void
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9_-\], must start with a letter, must not end with a underscore\/hyphen and must not contain two underscores\/hyphens in a row, got ".*"\./');
+        $attributes = HtmlAttributes::fromString(sprintf('foo="bar" %s="bar" baz=42', $name));
 
-        HtmlAttributes::fromString(sprintf('%s="bar"', $name));
+        $this->assertSame(['foo' => 'bar', 'baz' => '42'], iterator_to_array($attributes));
     }
 
     /**
@@ -131,6 +150,10 @@ class HtmlAttributesTest extends TestCase
         yield 'contains two hyphens in a row' => ['foo--bar'];
         yield 'ends with an underscore' => ['foo_'];
         yield 'contains two underscores in a row' => ['foo__bar'];
+        yield 'opening tag only' => ['<'];
+        yield 'contains opening tag as first char' => ['<foo'];
+        yield 'contains opening tag as second char' => ['f<oo'];
+        yield 'contains opening tag as last char' => ['foo<'];
     }
 
     public function testSetAndUnsetProperties(): void

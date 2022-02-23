@@ -48,75 +48,39 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
      */
     public static function fromString(string $attributesString): self
     {
-        $attributes = [];
+        // Regular expression to match attributes according to https://html.spec.whatwg.org/#before-attribute-name-state
+        $attributeRegex = '('
+            .'[\s/]*+'                                    // Optional white space including slash
+            .'([^>\s/][^>\s/=]*+)'                        // Attribute name
+            .'[\s]*+'                                     // Optional white space
+            .'(?:='                                       // Assignment
+                .'[\s]*+'                                 // Optional white space
+                .'(?|'                                    // Value
+                    .'"([^"]*)(?:"|$(*SKIP)(*FAIL))'      // Double quoted value
+                    .'|\'([^\']*)(?:\'|$(*SKIP)(*FAIL))'  // Or single quoted value
+                    .'|([^\s>]*+)'                        // Or unquoted or missing value
+                .')'                                      // Value end
+            .')?+'                                        // Assignment is optional
+        .')i';
 
-        $length = \strlen($attributesString);
-        $currentName = $currentValue = null;
-        $readName = $hasDelimiter = true;
+        preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER);
 
-        for ($position = 0; $position < $length; ++$position) {
-            // Advance position until the next character is no whitespace and return that character
-            $advance = static function () use ($attributesString, $length, &$position): string {
-                $next = '';
+        $attributes = array_combine(
+            array_map(static fn ($match) => $match[1] ?? '', $matches),
+            array_map(static fn ($match) => $match[2] ?? '', $matches),
+        );
 
-                for ($i = $position + 1; $i < $length; ++$i) {
-                    if (($next = $attributesString[$i]) !== ' ') {
-                        break;
-                    }
-                }
+        $instance = new self();
 
-                $position = $i - 1;
-
-                return $next;
-            };
-
-            $currentChar = $attributesString[$position];
-            $isWhitespace = ' ' === $currentChar;
-
-            // Ignore whitespaces between names and values
-            if ($isWhitespace && (($readName && null === $currentName) || (!$readName && null === $currentValue))) {
-                continue;
-            }
-
-            // Parse name
-            if ($readName) {
-                if ($isWhitespace) {
-                    if ('=' !== $advance()) {
-                        $attributes[$currentName] = null;
-                        $currentName = '';
-                    }
-                } elseif ('=' === $currentChar) {
-                    $readName = false;
-
-                    if ('"' !== $advance()) {
-                        $hasDelimiter = false;
-                    } else {
-                        ++$position;
-                    }
-                } else {
-                    $currentName .= $currentChar;
-                }
-
-                continue;
-            }
-
-            // Parse value
-            if ('"' === $currentChar || (!$hasDelimiter && $isWhitespace)) {
-                $attributes[$currentName] = $currentValue;
-
-                $currentName = $currentValue = null;
-                $readName = $hasDelimiter = true;
-            } else {
-                $currentValue .= $currentChar;
+        foreach ($attributes as $name => $value) {
+            try {
+                $instance->set($name, $value);
+            } catch (\InvalidArgumentException $exception) {
+                // Skip invalid attributes
             }
         }
 
-        // Add remaining value
-        if (null !== $currentValue) {
-            $attributes[$currentName] = $currentValue;
-        }
-
-        return new self($attributes);
+        return $instance;
     }
 
     /**
