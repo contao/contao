@@ -200,7 +200,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
 
         $string = implode(' ', $attributes);
 
-        return $leadingSpace && !empty($string) ? " $string" : $string;
+        return $leadingSpace && $string ? " $string" : $string;
     }
 
     /**
