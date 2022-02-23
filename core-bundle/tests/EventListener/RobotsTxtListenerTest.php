@@ -154,7 +154,6 @@ class RobotsTxtListenerTest extends TestCase
         $listener($event);
     }
 
-
     public function routePrefixProvider(): \Generator
     {
         yield ['/contao'];
