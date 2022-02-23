@@ -63,16 +63,11 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
             .')?+'                                        // Assignment is optional
         .')i';
 
-        preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER);
-
-        $attributes = array_combine(
-            array_map(static fn ($match) => $match[1] ?? '', $matches),
-            array_map(static fn ($match) => $match[2] ?? '', $matches),
-        );
+        preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
         $instance = new self();
 
-        foreach ($attributes as $name => $value) {
+        foreach ($matches as [1 => $name, 2 => $value]) {
             try {
                 $instance->set($name, $value);
             } catch (\InvalidArgumentException $exception) {
