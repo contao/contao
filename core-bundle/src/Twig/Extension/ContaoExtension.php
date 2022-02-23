@@ -60,7 +60,7 @@ final class ContaoExtension extends AbstractExtension
         // Use our escaper on all templates in the `@Contao` and `@Contao_*` namespaces
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
 
-        // Mark HtmlAttributes class as safe as it escapes it output itself
+        // Mark HtmlAttributes class as safe for HTML as it escapes its output itself
         $escaperExtension->addSafeClass(HtmlAttributes::class, ['html']);
     }
 
