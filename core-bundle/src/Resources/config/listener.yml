@@ -229,6 +229,8 @@ services:
 
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
+        arguments:
+            - '%contao.web_dir%'
         tags:
             - kernel.event_listener
 
@@ -418,6 +420,7 @@ services:
         class: Contao\CoreBundle\EventListener\RobotsTxtListener
         arguments:
             - '@contao.framework'
+            - '%contao.backend.route_prefix%'
         tags:
             - kernel.event_listener
 

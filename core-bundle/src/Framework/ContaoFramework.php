@@ -35,6 +35,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
@@ -51,6 +52,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private ScopeMatcher $scopeMatcher;
     private TokenChecker $tokenChecker;
     private Filesystem $filesystem;
+    private UrlGeneratorInterface $urlGenerator;
     private string $projectDir;
     private int $errorLevel;
     private bool $legacyRouting;
@@ -59,12 +61,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private array $adapterCache = [];
     private array $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $projectDir, int $errorLevel, bool $legacyRouting)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, UrlGeneratorInterface $urlGenerator, string $projectDir, int $errorLevel, bool $legacyRouting)
     {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
         $this->tokenChecker = $tokenChecker;
         $this->filesystem = $filesystem;
+        $this->urlGenerator = $urlGenerator;
         $this->projectDir = $projectDir;
         $this->errorLevel = $errorLevel;
         $this->legacyRouting = $legacyRouting;
@@ -356,7 +359,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
         }
 
         if (!$this->getAdapter(Config::class)->isComplete()) {
-            throw new RedirectResponseException('/contao/install');
+            throw new RedirectResponseException($this->urlGenerator->generate('contao_install'));
         }
     }
 
