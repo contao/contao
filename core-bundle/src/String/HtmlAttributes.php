@@ -35,7 +35,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
 
     /**
      * Outputs the attributes as a string that is safe to be placed inside HTML
-     * tags. The output will contain a leading space i there is at least one
+     * tags. The output will contain a leading space if there is at least one
      * property set: e.g. ' foo="bar" bar="42"'.
      */
     public function __toString(): string
