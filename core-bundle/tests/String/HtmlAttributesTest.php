@@ -63,7 +63,7 @@ class HtmlAttributesTest extends TestCase
     public function testCreatesAttributesFromArray(): void
     {
         $attributes = new HtmlAttributes([
-            'foObAr' => 'bar',
+            'foO_bAr' => 'bar',
             'bar-bar' => 42,
             'BAZ123' => true,
             'other' => null,
@@ -71,7 +71,7 @@ class HtmlAttributesTest extends TestCase
 
         $this->assertSame(
             [
-                'foobar' => 'bar',
+                'foo_bar' => 'bar',
                 'bar-bar' => '42',
                 'baz123' => '1',
                 'other' => null,
@@ -86,7 +86,7 @@ class HtmlAttributesTest extends TestCase
     public function testRejectsInvalidAttributeNamesWhenParsingString(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9-\], must start with a letter, must not end with a hyphen and must not contain two hyphens in a row, got ".*"\./');
+        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9_-\], must start with a letter, must not end with a underscore\/hyphen and must not contain two underscores\/hyphens in a row, got ".*"\./');
 
         HtmlAttributes::fromString(sprintf('%s="bar"', $name));
     }
@@ -97,7 +97,7 @@ class HtmlAttributesTest extends TestCase
     public function testRejectsInvalidAttributeNamesWhenConstructingFromArray(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9-\], must start with a letter, must not end with a hyphen and must not contain two hyphens in a row, got ".*"\./');
+        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9_-\], must start with a letter, must not end with a underscore\/hyphen and must not contain two underscores\/hyphens in a row, got ".*"\./');
 
         new HtmlAttributes([$name => 'bar']);
     }
@@ -110,7 +110,7 @@ class HtmlAttributesTest extends TestCase
         $attributes = new HtmlAttributes();
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9-\], must start with a letter, must not end with a hyphen and must not contain two hyphens in a row, got ".*"\./');
+        $this->expectExceptionMessageMatches('/A HTML attribute name must only consist of the characters \[a-z0-9_-\], must start with a letter, must not end with a underscore\/hyphen and must not contain two underscores\/hyphens in a row, got ".*"\./');
 
         $attributes->set($name, 'bar');
     }
@@ -122,6 +122,8 @@ class HtmlAttributesTest extends TestCase
         yield 'does not start with a-z' => ['2foo'];
         yield 'ends with a hyphen' => ['foo-'];
         yield 'contains two hyphens in a row' => ['foo--bar'];
+        yield 'ends with an underscore' => ['foo_'];
+        yield 'contains two underscores in a row' => ['foo__bar'];
     }
 
     public function testSetAndUnsetProperties(): void
