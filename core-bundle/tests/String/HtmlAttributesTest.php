@@ -36,7 +36,7 @@ class HtmlAttributesTest extends TestCase
 
         yield 'no value' => [
             'foo baz="42"',
-            ['foo' => null, 'baz' => '42'],
+            ['foo' => '', 'baz' => '42'],
         ];
 
         yield 'no quotes' => [
@@ -73,8 +73,8 @@ class HtmlAttributesTest extends TestCase
             [
                 'foo_bar' => 'bar',
                 'bar-bar' => '42',
-                'baz123' => '1',
-                'other' => null,
+                'baz123' => '',
+                'other' => '',
             ],
             iterator_to_array($attributes),
         );
@@ -156,6 +156,12 @@ class HtmlAttributesTest extends TestCase
         $attributes->setIfExists('f', 'abc');
 
         $this->assertSame(['bar' => '42', 'e' => ' ', 'f' => 'abc'], iterator_to_array($attributes));
+
+        // Unset properties by setting them to false
+        $attributes->set('bar', false);
+        $attributes->setIfExists('f', false); // should not alter the list
+
+        $this->assertSame(['e' => ' ', 'f' => 'abc'], iterator_to_array($attributes));
     }
 
     public function testAddAndRemoveClasses(): void
@@ -228,9 +234,10 @@ class HtmlAttributesTest extends TestCase
         $this->assertFalse(isset($attributes['foobar']));
 
         $attributes['other'] = true;
+        $attributes['baz'] = false;
         unset($attributes['foo']);
 
-        $this->assertSame(['baz' => '42', 'other' => '1'], iterator_to_array($attributes));
+        $this->assertSame(['other' => ''], iterator_to_array($attributes));
     }
 
     public function testThrowsWhenSettingInvalidNameUsingArrayAccess(): void

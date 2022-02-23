@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\String;
 
 /**
- * @implements \IteratorAggregate<string, string|null>
+ * @implements \IteratorAggregate<string, string>
  * @implements \ArrayAccess<string, string|int|bool|\Stringable|null>
  */
 class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
 {
     /**
-     * @var array<string, string|null>
+     * @var array<string, string>
      */
     private array $attributes = [];
 
@@ -119,6 +119,11 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
         return new self($attributes);
     }
 
+    /**
+     * Sets a property and validates the name. If the given $value is false the
+     * property will be unset instead. All values will be coerced to strings,
+     * whereby null and true will result in an empty string.
+     */
     public function set(string $name, string|int|bool|\Stringable|null $value): self
     {
         $name = strtolower($name);
@@ -127,7 +132,14 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
             throw new \InvalidArgumentException(sprintf('A HTML attribute name must only consist of the characters [a-z0-9_-], must start with a letter, must not end with a underscore/hyphen and must not contain two underscores/hyphens in a row, got "%s".', $name));
         }
 
-        $this->attributes[$name] = null !== $value ? (string) $value : null;
+        // Unset if value is set to false
+        if (false === $value) {
+            unset($this->attributes[$name]);
+
+            return $this;
+        }
+
+        $this->attributes[$name] = true === $value ? '' : (string) $value;
 
         // Normalize class names
         if ('class' === $name) {
@@ -195,7 +207,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
         $attributes = [];
 
         foreach ($this->attributes as $name => $value) {
-            $attributes[] = null !== $value ? sprintf('%s="%s"', $name, $this->escapeValue($name, $value)) : $name;
+            $attributes[] = '' !== $value ? sprintf('%s="%s"', $name, $this->escapeValue($name, $value)) : $name;
         }
 
         $string = implode(' ', $attributes);
@@ -204,7 +216,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
-     * @return \ArrayIterator<string, string|null>
+     * @return \ArrayIterator<string, string>
      */
     public function getIterator(): \Traversable
     {
