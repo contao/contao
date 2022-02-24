@@ -29,7 +29,7 @@ class BackupCreateCommand extends AbstractBackupCommand
     protected function configure(): void
     {
         parent::configure();
-        
+
         $this->addOption('data-only', null, InputOption::VALUE_NONE, 'By default, this command exports the table schema and data. Use --data-only to export only the data.');
     }
 
