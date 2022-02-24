@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -25,12 +26,23 @@ class BackupCreateCommand extends AbstractBackupCommand
     protected static $defaultName = 'contao:backup:create';
     protected static $defaultDescription = 'Creates a new database backup.';
 
+    protected function configure(): void
+    {
+        parent::configure();
+        
+        $this->addOption('data-only', null, InputOption::VALUE_NONE, 'By default, this command exports the table schema and data. Use --data-only to export only the data.');
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
         $config = $this->backupManager->createCreateConfig();
         $config = $this->handleCommonConfig($input, $config);
+
+        if ($input->getOption('data-only')) {
+            $config = $config->withDataOnly(true);
+        }
 
         try {
             $this->backupManager->create($config);

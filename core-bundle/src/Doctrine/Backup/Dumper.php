@@ -42,11 +42,15 @@ class Dumper implements DumperInterface
         $platform = $connection->getDatabasePlatform();
 
         foreach ($this->getTablesToDump($schemaManager, $config) as $table) {
-            yield from $this->dumpSchema($platform, $table);
+            if (!$config->isDataOnlyEnabled()) {
+                yield from $this->dumpSchema($platform, $table);
+            }
             yield from $this->dumpData($connection, $table);
         }
 
-        yield from $this->dumpViews($schemaManager, $platform);
+        if (!$config->isDataOnlyEnabled()) {
+            yield from $this->dumpViews($schemaManager, $platform);
+        }
 
         // Triggers are currently not supported (contributions welcome!)
 

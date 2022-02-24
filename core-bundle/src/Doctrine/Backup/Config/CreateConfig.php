@@ -14,4 +14,18 @@ namespace Contao\CoreBundle\Doctrine\Backup\Config;
 
 class CreateConfig extends AbstractConfig
 {
+    private bool $dataOnly = false;
+
+    public function isDataOnlyEnabled(): bool
+    {
+        return $this->dataOnly;
+    }
+
+    public function withDataOnly(bool $enable): self
+    {
+        $new = clone $this;
+        $new->dataOnly = $enable;
+
+        return $new;
+    }
 }
