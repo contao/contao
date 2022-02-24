@@ -51,17 +51,17 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
         // Regular expression to match attributes according to https://html.spec.whatwg.org/#before-attribute-name-state
         $attributeRegex = <<<'EOD'
             (
-                [\s/]*+                                    # Optional white space including slash
-                ([^>\s/][^>\s/=]*+)                        # Attribute name
-                [\s]*+                                     # Optional white space
-                (?:=                                       # Assignment
-                    [\s]*+                                 # Optional white space
-                    (?|                                    # Value
-                        "([^"]*)(?:"|$(*SKIP)(*FAIL))      # Double quoted value
-                        |\'([^\']*)(?:\'|$(*SKIP)(*FAIL))  # Or single quoted value
-                        |([^\s>]*+)                        # Or unquoted or missing value
-                    )                                      # Value end
-                )?+                                        # Assignment is optional
+                [\s/]*+                                 # Optional white space including slash
+                ([^>\s/][^>\s/=]*+)                     # Attribute name
+                [\s]*+                                  # Optional white space
+                (?:=                                    # Assignment
+                    [\s]*+                              # Optional white space
+                    (?|                                 # Value
+                        "([^"]*)(?:"|$(*SKIP)(*FAIL))   # Double quoted value
+                        |'([^']*)(?:'|$(*SKIP)(*FAIL))  # Or single quoted value
+                        |([^\s>]*+)                     # Or unquoted or missing value
+                    )                                   # Value end
+                )?+                                     # Assignment is optional
             )ix
             EOD;
 
