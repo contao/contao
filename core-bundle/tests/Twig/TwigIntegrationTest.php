@@ -83,11 +83,11 @@ class TwigIntegrationTest extends TestCase
     public function testRendersAttributes(): void
     {
         $templateContent = <<<'TEMPLATE'
-            <div{{ html_attributes(attributes).addClass('foo') }}>
-              <h1{{ html_attributes() }}>
-                <span{{ html_attributes({'data-x': 'y'}).setIfExists('style', style).set('data-bar', 'bar') }}>{{ headline }}</span>
+            <div{{ attrs(attributes).addClass('foo') }}>
+              <h1{{ attrs() }}>
+                <span{{ attrs({'data-x': 'y'}).setIfExists('style', style).set('data-bar', 'bar') }}>{{ headline }}</span>
               </h1>
-              <p{{ html_attributes(paragraph_attributes) }}>{{ text }}</p>
+              <p{{ attrs(paragraph_attributes) }}>{{ text }}</p>
             </div>
             TEMPLATE;
 

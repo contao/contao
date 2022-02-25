@@ -122,7 +122,7 @@ final class ContaoExtension extends AbstractExtension
                 ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]
             ),
             new TwigFunction(
-                'html_attributes',
+                'attrs',
                 static fn (iterable|string $attributes = null): HtmlAttributes => \is_string($attributes) ? HtmlAttributes::fromString($attributes) : new HtmlAttributes($attributes ?? []),
             ),
             new TwigFunction(
