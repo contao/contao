@@ -1225,6 +1225,10 @@ class DbafsTest extends TestCase
      */
     public function testSkipsNonUtf8FilesAndDirectories(): void
     {
+        if (\DIRECTORY_SEPARATOR === '\\') {
+            $this->markTestSkipped('Non-UTF-8 paths cannot reliably be created on this platform.');
+        }
+
         $filesystem = new VirtualFilesystem(
             new MountManager(new InMemoryFilesystemAdapter()),
             $this->createMock(DbafsManager::class)
@@ -1240,8 +1244,6 @@ class DbafsTest extends TestCase
         $this->expectDeprecation('Since contao/core-bundle 4.13: Filesystem resources with non-UTF-8 paths will no longer be skipped but throw an exception in Contao 5.0.');
 
         $changeSet = $dbafs->computeChangeSet();
-
-        fwrite(STDERR, print_r($changeSet, true));
 
         $this->assertCount(1, $changeSet->getItemsToCreate());
         $this->assertSame('valid.txt', $changeSet->getItemsToCreate()[0][ChangeSet::ATTR_PATH]);
