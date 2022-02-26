@@ -1241,6 +1241,8 @@ class DbafsTest extends TestCase
 
         $changeSet = $dbafs->computeChangeSet();
 
+        fwrite(STDERR, print_r($changeSet, true));
+
         $this->assertCount(1, $changeSet->getItemsToCreate());
         $this->assertSame('valid.txt', $changeSet->getItemsToCreate()[0][ChangeSet::ATTR_PATH]);
     }
