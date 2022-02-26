@@ -169,11 +169,7 @@ class DbafsTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAllAssociative')
-            ->with(
-                'SELECT * FROM tl_files WHERE path LIKE ? ORDER BY path',
-                ['foo/%'],
-                []
-            )
+            ->with('SELECT * FROM tl_files WHERE path LIKE ? ORDER BY path', ['foo/%'], [])
             ->willReturn([
                 ['id' => 1, 'uuid' => $this->generateUuid(1)->toBinary(), 'path' => 'foo/first', 'type' => 'file'],
                 ['id' => 2, 'uuid' => $this->generateUuid(2)->toBinary(), 'path' => 'foo/second', 'type' => 'file'],
@@ -209,9 +205,7 @@ class DbafsTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAssociative')
-            ->willReturn(
-                ['id' => 1, 'uuid' => $uuid->toBinary(), 'path' => 'some/path', 'type' => 'file'],
-            )
+            ->willReturn(['id' => 1, 'uuid' => $uuid->toBinary(), 'path' => 'some/path', 'type' => 'file'])
         ;
 
         $getColumn = function (string $name): Column {
@@ -560,23 +554,9 @@ class DbafsTest extends TestCase
 
         $changeSet = $dbafs->computeChangeSet(...((array) $paths));
 
-        $this->assertSame(
-            $expected->getItemsToCreate(),
-            $changeSet->getItemsToCreate(),
-            'items to create'
-        );
-
-        $this->assertSame(
-            $expected->getItemsToUpdate(),
-            $changeSet->getItemsToUpdate(),
-            'items to update'
-        );
-
-        $this->assertSame(
-            $expected->getItemsToDelete(),
-            $changeSet->getItemsToDelete(),
-            'items to delete'
-        );
+        $this->assertSame($expected->getItemsToCreate(), $changeSet->getItemsToCreate(), 'items to create');
+        $this->assertSame($expected->getItemsToUpdate(), $changeSet->getItemsToUpdate(), 'items to update');
+        $this->assertSame($expected->getItemsToDelete(), $changeSet->getItemsToDelete(), 'items to delete');
     }
 
     public function provideFilesystemsAndExpectedChangeSets(): \Generator
@@ -1154,10 +1134,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('delete')
-            ->with(
-                'tl_files',
-                ['path' => 'files/bar.file', 'type' => 'file']
-            )
+            ->with('tl_files', ['path' => 'files/bar.file', 'type' => 'file'])
         ;
 
         $filesystem = new VirtualFilesystem(

@@ -78,10 +78,7 @@ abstract class AbstractConfig
 
     private function filterTablesToIgnore(array $currentTables, array $newTables): array
     {
-        $newList = array_filter(
-            $newTables,
-            static fn ($table) => !\in_array($table[0], ['-', '+'], true)
-        );
+        $newList = array_filter($newTables, static fn ($table) => !\in_array($table[0], ['-', '+'], true));
 
         if ($newList) {
             $currentTables = $newList;

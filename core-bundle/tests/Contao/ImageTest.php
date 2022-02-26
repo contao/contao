@@ -133,10 +133,7 @@ class ImageTest extends TestCase
         $imageObj->setTargetHeight($arguments[1]);
         $imageObj->setResizeMode($arguments[4]);
 
-        $this->assertSame(
-            $expectedResult,
-            $imageObj->computeResize()
-        );
+        $this->assertSame($expectedResult, $imageObj->computeResize());
 
         $imageObj->setZoomLevel(50);
 

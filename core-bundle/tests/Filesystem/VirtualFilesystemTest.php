@@ -448,10 +448,7 @@ class VirtualFilesystemTest extends TestCase
         /** @var array<FilesystemItem> $listedContents */
         $listedContents = [...$filesystem->listContents('foo/bar', $deep, VirtualFilesystemInterface::BYPASS_DBAFS)];
 
-        $this->assertSame(
-            ['extra' => 'data'],
-            $listedContents[0]->getExtraMetadata()
-        );
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
 
         // Normalize listing for comparison
         $listing = array_map(
@@ -534,11 +531,7 @@ class VirtualFilesystemTest extends TestCase
         /** @var array<FilesystemItem> $listedContents */
         $listedContents = [...$filesystem->listContents('foo/bar', $deep)];
 
-        $this->assertSame(
-            ['extra' => 'data'],
-            $listedContents[0]->getExtraMetadata()
-        );
-
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
         $this->assertSame(1024, $listedContents[0]->getFileSize());
 
         // Normalize listing for comparison
@@ -631,13 +624,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetLastModified(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'lastModified',
-            123450,
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('lastModified', 123450, $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -645,13 +632,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetFileSize(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'fileSize',
-            1024,
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('fileSize', 1024, $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -659,13 +640,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetMimeType(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'mimeType',
-            'image/png',
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('mimeType', 'image/png', $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**

@@ -143,11 +143,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $cacheAdapter = new ArrayAdapter();
 
         $loader1 = $this->getContaoFilesystemLoader($cacheAdapter, $locator);
-        $loader1->addPath(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1'),
-            'Contao_App',
-            true
-        );
+        $loader1->addPath(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1'), 'Contao_App', true);
 
         $chains = $loader1->getInheritanceChains();
 
