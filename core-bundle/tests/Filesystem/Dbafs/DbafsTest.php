@@ -39,6 +39,26 @@ class DbafsTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    private int $codePageBackup = 0;
+
+    protected function setUp(): void
+    {
+        if (\function_exists('sapi_windows_cp_get')) {
+            $this->codePageBackup = sapi_windows_cp_get();
+        }
+
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        if (\function_exists('sapi_windows_cp_set')) {
+            sapi_windows_cp_set($this->codePageBackup);
+        }
+    }
+
     public function testResolvePaths(): void
     {
         $uuid1 = $this->generateUuid(1);
