@@ -233,9 +233,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $response
             ->expects($this->once())
             ->method('getContent')
-            ->willReturn(
-                '<html><body><form><input name="REQUEST_TOKEN" value=""></form></body></html>'
-            )
+            ->willReturn('<html><body><form><input name="REQUEST_TOKEN" value=""></form></body></html>')
         ;
 
         $response

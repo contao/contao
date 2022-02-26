@@ -339,11 +339,7 @@ class ContaoFrameworkTest extends TestCase
         $errorReporting = error_reporting();
         error_reporting(E_ALL ^ E_USER_NOTICE);
 
-        $this->assertNotSame(
-            $errorReporting,
-            error_reporting(),
-            'Test is invalid, error level has not changed.'
-        );
+        $this->assertNotSame($errorReporting, error_reporting(), 'Test is invalid, error level has not changed.');
 
         $framework->initialize();
 

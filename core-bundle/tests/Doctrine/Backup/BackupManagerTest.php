@@ -152,10 +152,7 @@ class BackupManagerTest extends ContaoTestCase
         $dumper
             ->expects($this->once())
             ->method('dump')
-            ->with(
-                $connection,
-                $this->isInstanceOf(CreateConfig::class)
-            )
+            ->with($connection, $this->isInstanceOf(CreateConfig::class))
             ->willThrowException(new BackupManagerException('Error!'))
         ;
 
@@ -366,10 +363,7 @@ class BackupManagerTest extends ContaoTestCase
         $dumper
             ->expects($this->once())
             ->method('dump')
-            ->with(
-                $connection,
-                $this->isInstanceOf(CreateConfig::class)
-            )
+            ->with($connection, $this->isInstanceOf(CreateConfig::class))
             ->willReturnCallback(
                 static function () {
                     yield 'Dumper content line one';

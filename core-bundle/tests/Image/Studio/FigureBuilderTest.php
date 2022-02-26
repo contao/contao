@@ -474,11 +474,7 @@ class FigureBuilderTest extends TestCase
         foreach ($setInvalidResourceOperations as [$method, $argument]) {
             $figureBuilder->$method($argument);
 
-            $this->assertNotSame(
-                $exception,
-                $figureBuilder->getLastException(),
-                'new exception replaces old one'
-            );
+            $this->assertNotSame($exception, $figureBuilder->getLastException(), 'new exception replaces old one');
 
             $exception = $figureBuilder->getLastException();
 

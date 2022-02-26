@@ -107,11 +107,7 @@ class PreviewFactory
         }
 
         $size = $this->normalizeSize($size);
-
-        $targetPath = Path::join(
-            $this->cacheDir,
-            $this->createCachePath($path, $size, $previewOptions)
-        );
+        $targetPath = Path::join($this->cacheDir, $this->createCachePath($path, $size, $previewOptions));
 
         if (null !== ($cachedPreviews = $this->getCachedPreviews($targetPath, $firstPage, $lastPage))) {
             return array_map(fn ($path) => $this->imageFactory->create($path), $cachedPreviews);
@@ -489,12 +485,7 @@ class PreviewFactory
             }
         }
 
-        return (int) round(
-            max(
-                max($width, $height) * $scaleFactor,
-                $widthDescriptor,
-            )
-        );
+        return (int) round(max(max($width, $height) * $scaleFactor, $widthDescriptor));
     }
 
     private function createCachePath(string $path, int $size, array $previewOptions): string

@@ -176,28 +176,19 @@ class PaletteManipulatorTest extends TestCase
             ->addField('name', 'name_legend', 'append')
         ;
 
-        $this->assertSame(
-            '{name_legend},name',
-            $pm->applyToString('')
-        );
+        $this->assertSame('{name_legend},name', $pm->applyToString(''));
 
         $pm = PaletteManipulator::create()
             ->addField('name', 'name_legend', 'append')
         ;
 
-        $this->assertSame(
-            'name',
-            $pm->applyToString('')
-        );
+        $this->assertSame('name', $pm->applyToString(''));
 
         $pm = PaletteManipulator::create()
             ->addField('name', 'name_legend', 'append', 'name_legend')
         ;
 
-        $this->assertSame(
-            '{name_legend},name',
-            $pm->applyToString('')
-        );
+        $this->assertSame('{name_legend},name', $pm->applyToString(''));
     }
 
     public function testAddsAFieldToANamelessLegend(): void
@@ -303,10 +294,7 @@ class PaletteManipulatorTest extends TestCase
             ->addField('bar', 'foo', 'after', 'name_legend')
         ;
 
-        $this->assertSame(
-            '{name_legend},name,bar',
-            $pm->applyToString('{name_legend},name')
-        );
+        $this->assertSame('{name_legend},name,bar', $pm->applyToString('{name_legend},name'));
     }
 
     public function testCallsTheFallbackClosure(): void
@@ -410,15 +398,8 @@ class PaletteManipulatorTest extends TestCase
     {
         $pm = PaletteManipulator::create()->removeField(['foo', 'baz']);
 
-        $this->assertSame(
-            '',
-            $pm->applyToString('{foo_legend},baz;{config_legend},foo')
-        );
-
-        $this->assertSame(
-            '{foo_legend},bar',
-            $pm->applyToString('{foo_legend},bar,baz;{config_legend},foo')
-        );
+        $this->assertSame('', $pm->applyToString('{foo_legend},baz;{config_legend},foo'));
+        $this->assertSame('{foo_legend},bar', $pm->applyToString('{foo_legend},bar,baz;{config_legend},foo'));
     }
 
     public function testRemovesAnExistingFieldFromALegend(): void
@@ -451,10 +432,7 @@ class PaletteManipulatorTest extends TestCase
         $pm = PaletteManipulator::create()->removeField(['firstname']);
         $pm->applyToSubpalette('name', 'tl_test');
 
-        $this->assertSame(
-            'lastname',
-            $GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']
-        );
+        $this->assertSame('lastname', $GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']);
     }
 
     public function testRemovesFieldsBeforeAddingFields(): void

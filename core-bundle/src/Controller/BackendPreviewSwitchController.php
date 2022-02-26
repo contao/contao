@@ -158,11 +158,7 @@ class BackendPreviewSwitchController
         }
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
-            $groups = array_map(
-                static fn ($groupId): string => '%"'.(int) $groupId.'"%',
-                $user->amg
-            );
-
+            $groups = array_map(static fn ($groupId): string => '%"'.(int) $groupId.'"%', $user->amg);
             $andWhereGroups = "AND (`groups` LIKE '".implode("' OR `groups` LIKE '", $groups)."')";
         }
 

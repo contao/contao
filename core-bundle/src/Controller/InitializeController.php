@@ -81,10 +81,7 @@ class InitializeController
 
         // Necessary to generate the correct base path
         foreach (['REQUEST_URI', 'SCRIPT_NAME', 'SCRIPT_FILENAME', 'PHP_SELF'] as $name) {
-            $realRequest->server->set(
-                $name,
-                str_replace(TL_SCRIPT, 'index.php', $realRequest->server->get($name))
-            );
+            $realRequest->server->set($name, str_replace(TL_SCRIPT, 'index.php', $realRequest->server->get($name)));
         }
 
         $realRequest->attributes->replace($mainRequest->attributes->all());
