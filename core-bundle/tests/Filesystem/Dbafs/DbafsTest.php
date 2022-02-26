@@ -1225,8 +1225,11 @@ class DbafsTest extends TestCase
      */
     public function testSkipsNonUtf8FilesAndDirectories(): void
     {
-        if (\DIRECTORY_SEPARATOR === '\\') {
-            $this->markTestSkipped('Non-UTF-8 paths cannot reliably be created on this platform.');
+        // Set a compatible codepage under Windows, so that \dirname() calls
+        // used in the InMemoryFilesystemAdapter implementation, do not alter
+        // our non-UTF-8 test paths.
+        if (\function_exists('sapi_windows_cp_set')) {
+            sapi_windows_cp_set(1252);
         }
 
         $filesystem = new VirtualFilesystem(
