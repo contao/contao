@@ -374,7 +374,7 @@ class PreviewFactory
     {
         // Unlike the Contao\Image\PictureFactory, the PictureFactoryInterface
         // does not know about ResizeOptions. We therefore check if the third
-        // argument of the 'create' method allows setting them.
+        // argument of the "create" method allows setting them.
         // TODO: Adjust this in Contao 5 after the interface has been adjusted.
         $canHandleResizeOptions = static function (PictureFactoryInterface $factory): bool {
             if ($factory instanceof PictureFactory) {

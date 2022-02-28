@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractBackendController extends AbstractController
 {
     /**
-     * Renders a Twig template with additional context for `@Contao/be_main`.
+     * Renders a Twig template with additional context for "@Contao/be_main".
      */
     protected function render(string $view, array $parameters = [], Response $response = null): Response
     {
