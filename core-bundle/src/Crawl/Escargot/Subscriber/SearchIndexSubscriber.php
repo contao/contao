@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -122,7 +123,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
         }
 
         // Skip any redirected URLs that are now outside our base hosts (#4213)
-        $actualHost = parse_url($response->getInfo('url'), PHP_URL_HOST);
+        $actualHost = (new Uri($response->getInfo('url')))->getHost();
 
         if ($crawlUri->getUri()->getHost() !== $actualHost && !$this->escargot->getBaseUris()->containsHost($actualHost)) {
             $this->logWithCrawlUri(
