@@ -229,7 +229,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             SubscriberInterface::DECISION_NEGATIVE,
             '',
             '',
-            ['ok' => 0, 'error' => 0],
+            ['ok' => 1, 'error' => 0],
         ];
     }
 
