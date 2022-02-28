@@ -71,9 +71,9 @@ interface DbafsInterface
      * All $paths must be relative to the DBAFS root and can occur in one of
      * the following forms:
      *
-     *   'foo/bar/baz' = just the single file/directory 'foo/bar/baz'
-     *   'foo/**' = 'foo' and all resources in all subdirectories
-     *   'foo/*' = 'foo' and only direct child resources of 'foo'
+     *    'foo/bar/baz' -> just the single file/directory "foo/bar/baz"
+     *    'foo/**' -> "foo" and all child resources in all subdirectories
+     *    'foo/*' -> "foo" and only direct child resources of "foo"
      */
     public function sync(string ...$paths): ChangeSet;
 
@@ -85,8 +85,9 @@ interface DbafsInterface
      * returned items.
      *
      * Example:
+     *
      *    public function getSupportedFeatures(): int {
-     *        // We support 'file size' and 'mime type' and set it in each record.
+     *        // We support "file size" and "mime type" and set it in each record.
      *        return DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE;
      *    }
      */

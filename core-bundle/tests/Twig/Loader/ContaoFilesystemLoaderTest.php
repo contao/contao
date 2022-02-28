@@ -68,7 +68,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader = $this->getContaoFilesystemLoader();
 
         $this->expectException(LoaderError::class);
-        $this->expectExceptionMessage("Tried to register an invalid Contao namespace 'Foo'.");
+        $this->expectExceptionMessage('Tried to register an invalid Contao namespace "Foo".');
 
         $loader->addPath('foo/path', 'Foo');
     }
@@ -78,7 +78,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader = $this->getContaoFilesystemLoader();
 
         $this->expectException(LoaderError::class);
-        $this->expectExceptionMessage("Tried to register an invalid Contao namespace 'Foo'.");
+        $this->expectExceptionMessage('Tried to register an invalid Contao namespace "Foo".');
 
         $loader->prependPath('foo/path', 'Foo');
     }

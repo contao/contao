@@ -33,57 +33,57 @@ class VirtualFilesystemExceptionTest extends TestCase
 
         yield 'unable to check if file exists' => [
             VirtualFilesystemException::unableToCheckIfFileExists('foo/bar', $previous),
-            'Unable to check if a file exists at \'foo/bar\'.',
+            'Unable to check if a file exists at "foo/bar".',
         ];
 
         yield 'unable to check if directory exists' => [
             VirtualFilesystemException::unableToCheckIfDirectoryExists('foo/bar', $previous),
-            'Unable to check if a directory exists at \'foo/bar\'.',
+            'Unable to check if a directory exists at "foo/bar".',
         ];
 
         yield 'unable to read' => [
             VirtualFilesystemException::unableToRead('foo/bar', $previous),
-            'Unable to read from \'foo/bar\'.',
+            'Unable to read from "foo/bar".',
         ];
 
         yield 'unable to write' => [
             VirtualFilesystemException::unableToWrite('foo/bar', $previous),
-            'Unable to write to \'foo/bar\'.',
+            'Unable to write to "foo/bar".',
         ];
 
         yield 'unable to delete file' => [
             VirtualFilesystemException::unableToDelete('foo/bar', $previous),
-            'Unable to delete file at \'foo/bar\'.',
+            'Unable to delete file at "foo/bar".',
         ];
 
         yield 'unable to delete directory' => [
             VirtualFilesystemException::unableToDeleteDirectory('foo/bar', $previous),
-            'Unable to delete directory at \'foo/bar\'.',
+            'Unable to delete directory at "foo/bar".',
         ];
 
         yield 'unable to create directory' => [
             VirtualFilesystemException::unableToCreateDirectory('foo/bar', $previous),
-            'Unable to create directory at \'foo/bar\'.',
+            'Unable to create directory at "foo/bar".',
         ];
 
         yield 'unable to copy' => [
             VirtualFilesystemException::unableToCopy('foo/bar', 'path/to', $previous),
-            'Unable to copy file from \'foo/bar\' to \'path/to\'.',
+            'Unable to copy file from "foo/bar" to "path/to".',
         ];
 
         yield 'unable to move' => [
             VirtualFilesystemException::unableToMove('foo/bar', 'path/to', $previous),
-            'Unable to move file from \'foo/bar\' to \'path/to\'.',
+            'Unable to move file from "foo/bar" to "path/to".',
         ];
 
         yield 'unable to list contents' => [
             VirtualFilesystemException::unableToListContents('foo/bar', $previous),
-            'Unable to list contents from \'foo/bar\'.',
+            'Unable to list contents from "foo/bar".',
         ];
 
         yield 'unable to retrieve metadata' => [
             VirtualFilesystemException::unableToRetrieveMetadata('foo/bar', $previous),
-            'Unable to retrieve metadata from \'foo/bar\'.',
+            'Unable to retrieve metadata from "foo/bar".',
         ];
     }
 }
