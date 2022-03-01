@@ -29,10 +29,7 @@ services:
     # Backwards compatibility
     Contao\CoreBundle\Framework\ContaoFrameworkInterface:
         alias: contao.framework
-        deprecated:
-            package: contao/core-bundle
-            version: 4.7
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.framework" instead.
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.framework" instead.
 
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
