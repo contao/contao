@@ -41,7 +41,7 @@ abstract class AbstractBackendController extends AbstractController
 
                 $this->Template->setData($this->compileTemplateData($this->Template->getData()));
 
-                // Make sure the compile function is executed that adds additional context (see #?)
+                // Make sure the compile function is executed that adds additional context (see #4224)
                 $this->Template->getResponse();
 
                 return $this->Template->getData();
