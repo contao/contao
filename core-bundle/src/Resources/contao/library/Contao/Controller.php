@@ -1233,7 +1233,8 @@ abstract class Controller extends System
 		{
 			$key = $matches[0];
 
-			if (!isset($arrCache[$key])) {
+			if (!isset($arrCache[$key]))
+			{
 				$router = System::getContainer()->get('router');
 				$arrCache[$key] = substr($router->generate($arrMapper[$key]), \strlen(Environment::get('path')) + 1);
 			}
@@ -1241,7 +1242,7 @@ abstract class Controller extends System
 			return $arrCache[$key];
 		};
 
-		$regex = '('.implode('|', array_map('preg_quote', array_keys($arrMapper))).')';
+		$regex = '(' . implode('|', array_map('preg_quote', array_keys($arrMapper))) . ')';
 
 		return preg_replace_callback($regex, $replace, $strContext);
 	}
