@@ -79,6 +79,11 @@ class InputTest extends TestCase
             'foo <span title="baz"> bar',
         ];
 
+        yield 'Keeps underscores in allowed attributes' => [
+            'foo <span data-foo_bar="baz"> bar',
+            'foo <span data-foo_bar="baz"> bar',
+        ];
+
         yield 'Reformats attributes' => [
             "<span \n \t title = \nwith-spaces class\n=' with \" and &#039; quotes' lang \t =\"with &quot; and ' quotes \t \n \" data-boolean-flag data-int = 0>",
             "<span title=\"with-spaces\" class=\" with &quot; and &#039; quotes\" lang=\"with &quot; and &#039; quotes \t \n \" data-boolean-flag=\"\" data-int=\"0\">",
