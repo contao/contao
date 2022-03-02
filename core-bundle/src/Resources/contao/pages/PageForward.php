@@ -25,9 +25,13 @@ class PageForward extends Frontend
 	 * Redirect to an internal page
 	 *
 	 * @param PageModel $objPage
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5. Use the PageForward::getResponse() method instead.
 	 */
 	public function generate($objPage)
 	{
+		@trigger_error('Using PageForward::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageForward::getResponse() method instead.');
+
 		$this->redirect($this->getForwardUrl($objPage), $this->getRedirectStatusCode($objPage));
 	}
 

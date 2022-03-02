@@ -529,7 +529,7 @@ class RouteProviderTest extends TestCase
         $route = $collection->get('tl_page.'.$page->id);
 
         $this->assertInstanceOf(Route::class, $route);
-        $this->assertSame('(/.+)?', $route->getRequirement('parameters'));
+        $this->assertSame('(/.+?)?', $route->getRequirement('parameters'));
         $this->assertTrue($route->getOption('utf8'));
         $this->assertSame($domain, $route->getHost());
 
