@@ -22,6 +22,7 @@ use Contao\Environment as ContaoEnvironment;
 use Contao\System;
 use Contao\TemplateLoader;
 use Doctrine\DBAL\Driver\Connection;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -34,6 +35,8 @@ use Twig\Environment;
 
 class AbstractBackendControllerTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,8 +54,15 @@ class AbstractBackendControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @group legacy
+     */
     public function testAddsAndMergesBackendContext(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Environment::get(\'agent\')" has been deprecated %s');
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Config::get(\'os\')" has been deprecated.');
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Config::get(\'browser\')" has been deprecated.');
+
         $controller = new class() extends AbstractBackendController {
             public function fooAction(): Response
             {
