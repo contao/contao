@@ -84,15 +84,17 @@ class DumperTest extends ContaoTestCase
         ];
 
         yield 'Table with data' => [
-            [new Table('tl_page', [new Column('foobar', Type::getType(Types::STRING))])],
+            [new Table('tl_page', [new Column('stringCol', Type::getType(Types::STRING)), new Column('integerCol', Type::getType(Types::INTEGER))])],
             [],
             [
-                'SELECT `foobar` AS `foobar` FROM `tl_page`' => [
+                'SELECT `stringCol` AS `stringCol`, `integerCol` AS `integerCol` FROM `tl_page`' => [
                     [
-                        'foobar' => 'value1',
+                        'stringCol' => 'value1',
+                        'integerCol' => '42',
                     ],
                     [
-                        'foobar' => null,
+                        'stringCol' => null,
+                        'integerCol' => null,
                     ],
                 ],
             ],
@@ -100,10 +102,10 @@ class DumperTest extends ContaoTestCase
                 'SET FOREIGN_KEY_CHECKS = 0;',
                 '-- BEGIN STRUCTURE tl_page',
                 'DROP TABLE IF EXISTS `tl_page`;',
-                'CREATE TABLE tl_page (foobar VARCHAR(255) NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
+                'CREATE TABLE tl_page (stringCol VARCHAR(255) NOT NULL, integerCol INT NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
                 '-- BEGIN DATA tl_page',
-                "INSERT INTO `tl_page` (`foobar`) VALUES ('value1');",
-                'INSERT INTO `tl_page` (`foobar`) VALUES (NULL);',
+                "INSERT INTO `tl_page` (`stringCol`, `integerCol`) VALUES ('value1', 42);",
+                'INSERT INTO `tl_page` (`stringCol`, `integerCol`) VALUES (NULL, NULL);',
                 'SET FOREIGN_KEY_CHECKS = 1;',
             ],
         ];
