@@ -138,7 +138,7 @@ class Dumper implements DumperInterface
         }
 
         if ('' === $value) {
-            return '';
+            return "''";
         }
 
         // In MySQL, booleans are stored as tinyint so we don't need to quote that either

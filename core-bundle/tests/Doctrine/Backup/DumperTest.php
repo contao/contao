@@ -93,7 +93,7 @@ class DumperTest extends ContaoTestCase
                         'integerCol' => '42',
                     ],
                     [
-                        'stringCol' => null,
+                        'stringCol' => '',
                         'integerCol' => null,
                     ],
                 ],
@@ -105,7 +105,7 @@ class DumperTest extends ContaoTestCase
                 'CREATE TABLE tl_page (stringCol VARCHAR(255) NOT NULL, integerCol INT NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
                 '-- BEGIN DATA tl_page',
                 "INSERT INTO `tl_page` (`stringCol`, `integerCol`) VALUES ('value1', 42);",
-                'INSERT INTO `tl_page` (`stringCol`, `integerCol`) VALUES (NULL, NULL);',
+                "INSERT INTO `tl_page` (`stringCol`, `integerCol`) VALUES ('', NULL);",
                 'SET FOREIGN_KEY_CHECKS = 1;',
             ],
         ];
