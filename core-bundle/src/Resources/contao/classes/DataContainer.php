@@ -516,7 +516,7 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		if ($wizard)
+		if ($wizard && !($arrData['eval']['disabled'] ?? false) && !($arrData['eval']['readonly'] ?? false))
 		{
 			$objWidget->wizard = $wizard;
 
