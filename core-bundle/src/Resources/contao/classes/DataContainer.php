@@ -516,7 +516,7 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		if ($wizard)
+		if ($wizard && !($arrData['eval']['disabled'] ?? false) && !($arrData['eval']['readonly'] ?? false))
 		{
 			$objWidget->wizard = $wizard;
 
@@ -727,7 +727,7 @@ abstract class DataContainer extends Backend
 	protected function switchToEdit($id)
 	{
 		$arrKeys = array();
-		$arrUnset = array('act', 'id', 'table', 'mode', 'pid');
+		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
 		foreach (array_keys($_GET) as $strKey)
 		{

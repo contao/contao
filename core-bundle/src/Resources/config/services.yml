@@ -27,7 +27,9 @@ services:
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
 
     # Backwards compatibility
-    Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
+    Contao\CoreBundle\Framework\ContaoFrameworkInterface:
+        alias: contao.framework
+        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.framework" instead.
 
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
