@@ -1280,7 +1280,7 @@ class tl_content extends Backend
 
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
-				$type = $GLOBALS['TL_LANG']['CTE'][$group] . ' (' . $type . ')';
+				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
 			}
 		}
 
@@ -1289,7 +1289,7 @@ class tl_content extends Backend
 		{
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
-				$type = $GLOBALS['TL_LANG']['CTE'][$group] . ' (' . $type . ')';
+				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
 			}
 		}
 
@@ -1517,7 +1517,7 @@ class tl_content extends Backend
 			}
 
 			$text = StringUtil::substr(strip_tags(preg_replace('/[\n\r\t]+/', ' ', $objAlias->text)), 32);
-			$strText = $GLOBALS['TL_LANG']['CTE'][$objAlias->type][0] . ' (';
+			$strText = ($GLOBALS['TL_LANG']['CTE'][$objAlias->type][0] ?? $objAlias->type) . ' (';
 
 			if ($headline)
 			{
