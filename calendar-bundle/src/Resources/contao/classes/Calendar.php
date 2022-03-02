@@ -10,7 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Monolog\ContaoContext;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provide methods regarding calendars.
@@ -60,7 +61,8 @@ class Calendar extends Frontend
 		else
 		{
 			$this->generateFiles($objCalendar->row());
-			$this->log('Generated calendar feed "' . $objCalendar->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
+
+			System::getContainer()->get('monolog.logger.contao.cron')->info('Generated calendar feed "' . $objCalendar->feedName . '.xml"');
 		}
 	}
 
@@ -80,7 +82,8 @@ class Calendar extends Frontend
 			{
 				$objCalendar->feedName = $objCalendar->alias ?: 'calendar' . $objCalendar->id;
 				$this->generateFiles($objCalendar->row());
-				$this->log('Generated calendar feed "' . $objCalendar->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
+
+				System::getContainer()->get('monolog.logger.contao.cron')->info('Generated calendar feed "' . $objCalendar->feedName . '.xml"');
 			}
 		}
 	}
@@ -102,7 +105,8 @@ class Calendar extends Frontend
 
 				// Update the XML file
 				$this->generateFiles($objFeed->row());
-				$this->log('Generated calendar feed "' . $objFeed->feedName . '.xml"', __METHOD__, ContaoContext::CRON);
+
+				System::getContainer()->get('monolog.logger.contao.cron')->info('Generated calendar feed "' . $objFeed->feedName . '.xml"');
 			}
 		}
 	}
@@ -213,13 +217,10 @@ class Calendar extends Frontend
 		$count = 0;
 		ksort($this->arrEvents);
 
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
 
-		if ($request)
-		{
-			$origScope = $request->attributes->get('_scope');
-			$request->attributes->set('_scope', 'frontend');
-		}
+		/** @var RequestStack $requestStack */
+		$requestStack = System::getContainer()->get('request_stack');
 
 		$origObjPage = $GLOBALS['objPage'] ?? null;
 
@@ -237,6 +238,11 @@ class Calendar extends Frontend
 
 					// Override the global page object (#2946)
 					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
+
+					// Push a new request to the request stack (#3856)
+					$request = Request::create($event['link']);
+					$request->attributes->set('_scope', 'frontend');
+					$requestStack->push($request);
 
 					$objItem = new FeedItem();
 					$objItem->title = $event['title'];
@@ -277,7 +283,7 @@ class Calendar extends Frontend
 					}
 					else
 					{
-						$strDescription = $event['teaser'];
+						$strDescription = $event['teaser'] ?? '';
 					}
 
 					$strDescription = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strDescription);
@@ -300,18 +306,15 @@ class Calendar extends Frontend
 					}
 
 					$objFeed->addItem($objItem);
+
+					$requestStack->pop();
 				}
 			}
 		}
 
-		if ($request)
-		{
-			$request->attributes->set('_scope', $origScope);
-		}
-
 		$GLOBALS['objPage'] = $origObjPage;
 
-		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		// Create the file
 		File::putContent($webDir . '/share/' . $strFile . '.xml', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));

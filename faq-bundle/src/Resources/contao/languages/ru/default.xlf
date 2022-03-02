@@ -9,6 +9,10 @@
         <source>FAQ</source>
         <target>Вопросы и ответы</target>
       </trans-unit>
+      <trans-unit id="MSC.faqOverview">
+        <source>Back to the FAQ overview</source>
+        <target>Перейти к обзору вопросов и ответов</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
-        <target>テーマ、フロントエンドモジュール、ページレイアウト、画像サイズを管理</target>
+        <target>テーマ、フロントエンドモジュール、ページのレイアウト、画像サイズを管理</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -121,6 +121,14 @@
         <source>Adjust the Contao configuration</source>
         <target>Contaoの構成を調整</target>
       </trans-unit>
+      <trans-unit id="MOD.preview_link.0">
+        <source>Preview links</source>
+        <target>プレビューのリンク</target>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.1">
+        <source>Manage preview links for the front end.</source>
+        <target>プロントエンドのプレビューのリンクを管理します。</target>
+      </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
         <target>保守</target>
@@ -171,7 +179,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_layout">
         <source>Page layouts</source>
-        <target>ページレイアウト</target>
+        <target>ページのレイアウト</target>
       </trans-unit>
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
@@ -195,7 +203,7 @@
       </trans-unit>
       <trans-unit id="MOD.layout">
         <source>Page layouts</source>
-        <target>ページレイアウト</target>
+        <target>ページのレイアウト</target>
       </trans-unit>
       <trans-unit id="MOD.image_sizes">
         <source>Image sizes</source>
@@ -385,6 +393,14 @@
         <source>Allows you to add custom HTML code</source>
         <target>独自のHTMLコードを追加</target>
       </trans-unit>
+      <trans-unit id="FMD.template.0">
+        <source>Custom template</source>
+        <target>独自のテンプレート</target>
+      </trans-unit>
+      <trans-unit id="FMD.template.1">
+        <source>Generates a module to insert a custom template.</source>
+        <target>独自のテンプレートを挿入するモジュールを生成します。</target>
+      </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
         <target>RSSリーダー</target>
@@ -400,6 +416,14 @@
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
         <target>2ファクター認証の設定または変更するフォームを生成します。</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.0">
+        <source>Root page dependent modules</source>
+        <target>ルートページに依存するモジュール</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.1">
+        <source>Generates different modules depending on the root page</source>
+        <target>ルートページに依存する異なるモジュールを生成</target>
       </trans-unit>
     </body>
   </file>

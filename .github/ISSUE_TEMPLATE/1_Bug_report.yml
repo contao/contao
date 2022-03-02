@@ -1,5 +1,6 @@
 name: 🐞 Report a bug
 description: Report errors and problems
+labels: [bug, unconfirmed]
 body:
     - type: input
       id: affected-versions

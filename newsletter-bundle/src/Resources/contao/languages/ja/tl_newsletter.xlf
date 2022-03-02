@@ -181,6 +181,10 @@
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
         <target>%sつの正しくない電子メールアドレスの宛先を無効にしました。(システムログを参照してください。)</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.skipped">
+        <source>%s e-mail address(es) has/have been skipped.</source>
+        <target>%s個のメールアドレスを飛ばしました。</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>
         <target>このチャンネルに有効な登録者がいません。</target>

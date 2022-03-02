@@ -43,10 +43,10 @@ class FrontendController extends AbstractController
     /**
      * @Route("/_contao/cron", name="contao_frontend_cron")
      */
-    public function cronAction(Request $request, Cron $cron): Response
+    public function cronAction(Request $request): Response
     {
         if ($request->isMethod(Request::METHOD_GET)) {
-            $cron->run(Cron::SCOPE_WEB);
+            $this->container->get('contao.cron')->run(Cron::SCOPE_WEB);
         }
 
         return new Response('', Response::HTTP_NO_CONTENT);
@@ -123,6 +123,7 @@ class FrontendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
+        $services['contao.cron'] = Cron::class;
         $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
 
         return $services;

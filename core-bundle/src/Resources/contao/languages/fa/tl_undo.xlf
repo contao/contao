@@ -10,8 +10,8 @@
         <target>نام کاربر مرتبط</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.0">
-        <source>Source table</source>
-        <target>جدول منبع</target>
+        <source>Source</source>
+        <target>منبع</target>
       </trans-unit>
       <trans-unit id="tl_undo.fromTable.1">
         <source>Name of the original table</source>
@@ -44,6 +44,9 @@
       <trans-unit id="tl_undo.undo">
         <source>Restore element ID %s</source>
         <target>بازگردانی المان شناسه‌ی %s</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.parent_modal">
+        <source>Show origin of %s ID %s</source>
       </trans-unit>
     </body>
   </file>

@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Class Comments
@@ -533,8 +532,7 @@ class Comments extends Frontend
 			$objNotify->delete();
 		}
 
-		// Add a log entry
-		$this->log('Purged the unactivated comment subscriptions', __METHOD__, ContaoContext::CRON);
+		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the unactivated comment subscriptions');
 	}
 
 	/**

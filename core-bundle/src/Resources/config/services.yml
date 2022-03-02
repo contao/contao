@@ -96,6 +96,7 @@ services:
     contao.cron:
         class: Contao\CoreBundle\Cron\Cron
         public: true
+        lazy: true # Defer creating the Doctrine repository in case the DB connection is not configured
         arguments:
             - '@contao.repository.cron_job'
             - '@doctrine.orm.entity_manager'
@@ -122,6 +123,8 @@ services:
             - '@contao.csrf.token_storage'
             - ~
             - '%contao.csrf_token_name%'
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.csrf.token_storage:
         class: Contao\CoreBundle\Csrf\MemoryTokenStorage
@@ -153,7 +156,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.doctrine.backup.dumper'
-            - ~
+            - '@contao.filesystem.virtual.backups'
             - ~
             - '@contao.doctrine.backup.retention_policy'
 
@@ -175,6 +178,27 @@ services:
         class: Contao\CoreBundle\Doctrine\Schema\SchemaProvider
         arguments:
             - '@doctrine.orm.default_entity_manager'
+
+    contao.filesystem.dbafs_factory:
+        class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
+        arguments:
+            - '@database_connection'
+            - '@event_dispatcher'
+
+    contao.filesystem.dbafs_manager:
+        class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
+        public: true
+
+    contao.filesystem.mount_manager:
+        class: Contao\CoreBundle\Filesystem\MountManager
+        arguments:
+            - ~
+
+    contao.filesystem.virtual_factory:
+        class: Contao\CoreBundle\Filesystem\VirtualFilesystemFactory
+        arguments:
+            - '@contao.filesystem.mount_manager'
+            - '@contao.filesystem.dbafs_manager'
 
     contao.fragment.forward_renderer:
         class: Contao\CoreBundle\Fragment\ForwardFragmentRenderer
@@ -239,6 +263,8 @@ services:
             - '%contao.image.valid_extensions%'
             - '%kernel.project_dir%/%contao.upload_path%'
             - '@?logger'
+        tags:
+            - { name: monolog.logger, channel: contao.error }
 
     contao.image.fallback_preview_provider:
         class: Contao\CoreBundle\Image\Preview\FallbackPreviewProvider
@@ -383,6 +409,7 @@ services:
 
     contao.mailer.available_transports:
         class: Contao\CoreBundle\Mailer\AvailableTransports
+        public: true
         arguments:
             - '@?translator'
 
@@ -923,6 +950,7 @@ services:
 
     contao.twig.filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
+        public: true
         arguments:
             - '@cache.system'
             - '@contao.twig.loader.template_locator'
@@ -938,6 +966,7 @@ services:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.loader.template_locator'
             - '%kernel.project_dir%'
+            - '%kernel.cache_dir%'
             - '%kernel.environment%'
         tags:
             - { name: kernel.cache_warmer }
@@ -986,6 +1015,7 @@ services:
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
+    Contao\CoreBundle\Image\Preview\PreviewFactory: '@contao.image.preview_factory'
     Contao\CoreBundle\Image\Studio\Studio:
         alias: contao.image.studio
         public: true # backwards compatibility
@@ -995,6 +1025,9 @@ services:
         public: true # backwards compatibility
     Contao\CoreBundle\Intl\Locales:
         alias: contao.intl.locales
+        public: true # backwards compatibility
+    Contao\CoreBundle\Mailer\AvailableTransports:
+        alias: contao.mailer.available_transports
         public: true # backwards compatibility
     Contao\CoreBundle\OptIn\OptIn:
         alias: contao.opt_in

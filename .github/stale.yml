@@ -7,7 +7,7 @@ exemptLabels:
     - feature
     - up for discussion
     - help wanted
-    - incompatible
+    - BC break
 
 markComment: >
     This issue has been automatically marked as stale because it has not had

@@ -17,7 +17,6 @@ use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
@@ -26,14 +25,14 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
  */
 class CommandSchedulerListener
 {
-    private ContainerInterface $locator;
+    private Cron $cron;
     private ContaoFramework $framework;
     private Connection $connection;
     private string $fragmentPath;
 
-    public function __construct(ContainerInterface $locator, ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment')
+    public function __construct(Cron $cron, ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment')
     {
-        $this->locator = $locator;
+        $this->cron = $cron;
         $this->framework = $framework;
         $this->connection = $connection;
         $this->fragmentPath = $fragmentPath;
@@ -45,7 +44,7 @@ class CommandSchedulerListener
     public function __invoke(TerminateEvent $event): void
     {
         if ($this->framework->isInitialized() && $this->canRunCron($event->getRequest())) {
-            $this->locator->get('contao.cron')->run(Cron::SCOPE_WEB);
+            $this->cron->run(Cron::SCOPE_WEB);
         }
     }
 

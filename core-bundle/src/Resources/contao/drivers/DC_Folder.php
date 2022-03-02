@@ -14,7 +14,6 @@ use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
@@ -153,7 +152,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -762,8 +761,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			// Add a log entry
-			$this->log('File or folder "' . $source . '" has been moved to "' . $destination . '"', __METHOD__, ContaoContext::FILES);
+			System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been moved to "' . $destination . '"');
 		}
 
 		// Redirect
@@ -928,8 +926,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		// Add a log entry
-		$this->log('File or folder "' . $source . '" has been copied to "' . $destination . '"', __METHOD__, ContaoContext::FILES);
+		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been copied to "' . $destination . '"');
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -1051,8 +1048,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			Dbafs::deleteResource($source);
 		}
 
-		// Add a log entry
-		$this->log('File or folder "' . $source . '" has been deleted', __METHOD__, ContaoContext::FILES);
+		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been deleted');
 
 		// Redirect
 		if (!$blnDoNotRedirect)
@@ -2229,7 +2225,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
-			$this->log('Folder "' . $this->intId . '" has been protected', __METHOD__, ContaoContext::FILES);
+			System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $this->intId . '" has been protected');
 		}
 		else
 		{
@@ -2239,7 +2235,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$this->import(Automator::class, 'Automator');
 			$this->Automator->generateSymlinks();
 
-			$this->log('The protection from folder "' . $this->intId . '" has been removed', __METHOD__, ContaoContext::FILES);
+			System::getContainer()->get('monolog.logger.contao.files')->info('The protection from folder "' . $this->intId . '" has been removed');
 		}
 
 		$this->redirect($this->getReferer());
@@ -2319,7 +2315,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$this->objActiveRecord = Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
-				$this->log('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created', __METHOD__, ContaoContext::FILES);
+				System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created');
 			}
 			else
 			{
@@ -2343,7 +2339,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					}
 				}
 
-				$this->log('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"', __METHOD__, ContaoContext::FILES);
+				System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"');
 			}
 
 			$strWebDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
@@ -2381,7 +2377,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Make sure unique fields are unique
-			if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+			if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 			{
 				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 			}
@@ -2445,7 +2441,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Save the value if there was no error
-			if (((string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue != $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
+			if ((\is_array($varValue) || (string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue != $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 			{
 				// If the field is a fallback field, empty the other columns
 				if ($varValue && ($arrData['eval']['fallback'] ?? null))
@@ -2454,7 +2450,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 
 				// Set the correct empty value (see #6284, #6373)
-				if ((string) $varValue === '')
+				if (!\is_array($varValue) && (string) $varValue === '')
 				{
 					$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
 				}
@@ -2476,8 +2472,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * Synchronize the file system with the database
 	 *
 	 * @return string
-	 *
-	 * @throws AccessDeniedException
 	 */
 	public function sync()
 	{
@@ -2486,86 +2480,18 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return '';
 		}
 
-		$this->loadLanguageFile('tl_files');
+		$container = System::getContainer();
 
 		// Synchronize
-		$strLog = Dbafs::syncFiles();
+		$changeSet = $container->get('contao.filesystem.dbafs_manager')->sync();
 
-		// Show the results
-		$arrMessages = array();
-		$arrCounts   = array('Added'=>0, 'Changed'=>0, 'Unchanged'=>0, 'Moved'=>0, 'Deleted'=>0);
-
-		// Read the log file
-		$fh = fopen($this->strRootDir . '/' . $strLog, 'r');
-
-		while (($buffer = fgets($fh)) !== false)
-		{
-			list($type, $file) = explode('] ', trim(substr($buffer, 1)), 2);
-
-			// Add a message depending on the type
-			switch ($type)
-			{
-				case 'Added':
-					$arrMessages[] = '<p class="tl_new">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncAdded'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				case 'Changed':
-					$arrMessages[] = '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncChanged'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				case 'Unchanged':
-					$arrMessages[] = '<p class="tl_confirm hidden">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncUnchanged'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				case 'Moved':
-					list($source, $target) = explode(' to ', $file, 2);
-					$arrMessages[] = '<p class="tl_info">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncMoved'], StringUtil::specialchars($source), StringUtil::specialchars($target)) . '</p>';
-					break;
-
-				case 'Deleted':
-					$arrMessages[] = '<p class="tl_error">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncDeleted'], StringUtil::specialchars($file)) . '</p>';
-					break;
-
-				default:
-					$arrMessages[] = '<p class="tl_error">' . StringUtil::specialchars($buffer) . '</p>';
-					break;
-			}
-
-			++$arrCounts[$type];
-		}
-
-		// Close the log file
-		unset($buffer);
-		fclose($fh);
-
-		// Confirm
-		Message::addConfirmation($GLOBALS['TL_LANG']['tl_files']['syncComplete']);
-
-		$return = Message::generate() . '
-<div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
-</div>
-<div id="sync-results">
-  <p class="left">' . sprintf($GLOBALS['TL_LANG']['tl_files']['syncResult'], System::getFormattedNumber($arrCounts['Added'], 0), System::getFormattedNumber($arrCounts['Changed'], 0), System::getFormattedNumber($arrCounts['Unchanged'], 0), System::getFormattedNumber($arrCounts['Moved'], 0), System::getFormattedNumber($arrCounts['Deleted'], 0)) . '</p>
-  <p class="right"><input type="checkbox" id="show-hidden" class="tl_checkbox" onclick="Backend.toggleUnchanged()"> <label for="show-hidden">' . $GLOBALS['TL_LANG']['tl_files']['syncShowUnchanged'] . '</label></p>
-</div>
-<div id="result-list">';
-
-		// Add the messages
-		foreach ($arrMessages as $strMessage)
-		{
-			$return .= "\n  " . $strMessage;
-		}
-
-		$return .= '
-</div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
-  <a href="' . $this->getReferer(true) . '" class="tl_submit" style="display:inline-block">' . $GLOBALS['TL_LANG']['MSC']['continue'] . '</a>
-</div>
-</div>';
-
-		return $return;
+		return $container->get('twig')->render(
+			'@ContaoCore/Backend/be_filesync_report.html.twig',
+			array(
+				'change_set' => $changeSet,
+				'referer' => $this->getReferer(true),
+			)
+		);
 	}
 
 	/**

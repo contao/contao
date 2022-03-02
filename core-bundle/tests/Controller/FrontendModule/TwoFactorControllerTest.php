@@ -38,11 +38,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TwoFactorControllerTest extends TestCase
 {
-    protected function setUp(): void
+    protected function tearDown(): void
     {
-        parent::setUp();
+        $this->resetStaticProperties([System::class]);
 
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        parent::tearDown();
     }
 
     public function testReturnsEmptyResponseIfTheUserIsNotFullyAuthenticated(): void

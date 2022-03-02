@@ -85,6 +85,10 @@
         <source>Feed settings</source>
         <target>Ustawienia kanału</target>
       </trans-unit>
+      <trans-unit id="tl_news_feed.image_legend">
+        <source>Image settings</source>
+        <target>Ustawienia obrazka</target>
+      </trans-unit>
       <trans-unit id="tl_news_feed.source_teaser">
         <source>News teasers</source>
         <target>Zajawka aktualności</target>

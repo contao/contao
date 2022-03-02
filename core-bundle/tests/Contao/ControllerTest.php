@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
@@ -19,18 +20,29 @@ use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\FilesModel;
+use Contao\PageModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 
 class ControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
 
     /**
      * @group legacy
@@ -187,6 +199,8 @@ class ControllerTest extends TestCase
         $container->set('contao.insert_tag.parser', $insertTagParser);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
 
+        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
+
         System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['caption' => null];
@@ -328,12 +342,8 @@ class ControllerTest extends TestCase
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
-            ->method('log')
-            ->with(
-                LogLevel::ERROR,
-                'Image "/path/to/image.jpg" could not be processed: <error>',
-                ['contao' => new ContaoContext('Contao\Controller::addImageToTemplate', 'ERROR')]
-            )
+            ->method('error')
+            ->with('Image "/path/to/image.jpg" could not be processed: <error>')
         ;
 
         $template = new \stdClass();
@@ -353,7 +363,7 @@ class ControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag.parser', $insertTagParser);
-        $container->set('monolog.logger.contao', $logger);
+        $container->set('monolog.logger.contao.error', $logger);
 
         System::setContainer($container);
 
@@ -471,5 +481,199 @@ class ControllerTest extends TestCase
         $this->assertSame('?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2', false));
         $this->assertSame('?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
         $this->assertSame('?do=page&amp;key=foo&amp;ref=cri', Controller::addToUrl('key=foo', true, ['id']));
+    }
+
+    /**
+     * @dataProvider pageStatusIconProvider
+     */
+    public function testPageStatusIcon(PageModel $pageModel, string $expected): void
+    {
+        $this->assertSame($expected, Controller::getPageStatusIcon($pageModel));
+        $this->assertFileExists(__DIR__.'/../../src/Resources/contao/themes/flexible/icons/'.$expected);
+    }
+
+    public function pageStatusIconProvider(): \Generator
+    {
+        yield 'Published' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'regular.svg',
+        ];
+
+        yield 'Unpublished' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'regular_1.svg',
+        ];
+
+        yield 'Hidden in menu' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '1',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'regular_2.svg',
+        ];
+
+        yield 'Unpublished and hidden from menu' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '1',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'regular_3.svg',
+        ];
+
+        yield 'Protected' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'regular_4.svg',
+        ];
+
+        yield 'Unpublished and protected' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'regular_5.svg',
+        ];
+
+        yield 'Unpublished and protected and hidden from menu' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '1',
+                'protected' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'regular_7.svg',
+        ];
+
+        yield 'Unpublished by stop date' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '',
+                'start' => '',
+                'stop' => '100',
+                'published' => '1',
+            ]),
+            'regular_1.svg',
+        ];
+
+        yield 'Unpublished by start date' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '',
+                'start' => PHP_INT_MAX,
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'regular_1.svg',
+        ];
+
+        yield 'Root page' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'root.svg',
+        ];
+
+        yield 'Unpublished root page' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'root_1.svg',
+        ];
+
+        yield 'Hidden root page' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '1',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'root.svg',
+        ];
+
+        yield 'Protected root page' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '',
+                'protected' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'root.svg',
+        ];
+
+        yield 'Root in maintenance mode' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '',
+                'protected' => '',
+                'maintenanceMode' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'root_2.svg',
+        ];
+
+        yield 'Unpublished root in maintenance mode' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '',
+                'protected' => '',
+                'maintenanceMode' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'root_1.svg',
+        ];
     }
 }

@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
@@ -19,6 +18,7 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -68,6 +68,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|array|null      $groups
  * @property string|boolean         $includeLayout
  * @property string|integer         $layout
+ * @property string|integer         $subpageLayout
  * @property string|boolean         $includeCache
  * @property string|integer|boolean $cache
  * @property string|boolean         $alwaysLoadFromCache
@@ -163,6 +164,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByGroups($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeLayout($val, array $opt=array())
  * @method static PageModel|null findOneByLayout($val, array $opt=array())
+ * @method static PageModel|null findOneBySubpageLayout($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeCache($val, array $opt=array())
  * @method static PageModel|null findOneByCache($val, array $opt=array())
  * @method static PageModel|null findOneByIncludeChmod($val, array $opt=array())
@@ -223,6 +225,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByGroups($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeLayout($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByLayout($val, array $opt=array())
+ * @method static Collection|PageModel[]|PageModel|null findBySubpageLayout($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeCache($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByCache($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByIncludeChmod($val, array $opt=array())
@@ -287,6 +290,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByGroups($val, array $opt=array())
  * @method static integer countByIncludeLayout($val, array $opt=array())
  * @method static integer countByLayout($val, array $opt=array())
+ * @method static integer countBySubpageLayout($val, array $opt=array())
  * @method static integer countByIncludeCache($val, array $opt=array())
  * @method static integer countByCache($val, array $opt=array())
  * @method static integer countByIncludeChmod($val, array $opt=array())
@@ -705,6 +709,11 @@ class PageModel extends Model
 	 */
 	public static function findSimilarByAlias(self $pageModel)
 	{
+		if ('' === $pageModel->alias)
+		{
+			return null;
+		}
+
 		$pageModel->loadDetails();
 
 		$t = static::$strTable;
@@ -754,7 +763,7 @@ class PageModel extends Model
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
 		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
-		$blnBeUserLoggedIn = $tokenChecker->hasBackendUser() && $tokenChecker->isPreviewMode();
+		$blnBeUserLoggedIn = $tokenChecker->isPreviewMode();
 		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
 
 		$objSubpages = Database::getInstance()->prepare("SELECT p1.*, (SELECT COUNT(*) FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS subpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
@@ -1185,7 +1194,7 @@ class PageModel extends Model
 					// Layout
 					if ($objParentPage->includeLayout && $this->layout === false)
 					{
-						$this->layout = $objParentPage->layout;
+						$this->layout = $objParentPage->subpageLayout ?: $objParentPage->layout;
 					}
 
 					// Protection
@@ -1265,7 +1274,7 @@ class PageModel extends Model
 		// No root page found
 		elseif (TL_MODE == 'FE' && $this->type != 'root')
 		{
-			System::log('Page ID "' . $this->id . '" does not belong to a root page', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
 
 			throw new NoRootPageFoundException('No root page found');
 		}
@@ -1320,6 +1329,7 @@ class PageModel extends Model
 	 * @param string $strForceLang Force a certain language
 	 *
 	 * @throws RouteNotFoundException
+	 * @throws ResourceNotFoundException
 	 *
 	 * @return string A URL that can be used in the front end
 	 */
@@ -1346,7 +1356,22 @@ class PageModel extends Model
 		}
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
+
+		try
+		{
+			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams));
+		}
+		catch (RouteNotFoundException $e)
+		{
+			$pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+
+			if (!$pageRegistry->isRoutable($this))
+			{
+				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
+			}
+
+			throw $e;
+		}
 
 		// Make the URL relative to the base path
 		if (0 === strncmp($strUrl, '/', 1) && 0 !== strncmp($strUrl, '//', 2))
@@ -1363,6 +1388,7 @@ class PageModel extends Model
 	 * @param string $strParams An optional string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
+	 * @throws ResourceNotFoundException
 	 *
 	 * @return string An absolute URL that can be used in the front end
 	 */
@@ -1371,7 +1397,22 @@ class PageModel extends Model
 		$this->loadDetails();
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+
+		try
+		{
+			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+		catch (RouteNotFoundException $e)
+		{
+			$pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+
+			if (!$pageRegistry->isRoutable($this))
+			{
+				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
+			}
+
+			throw $e;
+		}
 
 		return $this->applyLegacyLogic($strUrl, $strParams);
 	}
@@ -1382,6 +1423,7 @@ class PageModel extends Model
 	 * @param string $strParams An optional string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
+	 * @throws ResourceNotFoundException
 	 *
 	 * @return string The front end preview URL
 	 */
@@ -1403,7 +1445,22 @@ class PageModel extends Model
 		$context->setBaseUrl($previewScript);
 
 		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+
+		try
+		{
+			$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $this, 'parameters' => $strParams), UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+		catch (RouteNotFoundException $e)
+		{
+			$pageRegistry = System::getContainer()->get('contao.routing.page_registry');
+
+			if (!$pageRegistry->isRoutable($this))
+			{
+				throw new ResourceNotFoundException(sprintf('Page ID %s is not routable', $this->id), 0, $e);
+			}
+
+			throw $e;
+		}
 
 		$context->setBaseUrl($baseUrl);
 

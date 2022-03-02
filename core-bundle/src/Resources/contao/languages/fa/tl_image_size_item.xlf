@@ -71,7 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle">
         <source>Activate/deactivate media query ID %s</source>
-        <target>فعال/غیرفعال کردن media query شناسه‌ی %s</target>
+        <target>فعال/غیرفعال کردن مدیا کوئری شناسه‌ی %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.0">
         <source>Paste at the top</source>
@@ -83,11 +83,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.0">
         <source>Create a new media query at the top</source>
-        <target>ایجاد یک media query در بالا</target>
+        <target>ایجاد یک مدیا کوئری در بالا</target>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pastenew.1">
         <source>Create a new media query after media query ID %s</source>
-        <target>ایجاد یک media query بعد از media query شناسه‌ی %s</target>
+        <target>ایجاد یک مدیا کوئری بعد از مدیا کوئری شناسه‌ی %s</target>
       </trans-unit>
     </body>
   </file>

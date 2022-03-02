@@ -21,6 +21,8 @@ use Contao\CoreBundle\Tests\Fixtures\DataCollector\TestClass;
 use Contao\CoreBundle\Tests\Fixtures\DataCollector\vendor\foo\bar\BundleTestClass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
+use Contao\Model;
+use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +30,13 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ContaoDataCollectorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Model::class, Registry::class]);
+
+        parent::tearDown();
+    }
+
     public function testCollectsDataInBackEnd(): void
     {
         $GLOBALS['TL_DEBUG'] = [
@@ -211,6 +220,8 @@ class ContaoDataCollectorTest extends TestCase
             ],
             $collector->getLegacyRouting()['hooks']
         );
+
+        unset($GLOBALS['TL_HOOKS']);
     }
 
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void

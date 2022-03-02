@@ -20,6 +20,8 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
+use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
+use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -34,6 +36,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -41,7 +44,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class ContaoCoreExtension extends Extension implements PrependExtensionInterface
+class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
 {
     public function getAlias(): string
     {
@@ -60,6 +63,22 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         // Prepend the backend route prefix to make it available for third-party bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
+
+        // Make sure channels for all Contao log actions are available
+        if ($container->hasExtension('monolog')) {
+            $container->prependExtensionConfig('monolog', [
+                'channels' => [
+                    'contao.access',
+                    'contao.configuration',
+                    'contao.cron',
+                    'contao.email',
+                    'contao.error',
+                    'contao.files',
+                    'contao.forms',
+                    'contao.general',
+                ],
+            ]);
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container): void
@@ -109,6 +128,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
+        $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
 
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
@@ -144,40 +164,59 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             }
         );
 
-        $container->registerAttributeForAutoconfiguration(
-            AsCronJob::class,
-            static function (ChildDefinition $definition, AsCronJob $attribute): void {
-                $definition->addTag('contao.cronjob', get_object_vars($attribute));
-            }
-        );
+        $attributesForAutoconfiguration = [
+            AsPage::class => 'contao.page',
+            AsPickerProvider::class => 'contao.picker_provider',
+            AsCronJob::class => 'contao.cronjob',
+            AsHook::class => 'contao.hook',
+            AsCallback::class => 'contao.callback',
+        ];
 
-        $container->registerAttributeForAutoconfiguration(
-            AsHook::class,
-            static function (ChildDefinition $definition, AsHook $attribute): void {
-                $definition->addTag('contao.hook', get_object_vars($attribute));
-            }
-        );
+        foreach ($attributesForAutoconfiguration as $attributeClass => $tag) {
+            $container->registerAttributeForAutoconfiguration(
+                $attributeClass,
+                static function (ChildDefinition $definition, object $attribute, \Reflector $reflector) use ($attributeClass, $tag): void {
+                    $tagAttributes = get_object_vars($attribute);
 
-        $container->registerAttributeForAutoconfiguration(
-            AsCallback::class,
-            static function (ChildDefinition $definition, AsCallback $attribute): void {
-                $definition->addTag('contao.callback', get_object_vars($attribute));
-            }
-        );
+                    if ($reflector instanceof \ReflectionMethod) {
+                        if (isset($tagAttributes['method'])) {
+                            throw new LogicException(sprintf('%s attribute cannot declare a method on "%s::%s()".', $attributeClass, $reflector->getDeclaringClass()->getName(), $reflector->getName()));
+                        }
 
-        $container->registerAttributeForAutoconfiguration(
-            AsPage::class,
-            static function (ChildDefinition $definition, AsPage $attribute): void {
-                $definition->addTag('contao.page', get_object_vars($attribute));
-            }
-        );
+                        $tagAttributes['method'] = $reflector->getName();
+                    }
 
-        $container->registerAttributeForAutoconfiguration(
-            AsPickerProvider::class,
-            static function (ChildDefinition $definition, AsPickerProvider $attribute): void {
-                $definition->addTag('contao.picker_provider', get_object_vars($attribute));
-            }
-        );
+                    $definition->addTag($tag, $tagAttributes);
+                }
+            );
+        }
+    }
+
+    public function configureFilesystem(FilesystemConfiguration $config): void
+    {
+        // User uploads
+        $filesStorageName = 'files';
+
+        // TODO: Deprecate the 'contao.upload_path' config key. In the next
+        // major version, $uploadPath can then be replaced with 'files' and the
+        // redundant 'files' attribute removed when mounting the local adapter.
+        $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
+
+        $config
+            ->mountLocalAdapter($uploadPath, $uploadPath, 'files')
+            ->addVirtualFilesystem($filesStorageName, $uploadPath)
+        ;
+
+        $config
+            ->addDefaultDbafs($filesStorageName, 'tl_files')
+            ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
+        ;
+
+        // Backups
+        $config
+            ->mountLocalAdapter('var/backups', 'backups', 'backups')
+            ->addVirtualFilesystem('backups', 'backups')
+        ;
     }
 
     private function handleSearchConfig(array $config, ContainerBuilder $container): void
@@ -378,7 +417,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $retentionPolicy->setArgument(1, $config['backup']['keep_intervals']);
 
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
-        $dbDumper->setArgument(2, $config['backup']['directory']);
         $dbDumper->setArgument(3, $config['backup']['ignore_tables']);
     }
 

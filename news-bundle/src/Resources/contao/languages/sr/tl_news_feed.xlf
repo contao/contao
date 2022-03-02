@@ -27,11 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.archives.0">
         <source>News archives</source>
-        <target>Архиве вести</target>
+        <target>Категорије вести</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.archives.1">
         <source>Here you can choose the news archives to be included in the feed.</source>
-        <target>Овде можете да одаберете архиве вести које ће бити укључене у сажетак.</target>
+        <target>Овде можете да одаберете категорије вести које ће бити укључене у сажетак.</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.format.0">
         <source>Feed format</source>
@@ -79,11 +79,15 @@
       </trans-unit>
       <trans-unit id="tl_news_feed.archives_legend">
         <source>News archives</source>
-        <target>Архиве вести</target>
+        <target>Категорије вести</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.config_legend">
         <source>Feed settings</source>
         <target>Подешавања сажетка</target>
+      </trans-unit>
+      <trans-unit id="tl_news_feed.image_legend">
+        <source>Image settings</source>
+        <target>Подешавања слике</target>
       </trans-unit>
       <trans-unit id="tl_news_feed.source_teaser">
         <source>News teasers</source>

@@ -19,10 +19,18 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class BackupCreateCommandTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
+    }
+
     /**
      * @dataProvider successfulCommandRunProvider
      */
@@ -44,44 +52,44 @@ class BackupCreateCommandTest extends TestCase
             [],
             function (CreateConfig $config) {
                 $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
+                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
 
                 return true;
             },
-            '[OK] Successfully created an SQL dump at "test__20211101141254.sql.gz".',
+            '[OK] Successfully created SQL dump "test__20211101141254.sql.gz".',
         ];
 
         yield 'Different tables to ignore' => [
             ['--ignore-tables' => 'foo,bar'],
             function (CreateConfig $config) {
                 $this->assertSame(['bar', 'foo'], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
+                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
 
                 return true;
             },
-            '[OK] Successfully created an SQL dump at "test__20211101141254.sql.gz".',
+            '[OK] Successfully created SQL dump "test__20211101141254.sql.gz".',
         ];
 
         yield 'Different target file' => [
-            ['file' => 'somewhere/else/file__20211101141254.sql'],
+            ['name' => 'file__20211101141254.sql'],
             function (CreateConfig $config) {
                 $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('somewhere/else/file__20211101141254.sql', $config->getBackup()->getFilepath());
+                $this->assertSame('file__20211101141254.sql', $config->getBackup()->getFilename());
 
                 return true;
             },
-            '[OK] Successfully created an SQL dump at "somewhere/else/file__20211101141254.sql".',
+            '[OK] Successfully created SQL dump "file__20211101141254.sql".',
         ];
 
         yield 'JSON format' => [
             ['--format' => 'json'],
             function (CreateConfig $config) {
                 $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilepath());
+                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
 
                 return true;
             },
-            '{"createdAt":"2021-11-01T14:12:54+00:00","size":100,"path":"test__20211101141254.sql.gz"}',
+            '{"createdAt":"2021-11-01T14:12:54+00:00","size":100,"name":"test__20211101141254.sql.gz"}',
         ];
     }
 

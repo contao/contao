@@ -23,6 +23,13 @@ class LazySessionAccessTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($_SESSION);
+
+        parent::tearDown();
+    }
+
     /**
      * @group legacy
      */

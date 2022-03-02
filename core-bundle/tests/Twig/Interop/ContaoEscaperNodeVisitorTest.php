@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -20,6 +21,7 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
+use Contao\InsertTags;
 use Contao\System;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -28,6 +30,15 @@ use Twig\TwigFunction;
 
 class ContaoEscaperNodeVisitorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([InsertTags::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testPriority(): void
     {
         $visitor = new ContaoEscaperNodeVisitor(static fn () => []);

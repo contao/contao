@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -266,10 +265,10 @@ abstract class Backend extends Controller
 
 			if (!unlink($file))
 			{
-				throw new \Exception("The file $strRelpath cannot be deleted. Please remove the file manually and correct the file permission settings on your server.");
+				throw new \Exception('The file ' . $strRelpath . ' cannot be deleted. Please remove the file manually and correct the file permission settings on your server.');
 			}
 
-			System::log("File $strRelpath ran once and has then been removed successfully", __METHOD__, ContaoContext::GENERAL);
+			System::getContainer()->get('monolog.logger.contao.general')->info('File ' . $strRelpath . ' ran once and has then been removed successfully');
 		}
 
 		$appDir = System::getContainer()->getParameter('kernel.project_dir') . '/app';
@@ -408,7 +407,7 @@ abstract class Backend extends Controller
 			// Fabricate a new data container object
 			if (!isset($GLOBALS['TL_DCA'][$strTable]['config']['dataContainer']))
 			{
-				$this->log('Missing data container for table "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
+				System::getContainer()->get('monolog.logger.contao.error')->error('Missing data container for table "' . $strTable . '"');
 				trigger_error('Could not create a data container object', E_USER_ERROR);
 			}
 
@@ -460,7 +459,7 @@ abstract class Backend extends Controller
 			$this->Template->main .= $response;
 
 			// Add the name of the parent element
-			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != $arrTables[0])
+			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
 				$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
 										 ->limit(1)
@@ -477,7 +476,14 @@ abstract class Backend extends Controller
 			}
 
 			// Add the name of the submodule
-			$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1], Input::get('id')) . '</span>';
+			if (isset($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1]))
+			{
+				$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
+			}
+			else
+			{
+				$this->Template->headline .= ' <span>' . Input::get('key') . '</span>';
+			}
 		}
 
 		// Default action
@@ -498,7 +504,7 @@ abstract class Backend extends Controller
 				case 'undo':
 					if (!$dc instanceof ListableDataContainerInterface)
 					{
-						$this->log('Data container ' . $strTable . ' is not listable', __METHOD__, ContaoContext::ERROR);
+						System::getContainer()->get('monolog.logger.contao.error')->error('Data container ' . $strTable . ' is not listable');
 						trigger_error('The current data container is not listable', E_USER_ERROR);
 					}
 					break;
@@ -514,7 +520,7 @@ abstract class Backend extends Controller
 				case 'toggle':
 					if (!$dc instanceof EditableDataContainerInterface)
 					{
-						$this->log('Data container ' . $strTable . ' is not editable', __METHOD__, ContaoContext::ERROR);
+						System::getContainer()->get('monolog.logger.contao.error')->error('Data container ' . $strTable . ' is not editable');
 						trigger_error('The current data container is not editable', E_USER_ERROR);
 					}
 					break;
@@ -892,7 +898,8 @@ abstract class Backend extends Controller
 				}
 
 				$intId = $objPage->pid;
-			} while ($intId > 0 && $objPage->type != 'root');
+			}
+			while ($intId > 0 && $objPage->type != 'root');
 		}
 
 		// Check whether the node is mounted
@@ -942,7 +949,7 @@ abstract class Backend extends Controller
 		}
 
 		$image = Controller::getPageStatusIcon((object) $row);
-		$imageAttribute = trim($imageAttribute . ' data-icon="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'1'))) . '" data-icon-disabled="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>''))) . '"');
+		$imageAttribute = trim($imageAttribute . ' data-icon="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'1')))) . '" data-icon-disabled="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'')))) . '"');
 
 		// Return the image only
 		if ($blnReturnImage)
@@ -1160,7 +1167,7 @@ abstract class Backend extends Controller
       e.preventDefault();
       Backend.openModalSelector({
         "id": "tl_listing",
-        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0]) . ',
+        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? '') . ',
         "url": this.href + "&value=" + $("ctrl_' . $inputName . '").value,
         "callback": function(picker, value) {
           $("ctrl_' . $inputName . '").value = value.join(",");

@@ -77,6 +77,7 @@ use Contao\Model\Collection;
  * @property string|array|null $groups
  * @property string|boolean    $guests
  * @property string|array      $cssID
+ * @property string|array|null $rootPageDependentModules
  *
  * @property string $typePrefix
  * @property array  $classes

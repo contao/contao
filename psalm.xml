@@ -9,7 +9,7 @@ have to specify "7.4" here to make Psalm understand arrow functions.
 -->
 <psalm
     errorLevel="7"
-    phpVersion="7.4"
+    phpVersion="8.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config tools/psalm/vendor/vimeo/psalm/config.xsd"
@@ -20,6 +20,7 @@ have to specify "7.4" here to make Psalm understand arrow functions.
         <ignoreFiles>
             <directory name="core-bundle/src/Resources"/>
             <directory name="core-bundle/tests/Fixtures"/>
+            <directory name="vendor/roave/better-reflection"/>
         </ignoreFiles>
     </projectFiles>
     <plugins>

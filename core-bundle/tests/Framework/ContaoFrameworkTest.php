@@ -41,6 +41,15 @@ class ContaoFrameworkTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HOOKS']);
+
+        ini_restore('intl.default_locale');
+
+        parent::tearDown();
+    }
+
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
@@ -249,12 +258,6 @@ class ContaoFrameworkTest extends TestCase
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker
             ->expects($this->once())
-            ->method('hasBackendUser')
-            ->willReturn(true)
-        ;
-
-        $tokenChecker
-            ->expects($this->once())
             ->method('isPreviewMode')
             ->willReturn(true)
         ;
@@ -320,6 +323,10 @@ class ContaoFrameworkTest extends TestCase
         $this->addToAssertionCount(1); // does not throw an exception
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testOverridesTheErrorLevel(): void
     {
         $request = Request::create('/contao/login');
@@ -386,6 +393,9 @@ class ContaoFrameworkTest extends TestCase
 
     /**
      * @dataProvider getInstallRoutes
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testAllowsTheInstallationToBeIncompleteInTheInstallTool(string $route): void
     {
@@ -698,6 +708,10 @@ class ContaoFrameworkTest extends TestCase
         $adapterCache = $ref->getProperty('adapterCache');
         $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
+
+        $isInitialized = $ref->getProperty('initialized');
+        $isInitialized->setAccessible(true);
+        $isInitialized->setValue(false);
 
         return $framework;
     }

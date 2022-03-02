@@ -85,6 +85,10 @@
         <source>Feed settings</source>
         <target>Paramètres du flux</target>
       </trans-unit>
+      <trans-unit id="tl_news_feed.image_legend">
+        <source>Image settings</source>
+        <target>Paramètres d'image</target>
+      </trans-unit>
       <trans-unit id="tl_news_feed.source_teaser">
         <source>News teasers</source>
         <target>Accroches d'actualités</target>

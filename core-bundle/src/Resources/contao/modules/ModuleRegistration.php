@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 
 /**
  * Front end module "registration".
@@ -355,11 +354,10 @@ class ModuleRegistration extends Module
 		$this->Template->categories = array_filter($arrGroups);
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['register']);
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$this->Template->captcha = $arrFields['captcha']['captcha'];
-
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 
 	/**
@@ -568,8 +566,7 @@ class ModuleRegistration extends Module
 			}
 		}
 
-		// Log activity
-		$this->log('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated', __METHOD__, ContaoContext::ACCESS);
+		System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
 
 		// Redirect to the jumpTo page
 		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
@@ -660,7 +657,7 @@ class ModuleRegistration extends Module
 		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 
-		$this->log('A new user (ID ' . $intId . ') has registered on the website', __METHOD__, ContaoContext::ACCESS);
+		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
 	}
 }
 

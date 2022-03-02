@@ -12,27 +12,34 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Database\Result;
 use Contao\Database\Statement;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\Input;
+use Contao\Model;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
-class PageModelTest extends ContaoTestCase
+class PageModelTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
 
         $platform = $this->createMock(AbstractPlatform::class);
         $platform
@@ -63,14 +70,13 @@ class PageModelTest extends ContaoTestCase
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        PageModel::reset();
+
+        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class, System::class, Config::class]);
+
         parent::tearDown();
-
-        Registry::getInstance()->reset();
-
-        // Reset database instance
-        $property = (new \ReflectionClass(Database::class))->getProperty('arrInstances');
-        $property->setAccessible(true);
-        $property->setValue([]);
     }
 
     public function testCreatingEmptyPageModel(): void
@@ -299,6 +305,116 @@ class PageModelTest extends ContaoTestCase
             [
                 ['urlPrefix' => '', 'urlSuffix' => '.php'],
             ],
+        ];
+    }
+
+    public function testDoesNotFindSimilarIfAliasIsEmpty(): void
+    {
+        PageModel::reset();
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->never())
+            ->method('execute')
+        ;
+
+        $database
+            ->expects($this->never())
+            ->method('execute')
+        ;
+
+        $this->mockDatabase($database);
+
+        $sourcePage = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 1,
+            'alias' => '',
+        ]);
+
+        $sourcePage
+            ->expects($this->never())
+            ->method('loadDetails')
+        ;
+
+        $result = PageModel::findSimilarByAlias($sourcePage);
+
+        $this->assertNull($result);
+    }
+
+    /**
+     * @param bool|string $expectedLayout
+     *
+     * @dataProvider layoutInheritanceParentPagesProvider
+     */
+    public function testInheritingLayoutFromParentsInLoadDetails(array $parents, $expectedLayout): void
+    {
+        $page = new PageModel();
+        $page->pid = 42;
+
+        $numberOfParents = \count($parents);
+
+        // The last page has to be a root page for this test method to prevent
+        // running into the check of TL_MODE in PageModel::loadDetails()
+        $parents[$numberOfParents - 1][0]['type'] = 'root';
+
+        $statement = $this->createMock(Statement::class);
+        $statement
+            ->method('execute')
+            ->willReturnCallback(
+                static function () use (&$parents) {
+                    return !empty($parents) ? new Result(array_shift($parents), '') : new Result([], '');
+                }
+            )
+        ;
+
+        $database = $this->createMock(Database::class);
+        $database
+            ->expects($this->exactly($numberOfParents + 1))
+            ->method('prepare')
+            ->willReturn($statement)
+        ;
+
+        $this->mockDatabase($database);
+        $page->loadDetails();
+
+        $this->assertSame($expectedLayout, $page->layout);
+    }
+
+    public function layoutInheritanceParentPagesProvider(): \Generator
+    {
+        yield 'no parent with an inheritable layout' => [
+            [
+                [['id' => '1', 'pid' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => '1', 'subpageLayout' => '2']],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            false,
+        ];
+
+        yield 'inherit layout from parent page' => [
+            [
+                [['id' => '1', 'pid' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpageLayout' => '']],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            '1',
+        ];
+
+        yield 'inherit subpages layout from parent page' => [
+            [
+                [['id' => '1', 'pid' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpageLayout' => '2']],
+                [['id' => '3', 'pid' => '0']],
+            ],
+            '2',
+        ];
+
+        yield 'multiple parents with layouts' => [
+            [
+                [['id' => '1', 'pid' => '2', 'includeLayout' => '', 'layout' => '1', 'subpageLayout' => '1']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpageLayout' => '3']],
+                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '4', 'subpageLayout' => '']],
+            ],
+            '3',
         ];
     }
 

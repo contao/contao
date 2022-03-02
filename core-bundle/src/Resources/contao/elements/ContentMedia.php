@@ -125,27 +125,29 @@ class ContentMedia extends ContentElement
 			$arrFiles = array('m4a'=>null, 'mp3'=>null, 'wma'=>null, 'mpeg'=>null, 'wav'=>null, 'ogg'=>null);
 		}
 
-		$objFiles->reset();
-
 		// Convert the language to a locale (see #5678)
 		$strLanguage = LocaleUtil::formatAsLocale($objPage->language);
+		$strCaption = $this->playerCaption;
 
 		// Pass File objects to the template
-		while ($objFiles->next())
+		foreach ($objFiles as $objFileModel)
 		{
-			$arrMeta = StringUtil::deserialize($objFiles->meta);
+			/** @var FilesModel $objFileModel */
+			$objMeta = $objFileModel->getMetadata($strLanguage);
+			$strTitle = null;
 
-			if (\is_array($arrMeta) && isset($arrMeta[$strLanguage]))
+			if (null !== $objMeta)
 			{
-				$strTitle = $arrMeta[$strLanguage]['title'];
-			}
-			else
-			{
-				$strTitle = $objFiles->name;
+				$strTitle = $objMeta->getTitle();
+
+				if (empty($strCaption))
+				{
+					$strCaption = $objMeta->getCaption();
+				}
 			}
 
-			$objFile = new File($objFiles->path);
-			$objFile->title = StringUtil::specialchars($strTitle);
+			$objFile = new File($objFileModel->path);
+			$objFile->title = StringUtil::specialchars($strTitle ?: $objFile->name);
 
 			$arrFiles[$objFile->extension] = $objFile;
 		}
@@ -184,7 +186,7 @@ class ContentMedia extends ContentElement
 
 		$this->Template->attributes = $attributes;
 		$this->Template->preload = $this->playerPreload;
-		$this->Template->caption = $this->playerCaption;
+		$this->Template->caption = $strCaption;
 
 		if ($this->playerStart || $this->playerStop)
 		{

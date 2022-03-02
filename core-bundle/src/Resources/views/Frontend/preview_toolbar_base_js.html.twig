@@ -160,6 +160,9 @@
         transition: background .2s ease;
         font-family: inherit;
         font-size: inherit;
+        color: inherit;
+        line-height: 18px;
+        text-decoration: none;
     }
 
     @media only screen and (max-width: 676px) {
@@ -176,6 +179,30 @@
 
     .cto-toolbar .tl_submit:active {
         color: #aaa;
+    }
+
+    .cto-toolbar .badge-title {
+        align-self: center;
+        margin: 0 auto 0 9px;
+        border-radius: 8px;
+        padding: 2px 5px;
+        background: #0f1c26;
+        color: #fff;
+        font-size: .75rem;
+        font-weight: 600;
+    }
+
+    @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+        .cto-toolbar .badge-title {
+            font-weight: 500;
+        }
+    }
+
+    @media only screen and (max-width: 676px) {
+        .cto-toolbar .badge-title {
+            float: left;
+            margin: 3px auto 0 8px;
+        }
     }
 </style>
 <script>
@@ -248,6 +275,7 @@
 
             if (document.createElement('datalist') && window.HTMLDataListElement) {
                 const userField = form.querySelector('input[name="user"]');
+                let timer;
 
                 if (userField) {
                     userField.addEventListener('input', function () {
@@ -255,22 +283,28 @@
                             return;
                         }
 
-                        const body = {
-                            FORM_SUBMIT: 'datalist_members',
-                            REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
-                            value: userField.value
-                        };
+                        if (timer) {
+                            clearTimeout(timer);
+                        }
 
-                        const userList = form.querySelector('datalist[id="userlist"]');
+                        timer = setTimeout(function () {
+                            const body = {
+                                FORM_SUBMIT: 'datalist_members',
+                                REQUEST_TOKEN: form.querySelector('input[name="REQUEST_TOKEN"]').value,
+                                value: userField.value
+                            };
 
-                        request('POST', form.action, new URLSearchParams(body), function () {
-                            userList.innerHTML = '';
-                            JSON.parse(this.response).forEach(item => {
-                                const option = document.createElement('option');
-                                option.value = item;
-                                userList.appendChild(option);
-                            });
-                        }, false);
+                            const userList = form.querySelector('datalist[id="userlist"]');
+
+                            request('POST', form.action, new URLSearchParams(body), function () {
+                                userList.innerHTML = '';
+                                JSON.parse(this.response).forEach(item => {
+                                    const option = document.createElement('option');
+                                    option.value = item;
+                                    userList.appendChild(option);
+                                });
+                            }, false);
+                        }, 300);
                     });
                 }
             }

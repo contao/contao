@@ -941,9 +941,11 @@ class StringUtil
 			. ');?'               // Optional semicolon
 		. ')i';
 
+		$arrAllowedUrlProtocols = System::getContainer()->getParameter('contao.sanitizer.allowed_url_protocols');
+
 		// URL-encode colon to prevent disallowed protocols
 		if (
-			!preg_match('@^(?:https?|ftp|mailto|tel|data):@i', self::decodeEntities($strString))
+			!preg_match('(^(?:' . implode('|', array_map('preg_quote', $arrAllowedUrlProtocols)) . '):)i', self::decodeEntities($strString))
 			&& preg_match($colonRegEx, self::stripInsertTags($strString))
 		) {
 			$strString = preg_replace($colonRegEx, '%3A', $strString);
@@ -966,7 +968,8 @@ class StringUtil
 		do
 		{
 			$strString = preg_replace('/{{[^{}]*}}/', '', $strString, -1, $count);
-		} while ($count > 0);
+		}
+		while ($count > 0);
 
 		return $strString;
 	}

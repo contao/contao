@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Doctrine\DBAL\Exception\DriverException;
@@ -135,7 +134,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			$this->log('Could not load the data container configuration for "' . $strTable . '"', __METHOD__, ContaoContext::ERROR);
+			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load the data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load the data container configuration', E_USER_ERROR);
 		}
 
@@ -667,8 +666,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				// Add a log entry
-				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, ContaoContext::GENERAL);
+				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created' . $this->getParentEntries($this->strTable, $insertID));
+
 				$this->redirect($this->switchToEdit($insertID) . $s2e);
 			}
 		}
@@ -964,8 +963,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				// Add a log entry
-				$this->log('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID), __METHOD__, ContaoContext::GENERAL);
+				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID));
 
 				// Switch to edit mode
 				if (!$blnDoNotRedirect)
@@ -1021,11 +1019,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Consider the dynamic parent table (see #4867)
 				if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 				{
-					$ptable = $GLOBALS['TL_DCA'][$v]['config']['ptable'];
-					$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
+					$cond = ($table === 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
 					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND $cond" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting" : ""))
-												->execute($id, $ptable);
+												->execute($id, $table);
 				}
 				else
 				{
@@ -1532,7 +1529,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Add a log entry unless we are deleting from tl_log itself
 			if ($this->strTable != 'tl_log')
 			{
-				$this->log('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id'], __METHOD__, ContaoContext::GENERAL);
+				System::getContainer()->get('monolog.logger.contao.general')->info('DELETE FROM ' . $this->strTable . ' WHERE id=' . $data[$this->strTable][0]['id']);
 			}
 		}
 
@@ -1598,11 +1595,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Consider the dynamic parent table (see #4867)
 			if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 			{
-				$ptable = $GLOBALS['TL_DCA'][$v]['config']['ptable'];
-				$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
+				$cond = ($table === 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
 				$objDelete = $this->Database->prepare("SELECT id FROM $v WHERE pid=? AND $cond")
-											->execute($id, $ptable);
+											->execute($id, $table);
 			}
 			else
 			{
@@ -1700,7 +1696,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add log entry and delete record from tl_undo if there was no error
 		if (!$error)
 		{
-			$this->log('Undone ' . $query, __METHOD__, ContaoContext::GENERAL);
+			System::getContainer()->get('monolog.logger.contao.general')->info('Undone ' . $query);
 
 			$this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
 						   ->limit(1)
@@ -2694,6 +2690,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->strField = Input::get('field');
 
+		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true)
+		{
+			throw new AccessDeniedException('Field "' . $this->strTable . '.' . $this->strField . '" cannot be toggled.');
+		}
+
 		// Security check before using field in DB query!
 		if (!$this->Database->fieldExists($this->strField, $this->strTable))
 		{
@@ -3138,7 +3139,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make sure unique fields are unique
-		if ((string) $varValue !== '' && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 		{
 			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
@@ -3219,33 +3220,37 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Save the value if there was no error
-		if (((string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue !== $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
+		if ((\is_array($varValue) || (string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue !== $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 		{
+			$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
+			$arrTypes = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
+
 			// If the field is a fallback field, empty all other columns (see #6498)
 			if ($varValue && ($arrData['eval']['fallback'] ?? null))
 			{
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "='' WHERE pid=?")
-								   ->execute($this->activeRecord->pid);
+					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
+								   ->query('', array($varEmpty, $this->activeRecord->pid), $arrTypes);
 				}
 				else
 				{
-					$this->Database->execute("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=''");
+					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
+								   ->query('', array($varEmpty), $arrTypes);
 				}
 			}
 
 			// Set the correct empty value (see #6284, #6373)
-			if ((string) $varValue === '')
+			if (!\is_array($varValue) && (string) $varValue === '')
 			{
-				$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
+				$varValue = $varEmpty;
 			}
 
 			$arrValues = $this->values;
 			array_unshift($arrValues, $varValue);
 
 			$objUpdateStmt = $this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE " . implode(' AND ', $this->procedure))
-											->execute($arrValues);
+											->query('', $arrValues, $arrTypes);
 
 			if ($objUpdateStmt->affectedRows)
 			{
@@ -3704,7 +3709,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($this->visibleRootTrails))
 		{
 			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE pid=0 AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? 'ORDER BY sorting' : ''))
+			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE pid=0 AND id IN (" . implode(',', $this->visibleRootTrails) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting' : ''))
 											 ->execute()
 											 ->fetchEach('id');
 		}
@@ -3750,7 +3755,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$_buttons = '&nbsp;';
 
 		// Show paste button only if there are no root records specified
-		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && (!$this->root || ($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste'] ?? null)) && Input::get('act') != 'select')
+		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
 		{
 			// Call paste_button_callback (&$dc, $row, $table, $cr, $childs, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
@@ -4106,7 +4111,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Regular tree (on cut: disable buttons of the page and all its childs to avoid circular references)
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 				{
-					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || ($this->root && !$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] && \in_array($id, $this->root))) ? Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
+					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || (!$this->rootPaste && \in_array($id, $this->root))) ? Image::getHtml('pasteafter_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
 					$_buttons .= (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id'])))) ? Image::getHtml('pasteinto_.svg') . ' ' : '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
 				}
 
@@ -6192,6 +6197,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function initRoots()
 	{
 		$table = $this->strTable;
+		$this->rootPaste = $GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste'] ?? false;
 
 		// Get the IDs of all root records (tree view)
 		if ($this->treeView)
@@ -6201,11 +6207,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Unless there are any root records specified, use all records with parent ID 0
 			if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) || $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] === false)
 			{
-				$objIds = $this->Database->execute("SELECT id FROM $table WHERE pid=0");
+				$objIds = $this->Database->execute("SELECT id FROM $table WHERE pid=0" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting' : ''));
 
 				if ($objIds->numRows > 0)
 				{
 					$this->root = $objIds->fetchEach('id');
+				}
+
+				if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste']))
+				{
+					trigger_deprecation('contao/core-bundle', '4.13', 'Implicitly setting "TL_DCA.%s.list.sorting.rootPaste" to true by leaving "TL_DCA.%s.list.sorting.root" empty has been deprecated and will no longer work in Contao 5.0. Set "rootPaste" to true instead.', $table, $table);
+					$this->rootPaste = true;
 				}
 			}
 

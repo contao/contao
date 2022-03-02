@@ -30,9 +30,9 @@ class InputTest extends TestCase
     {
         parent::setUp();
 
-        $GLOBALS['TL_CONFIG'] = [];
-
         include __DIR__.'/../../src/Resources/contao/config/default.php';
+
+        $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
 
         $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(
             array_merge(
@@ -41,12 +41,18 @@ class InputTest extends TestCase
             )
         );
 
-        $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
+        $container = new ContainerBuilder();
+        $container->setParameter('kernel.charset', 'UTF-8');
+        $container->setParameter('contao.sanitizer.allowed_url_protocols', ['http', 'https', 'mailto', 'tel']);
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_CONFIG']);
+
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }
@@ -423,17 +429,13 @@ class InputTest extends TestCase
     {
         $simpleTokenParser = new SimpleTokenParser(new ExpressionLanguage());
 
-        $container = new ContainerBuilder();
-        $container->set('contao.string.simple_token_parser', $simpleTokenParser);
-        $container->setParameter('kernel.charset', 'UTF-8');
-
-        System::setContainer($container);
+        System::getContainer()->set('contao.string.simple_token_parser', $simpleTokenParser);
 
         // Input encode the source
         Input::resetCache();
         $_POST = ['html' => $source];
         $html = Input::postHtml('html', true);
-        unset($_POST);
+        $_POST = [];
         Input::resetCache();
 
         $this->assertSame($expected, $simpleTokenParser->parse($html, $tokens));

@@ -36,8 +36,7 @@ services:
     contao.listener.command_scheduler:
         class: Contao\CoreBundle\EventListener\CommandSchedulerListener
         arguments:
-            - !service_locator
-              contao.cron: '@contao.cron'
+            - '@contao.cron'
             - '@contao.framework'
             - '@database_connection'
             - '%fragment.path%'
@@ -47,6 +46,7 @@ services:
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber
         arguments:
+            - '@contao.csrf.token_manager'
             - '@contao.csrf.token_storage'
             - '%contao.csrf_cookie_prefix%'
         tags:
@@ -74,6 +74,13 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\DisableCanonicalFieldsListener
         arguments:
             - '@contao.framework'
+
+    contao.listener.data_container.layout_options:
+        class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
+        arguments:
+            - '@database_connection'
+        tags:
+            - { name: kernel.reset, method: reset }
 
     contao.listener.data_container.member_groups:
         class: Contao\CoreBundle\EventListener\DataContainer\MemberGroupsListener
@@ -121,6 +128,24 @@ services:
         arguments:
             - '@request_stack'
 
+    contao.listener.data_container.preview_link:
+        class: Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@security.helper'
+            - '@request_stack'
+            - '@translator'
+            - '@router'
+            - '@uri_signer'
+            - '%contao.preview_script%'
+
+    contao.listener.data_container.record_preview:
+        class: Contao\CoreBundle\EventListener\DataContainer\RecordPreviewListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+
     contao.listener.data_container.reset_custom_template:
         class: Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener
         arguments:
@@ -133,6 +158,19 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
+    contao.listener.data_container.undo.jump_to_parent_button:
+        class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentButtonListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@translator'
+
+    contao.listener.data_container.undo.label:
+        class: Contao\CoreBundle\EventListener\DataContainer\Undo\LabelListener
+        arguments:
+            - '@contao.framework'
+            - '@twig'
+
     contao.listener.data_container.validate_custom_rgxp:
         class: Contao\CoreBundle\EventListener\DataContainer\ValidateCustomRgxpListener
         arguments:
@@ -142,6 +180,11 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
         tags:
             - { name: contao.hook, hook: loadDataContainer }
+
+    contao.listener.dbafs_metadata:
+        class: Contao\CoreBundle\EventListener\DbafsMetadataSubscriber
+        tags:
+            - kernel.event_subscriber
 
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
@@ -321,6 +364,7 @@ services:
             - '@contao.security.token_checker'
             - '@router'
             - '@uri_signer'
+            - '@security.helper'
         tags:
             # The priority must be lower than the one of the firewall listener (defaults to 8)
             - { name: kernel.event_listener, priority: 7 }
@@ -329,6 +373,7 @@ services:
         class: Contao\CoreBundle\EventListener\PreviewToolbarListener
         arguments:
             - '@contao.routing.scope_matcher'
+            - '@contao.security.token_checker'
             - '@twig'
             - '@router'
             - '%contao.preview_script%'
@@ -409,6 +454,7 @@ services:
             - '@logger'
         tags:
             - kernel.event_listener
+            - { name: monolog.logger, channel: contao.access }
 
     contao.listener.security.two_factor_frontend:
         class: Contao\CoreBundle\EventListener\Security\TwoFactorFrontendListener
@@ -462,6 +508,13 @@ services:
         class: Contao\CoreBundle\EventListener\Widget\HttpUrlListener
         arguments:
             - '@translator'
+
+    contao.listener.widget.root_page_dependent_select:
+        class: Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener
+        arguments:
+            - '@database_connection'
+            - '@translator'
+            - '@contao.csrf.token_manager'
 
     # Backwards compatibility
     Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
