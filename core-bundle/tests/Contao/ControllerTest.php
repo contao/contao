@@ -13,13 +13,24 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Controller;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Environment;
 use Contao\System;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
 class ControllerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Controller::reset();
+    }
+
     public function testReturnsTheTimeZones(): void
     {
         $timeZones = System::getTimeZones();
@@ -147,5 +158,119 @@ class ControllerTest extends TestCase
         $this->assertSame('?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2', false));
         $this->assertSame('?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
         $this->assertSame('?do=page&amp;key=foo&amp;ref=cri', Controller::addToUrl('key=foo', true, ['id']));
+    }
+
+    /**
+     * @dataProvider redirectProvider
+     */
+    public function testReplacesOldBePathsInRedirect(string $location, array $routes, string $expected): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->exactly(\count($routes)))
+            ->method('generate')
+            ->withConsecutive(
+                ...array_map(
+                    static function ($route) {
+                        return [$route];
+                    },
+                    $routes
+                )
+            )
+            ->willReturnOnConsecutiveCalls(
+                ...array_map(
+                    static function ($route) {
+                        return '/'.$route;
+                    },
+                    $routes
+                )
+            )
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('router', $router);
+        System::setContainer($container);
+
+        Environment::reset();
+        Environment::set('path', '');
+        Environment::set('base', '');
+
+        try {
+            Controller::redirect($location);
+        } catch (RedirectResponseException $exception) {
+            /** @var RedirectResponse $response */
+            $response = $exception->getResponse();
+
+            $this->assertInstanceOf(RedirectResponse::class, $response);
+            $this->assertSame($expected, $response->getTargetUrl());
+        }
+    }
+
+    public function redirectProvider(): \Generator
+    {
+        yield 'Never calls the router without old backend path' => [
+            'https://example.com',
+            [],
+            'https://example.com',
+        ];
+
+        yield 'Replaces multiple paths (not really expected)' => [
+            'https://example.com/contao/main.php?contao/file.php=foo',
+            ['contao_backend', 'contao_backend_file'],
+            'https://example.com/contao_backend?contao_backend_file=foo',
+        ];
+
+        $pathMap = [
+            'contao/confirm.php' => 'contao_backend_confirm',
+            'contao/file.php' => 'contao_backend_file',
+            'contao/help.php' => 'contao_backend_help',
+            'contao/index.php' => 'contao_backend_login',
+            'contao/main.php' => 'contao_backend',
+            'contao/page.php' => 'contao_backend_page',
+            'contao/password.php' => 'contao_backend_password',
+            'contao/popup.php' => 'contao_backend_popup',
+            'contao/preview.php' => 'contao_backend_preview',
+        ];
+
+        foreach ($pathMap as $old => $new) {
+            yield 'Replaces '.$old.' with '.$new.' route' => [
+                "https://example.com/$old?foo=bar",
+                [$new],
+                "https://example.com/$new?foo=bar",
+            ];
+        }
+    }
+
+    public function testCachesOldBackendPaths(): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->exactly(2))
+            ->method('generate')
+            ->withConsecutive(['contao_backend'], ['contao_backend_file'])
+            ->willReturn('/contao', '/contao/file')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('router', $router);
+        System::setContainer($container);
+
+        Environment::reset();
+        Environment::set('path', '');
+        Environment::set('base', '');
+
+        $ref = new \ReflectionClass(Controller::class);
+        $method = $ref->getMethod('replaceOldBePaths');
+        $method->setAccessible(true);
+
+        $this->assertSame(
+            $method->invoke(null, 'This is a template with link to <a href="/contao/main.php">backend main</a> and <a href="/contao/main.php?do=articles">articles</a>'),
+            'This is a template with link to <a href="/contao">backend main</a> and <a href="/contao?do=articles">articles</a>'
+        );
+
+        $this->assertSame(
+            $method->invoke(null, 'Link to <a href="/contao/main.php">backend main</a> and <a href="/contao/file.php?x=y">files</a>'),
+            'Link to <a href="/contao">backend main</a> and <a href="/contao/file?x=y">files</a>'
+        );
     }
 }

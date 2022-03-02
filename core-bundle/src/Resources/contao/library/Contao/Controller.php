@@ -55,6 +55,11 @@ abstract class Controller extends System
 	protected static $arrQueryCache = array();
 
 	/**
+	 * @var array
+	 */
+	private static $arrOldBePathCache = array();
+
+	/**
 	 * Find a particular template file and return its path
 	 *
 	 * @param string $strTemplate The name of the template
@@ -1210,27 +1215,36 @@ abstract class Controller extends System
 	 */
 	protected static function replaceOldBePaths($strContext)
 	{
-		$router = System::getContainer()->get('router');
-
-		$generate = static function ($route) use ($router)
-		{
-			return substr($router->generate($route), \strlen(Environment::get('path')) + 1);
-		};
-
+		$arrCache = &self::$arrOldBePathCache;
 		$arrMapper = array
 		(
-			'contao/confirm.php'   => $generate('contao_backend_confirm'),
-			'contao/file.php'      => $generate('contao_backend_file'),
-			'contao/help.php'      => $generate('contao_backend_help'),
-			'contao/index.php'     => $generate('contao_backend_login'),
-			'contao/main.php'      => $generate('contao_backend'),
-			'contao/page.php'      => $generate('contao_backend_page'),
-			'contao/password.php'  => $generate('contao_backend_password'),
-			'contao/popup.php'     => $generate('contao_backend_popup'),
-			'contao/preview.php'   => $generate('contao_backend_preview'),
+			'contao/confirm.php'   => 'contao_backend_confirm',
+			'contao/file.php'      => 'contao_backend_file',
+			'contao/help.php'      => 'contao_backend_help',
+			'contao/index.php'     => 'contao_backend_login',
+			'contao/main.php'      => 'contao_backend',
+			'contao/page.php'      => 'contao_backend_page',
+			'contao/password.php'  => 'contao_backend_password',
+			'contao/popup.php'     => 'contao_backend_popup',
+			'contao/preview.php'   => 'contao_backend_preview',
 		);
 
-		return str_replace(array_keys($arrMapper), $arrMapper, $strContext);
+		$replace = static function ($matches) use ($arrMapper, &$arrCache)
+		{
+			$key = $matches[0];
+
+			if (!isset($arrCache[$key]))
+			{
+				$router = System::getContainer()->get('router');
+				$arrCache[$key] = substr($router->generate($arrMapper[$key]), \strlen(Environment::get('path')) + 1);
+			}
+
+			return $arrCache[$key];
+		};
+
+		$regex = '(' . implode('|', array_map('preg_quote', array_keys($arrMapper))) . ')';
+
+		return preg_replace_callback($regex, $replace, $strContext);
 	}
 
 	/**
@@ -1433,6 +1447,12 @@ abstract class Controller extends System
 	{
 		$loader = new DcaLoader($strTable);
 		$loader->load($blnNoCache);
+	}
+
+	public static function reset()
+	{
+		self::$arrQueryCache = array();
+		self::$arrOldBePathCache = array();
 	}
 
 	/**
