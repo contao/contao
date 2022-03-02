@@ -1216,6 +1216,7 @@ abstract class Controller extends System
 	protected static function replaceOldBePaths($strContext)
 	{
 		$arrCache = &self::$arrOldBePathCache;
+
 		$arrMapper = array
 		(
 			'contao/confirm.php'   => 'contao_backend_confirm',
