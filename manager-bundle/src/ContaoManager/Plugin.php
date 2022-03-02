@@ -349,7 +349,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
-     * Adds '^/.*': SAMEORIGIN to nelmio_security.clickjacking.paths.
+     * Adds a click jacking configuration for "^/.*" if not already defined.
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
