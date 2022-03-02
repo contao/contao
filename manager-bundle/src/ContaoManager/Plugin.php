@@ -244,6 +244,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
 
                 return $extensionConfigs;
+
+            case 'nelmio_security':
+                return $this->checkClickJackingPaths($extensionConfigs);
         }
 
         return $extensionConfigs;
@@ -341,6 +344,30 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         if ('mail' === $container->getParameter('mailer_transport')) {
             $container->setParameter('mailer_transport', 'sendmail');
         }
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Adds a click jacking configuration for "^/.*" if not already defined.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function checkClickJackingPaths(array $extensionConfigs): array
+    {
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['clickjacking']['paths']['^/.*'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'clickjacking' => [
+                'paths' => [
+                    '^/.*' => 'SAMEORIGIN',
+                ],
+            ],
+        ];
 
         return $extensionConfigs;
     }

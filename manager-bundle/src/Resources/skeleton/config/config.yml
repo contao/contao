@@ -91,9 +91,6 @@ lexik_maintenance:
 
 # Security configuration
 nelmio_security:
-    clickjacking:
-        paths:
-            '^/.*': SAMEORIGIN
     content_type:
         nosniff: true
     referrer_policy:
