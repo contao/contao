@@ -119,7 +119,7 @@
       </trans-unit>
       <trans-unit id="tl_news.default.1">
         <source>By clicking the &quot;read more …&quot; button, visitors will be redirected to the default page of the news archive.</source>
-        <target>Кликом на &quot;Детаљније...&quot;, посетиоци ће бити преусмерени на подразумевану страницу архиве вести.</target>
+        <target>Кликом на &quot;Детаљније...&quot;, посетиоци ће бити преусмерени на подразумевану страницу категорије вести.</target>
       </trans-unit>
       <trans-unit id="tl_news.internal.0">
         <source>Page</source>
@@ -299,7 +299,7 @@
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
-        <target>Налепи у архиву вести</target>
+        <target>Налепи у категорију вести</target>
       </trans-unit>
       <trans-unit id="tl_news.editmeta">
         <source>Edit the news item settings</source>

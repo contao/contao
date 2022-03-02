@@ -23,9 +23,13 @@ class PageError404 extends Frontend
 {
 	/**
 	 * Generate an error 404 page
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5. Use the PageError404::getResponse() method instead.
 	 */
 	public function generate()
 	{
+		@trigger_error('Using PageError404::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageError404::getResponse() method instead.');
+
 		/** @var PageModel $objPage */
 		global $objPage;
 

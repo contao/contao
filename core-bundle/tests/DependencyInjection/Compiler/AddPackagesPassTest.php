@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
+use Composer\InstalledVersions;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\PackageUtil;
-use PackageVersions\Versions;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class AddPackagesPassTest extends TestCase
@@ -29,7 +29,7 @@ class AddPackagesPassTest extends TestCase
 
         $this->assertTrue($container->hasParameter('kernel.packages'));
 
-        $keys = array_keys(Versions::VERSIONS);
+        $keys = InstalledVersions::getInstalledPackages();
         $packages = $container->getParameter('kernel.packages');
 
         $this->assertIsArray($packages);

@@ -467,7 +467,7 @@ class Environment
 	 */
 	protected static function host()
 	{
-		return static::get('httpHost');
+		return preg_replace('/:\d+$/', '', static::get('httpHost'));
 	}
 
 	/**

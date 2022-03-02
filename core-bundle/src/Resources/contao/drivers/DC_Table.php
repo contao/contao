@@ -1053,11 +1053,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 				// Consider the dynamic parent table (see #4867)
 				if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'])
 				{
-					$ptable = $GLOBALS['TL_DCA'][$v]['config']['ptable'];
-					$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
+					$cond = ($table === 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
 					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND $cond" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting" : ""))
-												->execute($id, $ptable);
+												->execute($id, $table);
 				}
 				else
 				{
@@ -1630,11 +1629,10 @@ class DC_Table extends DataContainer implements \listable, \editable
 			// Consider the dynamic parent table (see #4867)
 			if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'])
 			{
-				$ptable = $GLOBALS['TL_DCA'][$v]['config']['ptable'];
-				$cond = ($ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
+				$cond = ($table === 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
 
 				$objDelete = $this->Database->prepare("SELECT id FROM $v WHERE pid=? AND $cond")
-											->execute($id, $ptable);
+											->execute($id, $table);
 			}
 			else
 			{
@@ -3052,7 +3050,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Make sure unique fields are unique
-		if ((!is_scalar($varValue) || (string) $varValue !== '') && $arrData['eval']['unique'] && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+		if ((\is_array($varValue) || (string) $varValue !== '') && $arrData['eval']['unique'] && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
 		{
 			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
@@ -3133,7 +3131,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Save the value if there was no error
-		if ((!is_scalar($varValue) || (string) $varValue !== '' || !$arrData['eval']['doNotSaveEmpty']) && ($this->varValue !== $varValue || $arrData['eval']['alwaysSave']))
+		if ((\is_array($varValue) || (string) $varValue !== '' || !$arrData['eval']['doNotSaveEmpty']) && ($this->varValue !== $varValue || $arrData['eval']['alwaysSave']))
 		{
 			// If the field is a fallback field, empty all other columns (see #6498)
 			if ($varValue && $arrData['eval']['fallback'])
@@ -3150,7 +3148,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			// Set the correct empty value (see #6284, #6373)
-			if (is_scalar($varValue) && (string) $varValue === '')
+			if (!\is_array($varValue) && (string) $varValue === '')
 			{
 				$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']);
 			}

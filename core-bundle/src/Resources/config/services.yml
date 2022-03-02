@@ -214,6 +214,8 @@ services:
             - '@security.csrf.token_generator'
             - '@contao.csrf.token_storage'
         public: true
+        tags:
+            - { name: kernel.reset, method: reset }
 
     # Backwards compatibility
     contao.csrf.token_manager:

@@ -557,6 +557,60 @@ class PluginTest extends ContaoTestCase
         $this->assertSame('sendmail', $container->getParameter('mailer_transport'));
     }
 
+    public function testUpdatesTheClickJackingPaths(): void
+    {
+        $extensionConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'ALLOW',
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+
+        $expectedConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'ALLOW',
+                    ],
+                ],
+            ],
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/.*' => 'SAMEORIGIN',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedConfigs, $extensionConfig);
+    }
+
+    public function testDoesNotOverrideDefaultClickJackingPath(): void
+    {
+        $extensionConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'DENY',
+                        '^/.*' => 'ALLOW',
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+
+        $this->assertSame($extensionConfigs, $extensionConfig);
+    }
+
     /**
      * @dataProvider getMailerParameters
      */

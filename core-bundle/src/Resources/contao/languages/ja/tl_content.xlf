@@ -752,11 +752,11 @@
       </trans-unit>
       <trans-unit id="tl_content.includeTemplate">
         <source>The &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
-        <target>ページレイアウトに&lt;em&gt;%s&lt;/em&gt;というテンプレートを含める必要があります。</target>
+        <target>ページのレイアウトに&lt;em&gt;%s&lt;/em&gt;というテンプレートを含める必要があります。</target>
       </trans-unit>
       <trans-unit id="tl_content.includeTemplates">
         <source>The &lt;em&gt;%s&lt;/em&gt; or &lt;em&gt;%s&lt;/em&gt; template needs to be included in the page layout.</source>
-        <target>ページレイアウトに&lt;em&gt;%s&lt;/em&gt;または&lt;em&gt;%s&lt;/em&gt;というテンプレートを含める必要があります。</target>
+        <target>ページのレイアウトに&lt;em&gt;%s&lt;/em&gt;または&lt;em&gt;%s&lt;/em&gt;というテンプレートを含める必要があります。</target>
       </trans-unit>
       <trans-unit id="tl_content.player_autoplay">
         <source>Autoplay</source>

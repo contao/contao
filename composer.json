@@ -1,9 +1,8 @@
 {
     "name": "contao/contao",
-    "type": "symfony-bundle",
     "description": "Contao 4 bundles",
-    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
+    "type": "symfony-bundle",
     "authors": [
         {
             "name": "Leo Feyer",
@@ -14,6 +13,13 @@
             "homepage": "https://contao.org/contributors"
         }
     ],
+    "homepage": "https://contao.org",
+    "support": {
+        "issues": "https://github.com/contao/contao/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/contao",
+        "docs": "https://docs.contao.org"
+    },
     "require": {
         "php": "^7.2 || ^8.0",
         "ext-dom": "*",
@@ -26,7 +32,7 @@
         "ext-zlib": "*",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
-        "composer/package-versions-deprecated": "^1.8",
+        "composer/package-versions-deprecated": "^1.11.99.5",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.2",
         "contao-components/colorbox": "^1.6",
@@ -62,11 +68,11 @@
         "michelf/php-markdown": "^1.4",
         "nelmio/cors-bundle": "^1.5.3 || ^2.0.1",
         "nelmio/security-bundle": "^2.2",
+        "nikic/php-parser": "^4.9",
         "nyholm/psr7": "^1.2",
         "paragonie/constant_time_encoding": "^2.2",
         "patchwork/utf8": "^1.2",
         "phpspec/php-diff": "^1.0",
-        "phpunit/php-token-stream": "^1.4 || ^2.0 || ^3.0 || ^4.0",
         "psr/log": "^1.0",
         "ramsey/uuid": "^3.8",
         "scheb/2fa-backup-code": "^5.0",
@@ -89,7 +95,7 @@
         "symfony/dotenv": "4.4.*",
         "symfony/event-dispatcher": "4.4.*",
         "symfony/expression-language": "4.4.*",
-        "symfony/filesystem": "4.4.*",
+        "symfony/filesystem": "4.4.* || 5.4.*",
         "symfony/finder": "4.4.*",
         "symfony/framework-bundle": "4.4.*",
         "symfony/http-client": "4.4.*",
@@ -98,6 +104,7 @@
         "symfony/lock": "4.4.*",
         "symfony/monolog-bridge": "4.4.*",
         "symfony/monolog-bundle": "^3.1",
+        "symfony/polyfill-php73": "^1.8",
         "symfony/process": "4.4.*",
         "symfony/proxy-manager-bridge": "4.4.*",
         "symfony/routing": "4.4.*",
@@ -120,6 +127,15 @@
         "webmozart/path-util": "^2.2",
         "wikimedia/less.php": "^1.7"
     },
+    "require-dev": {
+        "ext-fileinfo": "*",
+        "bamarni/composer-bin-plugin": "^1.4",
+        "composer/composer": "^1.0 || ^2.0",
+        "contao/test-case": "^4.4",
+        "phpunit/phpunit": "^8.5",
+        "symfony/browser-kit": "4.4.*",
+        "symfony/phpunit-bridge": "4.4.*"
+    },
     "replace": {
         "contao/calendar-bundle": "self.version",
         "contao/comments-bundle": "self.version",
@@ -140,35 +156,6 @@
         "symfony/security-bundle": "4.4.* <4.4.5",
         "terminal42/contao-ce-access": "<3.0",
         "zendframework/zend-code": "<3.3.1"
-    },
-    "require-dev": {
-        "ext-fileinfo": "*",
-        "bamarni/composer-bin-plugin": "^1.4",
-        "composer/composer": "^1.0 || ^2.0",
-        "contao/test-case": "^4.4",
-        "phpunit/phpunit": "^8.5",
-        "symfony/browser-kit": "4.4.*",
-        "symfony/phpunit-bridge": "4.4.*"
-    },
-    "extra": {
-        "bamarni-bin": {
-            "bin-links": false,
-            "target-directory": "tools"
-        },
-        "contao-manager-plugin": {
-            "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
-            "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
-            "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
-            "contao/faq-bundle": "Contao\\FaqBundle\\ContaoManager\\Plugin",
-            "contao/installation-bundle": "Contao\\InstallationBundle\\ContaoManager\\Plugin",
-            "contao/listing-bundle": "Contao\\ListingBundle\\ContaoManager\\Plugin",
-            "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
-            "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
-            "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
-        },
-        "symfony": {
-            "require": "^4.4"
-        }
     },
     "autoload": {
         "psr-4": {
@@ -243,6 +230,30 @@
     "bin": [
         "manager-bundle/bin/contao-console"
     ],
+    "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true,
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
+        }
+    },
+    "extra": {
+        "bamarni-bin": {
+            "bin-links": false,
+            "target-directory": "tools"
+        },
+        "contao-manager-plugin": {
+            "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
+            "contao/comments-bundle": "Contao\\CommentsBundle\\ContaoManager\\Plugin",
+            "contao/core-bundle": "Contao\\CoreBundle\\ContaoManager\\Plugin",
+            "contao/faq-bundle": "Contao\\FaqBundle\\ContaoManager\\Plugin",
+            "contao/installation-bundle": "Contao\\InstallationBundle\\ContaoManager\\Plugin",
+            "contao/listing-bundle": "Contao\\ListingBundle\\ContaoManager\\Plugin",
+            "contao/manager-bundle": "Contao\\ManagerBundle\\ContaoManager\\Plugin",
+            "contao/news-bundle": "Contao\\NewsBundle\\ContaoManager\\Plugin",
+            "contao/newsletter-bundle": "Contao\\NewsletterBundle\\ContaoManager\\Plugin"
+        }
+    },
     "scripts": {
         "all": [
             "@unit-tests",
@@ -260,11 +271,5 @@
         "monorepo-tools": "tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
         "phpstan": "tools/phpstan/vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --memory-limit=1G --ansi",
         "unit-tests": "vendor/bin/phpunit --colors=always"
-    },
-    "support": {
-        "issues": "https://github.com/contao/contao/issues",
-        "forum": "https://community.contao.org",
-        "source": "https://github.com/contao/contao",
-        "docs": "https://docs.contao.org"
     }
 }

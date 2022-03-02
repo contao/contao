@@ -23,13 +23,24 @@ use Symfony\Component\HttpFoundation\Response;
 class PageRegular extends Frontend
 {
 	/**
+	 * @var Template
+	 *
+	 * @todo Remove in Contao 5.0
+	 */
+	protected $Template;
+
+	/**
 	 * Generate a regular page
 	 *
 	 * @param PageModel $objPage
 	 * @param boolean   $blnCheckRequest
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5. Use the PageRegular::getResponse() method instead.
 	 */
 	public function generate($objPage, $blnCheckRequest=false)
 	{
+		@trigger_error('Using PageRegular::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRegular::getResponse() method instead.');
+
 		$this->prepare($objPage);
 
 		$this->Template->output($blnCheckRequest);
