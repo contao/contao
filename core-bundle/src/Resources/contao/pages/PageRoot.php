@@ -29,9 +29,13 @@ class PageRoot extends Frontend
 	 * @param boolean $blnPreferAlias
 	 *
 	 * @return integer
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5. Use the PageRoot::getResponse() method instead.
 	 */
 	public function generate($rootPageId, $blnReturn=false, $blnPreferAlias=false)
 	{
+		@trigger_error('Using PageRoot::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRoot::getResponse() method instead.');
+
 		if (!$blnReturn)
 		{
 			$this->redirect($this->getRedirectUrl($rootPageId));

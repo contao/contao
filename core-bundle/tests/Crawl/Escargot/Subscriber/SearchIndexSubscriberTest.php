@@ -204,6 +204,13 @@ class SearchIndexSubscriberTest extends TestCase
             $this->getResponse(true),
             SubscriberInterface::DECISION_POSITIVE,
         ];
+
+        yield 'Test skips redirected responses outside the target domain' => [
+            $this->getResponse(false, 200, 'https://example.com'),
+            SubscriberInterface::DECISION_NEGATIVE,
+            LogLevel::DEBUG,
+            'Did not index because it was not part of the base URI collection.',
+        ];
     }
 
     /**
@@ -462,7 +469,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    private function getResponse(bool $asHtml, int $statusCode = 200): ResponseInterface
+    private function getResponse(bool $asHtml, int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface
     {
         $headers = $asHtml ? ['content-type' => ['text/html']] : [];
 
@@ -480,10 +487,13 @@ class SearchIndexSubscriberTest extends TestCase
         $response
             ->method('getInfo')
             ->willReturnCallback(
-                static function (string $key) use ($statusCode) {
+                static function (string $key) use ($statusCode, $url) {
                     switch ($key) {
                         case 'http_code':
                             return $statusCode;
+
+                        case 'url':
+                            return $url;
 
                         case 'response_headers':
                             return [];
