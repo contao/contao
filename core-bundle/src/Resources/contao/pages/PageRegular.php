@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-#[AllowDynamicProperties]
+#[\AllowDynamicProperties]
 class PageRegular extends Frontend
 {
 	/**
