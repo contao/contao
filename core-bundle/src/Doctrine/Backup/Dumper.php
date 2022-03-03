@@ -97,13 +97,13 @@ class Dumper implements DumperInterface
         yield sprintf('-- BEGIN DATA %s', $table->getName());
         $values = [];
         $columnBindingTypes = [];
-        $columnCharsets = [];
+        $columnUtf8Charsets = [];
 
         foreach ($table->getColumns() as $column) {
             $columnName = $column->getName();
             $values[] = "`$columnName` AS `$columnName`";
             $columnBindingTypes[$columnName] = $column->getType()->getBindingType();
-            $columnCharsets[$columnName] = strtolower($column->getPlatformOptions()['charset'] ?? '');
+            $columnUtf8Charsets[$columnName] = \in_array(strtolower($column->getPlatformOptions()['charset'] ?? ''), ['utf8', 'utf8mb4'], true);
         }
 
         $values = implode(', ', $values);
@@ -119,7 +119,7 @@ class Dumper implements DumperInterface
                 $insertValues[] = $this->formatValueForDump(
                     $value,
                     $columnBindingTypes[$columnName],
-                    $columnCharsets[$columnName],
+                    $columnUtf8Charsets[$columnName],
                     $connection
                 );
             }
@@ -131,7 +131,7 @@ class Dumper implements DumperInterface
         }
     }
 
-    private function formatValueForDump(?string $value, int $columnBindingType, string $columnCharset, Connection $connection): string
+    private function formatValueForDump(?string $value, int $columnBindingType, bool $isUtf8Charset, Connection $connection): string
     {
         if (null === $value) {
             return 'NULL';
@@ -150,7 +150,7 @@ class Dumper implements DumperInterface
         if (
             preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\xFF]/', $value)
             && (
-                !\in_array($columnCharset, ['utf8', 'utf8mb4'], true)
+                !$isUtf8Charset
                 || !preg_match('//u', $value)
             )
         ) {

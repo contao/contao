@@ -84,17 +84,23 @@ class DumperTest extends ContaoTestCase
         ];
 
         yield 'Table with data' => [
-            [new Table('tl_page', [new Column('stringCol', Type::getType(Types::STRING)), new Column('integerCol', Type::getType(Types::INTEGER))])],
+            [new Table('tl_page', [
+                new Column('stringCol', Type::getType(Types::STRING)),
+                new Column('integerCol', Type::getType(Types::INTEGER)),
+                new Column('booleanCol', Type::getType(Types::BOOLEAN)),
+            ])],
             [],
             [
-                'SELECT `stringCol` AS `stringCol`, `integerCol` AS `integerCol` FROM `tl_page`' => [
+                'SELECT `stringCol` AS `stringCol`, `integerCol` AS `integerCol`, `booleanCol` AS `booleanCol` FROM `tl_page`' => [
                     [
                         'stringCol' => 'value1',
                         'integerCol' => '42',
+                        'booleanCol' => '1',
                     ],
                     [
                         'stringCol' => '',
                         'integerCol' => null,
+                        'booleanCol' => '0',
                     ],
                 ],
             ],
@@ -102,10 +108,10 @@ class DumperTest extends ContaoTestCase
                 'SET FOREIGN_KEY_CHECKS = 0;',
                 '-- BEGIN STRUCTURE tl_page',
                 'DROP TABLE IF EXISTS `tl_page`;',
-                'CREATE TABLE tl_page (stringCol VARCHAR(255) NOT NULL, integerCol INT NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
+                'CREATE TABLE tl_page (stringCol VARCHAR(255) NOT NULL, integerCol INT NOT NULL, booleanCol TINYINT(1) NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
                 '-- BEGIN DATA tl_page',
-                "INSERT INTO `tl_page` (`stringCol`, `integerCol`) VALUES ('value1', 42);",
-                "INSERT INTO `tl_page` (`stringCol`, `integerCol`) VALUES ('', NULL);",
+                "INSERT INTO `tl_page` (`stringCol`, `integerCol`, `booleanCol`) VALUES ('value1', 42, 1);",
+                "INSERT INTO `tl_page` (`stringCol`, `integerCol`, `booleanCol`) VALUES ('', NULL, 0);",
                 'SET FOREIGN_KEY_CHECKS = 1;',
             ],
         ];
