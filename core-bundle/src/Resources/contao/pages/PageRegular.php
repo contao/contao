@@ -20,15 +20,9 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
+#[\AllowDynamicProperties]
 class PageRegular extends Frontend
 {
-	/**
-	 * @var Template
-	 *
-	 * @todo Remove in Contao 5.0
-	 */
-	protected $Template;
-
 	/**
 	 * Generate a regular page
 	 *
