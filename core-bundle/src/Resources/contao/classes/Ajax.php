@@ -417,7 +417,13 @@ class Ajax extends Backend
 					if (Input::get('act') == 'editAll')
 					{
 						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
+
+						$objVersions = new Versions($dc->table, $this->strAjaxId);
+						$objVersions->initialize();
+
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
+
+						$objVersions->create();
 
 						if (Input::post('load'))
 						{
@@ -426,7 +432,12 @@ class Ajax extends Backend
 					}
 					else
 					{
+						$objVersions = new Versions($dc->table, $dc->id);
+						$objVersions->initialize();
+
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
+
+						$objVersions->create();
 
 						if (Input::post('load'))
 						{
