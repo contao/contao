@@ -177,30 +177,32 @@ class BackendPreviewSwitchController
                 $user->amg
             );
 
-            $andWhereGroups = "AND (groups LIKE '".implode("' OR GROUPS LIKE '", $groups)."')";
+            $andWhereGroups = "AND (`groups` LIKE '".implode("' OR `groups` LIKE '", $groups)."')";
         }
 
         $time = Date::floorToMinute();
 
         // Get the active front end users
-        $result = $this->connection->executeQuery(
-            "
-                SELECT
-                    username
-                FROM
-                    tl_member
-                WHERE
-                    username LIKE ? $andWhereGroups
-                    AND login='1'
-                    AND disable!='1'
-                    AND (start='' OR start<='$time')
-                    AND (stop='' OR stop>'$time')
-                ORDER BY
-                    username
-            ",
-            [str_replace('%', '', $request->request->get('value')).'%']
-        );
+        $query = "
+            SELECT
+                username
+            FROM
+                tl_member
+            WHERE
+                username LIKE ? $andWhereGroups
+                AND login='1'
+                AND disable!='1'
+                AND (start='' OR start<='$time')
+                AND (stop='' OR stop>'$time')
+            ORDER BY
+                username
+        ";
 
-        return $result->fetchAll(FetchMode::COLUMN);
+        $query = $this->connection->getDatabasePlatform()->modifyLimitQuery($query, 20);
+
+        return $this->connection
+            ->executeQuery($query, [str_replace('%', '', $request->request->get('value')).'%'])
+            ->fetchAll(FetchMode::COLUMN)
+        ;
     }
 }
