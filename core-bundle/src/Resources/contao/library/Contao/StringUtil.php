@@ -784,7 +784,7 @@ class StringUtil
 
 			if ($file !== null)
 			{
-				$return .= $paths[$i+2] . '="{{file::' . static::binToUuid($file->uuid) . '}}"';
+				$return .= $paths[$i+2] . '="{{file::' . static::binToUuid($file->uuid) . '|urlattr}}"';
 			}
 			else
 			{
