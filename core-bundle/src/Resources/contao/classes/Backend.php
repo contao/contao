@@ -871,7 +871,8 @@ abstract class Backend extends Controller
 				}
 
 				$intId = $objPage->pid;
-			} while ($intId > 0 && $objPage->type != 'root');
+			}
+			while ($intId > 0 && $objPage->type != 'root');
 		}
 
 		// Check whether the node is mounted

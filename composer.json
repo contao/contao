@@ -263,13 +263,13 @@
             "@monorepo-tools"
         ],
         "cs-fixer": [
-            "tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.php --fix --ansi",
-            "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --fix --ansi",
-            "tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --fix --ansi"
+            "@php tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests --config tools/ecs/vendor/contao/easy-coding-standard/config/default.php --fix --ansi",
+            "@php tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/vendor/contao/easy-coding-standard/config/legacy.php --fix --ansi",
+            "@php tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/vendor/contao/easy-coding-standard/config/template.php --fix --ansi"
         ],
-        "functional-tests": "vendor/bin/phpunit --testsuite=functional --colors=always",
-        "monorepo-tools": "tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
-        "phpstan": "tools/phpstan/vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --memory-limit=1G --ansi",
-        "unit-tests": "vendor/bin/phpunit --colors=always"
+        "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
+        "monorepo-tools": "@php tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
+        "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyze core-bundle/src core-bundle/tests --level=3 --memory-limit=1G --ansi",
+        "unit-tests": "@php vendor/bin/phpunit --colors=always"
     }
 }
