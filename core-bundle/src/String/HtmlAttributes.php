@@ -129,10 +129,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
             ' ',
             array_unique(
                 array_filter(
-                    array_merge(
-                        explode(' ', $this->attributes['class'] ?? ''),
-                        array_map('trim', $classes)
-                    )
+                    explode(' ', ($this->attributes['class'] ?? '').' '.implode(' ', $classes)),
                 )
             )
         );
@@ -147,7 +144,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
             array_filter(
                 array_diff(
                     explode(' ', $this->attributes['class'] ?? ''),
-                    array_filter(array_map('trim', $classes))
+                    explode(' ', implode(' ', $classes))
                 )
             )
         );

@@ -251,13 +251,13 @@ class HtmlAttributesTest extends TestCase
     public function testAddAndRemoveClasses(): void
     {
         // Whitespaces should get normalized by default
-        $attributes = new HtmlAttributes(['class' => ' foo  bar other ']);
+        $attributes = new HtmlAttributes(['class' => ' foo  bar other1 other2  ']);
 
-        $this->assertSame('foo bar other', $attributes['class']);
+        $this->assertSame('foo bar other1 other2', $attributes['class']);
 
         // And and remove classes
-        $attributes->addClass('baz', 'foo', ' foobar');
-        $attributes->removeClass(' other', 'thing');
+        $attributes->addClass('baz', 'foo foobar');
+        $attributes->removeClass(' other1', 'thing other2');
 
         $this->assertSame('foo bar baz foobar', $attributes['class']);
     }
