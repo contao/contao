@@ -83,7 +83,7 @@ class TwigIntegrationTest extends TestCase
     public function testRendersAttributes(): void
     {
         $templateContent = <<<'TEMPLATE'
-            <div{{ attrs(attributes).addClass('foo') }}>
+            <div{{ attrs(attributes).addClass('foo').mergeWith(cssId) }}>
               <h1{{ attrs() }}>
                 <span{{ attrs({'data-x': 'y'}).setIfExists('style', style).set('data-bar', 'bar') }}>{{ headline }}</span>
               </h1>
@@ -92,7 +92,7 @@ class TwigIntegrationTest extends TestCase
             TEMPLATE;
 
         $expectedOutput = <<<'TEMPLATE'
-            <div class="block foo" data-thing="42">
+            <div class="block foo" data-thing="42" id="my-id">
               <h1>
                 <span data-x="y" data-bar="bar">Test headline</span>
               </h1>
@@ -107,6 +107,7 @@ class TwigIntegrationTest extends TestCase
             'test.html.twig',
             [
                 'attributes' => ['class' => 'block', 'data-thing' => 42],
+                'cssId' => ' id="my-id"',
                 'paragraph_attributes' => ' class="rte"',
                 'style' => '',
                 'headline' => 'Test headline',

@@ -22,11 +22,11 @@ class HtmlAttributesTest extends TestCase
      */
     public function testParsesAttributeStrings(string $attributeString, array $expectedAttributes): void
     {
-        $attributes = HtmlAttributes::fromString($attributeString);
+        $attributes = new HtmlAttributes($attributeString);
 
         $this->assertSame($expectedAttributes, iterator_to_array($attributes));
 
-        $attributes = HtmlAttributes::fromString($attributes->toString());
+        $attributes = new HtmlAttributes($attributes->toString());
 
         $this->assertSame($expectedAttributes, iterator_to_array($attributes));
     }
@@ -116,12 +116,57 @@ class HtmlAttributesTest extends TestCase
         );
     }
 
+    public function testCreatesAttributesFromAttributesClass(): void
+    {
+        $attributes = new HtmlAttributes([
+            'foO_bAr' => 'bar',
+            'bar-bar' => 42,
+            'BAZ123' => true,
+            'other' => null,
+        ]);
+
+        $this->assertSame(iterator_to_array($attributes), iterator_to_array(new HtmlAttributes($attributes)));
+    }
+
+    public function testMergesAttributesFromAttributesClass(): void
+    {
+        $attributesA = new HtmlAttributes([
+            'foO_bAr' => 'bar',
+            'class' => 'class1',
+        ]);
+
+        $attributesB = new HtmlAttributes([
+            'bar-bar' => 42,
+            'foo-foo' => 'foo',
+        ]);
+
+        $attributesC = 'BAZ123 = "" class="class2"';
+
+        $attributesD = [
+            'other' => null,
+            'foo-foo' => false,
+            'class' => 'class1 class3',
+        ];
+
+        $expectedProperties = [
+            'foo_bar' => 'bar',
+            'class' => 'class1 class2 class3',
+            'bar-bar' => '42',
+            'baz123' => '',
+            'other' => '',
+        ];
+
+        $attributes = $attributesA->mergeWith($attributesB)->mergeWith($attributesC)->mergeWith($attributesD);
+
+        $this->assertSame($expectedProperties, iterator_to_array($attributes));
+    }
+
     /**
      * @dataProvider provideInvalidAttributeNames
      */
     public function testSkipsInvalidAttributeNamesWhenParsingString(string $name): void
     {
-        $attributes = HtmlAttributes::fromString(sprintf('foo="bar" %s="bar" baz=42', $name));
+        $attributes = new HtmlAttributes(sprintf('foo="bar" %s="bar" baz=42', $name));
 
         $this->assertSame(['foo' => 'bar', 'baz' => '42'], iterator_to_array($attributes));
     }

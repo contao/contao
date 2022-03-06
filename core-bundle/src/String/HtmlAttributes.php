@@ -24,13 +24,11 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     private array $attributes = [];
 
     /**
-     * @param iterable<string, string|int|bool|\Stringable|null> $attributes
+     * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public function __construct(iterable $attributes = [])
+    public function __construct(iterable|string|self|null $attributes = null)
     {
-        foreach ($attributes as $name => $value) {
-            $this->set($name, $value);
-        }
+        $this->mergeWith($attributes);
     }
 
     /**
@@ -44,40 +42,39 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     }
 
     /**
-     * Parse attributes from an attribute string like 'foo="bar" baz="42'.
+     * Merges these instance's attributes with those of another
+     * instance/string/array of attributes.
+     *
+     * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public static function fromString(string $attributesString): self
+    public function mergeWith(iterable|string|self|null $attributes = null): self
     {
-        // Regular expression to match attributes according to https://html.spec.whatwg.org/#before-attribute-name-state
-        $attributeRegex = <<<'EOD'
-            (
-                [\s/]*+                                 # Optional white space including slash
-                ([^>\s/][^>\s/=]*+)                     # Attribute name
-                [\s]*+                                  # Optional white space
-                (?:=                                    # Assignment
-                    [\s]*+                              # Optional white space
-                    (?|                                 # Value
-                        "([^"]*)(?:"|$(*SKIP)(*FAIL))   # Double quoted value
-                        |'([^']*)(?:'|$(*SKIP)(*FAIL))  # Or single quoted value
-                        |([^\s>]*+)                     # Or unquoted or missing value
-                    )                                   # Value end
-                )?+                                     # Assignment is optional
-            )ix
-            EOD;
-
-        preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
-
-        $instance = new self();
-
-        foreach ($matches as [1 => $name, 2 => $value]) {
-            try {
-                $instance->set($name, html_entity_decode($value ?? '', ENT_QUOTES));
-            } catch (\InvalidArgumentException $exception) {
-                // Skip invalid attributes
+        // Merge values if possible, set them otherwise
+        $mergeSet = function (string $name, string|int|bool|\Stringable|null $value): void {
+            if ('class' === $name) {
+                $this->addClass($value);
+            } else {
+                $this->set($name, $value);
             }
+        };
+
+        if (\is_string($attributes)) {
+            foreach ($this->parseString($attributes) as $name => $value) {
+                try {
+                    $mergeSet($name, $value);
+                } catch (\InvalidArgumentException $exception) {
+                    // Skip invalid attributes
+                }
+            }
+
+            return $this;
         }
 
-        return $instance;
+        foreach ($attributes ?? [] as $name => $value) {
+            $mergeSet($name, $value);
+        }
+
+        return $this;
     }
 
     /**
@@ -206,6 +203,37 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         unset($this->attributes[$offset]);
+    }
+
+    /**
+     * Parse attributes from an attribute string like 'foo="bar" baz="42'.
+     *
+     * @return \Generator<string, string>
+     */
+    private function parseString(string $attributesString): \Generator
+    {
+        // Regular expression to match attributes according to https://html.spec.whatwg.org/#before-attribute-name-state
+        $attributeRegex = <<<'EOD'
+            (
+                [\s/]*+                                 # Optional white space including slash
+                ([^>\s/][^>\s/=]*+)                     # Attribute name
+                [\s]*+                                  # Optional white space
+                (?:=                                    # Assignment
+                    [\s]*+                              # Optional white space
+                    (?|                                 # Value
+                        "([^"]*)(?:"|$(*SKIP)(*FAIL))   # Double quoted value
+                        |'([^']*)(?:'|$(*SKIP)(*FAIL))  # Or single quoted value
+                        |([^\s>]*+)                     # Or unquoted or missing value
+                    )                                   # Value end
+                )?+                                     # Assignment is optional
+            )ix
+            EOD;
+
+        preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
+
+        foreach ($matches as [1 => $name, 2 => $value]) {
+            yield $name => html_entity_decode($value ?? '', ENT_QUOTES);
+        }
     }
 
     private function escapeValue(string $name, string $value): string
