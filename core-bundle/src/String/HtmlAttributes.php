@@ -203,7 +203,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
      */
     private function split(string $value): array
     {
-        return array_filter(preg_split('/[\s]+/', $value));
+        return array_filter(preg_split('/\s+/', $value));
     }
 
     /**
