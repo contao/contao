@@ -251,7 +251,7 @@ class HtmlAttributesTest extends TestCase
     public function testAddAndRemoveClasses(): void
     {
         // Whitespaces should get normalized by default
-        $attributes = new HtmlAttributes(['class' => ' foo  bar other1 other2  ']);
+        $attributes = new HtmlAttributes(['class' => " \ffoo  bar\tother1\nother2\r  "]);
 
         $this->assertSame('foo bar other1 other2', $attributes['class']);
 

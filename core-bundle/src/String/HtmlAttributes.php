@@ -128,9 +128,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
         $this->attributes['class'] = implode(
             ' ',
             array_unique(
-                array_filter(
-                    explode(' ', ($this->attributes['class'] ?? '').' '.implode(' ', $classes)),
-                )
+                $this->split(($this->attributes['class'] ?? '').' '.implode(' ', $classes))
             )
         );
 
@@ -141,11 +139,9 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     {
         $this->attributes['class'] = implode(
             ' ',
-            array_filter(
-                array_diff(
-                    explode(' ', $this->attributes['class'] ?? ''),
-                    explode(' ', implode(' ', $classes))
-                )
+            array_diff(
+                $this->split($this->attributes['class'] ?? ''),
+                $this->split(implode(' ', $classes))
             )
         );
 
@@ -200,6 +196,14 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         unset($this->attributes[$offset]);
+    }
+
+    /**
+     * @return array<string>
+     */
+    private function split(string $value): array
+    {
+        return array_filter(preg_split('/[ \t\n\r\f]+/', $value));
     }
 
     /**
