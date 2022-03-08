@@ -122,7 +122,7 @@ class PageError401 extends Frontend
 			}
 
 			// Add the referer so the login module can redirect back
-			$url = $objNextPage->getAbsoluteUrl() . '?redirect=' . urlencode(Environment::get('base') . Environment::get('request'));
+			$url = $objNextPage->getAbsoluteUrl() . '?redirect=' . rawurlencode(Environment::get('base') . Environment::get('request'));
 
 			/** @var UriSigner $uriSigner */
 			$uriSigner = System::getContainer()->get('uri_signer');
