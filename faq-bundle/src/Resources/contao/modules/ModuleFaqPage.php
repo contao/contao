@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\Model\Collection;
+
 /**
  * Class ModuleFaqPage
  *
@@ -69,7 +71,7 @@ class ModuleFaqPage extends Module
 	 */
 	protected function compile()
 	{
-		$objFaqs = FaqModel::findPublishedByPids($this->faq_categories);
+		$objFaqs = $this->fetchItems($this->faq_categories);
 
 		if ($objFaqs === null)
 		{
@@ -171,6 +173,35 @@ class ModuleFaqPage extends Module
 		{
 			return ModuleFaq::getSchemaOrgData($objFaqs);
 		};
+	}
+
+	/**
+	 * Fetch the matching items
+	 *
+	 * @param array $faqCategories
+	 *
+	 * @return FaqModel|FaqModel[]|Collection|null
+	 */
+	protected function fetchItems($faqCategories)
+	{
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['faqPageFetchItems']) && \is_array($GLOBALS['TL_HOOKS']['faqPageFetchItems']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['faqPageFetchItems'] as $callback)
+			{
+				if (($objCollection = System::importStatic($callback[0])->{$callback[1]}($faqCategories, $this)) === false)
+				{
+					continue;
+				}
+
+				if ($objCollection === null || $objCollection instanceof Collection)
+				{
+					return $objCollection;
+				}
+			}
+		}
+
+		return FaqModel::findPublishedByPids($faqCategories);
 	}
 }
 
