@@ -239,7 +239,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.webfonts.1">
         <source>Here you can add Google web fonts to your website. Specify the font families without the base URL (e.g. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</source>
-        <target>Hier können Sie Google-Webfonts zu Ihrer Webseite hinzfügen. Geben Sie die Schriftarten ohne die Basis-URL an (z.B. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
+        <target>Hier können Sie Google-Webfonts zu Ihrer Webseite hinzfügen. Geben Sie die Schriftarten ohne die Basis-URL an (z. B. &lt;em&gt;Ubuntu|Ubuntu+Mono&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_layout.lightboxSize.0">
         <source>Lightbox image size</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.defaultImageDensities.1">
         <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
-        <target>Hier können Sie die Standard-Pixeldichten definieren, z.B. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
+        <target>Hier können Sie die Standard-Pixeldichten definieren, z. B. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
         <source>Included modules</source>

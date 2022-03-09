@@ -2,6 +2,34 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.27] (2022-03-09)
+
+**Fixed issues:**
+
+- [#4248] Correctly encode redirect URLs between 401 pages and login forms ([leonexcc])
+- [#4241] Do not use the `.tl_confirm` CSS class in the front end ([leofeyer])
+- [#4235] Add the `|urlattr` flag in the `StringUtil::srcToInsertTag()` method ([leofeyer])
+- [#4237] Handle `0` as widget attribute value ([leofeyer])
+- [#4233] Make `config.sql` optional in the DCA ([leofeyer])
+- [#4234] Create new versions after the onsubmit_callback in the registration module ([leofeyer])
+- [#4232] Limit the number of suggestions in the front end preview ([leofeyer])
+- [#4231] Remove the `$Template` property from the PageRegular class again ([leofeyer])
+- [#4229] Use the Contao short URL service for keyboard shortcuts ([leofeyer])
+- [#4150] Improve sorting in the system log ([bennyborn])
+- [#4091] Lazy call router when replacing old backend paths ([aschempp])
+- [#4199] Deprecate the ContaoFrameworkInterface service ([aschempp])
+- [#4212] Unset key in URL when switching edit mode ([aschempp])
+- [#4135] Do not configure the default clickjacking paths in the skeleton ([fritzmg])
+- [#4218] Do not process redirected URLs outside base domains ([fritzmg])
+- [#4225] Remove the wizard if a DCA field is not editable ([aschempp])
+- [#4227] Support "submitOnChange" in the PageTree and Picker widgets ([aschempp])
+- [#4226] Deprecate the Page*::generate() methods ([aschempp])
+- [#4210] Fix warning in ModuleArticle if page object is null ([bezin])
+- [#4204] Allow underscores in tag attributes ([bytehead])
+- [#4155] Allow `<summary>` and `<details>` tags by default ([Toflar])
+- [#4083] Unlock flatten option for imagine configuration ([rabauss])
+- [#4105] Fix trailing slashes in URL for Contao 4.9 ([aschempp])
+
 ## [4.9.26] (2022-02-08)
 
 **Fixed issues:**
@@ -833,6 +861,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.27]: https://github.com/contao/contao/releases/tag/4.9.27
 [4.9.26]: https://github.com/contao/contao/releases/tag/4.9.26
 [4.9.25]: https://github.com/contao/contao/releases/tag/4.9.25
 [4.9.24]: https://github.com/contao/contao/releases/tag/4.9.24
@@ -885,6 +914,7 @@ This project adheres to [Semantic Versioning].
 [doishub]: https://github.com/doishub
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
+[leonexcc]: https://github.com/leonexcc
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
 [Mynyx]: https://github.com/Mynyx
@@ -898,6 +928,29 @@ This project adheres to [Semantic Versioning].
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
 [zonky2]: https://github.com/zonky2
+[#4248]: https://github.com/contao/contao/pull/4248
+[#4241]: https://github.com/contao/contao/pull/4241
+[#4235]: https://github.com/contao/contao/pull/4235
+[#4237]: https://github.com/contao/contao/pull/4237
+[#4233]: https://github.com/contao/contao/pull/4233
+[#4234]: https://github.com/contao/contao/pull/4234
+[#4232]: https://github.com/contao/contao/pull/4232
+[#4231]: https://github.com/contao/contao/pull/4231
+[#4229]: https://github.com/contao/contao/pull/4229
+[#4150]: https://github.com/contao/contao/pull/4150
+[#4091]: https://github.com/contao/contao/pull/4091
+[#4199]: https://github.com/contao/contao/pull/4199
+[#4212]: https://github.com/contao/contao/pull/4212
+[#4135]: https://github.com/contao/contao/pull/4135
+[#4218]: https://github.com/contao/contao/pull/4218
+[#4225]: https://github.com/contao/contao/pull/4225
+[#4227]: https://github.com/contao/contao/pull/4227
+[#4226]: https://github.com/contao/contao/pull/4226
+[#4210]: https://github.com/contao/contao/pull/4210
+[#4204]: https://github.com/contao/contao/pull/4204
+[#4155]: https://github.com/contao/contao/pull/4155
+[#4083]: https://github.com/contao/contao/pull/4083
+[#4105]: https://github.com/contao/contao/pull/4105
 [#4045]: https://github.com/contao/contao/pull/4045
 [#4075]: https://github.com/contao/contao/pull/4075
 [#4072]: https://github.com/contao/contao/pull/4072
