@@ -103,7 +103,49 @@ abstract class Events extends Module
 			return array();
 		}
 
+		$this->collectCalendars($arrCalendars, $intStart, $intEnd, $blnFeatured);
+
+		// HOOK: modify the result set
+		if (isset($GLOBALS['TL_HOOKS']['getAllEvents']) && \is_array($GLOBALS['TL_HOOKS']['getAllEvents']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['getAllEvents'] as $callback)
+			{
+				$this->import($callback[0]);
+				$this->arrEvents = $this->{$callback[0]}->{$callback[1]}($this->arrEvents, $arrCalendars, $intStart, $intEnd, $this);
+			}
+		}
+
+		return $this->arrEvents;
+	}
+
+	/**
+	 * Collect the matching calendars.
+	 *
+	 * @param array   $arrCalendars
+	 * @param integer $intStart
+	 * @param integer $intEnd
+	 * @param boolean $blnFeatured
+	 */
+	protected function collectCalendars($arrCalendars, $intStart, $intEnd, $blnFeatured)
+	{
 		$this->arrEvents = array();
+
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['collectCalendars']) && \is_array($GLOBALS['TL_HOOKS']['collectCalendars']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['collectCalendars'] as $callback)
+			{
+				if (($this->arrEvents = System::importStatic($callback[0])->{$callback[1]}($arrCalendars, $intStart, $intEnd, $blnFeatured, $this)) === false)
+				{
+					continue;
+				}
+
+				if (\is_array($this->arrEvents))
+				{
+					return;
+				}
+			}
+		}
 
 		foreach ($arrCalendars as $id)
 		{
@@ -167,18 +209,6 @@ abstract class Events extends Module
 		{
 			ksort($this->arrEvents[$key]);
 		}
-
-		// HOOK: modify the result set
-		if (isset($GLOBALS['TL_HOOKS']['getAllEvents']) && \is_array($GLOBALS['TL_HOOKS']['getAllEvents']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getAllEvents'] as $callback)
-			{
-				$this->import($callback[0]);
-				$this->arrEvents = $this->{$callback[0]}->{$callback[1]}($this->arrEvents, $arrCalendars, $intStart, $intEnd, $this);
-			}
-		}
-
-		return $this->arrEvents;
 	}
 
 	/**
