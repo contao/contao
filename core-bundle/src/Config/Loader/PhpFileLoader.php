@@ -79,7 +79,7 @@ class PhpFileLoader extends Loader
                     return NodeTraverser::REMOVE_NODE;
                 }
 
-                // Drop 'strict_types' definition
+                // Drop the "strict_types" definition
                 if ($node instanceof Declare_) {
                     foreach ($node->declares as $key => $declare) {
                         if ('strict_types' === $declare->key->name) {

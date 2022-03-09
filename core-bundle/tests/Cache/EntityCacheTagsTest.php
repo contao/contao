@@ -40,10 +40,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
     {
         $entityCacheTags = $this->getEntityCacheTags();
 
-        $this->assertSame(
-            'contao.db.tl_blog_post',
-            $entityCacheTags->getTagForEntityClass(BlogPost::class)
-        );
+        $this->assertSame('contao.db.tl_blog_post', $entityCacheTags->getTagForEntityClass(BlogPost::class));
     }
 
     public function testThrowsIfClassIsNoEntity(): void
@@ -61,10 +58,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $entityCacheTags = $this->getEntityCacheTags();
         $post = (new BlogPost())->setId(5);
 
-        $this->assertSame(
-            'contao.db.tl_blog_post.5',
-            $entityCacheTags->getTagForEntityInstance($post)
-        );
+        $this->assertSame('contao.db.tl_blog_post.5', $entityCacheTags->getTagForEntityInstance($post));
     }
 
     public function testThrowsIfInstanceIsNoEntity(): void
@@ -81,10 +75,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
     {
         $entityCacheTags = $this->getEntityCacheTags();
 
-        $this->assertSame(
-            'contao.db.tl_page',
-            $entityCacheTags->getTagForModelClass(PageModel::class)
-        );
+        $this->assertSame('contao.db.tl_page', $entityCacheTags->getTagForModelClass(PageModel::class));
     }
 
     public function testThrowsIfClassIsNoModel(): void
@@ -109,10 +100,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $page = (new \ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
         $page->id = 5;
 
-        $this->assertSame(
-            'contao.db.tl_page.5',
-            $entityCacheTags->getTagForModelInstance($page)
-        );
+        $this->assertSame('contao.db.tl_page.5', $entityCacheTags->getTagForModelInstance($page));
     }
 
     /**

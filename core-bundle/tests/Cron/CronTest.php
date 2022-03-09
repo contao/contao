@@ -97,10 +97,7 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('__call')
-            ->with(
-                $this->equalTo('findOneByName'),
-                $this->equalTo(['UpdateEntitiesCron::onHourly'])
-            )
+            ->with($this->equalTo('findOneByName'), $this->equalTo(['UpdateEntitiesCron::onHourly']))
             ->willReturn($entity)
         ;
 

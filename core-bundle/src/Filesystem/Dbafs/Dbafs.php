@@ -591,7 +591,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         if (!empty($inserts)) {
             $table = $this->connection->quoteIdentifier($this->table);
-            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // `uuid`, `pid`, …
+            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
             $placeholders = sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
 
             foreach (array_chunk($inserts, $this->bulkInsertSize) as $chunk) {
@@ -653,7 +653,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * This includes all parent directories and - in case of directories - all
      * resources that reside in it.
      *
-     * This method also builds lookup tables for hashes, 'last modified' timestamps
+     * This method also builds lookup tables for hashes, "last modified" timestamps
      * and UUIDs of the entire table.
      *
      * @param array<string> $searchPaths       non-empty list of search paths
@@ -816,7 +816,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * double slash (//) as suffix.
      *
      * If $considerShallowDirectories is set to false, paths that are directly
-     * inside shallow directories (e.g. 'foo/bar' in 'foo') do NOT yield a
+     * inside shallow directories (e.g. "foo/bar" in "foo") do NOT yield a
      * truthy result.
      *
      * @param array<string> $basePaths
@@ -893,7 +893,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $shallowDirectories = [];
         $deepDirectories = [];
 
-        // Normalize '/**' and '/*' suffixes
+        // Normalize "/**" and "/*" suffixes
         $paths = array_map(
             static function (string $path) use (&$shallowDirectories, &$deepDirectories): string {
                 if (preg_match('@^[^*]+/(\*\*?)@', $path, $matches)) {
