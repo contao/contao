@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_page.language.1">
         <source>Please enter the page language according to the ISO-639-1 standard (e.g. &quot;en&quot; for English or &quot;en-US&quot; for American English).</source>
-        <target>Bitte geben Sie die Sprache der Seite gemäß des ISO-639-1 Standards ein (z.B. &quot;de&quot; für Deutsch oder &quot;de-CH&quot; für Schweizerdeutsch).</target>
+        <target>Bitte geben Sie die Sprache der Seite gemäß des ISO-639-1 Standards ein (z. B. &quot;de&quot; für Deutsch oder &quot;de-CH&quot; für Schweizerdeutsch).</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.0">
         <source>Robots tag</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_page.autoforward.1">
         <source>Redirect visitors to another page (e.g. a login page).</source>
-        <target>Die Besucher zu einer anderen Seite (z.B. einer Login-Seite) weiterleiten.</target>
+        <target>Die Besucher zu einer anderen Seite (z. B. einer Login-Seite) weiterleiten.</target>
       </trans-unit>
       <trans-unit id="tl_page.protected.0">
         <source>Protect page</source>
