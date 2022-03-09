@@ -30,7 +30,7 @@ class PageError403 extends Frontend
 	 */
 	public function generate($objRootPage=null)
 	{
-		@trigger_error('Using PageError403::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageError403::getResponse() method instead.');
+		@trigger_error('Using PageError403::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageError403::getResponse() method instead.', E_USER_DEPRECATED);
 
 		/** @var PageModel $objPage */
 		global $objPage;
