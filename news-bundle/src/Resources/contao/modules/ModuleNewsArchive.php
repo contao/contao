@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\Model\Collection;
 
 /**
  * Front end module "news archive".
@@ -159,11 +160,13 @@ class ModuleNewsArchive extends ModuleNews
 
 		$this->Template->articles = array();
 
+		$limit = 0;
+		$offset = 0;
 		// Split the result
 		if ($this->perPage > 0)
 		{
 			// Get the total number of items
-			$intTotal = NewsModel::countPublishedFromToByPids($intBegin, $intEnd, $this->news_archives);
+			$intTotal = $this->countItems($this->news_archives, $intBegin, $intEnd);
 
 			if ($intTotal > 0)
 			{
@@ -189,41 +192,8 @@ class ModuleNewsArchive extends ModuleNews
 			}
 		}
 
-		// Determine sorting
-		$t = NewsModel::getTable();
-		$arrOptions = array();
-
-		switch ($this->news_order)
-		{
-			case 'order_headline_asc':
-				$arrOptions['order'] = "$t.headline";
-				break;
-
-			case 'order_headline_desc':
-				$arrOptions['order'] = "$t.headline DESC";
-				break;
-
-			case 'order_random':
-				$arrOptions['order'] = "RAND()";
-				break;
-
-			case 'order_date_asc':
-				$arrOptions['order'] = "$t.date";
-				break;
-
-			default:
-				$arrOptions['order'] = "$t.date DESC";
-		}
-
 		// Get the news items
-		if (isset($limit))
-		{
-			$objArticles = NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $this->news_archives, $limit, $offset, $arrOptions);
-		}
-		else
-		{
-			$objArticles = NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $this->news_archives, 0, 0, $arrOptions);
-		}
+		$objArticles = $this->fetchItems($this->news_archives, $intBegin, $intEnd, $limit, $offset);
 
 		// Add the articles
 		if ($objArticles !== null)
@@ -234,6 +204,95 @@ class ModuleNewsArchive extends ModuleNews
 		$this->Template->headline = trim($this->headline);
 		$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 		$this->Template->empty = $GLOBALS['TL_LANG']['MSC']['empty'];
+	}
+
+	/**
+	 *  Count the total matching items
+	 *
+	 * @param array $newsArchives
+	 * @param integer$intBegin
+	 * @param integer$intEnd
+	 *
+	 * @return int|null
+	 */
+	protected function countItems($newsArchives, $intBegin, $intEnd)
+	{
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['newsArchiveCountItems']) && \is_array($GLOBALS['TL_HOOKS']['newsArchiveCountItems']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['newsArchiveCountItems'] as $callback)
+			{
+				if (($intResult = System::importStatic($callback[0])->{$callback[1]}($newsArchives, $intBegin, $intEnd, $this)) === false)
+				{
+					continue;
+				}
+
+				if (\is_int($intResult))
+				{
+					return $intResult;
+				}
+			}
+		}
+
+		return NewsModel::countPublishedFromToByPids($intBegin, $intEnd, $newsArchives);
+	}
+
+	/**
+	 * Fetch the matching items
+	 *
+	 * @param array   $newsArchives
+	 * @param integer $intBegin
+	 * @param integer $intEnd
+	 * @param integer $limit
+	 * @param integer $offset
+	 *
+	 * @return Collection|NewsModel|NewsModel[]|null
+	 */
+	protected function fetchItems($newsArchives, $intBegin, $intEnd, $limit, $offset)
+	{
+		// HOOK: add custom logic
+		if (isset($GLOBALS['TL_HOOKS']['newsListFetchItems']) && \is_array($GLOBALS['TL_HOOKS']['newsListFetchItems']))
+		{
+			foreach ($GLOBALS['TL_HOOKS']['newsListFetchItems'] as $callback)
+			{
+				if (($objCollection = System::importStatic($callback[0])->{$callback[1]}($newsArchives, $intBegin, $intEnd, $limit, $offset, $this)) === false)
+				{
+					continue;
+				}
+
+				if ($objCollection === null || $objCollection instanceof Collection)
+				{
+					return $objCollection;
+				}
+			}
+		}
+
+		// Determine sorting
+		$t = NewsModel::getTable();
+
+		switch ($this->news_order)
+		{
+			case 'order_headline_asc':
+				$order = "$t.headline";
+				break;
+
+			case 'order_headline_desc':
+				$order = "$t.headline DESC";
+				break;
+
+			case 'order_random':
+				$order = "RAND()";
+				break;
+
+			case 'order_date_asc':
+				$order = "$t.date";
+				break;
+
+			default:
+				$order = "$t.date DESC";
+		}
+
+		return NewsModel::findPublishedFromToByPids($intBegin, $intEnd, $newsArchives, $limit, $offset, array('order' => $order));
 	}
 }
 
