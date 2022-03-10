@@ -30,4 +30,12 @@ class ContentElementReference extends FragmentReference
         $this->attributes['classes'] = $model->classes;
         $this->attributes['templateProperties'] = $templateProperties;
     }
+
+    public static function withModel(ContentModel $model, string $section = 'main', array $templateProperties = []): ContentElementReference
+    {
+        $reference = new self($model, $section, $templateProperties);
+        $reference->attributes['contentModel'] = $model;
+
+        return $reference;
+    }
 }

@@ -30,4 +30,12 @@ class FrontendModuleReference extends FragmentReference
         $this->attributes['classes'] = $model->classes;
         $this->attributes['templateProperties'] = $templateProperties;
     }
+
+    public static function withModel(ModuleModel $model, string $section = 'main', array $templateProperties = []): FrontendModuleReference
+    {
+        $reference = new self($model, $section, $templateProperties);
+        $reference->attributes['moduleModel'] = $model;
+
+        return $reference;
+    }
 }
