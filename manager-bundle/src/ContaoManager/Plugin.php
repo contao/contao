@@ -510,7 +510,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         // If URL is set, it overrides the driver option
-        if (null !== $url) {
+        if (!empty($url)) {
             $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
         }
 
