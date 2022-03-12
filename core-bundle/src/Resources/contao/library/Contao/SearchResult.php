@@ -68,6 +68,12 @@ class SearchResult
 	public function getResults(int $intCount = PHP_INT_MAX, int $intOffset = 0): array
 	{
 		$arrResults = \array_slice($this->arrResultsById, $intOffset, $intCount, true);
+
+		if (!$arrResults)
+		{
+			return array();
+		}
+
 		$strIds = implode(',', array_keys($arrResults));
 		$strQuery = 'SELECT * FROM tl_search WHERE ID in (' . $strIds . ')';
 		$objResult = Database::getInstance()->prepare($strQuery)->execute();
