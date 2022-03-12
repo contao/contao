@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Database\Result;
-use Patchwork\Utf8;
 
 /**
  * Creates and queries the search index
@@ -225,7 +224,7 @@ class Search
 		unset($arrSet);
 
 		// Split words
-		$arrWords = self::splitIntoWords(Utf8::strtolower($strText), $arrData['language']);
+		$arrWords = self::splitIntoWords($strText, $arrData['language']);
 		$arrIndex = array();
 
 		// Index words
@@ -271,13 +270,17 @@ class Search
 		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
 		$iterator->setText($strText);
 
+		// As the search index is shared across all languages, we can not use
+		// locale specific rules here (like de-ASCII or tr-Lower).
+		$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
+
 		$words = array();
 
 		foreach ($iterator->getPartsIterator() as $part)
 		{
 			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
 			{
-				$words[] = $part;
+				$words[] = $transliterator === null ? $part : $transliterator->transliterate($part);
 			}
 		}
 
@@ -303,7 +306,6 @@ class Search
 	{
 		// Clean the keywords
 		$strKeywords = StringUtil::decodeEntities($strKeywords);
-		$strKeywords = Utf8::strtolower($strKeywords);
 
 		// Check keyword string
 		if (!\strlen($strKeywords))
@@ -313,7 +315,7 @@ class Search
 
 		// Split keywords
 		$arrChunks = array();
-		preg_match_all('/"[^"]+"|[+-]?[^ ]+\*?/', $strKeywords, $arrChunks);
+		preg_match_all('/"[^"]+"|\S+/', $strKeywords, $arrChunks);
 
 		$arrPhrases = array();
 		$arrKeywords = array();
@@ -323,9 +325,32 @@ class Search
 
 		foreach (array_unique($arrChunks[0]) as $strKeyword)
 		{
-			if (substr($strKeyword, -1) == '*' && \strlen($strKeyword) > 1)
+			if (($strKeyword[0] === '*' || substr($strKeyword, -1) === '*') && \strlen($strKeyword) > 1)
 			{
-				$arrWildcards[] = str_replace('*', '%', $strKeyword);
+				$arrWildcardWords = self::splitIntoWords(trim($strKeyword, '*'), $GLOBALS['TL_LANGUAGE']);
+
+				foreach ($arrWildcardWords as $intIndex => $strWord)
+				{
+					if ($intIndex === 0 && $strKeyword[0] === '*')
+					{
+						$strWord = '%' . $strWord;
+					}
+
+					if ($intIndex === \count($arrWildcardWords) - 1 && substr($strKeyword, -1) === '*')
+					{
+						$strWord .= '%';
+					}
+
+					if ($strWord[0] === '%' || substr($strWord, -1) === '%')
+					{
+						$arrWildcards[] = $strWord;
+					}
+					else
+					{
+						$arrKeywords[] = $strWord;
+					}
+				}
+
 				continue;
 			}
 
@@ -358,14 +383,6 @@ class Search
 						{
 							$arrExcluded[] = $strWord;
 						}
-					}
-					break;
-
-				// Wildcards
-				case '*':
-					if (\strlen($strKeyword) > 1)
-					{
-						$arrWildcards[] = str_replace('*', '%', $strKeyword);
 					}
 					break;
 

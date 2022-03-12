@@ -50,4 +50,23 @@ class SearchTest extends TestCase
         yield ['foo/bar-longer-url-but-less-slashes.html', 'foo/bar/baz.html'];
         yield ['foo.html?query/with/many/slashes/', 'foo/bar.html?query-without-slashes'];
     }
+
+    /**
+     * @dataProvider splitIntoWordsProvider
+     */
+    public function testSplitIntoWords(string $source, array $expectedWords): void
+    {
+        $search = new \ReflectionClass(Search::class);
+        $method = $search->getMethod('splitIntoWords');
+        $method->setAccessible(true);
+
+        $this->assertSame($expectedWords, $method->invokeArgs(null, [$source, '']));
+    }
+
+    public function splitIntoWordsProvider(): \Generator
+    {
+        yield ['Lorem-Ipsum dolor,sit`amet/consectetur.', ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur']];
+        yield ['FÖO Bär bäß', ['foo', 'bar', 'bass']];
+        yield ['Contrôl Fée bïr çæ BŒ', ['control', 'fee', 'bir', 'cae', 'boe']];
+    }
 }
