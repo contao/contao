@@ -272,7 +272,14 @@ class Search
 
 		// As the search index is shared across all languages, we can not use
 		// locale specific rules here (like de-ASCII or tr-Lower).
-		$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
+		if (\in_array('Latin-ASCII', \Transliterator::listIDs(), true))
+		{
+			$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
+		}
+		else
+		{
+			$transliterator = \Transliterator::create('Lower');
+		}
 
 		$words = array();
 
@@ -280,11 +287,59 @@ class Search
 		{
 			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
 			{
-				$words[] = $transliterator === null ? $part : $transliterator->transliterate($part);
+				$words[] = $transliterator->transliterate($part);
 			}
 		}
 
 		return $words;
+	}
+
+	/**
+	 * Get different variants of the matched words that are present in the text,
+	 * e.g. with accents or diaeresis.
+	 *
+	 * @return string[]
+	 */
+	public static function getMatchVariants(array $arrMatches, string $strText, string $strLocale): array
+	{
+		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
+		$iterator->setText($strText);
+
+		// As the search index is shared across all languages, we can not use
+		// locale specific rules here (like de-ASCII or tr-Lower).
+		if (\in_array('Latin-ASCII', \Transliterator::listIDs(), true))
+		{
+			$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
+		}
+		else
+		{
+			$transliterator = \Transliterator::create('Lower');
+		}
+
+		$arrMatches = array_map(
+			static function ($match) use ($transliterator)
+			{
+				return $transliterator->transliterate($match);
+			},
+			$arrMatches
+		);
+
+		$variants = array();
+
+		foreach ($iterator->getPartsIterator() as $part)
+		{
+			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
+			{
+				if (
+					\in_array($transliterator->transliterate($part), $arrMatches, true)
+					&& !\in_array($part, $variants, true)
+				) {
+					$variants[] = $part;
+				}
+			}
+		}
+
+		return $variants;
 	}
 
 	/**
