@@ -95,7 +95,7 @@ class SearchResult
 		foreach ($arrResults as $k=>$v)
 		{
 			$arrHighlight = array();
-			$arrWords = Search::splitIntoWords(mb_strtolower($v['text']), $v['language']);
+			$arrWords = Search::splitIntoWords($v['text'], $v['language']);
 
 			foreach ($this->arrKeywords as $strKeyword)
 			{
@@ -113,6 +113,8 @@ class SearchResult
 					array_push($arrHighlight, ...$matches);
 				}
 			}
+
+			$arrHighlight = Search::getMatchVariants($arrHighlight, $v['text'], $v['language']);
 
 			// Highlight phrases if all their words have matched
 			foreach ($this->arrPhrases as $strPhrase)

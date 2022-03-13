@@ -69,4 +69,31 @@ class SearchTest extends TestCase
         yield ['FÖO Bär bäß', ['foo', 'bar', 'bass']];
         yield ['Contrôl Fée bïr çæ BŒ', ['control', 'fee', 'bir', 'cae', 'boe']];
     }
+
+    /**
+     * @dataProvider getMatchVariantsProvider
+     */
+    public function testGetMatchVariants(string $text, array $matches, array $expectedWords): void
+    {
+        $this->assertSame($expectedWords, Search::getMatchVariants($matches, $text, 'en'));
+    }
+
+    public function getMatchVariantsProvider(): \Generator
+    {
+        yield [
+            'FÖO Bär bäß',
+            ['foo', 'bar', 'bass'],
+            ['FÖO', 'Bär', 'bäß'],
+        ];
+        yield [
+            'Contrôl Fée bïr çæ BŒ',
+            ['control', 'fee', 'bir', 'cae', 'boe'],
+            ['Contrôl', 'Fée', 'bïr', 'çæ', 'BŒ'],
+        ];
+        yield [
+            'foo Foo fOO FOO föö',
+            ['foo', 'doesNotExist'],
+            ['foo', 'Foo', 'fOO', 'FOO', 'föö'],
+        ];
+    }
 }
