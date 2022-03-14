@@ -1286,7 +1286,7 @@ class InsertTags extends Controller
 	private function parseUrlWithQueryString(string $url): array
 	{
 		// Restore [&] and &amp;
-		$url = str_replace(array('[&]', '&amp;'), '&', $url);
+		$url = str_replace(array('&#61;', '[&]', '&amp;'), array('=', '&', '&'), $url);
 
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';
