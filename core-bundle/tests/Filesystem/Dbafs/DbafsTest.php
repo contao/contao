@@ -31,11 +31,34 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
 class DbafsTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
+    private int $codePageBackup = 0;
+
+    protected function setUp(): void
+    {
+        if (\function_exists('sapi_windows_cp_get')) {
+            $this->codePageBackup = sapi_windows_cp_get();
+        }
+
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        if (\function_exists('sapi_windows_cp_set')) {
+            sapi_windows_cp_set($this->codePageBackup);
+        }
+    }
+
     public function testResolvePaths(): void
     {
         $uuid1 = $this->generateUuid(1);
@@ -1192,6 +1215,38 @@ class DbafsTest extends TestCase
         $dbafs->useLastModified(true);
 
         $this->assertSame(DbafsInterface::FEATURE_LAST_MODIFIED, $dbafs->getSupportedFeatures());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSkipsNonUtf8FilesAndDirectories(): void
+    {
+        // Set a compatible codepage under Windows, so that dirname() calls
+        // used in the InMemoryFilesystemAdapter implementation do not alter
+        // our non-UTF-8 test paths.
+        if (\function_exists('sapi_windows_cp_set')) {
+            sapi_windows_cp_set(1252);
+        }
+
+        $filesystem = new VirtualFilesystem(
+            new MountManager(new InMemoryFilesystemAdapter()),
+            $this->createMock(DbafsManager::class)
+        );
+
+        $filesystem->createDirectory("b\xE4r");
+        $filesystem->write("b\xE4r/file.txt", '');
+        $filesystem->write("foob\xE4r.txt", '');
+        $filesystem->write('valid.txt', '');
+
+        $dbafs = $this->getDbafs(null, $filesystem);
+
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Filesystem resources with non-UTF-8 paths will no longer be skipped but throw an exception in Contao 5.0.');
+
+        $changeSet = $dbafs->computeChangeSet();
+
+        $this->assertCount(1, $changeSet->getItemsToCreate());
+        $this->assertSame('valid.txt', $changeSet->getItemsToCreate()[0][ChangeSet::ATTR_PATH]);
     }
 
     private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null, EventDispatcherInterface $eventDispatcher = null): Dbafs

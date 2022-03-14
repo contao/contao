@@ -51,7 +51,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     private string $table;
     private string $dbPathPrefix = '';
-    private int $maxFileSize = 2147483648; // 2 GiB
+    private int $maxFileSize = 2147483647; // 2 GiB - 1 byte (see #4208)
     private int $bulkInsertSize = 100;
     private bool $useLastModified = true;
 
@@ -721,6 +721,14 @@ class Dbafs implements DbafsInterface, ResetInterface
             /** @var FilesystemItem $item */
             foreach ($this->filesystem->listContents($directory, false, VirtualFilesystemInterface::BYPASS_DBAFS) as $item) {
                 $path = $item->getPath();
+
+                // Ignore paths with non-UTF-8 characters
+                // TODO: Move check to VirtualFilesystem#listContents() and throw a VirtualFilesystemException instead in Contao 5.
+                if (1 !== preg_match('//u', $path)) {
+                    trigger_deprecation('contao/core-bundle', '4.13', 'Filesystem resources with non-UTF-8 paths will no longer be skipped but throw an exception in Contao 5.0.');
+
+                    continue;
+                }
 
                 if (!$item->isFile()) {
                     if (!$shallow) {
