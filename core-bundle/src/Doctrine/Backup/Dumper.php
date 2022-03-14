@@ -95,6 +95,7 @@ class Dumper implements DumperInterface
     private function dumpData(Connection $connection, Table $table): \Generator
     {
         yield sprintf('-- BEGIN DATA %s', $table->getName());
+
         $values = [];
         $columnBindingTypes = [];
         $columnUtf8Charsets = [];
@@ -116,6 +117,7 @@ class Dumper implements DumperInterface
 
             foreach ($row as $columnName => $value) {
                 $insertColumns[] = "`$columnName`";
+
                 $insertValues[] = $this->formatValueForDump(
                     $value,
                     $columnBindingTypes[$columnName],
@@ -141,19 +143,13 @@ class Dumper implements DumperInterface
             return "''";
         }
 
-        // In MySQL, booleans are stored as tinyint so we don't need to quote that either
+        // In MySQL, booleans are stored as tinyint, so we don't need to quote that either
         if (ParameterType::INTEGER === $columnBindingType || ParameterType::BOOLEAN === $columnBindingType) {
             return $value;
         }
 
-        // non-ASCII values
-        if (
-            preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\xFF]/', $value)
-            && (
-                !$isUtf8Charset
-                || !preg_match('//u', $value)
-            )
-        ) {
+        // Non-ASCII values
+        if (preg_match('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\xFF]/', $value) && (!$isUtf8Charset || !preg_match('//u', $value))) {
             return '0x'.bin2hex($value);
         }
 

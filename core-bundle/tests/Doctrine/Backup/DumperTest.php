@@ -84,11 +84,13 @@ class DumperTest extends ContaoTestCase
         ];
 
         yield 'Table with data' => [
-            [new Table('tl_page', [
-                new Column('stringCol', Type::getType(Types::STRING)),
-                new Column('integerCol', Type::getType(Types::INTEGER)),
-                new Column('booleanCol', Type::getType(Types::BOOLEAN)),
-            ])],
+            [
+                new Table('tl_page', [
+                    new Column('stringCol', Type::getType(Types::STRING)),
+                    new Column('integerCol', Type::getType(Types::INTEGER)),
+                    new Column('booleanCol', Type::getType(Types::BOOLEAN)),
+                ]),
+            ],
             [],
             [
                 'SELECT `stringCol` AS `stringCol`, `integerCol` AS `integerCol`, `booleanCol` AS `booleanCol` FROM `tl_page`' => [
