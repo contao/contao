@@ -194,16 +194,10 @@ class PreviewFactoryTest extends TestCase
             ],
         ]);
 
-        $this->assertSame(
-            $expectedSize,
-            $factory->getPreviewSizeFromImageSize($size),
-        );
+        $this->assertSame($expectedSize, $factory->getPreviewSizeFromImageSize($size));
 
         if (\is_array($size)) {
-            $this->assertSame(
-                $expectedSize,
-                $factory->getPreviewSizeFromImageSize($size),
-            );
+            $this->assertSame($expectedSize, $factory->getPreviewSizeFromImageSize($size));
         }
     }
 
@@ -228,23 +222,14 @@ class PreviewFactoryTest extends TestCase
         yield [[0, 0, 456], 789];
         yield [[500, 500, 456], 789];
 
-        yield [
-            (new ResizeConfiguration())
-                ->setWidth(123)
-                ->setHeight(456),
-            456,
-        ];
+        yield [(new ResizeConfiguration())->setWidth(123)->setHeight(456), 456];
 
         yield [
             (new PictureConfiguration())
                 ->setSize(
                     (new PictureConfigurationItem())
                         ->setDensities('1.5x')
-                        ->setResizeConfig(
-                            (new ResizeConfiguration())
-                                ->setWidth(123)
-                                ->setHeight(456)
-                        )
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(456))
                 ),
             684,
         ];
@@ -254,27 +239,15 @@ class PreviewFactoryTest extends TestCase
                 ->setSize(
                     (new PictureConfigurationItem())
                         ->setDensities('1.5x')
-                        ->setResizeConfig(
-                            (new ResizeConfiguration())
-                                ->setWidth(123)
-                                ->setHeight(123)
-                        )
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(123))
                 )
                 ->setSizeItems([
                     (new PictureConfigurationItem())
                         ->setDensities('543w, 1.2x')
-                        ->setResizeConfig(
-                            (new ResizeConfiguration())
-                                ->setWidth(100)
-                                ->setHeight(150)
-                        ),
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(100)->setHeight(150)),
                     (new PictureConfigurationItem())
                         ->setDensities('432w, 1.2x')
-                        ->setResizeConfig(
-                            (new ResizeConfiguration())
-                                ->setWidth(100)
-                                ->setHeight(150)
-                        ),
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(100)->setHeight(150)),
                 ]),
             543,
         ];

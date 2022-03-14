@@ -51,11 +51,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
         $config
             ->expects($this->exactly(3))
             ->method('get')
-            ->withConsecutive(
-                ['undoPeriod'],
-                ['logPeriod'],
-                ['versionPeriod']
-            )
+            ->withConsecutive(['undoPeriod'], ['logPeriod'], ['versionPeriod'])
             ->willReturn($undoPeriod, $logPeriod, $versionPeriod)
         ;
 

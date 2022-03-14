@@ -1119,7 +1119,12 @@ services:
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.csrf.token_manager" instead.
 
-    Contao\CoreBundle\Framework\ContaoFrameworkInterface: '@contao.framework'
+    Contao\CoreBundle\Framework\ContaoFrameworkInterface:
+        alias: contao.framework
+        deprecated:
+            package: contao/core-bundle
+            version: 4.9
+            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.framework" instead.
 
     Contao\CoreBundle\Image\Studio\FigureRenderer:
         alias: contao.image.studio.figure_renderer
