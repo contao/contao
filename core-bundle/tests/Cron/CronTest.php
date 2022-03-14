@@ -154,7 +154,14 @@ class CronTest extends TestCase
 
     public function testDoesNotInstantiateDependenciesInConstructor(): void
     {
-        $cron = new Cron(static function (): void { throw new \LogicException(); }, static function (): void { throw new \LogicException(); });
+        $cron = new Cron(
+            static function (): void {
+                throw new \LogicException();
+            },
+            static function (): void {
+                throw new \LogicException();
+            }
+        );
 
         $this->expectException(\LogicException::class);
 
