@@ -33,7 +33,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
 
         if ($undoPeriod > 0) {
             $expectedStatements[] = [
-                'DELETE FROM tl_undo WHERE tstamp<:tstamp',
+                'DELETE FROM tl_undo WHERE tstamp < :tstamp',
                 ['tstamp' => $mockedTime - $undoPeriod],
                 ['tstamp' => Types::INTEGER],
             ];
@@ -41,7 +41,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
 
         if ($logPeriod > 0) {
             $expectedStatements[] = [
-                'DELETE FROM tl_log WHERE tstamp<:tstamp',
+                'DELETE FROM tl_log WHERE tstamp < :tstamp',
                 ['tstamp' => $mockedTime - $logPeriod],
                 ['tstamp' => Types::INTEGER],
             ];
@@ -49,7 +49,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
 
         if ($versionPeriod > 0) {
             $expectedStatements[] = [
-                'DELETE FROM tl_version WHERE tstamp<:tstamp',
+                'DELETE FROM tl_version WHERE tstamp < :tstamp',
                 ['tstamp' => $mockedTime - $versionPeriod],
                 ['tstamp' => Types::INTEGER],
             ];

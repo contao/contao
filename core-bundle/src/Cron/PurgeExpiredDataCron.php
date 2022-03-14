@@ -50,7 +50,7 @@ class PurgeExpiredDataCron
         }
 
         $this->connection->executeStatement(
-            sprintf('DELETE FROM %s WHERE tstamp<:tstamp', $table),
+            "DELETE FROM $table WHERE tstamp < :tstamp",
             ['tstamp' => time() - $period],
             ['tstamp' => Types::INTEGER],
         );
