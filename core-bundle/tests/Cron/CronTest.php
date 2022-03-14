@@ -34,7 +34,7 @@ class CronTest extends TestCase
             ->method('onHourly')
         ;
 
-        $cron = new Cron($repository, $this->createMock(EntityManagerInterface::class));
+        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class));
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
@@ -69,7 +69,7 @@ class CronTest extends TestCase
             )
         ;
 
-        $cron = new Cron($repository, $this->createMock(EntityManagerInterface::class), $logger);
+        $cron = new Cron(static fn () => $repository, fn () => $this->createMock(EntityManagerInterface::class), $logger);
         $cron->addCronJob(new CronJob($cronjob, '* * * * *', 'onMinutely'));
         $cron->addCronJob(new CronJob($cronjob, '0 * * * *', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
@@ -118,7 +118,7 @@ class CronTest extends TestCase
             ->method('flush')
         ;
 
-        $cron = new Cron($repository, $manager);
+        $cron = new Cron(static fn () => $repository, static fn () => $manager);
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
@@ -132,14 +132,14 @@ class CronTest extends TestCase
             ->with(Cron::SCOPE_CLI)
         ;
 
-        $cron = new Cron($this->createMock(CronJobRepository::class), $this->createMock(EntityManagerInterface::class));
+        $cron = new Cron(fn () => $this->createMock(CronJobRepository::class), fn () => $this->createMock(EntityManagerInterface::class));
         $cron->addCronJob(new CronJob($cronjob, '@hourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
 
     public function testInvalidArgumentExceptionForScope(): void
     {
-        $cron = new Cron($this->createMock(CronJobRepository::class), $this->createMock(EntityManagerInterface::class));
+        $cron = new Cron(fn () => $this->createMock(CronJobRepository::class), fn () => $this->createMock(EntityManagerInterface::class));
 
         try {
             $cron->run(Cron::SCOPE_CLI);
@@ -150,5 +150,21 @@ class CronTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
         $cron->run('invalid_scope');
+    }
+
+    public function testDoesNotInstantiateDependenciesInConstructor(): void
+    {
+        $cron = new Cron(
+            static function (): void {
+                throw new \LogicException();
+            },
+            static function (): void {
+                throw new \LogicException();
+            }
+        );
+
+        $this->expectException(\LogicException::class);
+
+        $cron->run(Cron::SCOPE_CLI);
     }
 }
