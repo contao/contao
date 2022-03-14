@@ -16,11 +16,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Search;
 
 /**
- * Tests the Search class.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- *
- * @group contao3
+ * @group legacy
  */
 class SearchTest extends TestCase
 {

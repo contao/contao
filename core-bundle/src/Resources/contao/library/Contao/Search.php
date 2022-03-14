@@ -423,26 +423,14 @@ class Search
 			$transliterator = \Transliterator::create('Lower');
 		}
 
-		$arrMatches = array_map(
-			static function ($match) use ($transliterator)
-			{
-				return $transliterator->transliterate($match);
-			},
-			$arrMatches
-		);
-
+		$arrMatches = array_map(static fn ($match) => $transliterator->transliterate($match), $arrMatches);
 		$variants = array();
 
 		foreach ($iterator->getPartsIterator() as $part)
 		{
-			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
+			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE && !\in_array($part, $variants, true) && \in_array($transliterator->transliterate($part), $arrMatches, true))
 			{
-				if (
-					\in_array($transliterator->transliterate($part), $arrMatches, true)
-					&& !\in_array($part, $variants, true)
-				) {
-					$variants[] = $part;
-				}
+				$variants[] = $part;
 			}
 		}
 
