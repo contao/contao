@@ -48,10 +48,7 @@ class SitemapControllerTest extends TestCase
         $pageModelAdapter
             ->expects($this->exactly(2))
             ->method('findPublishedRootPages')
-            ->withConsecutive(
-                [['dns' => 'www.foobar.com']],
-                [['dns' => '']]
-            )
+            ->withConsecutive([['dns' => 'www.foobar.com']], [['dns' => '']])
             ->willReturn(null)
         ;
 
@@ -649,10 +646,7 @@ class SitemapControllerTest extends TestCase
         $hook2
             ->expects($this->exactly(2))
             ->method('barFunction')
-            ->withConsecutive(
-                [['page1.html'], 42, true, 'en'],
-                [['page2.html'], 21, true, 'de']
-            )
+            ->withConsecutive([['page1.html'], 42, true, 'en'], [['page2.html'], 21, true, 'de'])
             ->willReturnArgument(0)
         ;
 

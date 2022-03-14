@@ -158,33 +158,33 @@ class BackendPreviewSwitchController
         }
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
-            $groups = array_map(
-                static fn ($groupId): string => '%"'.(int) $groupId.'"%',
-                $user->amg
-            );
-
+            $groups = array_map(static fn ($groupId): string => '%"'.(int) $groupId.'"%', $user->amg);
             $andWhereGroups = "AND (`groups` LIKE '".implode("' OR `groups` LIKE '", $groups)."')";
         }
 
         $time = Date::floorToMinute();
 
         // Get the active front end users
-        return $this->connection->fetchFirstColumn(
-            "
-                SELECT
-                    username
-                FROM
-                    tl_member
-                WHERE
-                    username LIKE ? $andWhereGroups
-                    AND login='1'
-                    AND disable!='1'
-                    AND (start='' OR start<='$time')
-                    AND (stop='' OR stop>'$time')
-                ORDER BY
-                    username
-            ",
-            [str_replace('%', '', $request->request->get('value')).'%']
-        );
+        $query = "
+            SELECT
+                username
+            FROM
+                tl_member
+            WHERE
+                username LIKE ? $andWhereGroups
+                AND login='1'
+                AND disable!='1'
+                AND (start='' OR start<='$time')
+                AND (stop='' OR stop>'$time')
+            ORDER BY
+                username
+        ";
+
+        $query = $this->connection->getDatabasePlatform()->modifyLimitQuery($query, 20);
+
+        return $this->connection
+            ->executeQuery($query, [str_replace('%', '', $request->request->get('value')).'%'])
+            ->fetchFirstColumn()
+        ;
     }
 }

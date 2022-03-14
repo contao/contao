@@ -66,7 +66,7 @@ class ImageResultTest extends TestCase
             ->method('create')
             ->willReturnCallback(
                 function () use ($supportsResizeOptions, $resizeOptions) {
-                    // Expect factories with a compatible 'create' method signature
+                    // Expect factories with a compatible "create" method signature
                     // to be called with $resizeOptions as 3rd argument.
                     if ($supportsResizeOptions) {
                         $this->assertSame($resizeOptions, func_get_arg(2));

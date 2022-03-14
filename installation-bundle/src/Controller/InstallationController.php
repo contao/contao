@@ -511,14 +511,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $installTool->persistConfig('adminEmail', $email);
-
-        $installTool->persistAdminUser(
-            $username,
-            $name,
-            $email,
-            $password,
-            $request->getLocale()
-        );
+        $installTool->persistAdminUser($username, $name, $email, $password, $request->getLocale());
 
         return $this->getRedirectResponse();
     }

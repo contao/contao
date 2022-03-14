@@ -56,7 +56,7 @@ final class ContaoExtension extends AbstractExtension
         $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
         $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
 
-        // Use our escaper on all templates in the `@Contao` and `@Contao_*` namespaces
+        // Use our escaper on all templates in the "@Contao" and "@Contao_*" namespaces
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
     }
 
@@ -64,7 +64,7 @@ final class ContaoExtension extends AbstractExtension
      * Adds a Contao escaper rule.
      *
      * If a template name matches any of the defined rules, it will be processed
-     * with the 'contao_html' escaper strategy. Make sure your rule will only
+     * with the "contao_html" escaper strategy. Make sure your rule will only
      * match templates with input encoded contexts!
      */
     public function addContaoEscaperRule(string $regularExpression): void
@@ -79,7 +79,7 @@ final class ContaoExtension extends AbstractExtension
     public function getNodeVisitors(): array
     {
         return [
-            // Enables the 'contao_twig' escaper for Contao templates with
+            // Enables the "contao_twig" escaper for Contao templates with
             // input encoding
             new ContaoEscaperNodeVisitor(
                 fn () => $this->contaoEscaperFilterRules
@@ -93,7 +93,7 @@ final class ContaoExtension extends AbstractExtension
     public function getTokenParsers(): array
     {
         return [
-            // Overwrite the parsers for the 'extends' and 'include' tags to
+            // Overwrite the parsers for the "extends" and "include" tags to
             // additionally support the Contao template hierarchy
             new DynamicExtendsTokenParser($this->hierarchy),
             new DynamicIncludeTokenParser($this->hierarchy),
@@ -105,7 +105,7 @@ final class ContaoExtension extends AbstractExtension
         $includeFunctionCallable = $this->getTwigIncludeFunction()->getCallable();
 
         return [
-            // Overwrite the 'include' function to additionally support the
+            // Overwrite the "include" function to additionally support the
             // Contao template hierarchy
             new TwigFunction(
                 'include',
@@ -170,7 +170,7 @@ final class ContaoExtension extends AbstractExtension
         };
 
         return [
-            // Overwrite the 'escape'/'e' filter to additionally support chunked text
+            // Overwrite the "escape" filter to additionally support chunked text
             new TwigFilter(
                 'escape',
                 $escaperFilter,
