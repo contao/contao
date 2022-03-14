@@ -322,6 +322,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $connection = ConnectionFactory::create($parameters);
+
         $installTool = $this->container->get('contao_installation.install_tool');
         $installTool->setConnection($connection);
 

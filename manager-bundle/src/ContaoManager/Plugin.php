@@ -573,10 +573,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $dbName .= '/'.$this->encodeUrlParameter($name);
         }
 
-        if (
-            $container->hasParameter('database_version')
-            && $version = $container->getParameter('database_version')
-        ) {
+        if ($container->hasParameter('database_version') && $version = $container->getParameter('database_version')) {
             $dbName .= '?serverVersion='.$this->encodeUrlParameter($version);
         }
 
