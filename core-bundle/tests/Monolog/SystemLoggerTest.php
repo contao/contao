@@ -33,10 +33,7 @@ class SystemLoggerTest extends TestCase
         $logger
             ->expects($this->once())
             ->method($method)
-            ->with(
-                $message,
-                $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action))
-            )
+            ->with($message, $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action)))
         ;
 
         (new SystemLogger($logger, $action))->{$method}($message);

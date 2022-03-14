@@ -24,7 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BackupRestoreCommand extends AbstractBackupCommand
 {
     protected static $defaultName = 'contao:backup:restore';
-    protected static $defaultDescription = 'Restores a backup.';
+    protected static $defaultDescription = 'Restores a database backup.';
 
     protected function configure(): void
     {

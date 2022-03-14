@@ -449,10 +449,7 @@ class LocalesTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
 
-        $this->assertSame(
-            ['de', 'de_AT', 'de_Cyrl', 'en_AT'],
-            $this->getLocalesService()->getLocaleIds()
-        );
+        $this->assertSame(['de', 'de_AT', 'de_Cyrl', 'en_AT'], $this->getLocalesService()->getLocaleIds());
     }
 
     /**
@@ -464,10 +461,7 @@ class LocalesTest extends TestCase
 
         $GLOBALS['TL_HOOKS']['getLanguages'] = [[self::class, 'getLanguagesHook']];
 
-        $this->assertSame(
-            ['de', 'de_Cyrl', 'en'],
-            $this->getLocalesService()->getLanguageLocaleIds()
-        );
+        $this->assertSame(['de', 'de_Cyrl', 'en'], $this->getLocalesService()->getLanguageLocaleIds());
     }
 
     public function getLanguagesHook(array &$return, array $languages, array $langsNative, bool $blnInstalledOnly): void

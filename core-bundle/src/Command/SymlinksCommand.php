@@ -250,10 +250,7 @@ class SymlinksCommand extends Command
                 unset($files[$key]);
 
                 $this->rows[] = [
-                    sprintf(
-                        '<fg=yellow;options=bold>%s</>',
-                        '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'
-                    ),
+                    sprintf('<fg=yellow;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'),
                     Path::join($this->webDir, $prepend, $path),
                     sprintf('<comment>Skipped because %s will be symlinked.</comment>', Path::join($prepend, $otherPath)),
                 ];

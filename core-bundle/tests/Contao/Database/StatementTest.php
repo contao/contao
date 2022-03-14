@@ -16,6 +16,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database\Statement;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Mysqli\Exception\ConnectionError;
+use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Result;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -295,5 +297,37 @@ class StatementTest extends TestCase
             'SELECT id FROM tl_content',
             [null],
         ];
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testTriggersDeprecationForNonQueries(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('executeQuery')
+            ->with('LOCK TABLES tl_foo WRITE')
+            ->willThrowException(
+                new DriverException(
+                    ConnectionError::upcast(
+                        new \mysqli_sql_exception('This command is not supported in the prepared statement protocol yet', 1295)
+                    ),
+                    null,
+                )
+            )
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('executeStatement')
+        ;
+
+        $statement = new Statement($connection);
+
+        $this->expectDeprecation('%sfor statements (instead of queries) has been deprecated%s');
+
+        $this->assertSame($statement, $statement->query('LOCK TABLES tl_foo WRITE'));
     }
 }

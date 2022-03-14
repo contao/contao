@@ -413,7 +413,6 @@ h2.sub_headline {
 	color:#d68c23;
 }
 .widget .tl_error,.widget .tl_confirm,.widget .tl_info,.widget .tl_new {
-	margin:1px 0;
 	padding:8px 10px 8px 30px;
 	background-position:9px 9px;
 }
