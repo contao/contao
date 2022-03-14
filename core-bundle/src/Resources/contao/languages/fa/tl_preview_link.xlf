@@ -3,6 +3,7 @@
     <body>
       <trans-unit id="tl_preview_link.url.0">
         <source>Target URL</source>
+        <target>URL مقصد</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.url.1">
         <source>The front end URL to be shared.</source>
@@ -33,6 +34,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.0">
         <source>Valid until</source>
+        <target>معتبر تا</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.1">
         <source>Preview of the final date until which the link is available.</source>
@@ -52,6 +54,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.url_legend">
         <source>Target URL</source>
+        <target>URL مقصد</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.config_legend">
         <source>Configuration</source>
@@ -63,6 +66,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.expire_options.1">
         <source>1 day</source>
+        <target>1 روز</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expire_options.7">
         <source>7 days</source>
@@ -71,6 +75,18 @@
       <trans-unit id="tl_preview_link.expire_options.30">
         <source>30 days</source>
         <target>۳۰ روز</target>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintNew">
+        <source>To add a preview link, use the &quot;Share URL&quot; button in the front end preview toolbar.</source>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintSave">
+        <source>Please save this record to generate the preview link.</source>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintEdit">
+        <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.hintExpired">
+        <source>This preview link has expired and can no longer be shared.</source>
       </trans-unit>
     </body>
   </file>

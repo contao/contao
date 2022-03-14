@@ -99,11 +99,7 @@ class RecordPreviewListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('update')
-            ->with(
-                'tl_undo',
-                ['preview' => '<record-preview>'],
-                ['id' => '42']
-            )
+            ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
         ;
 
         $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
@@ -122,7 +118,7 @@ class RecordPreviewListenerTest extends TestCase
         $listener->storePrecompiledRecordPreview($dataContainer, '42');
     }
 
-    public function testPrecompilesRecordPreviewWithLabelFunctionAndShowColumns(): void
+    public function testPrecompilesRecordPreviewWithTabularData(): void
     {
         $GLOBALS['TL_DCA']['tl_user']['list']['sorting']['mode'] = DataContainer::MODE_SORTED;
         $GLOBALS['TL_DCA']['tl_user']['list']['label']['showColumns'] = true;
@@ -158,14 +154,65 @@ class RecordPreviewListenerTest extends TestCase
             ->willReturn($result)
         ;
 
+        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+            'id' => '42',
+            'table' => 'tl_user',
+        ]);
+
+        $args = ['42', 'foo', 'foo@example.org'];
+
+        $dataContainer
+            ->expects($this->once())
+            ->method('generateRecordLabel')
+            ->with($row, 'tl_user')
+            ->willReturn($args)
+        ;
+
         $connection
             ->expects($this->once())
             ->method('update')
-            ->with(
-                'tl_undo',
-                ['preview' => serialize(['42', 'foo', 'foo@example.org'])],
-                ['id' => '42']
-            )
+            ->with('tl_undo', ['preview' => serialize($args)], ['id' => '42'])
+        ;
+
+        $listener = new RecordPreviewListener($framework, $connection);
+        $listener->storePrecompiledRecordPreview($dataContainer, '42');
+
+        unset($GLOBALS['TL_DCA']['tl_user']);
+    }
+
+    public function testPrecompilesRecordPreviewWithArrayArguments(): void
+    {
+        $GLOBALS['TL_DCA']['tl_user']['list']['sorting']['mode'] = DataContainer::MODE_SORTED;
+
+        $row = [
+            'id' => '42',
+            'username' => 'foo',
+            'email' => 'foo@example.org',
+        ];
+
+        $framework = $this->mockContaoFramework([
+            System::class => $this->createMock(System::class),
+        ]);
+
+        $result = $this->createMock(Result::class);
+        $result
+            ->method('fetchAssociative')
+            ->willReturn($row)
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('quoteIdentifier')
+            ->with('tl_user')
+            ->willReturn('tl_user')
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('executeQuery')
+            ->with('SELECT * FROM tl_user WHERE id = ?', ['42'])
+            ->willReturn($result)
         ;
 
         $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
@@ -173,11 +220,19 @@ class RecordPreviewListenerTest extends TestCase
             'table' => 'tl_user',
         ]);
 
+        $args = ['42', 'foo', 'foo@example.org'];
+
         $dataContainer
             ->expects($this->once())
             ->method('generateRecordLabel')
             ->with($row, 'tl_user')
-            ->willReturn(['42', 'foo', 'foo@example.org'])
+            ->willReturn($args)
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('update')
+            ->with('tl_undo', ['preview' => serialize($args)], ['id' => '42'])
         ;
 
         $listener = new RecordPreviewListener($framework, $connection);
@@ -240,11 +295,7 @@ class RecordPreviewListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('update')
-            ->with(
-                'tl_undo',
-                ['preview' => '<record-preview>'],
-                ['id' => '42']
-            )
+            ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
         ;
 
         $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
@@ -298,11 +349,7 @@ class RecordPreviewListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('update')
-            ->with(
-                'tl_undo',
-                ['preview' => '<record-preview>'],
-                ['id' => '42']
-            )
+            ->with('tl_undo', ['preview' => '<record-preview>'], ['id' => '42'])
         ;
 
         $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
@@ -337,11 +384,7 @@ class RecordPreviewListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('update')
-            ->with(
-                'tl_undo',
-                ['preview' => ''],
-                ['id' => '42']
-            )
+            ->with('tl_undo', ['preview' => ''], ['id' => '42'])
         ;
 
         $dataContainer = $this->mockClassWithProperties(DC_Table::class, [

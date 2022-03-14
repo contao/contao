@@ -177,7 +177,7 @@ class FilesystemConfigurationTest extends TestCase
         $adapterDefinitionFactory = $this->createMock(AdapterDefinitionFactory::class);
         $adapterDefinitionFactory
             ->method('createDefinition')
-            ->with('local', ['directory' => $expected])
+            ->with('local', ['directory' => $expected, 'skip_links' => true])
             ->willReturn($this->createMock(Definition::class))
         ;
 

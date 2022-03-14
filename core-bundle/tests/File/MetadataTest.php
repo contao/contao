@@ -202,10 +202,7 @@ class MetadataTest extends TestCase
             'get all metadata of first matching locale'
         );
 
-        $this->assertNull(
-            $model->getMetadata('es'),
-            'return null if no metadata is available for a locale'
-        );
+        $this->assertNull($model->getMetadata('es'), 'return null if no metadata is available for a locale');
     }
 
     public function testMergesMetadata(): void

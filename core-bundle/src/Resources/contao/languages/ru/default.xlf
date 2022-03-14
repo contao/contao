@@ -373,6 +373,10 @@
         <source>Generates a headline (h1 - h6).</source>
         <target>Создает заголовок (h1 - h6).</target>
       </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>Разное</target>
+      </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
         <target>Текст</target>
@@ -2748,6 +2752,9 @@
       <trans-unit id="MSC.parent">
         <source>Parent</source>
         <target>Родительский</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

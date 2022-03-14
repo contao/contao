@@ -168,10 +168,7 @@ class PageUrlListenerTest extends TestCase
                 $activeRecord['id'],
                 $this->callback(
                     function (callable $callback) use ($generated, $expectExists) {
-                        $this->assertSame(
-                            $expectExists,
-                            $callback($generated)
-                        );
+                        $this->assertSame($expectExists, $callback($generated));
 
                         return true;
                     }
@@ -1123,11 +1120,7 @@ class PageUrlListenerTest extends TestCase
                 [$pageAdapter->findWithDetails(3)],
                 [$pageAdapter->findWithDetails(4)],
             )
-            ->willReturn(
-                null,
-                null,
-                [$pageAdapter->findWithDetails(6)]
-            )
+            ->willReturn(null, null, [$pageAdapter->findWithDetails(6)])
         ;
 
         // Expects exception
@@ -1223,11 +1216,7 @@ class PageUrlListenerTest extends TestCase
                 [$pageAdapter->findWithDetails(3)],
                 [$pageAdapter->findWithDetails(4)],
             )
-            ->willReturn(
-                null,
-                null,
-                [$pageAdapter->findWithDetails(4)]
-            )
+            ->willReturn(null, null, [$pageAdapter->findWithDetails(4)])
         ;
 
         $listener = new PageUrlListener(
@@ -1471,11 +1460,7 @@ class PageUrlListenerTest extends TestCase
                 [$pageAdapter->findWithDetails(3)],
                 [$pageAdapter->findWithDetails(4)],
             )
-            ->willReturn(
-                null,
-                null,
-                [$pageAdapter->findWithDetails(4)]
-            )
+            ->willReturn(null, null, [$pageAdapter->findWithDetails(4)])
         ;
 
         $translator = $this->mockTranslator('ERR.pageUrlSuffix', '/de/bar/foo.html');

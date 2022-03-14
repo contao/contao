@@ -172,7 +172,7 @@ body:not(.fullscreen) #header .inner {
 	position: absolute;
 	top:-5px;
 }
-#tmenu .icon-alert {
+#tmenu .icon-alert,#tmenu .icon-manual {
 	width:16px;
 	margin-bottom:-2px;
 	position:relative;
@@ -180,6 +180,9 @@ body:not(.fullscreen) #header .inner {
 	overflow:hidden;
 	white-space:nowrap;
 	text-indent:28px; /* 16px width + 12px padding */
+}
+#tmenu .icon-manual {
+	background:url("icons/manual.svg") center center no-repeat;
 }
 #tmenu .icon-profile {
 	background:url("icons/profile_dark.svg") 20px center no-repeat;
@@ -410,7 +413,6 @@ h2.sub_headline {
 	color:#d68c23;
 }
 .widget .tl_error,.widget .tl_confirm,.widget .tl_info,.widget .tl_new {
-	margin:1px 0;
 	padding:8px 10px 8px 30px;
 	background-position:9px 9px;
 }
