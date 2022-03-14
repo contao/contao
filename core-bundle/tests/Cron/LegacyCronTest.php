@@ -83,7 +83,7 @@ class LegacyCronTest extends TestCase
         // Create a LegacyCron instance and add cron jobs to the cron service
         $legacyCron = new LegacyCron($framework);
 
-        $cron = new Cron($this->createMock(CronJobRepository::class), $this->createMock(EntityManagerInterface::class));
+        $cron = new Cron(fn () => $this->createMock(CronJobRepository::class), fn () => $this->createMock(EntityManagerInterface::class));
         $cron->addCronJob(new CronJob($legacyCron, '* * * * *', 'onMinutely'));
         $cron->addCronJob(new CronJob($legacyCron, '@hourly', 'onHourly'));
         $cron->addCronJob(new CronJob($legacyCron, '@daily', 'onDaily'));

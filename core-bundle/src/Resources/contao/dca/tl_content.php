@@ -47,7 +47,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid,ptable,invisible,start,stop' => 'index'
+				'pid,ptable,invisible,start,stop' => 'index',
+				'type' => 'index',
 			)
 		)
 	),
@@ -1105,7 +1106,7 @@ class tl_content extends Backend
 	{
 		if (Input::get('act') == 'delete')
 		{
-			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias' AND cteAlias=?")
+			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE type='alias' AND cteAlias=? AND (ptable='tl_article' OR ptable='')")
 									 ->execute(Input::get('id'));
 
 			if ($objCes->cnt > 0)
@@ -1116,7 +1117,7 @@ class tl_content extends Backend
 
 		if (Input::get('act') == 'deleteAll')
 		{
-			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias'")
+			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND (ptable='tl_article' OR ptable='')")
 									 ->execute();
 
 			$objSession = System::getContainer()->get('session');
@@ -1280,7 +1281,7 @@ class tl_content extends Backend
 
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
-				$type = $GLOBALS['TL_LANG']['CTE'][$group] . ' (' . $type . ')';
+				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
 			}
 		}
 
@@ -1289,7 +1290,7 @@ class tl_content extends Backend
 		{
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
-				$type = $GLOBALS['TL_LANG']['CTE'][$group] . ' (' . $type . ')';
+				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
 			}
 		}
 
@@ -1517,7 +1518,7 @@ class tl_content extends Backend
 			}
 
 			$text = StringUtil::substr(strip_tags(preg_replace('/[\n\r\t]+/', ' ', $objAlias->text)), 32);
-			$strText = $GLOBALS['TL_LANG']['CTE'][$objAlias->type][0] . ' (';
+			$strText = ($GLOBALS['TL_LANG']['CTE'][$objAlias->type][0] ?? $objAlias->type) . ' (';
 
 			if ($headline)
 			{
@@ -1874,7 +1875,7 @@ class tl_content extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		$objElement = $this->Database->prepare("SELECT id FROM tl_content WHERE cteAlias=? AND type='alias'")
+		$objElement = $this->Database->prepare("SELECT id FROM tl_content WHERE type='alias' AND cteAlias=?")
 									 ->limit(1)
 									 ->execute($row['id']);
 
