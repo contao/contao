@@ -1222,8 +1222,8 @@ class DbafsTest extends TestCase
      */
     public function testSkipsNonUtf8FilesAndDirectories(): void
     {
-        // Set a compatible codepage under Windows, so that \dirname() calls
-        // used in the InMemoryFilesystemAdapter implementation, do not alter
+        // Set a compatible codepage under Windows, so that dirname() calls
+        // used in the InMemoryFilesystemAdapter implementation do not alter
         // our non-UTF-8 test paths.
         if (\function_exists('sapi_windows_cp_set')) {
             sapi_windows_cp_set(1252);
