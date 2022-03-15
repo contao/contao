@@ -517,38 +517,6 @@ class DcaExtractor extends Controller
 			}
 		}
 
-		// Return if there are no fields
-		if (empty($fields))
-		{
-			return;
-		}
-
-		$params = System::getContainer()->get('database_connection')->getParams();
-
-		// Add the default engine and charset if none is given
-		if (empty($sql['engine']))
-		{
-			$sql['engine'] = $params['defaultTableOptions']['engine'] ?? 'InnoDB';
-		}
-
-		if (empty($sql['charset']))
-		{
-			$sql['charset'] = $params['defaultTableOptions']['charset'] ?? 'utf8mb4';
-		}
-
-		if (empty($sql['collate']))
-		{
-			$sql['collate'] = $params['defaultTableOptions']['collate'] ?? 'utf8mb4_unicode_ci';
-		}
-
-		// Meta
-		$this->arrMeta = array
-		(
-			'engine' => $sql['engine'],
-			'charset' => $sql['charset'],
-			'collate' => $sql['collate']
-		);
-
 		// Fields
 		$this->arrFields = array();
 		$this->arrOrderFields = array();
@@ -589,7 +557,37 @@ class DcaExtractor extends Controller
 		}
 
 		$this->arrUniqueFields = array_unique($this->arrUniqueFields);
-		$this->blnIsDbTable = true;
+
+		if (!empty($this->arrFields) || !empty($this->arrKeys))
+		{
+			$params = System::getContainer()->get('database_connection')->getParams();
+
+			// Add the default engine and charset if none is given
+			if (empty($sql['engine']))
+			{
+				$sql['engine'] = $params['defaultTableOptions']['engine'] ?? 'InnoDB';
+			}
+
+			if (empty($sql['charset']))
+			{
+				$sql['charset'] = $params['defaultTableOptions']['charset'] ?? 'utf8mb4';
+			}
+
+			if (empty($sql['collate']))
+			{
+				$sql['collate'] = $params['defaultTableOptions']['collate'] ?? 'utf8mb4_unicode_ci';
+			}
+
+			// Meta
+			$this->arrMeta = array
+			(
+				'engine' => $sql['engine'],
+				'charset' => $sql['charset'],
+				'collate' => $sql['collate']
+			);
+
+			$this->blnIsDbTable = true;
+		}
 	}
 
 	private function getDatabaseSqlFiles(): array
