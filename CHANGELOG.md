@@ -2,6 +2,42 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.1] (2022-03-15)
+
+**Fixed issues:**
+
+- [#4026] Fix multiple page controller routing issues ([aschempp])
+- [#4281] Add missing isSortable checks to the picker widget ([MarkejN])
+- [#4279] Fix bug with database query returing non-string types ([ausi])
+- [#4272] Add a help wizard if the canonical URL fields are disabled ([leofeyer])
+- [#4273] Adjust the "Recreate the XML files" description ([leofeyer])
+- [#4270] Only shorten the main headline elements if necessary ([leofeyer])
+- [#4275] Fix a potential PHP 8 incompatibility when generating a DCA column ([qzminski])
+- [#4274] Fall back to the section key if there is no label ([leofeyer])
+- [#4271] Correctly show all breadcrumb items ([leofeyer])
+- [#4197] Fix some dynamic routes handling ([aschempp])
+- [#4269] Use the correct web dir in the InstallWebDirCommand ([leofeyer])
+- [#4268] Fix the type hint of the MessageCatalogue::isContaoDomain() method ([leofeyer])
+- [#4267] Fix two minor issues in the install tool ([leofeyer])
+- [#4158] Set DB server version in install tool ([ausi])
+- [#4228] Improve the performance of contao:backup:create ([Toflar])
+- [#4261] Fix SQL error in purge expired data cron ([ausi])
+- [#4262] Fix SQL commands not supported in prepared statements ([ausi])
+- [#4264] Make search accent insensitive ([ausi])
+- [#4254] Fix infinite loop while loading of languages ([rabauss])
+- [#4202] Fix the remaining image size labels ([fritzmg])
+- [#4265] Use service_closure instead of lazy service ([ausi])
+- [#4259] Avoid error if the DATABASE_URL environment variable is an empty string ([qzminski])
+- [#4245] Decode equal sign when parsing query parameters of figure insert tag ([m-vo])
+- [#4244] Make sure tl_content.type has an index ([Toflar])
+- [#4216] Skip non-UTF-8 resources when syncing the DBAFS ([m-vo])
+- [#4230] Fix undefined array index warnings for content elements and forms ([fritzmg])
+- [#4224] Execute BackendTemplate#compile() when using the AbstractBackendController ([m-vo])
+- [#4221] Fix the FigureRendererTest ([aschempp])
+- [#4208] Lower max file size in Dbafs service ([m-vo])
+- [#4183] Clarify the backup command description ([Mynyx])
+- [#4162] Fix the widget height ([leofeyer])
+
 ## [4.13.0] (2022-02-17)
 
 **New features:**
@@ -236,6 +272,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.1]: https://github.com/contao/contao/releases/tag/4.13.1
 [4.13.0]: https://github.com/contao/contao/releases/tag/4.13.0
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
@@ -253,6 +290,7 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [MarkejN]: https://github.com/MarkejN
 [MDevster]: https://github.com/MDevster
+[Mynyx]: https://github.com/Mynyx
 [qzminski]: https://github.com/qzminski
 [rabauss]: https://github.com/rabauss
 [richardhj]: https://github.com/richardhj
@@ -260,6 +298,37 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [xprojects-de]: https://github.com/xprojects-de
+[#4026]: https://github.com/contao/contao/pull/4026
+[#4281]: https://github.com/contao/contao/pull/4281
+[#4279]: https://github.com/contao/contao/pull/4279
+[#4272]: https://github.com/contao/contao/pull/4272
+[#4273]: https://github.com/contao/contao/pull/4273
+[#4270]: https://github.com/contao/contao/pull/4270
+[#4275]: https://github.com/contao/contao/pull/4275
+[#4274]: https://github.com/contao/contao/pull/4274
+[#4271]: https://github.com/contao/contao/pull/4271
+[#4197]: https://github.com/contao/contao/pull/4197
+[#4269]: https://github.com/contao/contao/pull/4269
+[#4268]: https://github.com/contao/contao/pull/4268
+[#4267]: https://github.com/contao/contao/pull/4267
+[#4158]: https://github.com/contao/contao/pull/4158
+[#4228]: https://github.com/contao/contao/pull/4228
+[#4261]: https://github.com/contao/contao/pull/4261
+[#4262]: https://github.com/contao/contao/pull/4262
+[#4264]: https://github.com/contao/contao/pull/4264
+[#4254]: https://github.com/contao/contao/pull/4254
+[#4202]: https://github.com/contao/contao/pull/4202
+[#4265]: https://github.com/contao/contao/pull/4265
+[#4259]: https://github.com/contao/contao/pull/4259
+[#4245]: https://github.com/contao/contao/pull/4245
+[#4244]: https://github.com/contao/contao/pull/4244
+[#4216]: https://github.com/contao/contao/pull/4216
+[#4230]: https://github.com/contao/contao/pull/4230
+[#4224]: https://github.com/contao/contao/pull/4224
+[#4221]: https://github.com/contao/contao/pull/4221
+[#4208]: https://github.com/contao/contao/pull/4208
+[#4183]: https://github.com/contao/contao/pull/4183
+[#4162]: https://github.com/contao/contao/pull/4162
 [#4123]: https://github.com/contao/contao/pull/4123
 [#4151]: https://github.com/contao/contao/pull/4151
 [#4149]: https://github.com/contao/contao/pull/4149
