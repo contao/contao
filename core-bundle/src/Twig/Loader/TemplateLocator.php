@@ -24,27 +24,12 @@ use Symfony\Component\Finder\Finder;
  */
 class TemplateLocator
 {
-    private string $projectDir;
-    private ThemeNamespace $themeNamespace;
-    private Connection $connection;
-
     /**
-     * @var array<string,string>
+     * @param array<string, string>                $bundles
+     * @param array<string, array<string, string>> $bundlesMetadata
      */
-    private array $bundles;
-
-    /**
-     * @var array<string, array<string, string>>
-     */
-    private array $bundlesMetadata;
-
-    public function __construct(string $projectDir, array $bundles, array $bundlesMetadata, ThemeNamespace $themeNamespace, Connection $connection)
+    public function __construct(private string $projectDir, private array $bundles, private array $bundlesMetadata, private ThemeNamespace $themeNamespace, private Connection $connection)
     {
-        $this->projectDir = $projectDir;
-        $this->bundles = $bundles;
-        $this->bundlesMetadata = $bundlesMetadata;
-        $this->themeNamespace = $themeNamespace;
-        $this->connection = $connection;
     }
 
     /**

@@ -21,9 +21,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleAwareInterface
 {
-    private ContaoFramework $framework;
-    private ResourceFinder $resourceFinder;
-
     /**
      * @var \SplObjectStorage<MessageCatalogueInterface, MessageCatalogue>
      */
@@ -37,11 +34,9 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     /**
      * @internal Do not inherit from this class; decorate the "contao.translation.translator" service instead
      */
-    public function __construct(TranslatorInterface $translator, ContaoFramework $framework, ResourceFinder $resourceFinder)
+    public function __construct(TranslatorInterface $translator, private ContaoFramework $framework, private ResourceFinder $resourceFinder)
     {
         $this->translator = $translator;
-        $this->framework = $framework;
-        $this->resourceFinder = $resourceFinder;
         $this->catalogues = new \SplObjectStorage();
     }
 

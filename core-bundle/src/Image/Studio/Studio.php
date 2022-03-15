@@ -19,21 +19,11 @@ use Psr\Container\ContainerInterface;
 
 class Studio
 {
-    private ContainerInterface $locator;
-    private string $projectDir;
-    private string $uploadPath;
-
     /**
-     * @var array<string>
+     * @param array<string> $validExtensions
      */
-    private array $validExtensions;
-
-    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
+    public function __construct(private ContainerInterface $locator, private string $projectDir, private string $uploadPath, private array $validExtensions)
     {
-        $this->locator = $locator;
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->validExtensions = $validExtensions;
     }
 
     public function createFigureBuilder(): FigureBuilder

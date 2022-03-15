@@ -27,15 +27,8 @@ class SearchIndexListener
     public const FEATURE_INDEX = 0b01;
     public const FEATURE_DELETE = 0b10;
 
-    private IndexerInterface $indexer;
-    private string $fragmentPath;
-    private int $enabledFeatures;
-
-    public function __construct(IndexerInterface $indexer, string $fragmentPath = '_fragment', int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE)
+    public function __construct(private IndexerInterface $indexer, private string $fragmentPath = '_fragment', private int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE)
     {
-        $this->indexer = $indexer;
-        $this->fragmentPath = $fragmentPath;
-        $this->enabledFeatures = $enabledFeatures;
     }
 
     /**

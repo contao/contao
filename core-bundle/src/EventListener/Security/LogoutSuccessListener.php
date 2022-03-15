@@ -18,16 +18,11 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class LogoutSuccessListener
 {
-    private HttpUtils $httpUtils;
-    private ScopeMatcher $scopeMatcher;
-
     /**
      * @internal
      */
-    public function __construct(HttpUtils $httpUtils, ScopeMatcher $scopeMatcher)
+    public function __construct(private HttpUtils $httpUtils, private ScopeMatcher $scopeMatcher)
     {
-        $this->httpUtils = $httpUtils;
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function __invoke(LogoutEvent $event): void

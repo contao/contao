@@ -24,20 +24,11 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class LegacyMatcher implements RequestMatcherInterface
 {
-    private ContaoFramework $framework;
-    private RequestMatcherInterface $requestMatcher;
-    private string $urlSuffix;
-    private bool $prependLocale;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.legacy_matcher" service instead
      */
-    public function __construct(ContaoFramework $framework, RequestMatcherInterface $requestMatcher, string $urlSuffix, bool $prependLocale)
+    public function __construct(private ContaoFramework $framework, private RequestMatcherInterface $requestMatcher, private string $urlSuffix, private bool $prependLocale)
     {
-        $this->framework = $framework;
-        $this->requestMatcher = $requestMatcher;
-        $this->urlSuffix = $urlSuffix;
-        $this->prependLocale = $prependLocale;
     }
 
     public function matchRequest(Request $request): array

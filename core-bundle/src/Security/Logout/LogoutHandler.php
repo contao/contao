@@ -28,16 +28,11 @@ class LogoutHandler implements LogoutHandlerInterface
 {
     use TargetPathTrait;
 
-    private ContaoFramework $framework;
-    private ?LoggerInterface $logger;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.logout_handler" service instead
      */
-    public function __construct(ContaoFramework $framework, LoggerInterface $logger = null)
+    public function __construct(private ContaoFramework $framework, private ?LoggerInterface $logger = null)
     {
-        $this->framework = $framework;
-        $this->logger = $logger;
     }
 
     public function logout(Request $request, ?Response $response, TokenInterface $token): void

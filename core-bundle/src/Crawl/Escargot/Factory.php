@@ -34,26 +34,16 @@ class Factory
 {
     public const USER_AGENT = 'contao/crawler';
 
-    private Connection $connection;
-    private ContaoFramework $framework;
-    private array $defaultHttpClientOptions;
-
-    /**
-     * @var array<string>
-     */
-    private array $additionalUris;
-
     /**
      * @var array<EscargotSubscriberInterface>
      */
     private array $subscribers = [];
 
-    public function __construct(Connection $connection, ContaoFramework $framework, array $additionalUris = [], array $defaultHttpClientOptions = [])
+    /**
+     * @param array<string> $additionalUris
+     */
+    public function __construct(private Connection $connection, private ContaoFramework $framework, private array $additionalUris = [], private array $defaultHttpClientOptions = [])
     {
-        $this->connection = $connection;
-        $this->framework = $framework;
-        $this->additionalUris = $additionalUris;
-        $this->defaultHttpClientOptions = $defaultHttpClientOptions;
     }
 
     public function addSubscriber(EscargotSubscriberInterface $subscriber): self

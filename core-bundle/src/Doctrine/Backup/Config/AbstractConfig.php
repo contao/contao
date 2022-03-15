@@ -16,14 +16,11 @@ use Contao\CoreBundle\Doctrine\Backup\Backup;
 
 abstract class AbstractConfig
 {
-    private Backup $backup;
     private array $tablesToIgnore = [];
     private bool $gzCompression;
 
-    public function __construct(Backup $backup)
+    public function __construct(private Backup $backup)
     {
-        $this->backup = $backup;
-
         // Enable gz compression by default if path ends on .gz
         $this->gzCompression = 0 === strcasecmp(substr($backup->getFilename(), -3), '.gz');
     }

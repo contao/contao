@@ -17,7 +17,6 @@ namespace Contao\CoreBundle\Filesystem\Dbafs\Hashing;
  */
 final class Context
 {
-    private ?string $oldHash;
     private ?int $oldLastModified;
     private ?int $newLastModified;
 
@@ -29,9 +28,8 @@ final class Context
     /**
      * @internal
      */
-    public function __construct(string $fallback = null, int $oldLastModified = null)
+    public function __construct(private ?string $oldHash = null, int $oldLastModified = null)
     {
-        $this->oldHash = $fallback;
         $this->oldLastModified = $this->newLastModified = $oldLastModified;
     }
 

@@ -42,28 +42,16 @@ class AuthenticationProvider extends DaoAuthenticationProvider
 {
     private UserCheckerInterface $userChecker;
     private string $providerKey;
-    private ContaoFramework $framework;
-    private AuthenticationProviderInterface $twoFactorAuthenticationProvider;
-    private AuthenticationHandlerInterface $twoFactorAuthenticationHandler;
-    private AuthenticationContextFactoryInterface $authenticationContextFactory;
-    private RequestStack $requestStack;
-    private TrustedDeviceManagerInterface $trustedDeviceManager;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_provider" service instead
      */
-    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, PasswordHasherFactoryInterface $passwordHasherFactory, ContaoFramework $framework, AuthenticationProviderInterface $twoFactorAuthenticationProvider, AuthenticationHandlerInterface $twoFactorAuthenticationHandler, AuthenticationContextFactoryInterface $authenticationContextFactory, RequestStack $requestStack, TrustedDeviceManagerInterface $trustedDeviceManager)
+    public function __construct(UserProviderInterface $userProvider, UserCheckerInterface $userChecker, string $providerKey, PasswordHasherFactoryInterface $passwordHasherFactory, private ContaoFramework $framework, private AuthenticationProviderInterface $twoFactorAuthenticationProvider, private AuthenticationHandlerInterface $twoFactorAuthenticationHandler, private AuthenticationContextFactoryInterface $authenticationContextFactory, private RequestStack $requestStack, private TrustedDeviceManagerInterface $trustedDeviceManager)
     {
         parent::__construct($userProvider, $userChecker, $providerKey, $passwordHasherFactory, false);
 
         $this->userChecker = $userChecker;
         $this->providerKey = $providerKey;
-        $this->framework = $framework;
-        $this->twoFactorAuthenticationProvider = $twoFactorAuthenticationProvider;
-        $this->twoFactorAuthenticationHandler = $twoFactorAuthenticationHandler;
-        $this->authenticationContextFactory = $authenticationContextFactory;
-        $this->requestStack = $requestStack;
-        $this->trustedDeviceManager = $trustedDeviceManager;
     }
 
     public function authenticate(TokenInterface $token): TokenInterface

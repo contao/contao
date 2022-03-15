@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Document
 {
-    private UriInterface $uri;
-    private int $statusCode;
-    private string $body;
     private ?Crawler $crawler = null;
     private ?array $jsonLds = null;
 
@@ -35,12 +32,9 @@ class Document
      */
     private array $headers;
 
-    public function __construct(UriInterface $uri, int $statusCode, array $headers = [], string $body = '')
+    public function __construct(private UriInterface $uri, private int $statusCode, array $headers = [], private string $body = '')
     {
-        $this->uri = $uri;
-        $this->statusCode = $statusCode;
         $this->headers = array_change_key_case($headers);
-        $this->body = $body;
     }
 
     public function getUri(): UriInterface

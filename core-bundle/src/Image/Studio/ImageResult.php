@@ -28,20 +28,6 @@ use Symfony\Component\Filesystem\Path;
 
 class ImageResult
 {
-    private ContainerInterface $locator;
-    private ?ResizeOptions $resizeOptions;
-    private string $projectDir;
-
-    /**
-     * @var string|ImageInterface
-     */
-    private $filePathOrImageInterface;
-
-    /**
-     * @var int|string|array|PictureConfiguration|null
-     */
-    private $sizeConfiguration;
-
     /**
      * Cached picture.
      */
@@ -53,18 +39,13 @@ class ImageResult
     private ?ImageDimensions $originalDimensions = null;
 
     /**
-     * @param string|ImageInterface                      $filePathOrImage
+     * @param string|ImageInterface                      $filePathOrImageInterface
      * @param array|PictureConfiguration|int|string|null $sizeConfiguration
      *
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(ContainerInterface $locator, string $projectDir, $filePathOrImage, $sizeConfiguration = null, ResizeOptions $resizeOptions = null)
+    public function __construct(private ContainerInterface $locator, private string $projectDir, private $filePathOrImageInterface, private $sizeConfiguration = null, private ?ResizeOptions $resizeOptions = null)
     {
-        $this->locator = $locator;
-        $this->projectDir = $projectDir;
-        $this->filePathOrImageInterface = $filePathOrImage;
-        $this->sizeConfiguration = $sizeConfiguration;
-        $this->resizeOptions = $resizeOptions;
     }
 
     /**

@@ -23,14 +23,10 @@ use Twig\Environment;
 
 class FigureRenderer
 {
-    private Studio $studio;
-    private Environment $twig;
     private PropertyAccessor $propertyAccessor;
 
-    public function __construct(Studio $studio, Environment $twig)
+    public function __construct(private Studio $studio, private Environment $twig)
     {
-        $this->studio = $studio;
-        $this->twig = $twig;
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 

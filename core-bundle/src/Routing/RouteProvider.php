@@ -27,18 +27,12 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteProvider extends AbstractPageRouteProvider
 {
-    private bool $legacyRouting;
-    private bool $prependLocale;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry, bool $legacyRouting, bool $prependLocale)
+    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry, private bool $legacyRouting, private bool $prependLocale)
     {
         parent::__construct($framework, $candidates, $pageRegistry);
-
-        $this->legacyRouting = $legacyRouting;
-        $this->prependLocale = $prependLocale;
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection

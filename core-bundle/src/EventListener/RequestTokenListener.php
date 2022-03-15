@@ -28,19 +28,8 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  */
 class RequestTokenListener
 {
-    private ContaoFramework $framework;
-    private ScopeMatcher $scopeMatcher;
-    private ContaoCsrfTokenManager $csrfTokenManager;
-    private string $csrfTokenName;
-    private string $csrfCookiePrefix;
-
-    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, ContaoCsrfTokenManager $csrfTokenManager, string $csrfTokenName, string $csrfCookiePrefix = 'csrf_')
+    public function __construct(private ContaoFramework $framework, private ScopeMatcher $scopeMatcher, private ContaoCsrfTokenManager $csrfTokenManager, private string $csrfTokenName, private string $csrfCookiePrefix = 'csrf_')
     {
-        $this->framework = $framework;
-        $this->scopeMatcher = $scopeMatcher;
-        $this->csrfTokenManager = $csrfTokenManager;
-        $this->csrfTokenName = $csrfTokenName;
-        $this->csrfCookiePrefix = $csrfCookiePrefix;
     }
 
     public function __invoke(RequestEvent $event): void

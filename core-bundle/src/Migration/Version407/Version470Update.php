@@ -23,17 +23,8 @@ use Symfony\Component\Filesystem\Path;
  */
 class Version470Update extends AbstractMigration
 {
-    private Connection $connection;
-    private Filesystem $filesystem;
-    private string $uploadPath;
-    private string $projectDir;
-
-    public function __construct(Connection $connection, Filesystem $filesystem, string $uploadPath, string $projectDir)
+    public function __construct(private Connection $connection, private Filesystem $filesystem, private string $uploadPath, private string $projectDir)
     {
-        $this->connection = $connection;
-        $this->filesystem = $filesystem;
-        $this->uploadPath = $uploadPath;
-        $this->projectDir = $projectDir;
     }
 
     public function getName(): string

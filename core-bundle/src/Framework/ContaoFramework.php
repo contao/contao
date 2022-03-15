@@ -49,29 +49,13 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private static bool $initialized = false;
     private static string $nonce = '';
 
-    private RequestStack $requestStack;
-    private ScopeMatcher $scopeMatcher;
-    private TokenChecker $tokenChecker;
-    private Filesystem $filesystem;
-    private UrlGeneratorInterface $urlGenerator;
-    private string $projectDir;
-    private int $errorLevel;
-    private bool $legacyRouting;
     private ?Request $request = null;
     private bool $isFrontend = false;
     private array $adapterCache = [];
     private array $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, UrlGeneratorInterface $urlGenerator, string $projectDir, int $errorLevel, bool $legacyRouting)
+    public function __construct(private RequestStack $requestStack, private ScopeMatcher $scopeMatcher, private TokenChecker $tokenChecker, private Filesystem $filesystem, private UrlGeneratorInterface $urlGenerator, private string $projectDir, private int $errorLevel, private bool $legacyRouting)
     {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
-        $this->tokenChecker = $tokenChecker;
-        $this->filesystem = $filesystem;
-        $this->urlGenerator = $urlGenerator;
-        $this->projectDir = $projectDir;
-        $this->errorLevel = $errorLevel;
-        $this->legacyRouting = $legacyRouting;
     }
 
     public function reset(): void

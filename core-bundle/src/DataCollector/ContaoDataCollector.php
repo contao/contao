@@ -33,19 +33,8 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 {
     use FrameworkAwareTrait;
 
-    private TokenChecker $tokenChecker;
-    private bool $legacyRouting;
-    private string $projectDir;
-    private bool $prependLocale;
-    private string $urlSuffix;
-
-    public function __construct(TokenChecker $tokenChecker, bool $legacyRouting, string $projectDir, bool $prependLocale, string $urlSuffix)
+    public function __construct(private TokenChecker $tokenChecker, private bool $legacyRouting, private string $projectDir, private bool $prependLocale, private string $urlSuffix)
     {
-        $this->tokenChecker = $tokenChecker;
-        $this->legacyRouting = $legacyRouting;
-        $this->projectDir = $projectDir;
-        $this->prependLocale = $prependLocale;
-        $this->urlSuffix = $urlSuffix;
     }
 
     public function collect(Request $request, Response $response, \Throwable $exception = null): void

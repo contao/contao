@@ -16,16 +16,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 class LegacyCandidates extends AbstractCandidates
 {
-    private bool $prependLocale;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.candidates" service instead
      */
-    public function __construct(bool $prependLocale, string $urlSuffix)
+    public function __construct(private bool $prependLocale, string $urlSuffix)
     {
         parent::__construct([], [$urlSuffix]);
-
-        $this->prependLocale = $prependLocale;
     }
 
     /**

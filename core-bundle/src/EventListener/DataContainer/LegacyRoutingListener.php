@@ -25,17 +25,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class LegacyRoutingListener
 {
-    private ContaoFramework $framework;
-    private TranslatorInterface $translator;
-    private bool $prependLocale;
-    private string $urlSuffix;
-
-    public function __construct(ContaoFramework $framework, TranslatorInterface $translator, bool $prependLocale = false, string $urlSuffix = '.html')
+    public function __construct(private ContaoFramework $framework, private TranslatorInterface $translator, private bool $prependLocale = false, private string $urlSuffix = '.html')
     {
-        $this->framework = $framework;
-        $this->translator = $translator;
-        $this->prependLocale = $prependLocale;
-        $this->urlSuffix = $urlSuffix;
     }
 
     /**

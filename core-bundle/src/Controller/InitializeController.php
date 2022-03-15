@@ -40,19 +40,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class InitializeController
 {
-    private ContaoFramework $framework;
-    private RequestStack $requestStack;
-    private EventDispatcherInterface $eventDispatcher;
-    private HttpKernelInterface $httpKernel;
-    private KernelInterface $kernel;
-
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack, EventDispatcherInterface $eventDispatcher, HttpKernelInterface $httpKernel, KernelInterface $kernel)
+    public function __construct(private ContaoFramework $framework, private RequestStack $requestStack, private EventDispatcherInterface $eventDispatcher, private HttpKernelInterface $httpKernel, private KernelInterface $kernel)
     {
-        $this->framework = $framework;
-        $this->requestStack = $requestStack;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->httpKernel = $httpKernel;
-        $this->kernel = $kernel;
     }
 
     /**

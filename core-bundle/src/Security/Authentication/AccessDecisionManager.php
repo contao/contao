@@ -19,17 +19,8 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 
 class AccessDecisionManager implements AccessDecisionManagerInterface
 {
-    private AccessDecisionManagerInterface $inner;
-    private AccessDecisionManagerInterface $contaoAccessDecisionManager;
-    private ScopeMatcher $scopeMatcher;
-    private RequestStack $requestStack;
-
-    public function __construct(AccessDecisionManagerInterface $inner, AccessDecisionManagerInterface $contaoAccessDecisionManager, ScopeMatcher $scopeMatcher, RequestStack $requestStack)
+    public function __construct(private AccessDecisionManagerInterface $inner, private AccessDecisionManagerInterface $contaoAccessDecisionManager, private ScopeMatcher $scopeMatcher, private RequestStack $requestStack)
     {
-        $this->inner = $inner;
-        $this->contaoAccessDecisionManager = $contaoAccessDecisionManager;
-        $this->scopeMatcher = $scopeMatcher;
-        $this->requestStack = $requestStack;
     }
 
     public function decide(TokenInterface $token, array $attributes, $object = null): bool

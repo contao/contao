@@ -20,14 +20,11 @@ use Symfony\Component\Routing\RouteCollection;
 
 class LegacyRouteProvider implements RouteProviderInterface
 {
-    private FrontendLoader $frontendLoader;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.legacy_route_provider" service instead
      */
-    public function __construct(FrontendLoader $frontendLoader)
+    public function __construct(private FrontendLoader $frontendLoader)
     {
-        $this->frontendLoader = $frontendLoader;
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection

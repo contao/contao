@@ -21,9 +21,6 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemItem
 {
-    private bool $isFile;
-    private string $path;
-
     /**
      * @var int|(\Closure(self):int|null)|null
      */
@@ -50,10 +47,8 @@ class FilesystemItem
      * @param string|\Closure(self):string|null $mimeType
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
      */
-    public function __construct(bool $isFile, string $path, $lastModified = null, $fileSize = null, $mimeType = null, $extraMetadata = [])
+    public function __construct(private bool $isFile, private string $path, $lastModified = null, $fileSize = null, $mimeType = null, $extraMetadata = [])
     {
-        $this->isFile = $isFile;
-        $this->path = $path;
         $this->lastModified = $lastModified;
         $this->fileSize = $fileSize;
         $this->mimeType = $mimeType;

@@ -38,16 +38,8 @@ class UserPasswordCommand extends Command
     protected static $defaultName = 'contao:user:password';
     protected static $defaultDescription = 'Changes the password of a Contao back end user.';
 
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private PasswordHasherFactoryInterface $passwordHasherFactory;
-
-    public function __construct(ContaoFramework $framework, Connection $connection, PasswordHasherFactoryInterface $passwordHasherFactory)
+    public function __construct(private ContaoFramework $framework, private Connection $connection, private PasswordHasherFactoryInterface $passwordHasherFactory)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->passwordHasherFactory = $passwordHasherFactory;
-
         parent::__construct();
     }
 

@@ -21,16 +21,10 @@ use Symfony\Component\Filesystem\Path;
  */
 class CombinedFileDumper implements DumperInterface
 {
-    private Filesystem $filesystem;
-    private LoaderInterface $loader;
-    private string $cacheDir;
     private string $header = "<?php\n"; // add a line-break to prevent the "unexpected $end" error
 
-    public function __construct(Filesystem $filesystem, LoaderInterface $loader, string $cacheDir)
+    public function __construct(private Filesystem $filesystem, private LoaderInterface $loader, private string $cacheDir)
     {
-        $this->filesystem = $filesystem;
-        $this->loader = $loader;
-        $this->cacheDir = $cacheDir;
     }
 
     /**

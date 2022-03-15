@@ -21,9 +21,8 @@ class RouteParametersException extends InvalidParameterException
 {
     private Route $route;
     private array $parameters;
-    private int $referenceType;
 
-    public function __construct(Route $route, array $parameters, int $referenceType, ExceptionInterface $previous)
+    public function __construct(Route $route, array $parameters, private int $referenceType, ExceptionInterface $previous)
     {
         $message = $previous->getMessage();
 
@@ -40,7 +39,6 @@ class RouteParametersException extends InvalidParameterException
 
         $this->route = $route;
         $this->parameters = $parameters;
-        $this->referenceType = $referenceType;
     }
 
     public function getRoute(): Route

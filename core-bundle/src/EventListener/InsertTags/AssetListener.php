@@ -19,11 +19,8 @@ use Symfony\Component\Asset\Packages;
  */
 class AssetListener
 {
-    private Packages $packages;
-
-    public function __construct(Packages $packages)
+    public function __construct(private Packages $packages)
     {
-        $this->packages = $packages;
     }
 
     /**

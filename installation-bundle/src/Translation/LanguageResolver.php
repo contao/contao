@@ -17,13 +17,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class LanguageResolver
 {
-    private RequestStack $requestStack;
-    private string $translationsDir;
-
-    public function __construct(RequestStack $requestStack, string $translationsDir)
+    public function __construct(private RequestStack $requestStack, private string $translationsDir)
     {
-        $this->requestStack = $requestStack;
-        $this->translationsDir = $translationsDir;
     }
 
     /**

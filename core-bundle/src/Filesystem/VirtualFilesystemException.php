@@ -29,12 +29,8 @@ class VirtualFilesystemException extends \RuntimeException
     public const UNABLE_TO_LIST_CONTENTS = 9;
     public const UNABLE_TO_RETRIEVE_METADATA = 10;
 
-    private string $path;
-
-    private function __construct(string $path, string $message, int $code, \Throwable $previous)
+    private function __construct(private string $path, string $message, int $code, \Throwable $previous)
     {
-        $this->path = $path;
-
         parent::__construct($message, $code, $previous);
     }
 

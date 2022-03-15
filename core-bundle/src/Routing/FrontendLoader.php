@@ -19,18 +19,12 @@ use Symfony\Component\Routing\RouteCollection;
 
 class FrontendLoader extends Loader
 {
-    private bool $prependLocale;
-    private string $urlSuffix;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.frontend_loader" service instead
      */
-    public function __construct(bool $prependLocale, string $urlSuffix = '.html')
+    public function __construct(private bool $prependLocale, private string $urlSuffix = '.html')
     {
         trigger_deprecation('contao/core-bundle', '4.10', 'Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated and will no longer work in Contao 5.0. Use Symfony routing instead.', E_USER_DEPRECATED);
-
-        $this->prependLocale = $prependLocale;
-        $this->urlSuffix = $urlSuffix;
     }
 
     public function load($resource, string $type = null): RouteCollection

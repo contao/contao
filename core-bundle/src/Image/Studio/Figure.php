@@ -29,8 +29,6 @@ use Contao\Template;
  */
 class Figure
 {
-    private ImageResult $image;
-
     /**
      * @var Metadata|(\Closure(self):Metadata|null)|null
      */
@@ -62,9 +60,8 @@ class Figure
      * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
-    public function __construct(ImageResult $image, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
+    public function __construct(private ImageResult $image, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
     {
-        $this->image = $image;
         $this->metadata = $metadata;
         $this->linkAttributes = $linkAttributes;
         $this->lightbox = $lightbox;

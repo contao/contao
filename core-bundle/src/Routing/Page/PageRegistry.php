@@ -19,7 +19,6 @@ class PageRegistry
 {
     private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
 
-    private Connection $connection;
     private ?array $urlPrefixes = null;
     private ?array $urlSuffixes = null;
 
@@ -38,9 +37,8 @@ class PageRegistry
      */
     private array $contentComposition = [];
 
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**

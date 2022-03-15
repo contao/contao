@@ -20,13 +20,10 @@ class AvailableTransports
     /**
      * @var array<TransportConfig>
      */
-    private $transports = [];
+    private array $transports = [];
 
-    private ?TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator = null)
+    public function __construct(private ?TranslatorInterface $translator = null)
     {
-        $this->translator = $translator;
     }
 
     public function addTransport(TransportConfig $transportConfig): void

@@ -31,11 +31,8 @@ class InsertTagsListener
         'news_teaser',
     ];
 
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     /**

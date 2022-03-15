@@ -26,12 +26,10 @@ abstract class AbstractVersionUpdate implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
-    protected Connection $connection;
     protected array $messages = [];
 
-    public function __construct(Connection $connection)
+    public function __construct(protected Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**
