@@ -113,7 +113,7 @@ class RobotsTxtListenerTest extends TestCase
     /**
      * @dataProvider routePrefixProvider
      */
-    public function testDisallowsDynamicBackendRoutePath(string $routePrefix): void
+    public function testHandlesDynamicRoutePrefixes(string $routePrefix): void
     {
         $request = $this->createMock(Request::class);
         $rootPage = $this->mockClassWithProperties(PageModel::class);
@@ -157,9 +157,7 @@ class RobotsTxtListenerTest extends TestCase
     public function routePrefixProvider(): \Generator
     {
         yield ['/contao'];
-
         yield ['/admin'];
-
         yield ['/foo'];
     }
 }
