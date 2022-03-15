@@ -347,23 +347,25 @@ body:not(.fullscreen) #container {
 	margin:18px 0;
 	padding:0 16px;
 	font-size:1.1rem;
+	display:flex;
 }
 .popup #main_headline {
 	display:none;
 }
 #main_headline span {
 	display:inline-block;
-	max-width:25%;
+	max-width:max-content;
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
 	line-height:22px;
+	flex:1 0 0;
 }
 #main_headline span:nth-child(even) {
 	font-weight:400;
 }
 #main_headline span + span::before {
-	content: '› ';
+	content: "\A0› "; /* Non-breaking-space to prevent collapsing whitespace */
 	font-weight: 600;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {

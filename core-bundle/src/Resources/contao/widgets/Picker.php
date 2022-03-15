@@ -135,7 +135,7 @@ class Picker extends Widget
 			$showFields = $GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['fields'];
 
 			$return .= '
-<table class="tl_listing showColumns' . ($blnHasOrder ? ' sortable' : '') . '">
+<table class="tl_listing showColumns' . ($blnHasOrder || $this->isSortable ? ' sortable' : '') . '">
 <thead>
   <tr>';
 
@@ -179,7 +179,7 @@ class Picker extends Widget
 		else
 		{
 			$return .= '
-    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder ? 'sortable' : '') . '">';
+    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder || $this->isSortable ? 'sortable' : '') . '">';
 
 			foreach ($arrValues as $k=>$v)
 			{

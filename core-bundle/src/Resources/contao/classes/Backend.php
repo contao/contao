@@ -534,8 +534,12 @@ abstract class Backend extends Controller
 				$pid = $dc->id;
 				$table = $strTable;
 				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
-
 				$container = System::getContainer();
+
+				if ($ptable)
+				{
+					$this->loadDataContainer($ptable);
+				}
 
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
 				{
@@ -568,13 +572,15 @@ abstract class Backend extends Controller
 						}
 					}
 
-					System::loadLanguageFile($ptable);
-					$this->loadDataContainer($ptable);
-
 					// Next parent table
 					$pid = $objRow->pid;
 					$table = $ptable;
 					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable'] ?? null) ? $objRow->ptable : ($GLOBALS['TL_DCA'][$ptable]['config']['ptable'] ?? null);
+
+					if ($ptable)
+					{
+						$this->loadDataContainer($ptable);
+					}
 				}
 
 				// Add the last parent table
@@ -1124,7 +1130,7 @@ abstract class Backend extends Controller
 
 		foreach (array_keys($arrSections) as $k)
 		{
-			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
+			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k] ?? $k;
 		}
 
 		asort($arrSections);

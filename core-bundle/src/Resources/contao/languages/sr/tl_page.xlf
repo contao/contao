@@ -649,6 +649,9 @@
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
         <target>Следеће странице имају сличан алиас који може довести до конфликта са овом страницом. Ако се URL не може исправно одредити, пробајте са променом приоритета.</target>
       </trans-unit>
+      <trans-unit id="tl_page.relCanonical">
+        <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+      </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>
         <target>0 (не кеширај)</target>

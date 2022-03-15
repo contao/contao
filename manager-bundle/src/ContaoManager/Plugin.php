@@ -510,7 +510,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         // If URL is set, it overrides the driver option
-        if (null !== $url) {
+        if (!empty($url)) {
             $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
         }
 
@@ -570,7 +570,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $dbName = '';
 
         if ($name = $container->getParameter('database_name')) {
-            $dbName = '/'.$this->encodeUrlParameter($name);
+            $dbName .= '/'.$this->encodeUrlParameter($name);
+        }
+
+        if ($container->hasParameter('database_version') && $version = $container->getParameter('database_version')) {
+            $dbName .= '?serverVersion='.$this->encodeUrlParameter($version);
         }
 
         return sprintf(
