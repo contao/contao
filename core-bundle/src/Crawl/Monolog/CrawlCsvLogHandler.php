@@ -17,7 +17,7 @@ use Terminal42\Escargot\CrawlUri;
 
 class CrawlCsvLogHandler extends StreamHandler
 {
-    public const DATETIME_FORMAT = 'Y-m-d H:i:s.u';
+    final public const DATETIME_FORMAT = 'Y-m-d H:i:s.u';
 
     private ?string $filterSource = null;
 

@@ -29,10 +29,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendCsvImportController
 {
-    public const SEPARATOR_COMMA = 'comma';
-    public const SEPARATOR_LINEBREAK = 'linebreak';
-    public const SEPARATOR_SEMICOLON = 'semicolon';
-    public const SEPARATOR_TABULATOR = 'tabulator';
+    final public const SEPARATOR_COMMA = 'comma';
+    final public const SEPARATOR_LINEBREAK = 'linebreak';
+    final public const SEPARATOR_SEMICOLON = 'semicolon';
+    final public const SEPARATOR_TABULATOR = 'tabulator';
 
     /**
      * @internal Do not inherit from this class; decorate the "Contao\CoreBundle\Controller\BackendCsvImportController" service instead

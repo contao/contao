@@ -24,8 +24,8 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
  */
 class SearchIndexListener
 {
-    public const FEATURE_INDEX = 0b01;
-    public const FEATURE_DELETE = 0b10;
+    final public const FEATURE_INDEX = 0b01;
+    final public const FEATURE_DELETE = 0b10;
 
     public function __construct(private IndexerInterface $indexer, private string $fragmentPath = '_fragment', private int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE)
     {

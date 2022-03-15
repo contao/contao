@@ -16,10 +16,10 @@ use Contao\StringUtil;
 
 class PaletteManipulator
 {
-    public const POSITION_BEFORE = 'before';
-    public const POSITION_AFTER = 'after';
-    public const POSITION_PREPEND = 'prepend';
-    public const POSITION_APPEND = 'append';
+    final public const POSITION_BEFORE = 'before';
+    final public const POSITION_AFTER = 'after';
+    final public const POSITION_PREPEND = 'prepend';
+    final public const POSITION_APPEND = 'append';
 
     private array $legends = [];
     private array $fields = [];

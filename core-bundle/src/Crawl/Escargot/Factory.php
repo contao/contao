@@ -32,7 +32,7 @@ use Terminal42\Escargot\Subscriber\RobotsSubscriber;
 
 class Factory
 {
-    public const USER_AGENT = 'contao/crawler';
+    final public const USER_AGENT = 'contao/crawler';
 
     /**
      * @var array<EscargotSubscriberInterface>

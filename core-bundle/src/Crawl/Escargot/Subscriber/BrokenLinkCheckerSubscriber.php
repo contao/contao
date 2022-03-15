@@ -34,7 +34,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
 
-    public const TAG_SKIP = 'skip-broken-link-checker';
+    final public const TAG_SKIP = 'skip-broken-link-checker';
 
     private array $stats = ['ok' => 0, 'error' => 0];
 
