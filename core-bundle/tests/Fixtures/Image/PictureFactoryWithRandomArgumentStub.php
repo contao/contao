@@ -17,12 +17,12 @@ use Contao\Image\PictureInterface;
 
 class PictureFactoryWithRandomArgumentStub implements PictureFactoryInterface
 {
-    public function setDefaultDensities($densities): void
+    public function setDefaultDensities($densities): never
     {
         throw new \RuntimeException('not implemented');
     }
 
-    public function create($path, $size = null, array $options = null): PictureInterface
+    public function create($path, $size = null, array $options = null): never
     {
         throw new \RuntimeException('not implemented');
     }

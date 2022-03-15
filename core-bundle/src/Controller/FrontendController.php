@@ -71,7 +71,7 @@ class FrontendController extends AbstractController
      *
      * @return never
      */
-    public function logoutAction(): void
+    public function logoutAction(): never
     {
         throw new LogoutException('The user was not logged out correctly.');
     }

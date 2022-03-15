@@ -17,12 +17,12 @@ use Contao\Image\PictureInterface;
 
 class PictureFactoryWithoutResizeOptionsStub implements PictureFactoryInterface
 {
-    public function setDefaultDensities($densities): void
+    public function setDefaultDensities($densities): never
     {
         throw new \RuntimeException('not implemented');
     }
 
-    public function create($path, $size = null): PictureInterface
+    public function create($path, $size = null): never
     {
         throw new \RuntimeException('not implemented');
     }
