@@ -58,9 +58,9 @@ class FilesystemItemIterator implements \IteratorAggregate
         foreach ($this->listing as $item) {
             if (!$item instanceof FilesystemItem) {
                 /** @phpstan-ignore-next-line */
-                $type = \is_object($item) ? \get_class($item) : \gettype($item);
+                $type = \is_object($item) ? $item::class : \gettype($item);
 
-                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', __CLASS__, FilesystemItem::class, $type));
+                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', self::class, FilesystemItem::class, $type));
             }
 
             yield $item;

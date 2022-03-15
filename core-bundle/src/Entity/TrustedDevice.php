@@ -67,7 +67,7 @@ class TrustedDevice
     {
         $this->userId = (int) $user->id;
         $this->created = new \DateTime();
-        $this->userClass = \get_class($user);
+        $this->userClass = $user::class;
     }
 
     public function getId(): int

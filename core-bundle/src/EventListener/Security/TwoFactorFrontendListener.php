@@ -48,7 +48,7 @@ class TwoFactorFrontendListener
         }
 
         // Check if is a supported token
-        if (!$token instanceof TwoFactorToken && !\in_array(\get_class($token), $this->supportedTokens, true)) {
+        if (!$token instanceof TwoFactorToken && !\in_array($token::class, $this->supportedTokens, true)) {
             return;
         }
 

@@ -182,7 +182,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
                 $hook = [
                     'name' => $name,
-                    'class' => \get_class($class),
+                    'class' => $class::class,
                     'method' => $callback[1],
                     'package' => '',
                 ];

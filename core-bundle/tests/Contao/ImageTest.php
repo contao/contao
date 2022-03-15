@@ -1419,7 +1419,7 @@ class ImageTest extends TestCase
             .'_'.$imageObj->getTargetHeight()
             .'_'.$imageObj->getResizeMode()
             .'_'.$imageObj->getTargetPath()
-            .'_'.str_replace('\\', '-', \get_class($imageObj))
+            .'_'.str_replace('\\', '-', $imageObj::class)
             .'.jpg';
 
         (new Filesystem())->dumpFile(Path::join(System::getContainer()->getParameter('kernel.project_dir'), $path), '');
@@ -1497,9 +1497,9 @@ class ImageTest extends TestCase
             .'_'.$targetWidth
             .'_'.$targetHeight
             .'_'.$resizeMode
-            .'_'.str_replace('\\', '-', \get_class($fileObj))
+            .'_'.str_replace('\\', '-', $fileObj::class)
             .'_'.$targetPath
-            .'_'.str_replace('\\', '-', \get_class($imageObj))
+            .'_'.str_replace('\\', '-', $imageObj::class)
             .'.jpg';
 
         (new Filesystem())->dumpFile(Path::join(System::getContainer()->getParameter('kernel.project_dir'), $path), '');
