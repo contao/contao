@@ -118,9 +118,7 @@ class PageControllerTest extends FunctionalTestCase
         self::$lastImport = $fileNames;
 
         static::loadFixtures(array_map(
-            static function ($file) {
-                return __DIR__.'/../Fixtures/Functional/PageController/'.$file.'.yml';
-            },
+            static fn ($file) => __DIR__.'/../Fixtures/Functional/PageController/'.$file.'.yml',
             $fileNames
         ));
     }
