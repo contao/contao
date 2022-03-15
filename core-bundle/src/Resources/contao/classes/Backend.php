@@ -1130,7 +1130,7 @@ abstract class Backend extends Controller
 
 		foreach (array_keys($arrSections) as $k)
 		{
-			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
+			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k] ?? $k;
 		}
 
 		asort($arrSections);
