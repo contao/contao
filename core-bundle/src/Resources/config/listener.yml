@@ -74,6 +74,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\DisableCanonicalFieldsListener
         arguments:
             - '@contao.framework'
+            - '@translator'
 
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
