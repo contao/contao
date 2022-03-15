@@ -23,10 +23,7 @@ use Symfony\Component\Routing\Route;
 
 class PageControllerTest extends FunctionalTestCase
 {
-    /**
-     * @var array|null
-     */
-    private static $lastImport;
+    private static ?array $lastImport = null;
 
     public static function setUpBeforeClass(): void
     {

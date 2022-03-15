@@ -24,7 +24,7 @@ class PageRouteCompiler extends RouteCompiler
             return parent::compile($route);
         }
 
-        // Remove URL suffix from path to allow path without optional parameters
+        // Remove the URL suffix from the path to allow paths without optional parameters
         $urlSuffix = $route->getUrlSuffix();
         $route->setUrlSuffix('');
 
