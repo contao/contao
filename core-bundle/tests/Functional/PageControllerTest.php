@@ -45,6 +45,8 @@ class PageControllerTest extends FunctionalTestCase
     }
 
     /**
+     * @param string|null|false $path
+     *
      * @dataProvider getPageController
      */
     public function testResolvesPageController(array $fixtures, string $request, $path, array $requirements, array $defaults): void
