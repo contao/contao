@@ -97,7 +97,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
     public function supportsContext($context): bool
     {
-        if (0 !== strpos($context, self::PREFIX)) {
+        if (!str_starts_with($context, self::PREFIX)) {
             return false;
         }
 
@@ -118,7 +118,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
     public function isCurrent(PickerConfig $config): bool
     {
-        return 0 === strpos($config->getCurrent(), $this->getName().'.');
+        return str_starts_with($config->getCurrent(), $this->getName().'.');
     }
 
     public function getDcaTable(PickerConfig $config = null): string

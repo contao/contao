@@ -208,7 +208,7 @@ class InstallTool
         }
 
         // Check if utf8mb4 can be used if the user has configured it
-        if (isset($options['engine'], $options['collate']) && 0 === strncmp($options['collate'], 'utf8mb4', 7)) {
+        if (isset($options['engine'], $options['collate']) && str_starts_with($options['collate'], 'utf8mb4')) {
             if ('innodb' !== strtolower($options['engine'])) {
                 $context['errorCode'] = 4;
                 $context['engine'] = $options['engine'];
@@ -313,7 +313,7 @@ class InstallTool
             $tables = $this->connection->createSchemaManager()->listTableNames();
 
             foreach ($tables as $table) {
-                if (0 === strncmp($table, 'tl_', 3)) {
+                if (str_starts_with($table, 'tl_')) {
                     $this->connection->executeStatement('TRUNCATE TABLE '.$this->connection->quoteIdentifier($table));
                 }
             }

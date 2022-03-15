@@ -123,7 +123,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
      */
     private function getBundlePackageName(string $className): string
     {
-        if ('Bundle' === substr($className, -6)) {
+        if (str_ends_with($className, 'Bundle')) {
             $className = substr($className, 0, -6);
         }
 

@@ -61,7 +61,7 @@ class PageRoute extends Route implements RouteObjectInterface
 
         if ('' === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id);
-        } elseif (0 !== strncmp($path, '/', 1)) {
+        } elseif (!str_starts_with($path, '/')) {
             $path = '/'.($pageModel->alias ?: $pageModel->id).'/'.$path;
         }
 

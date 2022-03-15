@@ -74,7 +74,7 @@ final class ContextFactory
 
             $name = $method->getName();
 
-            if (0 === strpos($name, '__')) {
+            if (str_starts_with($name, '__')) {
                 continue;
             }
 
@@ -100,7 +100,7 @@ final class ContextFactory
             : (array) $object;
 
         foreach ($mangledObjectVars as $key => $value) {
-            if (0 === strncmp($key, "\0*\0", 3)) {
+            if (str_starts_with($key, "\0*\0")) {
                 // Protected member
                 $key = substr($key, 3);
             }

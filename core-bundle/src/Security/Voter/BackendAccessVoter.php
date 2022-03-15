@@ -48,7 +48,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
      */
     protected function supports($attribute, $subject): bool
     {
-        return \is_string($attribute) && 0 === strncmp($attribute, 'contao_user.', 12);
+        return \is_string($attribute) && str_starts_with($attribute, 'contao_user.');
     }
 
     /**

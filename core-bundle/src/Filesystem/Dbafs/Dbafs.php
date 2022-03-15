@@ -728,7 +728,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 }
 
                 // Ignore dot files
-                if (0 === strpos(basename($path), '.')) {
+                if (str_starts_with(basename($path), '.')) {
                     continue;
                 }
 
@@ -871,7 +871,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                     throw new \InvalidArgumentException(sprintf('Absolute path "%s" is not allowed when synchronizing.', $path));
                 }
 
-                if (0 === strpos($path, '.')) {
+                if (str_starts_with($path, '.')) {
                     throw new \InvalidArgumentException(sprintf('Dot path "%s" is not allowed when synchronizing.', $path));
                 }
 

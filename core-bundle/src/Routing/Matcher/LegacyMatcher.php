@@ -161,7 +161,7 @@ class LegacyMatcher implements RequestMatcherInterface
             $pathInfo = substr($pathInfo, 0, -$suffixLength);
         }
 
-        if (0 === strncmp($pathInfo, '/', 1)) {
+        if (str_starts_with($pathInfo, '/')) {
             $pathInfo = substr($pathInfo, 1);
         }
 

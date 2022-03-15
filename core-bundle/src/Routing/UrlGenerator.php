@@ -181,7 +181,7 @@ class UrlGenerator implements UrlGeneratorInterface
      */
     private function getHostAndPort(string $domain): array
     {
-        if (false !== strpos($domain, ':')) {
+        if (str_contains($domain, ':')) {
             [$host, $port] = explode(':', $domain, 2);
 
             return [$host, (int) $port];

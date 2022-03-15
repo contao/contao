@@ -93,7 +93,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
 
     protected function getClassNameWithoutSuffix(string $className): string
     {
-        if ('Controller' === substr($className, -10)) {
+        if (str_ends_with($className, 'Controller')) {
             $className = substr($className, 0, -10);
         }
 
