@@ -536,7 +536,10 @@ abstract class Backend extends Controller
 				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
 				$container = System::getContainer();
 
-				$this->loadDataContainer($ptable);
+				if ($ptable)
+				{
+					$this->loadDataContainer($ptable);
+				}
 
 				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
 				{
