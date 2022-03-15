@@ -757,6 +757,9 @@ class ControllerTest extends TestCase
         }
     }
 
+    /**
+     * @group legacy
+     */
     public function testCachesOldBackendPaths(): void
     {
         $router = $this->createMock(RouterInterface::class);
