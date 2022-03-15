@@ -690,6 +690,8 @@ class ControllerTest extends TestCase
 
     /**
      * @dataProvider redirectProvider
+     *
+     * @group legacy
      */
     public function testReplacesOldBePathsInRedirect(string $location, array $routes, string $expected): void
     {
