@@ -207,7 +207,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return array<string>|string
      */
-    private function findConfigFiles(string $name)
+    private function findConfigFiles(string $name): array|string
     {
         try {
             return $this->locator->locate(Path::join('config', $name), null, false);
@@ -219,7 +219,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return Finder|array<SplFileInfo>
      */
-    private function findDcaFiles()
+    private function findDcaFiles(): array|Finder
     {
         try {
             return $this->finder->findIn('dca')->files()->name('*.php');
@@ -231,7 +231,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return Finder|array<SplFileInfo>
      */
-    private function findLanguageFiles(string $language)
+    private function findLanguageFiles(string $language): array|Finder
     {
         try {
             return $this->finder
@@ -247,7 +247,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return Finder|array<SplFileInfo>
      */
-    private function findTemplateFiles()
+    private function findTemplateFiles(): array|Finder
     {
         try {
             return $this->finder->findIn('templates')->name('*.html5');

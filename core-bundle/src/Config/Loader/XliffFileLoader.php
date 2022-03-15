@@ -176,10 +176,7 @@ class XliffFileLoader extends Loader
         $data = $value;
     }
 
-    /**
-     * @return int|string
-     */
-    private function quoteKey(string $key)
+    private function quoteKey(string $key): int|string
     {
         if ('0' === $key) {
             return 0;

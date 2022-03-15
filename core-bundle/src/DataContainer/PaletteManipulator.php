@@ -33,12 +33,11 @@ class PaletteManipulator
     /**
      * If the legend already exists, nothing will be changed.
      *
-     * @param string|array $parent
-     * @param bool         $hide
+     * @param bool $hide
      *
      * @throws PalettePositionException
      */
-    public function addLegend(string $name, $parent, string $position = self::POSITION_AFTER, /*bool */$hide = false): self
+    public function addLegend(string $name, array|string $parent, string $position = self::POSITION_AFTER, /*bool */$hide = false): self
     {
         $this->validatePosition($position);
 
@@ -55,14 +54,12 @@ class PaletteManipulator
     /**
      * If $position is PREPEND or APPEND, pass a legend as parent; otherwise pass a field name.
      *
-     * @param string|array               $name
-     * @param string|array               $parent
      * @param string|array|\Closure|null $fallback
      * @param string                     $fallbackPosition
      *
      * @throws PalettePositionException
      */
-    public function addField($name, $parent, string $position = self::POSITION_AFTER, $fallback = null, /*string */$fallbackPosition = self::POSITION_APPEND): self
+    public function addField(array|string $name, array|string $parent, string $position = self::POSITION_AFTER, $fallback = null, /*string */$fallbackPosition = self::POSITION_APPEND): self
     {
         $this->validatePosition($position);
 
@@ -83,10 +80,8 @@ class PaletteManipulator
 
     /**
      * If no legend is given, the field is removed everywhere.
-     *
-     * @param string|array $name
      */
-    public function removeField($name, string $legend = null): self
+    public function removeField(array|string $name, string $legend = null): self
     {
         $this->removes[] = [
             'fields' => (array) $name,
@@ -364,10 +359,8 @@ class PaletteManipulator
 
     /**
      * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
-     *
-     * @return string|false
      */
-    private function findLegendForField(array $config, string $field)
+    private function findLegendForField(array $config, string $field): string|false
     {
         foreach ($config as $legend => $group) {
             if (\in_array($field, $group['fields'], true)) {

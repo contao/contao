@@ -66,7 +66,7 @@ class PictureFactory implements PictureFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    public function create($path, $size = null, ResizeOptions $options = null): PictureInterface
+    public function create(ImageInterface|string $path, $size = null, ResizeOptions $options = null): PictureInterface
     {
         $attributes = [];
 

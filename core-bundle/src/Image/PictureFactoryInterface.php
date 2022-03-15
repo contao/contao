@@ -31,11 +31,10 @@ interface PictureFactoryInterface
     /**
      * Creates a Picture object.
      *
-     * @param string|ImageInterface                      $path
      * @param int|string|array|PictureConfiguration|null $size
      * @param ResizeOptions|null                         $options
      *
      * @return PictureInterface
      */
-    public function create($path, $size = null/*, ResizeOptions $options = null*/)/*: PictureInterface*/;
+    public function create(ImageInterface|string $path, $size = null/*, ResizeOptions $options = null*/)/*: PictureInterface*/;
 }

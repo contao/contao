@@ -100,7 +100,7 @@ final class ResponseContext
     /**
      * @param \Closure|object $objectOrFactory
      */
-    private function registerService(string $serviceId, $objectOrFactory): void
+    private function registerService(string $serviceId, object $objectOrFactory): void
     {
         $this->services[$serviceId] = $objectOrFactory;
         $this->current[$serviceId] = $serviceId;

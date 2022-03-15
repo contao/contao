@@ -54,10 +54,8 @@ class FigureBuilder
      * User defined size configuration.
      *
      * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
-     *
-     * @var int|string|array|PictureConfiguration|null
      */
-    private $sizeConfiguration;
+    private array|int|PictureConfiguration|string|null $sizeConfiguration = null;
 
     /**
      * User defined resize options.
@@ -90,17 +88,13 @@ class FigureBuilder
 
     /**
      * User defined lightbox resource or url. This will overwrite the default if set.
-     *
-     * @var string|ImageInterface|null
      */
-    private $lightboxResourceOrUrl;
+    private ImageInterface|string|null $lightboxResourceOrUrl = null;
 
     /**
      * User defined lightbox size configuration. This will overwrite the default if set.
-     *
-     * @var int|string|array|PictureConfiguration|null
      */
-    private $lightboxSizeConfiguration;
+    private array|int|PictureConfiguration|string|null $lightboxSizeConfiguration = null;
 
     /**
      * User defined lightbox resize options.

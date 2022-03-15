@@ -129,8 +129,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to accept the license.
-     *
-     * @return Response|RedirectResponse
      */
     private function acceptLicense(): Response
     {
@@ -151,8 +149,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to set the install tool password.
-     *
-     * @return Response|RedirectResponse
      */
     private function setPassword(): Response
     {
@@ -185,8 +181,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to log in.
-     *
-     * @return Response|RedirectResponse
      */
     private function login(): Response
     {
@@ -284,8 +278,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to set up the database connection.
-     *
-     * @return Response|RedirectResponse
      */
     private function setUpDatabaseConnection(): Response
     {

@@ -28,7 +28,7 @@ interface ImageFactoryInterface
      *
      * @return ImageInterface
      */
-    public function create($path, $size = null, $options = null)/*: ImageInterface*/;
+    public function create(ImageInterface|string $path, $size = null, $options = null)/*: ImageInterface*/;
 
     /**
      * Returns the equivalent important part from a legacy resize mode.

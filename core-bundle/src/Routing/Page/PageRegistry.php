@@ -134,10 +134,7 @@ class PageRegistry
         return $this->urlSuffixes;
     }
 
-    /**
-     * @param ContentCompositionInterface|bool $contentComposition
-     */
-    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, $contentComposition = true): self
+    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, bool|ContentCompositionInterface $contentComposition = true): self
     {
         // Override existing pages with the same identifier
         $this->routeConfigs[$type] = $config;

@@ -32,11 +32,7 @@ final class Page implements ServiceTagInterface
     private array $options = [];
     private array $defaults = [];
     private array $methods = [];
-
-    /**
-     * @var string|bool|null
-     */
-    private $path;
+    private bool|string|null $path = null;
 
     public function __construct(array $data)
     {
@@ -169,7 +165,7 @@ final class Page implements ServiceTagInterface
     /**
      * @param string|array<string> $methods
      */
-    public function setMethods($methods): void
+    public function setMethods(array|string $methods): void
     {
         $this->methods = \is_array($methods) ? $methods : [$methods];
     }

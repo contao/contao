@@ -101,10 +101,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return '{{faq_url::%s}}';
     }
 
-    /**
-     * @param int|string $id
-     */
-    private function getFaqCategoryId($id): ?int
+    private function getFaqCategoryId(int|string $id): ?int
     {
         $faqAdapter = $this->framework->getAdapter(FaqModel::class);
 

@@ -25,10 +25,7 @@ class PreviewUrlCreateEvent extends Event
     {
     }
 
-    /**
-     * @return string|int
-     */
-    public function getId()
+    public function getId(): int|string
     {
         return $this->id;
     }

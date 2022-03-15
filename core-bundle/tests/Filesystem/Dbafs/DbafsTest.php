@@ -530,7 +530,7 @@ class DbafsTest extends TestCase
      *
      * @param string|array<int, string> $paths
      */
-    public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, $paths, ChangeSet $expected): void
+    public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, array|string $paths, ChangeSet $expected): void
     {
         /*
          * Demo file structure present in the database:

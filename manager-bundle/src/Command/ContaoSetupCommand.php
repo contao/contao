@@ -35,10 +35,7 @@ class ContaoSetupCommand extends Command
      */
     private \Closure $createProcessHandler;
 
-    /**
-     * @var string|false
-     */
-    private $phpPath;
+    private string|false $phpPath;
 
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler

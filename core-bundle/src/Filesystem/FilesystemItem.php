@@ -84,7 +84,7 @@ class FilesystemItem
     /**
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
      */
-    public function withExtraMetadata($extraMetadata): self
+    public function withExtraMetadata(array|callable $extraMetadata): self
     {
         return new self(
             $this->isFile,

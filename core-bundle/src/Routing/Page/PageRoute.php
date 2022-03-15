@@ -26,10 +26,8 @@ class PageRoute extends Route implements RouteObjectInterface
 
     /**
      * The referenced content object (can be anything).
-     *
-     * @var mixed
      */
-    private $content;
+    private mixed $content = null;
 
     /**
      * @param string|array<string> $methods

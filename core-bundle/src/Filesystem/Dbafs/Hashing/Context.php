@@ -19,11 +19,7 @@ final class Context
 {
     private ?int $oldLastModified;
     private ?int $newLastModified;
-
-    /**
-     * @var string|false|null
-     */
-    private $result = false;
+    private bool|string|null $result = false;
 
     /**
      * @internal
