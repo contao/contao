@@ -30,6 +30,7 @@ class RoutingTest extends FunctionalTestCase
         parent::setUpBeforeClass();
 
         static::bootKernel();
+        System::setContainer(self::$container);
         static::resetDatabaseSchema();
         static::ensureKernelShutdown();
     }
