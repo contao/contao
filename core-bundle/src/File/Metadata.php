@@ -50,7 +50,7 @@ class Metadata
             return $this;
         }
 
-        return new self(array_merge($this->values, $values));
+        return new self([...$this->values, ...$values]);
     }
 
     /**
