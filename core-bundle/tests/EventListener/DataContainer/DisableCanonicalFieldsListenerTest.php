@@ -170,7 +170,6 @@ class DisableCanonicalFieldsListenerTest extends TestCase
         ;
 
         $dc = $this->mockClassWithProperties(DataContainer::class);
-        $dc->id = null;
 
         $listener = new DisableCanonicalFieldsListener($framework, $translator);
         $listener('', $dc);
