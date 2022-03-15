@@ -41,12 +41,15 @@ class ContaoContext
      */
     public function __toString(): string
     {
-        return (string) json_encode([
-            'func' => $this->func,
-            'action' => $this->action,
-            'username' => $this->username,
-            'browser' => $this->browser,
-        ]);
+        return (string) json_encode(
+            [
+                'func' => $this->func,
+                'action' => $this->action,
+                'username' => $this->username,
+                'browser' => $this->browser,
+            ],
+            JSON_THROW_ON_ERROR
+        );
     }
 
     public function getFunc(): string

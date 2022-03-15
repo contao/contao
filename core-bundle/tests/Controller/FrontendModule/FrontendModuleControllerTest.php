@@ -86,7 +86,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($container);
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('mod_bar', $template['templateName']);
     }
@@ -97,7 +97,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
         $response = $controller(new Request(), $this->getModuleModel(), 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('', $template['cssID']);
         $this->assertSame('mod_test', $template['class']);
@@ -112,7 +112,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('foobar', $template['headline']);
         $this->assertSame('h6', $template['hl']);
@@ -127,7 +127,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
         $response = $controller(new Request(), $model, 'main');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame(' id="foo"', $template['cssID']);
         $this->assertSame('mod_test bar', $template['class']);
@@ -139,7 +139,7 @@ class FrontendModuleControllerTest extends TestCase
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('mod_test'));
 
         $response = $controller(new Request(), $this->getModuleModel(), 'left');
-        $template = json_decode($response->getContent(), true);
+        $template = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('left', $template['inColumn']);
     }

@@ -70,7 +70,7 @@ class UserListCommandTest extends TestCase
         $output = $commandTester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertNotNull(json_decode($output, true));
+        $this->assertNotNull(json_decode($output, true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testReturnsValidJsonWithSubset(): void
@@ -88,7 +88,7 @@ class UserListCommandTest extends TestCase
         $output = $commandTester->getDisplay();
 
         $this->assertSame(0, $code);
-        $this->assertNotNull(json_decode($output, true));
+        $this->assertNotNull(json_decode($output, true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function testTakesColumnAsArgument(): void

@@ -76,7 +76,7 @@ class UserListCommand extends Command
             case 'json':
                 $data = $this->formatJson($users, $columns);
 
-                $io->write(json_encode($data));
+                $io->write(json_encode($data, JSON_THROW_ON_ERROR));
                 break;
 
             default:
