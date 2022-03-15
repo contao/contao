@@ -42,7 +42,7 @@ class Comment
      * @ORM\ManyToOne(targetEntity=BlogPost::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
-    private ?BlogPost $blogPost;
+    private ?BlogPost $blogPost = null;
 
     public function getId(): int
     {
