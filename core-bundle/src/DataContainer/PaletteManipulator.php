@@ -359,7 +359,7 @@ class PaletteManipulator
     /**
      * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
      */
-    private function findLegendForField(array $config, string $field): string|false
+    private function findLegendForField(array $config, string $field): string|int|false
     {
         foreach ($config as $legend => $group) {
             if (\in_array($field, $group['fields'], true)) {

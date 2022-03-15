@@ -13,16 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Fixtures\Image;
 
 use Contao\CoreBundle\Image\PictureFactoryInterface;
-use Contao\Image\PictureInterface;
 
 class PictureFactoryWithoutResizeOptionsStub implements PictureFactoryInterface
 {
-    public function setDefaultDensities($densities): never
+    public function setDefaultDensities($densities): void
     {
         throw new \RuntimeException('not implemented');
     }
 
-    public function create($path, $size = null): never
+    public function create($path, $size = null): void
     {
         throw new \RuntimeException('not implemented');
     }

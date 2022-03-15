@@ -107,14 +107,14 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return $template;
     }
 
-    protected function addHeadlineToTemplate(Template $template, array|string $headline): void
+    protected function addHeadlineToTemplate(Template $template, array|string|null $headline): void
     {
         $data = StringUtil::deserialize($headline);
         $template->headline = \is_array($data) ? $data['value'] : $data;
         $template->hl = \is_array($data) ? $data['unit'] : 'h1';
     }
 
-    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string $cssID, array $classes = null): void
+    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array $classes = null): void
     {
         $data = StringUtil::deserialize($cssID, true);
         $template->class = trim($templateName.' '.($data[1] ?? ''));

@@ -51,7 +51,7 @@ class ImageResult
     /**
      * Creates a picture with the defined size configuration.
      */
-    public function getPicture(): PictureInterface
+    public function getPicture(): ?PictureInterface
     {
         if (null !== $this->picture) {
             return $this->picture;

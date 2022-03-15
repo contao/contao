@@ -297,11 +297,11 @@ class SimpleTokenParserTest extends TestCase
     }
 
     /**
-     * @param bool|int|string|array<string> $value
+     * @param bool|int|string|array<string>|null $value
      *
      * @dataProvider parsesSimpleTokensWithShorthandIfProvider
      */
-    public function testParsesSimpleTokensWithShorthandIf(array|bool|int|string $value, bool $match): void
+    public function testParsesSimpleTokensWithShorthandIf(array|bool|int|string|null $value, bool $match): void
     {
         $this->assertSame(
             $match ? 'match' : 'no-match',
