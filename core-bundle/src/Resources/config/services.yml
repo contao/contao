@@ -238,6 +238,7 @@ services:
             - '@contao.routing.scope_matcher'
             - '@contao.security.token_checker'
             - '@filesystem'
+            - '@router'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
             - '%contao.legacy_routing%'
