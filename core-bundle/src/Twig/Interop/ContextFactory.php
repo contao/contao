@@ -142,19 +142,19 @@ final class ContextFactory
             }
 
             /**
-             * Called when evaluating `{{ var }}` in a Twig template.
+             * Called when evaluating "{{ var }}" in a Twig template.
              */
             public function __toString(): string
             {
                 try {
                     return (string) $this();
                 } catch (\Throwable $e) {
-                    throw new \RuntimeException("Error evaluating '$this->name': {$e->getMessage()}", 0, $e);
+                    throw new \RuntimeException(sprintf('Error evaluating "%s": %s', $this->name, $e->getMessage()), 0, $e);
                 }
             }
 
             /**
-             * Called when evaluating '{{ var.invoke(…) }}' in a Twig template.
+             * Called when evaluating "{{ var.invoke(…) }}" in a Twig template.
              * We do not cast to string here, so that other types (like arrays)
              * are supported as well.
              *

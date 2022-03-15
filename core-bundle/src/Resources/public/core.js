@@ -1109,7 +1109,7 @@ var Backend =
 	 * it was defined and add the "down" CSS class to the header.
 	 */
 	initScrollOffset: function() {
-		// Kill the legacy cookie here; this way it can be sent by the server
+		// Kill the legacy cookie here; this way it can be sent by the server,
 		// but it won't be resent by the client in the next request
 		Cookie.dispose('BE_PAGE_OFFSET');
 

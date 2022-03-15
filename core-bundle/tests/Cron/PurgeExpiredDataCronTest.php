@@ -16,7 +16,7 @@ use Contao\Config;
 use Contao\CoreBundle\Cron\PurgeExpiredDataCron;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 class PurgeExpiredDataCronTest extends ContaoTestCase
@@ -30,48 +30,44 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
         ClockMock::withClockMock($mockedTime);
 
         $expectedStatements = [];
-        $expectedExecuteParameters = [];
 
         if ($undoPeriod > 0) {
-            $expectedStatements[] = ['DELETE FROM tl_undo WHERE tstamp<:tstamp'];
-            $expectedExecuteParameters[] = [['tstamp' => $mockedTime - $undoPeriod]];
+            $expectedStatements[] = [
+                'DELETE FROM tl_undo WHERE tstamp < :tstamp',
+                ['tstamp' => $mockedTime - $undoPeriod],
+                ['tstamp' => Types::INTEGER],
+            ];
         }
 
         if ($logPeriod > 0) {
-            $expectedStatements[] = ['DELETE FROM tl_log WHERE tstamp<:tstamp'];
-            $expectedExecuteParameters[] = [['tstamp' => $mockedTime - $logPeriod]];
+            $expectedStatements[] = [
+                'DELETE FROM tl_log WHERE tstamp < :tstamp',
+                ['tstamp' => $mockedTime - $logPeriod],
+                ['tstamp' => Types::INTEGER],
+            ];
         }
 
         if ($versionPeriod > 0) {
-            $expectedStatements[] = ['DELETE FROM tl_version WHERE tstamp<:tstamp'];
-            $expectedExecuteParameters[] = [['tstamp' => $mockedTime - $versionPeriod]];
+            $expectedStatements[] = [
+                'DELETE FROM tl_version WHERE tstamp < :tstamp',
+                ['tstamp' => $mockedTime - $versionPeriod],
+                ['tstamp' => Types::INTEGER],
+            ];
         }
 
         $config = $this->mockAdapter(['get']);
         $config
             ->expects($this->exactly(3))
             ->method('get')
-            ->withConsecutive(
-                ['undoPeriod'],
-                ['logPeriod'],
-                ['versionPeriod']
-            )
+            ->withConsecutive(['undoPeriod'], ['logPeriod'], ['versionPeriod'])
             ->willReturn($undoPeriod, $logPeriod, $versionPeriod)
-        ;
-
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->expects($this->exactly(\count($expectedExecuteParameters)))
-            ->method('executeStatement')
-            ->withConsecutive(...$expectedExecuteParameters)
         ;
 
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->exactly(\count($expectedStatements)))
-            ->method('prepare')
+            ->method('executeStatement')
             ->withConsecutive(...$expectedStatements)
-            ->willReturn($statement)
         ;
 
         $framework = $this->mockContaoFramework([Config::class => $config]);

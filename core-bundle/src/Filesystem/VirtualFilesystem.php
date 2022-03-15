@@ -20,7 +20,7 @@ use Symfony\Component\Uid\Uuid;
 /**
  * Use the VirtualFilesystem to access resources from mounted adapters and
  * registered DBAFS instances. The class can be instantiated with a path
- * prefix (e.g. 'assets/images') to get a different root and/or as a readonly
+ * prefix (e.g. "assets/images") to get a different root and/or as a readonly
  * view to prevent accidental mutations.
  *
  * In each method you can either pass in a path (string) or a @see Uuid to
@@ -157,7 +157,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($pathFrom, $pathTo);
     }
 
-    public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): iterable
+    public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): FilesystemItemIterator
     {
         $path = $this->resolve($location);
 
@@ -165,7 +165,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
             $this->dbafsManager->sync($path);
         }
 
-        return $this->doListContents($path, $deep, $accessFlags);
+        return new FilesystemItemIterator($this->doListContents($path, $deep, $accessFlags));
     }
 
     public function getLastModified($location, int $accessFlags = self::NONE): int
@@ -326,11 +326,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         ;
 
         if (Path::isAbsolute($path)) {
-            throw new \OutOfBoundsException("Virtual filesystem path '$path' cannot be absolute.");
+            throw new \OutOfBoundsException(sprintf('Virtual filesystem path "%s" cannot be absolute.', $path));
         }
 
         if (str_starts_with($path, '..')) {
-            throw new \OutOfBoundsException("Virtual filesystem path '$path' must not escape the filesystem boundary.");
+            throw new \OutOfBoundsException(sprintf('Virtual filesystem path "%s" must not escape the filesystem boundary.', $path));
         }
 
         return Path::join($this->prefix, $path);

@@ -36,10 +36,10 @@ class CreateConfigTest extends TestCase
     public function testWithers(): void
     {
         $config = new CreateConfig(new Backup('valid_backup_filename__20211101141254.sql'));
-        $config = $config->withFilePath('other_name__20211101141254.sql.gz');
+        $config = $config->withFileName('other_name__20211101141254.sql.gz');
         $config = $config->withTablesToIgnore(['foobar']);
 
-        $this->assertSame('other_name__20211101141254.sql.gz', $config->getBackup()->getFilepath());
+        $this->assertSame('other_name__20211101141254.sql.gz', $config->getBackup()->getFilename());
         $this->assertSame(['foobar'], $config->getTablesToIgnore());
 
         // Important, this should not automatically be enabled when changing the path!

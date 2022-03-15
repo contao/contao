@@ -207,6 +207,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxImageWidth.1">
         <source>Here you can enter the maximum width for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Aquí puede introduzir el ancho máximo para cargar imágenes en píxeles. introduzca 0 para usar el valor predeterminado del sistema.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.maxImageHeight.0">
         <source>Maximum image height</source>
@@ -214,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_form_field.maxImageHeight.1">
         <source>Here you can enter the maximum height for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Aquí puede introduzir la altura máxima para cargar imágenes en píxeles. introduzca 0 para usar el valor predeterminado del sistema.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>

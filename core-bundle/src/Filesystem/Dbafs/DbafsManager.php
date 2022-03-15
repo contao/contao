@@ -84,8 +84,8 @@ class DbafsManager
      *
      * The returned path will always be relative to the provided prefix:
      *
-     *     resolveUuid($uuid); // returns 'files/foo/bar'
-     *     resolveUuid($uuid, 'files/foo'); // returns 'bar'
+     *     resolveUuid($uuid); // returns "files/foo/bar"
+     *     resolveUuid($uuid, 'files/foo'); // returns "bar"
      *
      * @throws UnableToResolveUuidException
      */
@@ -209,7 +209,7 @@ class DbafsManager
         }
 
         if (!$success) {
-            throw new \InvalidArgumentException("No resource exists for the given path '$path'.");
+            throw new \InvalidArgumentException(sprintf('No resource exists for the given path "%s".', $path));
         }
     }
 
@@ -315,9 +315,9 @@ class DbafsManager
      * Ensures that all DBAFS with a more specific prefix are also supporting
      * everything each less specific one does.
      *
-     * For example, a DBAFS with prefix 'files/media' must also support
-     * 'fileSize' if the DBAFS under 'files' does. It could, however, support
-     * additional properties like 'mimeType' even if the 'files' DBAFS does not.
+     * For example, a DBAFS with prefix "files/media" must also support
+     * "fileSize" if the DBAFS under "files" does. It could, however, support
+     * additional properties like "mimeType" even if the "files" DBAFS does not.
      */
     private function validateTransitiveProperties(): void
     {
@@ -330,9 +330,9 @@ class DbafsManager
                 $nonTransitive = $supportedFeatures & ~$dbafs->getSupportedFeatures();
 
                 if (0 !== $nonTransitive) {
-                    $features = implode("' and '", $this->getFeatureFlagsAsNames($nonTransitive));
+                    $features = implode('" and "', $this->getFeatureFlagsAsNames($nonTransitive));
 
-                    throw new \LogicException("The transitive feature(s) '$features' must be supported for any DBAFS with a path prefix '$prefix', because they are also supported for '$currentPrefix'.");
+                    throw new \LogicException(sprintf('The transitive feature(s) "%s" must be supported for any DBAFS with a path prefix "%s", because they are also supported for "%s".', $features, $prefix, $currentPrefix));
                 }
             }
 

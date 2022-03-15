@@ -34,7 +34,7 @@ class FilesystemUtilTest extends TestCase
     {
         yield 'no resource' => [
             new \stdClass(),
-            'Invalid stream provided, expected stream resource, received \'object\'.',
+            'Invalid stream provided, expected stream resource, received "object".',
         ];
 
         $resource = tmpfile();
@@ -42,14 +42,14 @@ class FilesystemUtilTest extends TestCase
 
         yield 'closed resource' => [
             $resource,
-            'Invalid stream provided, expected stream resource, received \'resource (closed)\'.',
+            'Invalid stream provided, expected stream resource, received "resource (closed)".',
         ];
 
         $nonStreamResource = stream_context_create();
 
         yield 'non-stream resource' => [
             $nonStreamResource,
-            'Invalid stream provided, expected stream resource, received resource of type \'stream-context\'.',
+            'Invalid stream provided, expected stream resource, received resource of type "stream-context".',
         ];
     }
 

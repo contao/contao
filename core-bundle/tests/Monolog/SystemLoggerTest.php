@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Monolog;
+namespace Contao\CoreBundle\Tests\Monolog;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Monolog\SystemLogger;
@@ -33,10 +33,7 @@ class SystemLoggerTest extends TestCase
         $logger
             ->expects($this->once())
             ->method($method)
-            ->with(
-                $message,
-                $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action))
-            )
+            ->with($message, $this->assertExpectedContaoContext(new ContaoContext(__METHOD__, $action)))
         ;
 
         (new SystemLogger($logger, $action))->{$method}($message);

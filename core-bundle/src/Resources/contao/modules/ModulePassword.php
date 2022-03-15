@@ -74,6 +74,8 @@ class ModulePassword extends Module
 			}
 		}
 
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+
 		// Set new password
 		if (strncmp(Input::get('token'), 'pw-', 3) === 0)
 		{

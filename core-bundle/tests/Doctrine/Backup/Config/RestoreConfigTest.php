@@ -37,11 +37,11 @@ class RestoreConfigTest extends TestCase
     public function testWithers(): void
     {
         $config = new RestoreConfig(new Backup('valid_backup_filename__20211101141254.sql'));
-        $config = $config->withFilePath('other_name__20211101141254.sql.gz');
+        $config = $config->withFileName('other_name__20211101141254.sql.gz');
         $config = $config->withTablesToIgnore(['foobar']);
         $config = $config->withIgnoreOriginCheck(true);
 
-        $this->assertSame('other_name__20211101141254.sql.gz', $config->getBackup()->getFilepath());
+        $this->assertSame('other_name__20211101141254.sql.gz', $config->getBackup()->getFilename());
         $this->assertTrue($config->ignoreOriginCheck());
         $this->assertSame(['foobar'], $config->getTablesToIgnore());
 

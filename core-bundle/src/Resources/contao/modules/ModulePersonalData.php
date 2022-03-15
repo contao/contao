@@ -321,12 +321,6 @@ class ModulePersonalData extends Module
 		{
 			$objMember->tstamp = time();
 			$objMember->save();
-
-			// Create a new version
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)
-			{
-				$objVersions->create();
-			}
 		}
 
 		$this->Template->hasError = $doNotSubmit;
@@ -359,6 +353,12 @@ class ModulePersonalData extends Module
 						$callback($this->User, $this);
 					}
 				}
+			}
+
+			// Create a new version
+			if ($blnModified && ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null))
+			{
+				$objVersions->create();
 			}
 
 			// Check whether there is a jumpTo page
@@ -398,6 +398,7 @@ class ModulePersonalData extends Module
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->rowLast = 'row_' . $row . ((($row % 2) == 0) ? ' even' : ' odd');
+		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
 

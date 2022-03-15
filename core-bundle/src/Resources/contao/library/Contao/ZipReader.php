@@ -445,7 +445,8 @@ class ZipReader
 
 			$fseek = @fseek($this->resFile, $intOffset, SEEK_END);
 			$strBuffer = @fread($this->resFile, abs($intOffset)) . $strBuffer;
-		} while ($fseek != -1 && ($pos = strpos($strBuffer, self::CENTRAL_DIR_END)) === false);
+		}
+		while ($fseek != -1 && ($pos = strpos($strBuffer, self::CENTRAL_DIR_END)) === false);
 
 		// Reposition pointer
 		fseek($this->resFile, ($intOffset + $pos), SEEK_END);

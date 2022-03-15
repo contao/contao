@@ -15,12 +15,13 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\Config;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\Frontend;
+use Contao\Input;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,13 +31,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
 /**
  * @group legacy
  */
-class RoutingTest extends ContaoTestCase
+class RoutingTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->backupServerEnvGetPost();
 
         $GLOBALS['TL_CONFIG']['urlSuffix'] = '.html';
         $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
@@ -50,8 +53,17 @@ class RoutingTest extends ContaoTestCase
 
         System::setContainer($container);
 
-        $_GET = [];
         $GLOBALS['TL_AUTO_ITEM'] = ['items'];
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_AUTO_ITEM']);
+
+        $this->restoreServerEnvGetPost();
+        $this->resetStaticProperties([Input::class, Environment::class, System::class]);
+
+        parent::tearDown();
     }
 
     public function testReturnsThePageIdFromTheUrl(): void

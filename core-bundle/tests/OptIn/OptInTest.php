@@ -13,13 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\OptIn;
 
 use Contao\CoreBundle\OptIn\OptIn;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\MemberModel;
 use Contao\Model;
 use Contao\Model\Collection;
 use Contao\OptInModel;
-use Contao\TestCase\ContaoTestCase;
 
-class OptInTest extends ContaoTestCase
+class OptInTest extends TestCase
 {
     public function testCreatesAToken(): void
     {

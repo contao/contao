@@ -24,15 +24,13 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BackupRestoreCommand extends AbstractBackupCommand
 {
     protected static $defaultName = 'contao:backup:restore';
+    protected static $defaultDescription = 'Restores a database backup.';
 
     protected function configure(): void
     {
         parent::configure();
 
-        $this
-            ->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.')
-            ->setDescription('Restores a backup.')
-        ;
+        $this->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -64,7 +62,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
             return 0;
         }
 
-        $io->success(sprintf('Successfully restored backup from "%s".', $config->getBackup()->getFilepath()));
+        $io->success(sprintf('Successfully restored backup from "%s".', $config->getBackup()->getFilename()));
 
         return 0;
     }

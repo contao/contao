@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
+use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
 use PhpCsFixer\Fixer\Basic\BracesFixer;
 use PhpCsFixer\Fixer\ClassNotation\OrderedClassElementsFixer;
@@ -75,6 +76,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         UseArrowFunctionsFixer::class => null,
         UselessParenthesesSniff::class => null,
         UselessVariableSniff::class => null,
+        UseSprintfInExceptionsSniff::class => null,
         VisibilityRequiredFixer::class => null,
         VoidReturnFixer::class => null,
         YodaStyleFixer::class => null,

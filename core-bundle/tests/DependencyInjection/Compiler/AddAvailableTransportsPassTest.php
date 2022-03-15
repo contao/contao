@@ -30,7 +30,7 @@ class AddAvailableTransportsPassTest extends TestCase
         $pass = new AddAvailableTransportsPass();
         $pass->process($container);
 
-        $definition = $container->getDefinition(AvailableTransports::class);
+        $definition = $container->getDefinition('contao.mailer.available_transports');
 
         $this->assertEmpty($definition->getMethodCalls());
     }
@@ -49,7 +49,7 @@ class AddAvailableTransportsPassTest extends TestCase
         $pass = new AddAvailableTransportsPass();
         $pass->process($container);
 
-        $definition = $container->getDefinition(AvailableTransports::class);
+        $definition = $container->getDefinition('contao.mailer.available_transports');
 
         $this->assertEmpty($definition->getMethodCalls());
     }
@@ -72,7 +72,7 @@ class AddAvailableTransportsPassTest extends TestCase
         $pass = new AddAvailableTransportsPass();
         $pass->process($container);
 
-        $definition = $container->getDefinition(AvailableTransports::class);
+        $definition = $container->getDefinition('contao.mailer.available_transports');
 
         $this->assertEmpty($definition->getMethodCalls());
     }
@@ -167,7 +167,7 @@ class AddAvailableTransportsPassTest extends TestCase
     private function getContainerBuilder(): ContainerBuilder
     {
         $container = new ContainerBuilder();
-        $container->setDefinition(AvailableTransports::class, new Definition(AvailableTransports::class, []));
+        $container->setDefinition('contao.mailer.available_transports', new Definition(AvailableTransports::class, []));
 
         return $container;
     }
@@ -177,9 +177,9 @@ class AddAvailableTransportsPassTest extends TestCase
      */
     private function getTransportsFromDefinition(ContainerBuilder $container): array
     {
-        $this->assertTrue($container->hasDefinition(AvailableTransports::class));
+        $this->assertTrue($container->hasDefinition('contao.mailer.available_transports'));
 
-        $definition = $container->getDefinition(AvailableTransports::class);
+        $definition = $container->getDefinition('contao.mailer.available_transports');
         $methodCalls = $definition->getMethodCalls();
 
         $this->assertIsArray($methodCalls);

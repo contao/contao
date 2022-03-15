@@ -126,6 +126,13 @@ class ContentCompositionListenerTest extends TestCase
         );
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA']);
+
+        parent::tearDown();
+    }
+
     public function testDoesNotRenderThePageArticlesOperationIfUserDoesNotHaveAccess(): void
     {
         $this->security
@@ -254,10 +261,7 @@ class ContentCompositionListenerTest extends TestCase
             ->method('addToUrl')
         ;
 
-        $this->assertSame(
-            '',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', null)
-        );
+        $this->assertSame('', $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', null));
     }
 
     public function testRendersNoArticlesIconIfPageSupportsContentCompositionAndIconAndHrefAreNull(): void
@@ -282,10 +286,7 @@ class ContentCompositionListenerTest extends TestCase
             ->method('createInstance')
         ;
 
-        $this->assertSame(
-            '',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, null, '', '', null)
-        );
+        $this->assertSame('', $this->listener->renderPageArticlesOperation($this->pageRecord, null, '', '', null));
     }
 
     public function testRendersArticlesOperationIfProviderSupportsCompositionAndPageLayoutHasArticles(): void
@@ -557,9 +558,7 @@ class ContentCompositionListenerTest extends TestCase
             ->expects($this->once())
             ->method('getRelated')
             ->with('layout')
-            ->willReturn(
-                $this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize($modules)])
-            )
+            ->willReturn($this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize($modules)]))
         ;
 
         $article = [
@@ -661,10 +660,7 @@ class ContentCompositionListenerTest extends TestCase
             ->method('isGranted')
         ;
 
-        $this->assertSame(
-            '',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
-        );
+        $this->assertSame('', $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false));
     }
 
     public function testDisablesPasteIntoArticleOnCircularReference(): void

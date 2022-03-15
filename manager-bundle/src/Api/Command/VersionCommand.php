@@ -23,6 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class VersionCommand extends Command
 {
+    protected static $defaultName = 'version';
+    protected static $defaultDescription = 'Gets the Contao Manager API version and features.';
+
     private Application $application;
 
     public function __construct(Application $application)
@@ -30,16 +33,6 @@ class VersionCommand extends Command
         parent::__construct();
 
         $this->application = $application;
-    }
-
-    protected function configure(): void
-    {
-        parent::configure();
-
-        $this
-            ->setName('version')
-            ->setDescription('Gets the Contao Manager API version and features.')
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

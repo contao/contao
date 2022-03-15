@@ -80,8 +80,6 @@ class MountManagerTest extends TestCase
         [$method, $arguments, $return] = $call;
 
         $this->assertSame($return, $manager->$method('files/media/foo', ...$arguments));
-
-        $this->closeStreamResources($arguments);
     }
 
     /**
@@ -100,8 +98,6 @@ class MountManagerTest extends TestCase
         [$method, $arguments, $return] = $call;
 
         $this->assertSame($return, $manager->$method('some/place', ...$arguments));
-
-        $this->closeStreamResources($arguments);
     }
 
     public function provideCalls(): \Generator
@@ -308,8 +304,6 @@ class MountManagerTest extends TestCase
             $this->assertSame($flysystemException, $e->getPrevious());
             $this->assertSame('some/place', $e->getPath());
         }
-
-        $this->closeStreamResources($arguments);
     }
 
     public function provideCallsForFlysystemExceptions(): \Generator
@@ -454,9 +448,9 @@ class MountManagerTest extends TestCase
             [
                 'file1 (file)',
                 'files (dir)',
-                // Note: 'files/media' must not be reported as a directory
+                // Note: "files/media" must not be reported as a directory
                 // here, because it is virtual and implicit (i.e. only the
-                // explicitly mounted 'files/media/extra' is included).
+                // explicitly mounted "files/media/extra" is included).
                 'files/media/extra (dir)',
                 'files/media/extra/cat.avif (file)',
                 'files/media/extra/videos (dir)',
@@ -607,14 +601,5 @@ class MountManagerTest extends TestCase
         }
 
         return $adapter;
-    }
-
-    private function closeStreamResources(array $arguments): void
-    {
-        foreach ($arguments as $resource) {
-            if (\is_resource($resource)) {
-                fclose($resource);
-            }
-        }
     }
 }

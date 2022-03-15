@@ -35,11 +35,21 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
     use ExpectDeprecationTrait;
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HOOKS']);
+
+        ini_restore('intl.default_locale');
+
+        parent::tearDown();
+    }
 
     /**
      * @runInSeparateProcess
@@ -314,6 +324,10 @@ class ContaoFrameworkTest extends TestCase
         $this->addToAssertionCount(1); // does not throw an exception
     }
 
+    /**
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
     public function testOverridesTheErrorLevel(): void
     {
         $request = Request::create('/contao/login');
@@ -326,11 +340,7 @@ class ContaoFrameworkTest extends TestCase
         $errorReporting = error_reporting();
         error_reporting(E_ALL ^ E_USER_NOTICE);
 
-        $this->assertNotSame(
-            $errorReporting,
-            error_reporting(),
-            'Test is invalid, error level has not changed.'
-        );
+        $this->assertNotSame($errorReporting, error_reporting(), 'Test is invalid, error level has not changed.');
 
         $framework->initialize();
 
@@ -345,6 +355,14 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testRedirectsToTheInstallToolIfTheInstallationIsIncomplete(): void
     {
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_install', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('/contao/install')
+        ;
+
         $request = Request::create('/contao/login');
         $request->attributes->set('_route', 'dummy');
 
@@ -356,6 +374,7 @@ class ContaoFrameworkTest extends TestCase
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
             new Filesystem(),
+            $urlGenerator,
             $this->getTempDir(),
             error_reporting(),
             false
@@ -380,6 +399,9 @@ class ContaoFrameworkTest extends TestCase
 
     /**
      * @dataProvider getInstallRoutes
+     *
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
      */
     public function testAllowsTheInstallationToBeIncompleteInTheInstallTool(string $route): void
     {
@@ -394,6 +416,7 @@ class ContaoFrameworkTest extends TestCase
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
             new Filesystem(),
+            $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting(),
             false
@@ -678,6 +701,7 @@ class ContaoFrameworkTest extends TestCase
             $scopeMatcher ?? $this->mockScopeMatcher(),
             $tokenChecker ?? $this->createMock(TokenChecker::class),
             new Filesystem(),
+            $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting(),
             false
@@ -692,6 +716,10 @@ class ContaoFrameworkTest extends TestCase
         $adapterCache = $ref->getProperty('adapterCache');
         $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
+
+        $isInitialized = $ref->getProperty('initialized');
+        $isInitialized->setAccessible(true);
+        $isInitialized->setValue(false);
 
         return $framework;
     }

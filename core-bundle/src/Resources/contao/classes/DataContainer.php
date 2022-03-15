@@ -637,7 +637,7 @@ abstract class DataContainer extends Backend
 
 		$hasWizardClass = \in_array('wizard', $arrClasses);
 
-		if ($wizard)
+		if ($wizard && !($arrData['eval']['disabled'] ?? false) && !($arrData['eval']['readonly'] ?? false))
 		{
 			$objWidget->wizard = $wizard;
 
@@ -845,7 +845,7 @@ abstract class DataContainer extends Backend
 	protected function switchToEdit($id)
 	{
 		$arrKeys = array();
-		$arrUnset = array('act', 'id', 'table', 'mode', 'pid');
+		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
 		foreach (array_keys($_GET) as $strKey)
 		{
@@ -954,7 +954,7 @@ abstract class DataContainer extends Backend
 						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
 					}
 
-					parse_str(StringUtil::decodeEntities($v['href']), $params);
+					parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
 
 					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 					{
@@ -1612,9 +1612,16 @@ abstract class DataContainer extends Backend
 	 * @param string $table
 	 *
 	 * @return string
+	 *
+	 * @todo Change the return type to ?string in Contao 5.0
 	 */
 	public static function getDriverForTable(string $table): string
 	{
+		if (!isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer']))
+		{
+			return '';
+		}
+
 		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
 
 		if (false === strpos($dataContainer, '\\'))
@@ -1689,7 +1696,7 @@ abstract class DataContainer extends Backend
 
 					foreach ($row_v as $option)
 					{
-						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?: $option;
+						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
 					}
 
 					$args[$k] = implode(', ', $args_k);

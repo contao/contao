@@ -281,6 +281,9 @@
       <trans-unit id="CTE.headline.1">
         <source>Generates a headline (h1 - h6).</source>
       </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+      </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
       </trans-unit>
@@ -1185,7 +1188,7 @@
         <source>Back end keyboard shortcuts</source>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href="https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/" title="Keyboard shortcuts overview" target="_blank" rel="noreferrer noopener"&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <source>Learn more about speeding up your workflow by using &lt;a href="https://to.contao.org/shortcuts" target="_blank" rel="noreferrer noopener"&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2062,6 +2065,9 @@
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

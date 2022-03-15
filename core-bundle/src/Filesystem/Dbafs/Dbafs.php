@@ -51,7 +51,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     private string $table;
     private string $dbPathPrefix = '';
-    private int $maxFileSize = 2147483648; // 2 GiB
+    private int $maxFileSize = 2147483647; // 2 GiB - 1 byte (see #4208)
     private int $bulkInsertSize = 100;
     private bool $useLastModified = true;
 
@@ -167,11 +167,11 @@ class Dbafs implements DbafsInterface, ResetInterface
     public function setExtraMetadata(string $path, array $metadata): void
     {
         if (null === ($record = $this->getRecord($path))) {
-            throw new \InvalidArgumentException("Record for path '$path' does not exist.");
+            throw new \InvalidArgumentException(sprintf('Record for path "%s" does not exist.', $path));
         }
 
         if (!$record->isFile()) {
-            throw new \LogicException("Can only set extra metadata for files, directory given under '$path'.");
+            throw new \LogicException(sprintf('Can only set extra metadata for files, directory given under "%s".', $path));
         }
 
         $row = [
@@ -591,7 +591,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         if (!empty($inserts)) {
             $table = $this->connection->quoteIdentifier($this->table);
-            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // `uuid`, `pid`, …
+            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
             $placeholders = sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
 
             foreach (array_chunk($inserts, $this->bulkInsertSize) as $chunk) {
@@ -653,7 +653,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * This includes all parent directories and - in case of directories - all
      * resources that reside in it.
      *
-     * This method also builds lookup tables for hashes, 'last modified' timestamps
+     * This method also builds lookup tables for hashes, "last modified" timestamps
      * and UUIDs of the entire table.
      *
      * @param array<string> $searchPaths       non-empty list of search paths
@@ -722,6 +722,14 @@ class Dbafs implements DbafsInterface, ResetInterface
             foreach ($this->filesystem->listContents($directory, false, VirtualFilesystemInterface::BYPASS_DBAFS) as $item) {
                 $path = $item->getPath();
 
+                // Ignore paths with non-UTF-8 characters
+                // TODO: Move check to VirtualFilesystem#listContents() and throw a VirtualFilesystemException instead in Contao 5.
+                if (1 !== preg_match('//u', $path)) {
+                    trigger_deprecation('contao/core-bundle', '4.13', 'Filesystem resources with non-UTF-8 paths will no longer be skipped but throw an exception in Contao 5.0.');
+
+                    continue;
+                }
+
                 if (!$item->isFile()) {
                     if (!$shallow) {
                         yield from $traverseRecursively($path);
@@ -730,8 +738,8 @@ class Dbafs implements DbafsInterface, ResetInterface
                     continue;
                 }
 
-                // Ignore file markers
-                if (self::FILE_MARKER_PUBLIC === basename($path)) {
+                // Ignore dot files
+                if (0 === strpos(basename($path), '.')) {
                     continue;
                 }
 
@@ -816,7 +824,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * double slash (//) as suffix.
      *
      * If $considerShallowDirectories is set to false, paths that are directly
-     * inside shallow directories (e.g. 'foo/bar' in 'foo') do NOT yield a
+     * inside shallow directories (e.g. "foo/bar" in "foo") do NOT yield a
      * truthy result.
      *
      * @param array<string> $basePaths
@@ -871,11 +879,11 @@ class Dbafs implements DbafsInterface, ResetInterface
                 $path = trim(Path::canonicalize($path));
 
                 if (Path::isAbsolute($path)) {
-                    throw new \InvalidArgumentException("Absolute path '$path' is not allowed when synchronizing.");
+                    throw new \InvalidArgumentException(sprintf('Absolute path "%s" is not allowed when synchronizing.', $path));
                 }
 
                 if (0 === strpos($path, '.')) {
-                    throw new \InvalidArgumentException("Dot path '$path' is not allowed when synchronizing.");
+                    throw new \InvalidArgumentException(sprintf('Dot path "%s" is not allowed when synchronizing.', $path));
                 }
 
                 return $path;
@@ -893,7 +901,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $shallowDirectories = [];
         $deepDirectories = [];
 
-        // Normalize '/**' and '/*' suffixes
+        // Normalize "/**" and "/*" suffixes
         $paths = array_map(
             static function (string $path) use (&$shallowDirectories, &$deepDirectories): string {
                 if (preg_match('@^[^*]+/(\*\*?)@', $path, $matches)) {

@@ -41,7 +41,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
-        "phpunit/phpunit": "^8.5",
+        "phpunit/phpunit": "^9.3",
         "symfony/http-client": "^5.4",
         "symfony/phpunit-bridge": "^5.4"
     },
@@ -57,6 +57,12 @@
     "autoload-dev": {
         "psr-4": {
             "Contao\\InstallationBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
         }
     },
     "extra": {

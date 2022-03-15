@@ -16,11 +16,14 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\Pagination;
+use Contao\System;
 
 class PaginationTest extends TestCase
 {
     protected function setUp(): void
     {
+        parent::setUp();
+
         $GLOBALS['TL_LANG']['MSC']['first'] = 'First';
         $GLOBALS['TL_LANG']['MSC']['previous'] = 'Previous';
         $GLOBALS['TL_LANG']['MSC']['next'] = 'Next';
@@ -28,15 +31,18 @@ class PaginationTest extends TestCase
         $GLOBALS['TL_LANG']['MSC']['totalPages'] = 'Total';
         $GLOBALS['TL_LANG']['MSC']['goToPage'] = 'Go to';
 
-        parent::setUp();
+        System::setContainer($this->getContainerWithContaoConfiguration());
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG'], $_GET['page']);
+        unset($GLOBALS['TL_LANG']);
+        $_GET = [];
 
         Input::resetCache();
         Input::resetUnusedGet();
+
+        $this->resetStaticProperties([System::class]);
 
         parent::tearDown();
     }

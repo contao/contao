@@ -79,9 +79,11 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.0">
         <source>Purge the preview cache</source>
+        <target>Очистить кеш предпросмотра</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.previews.1">
         <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Удаляет автоматически созданные изображения предпросмотра, а затем очищает общий кэш, чтобы не было ссылок на удаленные ресурсы.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
