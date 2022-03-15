@@ -133,11 +133,16 @@ class Dumper implements DumperInterface
         }
     }
 
-    private function formatValueForDump(?string $value, int $columnBindingType, bool $isUtf8Charset, Connection $connection): string
+    /**
+     * @param string|int|float|null $value
+     */
+    private function formatValueForDump($value, int $columnBindingType, bool $isUtf8Charset, Connection $connection): string
     {
         if (null === $value) {
             return 'NULL';
         }
+
+        $value = (string) $value;
 
         if ('' === $value) {
             return "''";

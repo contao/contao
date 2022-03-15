@@ -118,6 +118,50 @@ class DumperTest extends ContaoTestCase
             ],
         ];
 
+        yield 'Table with float and integer data' => [
+            [
+                new Table('tl_page', [
+                    new Column('stringCol', Type::getType(Types::STRING)),
+                    new Column('integerCol', Type::getType(Types::INTEGER)),
+                    new Column('floatCol', Type::getType(Types::FLOAT)),
+                    new Column('bigintCol', Type::getType(Types::BIGINT)),
+                    new Column('decimalCol', Type::getType(Types::DECIMAL)),
+                    new Column('booleanCol', Type::getType(Types::BOOLEAN)),
+                ]),
+            ],
+            [],
+            [
+                'SELECT `stringCol` AS `stringCol`, `integerCol` AS `integerCol`, `floatCol` AS `floatCol`, `bigintCol` AS `bigintCol`, `decimalCol` AS `decimalCol`, `booleanCol` AS `booleanCol` FROM `tl_page`' => [
+                    [
+                        'stringCol' => 'value1',
+                        'integerCol' => '42',
+                        'floatCol' => '4.2',
+                        'bigintCol' => '92233720368547758079223372036854775807',
+                        'decimalCol' => '4.2',
+                        'booleanCol' => '1',
+                    ],
+                    [
+                        'stringCol' => 'value1',
+                        'integerCol' => 42,
+                        'floatCol' => 4.2,
+                        'bigintCol' => '92233720368547758079223372036854775807',
+                        'decimalCol' => 4.2,
+                        'booleanCol' => 1,
+                    ],
+                ],
+            ],
+            [
+                'SET FOREIGN_KEY_CHECKS = 0;',
+                '-- BEGIN STRUCTURE tl_page',
+                'DROP TABLE IF EXISTS `tl_page`;',
+                'CREATE TABLE tl_page (stringCol VARCHAR(255) NOT NULL, integerCol INT NOT NULL, floatCol DOUBLE PRECISION NOT NULL, bigintCol BIGINT NOT NULL, decimalCol NUMERIC(10, 0) NOT NULL, booleanCol TINYINT(1) NOT NULL) DEFAULT CHARACTER SET utf8 COLLATE `utf8_unicode_ci` ENGINE = InnoDB;',
+                '-- BEGIN DATA tl_page',
+                "INSERT INTO `tl_page` (`stringCol`, `integerCol`, `floatCol`, `bigintCol`, `decimalCol`, `booleanCol`) VALUES ('value1', 42, '4.2', '92233720368547758079223372036854775807', '4.2', 1);",
+                "INSERT INTO `tl_page` (`stringCol`, `integerCol`, `floatCol`, `bigintCol`, `decimalCol`, `booleanCol`) VALUES ('value1', 42, '4.2', '92233720368547758079223372036854775807', '4.2', 1);",
+                'SET FOREIGN_KEY_CHECKS = 1;',
+            ],
+        ];
+
         yield 'Multiple tables with data' => [
             [
                 new Table('tl_page', [new Column('foobar', Type::getType(Types::STRING))]),
