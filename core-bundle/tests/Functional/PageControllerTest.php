@@ -45,7 +45,7 @@ class PageControllerTest extends FunctionalTestCase
     }
 
     /**
-     * @param string|null|false $path
+     * @param string|false|null $path
      *
      * @dataProvider getPageController
      */
