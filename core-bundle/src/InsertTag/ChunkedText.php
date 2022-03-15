@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\InsertTag;
 /**
  * @implements \IteratorAggregate<int, array{0:int, 1:string}>
  */
-final class ChunkedText implements \IteratorAggregate
+final class ChunkedText implements \IteratorAggregate, \Stringable
 {
     public const TYPE_TEXT = 0;
     public const TYPE_RAW = 1;

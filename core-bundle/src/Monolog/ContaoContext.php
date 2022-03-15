@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Monolog;
 
-class ContaoContext
+class ContaoContext implements \Stringable
 {
     final public const ERROR = 'ERROR';
     final public const ACCESS = 'ACCESS';

@@ -375,7 +375,7 @@ class StringUtilTest extends TestCase
         ];
 
         yield 'Stringable argument' => [
-            new class('foobar') {
+            new class('foobar' implements \Stringable) {
                 public function __construct(private string $value)
                 {
                 }

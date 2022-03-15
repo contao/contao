@@ -19,7 +19,7 @@ use Symfony\Component\Filesystem\Path;
 /**
  * @experimental
  */
-class FilesystemItem
+class FilesystemItem implements \Stringable
 {
     /**
      * @var int|(\Closure(self):int|null)|null
