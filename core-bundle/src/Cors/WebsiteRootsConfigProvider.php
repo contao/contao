@@ -72,7 +72,7 @@ class WebsiteRootsConfigProvider implements ProviderInterface
     {
         try {
             return $this->connection->createSchemaManager()->tablesExist(['tl_page']);
-        } catch (DriverException $e) {
+        } catch (DriverException) {
             return false;
         }
     }

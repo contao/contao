@@ -129,7 +129,7 @@ class ContaoCoreBundle extends Bundle
     {
         try {
             $version = (string) InstalledVersions::getPrettyVersion('contao/core-bundle');
-        } catch (\OutOfBoundsException $e) {
+        } catch (\OutOfBoundsException) {
             $version = '';
         }
 

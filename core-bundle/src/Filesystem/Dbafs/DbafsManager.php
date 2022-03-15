@@ -203,7 +203,7 @@ class DbafsManager
             try {
                 $dbafs->setExtraMetadata($resolvedPath, $metadata);
                 $success = true;
-            } catch (\InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException) {
                 // ignore
             }
         }

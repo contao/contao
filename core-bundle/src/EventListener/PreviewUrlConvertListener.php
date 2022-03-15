@@ -54,7 +54,7 @@ class PreviewUrlConvertListener
 
             try {
                 $event->setUrl($page->getPreviewUrl($this->getParams($request)));
-            } catch (ExceptionInterface $e) {
+            } catch (ExceptionInterface) {
                 $event->setResponse($this->forward($request, $page));
             }
         }

@@ -200,7 +200,7 @@ class PageUrlListener
                 [RouteObjectInterface::ROUTE_OBJECT => $currentRoute],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-        } catch (RouteParametersException $e) {
+        } catch (RouteParametersException) {
             // This route has mandatory parameters, only match exact path with placeholders
             $currentUrl = null;
         }
@@ -253,7 +253,7 @@ class PageUrlListener
 
         try {
             $this->routeMatcher->finalMatch($routeCollection, $request);
-        } catch (ResourceNotFoundException $exception) {
+        } catch (ResourceNotFoundException) {
             return false;
         }
 

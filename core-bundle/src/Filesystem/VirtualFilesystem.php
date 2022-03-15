@@ -240,7 +240,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
 
             try {
                 $this->dbafsManager->resolveUuid($location, $this->prefix);
-            } catch (UnableToResolveUuidException $e) {
+            } catch (UnableToResolveUuidException) {
                 return false;
             }
 

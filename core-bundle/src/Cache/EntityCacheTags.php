@@ -134,7 +134,7 @@ class EntityCacheTags
 
                 try {
                     return [$this->getTagForEntityClass($target)];
-                } catch (\InvalidArgumentException $e) {
+                } catch (\InvalidArgumentException) {
                     // ignore
                 }
             }
@@ -300,7 +300,7 @@ class EntityCacheTags
         $getMetadata = function (string $className) {
             try {
                 return $this->entityManager->getClassMetadata($className);
-            } catch (MappingException $e) {
+            } catch (MappingException) {
                 return null;
             }
         };

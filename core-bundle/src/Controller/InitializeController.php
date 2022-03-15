@@ -170,7 +170,7 @@ class InitializeController
             );
 
             $this->requestStack->pop();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // ignore and continue with original response
         }
 
@@ -192,7 +192,7 @@ class InitializeController
 
         try {
             $this->eventDispatcher->dispatch($event, KernelEvents::RESPONSE);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             // Ignore any errors from events
         }
 

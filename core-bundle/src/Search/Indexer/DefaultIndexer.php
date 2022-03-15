@@ -42,13 +42,13 @@ class DefaultIndexer implements IndexerInterface
 
         try {
             $title = $document->getContentCrawler()->filterXPath('//head/title')->first()->text(null, true);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $title = 'undefined';
         }
 
         try {
             $language = $document->getContentCrawler()->filterXPath('//html[@lang]')->first()->attr('lang');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $language = 'en';
         }
 

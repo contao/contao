@@ -291,7 +291,7 @@ class ImageFactory implements ImageFactoryInterface
                     (float) $file->importantPartWidth / $size->getWidth(),
                     (float) $file->importantPartHeight / $size->getHeight()
                 );
-            } catch (\Throwable $exception) {
+            } catch (\Throwable) {
                 return new ImportantPart();
             }
         }

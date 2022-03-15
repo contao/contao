@@ -69,7 +69,7 @@ class SearchIndexListener
             if (str_contains($robots, 'noindex')) {
                 return;
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // No meta robots tag found
         }
 
@@ -90,7 +90,7 @@ class SearchIndexListener
             if (!$success && $this->enabledFeatures & self::FEATURE_DELETE) {
                 $this->indexer->delete($document);
             }
-        } catch (IndexerException $e) {
+        } catch (IndexerException) {
             // ignore
         }
     }

@@ -71,7 +71,7 @@ class PackageUtil
 
         try {
             $version = static::getVersion('contao/core-bundle');
-        } catch (\OutOfBoundsException $e) {
+        } catch (\OutOfBoundsException) {
             $version = '';
         }
 

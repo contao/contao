@@ -53,7 +53,7 @@ class LegacyMatcher implements RequestMatcherInterface
             $match = $this->requestMatcher->matchRequest($request);
             $fragments = $this->createFragmentsFromMatch($match);
             $locale = isset($match['_locale']) ? LocaleUtil::formatAsLanguageTag($match['_locale']) : null;
-        } catch (ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException) {
             // continue and parse fragments from path
         }
 

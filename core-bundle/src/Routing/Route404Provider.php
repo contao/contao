@@ -149,7 +149,7 @@ class Route404Provider extends AbstractPageRouteProvider
             if (!$page->rootId) {
                 return;
             }
-        } catch (NoRootPageFoundException $e) {
+        } catch (NoRootPageFoundException) {
             return;
         }
 

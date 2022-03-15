@@ -84,7 +84,7 @@ class TemplateTest extends TestCase
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Ignore
         }
 
@@ -117,7 +117,7 @@ class TemplateTest extends TestCase
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Ignore
         }
 
@@ -178,7 +178,7 @@ class TemplateTest extends TestCase
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Ignore
         }
 
@@ -217,7 +217,7 @@ class TemplateTest extends TestCase
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Ignore
         }
 

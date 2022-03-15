@@ -61,7 +61,7 @@ class PickerBuilder implements PickerBuilderInterface
     {
         try {
             $config = PickerConfig::urlDecode($data);
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             return null;
         }
 

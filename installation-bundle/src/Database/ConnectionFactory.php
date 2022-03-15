@@ -34,7 +34,7 @@ class ConnectionFactory
 
         try {
             return DriverManager::getConnection($params);
-        } catch (Exception $e) {
+        } catch (Exception) {
             // ignore
         }
 

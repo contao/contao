@@ -72,7 +72,7 @@ class PrettyErrorScreenListener
 
         try {
             $isBackendUser = $this->security->isGranted('ROLE_USER');
-        } catch (AuthenticationCredentialsNotFoundException $e) {
+        } catch (AuthenticationCredentialsNotFoundException) {
             $isBackendUser = false;
         }
 
@@ -192,7 +192,7 @@ class PrettyErrorScreenListener
 
         try {
             $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
-        } catch (Error $e) {
+        } catch (Error) {
             $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
         }
     }
@@ -207,7 +207,7 @@ class PrettyErrorScreenListener
 
         try {
             $isBackendUser = $this->security->isGranted('ROLE_USER');
-        } catch (AuthenticationCredentialsNotFoundException $e) {
+        } catch (AuthenticationCredentialsNotFoundException) {
             $isBackendUser = false;
         }
 

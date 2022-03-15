@@ -361,7 +361,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             // Will throw an exception if the PHP implementation is not available
             try {
                 new $class();
-            } catch (RuntimeException $e) {
+            } catch (RuntimeException) {
                 continue;
             }
 
