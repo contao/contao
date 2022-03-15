@@ -74,6 +74,7 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\DisableCanonicalFieldsListener
         arguments:
             - '@contao.framework'
+            - '@translator'
 
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
@@ -145,12 +146,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@database_connection'
-
-    contao.listener.data_container.rel_canonical:
-        class: Contao\CoreBundle\EventListener\DataContainer\RelCanonicalListener
-        arguments:
-            - '@contao.framework'
-            - '@translator'
 
     contao.listener.data_container.reset_custom_template:
         class: Contao\CoreBundle\EventListener\DataContainer\ResetCustomTemplateListener
