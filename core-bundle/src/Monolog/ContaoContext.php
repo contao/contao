@@ -41,15 +41,12 @@ class ContaoContext implements \Stringable
      */
     public function __toString(): string
     {
-        return (string) json_encode(
-            [
-                'func' => $this->func,
-                'action' => $this->action,
-                'username' => $this->username,
-                'browser' => $this->browser,
-            ],
-            JSON_THROW_ON_ERROR
-        );
+        return (string) json_encode([
+            'func' => $this->func,
+            'action' => $this->action,
+            'username' => $this->username,
+            'browser' => $this->browser,
+        ]);
     }
 
     public function getFunc(): string

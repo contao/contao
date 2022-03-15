@@ -86,7 +86,7 @@ class BackupListCommand extends AbstractBackupCommand
             $json[] = $backup->toArray();
         }
 
-        return json_encode($json, JSON_THROW_ON_ERROR);
+        return json_encode($json);
     }
 
     /**

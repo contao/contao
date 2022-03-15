@@ -45,7 +45,7 @@ class ParseJwtCookieCommand extends Command
     {
         $payload = $this->jwtManager->parseCookie($input->getArgument('content'));
 
-        $output->write(json_encode($payload, JSON_THROW_ON_ERROR));
+        $output->write(json_encode($payload));
 
         return 0;
     }

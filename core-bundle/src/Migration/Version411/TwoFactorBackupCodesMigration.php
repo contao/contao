@@ -59,7 +59,7 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
         $rows = $this->getAffectedRowsForTable($table);
 
         foreach ($rows as $row) {
-            $backupCodes = json_decode($row['backupCodes'], true, 512, JSON_THROW_ON_ERROR);
+            $backupCodes = json_decode($row['backupCodes'], true);
 
             if (!\is_array($backupCodes)) {
                 continue;
@@ -72,7 +72,7 @@ class TwoFactorBackupCodesMigration extends AbstractMigration
             $this->connection
                 ->prepare("UPDATE $table SET backupCodes = :backupCodes WHERE id = :id")
                 ->executeStatement([
-                    ':backupCodes' => json_encode($backupCodes, JSON_THROW_ON_ERROR),
+                    ':backupCodes' => json_encode($backupCodes),
                     ':id' => $row['id'],
                 ])
             ;

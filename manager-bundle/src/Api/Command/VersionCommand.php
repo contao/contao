@@ -33,14 +33,11 @@ class VersionCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->write(json_encode(
-            [
-                'version' => Application::VERSION,
-                'commands' => $this->getCommandNames(),
-                'features' => $this->getFeatures(),
-            ],
-            JSON_THROW_ON_ERROR
-        ));
+        $output->write(json_encode([
+            'version' => Application::VERSION,
+            'commands' => $this->getCommandNames(),
+            'features' => $this->getFeatures(),
+        ]));
 
         return 0;
     }

@@ -60,13 +60,10 @@ class BackupCodeManagerTest extends TestCase
 
     public function testHandlesContaoUsers(): void
     {
-        $backupCodes = json_encode(
-            [
-                password_hash('123456', PASSWORD_DEFAULT),
-                password_hash('234567', PASSWORD_DEFAULT),
-            ],
-            JSON_THROW_ON_ERROR
-        );
+        $backupCodes = json_encode([
+            password_hash('123456', PASSWORD_DEFAULT),
+            password_hash('234567', PASSWORD_DEFAULT),
+        ]);
 
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class, []);
         $frontendUser->backupCodes = $backupCodes;
@@ -115,7 +112,7 @@ class BackupCodeManagerTest extends TestCase
         $backupCodes = $backupCodeManager->generateBackupCodes($user);
 
         $this->assertCount(10, $backupCodes);
-        $this->assertCount(10, json_decode($user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
+        $this->assertCount(10, json_decode($user->backupCodes, true));
         $this->assertMatchesRegularExpression('/[a-f0-9]{6}-[a-f0-9]{6}/', $backupCodes[0]);
     }
 }

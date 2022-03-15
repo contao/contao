@@ -149,7 +149,7 @@ class PreviewLinkListener
                 'tl_preview_link.hintEdit',
                 [
                     $clipboard['content'],
-                    StringUtil::specialchars(json_encode($clipboard, JSON_THROW_ON_ERROR)),
+                    StringUtil::specialchars(json_encode($clipboard)),
                     $clipboard['content'],
                 ],
                 'contao_tl_preview_link'
@@ -201,7 +201,7 @@ class PreviewLinkListener
             '<a href="%s" target="_blank" title="%s" data-to-clipboard="%s">%s</a> ',
             $clipboard['content'],
             StringUtil::specialchars($title),
-            StringUtil::specialchars(json_encode($clipboard, JSON_THROW_ON_ERROR)),
+            StringUtil::specialchars(json_encode($clipboard)),
             Image::getHtml($icon, $label)
         );
     }

@@ -84,7 +84,7 @@ class MaintenanceModeCommand extends Command
                     'language' => 'en',
                     'template' => $templateName,
                 ],
-                json_decode($templateVars, true, 512, JSON_THROW_ON_ERROR)
+                json_decode($templateVars, true)
             ))
         );
     }
