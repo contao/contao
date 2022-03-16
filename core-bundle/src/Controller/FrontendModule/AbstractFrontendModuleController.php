@@ -37,14 +37,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         $this->addSectionToTemplate($template, $section);
         $this->tagResponse($model);
 
-        $response = $this->getResponse($template, $model, $request);
-
-        if (null === $response) {
-            trigger_deprecation('contao/core-bundle', '4.12', 'Returning null in %s::getResponse() is deprecated, return a Response instead.', static::class);
-            $response = $template->getResponse();
-        }
-
-        return $response;
+        return $this->getResponse($template, $model, $request);
     }
 
     public static function getSubscribedServices(): array

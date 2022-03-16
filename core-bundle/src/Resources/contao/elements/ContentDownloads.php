@@ -307,11 +307,6 @@ class ContentDownloads extends ContentDownload
 				array_multisort($files, SORT_NUMERIC, $auxDate, SORT_DESC);
 				break;
 
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			case 'meta':
-				trigger_deprecation('contao/core-bundle', '4.0', 'The "meta" key in "Contao\ContentDownloads::compile()" has been deprecated and will no longer work in Contao 5.0.');
-				// no break
-
 			case 'custom':
 				$files = ArrayUtil::sortByOrderField($files, $this->orderSRC);
 				break;

@@ -402,7 +402,6 @@ services:
     contao.listener.request_token:
         class: Contao\CoreBundle\EventListener\RequestTokenListener
         arguments:
-            - '@contao.framework'
             - '@contao.routing.scope_matcher'
             - '@contao.csrf.token_manager'
             - '%contao.csrf_token_name%'

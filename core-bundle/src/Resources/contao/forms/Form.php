@@ -595,21 +595,6 @@ class Form extends Hybrid
 	}
 
 	/**
-	 * Get the maximum file size that is allowed for file uploads
-	 *
-	 * @return integer
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use $this->objModel->getMaxUploadFileSize() instead.
-	 */
-	protected function getMaxFileSize()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Form::getMaxFileSize()" has been deprecated and will no longer work in Contao 5.0. Use "$this->objModel->getMaxUploadFileSize()" instead.');
-
-		return $this->objModel->getMaxUploadFileSize();
-	}
-
-	/**
 	 * Initialize the form in the current session
 	 *
 	 * @param string $formId

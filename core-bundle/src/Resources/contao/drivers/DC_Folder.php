@@ -1567,25 +1567,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			if ($this->blnCreateNewVersion && $objModel !== null)
 			{
 				$objVersions->create();
-
-				// Call the onversion_callback
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
-				{
-					trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
-
-					foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
-					{
-						if (\is_array($callback))
-						{
-							$this->import($callback[0]);
-							$this->{$callback[0]}->{$callback[1]}($this->strTable, $objModel->id, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($this->strTable, $objModel->id, $this);
-						}
-					}
-				}
 			}
 
 			// Redirect
@@ -1796,25 +1777,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					if ($this->blnCreateNewVersion && $objModel !== null)
 					{
 						$objVersions->create();
-
-						// Call the onversion_callback
-						if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
-						{
-							trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
-
-							foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
-							{
-								if (\is_array($callback))
-								{
-									$this->import($callback[0]);
-									$this->{$callback[0]}->{$callback[1]}($this->strTable, $objModel->id, $this);
-								}
-								elseif (\is_callable($callback))
-								{
-									$callback($this->strTable, $objModel->id, $this);
-								}
-							}
-						}
 					}
 				}
 			}
@@ -2197,48 +2159,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				(new Filesystem())->remove($twigCache);
 			}
 		}
-	}
-
-	/**
-	 * Protect a folder
-	 *
-	 * @throws InternalServerErrorException
-	 *
-	 * @deprecated Deprecated since Contao 4.7 to be removed in 5.0.
-	 *             Use Contao\Folder::protect() and Contao\Folder::unprotect() instead.
-	 */
-	public function protect()
-	{
-		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\DC_Folder::protect()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Folder::protect()" and "Contao\Folder::unprotect()" instead.');
-
-		if (!is_dir($this->strRootDir . '/' . $this->intId))
-		{
-			throw new InternalServerErrorException('Resource "' . $this->intId . '" is not a directory.');
-		}
-
-		// Protect or unprotect the folder
-		if (is_file($this->strRootDir . '/' . $this->intId . '/.public'))
-		{
-			$objFolder = new Folder($this->intId);
-			$objFolder->protect();
-
-			$this->import(Automator::class, 'Automator');
-			$this->Automator->generateSymlinks();
-
-			System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $this->intId . '" has been protected');
-		}
-		else
-		{
-			$objFolder = new Folder($this->intId);
-			$objFolder->unprotect();
-
-			$this->import(Automator::class, 'Automator');
-			$this->Automator->generateSymlinks();
-
-			System::getContainer()->get('monolog.logger.contao.files')->info('The protection from folder "' . $this->intId . '" has been removed');
-		}
-
-		$this->redirect($this->getReferer());
 	}
 
 	/**

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
-use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
@@ -70,13 +69,7 @@ class TemplateLocator
                 continue;
             }
 
-            try {
-                $slug = $this->themeNamespace->generateSlug(Path::makeRelative($themePath, 'templates'));
-            } catch (InvalidThemePathException $e) {
-                trigger_deprecation('contao/core-bundle', '4.12', 'Using a theme path with invalid characters has been deprecated and will throw an exception in Contao 5.0.');
-
-                continue;
-            }
+            $slug = $this->themeNamespace->generateSlug(Path::makeRelative($themePath, 'templates'));
 
             $directories[$slug] = $absolutePath;
         }

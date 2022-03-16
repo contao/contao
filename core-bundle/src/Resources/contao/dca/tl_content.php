@@ -21,7 +21,6 @@ use Contao\Image;
 use Contao\Input;
 use Contao\MemberGroupModel;
 use Contao\Message;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -1345,85 +1344,6 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Return the edit article alias wizard
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function editArticleAlias(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::editArticleAlias()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if ($dc->value < 1)
-		{
-			return '';
-		}
-
-		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-
-		return ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
-	}
-
-	/**
-	 * Get all articles and return them as array (article alias)
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function getArticleAlias(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::getArticleAlias()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$arrPids = array();
-		$arrAlias = array();
-
-		if (!$this->User->isAdmin)
-		{
-			foreach ($this->User->pagemounts as $id)
-			{
-				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
-			}
-
-			if (!empty($arrPids))
-			{
-				$arrPids = array_merge(...$arrPids);
-			}
-			else
-			{
-				return $arrAlias;
-			}
-
-			$objAlias = $this->Database->prepare("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") AND a.id!=(SELECT pid FROM tl_content WHERE id=?) ORDER BY parent, a.sorting")
-									   ->execute($dc->id);
-		}
-		else
-		{
-			$objAlias = $this->Database->prepare("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.id!=(SELECT pid FROM tl_content WHERE id=?) ORDER BY parent, a.sorting")
-									   ->execute($dc->id);
-		}
-
-		if ($objAlias->numRows)
-		{
-			System::loadLanguageFile('tl_article');
-
-			while ($objAlias->next())
-			{
-				$key = $objAlias->parent . ' (ID ' . $objAlias->pid . ')';
-				$arrAlias[$key][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?: $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
-			}
-		}
-
-		return $arrAlias;
-	}
-
-	/**
 	 * Throw an exception if the current article is selected (circular reference)
 	 *
 	 * @param mixed         $varValue
@@ -1439,101 +1359,6 @@ class tl_content extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Return the edit alias wizard
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function editAlias(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::editAlias()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if ($dc->value < 1)
-		{
-			return '';
-		}
-
-		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-
-		return ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;act=edit&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
-	}
-
-	/**
-	 * Get all content elements and return them as array (content element alias)
-	 *
-	 * @return array
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function getAlias()
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::getAlias()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$arrPids = array();
-		$arrAlias = array();
-
-		if (!$this->User->isAdmin)
-		{
-			foreach ($this->User->pagemounts as $id)
-			{
-				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
-			}
-
-			if (!empty($arrPids))
-			{
-				$arrPids = array_merge(...$arrPids);
-			}
-			else
-			{
-				return $arrAlias;
-			}
-
-			$objAlias = $this->Database->prepare("SELECT c.id, c.pid, c.type, (CASE c.type WHEN 'module' THEN m.name WHEN 'form' THEN f.title WHEN 'table' THEN c.summary ELSE c.headline END) AS headline, c.text, a.title FROM tl_content c LEFT JOIN tl_article a ON a.id=c.pid LEFT JOIN tl_module m ON m.id=c.module LEFT JOIN tl_form f on f.id=c.form WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") AND (c.ptable='tl_article' OR c.ptable='') AND c.id!=? ORDER BY a.title, c.sorting")
-									   ->execute(Input::get('id'));
-		}
-		else
-		{
-			$objAlias = $this->Database->prepare("SELECT c.id, c.pid, c.type, (CASE c.type WHEN 'module' THEN m.name WHEN 'form' THEN f.title WHEN 'table' THEN c.summary ELSE c.headline END) AS headline, c.text, a.title FROM tl_content c LEFT JOIN tl_article a ON a.id=c.pid LEFT JOIN tl_module m ON m.id=c.module LEFT JOIN tl_form f on f.id=c.form WHERE (c.ptable='tl_article' OR c.ptable='') AND c.id!=? ORDER BY a.title, c.sorting")
-									   ->execute(Input::get('id'));
-		}
-
-		while ($objAlias->next())
-		{
-			$arrHeadline = StringUtil::deserialize($objAlias->headline, true);
-
-			if (isset($arrHeadline['value']))
-			{
-				$headline = StringUtil::substr($arrHeadline['value'], 32);
-			}
-			else
-			{
-				$headline = StringUtil::substr(preg_replace('/[\n\r\t]+/', ' ', $arrHeadline[0]), 32);
-			}
-
-			$text = StringUtil::substr(strip_tags(preg_replace('/[\n\r\t]+/', ' ', $objAlias->text)), 32);
-			$strText = ($GLOBALS['TL_LANG']['CTE'][$objAlias->type][0] ?? $objAlias->type) . ' (';
-
-			if ($headline)
-			{
-				$strText .= $headline . ', ';
-			}
-			elseif ($text)
-			{
-				$strText .= $text . ', ';
-			}
-
-			$key = $objAlias->title . ' (ID ' . $objAlias->pid . ')';
-			$arrAlias[$key][$objAlias->id] = $strText . 'ID ' . $objAlias->id . ')';
-		}
-
-		return $arrAlias;
 	}
 
 	/**
@@ -1638,111 +1463,6 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Return the edit article teaser wizard
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function editArticle(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::editArticle()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if ($dc->value < 1)
-		{
-			return '';
-		}
-
-		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editarticle'], $dc->value);
-
-		return ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
-	}
-
-	/**
-	 * Get all articles and return them as array (article teaser)
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function getArticles(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::getArticles()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$arrPids = array();
-		$arrArticle = array();
-		$arrRoot = array();
-		$intPid = $dc->activeRecord->pid ?? null;
-
-		if (Input::get('act') == 'overrideAll')
-		{
-			$intPid = Input::get('id');
-		}
-
-		// Limit pages to the website root
-		$objArticle = $this->Database->prepare("SELECT pid FROM tl_article WHERE id=?")
-									 ->limit(1)
-									 ->execute($intPid);
-
-		if ($objArticle->numRows)
-		{
-			$objPage = PageModel::findWithDetails($objArticle->pid);
-			$arrRoot = $this->Database->getChildRecords($objPage->rootId, 'tl_page');
-			array_unshift($arrRoot, $objPage->rootId);
-		}
-
-		unset($objArticle);
-
-		// Limit pages to the user's pagemounts
-		if ($this->User->isAdmin)
-		{
-			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid" . (!empty($arrRoot) ? " WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrRoot))) . ")" : "") . " ORDER BY parent, a.sorting");
-		}
-		else
-		{
-			foreach ($this->User->pagemounts as $id)
-			{
-				if (!in_array($id, $arrRoot))
-				{
-					continue;
-				}
-
-				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
-			}
-
-			if (!empty($arrPids))
-			{
-				$arrPids = array_merge(...$arrPids);
-			}
-			else
-			{
-				return $arrArticle;
-			}
-
-			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
-		}
-
-		// Edit the result
-		if ($objArticle->numRows)
-		{
-			System::loadLanguageFile('tl_article');
-
-			while ($objArticle->next())
-			{
-				$key = $objArticle->parent . ' (ID ' . $objArticle->pid . ')';
-				$arrArticle[$key][$objArticle->id] = $objArticle->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objArticle->inColumn] ?: $objArticle->inColumn) . ', ID ' . $objArticle->id . ')';
-			}
-		}
-
-		return $arrArticle;
-	}
-
-	/**
 	 * Dynamically set the ace syntax
 	 *
 	 * @param mixed         $varValue
@@ -1819,23 +1539,6 @@ class tl_content extends Backend
 	public function tableImportWizard()
 	{
 		return ' <a href="' . $this->addToUrl('key=table') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['tw_import'][0]) . '</a> ' . Image::getHtml('demagnify.svg', '', 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_shrink']) . '" style="cursor:pointer" onclick="Backend.tableWizardResize(0.9)"') . Image::getHtml('magnify.svg', '', 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_expand']) . '" style="cursor:pointer" onclick="Backend.tableWizardResize(1.1)"');
-	}
-
-	/**
-	 * Return the link picker wizard
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.
-	 *             Set the "dcaPicker" eval attribute instead.
-	 */
-	public function pagePicker(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.4', 'Using "tl_content::pagePicker()" has been deprecated and will no longer work in Contao 5.0. Set the "dcaPicker" eval attribute instead.');
-
-		return Backend::getDcaPickerWizard(true, $dc->table, $dc->field, $dc->inputName);
 	}
 
 	/**

@@ -196,15 +196,6 @@ abstract class Events extends Module
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		// Backwards compatibility (4th argument was $strUrl)
-		if (\func_num_args() > 6)
-		{
-			trigger_deprecation('contao/calendar-bundle', '4.0', 'Calling "Contao\Events::addEvent()" with 7 arguments has been deprecated and will no longer work in Contao 5.0. Do not pass $strUrl as 4th argument anymore.');
-
-			$intLimit = func_get_arg(5);
-			$intCalendar = func_get_arg(6);
-		}
-
 		$intDate = $intStart;
 		$intKey = date('Ymd', $intStart);
 		$strDate = Date::parse($objPage->dateFormat, $intStart);

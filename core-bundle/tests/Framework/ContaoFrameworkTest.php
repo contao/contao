@@ -31,7 +31,6 @@ use Contao\PageModel;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -373,7 +372,6 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
-            new Filesystem(),
             $urlGenerator,
             $this->getTempDir(),
             error_reporting(),
@@ -415,7 +413,6 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
-            new Filesystem(),
             $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting(),
@@ -700,7 +697,6 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $scopeMatcher ?? $this->mockScopeMatcher(),
             $tokenChecker ?? $this->createMock(TokenChecker::class),
-            new Filesystem(),
             $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting(),

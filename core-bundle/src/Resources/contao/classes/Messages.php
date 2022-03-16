@@ -18,20 +18,6 @@ namespace Contao;
 class Messages extends Backend
 {
 	/**
-	 * Check for the latest Contao version
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.
-	 */
-	public function versionCheck()
-	{
-		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\Messages::versionCheck()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return '';
-	}
-
-	/**
 	 * Show a warning if there is no language fallback page
 	 *
 	 * @return string

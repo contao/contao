@@ -153,49 +153,6 @@ class Password extends Widget
 			(($this->description && Config::get('showHelp') && !$this->hasErrors()) ? "\n  " . '<p class="tl_help tl_tip">' . $this->description . '</p>' : '')
 		);
 	}
-
-	/**
-	 * Generate the label of the confirmation field and return it as string
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0
-	 */
-	public function generateConfirmationLabel()
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Password::generateConfirmationLabel()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return sprintf(
-			'<label for="ctrl_%s_confirm" class="confirm%s">%s%s%s</label>',
-			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
-			($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
-			$GLOBALS['TL_LANG']['MSC']['confirm'][0],
-			($this->mandatory ? '<span class="mandatory">*</span>' : '')
-		);
-	}
-
-	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0
-	 */
-	public function generateConfirmation()
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Password::generateConfirmation()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return sprintf(
-			'<input type="password" name="%s_confirm" id="ctrl_%s_confirm" class="tl_text tl_password confirm%s" value="%s" autocomplete="new-password"%s onfocus="Backend.getScrollOffset()">%s',
-			$this->strName,
-			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
-			($this->varValue ? '*****' : ''),
-			$this->getAttributes(),
-			((isset($GLOBALS['TL_LANG']['MSC']['confirm'][1]) && Config::get('showHelp')) ? "\n  " . '<p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['MSC']['confirm'][1] . '</p>' : '')
-		);
-	}
 }
 
 class_alias(Password::class, 'Password');

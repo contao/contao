@@ -13,7 +13,6 @@ namespace Contao;
 use Contao\Database\Result;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception\DriverException;
 
 /**
@@ -62,34 +61,11 @@ class Database
 	/**
 	 * Establish the database connection
 	 *
-	 * @param array $arrConfig The configuration array
-	 *
 	 * @throws \Exception If a connection cannot be established
 	 */
-	protected function __construct(array $arrConfig)
+	protected function __construct()
 	{
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if (!empty($arrConfig))
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Passing a custom configuration to "Contao\Database::__construct()" has been deprecated and will no longer work in Contao 5.0.');
-
-			$arrParams = array
-			(
-				'driver'    => 'pdo_mysql',
-				'host'      => $arrConfig['dbHost'],
-				'port'      => $arrConfig['dbPort'],
-				'user'      => $arrConfig['dbUser'],
-				'password'  => $arrConfig['dbPass'],
-				'dbname'    => $arrConfig['dbDatabase'],
-				'charset'   => $arrConfig['dbCharset']
-			);
-
-			$this->resConnection = DriverManager::getConnection($arrParams);
-		}
-		else
-		{
-			$this->resConnection = System::getContainer()->get('database_connection');
-		}
+		$this->resConnection = System::getContainer()->get('database_connection');
 
 		if (!\is_object($this->resConnection))
 		{
@@ -735,40 +711,6 @@ class Database
 		}
 
 		return System::getContainer()->get('database_connection')->quoteIdentifier($strName);
-	}
-
-	/**
-	 * Execute a query and do not cache the result
-	 *
-	 * @param string $strQuery The query string
-	 *
-	 * @return Result The Result object
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Database::execute() instead.
-	 */
-	public function executeUncached($strQuery)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Database::executeUncached()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Database::execute()" instead.');
-
-		return $this->execute($strQuery);
-	}
-
-	/**
-	 * Always execute the query and add or replace an existing cache entry
-	 *
-	 * @param string $strQuery The query string
-	 *
-	 * @return Result The Result object
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Database::execute() instead.
-	 */
-	public function executeCached($strQuery)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Database::executeCached()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Database::execute()" instead.');
-
-		return $this->execute($strQuery);
 	}
 }
 

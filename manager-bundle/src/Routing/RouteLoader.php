@@ -90,17 +90,6 @@ class RouteLoader implements RouteLoaderInterface
             }
         }
 
-        // Fallback to the legacy config file (see #566)
-        foreach (['routes.yaml', 'routes.yml', 'routing.yaml', 'routing.yml'] as $file) {
-            $path = Path::join($this->projectDir, 'app/config', $file);
-
-            if (file_exists($path)) {
-                trigger_deprecation('contao/manager-bundle', '4.9', sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file));
-
-                return $path;
-            }
-        }
-
         return null;
     }
 }
