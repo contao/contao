@@ -126,7 +126,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
      *
      * @return T
      */
-    public function createInstance($class, array $args = [])
+    public function createInstance(string $class, array $args = [])
     {
         if (\in_array('getInstance', get_class_methods($class), true)) {
             return \call_user_func_array([$class, 'getInstance'], $args);
@@ -146,7 +146,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
      *
      * @phpstan-return Adapter<T>
      */
-    public function getAdapter($class): Adapter
+    public function getAdapter(string $class): Adapter
     {
         return $this->adapterCache[$class] ??= new Adapter($class);
     }

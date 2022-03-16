@@ -25,149 +25,115 @@ interface VirtualFilesystemInterface
     public const FORCE_SYNC = 1 << 1;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      */
-    public function has($location, int $accessFlags = self::NONE): bool;
+    public function has(string|Uuid $location, int $accessFlags = self::NONE): bool;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      */
-    public function fileExists($location, int $accessFlags = self::NONE): bool;
+    public function fileExists(string|Uuid $location, int $accessFlags = self::NONE): bool;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      */
-    public function directoryExists($location, int $accessFlags = self::NONE): bool;
+    public function directoryExists(string|Uuid $location, int $accessFlags = self::NONE): bool;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function read($location): string;
+    public function read(string|Uuid $location): string;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      *
      * @return resource
      */
-    public function readStream($location);
+    public function readStream(string|Uuid $location);
 
     /**
-     * @param string|Uuid $location
+     * @throws VirtualFilesystemException
+     * @throws UnableToResolveUuidException
+     */
+    public function write(string|Uuid $location, string $contents, array $options = []): void;
+
+    /**
+     * @param resource $contents
      *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function write($location, string $contents, array $options = []): void;
+    public function writeStream(string|Uuid $location, $contents, array $options = []): void;
 
     /**
-     * @param string|Uuid $location
-     * @param resource    $contents
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function writeStream($location, $contents, array $options = []): void;
+    public function delete(string|Uuid $location): void;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function delete($location): void;
+    public function deleteDirectory(string|Uuid $location): void;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function deleteDirectory($location): void;
+    public function createDirectory(string|Uuid $location, array $options = []): void;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function createDirectory($location, array $options = []): void;
+    public function copy(string|Uuid $source, string $destination, array $options = []): void;
 
     /**
-     * @param string|Uuid $source
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function copy($source, string $destination, array $options = []): void;
+    public function move(string|Uuid $source, string $destination, array $options = []): void;
 
     /**
-     * @param string|Uuid $source
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function move($source, string $destination, array $options = []): void;
+    public function listContents(string|Uuid $location, bool $deep = false, int $accessFlags = self::NONE): FilesystemItemIterator;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): FilesystemItemIterator;
+    public function getLastModified(string|Uuid $location, int $accessFlags = self::NONE): int;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function getLastModified($location, int $accessFlags = self::NONE): int;
+    public function getFileSize(string|Uuid $location, int $accessFlags = self::NONE): int;
 
     /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function getFileSize($location, int $accessFlags = self::NONE): int;
+    public function getMimeType(string|Uuid $location, int $accessFlags = self::NONE): string;
 
     /**
-     * @param string|Uuid $location
-     *
-     * @throws VirtualFilesystemException
-     * @throws UnableToResolveUuidException
-     */
-    public function getMimeType($location, int $accessFlags = self::NONE): string;
-
-    /**
-     * @param string|Uuid $location
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      *
      * @return array<string,mixed>
      */
-    public function getExtraMetadata($location, int $accessFlags = self::NONE): array;
+    public function getExtraMetadata(string|Uuid $location, int $accessFlags = self::NONE): array;
 
     /**
-     * @param string|Uuid         $location
      * @param array<string,mixed> $metadata
      *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function setExtraMetadata($location, array $metadata): void;
+    public function setExtraMetadata(string|Uuid $location, array $metadata): void;
 }
