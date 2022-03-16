@@ -103,9 +103,10 @@ class ConfigureFilesystemPassTest extends TestCase
         // Setup directories with symlink
         $filesystem = new Filesystem();
         $filesystem->mkdir(Path::join($tempDir, 'files'));
-        $filesystem->dumpFile(Path::join($tempDir, 'vendor/foo/dummy.txt'), 'dummy');
+        $filesystem->dumpFile($dummyFile = Path::join($tempDir, 'vendor/foo/dummy.txt'), 'dummy');
 
         $this->createSymlink($target, $link, Path::join($tempDir, 'files'));
+        $this->createSymlink($dummyFile, 'dummy.txt', Path::join($tempDir, 'files')); // should get ignored
 
         $container = new ContainerBuilder(
             new ParameterBag([
