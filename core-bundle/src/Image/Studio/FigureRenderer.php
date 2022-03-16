@@ -44,7 +44,7 @@ class FigureRenderer
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
      * @param string                                     $template      A Contao or Twig template
      */
-    public function render(FilesModel|ImageInterface|int|string $from, $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): ?string
+    public function render(FilesModel|ImageInterface|int|string $from, int|string|array|PictureConfiguration|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): ?string
     {
         $configuration['from'] = $from;
         $configuration['size'] = $size;

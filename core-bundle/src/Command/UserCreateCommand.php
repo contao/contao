@@ -38,6 +38,7 @@ class UserCreateCommand extends Command
 {
     protected static $defaultName = 'contao:user:create';
     protected static $defaultDescription = 'Create a new Contao back end user.';
+
     private array $locales;
 
     public function __construct(private ContaoFramework $framework, private Connection $connection, private PasswordHasherFactoryInterface $passwordHasherFactory, Locales $locales)

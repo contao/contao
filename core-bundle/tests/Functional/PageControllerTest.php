@@ -42,11 +42,9 @@ class PageControllerTest extends FunctionalTestCase
     }
 
     /**
-     * @param string|false|null $path
-     *
      * @dataProvider getPageController
      */
-    public function testResolvesPageController(array $fixtures, string $request, $path, array $requirements, array $defaults): void
+    public function testResolvesPageController(array $fixtures, string $request, string|false|null $path, array $requirements, array $defaults): void
     {
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = 'example.com';

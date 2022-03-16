@@ -219,7 +219,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return Finder|array<SplFileInfo>
      */
-    private function findDcaFiles(): array|Finder
+    private function findDcaFiles(): Finder|array
     {
         try {
             return $this->finder->findIn('dca')->files()->name('*.php');
@@ -231,7 +231,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return Finder|array<SplFileInfo>
      */
-    private function findLanguageFiles(string $language): array|Finder
+    private function findLanguageFiles(string $language): Finder|array
     {
         try {
             return $this->finder
@@ -247,7 +247,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return Finder|array<SplFileInfo>
      */
-    private function findTemplateFiles(): array|Finder
+    private function findTemplateFiles(): Finder|array
     {
         try {
             return $this->finder->findIn('templates')->name('*.html5');

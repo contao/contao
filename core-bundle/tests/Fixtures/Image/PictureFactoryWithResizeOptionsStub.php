@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Fixtures\Image;
 
 use Contao\CoreBundle\Image\PictureFactoryInterface;
+use Contao\Image\PictureInterface;
 use Contao\Image\ResizeOptions;
 
 class PictureFactoryWithResizeOptionsStub implements PictureFactoryInterface
@@ -22,7 +23,7 @@ class PictureFactoryWithResizeOptionsStub implements PictureFactoryInterface
         throw new \RuntimeException('not implemented');
     }
 
-    public function create($path, $size = null, ResizeOptions $options = null): void
+    public function create($path, $size = null, ResizeOptions $options = null): PictureInterface
     {
         throw new \RuntimeException('not implemented');
     }

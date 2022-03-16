@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Fixtures\Image;
 
 use Contao\CoreBundle\Image\PictureFactoryInterface;
+use Contao\Image\PictureInterface;
 
 class PictureFactoryWithRandomArgumentStub implements PictureFactoryInterface
 {
@@ -21,7 +22,7 @@ class PictureFactoryWithRandomArgumentStub implements PictureFactoryInterface
         throw new \RuntimeException('not implemented');
     }
 
-    public function create($path, $size = null, array $options = null): void
+    public function create($path, $size = null, array $options = null): PictureInterface
     {
         throw new \RuntimeException('not implemented');
     }

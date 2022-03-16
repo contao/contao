@@ -70,6 +70,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         // Cookiebot Cookie Consent
         'CookieConsent',
     ];
+
     private array $removeFromDenyList = [];
 
     public function __construct(private array $allowList = [])

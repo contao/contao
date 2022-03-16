@@ -44,6 +44,7 @@ class ResizeImagesCommand extends Command
 {
     protected static $defaultName = 'contao:resize-images';
     protected static $defaultDescription = 'Resizes deferred images that have not been processed yet.';
+
     private ?DeferredResizerInterface $resizer;
     private Filesystem $filesystem;
     private int $terminalWidth;

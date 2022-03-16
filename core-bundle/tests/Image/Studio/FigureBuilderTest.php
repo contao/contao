@@ -747,11 +747,9 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
-     * @param ImageInterface|string|null $resource
-     *
      * @dataProvider provideUuidMetadataAutoFetchCases
      */
-    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata($resource, ?Metadata $metadataToSet, ?string $locale, array $expectedMetadata): void
+    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(ImageInterface|FilesModel|string|null $resource, ?Metadata $metadataToSet, ?string $locale, array $expectedMetadata): void
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
@@ -950,11 +948,9 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
-     * @param ImageInterface|string|null $resource
-     *
      * @dataProvider provideLightboxResourcesOrUrls
      */
-    public function testSetLightboxResourceOrUrl($resource, array $expectedArguments, bool $hasLightbox = true): void
+    public function testSetLightboxResourceOrUrl(ImageInterface|string|null $resource, array $expectedArguments, bool $hasLightbox = true): void
     {
         if ($hasLightbox) {
             $studio = $this->mockStudioForLightbox(...$expectedArguments);
@@ -1256,11 +1252,9 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
-     * @param ImageInterface|string|null $expectedResource
-     *
      * @return Studio&MockObject
      */
-    private function mockStudioForLightbox($expectedResource, ?string $expectedUrl, string $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, ?string $expectedUrl, string $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
     {
         $lightbox = $this->createMock(LightboxResult::class);
 

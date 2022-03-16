@@ -46,6 +46,7 @@ class CrawlCommand extends Command
 {
     protected static $defaultName = 'contao:crawl';
     protected static $defaultDescription = 'Crawls the Contao root pages with the desired subscribers.';
+
     private ?Escargot $escargot = null;
 
     public function __construct(private Factory $escargotFactory, private Filesystem $filesystem)

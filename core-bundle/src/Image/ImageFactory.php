@@ -165,7 +165,7 @@ class ImageFactory implements ImageFactoryInterface
      *
      * @return array<(ResizeConfiguration|ImportantPart|ResizeOptions|null)>
      */
-    private function createConfig($size, ImageInterface $image): array
+    private function createConfig(int|array|null $size, ImageInterface $image): array
     {
         if (!\is_array($size)) {
             $size = [0, 0, $size];

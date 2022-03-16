@@ -120,7 +120,7 @@ class EntityCacheTags
      *
      * @return array<int, string>
      */
-    public function getTagsFor($target): array
+    public function getTagsFor(array|object|string|null $target): array
     {
         if (!$target) {
             return [];
@@ -215,7 +215,7 @@ class EntityCacheTags
      *
      * @param array|Collection|ModelCollection|string|object|null $target
      */
-    public function tagWith($target): void
+    public function tagWith(array|object|string|null $target): void
     {
         if (null === $this->responseTagger) {
             return;
@@ -279,7 +279,7 @@ class EntityCacheTags
      *
      * @param array|Collection|ModelCollection|string|object|null $target
      */
-    public function invalidateTagsFor($target): void
+    public function invalidateTagsFor(array|object|string|null $target): void
     {
         if (null === $this->cacheInvalidator) {
             return;

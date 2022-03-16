@@ -19,19 +19,12 @@ final class RouteConfig
      */
     private array $methods;
 
-    /**
-     * @param string|bool|null     $path
-     * @param string|array<string> $methods
-     */
-    public function __construct(private $path = null, private ?string $pathRegex = null, private ?string $urlSuffix = null, private array $requirements = [], private array $options = [], private array $defaults = [], $methods = [])
+    public function __construct(private string|bool|null $path = null, private ?string $pathRegex = null, private ?string $urlSuffix = null, private array $requirements = [], private array $options = [], private array $defaults = [], array|string $methods = [])
     {
         $this->methods = \is_array($methods) ? $methods : [$methods];
     }
 
-    /**
-     * @return string|bool|null
-     */
-    public function getPath()
+    public function getPath(): string|bool|null
     {
         return $this->path;
     }

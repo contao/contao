@@ -18,14 +18,12 @@ use Contao\CoreBundle\Tests\TestCase;
 class GlobalsMapListenerTest extends TestCase
 {
     /**
-     * @param array|string|null $existing
-     *
      * @dataProvider getValuesData
      *
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testMergesTheValuesIntoTheGlobalsArray(string $key, $existing, array|string $new): void
+    public function testMergesTheValuesIntoTheGlobalsArray(string $key, array|string|null $existing, array|string $new): void
     {
         $GLOBALS[$key] = $existing;
 

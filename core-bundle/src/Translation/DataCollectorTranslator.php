@@ -26,16 +26,9 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
 {
     private array $messages = [];
 
-    /**
-     * @var TranslatorInterface|TranslatorBagInterface|LocaleAwareInterface
-     */
-    private $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface|TranslatorBagInterface|LocaleAwareInterface $translator)
     {
         parent::__construct($translator);
-
-        $this->translator = $translator;
     }
 
     /**

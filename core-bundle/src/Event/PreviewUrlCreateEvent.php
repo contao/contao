@@ -18,10 +18,7 @@ class PreviewUrlCreateEvent extends Event
 {
     private ?string $query = null;
 
-    /**
-     * @param string|int $id
-     */
-    public function __construct(private string $key, private $id)
+    public function __construct(private string $key, private string|int $id)
     {
     }
 

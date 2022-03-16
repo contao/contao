@@ -22,37 +22,13 @@ use Symfony\Component\Filesystem\Path;
 class FilesystemItem implements \Stringable
 {
     /**
-     * @var int|(\Closure(self):int|null)|null
-     */
-    private $lastModified;
-
-    /**
-     * @var int|\Closure(self):int|null
-     */
-    private $fileSize;
-
-    /**
-     * @var string|\Closure(self):string|null
-     */
-    private $mimeType;
-
-    /**
-     * @var array<string, mixed>|\Closure(self):array<string, mixed>
-     */
-    private $extraMetadata;
-
-    /**
      * @param int|(\Closure(self):int|null)|null $lastModified
      * @param int|\Closure(self):int|null $fileSize
      * @param string|\Closure(self):string|null $mimeType
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
      */
-    public function __construct(private bool $isFile, private string $path, $lastModified = null, $fileSize = null, $mimeType = null, $extraMetadata = [])
+    public function __construct(private bool $isFile, private string $path, private int|\Closure|null $lastModified = null, private int|\Closure|null $fileSize = null, private string|\Closure|null $mimeType = null, private array|\Closure $extraMetadata = [])
     {
-        $this->lastModified = $lastModified;
-        $this->fileSize = $fileSize;
-        $this->mimeType = $mimeType;
-        $this->extraMetadata = $extraMetadata;
     }
 
     public function __toString(): string
@@ -101,7 +77,7 @@ class FilesystemItem implements \Stringable
      * @param int|\Closure(self):int|null $fileSize
      * @param string|\Closure(self):string|null $mimeType
      */
-    public function withMetadataIfNotDefined($lastModified, $fileSize, $mimeType): self
+    public function withMetadataIfNotDefined(int|\Closure|null $lastModified, int|\Closure|null $fileSize, string|\Closure|null $mimeType): self
     {
         return new self(
             $this->isFile,

@@ -115,11 +115,9 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * Creates a picture configuration.
      *
-     * @param int|array|null $size
-     *
      * @phpstan-return array{0:PictureConfiguration, 1:array<string, string>, 2:ResizeOptions}
      */
-    private function createConfig($size): array
+    private function createConfig(int|array|string|null $size): array
     {
         if (!\is_array($size)) {
             $size = [0, 0, $size];

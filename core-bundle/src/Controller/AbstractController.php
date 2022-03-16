@@ -61,7 +61,7 @@ abstract class AbstractController extends SymfonyAbstractController
     /**
      * @param array|Collection|ModelCollection|string|object|null $tags
      */
-    protected function tagResponse($tags): void
+    protected function tagResponse(array|object|string|null $tags): void
     {
         $this->container->get('contao.cache.entity_tags')->tagWith($tags);
     }

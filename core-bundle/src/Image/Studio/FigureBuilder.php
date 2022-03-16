@@ -233,7 +233,7 @@ class FigureBuilder
      *
      * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
-    public function from($identifier): self
+    public function from(int|string|bool|FilesModel|ImageInterface|Metadata|null $identifier): self
     {
         if (null === $identifier) {
             $this->lastException = new InvalidResourceException('The defined resource is "null".');
@@ -273,7 +273,7 @@ class FigureBuilder
      *
      * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
-    public function setSize($size): self
+    public function setSize(int|string|array|PictureConfiguration|null $size): self
     {
         $this->sizeConfiguration = $size;
 
@@ -385,10 +385,8 @@ class FigureBuilder
      * automatically determined from the metadata or base resource. For this
      * setting to take effect, make sure you have enabled the creation of a
      * lightbox by calling enableLightbox().
-     *
-     * @param string|ImageInterface|null $resourceOrUrl
      */
-    public function setLightboxResourceOrUrl($resourceOrUrl): self
+    public function setLightboxResourceOrUrl(string|ImageInterface|null $resourceOrUrl): self
     {
         $this->lightboxResourceOrUrl = $resourceOrUrl;
 
@@ -403,7 +401,7 @@ class FigureBuilder
      *
      * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
-    public function setLightboxSize($size): self
+    public function setLightboxSize(int|string|array|PictureConfiguration|null $size): self
     {
         $this->lightboxSizeConfiguration = $size;
 

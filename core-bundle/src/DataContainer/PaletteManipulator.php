@@ -54,12 +54,11 @@ class PaletteManipulator
     /**
      * If $position is PREPEND or APPEND, pass a legend as parent; otherwise pass a field name.
      *
-     * @param string|array|\Closure|null $fallback
-     * @param string                     $fallbackPosition
+     * @param string $fallbackPosition
      *
      * @throws PalettePositionException
      */
-    public function addField(array|string $name, array|string $parent, string $position = self::POSITION_AFTER, $fallback = null, /*string */$fallbackPosition = self::POSITION_APPEND): self
+    public function addField(array|string $name, array|string $parent, string $position = self::POSITION_AFTER, string|array|\Closure|null $fallback = null, /*string */$fallbackPosition = self::POSITION_APPEND): self
     {
         $this->validatePosition($position);
 

@@ -39,12 +39,9 @@ class ImageResult
     private ?ImageDimensions $originalDimensions = null;
 
     /**
-     * @param string|ImageInterface                      $filePathOrImageInterface
-     * @param array|PictureConfiguration|int|string|null $sizeConfiguration
-     *
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(private ContainerInterface $locator, private string $projectDir, private $filePathOrImageInterface, private $sizeConfiguration = null, private ?ResizeOptions $resizeOptions = null)
+    public function __construct(private ContainerInterface $locator, private string $projectDir, private string|ImageInterface $filePathOrImageInterface, private array|PictureConfiguration|int|string|null $sizeConfiguration = null, private ?ResizeOptions $resizeOptions = null)
     {
     }
 
