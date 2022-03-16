@@ -21,7 +21,6 @@ use Symfony\Component\Config\Definition\BaseNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Definition\PrototypedArrayNode;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ConfigurationTest extends TestCase
 {
@@ -54,19 +53,6 @@ class ConfigurationTest extends TestCase
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
         $this->assertSame('my_super_service', $configuration['image']['imagine_service']);
-    }
-
-    public function testAdjustsTheDefaultWebDir(): void
-    {
-        $configuration = (new Processor())->processConfiguration($this->configuration, []);
-
-        $this->assertSame('public', basename($configuration['web_dir']));
-
-        (new Filesystem())->mkdir($this->getTempDir().'/web');
-
-        $configuration = (new Processor())->processConfiguration($this->configuration, []);
-
-        $this->assertSame('web', basename($configuration['web_dir']));
     }
 
     /**
