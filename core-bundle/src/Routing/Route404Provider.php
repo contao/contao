@@ -256,8 +256,8 @@ class Route404Provider extends AbstractPageRouteProvider
         uasort(
             $routes,
             function (Route $a, Route $b) use ($languages, $routes) {
-                $errorA = false !== strpos('.error_404', array_search($a, $routes, true));
-                $errorB = false !== strpos('.error_404', array_search($a, $routes, true), -7);
+                $errorA = false !== strpos('.error_404', array_search($a, $routes, true), -10);
+                $errorB = false !== strpos('.error_404', array_search($b, $routes, true), -10);
                 $localeA = '.locale' === substr(array_search($a, $routes, true), -7);
                 $localeB = '.locale' === substr(array_search($b, $routes, true), -7);
 
