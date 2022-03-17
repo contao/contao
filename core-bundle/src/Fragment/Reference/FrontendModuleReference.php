@@ -21,21 +21,13 @@ class FrontendModuleReference extends FragmentReference
     public const GLOBALS_KEY = 'FE_MOD';
     public const PROXY_CLASS = ModuleProxy::class;
 
-    public function __construct(ModuleModel $model, string $section = 'main', array $templateProperties = [])
+    public function __construct(ModuleModel $model, string $section = 'main', array $templateProperties = [], bool $inline = false)
     {
         parent::__construct(self::TAG_NAME.'.'.$model->type);
 
-        $this->attributes['moduleModel'] = $model->id;
+        $this->attributes['moduleModel'] = $inline ? $model : $model->id;
         $this->attributes['section'] = $section;
         $this->attributes['classes'] = $model->classes;
         $this->attributes['templateProperties'] = $templateProperties;
-    }
-
-    public static function withModel(ModuleModel $model, string $section = 'main', array $templateProperties = []): FrontendModuleReference
-    {
-        $reference = new self($model, $section, $templateProperties);
-        $reference->attributes['moduleModel'] = $model;
-
-        return $reference;
     }
 }
