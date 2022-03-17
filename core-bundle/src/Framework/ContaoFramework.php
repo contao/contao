@@ -115,7 +115,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             return;
         }
 
-        Controller::reset();
+        Controller::resetStaticCache();
         Environment::reset();
         Input::resetCache();
         Input::resetUnusedGet();

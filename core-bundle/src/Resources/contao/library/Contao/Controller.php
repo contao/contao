@@ -137,7 +137,7 @@ abstract class Controller extends System
 		{
 			if ($strTemplate != $strPrefix)
 			{
-				list($k, $strKey) = explode('_', $strTemplate, 2);
+				[$k, $strKey] = explode('_', $strTemplate, 2);
 
 				if (isset($arrMapper[$k]) && \in_array($strKey, $arrMapper[$k]))
 				{
@@ -309,7 +309,7 @@ abstract class Controller extends System
 			// Show a particular article only
 			if ($objPage->type == 'regular' && Input::get('articles'))
 			{
-				list($strSection, $strArticle) = explode(':', Input::get('articles'));
+				[$strSection, $strArticle] = explode(':', Input::get('articles'));
 
 				if ($strArticle === null)
 				{
@@ -1450,7 +1450,11 @@ abstract class Controller extends System
 		$loader->load($blnNoCache);
 	}
 
-	public static function reset()
+	/**
+	 * Do not name this "reset" because it might result in conflicts with child classes
+	 * @see https://github.com/contao/contao/issues/4257
+	 */
+	public static function resetStaticCache()
 	{
 		self::$arrQueryCache = array();
 		self::$arrOldBePathCache = array();
