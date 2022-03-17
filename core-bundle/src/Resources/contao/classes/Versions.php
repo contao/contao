@@ -822,14 +822,14 @@ class Versions extends Controller
 	 *
 	 * @return string
 	 */
-	protected function implodeRecursive($var, $binary=false)
+	protected function implodeRecursive($var, $binary=false, $level=0)
 	{
 		if (!\is_array($var))
 		{
 			return $binary && Validator::isBinaryUuid($var) ? StringUtil::binToUuid($var) : $var;
 		}
 
-		if (!\is_array(current($var)))
+		if (!\is_array(current($var)) && !ArrayUtil::isAssoc($var))
 		{
 			if ($binary)
 			{
@@ -843,10 +843,11 @@ class Versions extends Controller
 
 		foreach ($var as $k=>$v)
 		{
-			$buffer .= $k . ": " . $this->implodeRecursive($v) . "\n";
+			$isArray = \is_array($v);
+			$buffer .=  str_repeat(' ', $level * 4) . $k . ": " . ($isArray ? "\n" : '') . $this->implodeRecursive($v, false, $level+1) . (($isArray && $level === 0) ? "\n\n" : "\n");
 		}
 
-		return trim($buffer);
+		return $buffer;
 	}
 }
 
