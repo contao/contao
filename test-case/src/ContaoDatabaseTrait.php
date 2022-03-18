@@ -28,7 +28,7 @@ trait ContaoDatabaseTrait
             throw new \InvalidArgumentException(sprintf('File "%s" does not exist', $sqlFile));
         }
 
-        static::getConnection()->exec(file_get_contents($sqlFile));
+        static::getConnection()->executeStatement(file_get_contents($sqlFile));
     }
 
     protected static function getConnection(): Connection

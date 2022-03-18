@@ -20,7 +20,7 @@
     "require-dev": {
         "ext-pdo": "*",
         "contao/core-bundle": "^4.9",
-        "doctrine/dbal": "^2.10",
+        "doctrine/dbal": "^2.11 || ^3.0",
         "doctrine/orm": "^2.6.3",
         "friendsofphp/php-cs-fixer": "^2.12",
         "php-http/guzzle6-adapter": "^1.1"
