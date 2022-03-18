@@ -119,9 +119,6 @@ use Contao\SectionWizard;
 use Contao\SelectMenu;
 use Contao\SerpPreview;
 use Contao\StringUtil;
-use Contao\StyleModel;
-use Contao\StyleSheetModel;
-use Contao\StyleSheets;
 use Contao\System;
 use Contao\TableWizard;
 use Contao\TextArea;
@@ -159,11 +156,9 @@ $GLOBALS['BE_MOD'] = array
 	(
 		'themes' => array
 		(
-			'tables'      => array('tl_theme', 'tl_module', 'tl_style_sheet', 'tl_style', 'tl_layout', 'tl_image_size', 'tl_image_size_item'),
+			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item'),
 			'importTheme' => array(Theme::class, 'importTheme'),
 			'exportTheme' => array(Theme::class, 'exportTheme'),
-			'import'      => array(StyleSheets::class, 'importStyleSheet'),
-			'export'      => array(StyleSheets::class, 'exportStyleSheet')
 		),
 		'page' => array
 		(
@@ -569,8 +564,6 @@ $GLOBALS['TL_MODELS'] = array(
 	'tl_module' => ModuleModel::class,
 	'tl_opt_in' => OptInModel::class,
 	'tl_page' => PageModel::class,
-	'tl_style' => StyleModel::class,
-	'tl_style_sheet' => StyleSheetModel::class,
 	'tl_theme' => ThemeModel::class,
 	'tl_user_group' => UserGroupModel::class,
 	'tl_user' => UserModel::class
