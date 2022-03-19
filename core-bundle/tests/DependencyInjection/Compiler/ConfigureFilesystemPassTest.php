@@ -105,8 +105,8 @@ class ConfigureFilesystemPassTest extends TestCase
         $filesystem->mkdir(Path::join($tempDir, 'files'));
         $filesystem->dumpFile($dummyFile = Path::join($tempDir, 'vendor/foo/dummy.txt'), 'dummy');
 
-        $this->createSymlink($target, $link, Path::join($tempDir, 'files'));
-        $this->createSymlink($dummyFile, 'dummy.txt', Path::join($tempDir, 'files')); // should get ignored
+        $this->createSymlink($target, $link, Path::join($tempDir, 'files'), true);
+        $this->createSymlink($dummyFile, 'dummy.txt', Path::join($tempDir, 'files'), false); // should get ignored
 
         $container = new ContainerBuilder(
             new ParameterBag([
@@ -164,13 +164,16 @@ class ConfigureFilesystemPassTest extends TestCase
         ];
     }
 
-    private function createSymlink(string $target, string $link, string $cwd): void
+    private function createSymlink(string $target, string $link, string $cwd, bool $isDirectory): void
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $target = str_replace('/', '\\', $target);
             $link = str_replace('/', '\\', $link);
 
-            Process::fromShellCommandline('mklink /d "${:link}" "${:target}"', $cwd)->mustRun(null, compact('link', 'target'));
+            Process::fromShellCommandline(
+                sprintf('mklink%s "${:link}" "${:target}"', $isDirectory ? ' /d' : ''),
+                $cwd
+            )->mustRun(null, compact('link', 'target'));
         } else {
             chdir($cwd);
 
