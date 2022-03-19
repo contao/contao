@@ -167,9 +167,10 @@ class ConfigureFilesystemPassTest extends TestCase
     private function createSymlink(string $target, string $link, string $cwd): void
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
-            $isDirectory = is_dir($target);
             $target = str_replace('/', '\\', $target);
             $link = str_replace('/', '\\', $link);
+
+            $isDirectory = !str_ends_with($target, '.txt');
 
             Process::fromShellCommandline(
                 sprintf('mklink%s "${:link}" "${:target}"', $isDirectory ? ' /d' : ''),
