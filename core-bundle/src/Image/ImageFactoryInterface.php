@@ -26,7 +26,7 @@ interface ImageFactoryInterface
      * @param int|array|ResizeConfiguration|null $size    An image size ID, an array with width, height and resize mode or a ResizeConfiguration object
      * @param string|ResizeOptions|null          $options The target path as string or a ResizeOptions object
      */
-    public function create(string|ImageInterface $path, int|array|ResizeConfiguration|null $size = null, string|ResizeOptions|null $options = null): ImageInterface;
+    public function create(string|ImageInterface $path, int|string|array|ResizeConfiguration|null $size = null, string|ResizeOptions|null $options = null): ImageInterface;
 
     /**
      * Returns the equivalent important part from a legacy resize mode.
