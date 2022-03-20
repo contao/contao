@@ -156,7 +156,7 @@ class Files
 	{
 		$this->validate($strFile);
 
-		if ($strMode[0] !== 'r')
+		if ($strMode[0] !== 'r' && \dirname($strFile) && \dirname($strFile) !== '.')
 		{
 			$this->mkdir(\dirname($strFile));
 		}
