@@ -63,7 +63,7 @@ class PictureFactory implements PictureFactoryInterface
 
     public function setDefaultDensities(string $densities): static
     {
-        $this->defaultDensities = (string) $densities;
+        $this->defaultDensities = $densities;
 
         return $this;
     }
