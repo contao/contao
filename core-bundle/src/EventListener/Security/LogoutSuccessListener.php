@@ -77,7 +77,7 @@ class LogoutSuccessListener
         }
     }
 
-    private function logout(Request $request)
+    private function logout(Request $request): void
     {
         $token = $this->security->getToken();
 
