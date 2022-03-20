@@ -171,11 +171,9 @@ class ConfigureFilesystemPassTest extends TestCase
             $link = str_replace('/', '\\', $link);
 
             $isDirectory = !str_ends_with($target, '.txt');
+            $command = sprintf('mklink%s "${:link}" "${:target}"', $isDirectory ? ' /d' : '');
 
-            Process::fromShellCommandline(
-                sprintf('mklink%s "${:link}" "${:target}"', $isDirectory ? ' /d' : ''),
-                $cwd
-            )->mustRun(null, compact('link', 'target'));
+            Process::fromShellCommandline($command, $cwd)->mustRun(null, compact('link', 'target'));
         } else {
             chdir($cwd);
 
