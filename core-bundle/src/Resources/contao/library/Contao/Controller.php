@@ -137,7 +137,7 @@ abstract class Controller extends System
 		{
 			if ($strTemplate != $strPrefix)
 			{
-				[$k, $strKey] = explode('_', $strTemplate, 2);
+				list($k, $strKey) = explode('_', $strTemplate, 2);
 
 				if (isset($arrMapper[$k]) && \in_array($strKey, $arrMapper[$k]))
 				{
@@ -309,7 +309,7 @@ abstract class Controller extends System
 			// Show a particular article only
 			if ($objPage->type == 'regular' && Input::get('articles'))
 			{
-				[$strSection, $strArticle] = explode(':', Input::get('articles'));
+				list($strSection, $strArticle) = explode(':', Input::get('articles'));
 
 				if ($strArticle === null)
 				{
