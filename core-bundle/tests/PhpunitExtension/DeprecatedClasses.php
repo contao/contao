@@ -39,10 +39,6 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
             ],
         ];
 
-        if (class_exists(LegacyLogoutHandlerListener::class)) {
-            $deprecations[LogoutHandler::class] = ['%s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s'];
-        }
-
         return $deprecations;
     }
 }
