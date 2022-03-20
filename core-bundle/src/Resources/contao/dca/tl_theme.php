@@ -190,12 +190,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'options_callback'        => array('tl_theme', 'getTemplateFolders'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
-		),
-		'vars' => array
-		(
-			'inputType'               => 'keyValueWizard',
-			'exclude'                 => true,
-			'sql'                     => "text NULL"
 		)
 	)
 );
