@@ -140,6 +140,38 @@ class PrettyErrorScreenListenerTest extends TestCase
         yield [404, new NotFoundHttpException('', new PageNotFoundException())];
     }
 
+    public function testUnprotectsErrorPage(): void
+    {
+        $exception = new UnauthorizedHttpException('', '', new InsufficientAuthenticationException());
+
+        $errorPage = $this->mockPageWithProperties([
+            'pid' => 1,
+            'type' => 'error_401',
+            'rootLanguage' => '',
+            'protected' => '1',
+            'groups' => ''
+        ]);
+
+        $request = $this->getRequest('frontend');
+        $request->attributes->set('pageModel', $this->mockPageWithProperties(['rootId' => 1]));
+
+        $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $httpKernel
+            ->expects($this->once())
+            ->method('handle')
+            ->willReturn(new Response('foo', 401))
+        ;
+
+        $event = $this->getResponseEvent($exception, $request);
+
+        $listener = $this->getListener(false, false, null, $errorPage, $httpKernel);
+        $listener($event);
+
+        $this->assertTrue($event->hasResponse());
+        $this->assertSame(401, $event->getResponse()->getStatusCode());
+        $this->assertFalse($errorPage->protected);
+    }
+
     public function testHandlesResponseExceptionsWhenForwarding(): void
     {
         $errorPage = $this->mockPageWithProperties([
