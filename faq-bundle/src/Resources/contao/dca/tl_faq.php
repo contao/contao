@@ -15,6 +15,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\DC_Table;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\Input;
@@ -29,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_faq_category',
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'question',

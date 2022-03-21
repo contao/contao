@@ -265,16 +265,16 @@ class PageSelector extends Widget
 		$this->loadDataContainer($this->strTable);
 
 		// Load current values
-		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null)
+		switch (true)
 		{
-			case 'File':
+			case is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null, DC_File::class, true):
 				if (Config::get($this->strField))
 				{
 					$this->varValue = Config::get($this->strField);
 				}
 				break;
 
-			case 'Table':
+			case is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null, DC_Table::class, true):
 				if (!$this->Database->fieldExists($this->strField, $this->strTable))
 				{
 					break;
