@@ -948,5 +948,3 @@ class Updater extends Controller
 		$this->Database->prepare("INSERT INTO tl_content %s")->set($set)->execute();
 	}
 }
-
-class_alias(Updater::class, 'Database\Updater');

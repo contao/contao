@@ -582,5 +582,3 @@ class News extends Frontend
 		return self::$arrPageCache[$intPageId];
 	}
 }
-
-class_alias(News::class, 'News');

@@ -141,5 +141,3 @@ class RadioTable extends Widget
   </table>';
 	}
 }
-
-class_alias(RadioTable::class, 'RadioTable');

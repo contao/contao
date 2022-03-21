@@ -125,5 +125,3 @@ class TextArea extends Widget
 		);
 	}
 }
-
-class_alias(TextArea::class, 'TextArea');

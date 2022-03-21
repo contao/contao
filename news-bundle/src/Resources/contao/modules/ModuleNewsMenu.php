@@ -367,5 +367,3 @@ class ModuleNewsMenu extends ModuleNews
 		return $arrDays;
 	}
 }
-
-class_alias(ModuleNewsMenu::class, 'ModuleNewsMenu');

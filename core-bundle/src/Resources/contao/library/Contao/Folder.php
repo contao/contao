@@ -594,5 +594,3 @@ class Folder extends System
 		return $arrReturn;
 	}
 }
-
-class_alias(Folder::class, 'Folder');

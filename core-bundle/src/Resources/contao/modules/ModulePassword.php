@@ -338,5 +338,3 @@ class ModulePassword extends Module
 		$this->reload();
 	}
 }
-
-class_alias(ModulePassword::class, 'ModulePassword');

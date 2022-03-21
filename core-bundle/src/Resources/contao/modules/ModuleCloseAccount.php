@@ -148,5 +148,3 @@ class ModuleCloseAccount extends Module
 		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
-
-class_alias(ModuleCloseAccount::class, 'ModuleCloseAccount');

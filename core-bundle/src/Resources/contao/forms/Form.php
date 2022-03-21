@@ -629,5 +629,3 @@ class Form extends Hybrid
 		}
 	}
 }
-
-class_alias(Form::class, 'Form');

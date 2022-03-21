@@ -62,5 +62,3 @@ class Messages extends Backend
 		return implode("\n", $arrReturn);
 	}
 }
-
-class_alias(Messages::class, 'Messages');

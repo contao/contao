@@ -218,5 +218,3 @@ class FormFieldModel extends Model
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
 }
-
-class_alias(FormFieldModel::class, 'FormFieldModel');

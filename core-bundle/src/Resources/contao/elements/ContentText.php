@@ -60,5 +60,3 @@ class ContentText extends ContentElement
 		}
 	}
 }
-
-class_alias(ContentText::class, 'ContentText');

@@ -1410,5 +1410,3 @@ class PageModel extends Model
 		return '(' . implode('|', $data) . ')';
 	}
 }
-
-class_alias(PageModel::class, 'PageModel');

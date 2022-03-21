@@ -177,5 +177,3 @@ class BackendFile extends Backend
 		return $objTemplate->getResponse();
 	}
 }
-
-class_alias(BackendFile::class, 'BackendFile');

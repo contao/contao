@@ -141,5 +141,3 @@ class ModuleNewsletterReader extends Module
 		}
 	}
 }
-
-class_alias(ModuleNewsletterReader::class, 'ModuleNewsletterReader');

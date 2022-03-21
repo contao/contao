@@ -336,5 +336,3 @@ class FormSelectMenu extends Widget
 		);
 	}
 }
-
-class_alias(FormSelectMenu::class, 'FormSelectMenu');

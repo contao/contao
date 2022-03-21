@@ -439,5 +439,3 @@ class Statement
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
 }
-
-class_alias(Statement::class, 'Database\Statement');

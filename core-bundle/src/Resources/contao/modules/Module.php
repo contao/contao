@@ -554,5 +554,3 @@ abstract class Module extends Frontend
 		return '';
 	}
 }
-
-class_alias(Module::class, 'Module');

@@ -654,5 +654,3 @@ class ModuleRegistration extends Module
 		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
 	}
 }
-
-class_alias(ModuleRegistration::class, 'ModuleRegistration');

@@ -97,5 +97,3 @@ class PageRoot extends Frontend
 		return $this->getNextPage($rootPageId)->getFrontendUrl();
 	}
 }
-
-class_alias(PageRoot::class, 'PageRoot');

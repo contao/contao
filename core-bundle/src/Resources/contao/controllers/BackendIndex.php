@@ -123,5 +123,3 @@ class BackendIndex extends Backend
 		return $objTemplate->getResponse();
 	}
 }
-
-class_alias(BackendIndex::class, 'BackendIndex');

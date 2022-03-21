@@ -333,5 +333,3 @@ class ModuleSearch extends Module
 		}
 	}
 }
-
-class_alias(ModuleSearch::class, 'ModuleSearch');

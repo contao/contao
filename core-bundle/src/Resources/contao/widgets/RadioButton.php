@@ -162,5 +162,3 @@ class RadioButton extends Widget
 		);
 	}
 }
-
-class_alias(RadioButton::class, 'RadioButton');

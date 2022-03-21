@@ -79,4 +79,42 @@ class TwigIntegrationTest extends TestCase
 
         $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse());
     }
+
+    public function testRendersAttributes(): void
+    {
+        $templateContent = <<<'TEMPLATE'
+            <div{{ attrs(attributes).addClass('foo').mergeWith(cssId) }}>
+              <h1{{ attrs() }}>
+                <span{{ attrs({'data-x': 'y'}).setIfExists('style', style).set('data-bar', 'bar') }}>{{ headline }}</span>
+              </h1>
+              <p{{ attrs(paragraph_attributes) }}>{{ text }}</p>
+            </div>
+            TEMPLATE;
+
+        $expectedOutput = <<<'TEMPLATE'
+            <div class="block foo" data-thing="42" id="my-id">
+              <h1>
+                <span data-x="y" data-bar="bar">Test headline</span>
+              </h1>
+              <p class="rte">Some text</p>
+            </div>
+            TEMPLATE;
+
+        $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
+        $environment->addExtension(new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class)));
+
+        $output = $environment->render(
+            'test.html.twig',
+            [
+                'attributes' => ['class' => 'block', 'data-thing' => 42],
+                'cssId' => ' id="my-id"',
+                'paragraph_attributes' => ' class="rte"',
+                'style' => '',
+                'headline' => 'Test headline',
+                'text' => 'Some text',
+            ]
+        );
+
+        $this->assertSame($expectedOutput, $output);
+    }
 }

@@ -62,5 +62,3 @@ class FormFieldsetStop extends Widget
 		return '</fieldset>';
 	}
 }
-
-class_alias(FormFieldsetStop::class, 'FormFieldsetStop');

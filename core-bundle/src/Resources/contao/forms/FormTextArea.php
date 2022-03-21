@@ -171,5 +171,3 @@ class FormTextArea extends Widget
 		);
 	}
 }
-
-class_alias(FormTextArea::class, 'FormTextArea');

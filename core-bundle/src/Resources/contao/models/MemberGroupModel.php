@@ -103,5 +103,3 @@ class MemberGroupModel extends Model
 		return static::findBy(array("$t.disable='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')"), null, $arrOptions);
 	}
 }
-
-class_alias(MemberGroupModel::class, 'MemberGroupModel');
