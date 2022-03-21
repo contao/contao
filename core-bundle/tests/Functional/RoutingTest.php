@@ -51,7 +51,7 @@ class RoutingTest extends WebTestCase
         Input::resetUnusedGet();
         Environment::reset();
         InsertTags::reset();
-        Controller::resetStaticCache();
+        Controller::resetControllerCache();
 
         Config::set('debugMode', false);
         Config::set('useAutoItem', true);
