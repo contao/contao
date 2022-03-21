@@ -252,7 +252,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlWithoutValue(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
-        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => Contao\DC_Table::class]];
+        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => DC_Table::class]];
 
         $params = [
             'do' => 'article',
@@ -274,7 +274,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlWithoutPtable(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
-        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => Contao\DC_Table::class]];
+        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => DC_Table::class]];
 
         $params = [
             'do' => 'article',
@@ -296,7 +296,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlWithPtable(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
-        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => Contao\DC_Table::class, 'ptable' => 'tl_page']];
+        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_page']];
 
         $params = [
             'do' => 'article',
@@ -318,7 +318,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlWithPtableAndMultipleTables(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_page', 'tl_article']];
-        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => Contao\DC_Table::class, 'ptable' => 'tl_page']];
+        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_page']];
 
         $params = [
             'do' => 'article',
@@ -343,7 +343,7 @@ class TablePickerProviderTest extends ContaoTestCase
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
         $GLOBALS['BE_MOD']['foo']['news'] = ['tables' => ['tl_news', 'tl_content']];
-        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => Contao\DC_Table::class, 'dynamicPtable' => true]];
+        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => DC_Table::class, 'dynamicPtable' => true]];
 
         $params = [
             'do' => 'news',
@@ -368,7 +368,7 @@ class TablePickerProviderTest extends ContaoTestCase
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
         $GLOBALS['BE_MOD']['foo']['news'] = ['tables' => ['tl_news', 'tl_content']];
-        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => Contao\DC_Table::class, 'dynamicPtable' => true]];
+        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => DC_Table::class, 'dynamicPtable' => true]];
 
         $params = [
             'do' => 'article',
@@ -392,7 +392,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlWithoutDbRecordRendersFirstModule(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article']];
-        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => Contao\DC_Table::class, 'ptable' => 'tl_page']];
+        $GLOBALS['TL_DCA']['tl_article'] = ['config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_page']];
 
         $params = [
             'do' => 'article',
@@ -414,7 +414,7 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetUrlAddsTableIfItsNotFirstInModule(): void
     {
         $GLOBALS['BE_MOD']['foo']['article'] = ['tables' => ['tl_article', 'tl_content']];
-        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => Contao\DC_Table::class, 'ptable' => 'tl_article']];
+        $GLOBALS['TL_DCA']['tl_content'] = ['config' => ['dataContainer' => DC_Table::class, 'ptable' => 'tl_article']];
 
         $params = [
             'do' => 'article',
