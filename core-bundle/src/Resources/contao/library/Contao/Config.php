@@ -113,8 +113,6 @@ class Config
 		'dbCollation'           => true,
 		'disableRefererCheck'   => true,
 		'requestTokenWhitelist' => true,
-		'encryptionMode'        => true,
-		'encryptionCipher'      => true,
 		'sessionTimeout'        => true,
 		'disableInsertTags'     => true,
 		'rootFiles'             => true,

@@ -279,12 +279,6 @@ class ModulePersonalData extends Module
 						$varValue = $objWidget->getEmptyValue();
 					}
 
-					// Encrypt the value (see #7815)
-					if ($arrData['eval']['encrypt'] ?? null)
-					{
-						$varValue = Encryption::encrypt($varValue);
-					}
-
 					// Set the new value
 					if ($varValue !== $this->User->$field)
 					{
