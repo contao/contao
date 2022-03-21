@@ -220,7 +220,7 @@ class Installer
                 continue;
             }
 
-            $engine = $table->getOption('engine');
+            $engine = $table->hasOption('engine') ? $table->getOption('engine') : '';
             $innodb = 'innodb' === strtolower($engine);
 
             if (strtolower($tableOptions['Engine']) !== strtolower($engine)) {
@@ -248,10 +248,10 @@ class Installer
                 }
             }
 
-            $collate = $table->getOption('collate');
+            $collate = $table->hasOption('collate') ? $table->getOption('collate') : '';
+            $charset = $table->hasOption('charset') ? $table->getOption('charset') : '';
 
-            if ($tableOptions['Collation'] !== $collate) {
-                $charset = $table->getOption('charset');
+            if ($tableOptions['Collation'] !== $collate && '' !== $charset) {
                 $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
                 $deleteIndexes = true;
                 $alterTables[md5($command)] = $command;
