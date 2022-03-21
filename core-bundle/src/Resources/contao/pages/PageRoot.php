@@ -21,32 +21,6 @@ trigger_deprecation('contao/core-bundle', '4.12', 'Using the "Contao\PageRoot" c
 class PageRoot extends Frontend
 {
 	/**
-	 * Redirect to the first active regular page
-	 *
-	 * @param integer $rootPageId
-	 * @param boolean $blnReturn
-	 * @param boolean $blnPreferAlias
-	 *
-	 * @return integer
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5; use
-	 *             the PageRoot::getResponse() method instead
-	 */
-	public function generate($rootPageId, $blnReturn=false, $blnPreferAlias=false)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using PageRoot::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRoot::getResponse() method instead.');
-
-		if (!$blnReturn)
-		{
-			$this->redirect($this->getRedirectUrl($rootPageId));
-		}
-
-		$objNextPage = $this->getNextPage($rootPageId);
-
-		return ($blnPreferAlias && $objNextPage->alias) ? $objNextPage->alias : $objNextPage->id;
-	}
-
-	/**
 	 * Return a response object
 	 *
 	 * @param integer $rootPageId

@@ -30,24 +30,6 @@ class PageRegular extends Frontend
 	protected $responseContext;
 
 	/**
-	 * Generate a regular page
-	 *
-	 * @param PageModel $objPage
-	 * @param boolean   $blnCheckRequest
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5; use
-	 *             the PageRegular::getResponse() method instead
-	 */
-	public function generate($objPage, $blnCheckRequest=false)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using PageRegular::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRegular::getResponse() method instead.');
-
-		$this->prepare($objPage);
-
-		$this->Template->output($blnCheckRequest);
-	}
-
-	/**
 	 * Return a response object
 	 *
 	 * @param PageModel $objPage
