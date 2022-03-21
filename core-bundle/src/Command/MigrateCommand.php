@@ -79,7 +79,7 @@ class MigrateCommand extends Command
             ->addOption('migrations-only', null, InputOption::VALUE_NONE, 'Only execute the migrations.')
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Show pending migrations and schema updates without executing them.')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, ndjson)', 'txt')
-            ->addOption('hash', null, InputOption::VALUE_REQUIRED, 'Hash')
+            ->addOption('hash', null, InputOption::VALUE_REQUIRED, 'A hash value from a --dry-run result')
             ->setDescription('Executes migrations and updates the database schema.')
         ;
     }
