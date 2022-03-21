@@ -200,23 +200,6 @@ class Automator extends System
 	}
 
 	/**
-	 * Purge the search cache
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
-	 */
-	public function purgeSearchCache()
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Automator::purgeSearchCache()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$strCacheDir = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
-
-		$objFolder = new Folder($strCacheDir . '/contao/search');
-		$objFolder->purge();
-
-		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the search cache');
-	}
-
-	/**
 	 * Purge the internal cache
 	 */
 	public function purgeInternalCache()
@@ -398,53 +381,6 @@ class Automator extends System
 		$warmer->warmUp($container->getParameter('kernel.cache_dir'));
 
 		System::getContainer()->get('monolog.logger.contao.cron')->info('Generated the internal cache');
-	}
-
-	/**
-	 * Rotate the log files
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use the logger service instead, which rotates its log files automatically.
-	 */
-	public function rotateLogs()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Automator::rotateLogs()" has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.');
-
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrFiles = preg_grep('/\.log$/', Folder::scan($projectDir . '/system/logs'));
-
-		foreach ($arrFiles as $strFile)
-		{
-			// Ignore Monolog log files (see #2579)
-			if (preg_match('/-\d{4}-\d{2}-\d{2}\.log$/', $strFile))
-			{
-				continue;
-			}
-
-			$objFile = new File('system/logs/' . $strFile . '.9');
-
-			// Delete the oldest file
-			if ($objFile->exists())
-			{
-				$objFile->delete();
-			}
-
-			// Rotate the files (e.g. error.log.4 becomes error.log.5)
-			for ($i=8; $i>0; $i--)
-			{
-				$strGzName = 'system/logs/' . $strFile . '.' . $i;
-
-				if (file_exists($projectDir . '/' . $strGzName))
-				{
-					$objFile = new File($strGzName);
-					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));
-				}
-			}
-
-			// Add .1 to the latest file
-			$objFile = new File('system/logs/' . $strFile);
-			$objFile->renameTo('system/logs/' . $strFile . '.1');
-		}
 	}
 }
 

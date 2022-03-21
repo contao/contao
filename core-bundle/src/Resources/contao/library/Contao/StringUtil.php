@@ -480,44 +480,6 @@ class StringUtil
 	}
 
 	/**
-	 * Convert a string to XHTML
-	 *
-	 * @param string $strString The HTML5 string
-	 *
-	 * @return string The XHTML string
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
-	 */
-	public static function toXhtml($strString)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'The "StringUtil::toXhtml()" method has been deprecated and will no longer work in Contao 5.0.');
-
-		$arrPregReplace = array
-		(
-			'/<(br|hr|img)([^>]*)>/i' => '<$1$2 />', // Close stand-alone tags
-			'/ border="[^"]*"/'       => ''          // Remove deprecated attributes
-		);
-
-		$arrStrReplace = array
-		(
-			'/ />'             => ' />',        // Fix incorrectly closed tags
-			'<b>'              => '<strong>',   // Replace <b> with <strong>
-			'</b>'             => '</strong>',
-			'<i>'              => '<em>',       // Replace <i> with <em>
-			'</i>'             => '</em>',
-			'<u>'              => '<span style="text-decoration:underline">',
-			'</u>'             => '</span>',
-			' target="_self"'  => '',
-			' target="_blank"' => ' onclick="return !window.open(this.href)"'
-		);
-
-		$strString = preg_replace(array_keys($arrPregReplace), $arrPregReplace, $strString);
-		$strString = str_ireplace(array_keys($arrStrReplace), $arrStrReplace, $strString);
-
-		return $strString;
-	}
-
-	/**
 	 * Convert a string to HTML5
 	 *
 	 * @param string $strString The XHTML string
@@ -1154,42 +1116,6 @@ class StringUtil
 		}
 
 		return $strValue;
-	}
-
-	/**
-	 * Convert an input-encoded string to plain text UTF-8
-	 *
-	 * Strips or replaces insert tags, strips HTML tags, decodes entities, escapes insert tag braces.
-	 *
-	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5;
-	 *             use the Contao\CoreBundle\String\HtmlDecoder service instead
-	 */
-	public static function inputEncodedToPlainText(string $strValue, bool $blnRemoveInsertTags = false): string
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "StringUtil::inputEncodedToPlainText()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
-
-		return System::getContainer()->get('contao.string.html_decoder')->inputEncodedToPlainText($strValue, $blnRemoveInsertTags);
-	}
-
-	/**
-	 * Convert an HTML string to plain text with normalized white space
-	 *
-	 * It handles all Contao input encoding specifics like insert tags, basic
-	 * entities and encoded entities and is meant to be used with content from
-	 * fields that have the allowHtml flag enabled.
-	 *
-	 * @param bool $blnRemoveInsertTags True to remove insert tags instead of replacing them
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5;
-	 *             use the Contao\CoreBundle\String\HtmlDecoder service instead
-	 */
-	public static function htmlToPlainText(string $strValue, bool $blnRemoveInsertTags = false): string
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "StringUtil::htmlToPlainText()" has been deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
-
-		return System::getContainer()->get('contao.string.html_decoder')->htmlToPlainText($strValue, $blnRemoveInsertTags);
 	}
 }
 

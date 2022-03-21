@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
-use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -36,49 +35,7 @@ class FrontendIndex extends Frontend
 	}
 
 	/**
-	 * Run the controller
-	 *
-	 * @return Response
-	 *
-	 * @throws PageNotFoundException
-	 */
-	public function run()
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\FrontendIndex::run()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.');
-
-		$pageId = $this->getPageIdFromUrl();
-
-		// Load a website root page object if there is no page ID
-		if ($pageId === null)
-		{
-			$objRootPage = $this->getRootPageFromUrl();
-
-			/** @var PageRoot $objHandler */
-			$objHandler = new $GLOBALS['TL_PTY']['root']();
-			$pageId = $objHandler->generate($objRootPage->id, true, true);
-		}
-
-		// Throw a 404 error if the request is not a Contao request (see #2864)
-		elseif ($pageId === false)
-		{
-			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-		}
-
-		$pageModel = PageModel::findPublishedByIdOrAlias($pageId);
-
-		// Throw a 404 error if the page could not be found
-		if ($pageModel === null)
-		{
-			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-		}
-
-		return $this->renderPage($pageModel);
-	}
-
-	/**
 	 * Render a page
-	 *
-	 * @param Collection|PageModel[]|PageModel $pageModel
 	 *
 	 * @return Response
 	 *
@@ -86,92 +43,12 @@ class FrontendIndex extends Frontend
 	 * @throws PageNotFoundException
 	 * @throws AccessDeniedException
 	 */
-	public function renderPage($pageModel)
+	public function renderPage(PageModel $pageModel)
 	{
 		/** @var PageModel $objPage */
 		global $objPage;
 
 		$objPage = $pageModel;
-
-		// Check the URL and language of each page if there are multiple results
-		if ($objPage instanceof Collection && $objPage->count() > 1)
-		{
-			trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\FrontendIndex::renderPage()" with a model collection has been deprecated and will no longer work Contao 5.0. Use the Symfony routing instead.');
-
-			$arrPages = array();
-
-			// Order by domain and language
-			while ($objPage->next())
-			{
-				/** @var PageModel $objModel */
-				$objModel = $objPage->current();
-				$objCurrentPage = $objModel->loadDetails();
-
-				$domain = $objCurrentPage->domain ?: '*';
-				$arrPages[$domain][$objCurrentPage->rootLanguage] = $objCurrentPage;
-
-				// Also store the fallback language
-				if ($objCurrentPage->rootIsFallback)
-				{
-					$arrPages[$domain]['*'] = $objCurrentPage;
-				}
-			}
-
-			$strHost = Environment::get('host');
-
-			// Look for a root page whose domain name matches the host name
-			$arrLangs = $arrPages[$strHost] ?? ($arrPages['*'] ?: array());
-
-			// Throw an exception if there are no matches (see #1522)
-			if (empty($arrLangs))
-			{
-				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-			}
-
-			// Use the first result (see #4872)
-			if (!System::getContainer()->getParameter('contao.legacy_routing') || !System::getContainer()->getParameter('contao.prepend_locale'))
-			{
-				$objNewPage = current($arrLangs);
-			}
-
-			// Try to find a page matching the language parameter
-			elseif (($lang = Input::get('language')) && isset($arrLangs[$lang]))
-			{
-				$objNewPage = $arrLangs[$lang];
-			}
-
-			// Use the fallback language (see #8142)
-			elseif (isset($arrLangs['*']))
-			{
-				$objNewPage = $arrLangs['*'];
-			}
-
-			// Throw an exception if there is no matching page (see #1522)
-			else
-			{
-				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-			}
-
-			// Store the page object
-			if (\is_object($objNewPage))
-			{
-				$objPage = $objNewPage;
-			}
-		}
-
-		// Throw a 500 error if the result is still ambiguous
-		if ($objPage instanceof Collection && $objPage->count() > 1)
-		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('More than one page matches ' . Environment::get('base') . Environment::get('request'));
-
-			throw new \LogicException('More than one page found: ' . Environment::get('uri'));
-		}
-
-		// Make sure $objPage is a Model
-		if ($objPage instanceof Collection)
-		{
-			$objPage = $objPage->current();
-		}
 
 		// If the page has an alias, it can no longer be called via ID (see #7661)
 		if ($objPage->alias)
@@ -327,17 +204,6 @@ class FrontendIndex extends Frontend
 
 			throw $e;
 		}
-	}
-
-	/**
-	 * Try to load the page from the cache
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use the kernel.request event instead.
-	 */
-	protected function outputFromCache()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\FrontendIndex::outputFromCache()" has been deprecated and will no longer work in Contao 5.0. Use the "kernel.request" event instead.');
 	}
 }
 

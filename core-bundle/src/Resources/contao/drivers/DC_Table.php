@@ -2051,25 +2051,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($this->blnCreateNewVersion)
 			{
 				$objVersions->create();
-
-				// Call the onversion_callback
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
-				{
-					trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
-
-					foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
-					{
-						if (\is_array($callback))
-						{
-							$this->import($callback[0]);
-							$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($this->strTable, $this->intId, $this);
-						}
-					}
-				}
 			}
 
 			// Show a warning if the record has been saved by another user (see #8412)
@@ -2444,25 +2425,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if ($this->blnCreateNewVersion)
 					{
 						$objVersions->create();
-
-						// Call the onversion_callback
-						if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
-						{
-							trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
-
-							foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
-							{
-								if (\is_array($callback))
-								{
-									$this->import($callback[0]);
-									$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
-								}
-								elseif (\is_callable($callback))
-								{
-									$callback($this->strTable, $this->intId, $this);
-								}
-							}
-						}
 					}
 
 					$this->invalidateCacheTags();
@@ -2713,25 +2675,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if ($this->blnCreateNewVersion)
 		{
 			$objVersions->create();
-
-			// Call the onversion_callback
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
-			{
-				trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
-
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
-				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$callback($this->strTable, $this->intId, $this);
-					}
-				}
-			}
 		}
 
 		$this->invalidateCacheTags();
@@ -2863,25 +2806,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if ($this->blnCreateNewVersion)
 						{
 							$objVersions->create();
-
-							// Call the onversion_callback
-							if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
-							{
-								trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
-
-								foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
-								{
-									if (\is_array($callback))
-									{
-										$this->import($callback[0]);
-										$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
-									}
-									elseif (\is_callable($callback))
-									{
-										$callback($this->strTable, $this->intId, $this);
-									}
-								}
-							}
 						}
 					}
 				}

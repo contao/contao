@@ -118,7 +118,7 @@ class ContentDownloads extends ContentDownload
 			{
 				$objFile = new File($objFiles->path);
 
-				if (!\in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+				if (!\in_array($objFile->extension, $allowedDownload))
 				{
 					continue;
 				}
@@ -211,7 +211,7 @@ class ContentDownloads extends ContentDownload
 
 					$objFile = new File($objSubfiles->path);
 
-					if (!\in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+					if (!\in_array($objFile->extension, $allowedDownload))
 					{
 						continue;
 					}
@@ -306,11 +306,6 @@ class ContentDownloads extends ContentDownload
 			case 'date_desc':
 				array_multisort($files, SORT_NUMERIC, $auxDate, SORT_DESC);
 				break;
-
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			case 'meta':
-				trigger_deprecation('contao/core-bundle', '4.0', 'The "meta" key in "Contao\ContentDownloads::compile()" has been deprecated and will no longer work in Contao 5.0.');
-				// no break
 
 			case 'custom':
 				$files = ArrayUtil::sortByOrderField($files, $this->orderSRC);

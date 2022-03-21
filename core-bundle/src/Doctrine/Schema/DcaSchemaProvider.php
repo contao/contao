@@ -23,28 +23,14 @@ class DcaSchemaProvider
 {
     private ContaoFramework $framework;
     private Registry $doctrine;
-    private SchemaProvider $schemaProvider;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.doctrine.dca_schema_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Registry $doctrine, SchemaProvider $schemaProvider)
+    public function __construct(ContaoFramework $framework, Registry $doctrine)
     {
         $this->framework = $framework;
         $this->doctrine = $doctrine;
-        $this->schemaProvider = $schemaProvider;
-    }
-
-    /**
-     * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0;
-     *             use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider
-     *             class instead.
-     */
-    public function createSchema(): Schema
-    {
-        trigger_deprecation('contao/core-bundle', '4.11', 'Using the DcaSchemaProvider class to create the schema has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider\SchemaProvider class instead.');
-
-        return $this->schemaProvider->createSchema();
     }
 
     /**

@@ -169,48 +169,6 @@ class FormPassword extends Widget
 			$this->strTagEnding
 		);
 	}
-
-	/**
-	 * Generate the label of the confirmation field and return it as string
-	 *
-	 * @return string The confirmation label markup
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0
-	 */
-	public function generateConfirmationLabel()
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\FormPassword::generateConfirmation()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return sprintf(
-			'<label for="ctrl_%s_confirm" class="confirm%s">%s%s%s</label>',
-			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
-			($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
-			sprintf($GLOBALS['TL_LANG']['MSC']['confirmation'], $this->strLabel),
-			($this->mandatory ? '<span class="mandatory">*</span>' : '')
-		);
-	}
-
-	/**
-	 * Generate the widget and return it as string
-	 *
-	 * @return string The confirmation field markup
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0
-	 */
-	public function generateConfirmation()
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\FormPassword::generateConfirmation()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return sprintf(
-			'<input type="password" name="%s_confirm" id="ctrl_%s_confirm" class="text password confirm%s" value="" autocomplete="new-password"%s%s',
-			$this->strName,
-			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
-			$this->getAttributes(),
-			$this->strTagEnding
-		);
-	}
 }
 
 class_alias(FormPassword::class, 'FormPassword');

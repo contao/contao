@@ -308,7 +308,7 @@ class FileTree extends Widget
 								}
 							}
 							// Only show allowed download types
-							elseif (\in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+							elseif (\in_array($objFile->extension, $allowedDownload))
 							{
 								if ($this->showAsImage($objFile))
 								{
@@ -335,7 +335,7 @@ class FileTree extends Widget
 							}
 						}
 						// Only show allowed download types
-						elseif (\in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+						elseif (\in_array($objFile->extension, $allowedDownload))
 						{
 							if ($this->showAsImage($objFile))
 							{

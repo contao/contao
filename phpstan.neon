@@ -47,8 +47,6 @@ parameters:
             message: '#has no return type specified#'
             paths:
                 - %currentWorkingDirectory%/core-bundle/src/Config/Dumper/DumperInterface.php
-                - %currentWorkingDirectory%/core-bundle/src/ContaoFrameworkInterface.php
-                - %currentWorkingDirectory%/core-bundle/src/Framework/ContaoFrameworkInterface.php
                 - %currentWorkingDirectory%/core-bundle/src/Framework/FrameworkAwareInterface.php
 
         -

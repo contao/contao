@@ -74,14 +74,6 @@ class BackendMain extends Backend
 			$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'security')));
 		}
 
-		// Front end redirect
-		if (Input::get('do') == 'feRedirect')
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "feRedirect" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao_backend_preview" route directly instead.');
-
-			$this->redirectToFrontendPage(Input::get('page'), Input::get('article'));
-		}
-
 		// Backend user profile redirect
 		if (Input::get('do') == 'login' && (Input::get('act') != 'edit' && Input::get('id') != $this->User->id))
 		{
@@ -137,14 +129,6 @@ class BackendMain extends Backend
 			$objSessionBag->replace($session);
 
 			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
-		}
-		// Error
-		elseif (Input::get('act') == 'error')
-		{
-			$this->Template->error = $GLOBALS['TL_LANG']['ERR']['general'];
-			$this->Template->title = $GLOBALS['TL_LANG']['ERR']['general'];
-
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using "act=error" has been deprecated and will no longer work in Contao 5.0. Throw an exception instead.');
 		}
 		// Welcome screen
 		elseif (!Input::get('do') && !Input::get('act'))

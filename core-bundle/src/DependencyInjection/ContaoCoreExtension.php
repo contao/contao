@@ -133,7 +133,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
-        $this->overwriteImageTargetDir($config, $container);
         $this->handleTokenCheckerConfig($config, $container);
         $this->handleLegacyRouting($config, $configs, $container, $loader);
         $this->handleBackup($config, $container);
@@ -368,23 +367,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         return Imagine::class; // see #616
-    }
-
-    /**
-     * Reads the old contao.image.target_path parameter.
-     */
-    private function overwriteImageTargetDir(array $config, ContainerBuilder $container): void
-    {
-        if (!isset($config['image']['target_path'])) {
-            return;
-        }
-
-        $container->setParameter(
-            'contao.image.target_dir',
-            Path::join($container->getParameter('kernel.project_dir'), $config['image']['target_path'])
-        );
-
-        trigger_deprecation('contao/core-bundle', '4.4', 'Using the "contao.image.target_path" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.target_dir" parameter instead.');
     }
 
     private function handleTokenCheckerConfig(array $config, ContainerBuilder $container): void

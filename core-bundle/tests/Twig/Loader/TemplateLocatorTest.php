@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Loader;
 
+use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -23,13 +24,10 @@ use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Path;
 
 class TemplateLocatorTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testFindsThemeDirectories(): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
@@ -51,15 +49,13 @@ class TemplateLocatorTest extends TestCase
         $this->assertSame($expectedThemeDirectories, $locator->findThemeDirectories());
     }
 
-    /**
-     * @group legacy
-     */
     public function testTriggersDeprecationIfThemeDirectoryContainsInvalidCharacters(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.12: Using a theme path with invalid characters has been deprecated and will throw an exception in Contao 5.0.');
-
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
         $locator = $this->getTemplateLocator($projectDir, ['themes/invalid.theme']);
+
+        $this->expectException(InvalidThemePathException::class);
+        $this->expectExceptionMessage('The theme path "../themes/invalid.theme" contains one or more invalid characters: "."');
 
         $this->assertEmpty($locator->findThemeDirectories());
     }

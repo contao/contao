@@ -15,9 +15,9 @@ use Contao\Database\Result;
 /**
  * Creates and queries the search index
  *
- * The class takes the HTML markup of a page, exctracts the content and writes
+ * The class takes the HTML markup of a page, extracts the content and writes
  * it to the database (search index). It also provides a method to query the
- * seach index, returning the matching entries.
+ * search index, returning the matching entries.
  *
  * Usage:
  *
@@ -807,26 +807,6 @@ class Search
 	 */
 	final public function __clone()
 	{
-	}
-
-	/**
-	 * Return the object instance (Singleton)
-	 *
-	 * @return Search The object instance
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Search class is now static.
-	 */
-	public static function getInstance()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Search::getInstance()" has been deprecated and will no longer work in Contao 5.0. The "Contao\Search" class is now static.');
-
-		if (static::$objInstance === null)
-		{
-			static::$objInstance = new static();
-		}
-
-		return static::$objInstance;
 	}
 
 	/**
