@@ -17,8 +17,6 @@ use Contao\ContentText;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\DataCollector\ContaoDataCollector;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\CoreBundle\Tests\Fixtures\DataCollector\TestClass;
-use Contao\CoreBundle\Tests\Fixtures\DataCollector\vendor\foo\bar\BundleTestClass;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
 use Contao\Model;
@@ -46,7 +44,7 @@ class ContaoDataCollectorTest extends TestCase
             'additional_data' => 'data',
         ];
 
-        $collector = $this->getDataCollector();
+        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
         $collector->collect(new Request(), new Response());
 
         $this->assertSame(['ContentText' => ContentText::class], $collector->getClassesAliased());
@@ -90,7 +88,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $GLOBALS['objPage'] = $page;
 
-        $collector = $this->getDataCollector();
+        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
@@ -136,7 +134,7 @@ class ContaoDataCollectorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $collector = $this->getDataCollector(false, false, '.html', $tokenChecker);
+        $collector = new ContaoDataCollector($tokenChecker);
         $collector->setFramework($framework);
         $collector->collect(new Request(), new Response());
 
@@ -158,22 +156,11 @@ class ContaoDataCollectorTest extends TestCase
 
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
-        $collector = $this->getDataCollector();
+        $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
 
         $method = new \ReflectionMethod($collector, 'getData');
         $method->setAccessible(true);
 
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));
-    }
-
-    private function getDataCollector(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html', TokenChecker $tokenChecker = null): ContaoDataCollector
-    {
-        return new ContaoDataCollector(
-            $tokenChecker ?? $this->createMock(TokenChecker::class),
-            $legacyRouting,
-            \dirname(__DIR__).'/Fixtures/DataCollector',
-            $prependLocale,
-            $urlSuffix
-        );
     }
 }
