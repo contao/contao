@@ -138,10 +138,8 @@ class Updater extends Controller
 
 		// Add a PID column to the child tables
 		$this->Database->query("ALTER TABLE `tl_module` ADD `pid` int(10) unsigned NOT NULL default 0");
-		$this->Database->query("ALTER TABLE `tl_style_sheet` ADD `pid` int(10) unsigned NOT NULL default 0");
 		$this->Database->query("ALTER TABLE `tl_layout` ADD `pid` int(10) unsigned NOT NULL default 0");
 		$this->Database->query("UPDATE tl_module SET pid=1");
-		$this->Database->query("UPDATE tl_style_sheet SET pid=1");
 		$this->Database->query("UPDATE tl_layout SET pid=1");
 
 		// Create a theme from the present resources
@@ -225,8 +223,6 @@ class Updater extends Controller
 	 */
 	public function run210Update()
 	{
-		$this->Database->query("ALTER TABLE `tl_style` ADD `positioning` char(1) NOT NULL default ''");
-		$this->Database->query("UPDATE `tl_style` SET `positioning`=`size`");
 		$this->Database->query("UPDATE `tl_module` SET `guests`=1 WHERE `type`='lostPassword' OR `type`='registration'");
 		$this->Database->query("UPDATE `tl_news` SET `teaser`=CONCAT('<p>', teaser, '</p>') WHERE `teaser`!='' AND `teaser` NOT LIKE '<p>%'");
 	}
@@ -310,39 +306,6 @@ class Updater extends Controller
 		while ($objEvents->next())
 		{
 			$this->createContentElement($objEvents, 'tl_calendar_events', 'details');
-		}
-
-		// Convert the gradient angle syntax (see #4569)
-		if ($this->Database->fieldExists('gradientAngle', 'tl_style'))
-		{
-			$objStyle = $this->Database->execute("SELECT id, gradientAngle FROM tl_style WHERE gradientAngle!=''");
-
-			while ($objStyle->next())
-			{
-				$angle = '';
-
-				if (strpos($objStyle->gradientAngle, 'deg') !== false)
-				{
-					$angle = (abs(450 - (int) $objStyle->gradientAngle) % 360) . 'deg';
-				}
-				else
-				{
-					switch ($objStyle->gradientAngle)
-					{
-						case 'top': $angle = 'to bottom'; break;
-						case 'right': $angle = 'to left'; break;
-						case 'bottom': $angle = 'to top'; break;
-						case 'left': $angle = 'to right'; break;
-						case 'top left': $angle = 'to bottom right'; break;
-						case 'top right': $angle = 'to bottom left'; break;
-						case 'bottom left': $angle = 'to top right'; break;
-						case 'bottom right': $angle = 'to top left'; break;
-					}
-				}
-
-				$this->Database->prepare("UPDATE tl_style SET gradientAngle=? WHERE id=?")
-							   ->execute($angle, $objStyle->id);
-			}
 		}
 
 		// Make unlimited recurrences end on 2106-02-07 07:28:15 (see #4862 and #510)
@@ -454,11 +417,6 @@ class Updater extends Controller
 		$this->Database->query("UPDATE `tl_content` SET `type`='accordionStart' WHERE `type`='accordion' AND `mooType`='mooStart'");
 		$this->Database->query("UPDATE `tl_content` SET `type`='accordionStop' WHERE `type`='accordion' AND `mooType`='mooStop'");
 		$this->Database->query("UPDATE `tl_content` SET `type`='accordionSingle' WHERE `type`='accordion' AND `mooType`='mooSingle'");
-
-		// White-space is now in the "alignment" section (see #4519)
-		$this->Database->query("UPDATE `tl_style` SET `alignment`=1 WHERE `whitespace`!=''");
-		$this->Database->query("ALTER TABLE `tl_style` CHANGE `whitespace` `whitespace` varchar(8) NOT NULL default ''");
-		$this->Database->query("UPDATE `tl_style` SET `whitespace`='nowrap' WHERE `whitespace`!=''");
 
 		// Drop the tl_files.path index (see #5598)
 		if ($this->Database->indexExists('path', 'tl_files'))

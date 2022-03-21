@@ -665,11 +665,6 @@ var AjaxRequest =
 			}
 		}
 
-		// Mark disabled format definitions
-		if (table == 'tl_style') {
-			div.getParent('div').getElement('pre').toggleClass('disabled');
-		}
-
 		icon = image.get('data-icon') || AjaxRequest.themePath + 'icons/visible.svg';
 		icond = image.get('data-icon-disabled') || AjaxRequest.themePath + 'icons/invisible.svg';
 

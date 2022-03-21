@@ -69,7 +69,7 @@
         <source>Purge the script cache</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.1">
-        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.pages.0">
         <source>Purge the shared cache</source>
