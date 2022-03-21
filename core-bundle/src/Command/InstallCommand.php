@@ -54,15 +54,7 @@ class InstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
-        $this->webDir = $input->getArgument('target');
-
-        if (null === $this->webDir) {
-            if ($this->fs->exists($this->projectDir.'/web')) {
-                $this->webDir = 'web'; // backwards compatibility
-            } else {
-                $this->webDir = 'public';
-            }
-        }
+        $this->webDir = $input->getArgument('target') ?? 'public';
 
         $this->addEmptyDirs();
 

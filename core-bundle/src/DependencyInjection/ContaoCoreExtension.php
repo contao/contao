@@ -99,8 +99,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yml');
         $loader->load('services.yml');
 
-        // TODO: Replace "?? $config['web_dir']" with "?? Path::join($projectDir, 'public')" in Contao 5 (see #3535)
-        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? $config['web_dir']);
+        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);

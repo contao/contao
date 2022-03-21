@@ -51,16 +51,7 @@ class InstallWebDirCommand extends Command
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $webDir = $input->getArgument('target');
-
-        if (null === $webDir) {
-            if ($this->fs->exists($this->projectDir.'/web')) {
-                $webDir = 'web'; // backwards compatibility
-            } else {
-                $webDir = 'public';
-            }
-        }
-
+        $webDir = $input->getArgument('target') ?? 'public';
         $path = Path::join($this->projectDir, $webDir);
 
         $this->addHtaccess($path);

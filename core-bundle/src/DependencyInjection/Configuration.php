@@ -20,7 +20,6 @@ use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
@@ -120,7 +119,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
                     ->setDeprecated('contao/core-bundle', '4.13', 'Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->getDefaultWebDir())
+                    ->defaultValue('public')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
@@ -706,16 +705,5 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
-    }
-
-    private function getDefaultWebDir(): string
-    {
-        $webDir = Path::join($this->projectDir, 'web');
-
-        if ((new Filesystem())->exists($webDir)) {
-            return $webDir;
-        }
-
-        return Path::join($this->projectDir, 'public');
     }
 }

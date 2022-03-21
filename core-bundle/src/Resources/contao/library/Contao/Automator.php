@@ -164,10 +164,6 @@ class Automator extends System
 			$objFolder->purge();
 		}
 
-		// Recreate the internal style sheets
-		$this->import(StyleSheets::class, 'StyleSheets');
-		$this->StyleSheets->updateStyleSheets();
-
 		// Also empty the shared cache so there are no links to deleted scripts
 		$this->purgePageCache();
 

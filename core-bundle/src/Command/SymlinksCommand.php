@@ -65,15 +65,7 @@ class SymlinksCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->webDir = $input->getArgument('target');
-
-        if (null === $this->webDir) {
-            if ((new Filesystem())->exists($this->projectDir.'/web')) {
-                $this->webDir = 'web'; // backwards compatibility
-            } else {
-                $this->webDir = 'public';
-            }
-        }
+        $this->webDir = $input->getArgument('target') ?? 'public';
 
         $this->generateSymlinks();
 

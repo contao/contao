@@ -112,16 +112,6 @@ source_file = src/Resources/contao/languages/en/tl_settings.xlf
 source_lang = en
 file_filter = src/Resources/contao/languages/<lang>/tl_settings.xlf
 
-[core-bundle.v4_13-tl_style]
-source_file = src/Resources/contao/languages/en/tl_style.xlf
-source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_style.xlf
-
-[core-bundle.v4_13-tl_style_sheet]
-source_file = src/Resources/contao/languages/en/tl_style_sheet.xlf
-source_lang = en
-file_filter = src/Resources/contao/languages/<lang>/tl_style_sheet.xlf
-
 [core-bundle.v4_13-tl_templates]
 source_file = src/Resources/contao/languages/en/tl_templates.xlf
 source_lang = en
