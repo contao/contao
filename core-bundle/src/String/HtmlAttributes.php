@@ -34,7 +34,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     /**
      * Outputs the attributes as a string that is safe to be placed inside HTML
      * tags. The output will contain a leading space if there is at least one
-     * property set: e.g. ' foo="bar" bar="42"'.
+     * property set, e.g. ' foo="bar" bar="42"'.
      */
     public function __toString(): string
     {
@@ -62,7 +62,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
             foreach ($this->parseString($attributes) as $name => $value) {
                 try {
                     $mergeSet($name, $value);
-                } catch (\InvalidArgumentException $exception) {
+                } catch (\InvalidArgumentException) {
                     // Skip invalid attributes
                 }
             }
@@ -127,9 +127,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     {
         $this->attributes['class'] = implode(
             ' ',
-            array_unique(
-                $this->split(($this->attributes['class'] ?? '').' '.implode(' ', $classes))
-            )
+            array_unique($this->split(($this->attributes['class'] ?? '').' '.implode(' ', $classes)))
         );
 
         return $this;
@@ -151,7 +149,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     /**
      * Outputs the attributes as a string that is safe to be placed inside HTML
      * tags. The output will contain a leading space if $leadingSpace is set to
-     * true and there is at least one property set: e.g. ' foo="bar" bar="42"'.
+     * true and there is at least one property set, e.g. ' foo="bar" bar="42"'.
      */
     public function toString(bool $leadingSpace = true): string
     {

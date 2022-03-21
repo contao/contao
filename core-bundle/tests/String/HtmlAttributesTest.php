@@ -255,7 +255,7 @@ class HtmlAttributesTest extends TestCase
 
         $this->assertSame('foo bar other1 other2', $attributes['class']);
 
-        // And and remove classes
+        // And remove classes
         $attributes->addClass('baz', 'foo foobar');
         $attributes->removeClass(' other1', 'thing other2');
 
