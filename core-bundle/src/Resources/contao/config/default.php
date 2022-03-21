@@ -69,10 +69,6 @@ $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = array();
 $GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8mb4';
 $GLOBALS['TL_CONFIG']['dbCollation'] = 'utf8mb4_unicode_ci';
 
-// Encryption
-$GLOBALS['TL_CONFIG']['encryptionMode']   = 'cfb';
-$GLOBALS['TL_CONFIG']['encryptionCipher'] = 'rijndael-256';
-
 // File uploads
 $GLOBALS['TL_CONFIG']['uploadTypes']
 	= 'jpg,jpeg,gif,png,ico,svg,svgz,webp,avif,heic,jxl,'
