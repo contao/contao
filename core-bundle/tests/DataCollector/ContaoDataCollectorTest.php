@@ -63,7 +63,6 @@ class ContaoDataCollectorTest extends TestCase
                 'preview' => false,
                 'layout' => '',
                 'template' => '',
-                'legacy_routing' => false,
             ],
             $collector->getSummary()
         );
@@ -104,7 +103,6 @@ class ContaoDataCollectorTest extends TestCase
                 'preview' => false,
                 'layout' => 'Default (ID 2)',
                 'template' => 'fe_page',
-                'legacy_routing' => false,
             ],
             $collector->getSummary()
         );
@@ -151,77 +149,11 @@ class ContaoDataCollectorTest extends TestCase
                 'preview' => true,
                 'layout' => 'Default (ID 2)',
                 'template' => 'fe_page',
-                'legacy_routing' => false,
             ],
             $collector->getSummary()
         );
 
         unset($GLOBALS['objPage']);
-    }
-
-    public function testStoresTheLegacyRoutingData(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html'): void
-    {
-        $collector = $this->getDataCollector($legacyRouting, $prependLocale, $urlSuffix);
-        $collector->collect(new Request(), new Response());
-
-        $this->assertSame(
-            [
-                'enabled' => $legacyRouting,
-                'prepend_locale' => $prependLocale,
-                'url_suffix' => $urlSuffix,
-                'hooks' => [],
-            ],
-            $collector->getLegacyRouting()
-        );
-    }
-
-    public function legacyRoutingProvider(): \Generator
-    {
-        yield [false, false, '.html'];
-        yield [true, false, '.html'];
-        yield [true, false, '.html'];
-        yield [true, true, '.html'];
-        yield [true, true, '.php'];
-    }
-
-    public function testIncludesTheLegacyRoutingHooks(): void
-    {
-        $GLOBALS['TL_HOOKS'] = [
-            'getPageIdFromUrl' => [
-                [TestClass::class, 'onGetPageIdFromUrl'],
-                ['foo.service', 'onGetPageIdFromUrl'],
-            ],
-            'getRootPageFromUrl' => [
-                [TestClass::class, 'onGetRootPageFromUrl'],
-                ['bar.service', 'onGetRootPageFromUrl'],
-            ],
-        ];
-
-        $systemAdapter = $this->mockAdapter(['importStatic']);
-        $systemAdapter
-            ->expects($this->exactly(4))
-            ->method('importStatic')
-            ->withConsecutive([TestClass::class], ['foo.service'], [TestClass::class], ['bar.service'])
-            ->willReturnOnConsecutiveCalls(new TestClass(), new BundleTestClass(), new TestClass(), new BundleTestClass())
-        ;
-
-        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
-
-        $collector = $this->getDataCollector(true);
-        $collector->setFramework($framework);
-        $collector->collect(new Request(), new Response());
-
-        $this->assertSame(
-            [
-                ['name' => 'getPageIdFromUrl', 'class' => TestClass::class, 'method' => 'onGetPageIdFromUrl', 'package' => ''],
-                ['name' => 'getPageIdFromUrl', 'class' => BundleTestClass::class, 'method' => 'onGetPageIdFromUrl', 'package' => 'foo/bar'],
-                ['name' => 'getRootPageFromUrl', 'class' => TestClass::class, 'method' => 'onGetRootPageFromUrl', 'package' => ''],
-                ['name' => 'getRootPageFromUrl', 'class' => BundleTestClass::class, 'method' => 'onGetRootPageFromUrl', 'package' => 'foo/bar'],
-            ],
-            $collector->getLegacyRouting()['hooks']
-        );
-
-        unset($GLOBALS['TL_HOOKS']);
     }
 
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
