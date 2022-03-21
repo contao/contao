@@ -30,7 +30,7 @@
   <?= $this->javascripts ?>
 
 </head>
-<body class="<?= $this->ua ?>">
+<body<?php if ($this->ua): ?> class="<?= $this->ua ?>"<?php endif; ?>>
 
   <div id="container">
     <main id="main">
