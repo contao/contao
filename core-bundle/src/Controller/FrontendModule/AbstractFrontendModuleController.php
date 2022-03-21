@@ -67,5 +67,5 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         return new Response($template->parse());
     }
 
-    abstract protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response;
+    abstract protected function getResponse(Template $template, ModuleModel $model, Request $request): Response;
 }

@@ -54,5 +54,5 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         $response->setSharedMaxAge(min($min));
     }
 
-    abstract protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response;
+    abstract protected function getResponse(Template $template, ContentModel $model, Request $request): Response;
 }
