@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MarkdownController extends AbstractContentElementController
 {
-    protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
+    protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         $this->initializeContaoFramework();
 

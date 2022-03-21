@@ -637,7 +637,7 @@ abstract class DataContainer extends Backend
 
 		$hasWizardClass = \in_array('wizard', $arrClasses);
 
-		if ($wizard)
+		if ($wizard && !($arrData['eval']['disabled'] ?? false) && !($arrData['eval']['readonly'] ?? false))
 		{
 			$objWidget->wizard = $wizard;
 
@@ -845,7 +845,7 @@ abstract class DataContainer extends Backend
 	protected function switchToEdit($id)
 	{
 		$arrKeys = array();
-		$arrUnset = array('act', 'id', 'table', 'mode', 'pid');
+		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
 		foreach (array_keys($_GET) as $strKey)
 		{
@@ -1649,12 +1649,6 @@ abstract class DataContainer extends Backend
 
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			// Decrypt the value
-			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
-			{
-				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
-			}
-
 			if (strpos($v, ':') !== false)
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
@@ -1696,7 +1690,7 @@ abstract class DataContainer extends Backend
 
 					foreach ($row_v as $option)
 					{
-						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?: $option;
+						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
 					}
 
 					$args[$k] = implode(', ', $args_k);
@@ -1785,5 +1779,3 @@ abstract class DataContainer extends Backend
 		return $label;
 	}
 }
-
-class_alias(DataContainer::class, 'DataContainer');

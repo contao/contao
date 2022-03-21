@@ -41,5 +41,3 @@ class ContentSliderStop extends ContentElement
 		$this->Template->next = $GLOBALS['TL_LANG']['MSC']['next'];
 	}
 }
-
-class_alias(ContentSliderStop::class, 'ContentSliderStop');

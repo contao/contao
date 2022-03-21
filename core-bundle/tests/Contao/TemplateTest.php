@@ -20,7 +20,6 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Contao\System;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -29,8 +28,6 @@ use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -319,9 +316,6 @@ class TemplateTest extends TestCase
         $this->assertSame(['test' => 1], $dump);
     }
 
-    /**
-     * @group legacy
-     */
     public function testShowsDebugComments(): void
     {
         (new Filesystem())->dumpFile(
@@ -343,16 +337,9 @@ class TemplateTest extends TestCase
         $this->assertSame('test', $template->setDebug()->parse());
 
         System::getContainer()->setParameter('kernel.debug', true);
-        $GLOBALS['TL_CONFIG']['debugMode'] = true;
 
         $this->assertSame($sourceWithComments, $template->parse());
         $this->assertSame('test', $template->setDebug(false)->parse());
-
-        $GLOBALS['TL_CONFIG']['debugMode'] = false;
-
-        $this->expectDeprecation('%sTL_CONFIG.debugMode%s');
-
-        $this->assertSame('test', $template->setDebug()->parse());
     }
 
     public function testFigureFunction(): void

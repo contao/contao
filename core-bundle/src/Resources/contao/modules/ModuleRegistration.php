@@ -285,12 +285,6 @@ class ModuleRegistration extends Module
 						$varValue = $objWidget->getEmptyValue();
 					}
 
-					// Encrypt the value (see #7815)
-					if ($arrData['eval']['encrypt'] ?? null)
-					{
-						$varValue = Encryption::encrypt($varValue);
-					}
-
 					// Set the new value
 					$arrUser[$field] = $varValue;
 				}
@@ -660,5 +654,3 @@ class ModuleRegistration extends Module
 		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
 	}
 }
-
-class_alias(ModuleRegistration::class, 'ModuleRegistration');

@@ -125,5 +125,3 @@ class ListWizard extends Widget
 		return $response->getContent();
 	}
 }
-
-class_alias(ListWizard::class, 'ListWizard');

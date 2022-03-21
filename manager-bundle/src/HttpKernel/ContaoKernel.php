@@ -318,17 +318,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             }
         }
 
-        // Fallback to the legacy config file (see #566)
-        foreach (['.yaml', '.yml'] as $ext) {
-            $path = Path::join($projectDir, 'app/config', $file.$ext);
-
-            if (file_exists($path)) {
-                trigger_deprecation('contao/manager-bundle', '4.9', sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file.$ext));
-
-                return $path;
-            }
-        }
-
         return null;
     }
 

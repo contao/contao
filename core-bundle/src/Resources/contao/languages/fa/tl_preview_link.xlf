@@ -16,18 +16,21 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
+        <target>ایجاد شده در</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.1">
         <source>Date and time when the preview link was created.</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdBy.0">
         <source>Created by</source>
+        <target>ایجادشده توسط</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdBy.1">
         <source>The user who created the preview link.</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresInDays.0">
         <source>Expires after</source>
+        <target>انتقضاء بعد از</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresInDays.1">
         <source>Select how long the preview link should be available.</source>

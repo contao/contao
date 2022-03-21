@@ -687,5 +687,3 @@ class Comments extends Frontend
 		$objComment->save();
 	}
 }
-
-class_alias(Comments::class, 'Comments');

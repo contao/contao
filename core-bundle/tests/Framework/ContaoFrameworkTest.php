@@ -31,10 +31,10 @@ use Contao\PageModel;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
@@ -339,11 +339,7 @@ class ContaoFrameworkTest extends TestCase
         $errorReporting = error_reporting();
         error_reporting(E_ALL ^ E_USER_NOTICE);
 
-        $this->assertNotSame(
-            $errorReporting,
-            error_reporting(),
-            'Test is invalid, error level has not changed.'
-        );
+        $this->assertNotSame($errorReporting, error_reporting(), 'Test is invalid, error level has not changed.');
 
         $framework->initialize();
 
@@ -358,6 +354,14 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testRedirectsToTheInstallToolIfTheInstallationIsIncomplete(): void
     {
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_install', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('/contao/install')
+        ;
+
         $request = Request::create('/contao/login');
         $request->attributes->set('_route', 'dummy');
 
@@ -368,7 +372,7 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
-            new Filesystem(),
+            $urlGenerator,
             $this->getTempDir(),
             error_reporting(),
             false
@@ -409,7 +413,7 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
-            new Filesystem(),
+            $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting(),
             false
@@ -693,7 +697,7 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $scopeMatcher ?? $this->mockScopeMatcher(),
             $tokenChecker ?? $this->createMock(TokenChecker::class),
-            new Filesystem(),
+            $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting(),
             false

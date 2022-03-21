@@ -130,8 +130,8 @@
         <target>Datenbank aktualisieren</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
-        <source>Please note that the update assistant only handles tables starting with &lt;code&gt;tl_&lt;/code&gt;.</source>
-        <target>Bitte beachten Sie, dass der Update-Assistent nur Tabellen berücksichtigt, die mit &lt;code&gt;tl_&lt;/code&gt; beginnen.</target>
+        <source>Here you can update the database schema.</source>
+        <target>Hier können Sie das Datenbank-Schema aktualisieren.</target>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>

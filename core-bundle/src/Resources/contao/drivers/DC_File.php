@@ -560,5 +560,3 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		return $strPalette;
 	}
 }
-
-class_alias(DC_File::class, 'DC_File');

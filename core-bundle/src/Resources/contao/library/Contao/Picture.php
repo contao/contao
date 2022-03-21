@@ -348,5 +348,3 @@ class Picture
 		return $configItem;
 	}
 }
-
-class_alias(Picture::class, 'Picture');

@@ -78,7 +78,7 @@ class ImageResult
 
         // Unlike the Contao\Image\PictureFactory the PictureFactoryInterface
         // does not know about ResizeOptions. We therefore check if the third
-        // argument of the 'create' method allows setting them.
+        // argument of the "create" method allows setting them.
         $canHandleResizeOptions = static function (PictureFactoryInterface $factory): bool {
             if ($factory instanceof PictureFactory) {
                 return true;

@@ -113,8 +113,6 @@ class Config
 		'dbCollation'           => true,
 		'disableRefererCheck'   => true,
 		'requestTokenWhitelist' => true,
-		'encryptionMode'        => true,
-		'encryptionCipher'      => true,
 		'sessionTimeout'        => true,
 		'disableInsertTags'     => true,
 		'rootFiles'             => true,
@@ -360,21 +358,6 @@ class Config
 	}
 
 	/**
-	 * Return all active modules as array
-	 *
-	 * @return array An array of active modules
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use the container parameter "kernel.bundles" instead.
-	 */
-	public function getActiveModules()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Config::getActiveModules()" has been deprecated and will no longer work in Contao 5.0. Use "kernel.bundles" instead.');
-
-		return ModuleLoader::getActive();
-	}
-
-	/**
 	 * Add a configuration variable to the local configuration file
 	 *
 	 * @param string $strKey   The full variable name
@@ -615,5 +598,3 @@ class Config
 		return "'" . str_replace('\\"', '"', preg_replace('/[\n\r\t ]+/', ' ', addslashes($varValue))) . "'";
 	}
 }
-
-class_alias(Config::class, 'Config');

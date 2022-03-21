@@ -20,7 +20,6 @@ use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
@@ -93,7 +92,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(false)
                 ->end()
                 ->scalarNode('preview_script')
-                    ->info("An optional entry point script that bypasses the front end cache for previewing changes (e.g. '/preview.php').")
+                    ->info('An optional entry point script that bypasses the front end cache for previewing changes (e.g. "/preview.php").')
                     ->cannotBeEmpty()
                     ->defaultValue('')
                     ->validate()
@@ -120,7 +119,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
                     ->setDeprecated('contao/core-bundle', '4.13', 'Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->getDefaultWebDir())
+                    ->defaultValue('public')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
@@ -179,6 +178,9 @@ class Configuration implements ConfigurationInterface
                         ->integerNode('jxl_quality')
                         ->end()
                         ->booleanNode('jxl_lossless')
+                        ->end()
+                        ->booleanNode('flatten')
+                            ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
                         ->end()
                         ->scalarNode('interlace')
                             ->defaultValue(ImageInterface::INTERLACE_PLANE)
@@ -703,16 +705,5 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
-    }
-
-    private function getDefaultWebDir(): string
-    {
-        $webDir = Path::join($this->projectDir, 'web');
-
-        if ((new Filesystem())->exists($webDir)) {
-            return $webDir;
-        }
-
-        return Path::join($this->projectDir, 'public');
     }
 }

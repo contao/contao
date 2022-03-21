@@ -417,12 +417,6 @@ class InsertTags extends Controller
 
 						$value = StringUtil::deserialize($value);
 
-						// Decrypt the value
-						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'] ?? null)
-						{
-							$value = Encryption::decrypt($value);
-						}
-
 						$rgxp = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['rgxp'] ?? null;
 						$opts = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['options'] ?? null;
 						$rfrc = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['reference'] ?? null;
@@ -1286,7 +1280,7 @@ class InsertTags extends Controller
 	private function parseUrlWithQueryString(string $url): array
 	{
 		// Restore [&] and &amp;
-		$url = str_replace(array('[&]', '&amp;'), '&', $url);
+		$url = str_replace(array('&#61;', '[&]', '&amp;'), array('=', '&', '&'), $url);
 
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';
@@ -1505,5 +1499,3 @@ class InsertTags extends Controller
 		return false;
 	}
 }
-
-class_alias(InsertTags::class, 'InsertTags');

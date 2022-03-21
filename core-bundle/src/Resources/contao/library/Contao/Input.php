@@ -680,7 +680,7 @@ class Input
 	private static function getAttributesFromTag($strAttributes)
 	{
 		// Match every attribute name value pair
-		if (!preg_match_all('@\s+([a-z][a-z0-9:-]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]*))?@i', $strAttributes, $matches, PREG_SET_ORDER))
+		if (!preg_match_all('@\s+([a-z][a-z0-9_:-]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]*))?@i', $strAttributes, $matches, PREG_SET_ORDER))
 		{
 			return array();
 		}
@@ -1033,5 +1033,3 @@ class Input
 		return static::$objInstance;
 	}
 }
-
-class_alias(Input::class, 'Input');

@@ -201,5 +201,3 @@ class CheckBoxWizard extends Widget
 		);
 	}
 }
-
-class_alias(CheckBoxWizard::class, 'CheckBoxWizard');

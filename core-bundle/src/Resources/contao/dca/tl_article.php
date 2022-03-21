@@ -767,29 +767,6 @@ class tl_article extends Backend
 	}
 
 	/**
-	 * Return the paste article button
-	 *
-	 * @param DataContainer $dc
-	 * @param array         $row
-	 * @param string        $table
-	 * @param boolean       $cr
-	 * @param array         $arrClipboard
-	 *
-	 * @return string
-	 *
-	 * @deprecated
-	 */
-	public function pasteArticle(DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_article::pasteArticle()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return System::getContainer()
-			->get('contao.listener.data_container.content_composition')
-			->renderArticlePasteButton($dc, $row, $table, $cr, $arrClipboard)
-		;
-	}
-
-	/**
 	 * Return the delete article button
 	 *
 	 * @param array  $row

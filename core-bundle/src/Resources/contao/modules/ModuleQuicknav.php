@@ -182,5 +182,3 @@ class ModuleQuicknav extends Module
 		return $arrPages;
 	}
 }
-
-class_alias(ModuleQuicknav::class, 'ModuleQuicknav');

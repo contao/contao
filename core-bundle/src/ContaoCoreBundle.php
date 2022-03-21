@@ -17,7 +17,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
@@ -83,7 +82,6 @@ class ContaoCoreBundle extends Bundle
         );
 
         $container->addCompilerPass(new MakeServicesPublicPass());
-        $container->addCompilerPass(new AddPackagesPass());
         $container->addCompilerPass(new AddAssetsPackagesPass());
         $container->addCompilerPass(new AddSessionBagsPass());
         $container->addCompilerPass(new AddResourcesPathsPass());

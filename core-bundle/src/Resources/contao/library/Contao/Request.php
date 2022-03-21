@@ -429,5 +429,3 @@ class Request
 		}
 	}
 }
-
-class_alias(Request::class, 'Request');

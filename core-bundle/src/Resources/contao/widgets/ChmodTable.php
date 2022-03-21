@@ -71,5 +71,3 @@ class ChmodTable extends Widget
   </table>';
 	}
 }
-
-class_alias(ChmodTable::class, 'ChmodTable');

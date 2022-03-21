@@ -233,12 +233,6 @@ abstract class Widget extends Controller
 
 			case 'value':
 				$this->varValue = StringUtil::deserialize($varValue);
-
-				// Decrypt the value if it is encrypted
-				if ($this->arrConfiguration['encrypt'] ?? null)
-				{
-					$this->varValue = Encryption::decrypt($this->varValue);
-				}
 				break;
 
 			case 'class':
@@ -374,12 +368,6 @@ abstract class Widget extends Controller
 				return $this->strLabel;
 
 			case 'value':
-				// Encrypt the value
-				if (isset($this->arrConfiguration['encrypt']) && $this->arrConfiguration['encrypt'])
-				{
-					return Encryption::encrypt($this->varValue);
-				}
-
 				if ($this->varValue === '')
 				{
 					return $this->getEmptyStringOrNull();
@@ -706,7 +694,7 @@ abstract class Widget extends Controller
 			return ' ' . $strKey;
 		}
 
-		if ($varValue)
+		if ('' !== (string) $varValue)
 		{
 			return ' ' . $strKey . '="' . StringUtil::specialchars($varValue) . '"';
 		}
@@ -1035,13 +1023,6 @@ abstract class Widget extends Controller
 					if (!Validator::isLanguage($varInput))
 					{
 						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['language'], $this->strLabel));
-					}
-					break;
-
-				case 'google+':
-					if (!Validator::isGooglePlusId($varInput))
-					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidGoogleId'], $this->strLabel));
 					}
 					break;
 
@@ -1440,12 +1421,6 @@ abstract class Widget extends Controller
 			}
 		}
 
-		// Warn if someone uses the "encrypt" flag (see #8589)
-		if (isset($arrAttributes['encrypt']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "encrypt" flag' . (!empty($strTable) && !empty($strField) ? ' on ' . $strTable . '.' . $strField : '') . ' has been deprecated and will no longer work in Contao 5.0. Use the load and save callbacks with a third-party library such as OpenSSL or phpseclib instead.');
-		}
-
 		return $arrAttributes;
 	}
 
@@ -1566,5 +1541,3 @@ abstract class Widget extends Controller
 		return '';
 	}
 }
-
-class_alias(Widget::class, 'Widget');

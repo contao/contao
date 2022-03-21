@@ -249,6 +249,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
 
                 return $this->enableStrictMode($extensionConfigs, $container);
+
+            case 'nelmio_security':
+                return $this->checkClickjackingPaths($extensionConfigs);
         }
 
         return $extensionConfigs;
@@ -507,7 +510,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         // If URL is set, it overrides the driver option
-        if (null !== $url) {
+        if (!empty($url)) {
             $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
         }
 
@@ -517,6 +520,30 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return [$driver, array_replace([], ...$options)];
+    }
+
+    /**
+     * Adds a clickjacking configuration for "^/.*" if not already defined.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function checkClickjackingPaths(array $extensionConfigs): array
+    {
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['clickjacking']['paths']['^/.*'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'clickjacking' => [
+                'paths' => [
+                    '^/.*' => 'SAMEORIGIN',
+                ],
+            ],
+        ];
+
+        return $extensionConfigs;
     }
 
     private function getDatabaseUrl(ContainerBuilder $container, array $extensionConfigs): string
@@ -543,7 +570,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $dbName = '';
 
         if ($name = $container->getParameter('database_name')) {
-            $dbName = '/'.$this->encodeUrlParameter($name);
+            $dbName .= '/'.$this->encodeUrlParameter($name);
+        }
+
+        if ($container->hasParameter('database_version') && $version = $container->getParameter('database_version')) {
+            $dbName .= '?serverVersion='.$this->encodeUrlParameter($version);
         }
 
         return sprintf(

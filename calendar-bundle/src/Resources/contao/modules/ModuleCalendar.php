@@ -326,5 +326,3 @@ class ModuleCalendar extends Events
 		return $arrDays;
 	}
 }
-
-class_alias(ModuleCalendar::class, 'ModuleCalendar');

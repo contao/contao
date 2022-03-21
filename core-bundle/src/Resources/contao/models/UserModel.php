@@ -205,5 +205,3 @@ class UserModel extends Model
 	 */
 	protected static $strTable = 'tl_user';
 }
-
-class_alias(UserModel::class, 'UserModel');

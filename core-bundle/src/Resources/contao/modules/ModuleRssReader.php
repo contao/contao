@@ -180,5 +180,3 @@ class ModuleRssReader extends Module
 		$this->Template->items = array_values($items);
 	}
 }
-
-class_alias(ModuleRssReader::class, 'ModuleRssReader');

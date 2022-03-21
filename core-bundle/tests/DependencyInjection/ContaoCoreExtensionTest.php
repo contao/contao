@@ -483,13 +483,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->has('contao.listener.search_index'));
     }
 
-    /**
-     * @group legacy
-     */
     public function testRegistersTheImageTargetPath(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.4: Using the "contao.image.target_path" parameter has been deprecated %s.');
-
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
@@ -503,17 +498,6 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load([], $container);
 
         $this->assertSame(Path::normalize($this->getTempDir()).'/assets/images', $container->getParameter('contao.image.target_dir'));
-
-        $params = [
-            'contao' => [
-                'image' => ['target_path' => 'my/custom/dir'],
-            ],
-        ];
-
-        $extension = new ContaoCoreExtension();
-        $extension->load($params, $container);
-
-        $this->assertSame(Path::normalize($this->getTempDir()).'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
     }
 
     /**
@@ -619,10 +603,7 @@ class ContaoCoreExtensionTest extends TestCase
         $config
             ->expects($this->exactly(2))
             ->method('mountLocalAdapter')
-            ->withConsecutive(
-                ['upload/path', 'upload/path', 'files'],
-                ['var/backups', 'backups', 'backups'],
-            )
+            ->withConsecutive(['upload/path', 'upload/path', 'files'], ['var/backups', 'backups', 'backups'])
         ;
 
         $dbafsDefinition = $this->createMock(Definition::class);

@@ -641,5 +641,3 @@ class Calendar extends Frontend
 		return self::$arrPageCache[$intPageId];
 	}
 }
-
-class_alias(Calendar::class, 'Calendar');

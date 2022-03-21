@@ -388,10 +388,7 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
-        $this->assertHasStatement(
-            $commands['ALTER_ADD'],
-            'ALTER TABLE tl_foo ADD bar VARCHAR(255) NOT NULL'
-        );
+        $this->assertHasStatement($commands['ALTER_ADD'], 'ALTER TABLE tl_foo ADD bar VARCHAR(255) NOT NULL');
     }
 
     public function testHandlesDecimalsInTheAddColumnCommands(): void
@@ -414,10 +411,7 @@ class InstallerTest extends TestCase
         $commands = $installer->getCommands();
 
         $this->assertArrayHasKey('ALTER_ADD', $commands);
-        $this->assertHasStatement(
-            $commands['ALTER_ADD'],
-            'ALTER TABLE tl_foo ADD foo NUMERIC(9,2) NOT NULL'
-        );
+        $this->assertHasStatement($commands['ALTER_ADD'], 'ALTER TABLE tl_foo ADD foo NUMERIC(9,2) NOT NULL');
     }
 
     public function testHandlesDefaultsInTheAddColumnCommands(): void

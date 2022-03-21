@@ -37,5 +37,3 @@ class SqlFiles extends \RecursiveFilterIterator
 		return false;
 	}
 }
-
-class_alias(SqlFiles::class, 'Filter\SqlFiles');

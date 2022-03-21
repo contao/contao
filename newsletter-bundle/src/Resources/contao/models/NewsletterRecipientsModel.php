@@ -123,5 +123,3 @@ class NewsletterRecipientsModel extends Model
 		return static::createCollectionFromDbResult($objResult, $t);
 	}
 }
-
-class_alias(NewsletterRecipientsModel::class, 'NewsletterRecipientsModel');

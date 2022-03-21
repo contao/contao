@@ -43,7 +43,7 @@ jobs:
     ecs:
         name: ECS
         runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -68,7 +68,7 @@ jobs:
     ecs-legacy:
         name: ECS Legacy
         runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -95,7 +95,7 @@ jobs:
     phpstan:
         name: PHPStan
         runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -120,7 +120,7 @@ jobs:
     psalm:
         name: Psalm
         runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -145,7 +145,7 @@ jobs:
     yamllint:
         name: YAMLlint
         runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'push'
         steps:
             - name: Checkout
               uses: actions/checkout@v1
@@ -160,7 +160,7 @@ jobs:
     require-checker:
         name: Require Checker
         runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -189,7 +189,7 @@ jobs:
     service-linter:
         name: Service Linter
         runs-on: ubuntu-latest
-        if: github.event_name == 'pull_request'
+        if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2

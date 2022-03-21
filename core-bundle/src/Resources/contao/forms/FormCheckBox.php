@@ -284,5 +284,3 @@ class FormCheckBox extends Widget
 		);
 	}
 }
-
-class_alias(FormCheckBox::class, 'FormCheckBox');

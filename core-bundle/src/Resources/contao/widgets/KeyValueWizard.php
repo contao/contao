@@ -157,5 +157,3 @@ class KeyValueWizard extends Widget
   <script>Backend.keyValueWizard("ctrl_' . $this->strId . '")</script>';
 	}
 }
-
-class_alias(KeyValueWizard::class, 'KeyValueWizard');

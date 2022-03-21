@@ -337,5 +337,3 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 		return FileUpload::getMaxUploadSize();
 	}
 }
-
-class_alias(FormFileUpload::class, 'FormFileUpload');

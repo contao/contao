@@ -1063,30 +1063,6 @@ class tl_page extends Backend
 	}
 
 	/**
-	 * Make sure that top-level pages are root pages
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 *
-	 * @throws Exception
-	 *
-	 * @deprecated
-	 */
-	public function checkRootType($varValue, DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::checkRootType()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if ($varValue != 'root' && $dc->activeRecord->pid == 0)
-		{
-			throw new Exception($GLOBALS['TL_LANG']['ERR']['topLevelRoot']);
-		}
-
-		return $varValue;
-	}
-
-	/**
 	 * Return the SERP URL
 	 *
 	 * @param PageModel $page
@@ -1193,60 +1169,6 @@ class tl_page extends Backend
 		$session = $objSession->get('sitemap_updater');
 		$session[] = PageModel::findWithDetails($dc->activeRecord->id)->rootId;
 		$objSession->set('sitemap_updater', array_unique($session));
-	}
-
-	/**
-	 * Auto-generate a page alias if it has not been set yet
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @throws Exception
-	 */
-	public function generateAlias($varValue, DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::generateAlias()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return System::getContainer()
-			->get('contao.listener.data_container.page_url')
-			->generateAlias($varValue, $dc)
-		;
-	}
-
-	/**
-	 * Automatically create an article in the main column of a new page
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @deprecated
-	 */
-	public function generateArticle(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::generateArticle()" has been deprecated and will no longer work in Contao 5.0.');
-
-		System::getContainer()
-			->get('contao.listener.data_container.content_composition')
-			->generateArticleForPage($dc)
-		;
-	}
-
-	/**
-	 * Purge the search index if a page is being deleted
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @deprecated
-	 */
-	public function purgeSearchIndex(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::purgeSearchIndex()" has been deprecated and will no longer work in Contao 5.0.');
-
-		System::getContainer()
-			->get('contao.listener.data_container.page_search')
-			->onDelete($dc)
-		;
 	}
 
 	/**
@@ -1377,22 +1299,6 @@ class tl_page extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Returns all allowed page types as array
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 *
-	 * @deprecated
-	 */
-	public function getPageTypes(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::getPageTypes()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return System::getContainer()->get('contao.listener.data_container.page_type_options')($dc);
 	}
 
 	/**
@@ -1608,29 +1514,6 @@ class tl_page extends Backend
 		$security = System::getContainer()->get('security.helper');
 
 		return ($security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $row['type']) && $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_PAGE, $row) && ($this->User->isAdmin || !in_array($row['id'], $root))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Generate an "edit articles" button and return it as string
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 *
-	 * @return string
-	 *
-	 * @deprecated
-	 */
-	public function editArticles($row, $href, $label, $title, $icon)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::editArticles()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return System::getContainer()
-			->get('contao.listener.data_container.content_composition')
-			->renderPageArticlesOperation($row, $href, $label, $title, $icon)
-		;
 	}
 
 	/**

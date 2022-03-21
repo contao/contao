@@ -264,5 +264,3 @@ class CheckBox extends Widget
 		);
 	}
 }
-
-class_alias(CheckBox::class, 'CheckBox');

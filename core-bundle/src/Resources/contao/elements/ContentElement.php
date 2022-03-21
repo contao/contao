@@ -345,5 +345,3 @@ abstract class ContentElement extends Frontend
 		return '';
 	}
 }
-
-class_alias(ContentElement::class, 'ContentElement');

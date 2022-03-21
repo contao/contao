@@ -58,5 +58,3 @@ class ModuleMaintenance extends BackendModule
 		}
 	}
 }
-
-class_alias(ModuleMaintenance::class, 'ModuleMaintenance');
