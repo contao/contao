@@ -713,5 +713,3 @@ class Database
 		return System::getContainer()->get('database_connection')->quoteIdentifier($strName);
 	}
 }
-
-class_alias(Database::class, 'Database');

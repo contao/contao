@@ -158,5 +158,3 @@ class TrblField extends Widget
 		);
 	}
 }
-
-class_alias(TrblField::class, 'TrblField');

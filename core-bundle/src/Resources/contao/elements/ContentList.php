@@ -45,5 +45,3 @@ class ContentList extends ContentElement
 		$this->Template->tag = ($this->listtype == 'ordered') ? 'ol' : 'ul';
 	}
 }
-
-class_alias(ContentList::class, 'ContentList');

@@ -85,5 +85,3 @@ class DropZone extends FileUpload
 		return $return;
 	}
 }
-
-class_alias(DropZone::class, 'DropZone');

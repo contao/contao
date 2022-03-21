@@ -945,5 +945,3 @@ class Image
 		return 0;
 	}
 }
-
-class_alias(Image::class, 'Image');

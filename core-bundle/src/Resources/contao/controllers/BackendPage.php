@@ -166,5 +166,3 @@ class BackendPage extends Backend
 		return $objTemplate->getResponse();
 	}
 }
-
-class_alias(BackendPage::class, 'BackendPage');

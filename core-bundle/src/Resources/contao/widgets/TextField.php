@@ -210,5 +210,3 @@ class TextField extends Widget
 		);
 	}
 }
-
-class_alias(TextField::class, 'TextField');

@@ -405,5 +405,3 @@ class Pagination
 		return StringUtil::ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
 	}
 }
-
-class_alias(Pagination::class, 'Pagination');

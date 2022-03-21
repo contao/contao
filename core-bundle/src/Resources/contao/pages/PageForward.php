@@ -141,5 +141,3 @@ class PageForward extends Frontend
 		return ($objPage->redirect == 'temporary') ? 303 : 301;
 	}
 }
-
-class_alias(PageForward::class, 'PageForward');

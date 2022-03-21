@@ -182,5 +182,3 @@ class TableWizard extends Widget
 		return $response->getContent();
 	}
 }
-
-class_alias(TableWizard::class, 'TableWizard');

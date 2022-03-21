@@ -236,5 +236,3 @@ class ModuleNewsArchive extends ModuleNews
 		$this->Template->empty = $GLOBALS['TL_LANG']['MSC']['empty'];
 	}
 }
-
-class_alias(ModuleNewsArchive::class, 'ModuleNewsArchive');

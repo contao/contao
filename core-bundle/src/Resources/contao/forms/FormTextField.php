@@ -275,5 +275,3 @@ class FormTextField extends Widget
 		);
 	}
 }
-
-class_alias(FormTextField::class, 'FormTextField');

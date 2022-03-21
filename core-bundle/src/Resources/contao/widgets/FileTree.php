@@ -523,5 +523,3 @@ class FileTree extends Widget
 		return $this->getFilePreviewPath($objFile->path) !== null;
 	}
 }
-
-class_alias(FileTree::class, 'FileTree');

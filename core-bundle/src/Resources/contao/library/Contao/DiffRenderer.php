@@ -98,5 +98,3 @@ class DiffRenderer extends \Diff_Renderer_Html_Array
 		return $html;
 	}
 }
-
-class_alias(DiffRenderer::class, 'DiffRenderer');

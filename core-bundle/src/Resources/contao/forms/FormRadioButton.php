@@ -248,5 +248,3 @@ class FormRadioButton extends Widget
 		);
 	}
 }
-
-class_alias(FormRadioButton::class, 'FormRadioButton');

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Framework;
 
-use Contao\ClassLoader;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\LegacyRoutingException;
@@ -264,9 +263,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         // Preload the configuration (see #5872)
         $config->preload();
 
-        // Register the class loader
-        ClassLoader::scanAndRegister();
-
         $this->initializeLegacySessionAccess();
         $this->setDefaultLanguage();
 
@@ -298,7 +294,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         static $basicClasses = [
             'System',
             'Config',
-            'ClassLoader',
             'TemplateLoader',
         ];
 

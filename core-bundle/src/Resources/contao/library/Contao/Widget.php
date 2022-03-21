@@ -1548,5 +1548,3 @@ abstract class Widget extends Controller
 		return '';
 	}
 }
-
-class_alias(Widget::class, 'Widget');

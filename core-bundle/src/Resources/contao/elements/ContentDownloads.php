@@ -319,5 +319,3 @@ class ContentDownloads extends ContentDownload
 		$this->Template->files = array_values($files);
 	}
 }
-
-class_alias(ContentDownloads::class, 'ContentDownloads');

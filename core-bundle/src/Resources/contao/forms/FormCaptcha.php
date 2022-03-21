@@ -272,5 +272,3 @@ class FormCaptcha extends Widget
 		);
 	}
 }
-
-class_alias(FormCaptcha::class, 'FormCaptcha');

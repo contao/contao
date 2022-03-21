@@ -467,5 +467,3 @@ class Installer extends Controller
 		return $return;
 	}
 }
-
-class_alias(Installer::class, 'Database\Installer');

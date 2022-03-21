@@ -106,5 +106,3 @@ class QueryBuilder
 		return $strQuery;
 	}
 }
-
-class_alias(QueryBuilder::class, 'Model\QueryBuilder');

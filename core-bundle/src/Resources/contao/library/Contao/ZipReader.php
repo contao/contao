@@ -558,5 +558,3 @@ class ZipReader
 		);
 	}
 }
-
-class_alias(ZipReader::class, 'ZipReader');

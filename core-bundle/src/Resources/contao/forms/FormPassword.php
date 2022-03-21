@@ -170,5 +170,3 @@ class FormPassword extends Widget
 		);
 	}
 }
-
-class_alias(FormPassword::class, 'FormPassword');

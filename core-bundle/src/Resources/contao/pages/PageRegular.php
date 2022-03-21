@@ -665,5 +665,3 @@ class PageRegular extends Frontend
 		};
 	}
 }
-
-class_alias(PageRegular::class, 'PageRegular');

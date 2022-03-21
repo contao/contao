@@ -1130,5 +1130,3 @@ class Theme extends Backend
 		return preg_replace('@^' . preg_quote(System::getContainer()->getParameter('contao.upload_path'), '@') . '/@', 'files/', $strPath);
 	}
 }
-
-class_alias(Theme::class, 'Theme');

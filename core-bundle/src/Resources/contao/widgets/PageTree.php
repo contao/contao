@@ -267,5 +267,3 @@ class PageTree extends Widget
 		return $extras;
 	}
 }
-
-class_alias(PageTree::class, 'PageTree');

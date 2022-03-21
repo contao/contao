@@ -89,5 +89,3 @@ abstract class BackendModule extends Backend
 	 */
 	abstract protected function compile();
 }
-
-class_alias(BackendModule::class, 'BackendModule');

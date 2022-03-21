@@ -668,5 +668,3 @@ class FileSelector extends Widget
 		return true;
 	}
 }
-
-class_alias(FileSelector::class, 'FileSelector');

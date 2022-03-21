@@ -927,5 +927,3 @@ class File extends System
 		return $return;
 	}
 }
-
-class_alias(File::class, 'File');

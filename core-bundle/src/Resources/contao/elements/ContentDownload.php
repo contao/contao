@@ -205,5 +205,3 @@ class ContentDownload extends ContentElement
 		}
 	}
 }
-
-class_alias(ContentDownload::class, 'ContentDownload');
