@@ -15,7 +15,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ptable'                      => 'tl_faq_category',
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'question',

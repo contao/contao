@@ -102,7 +102,7 @@ class FileTree extends Widget
 
 			if ($order = Input::post($this->strOrderName))
 			{
-				$arrNew = array_map('StringUtil::uuidToBin', explode(',', $order));
+				$arrNew = array_map('\Contao\StringUtil::uuidToBin', explode(',', $order));
 			}
 
 			// Only proceed if the value has changed
@@ -135,7 +135,7 @@ class FileTree extends Widget
 
 		$arrValue = array_values(array_filter(explode(',', $varInput)));
 
-		return $this->multiple ? array_map('StringUtil::uuidToBin', $arrValue) : StringUtil::uuidToBin($arrValue[0]);
+		return $this->multiple ? array_map('\Contao\StringUtil::uuidToBin', $arrValue) : StringUtil::uuidToBin($arrValue[0]);
 	}
 
 	/**
@@ -345,8 +345,8 @@ class FileTree extends Widget
 		}
 
 		// Convert the binary UUIDs
-		$strSet = implode(',', array_map('StringUtil::binToUuid', $arrSet));
-		$strOrder = $blnHasOrder ? implode(',', array_map('StringUtil::binToUuid', $this->{$this->orderField})) : '';
+		$strSet = implode(',', array_map('\Contao\StringUtil::binToUuid', $arrSet));
+		$strOrder = $blnHasOrder ? implode(',', array_map('\Contao\StringUtil::binToUuid', $this->{$this->orderField})) : '';
 
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $strSet . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . '>' . ($blnHasOrder ? '
   <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $strOrder . '">' : '') . '
