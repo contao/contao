@@ -430,7 +430,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 * {@inheritdoc}
 	 */
 	public function getSalt(): ?string
-    {
+	{
 		return null;
 	}
 

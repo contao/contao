@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Security\Authenticator;
 
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
@@ -108,6 +116,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
             new PasswordCredentials($credentials['password']),
             [new RememberMeBadge()]
         );
+
         if ($this->options['enable_csrf']) {
             $passport->addBadge(new CsrfTokenBadge($this->options['csrf_token_id'], $credentials['csrf_token']));
         }

@@ -47,6 +47,21 @@ class ContaoLoginFactory extends AbstractFactory implements AuthenticatorFactory
         return 'contao-login';
     }
 
+    public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId)
+    {
+        $authenticatorId = 'contao.security.authenticator.'.$firewallName;
+        $options = array_intersect_key($config, $this->options);
+        $container
+            ->setDefinition($authenticatorId, new ChildDefinition('contao.security.authenticator'))
+            ->replaceArgument(0, new Reference($userProviderId))
+            ->replaceArgument(1, new Reference($this->createAuthenticationSuccessHandler($container, $firewallName, $config)))
+            ->replaceArgument(2, new Reference($this->createAuthenticationFailureHandler($container, $firewallName, $config)))
+            ->replaceArgument(7, $options)
+        ;
+
+        return $authenticatorId;
+    }
+
     protected function createAuthProvider(ContainerBuilder $container, string $id, array $config, string $userProviderId): string
     {
         $twoFactorProviderId = TwoFactorFactory::PROVIDER_ID_PREFIX.$id;
@@ -108,19 +123,5 @@ class ContaoLoginFactory extends AbstractFactory implements AuthenticatorFactory
             ->replaceArgument(5, false)
             ->addTag('kernel.event_subscriber')
         ;
-    }
-
-    public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId)
-    {
-        $authenticatorId = 'contao.security.authenticator.'.$firewallName;
-        $options = array_intersect_key($config, $this->options);
-        $container
-            ->setDefinition($authenticatorId, new ChildDefinition('contao.security.authenticator'))
-            ->replaceArgument(0, new Reference($userProviderId))
-            ->replaceArgument(1, new Reference($this->createAuthenticationSuccessHandler($container, $firewallName, $config)))
-            ->replaceArgument(2, new Reference($this->createAuthenticationFailureHandler($container, $firewallName, $config)))
-            ->replaceArgument(7, $options);
-
-        return $authenticatorId;
     }
 }
