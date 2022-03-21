@@ -93,7 +93,6 @@ class Config
 		'urlSuffix'        => 'contao.url_suffix',
 		'uploadPath'       => 'contao.upload_path',
 		'editableFiles'    => 'contao.editable_files',
-		'debugMode'        => 'kernel.debug',
 		'characterSet'     => 'kernel.charset',
 		'enableSearch'     => 'contao.search.default_indexer.enable',
 		'indexProtected'   => 'contao.search.index_protected',
