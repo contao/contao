@@ -62,11 +62,6 @@ class InstallTool
         return is_writable(__FILE__);
     }
 
-    public function shouldAcceptLicense(): bool
-    {
-        return !Config::get('licenseAccepted');
-    }
-
     public function increaseLoginCount(): void
     {
         $count = 0;
