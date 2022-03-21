@@ -214,5 +214,3 @@ class DcaLoader extends Controller
 		}
 	}
 }
-
-class_alias(DcaLoader::class, 'DcaLoader');

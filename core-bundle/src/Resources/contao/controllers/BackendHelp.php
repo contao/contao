@@ -156,5 +156,3 @@ class BackendHelp extends Backend
 		return $objTemplate->getResponse();
 	}
 }
-
-class_alias(BackendHelp::class, 'BackendHelp');

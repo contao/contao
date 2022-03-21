@@ -541,5 +541,3 @@ class Combiner extends System
 		return $return;
 	}
 }
-
-class_alias(Combiner::class, 'Combiner');

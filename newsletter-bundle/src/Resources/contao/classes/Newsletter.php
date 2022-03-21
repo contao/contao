@@ -1081,5 +1081,3 @@ class Newsletter extends Backend
 		return $arrPages;
 	}
 }
-
-class_alias(Newsletter::class, 'Newsletter');

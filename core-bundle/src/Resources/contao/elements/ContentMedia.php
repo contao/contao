@@ -206,5 +206,3 @@ class ContentMedia extends ContentElement
 		}
 	}
 }
-
-class_alias(ContentMedia::class, 'ContentMedia');

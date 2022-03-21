@@ -1499,5 +1499,3 @@ class InsertTags extends Controller
 		return false;
 	}
 }
-
-class_alias(InsertTags::class, 'InsertTags');

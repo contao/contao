@@ -140,5 +140,3 @@ class ModuleRandomImage extends Module
 		));
 	}
 }
-
-class_alias(ModuleRandomImage::class, 'ModuleRandomImage');

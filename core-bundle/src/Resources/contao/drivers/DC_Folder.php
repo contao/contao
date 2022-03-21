@@ -3051,5 +3051,3 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		return $attributes;
 	}
 }
-
-class_alias(DC_Folder::class, 'DC_Folder');

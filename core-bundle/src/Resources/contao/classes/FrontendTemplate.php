@@ -224,5 +224,3 @@ class FrontendTemplate extends Template
 		return $response;
 	}
 }
-
-class_alias(FrontendTemplate::class, 'FrontendTemplate');

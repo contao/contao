@@ -723,5 +723,3 @@ abstract class Template extends Controller
 		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . StringUtil::specialchars($title) . '">';
 	}
 }
-
-class_alias(Template::class, 'Template');

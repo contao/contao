@@ -154,5 +154,3 @@ class Password extends Widget
 		);
 	}
 }
-
-class_alias(Password::class, 'Password');

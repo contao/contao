@@ -129,5 +129,3 @@ class BackendPassword extends Backend
 		return $objTemplate->getResponse();
 	}
 }
-
-class_alias(BackendPassword::class, 'BackendPassword');

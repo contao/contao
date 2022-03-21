@@ -332,5 +332,3 @@ class FileUpload extends Backend
 		return false;
 	}
 }
-
-class_alias(FileUpload::class, 'FileUpload');

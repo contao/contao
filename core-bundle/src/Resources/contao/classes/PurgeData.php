@@ -147,5 +147,3 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 		return $objTemplate->parse();
 	}
 }
-
-class_alias(PurgeData::class, 'PurgeData');

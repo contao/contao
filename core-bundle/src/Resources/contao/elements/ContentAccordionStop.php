@@ -37,5 +37,3 @@ class ContentAccordionStop extends ContentElement
 		}
 	}
 }
-
-class_alias(ContentAccordionStop::class, 'ContentAccordionStop');

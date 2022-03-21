@@ -6168,5 +6168,3 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return $attributes;
 	}
 }
-
-class_alias(DC_Table::class, 'DC_Table');

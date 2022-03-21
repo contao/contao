@@ -614,5 +614,3 @@ abstract class Events extends Module
 		}
 	}
 }
-
-class_alias(Events::class, 'Events');

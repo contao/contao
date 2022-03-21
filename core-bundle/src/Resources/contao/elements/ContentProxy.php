@@ -84,5 +84,3 @@ class ContentProxy extends ContentElement
 		// noop
 	}
 }
-
-class_alias(ContentProxy::class, 'ContentProxy');

@@ -208,5 +208,3 @@ class SelectMenu extends Widget
 		);
 	}
 }
-
-class_alias(SelectMenu::class, 'SelectMenu');

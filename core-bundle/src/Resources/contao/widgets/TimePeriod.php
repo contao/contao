@@ -164,5 +164,3 @@ class TimePeriod extends Widget
 		);
 	}
 }
-
-class_alias(TimePeriod::class, 'TimePeriod');

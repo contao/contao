@@ -185,5 +185,3 @@ class MetaWizard extends Widget
 		return $return;
 	}
 }
-
-class_alias(MetaWizard::class, 'MetaWizard');
