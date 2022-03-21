@@ -24,7 +24,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property string  $teaser
  * @property string  $teaserCssID
  * @property string  $classes
- * @property string  $keywords
  * @property boolean $printable
  * @property boolean $published
  * @property integer $start

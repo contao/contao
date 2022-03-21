@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
  * Class FrontendTemplate
  *
  * @property integer $id
- * @property string  $keywords
  * @property string  $content
  * @property array   $sections
  * @property array   $positions
