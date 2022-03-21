@@ -222,7 +222,7 @@ class Ajax extends Backend
 				// Load the value
 				if (Input::get('act') != 'overrideAll')
 				{
-					if (($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null) == 'File')
+					if (is_a($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null, DC_File::class, true))
 					{
 						$varValue = Config::get($strField);
 					}

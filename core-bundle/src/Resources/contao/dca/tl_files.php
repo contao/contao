@@ -32,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Folder',
+		'dataContainer'               => DC_Folder::class,
 		'enableVersioning'            => true,
 		'databaseAssisted'            => true,
 		'uploadPath'                  => $GLOBALS['TL_CONFIG']['uploadPath'] ?? System::getContainer()->getParameter('contao.upload_path'),

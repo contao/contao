@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\DataContainer;
+use Contao\DC_Folder;
 use Contao\DiffRenderer;
 use Contao\Environment;
 use Contao\File;
@@ -35,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Folder',
+		'dataContainer'               => DC_Folder::class,
 		'uploadPath'                  => 'templates',
 		'editableFileTypes'           => 'html5,twig',
 		'closed'                      => true,
