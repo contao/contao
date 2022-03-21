@@ -322,22 +322,6 @@ class Ajax extends Backend
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
 
-			// Feature/unfeature an element
-			case 'toggleFeatured':
-				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=toggleFeatured) has been deprecated and will no longer work in Contao 5.0. Use the toggle operation instead.');
-
-				if (class_exists($dc->table, false))
-				{
-					$dca = new $dc->table();
-
-					if (method_exists($dca, 'toggleFeatured'))
-					{
-						$dca->toggleFeatured(Input::post('id'), Input::post('state') == 1, $dc);
-					}
-				}
-
-				throw new NoContentResponseException();
-
 			// Toggle subpalettes
 			case 'toggleSubpalette':
 				$this->import(BackendUser::class, 'User');
