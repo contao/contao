@@ -251,8 +251,7 @@ class PageSelector extends Widget
 	 */
 	public function generateAjax($id, $strField, $level)
 	{
-		if (!Environment::get('isAjaxRequest'))
-		{
+		if (!Environment::get('isAjaxRequest')) {
 			return '';
 		}
 
@@ -260,30 +259,27 @@ class PageSelector extends Widget
 		$this->loadDataContainer($this->strTable);
 
 		// Load current values
-		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
+		if (is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_File::class, true))
 		{
-			case 'File':
-				if (Config::get($this->strField))
-				{
-					$this->varValue = Config::get($this->strField);
-				}
-				break;
+			if (Config::get($this->strField))
+			{
+				$this->varValue = Config::get($this->strField);
+			}
+		}
 
-			case 'Table':
-				if (!$this->Database->fieldExists($this->strField, $this->strTable))
-				{
-					break;
-				}
-
+		elseif (is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_Table::class, true))
+		{
+			if ($this->Database->fieldExists($this->strField, $this->strTable))
+			{
 				$objField = $this->Database->prepare("SELECT " . Database::quoteIdentifier($this->strField) . " FROM " . $this->strTable . " WHERE id=?")
-										   ->limit(1)
-										   ->execute($this->strId);
+					->limit(1)
+					->execute($this->strId);
 
 				if ($objField->numRows)
 				{
 					$this->varValue = StringUtil::deserialize($objField->{$this->strField});
 				}
-				break;
+			}
 		}
 
 		$this->getPathNodes();

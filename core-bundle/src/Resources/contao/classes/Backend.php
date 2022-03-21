@@ -520,7 +520,7 @@ abstract class Backend extends Controller
 				$table = $strTable;
 				$ptable = ($act != 'edit') ? $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] : $strTable;
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'], array(5, 6)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'], array(5, 6)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)

@@ -15,7 +15,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ptable'                      => 'tl_page',
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,

@@ -298,32 +298,29 @@ class FileSelector extends Widget
 		$this->loadDataContainer($this->strTable);
 
 		// Load the current values
-		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
+		if (is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_File::class, true))
 		{
-			case 'File':
-				if (Config::get($this->strField))
-				{
-					$this->varValue = Config::get($this->strField);
-				}
-				break;
+			if (Config::get($this->strField))
+			{
+				$this->varValue = Config::get($this->strField);
+			}
+		}
 
-			case 'Table':
-				$this->import(Database::class, 'Database');
+		elseif (is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_Table::class, true))
+		{
+			$this->import(Database::class, 'Database');
 
-				if (!$this->Database->fieldExists($this->strField, $this->strTable))
-				{
-					break;
-				}
-
+			if ($this->Database->fieldExists($this->strField, $this->strTable))
+			{
 				$objField = $this->Database->prepare("SELECT " . Database::quoteIdentifier($this->strField) . " FROM " . $this->strTable . " WHERE id=?")
-										   ->limit(1)
-										   ->execute($this->strId);
+					->limit(1)
+					->execute($this->strId);
 
 				if ($objField->numRows)
 				{
 					$this->varValue = StringUtil::deserialize($objField->{$this->strField});
 				}
-				break;
+			}
 		}
 
 		$this->convertValuesToPaths();

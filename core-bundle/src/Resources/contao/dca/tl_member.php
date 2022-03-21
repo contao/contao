@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'enableVersioning'            => true,
 		'onsubmit_callback' => array
 		(

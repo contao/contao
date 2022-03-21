@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_style_sheet'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ptable'                      => 'tl_theme',
 		'ctable'                      => array('tl_style'),
 		'switchToEdit'                => true,

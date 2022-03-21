@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'closed'                      => true,
 		'notEditable'                 => true,
 		'notCopyable'                 => true,

@@ -386,13 +386,13 @@ class DcaExtractor extends Controller
 		}
 
 		// Return if the DC type is "File"
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'File')
+		if (is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_File::class, true))
 		{
 			return;
 		}
 
 		// Return if the DC type is "Folder" and the DC is not database assisted
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] == 'Folder' && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
+		if (is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_Folder::class, true) && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
 		{
 			return;
 		}
