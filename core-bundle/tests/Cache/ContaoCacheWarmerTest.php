@@ -22,7 +22,6 @@ use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;

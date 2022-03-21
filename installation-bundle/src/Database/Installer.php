@@ -16,7 +16,6 @@ use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\Table;
 
 class Installer
 {

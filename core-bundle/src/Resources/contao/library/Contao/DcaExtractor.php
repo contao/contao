@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
-
 /**
  * Extracts DCA information and cache it
  *

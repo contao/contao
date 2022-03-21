@@ -288,6 +288,7 @@ class DcaSchemaProvider
         $this->framework->initialize();
 
         $installer = $this->framework->createInstance(Installer::class);
+
         return $installer->getFromDca();
     }
 
