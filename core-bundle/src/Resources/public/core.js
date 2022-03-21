@@ -784,55 +784,6 @@ var Backend =
 	},
 
 	/**
-	 * Limit the height of the preview pane
-	 */
-	limitPreviewHeight: function() {
-		var hgt = 0;
-
-		$$('div.limit_height').each(function(div) {
-			var parent = div.getParent('.tl_content'),
-				toggler, button, size, style;
-
-			// Return if the element is a wrapper
-			if (parent && (parent.hasClass('wrapper_start') || parent.hasClass('wrapper_stop'))) return;
-
-			if (hgt === 0) {
-				hgt = div.className.replace(/[^0-9]*/, '').toInt();
-			}
-
-			// Return if there is no height value
-			if (!hgt) return;
-
-			toggler = new Element('div', {
-				'class': 'limit_toggler'
-			});
-
-			button = new Element('button', {
-				'type': 'button',
-				'html': '<span>...</span>',
-				'class': 'unselectable',
-				'data-state': 0
-			}).inject(toggler);
-
-			size = div.getCoordinates();
-			div.setStyle('height', hgt);
-
-			// Disable the function if the preview height is below the max-height
-			if (size.height <= hgt) {
-				return;
-			}
-
-			button.addEvent('click', function() {
-				style = toggler.getPrevious('div').getStyle('height').toInt();
-				toggler.getPrevious('div').setStyle('height', ((style > hgt) ? hgt : ''));
-				button.set('data-state', button.get('data-state') ? 0 : 1);
-			});
-
-			toggler.inject(div, 'after');
-		});
-	},
-
-	/**
 	 * Toggle checkboxes
 	 *
 	 * @param {object} el   The DOM element
@@ -2582,11 +2533,6 @@ window.addEvent('domready', function() {
 // Resize the table wizard
 window.addEvent('resize', function() {
 	Backend.tableWizardSetWidth();
-});
-
-// Limit the height of the preview fields
-window.addEvent('load', function() {
-	Backend.limitPreviewHeight();
 });
 
 // Re-apply certain changes upon ajax_change
