@@ -179,7 +179,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->booleanNode('reject_large_uploads')
-                    ->info('Reject uploaded images exceeding the localconfig.gdMaxImgWidth and localconfig.gdMaxImgHeight dimensions.')
+                    ->info('Reject uploaded images exceeding the localconfig.imageWidth and localconfig.imageHeight dimensions.')
                     ->defaultValue(false)
                 ->end()
                 ->arrayNode('sizes')

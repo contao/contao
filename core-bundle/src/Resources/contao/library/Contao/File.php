@@ -591,7 +591,7 @@ class File extends System
 
 				if ($image instanceof DeferredImageInterface)
 				{
-					System::getContainer()->get('contao.image.legacy_resizer')->resizeDeferredImage($image);
+					System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
 
 					return true;
 				}
