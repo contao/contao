@@ -305,7 +305,6 @@ class FileSelector extends Widget
 				$this->varValue = Config::get($this->strField);
 			}
 		}
-
 		elseif (is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_Table::class, true))
 		{
 			$this->import(Database::class, 'Database');

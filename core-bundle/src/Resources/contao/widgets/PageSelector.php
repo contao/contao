@@ -251,7 +251,8 @@ class PageSelector extends Widget
 	 */
 	public function generateAjax($id, $strField, $level)
 	{
-		if (!Environment::get('isAjaxRequest')) {
+		if (!Environment::get('isAjaxRequest'))
+		{
 			return '';
 		}
 
@@ -266,7 +267,6 @@ class PageSelector extends Widget
 				$this->varValue = Config::get($this->strField);
 			}
 		}
-
 		elseif (is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_Table::class, true))
 		{
 			if ($this->Database->fieldExists($this->strField, $this->strTable))
