@@ -96,7 +96,7 @@ composer run functional-tests
 composer run cs-fixer
 composer run service-linter
 composer run phpstan
-composer run psalm
+composer run require-checker
 composer run monorepo-tools
 ```
 

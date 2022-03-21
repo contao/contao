@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\FrontendUser;
 use Contao\Image;
 use Contao\MemberGroupModel;
@@ -25,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'onsubmit_callback' => array
 		(
