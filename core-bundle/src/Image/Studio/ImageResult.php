@@ -72,40 +72,14 @@ class ImageResult
      */
     public function getPicture(): PictureInterface
     {
-        if (null !== $this->picture) {
-            return $this->picture;
-        }
-
-        // Unlike the Contao\Image\PictureFactory the PictureFactoryInterface
-        // does not know about ResizeOptions. We therefore check if the third
-        // argument of the "create" method allows setting them.
-        $canHandleResizeOptions = static function (PictureFactoryInterface $factory): bool {
-            if ($factory instanceof PictureFactory) {
-                return true;
-            }
-
-            $createParameters = (new \ReflectionClass($factory))
-                ->getMethod('create')
-                ->getParameters()
+        if (null === $this->picture) {
+            $this->picture = $this
+                ->pictureFactory()
+                ->create($this->filePathOrImageInterface, $this->sizeConfiguration, $this->resizeOptions)
             ;
-
-            if (!isset($createParameters[2])) {
-                return false;
-            }
-
-            $type = $createParameters[2]->getType();
-
-            return $type instanceof \ReflectionNamedType && ResizeOptions::class === $type->getName();
-        };
-
-        $factory = $this->pictureFactory();
-        $arguments = [$this->filePathOrImageInterface, $this->sizeConfiguration];
-
-        if (null !== $this->resizeOptions && $canHandleResizeOptions($factory)) {
-            $arguments[] = $this->resizeOptions;
         }
 
-        return $this->picture = $this->pictureFactory()->create(...$arguments);
+        return $this->picture;
     }
 
     /**

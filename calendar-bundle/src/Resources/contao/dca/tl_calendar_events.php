@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\DC_Table;
 use Contao\Events;
 use Contao\Input;
 use Contao\LayoutModel;
@@ -32,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_calendar',
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,

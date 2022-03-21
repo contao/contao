@@ -8,6 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\DC_File;
 use Contao\StringUtil;
 
 $GLOBALS['TL_DCA']['tl_settings'] = array
@@ -15,7 +16,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'File',
+		'dataContainer'               => DC_File::class,
 		'closed'                      => true
 	),
 
