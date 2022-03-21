@@ -72,7 +72,7 @@ class ModuleEventlist extends Events
 		}
 
 		// Show the event reader if an item has been selected
-		if ($this->cal_readerModule > 0  && null !== Input::get('auto_item'))
+		if ($this->cal_readerModule > 0  && null !== Input::get('auto_item', false, true))
 		{
 			return $this->getFrontendModule($this->cal_readerModule, $this->strColumn);
 		}
