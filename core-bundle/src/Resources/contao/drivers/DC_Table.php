@@ -6168,4 +6168,3 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return $attributes;
 	}
 }
-
