@@ -329,6 +329,7 @@ class HtmlAttributesTest extends TestCase
         $attributes = new HtmlAttributes();
 
         $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('A HTML attribute name must only consist of the characters [a-z0-9_-], must start with a letter, must not end with a underscore/hyphen and must not contain two underscores/hyphens in a row, got "foo--2000".');
 
         $attributes['foo--2000'] = 'bar';
     }
