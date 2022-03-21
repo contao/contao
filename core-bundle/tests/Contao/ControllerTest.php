@@ -729,18 +729,16 @@ class ControllerTest extends TestCase
         ];
 
         yield 'Replaces multiple paths (not really expected)' => [
-            'https://example.com/contao/main.php?contao/file.php=foo',
-            ['contao_backend', 'contao_backend_file'],
-            'https://example.com/contao_backend?contao_backend_file=foo',
+            'https://example.com/contao/main.php?contao/password.php=foo',
+            ['contao_backend', 'contao_backend_password'],
+            'https://example.com/contao_backend?contao_backend_password=foo',
         ];
 
         $pathMap = [
             'contao/confirm.php' => 'contao_backend_confirm',
-            'contao/file.php' => 'contao_backend_file',
             'contao/help.php' => 'contao_backend_help',
             'contao/index.php' => 'contao_backend_login',
             'contao/main.php' => 'contao_backend',
-            'contao/page.php' => 'contao_backend_page',
             'contao/password.php' => 'contao_backend_password',
             'contao/popup.php' => 'contao_backend_popup',
             'contao/preview.php' => 'contao_backend_preview',
@@ -761,8 +759,8 @@ class ControllerTest extends TestCase
         $router
             ->expects($this->exactly(2))
             ->method('generate')
-            ->withConsecutive(['contao_backend'], ['contao_backend_file'])
-            ->willReturn('/contao', '/contao/file')
+            ->withConsecutive(['contao_backend'], ['contao_backend_password'])
+            ->willReturn('/contao', '/contao/password')
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
@@ -783,8 +781,8 @@ class ControllerTest extends TestCase
         );
 
         $this->assertSame(
-            $method->invoke(null, 'Link to <a href="/contao/main.php">backend main</a> and <a href="/contao/file.php?x=y">files</a>'),
-            'Link to <a href="/contao">backend main</a> and <a href="/contao/file?x=y">files</a>'
+            $method->invoke(null, 'Link to <a href="/contao/main.php">backend main</a> and <a href="/contao/password.php?x=y">password</a>'),
+            'Link to <a href="/contao">backend main</a> and <a href="/contao/password?x=y">password</a>'
         );
     }
 }
