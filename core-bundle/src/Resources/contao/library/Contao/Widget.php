@@ -1038,13 +1038,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				case 'google+':
-					if (!Validator::isGooglePlusId($varInput))
-					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidGoogleId'], $this->strLabel));
-					}
-					break;
-
 				case 'fieldname':
 					if (!Validator::isFieldName($varInput))
 					{
