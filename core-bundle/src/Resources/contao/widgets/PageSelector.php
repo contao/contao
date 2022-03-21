@@ -276,13 +276,14 @@ class PageSelector extends Widget
 				}
 
 				$objField = $this->Database->prepare("SELECT " . Database::quoteIdentifier($this->strField) . " FROM " . $this->strTable . " WHERE id=?")
-					->limit(1)
-					->execute($this->strId);
+										   ->limit(1)
+										   ->execute($this->strId);
 
 				if ($objField->numRows)
 				{
 					$this->varValue = StringUtil::deserialize($objField->{$this->strField});
 				}
+				break;
 		}
 
 		$this->getPathNodes();
