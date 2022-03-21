@@ -84,7 +84,7 @@
         <source>Custom label</source>
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
-        <source>Here you can enter a custom label for the drop-down menu.</source>
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -229,12 +229,6 @@
       </trans-unit>
       <trans-unit id="tl_module.singleSRC.1">
         <source>Please select a file from the files directory.</source>
-      </trans-unit>
-      <trans-unit id="tl_module.url.0">
-        <source>URL</source>
-      </trans-unit>
-      <trans-unit id="tl_module.url.1">
-        <source>Please enter the URL (http://…) of the Flash movie.</source>
       </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
@@ -387,7 +381,7 @@
         <source>Please select a module for every root page.</source>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Module for "%s"</source>
+        <source>Choose module for "%s"</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

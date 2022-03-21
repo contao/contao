@@ -36,6 +36,7 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
@@ -98,8 +99,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yml');
         $loader->load('services.yml');
 
-        // TODO: Replace "?? $config['web_dir']" with "?? Path::join($projectDir, 'public')" in Contao 5 (see #3535)
-        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? $config['web_dir']);
+        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
@@ -127,6 +127,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
+        $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
 
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);
@@ -162,49 +163,42 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             }
         );
 
-        $container->registerAttributeForAutoconfiguration(
-            AsCronJob::class,
-            static function (ChildDefinition $definition, AsCronJob $attribute): void {
-                $definition->addTag('contao.cronjob', get_object_vars($attribute));
-            }
-        );
+        $attributesForAutoconfiguration = [
+            AsPage::class => 'contao.page',
+            AsPickerProvider::class => 'contao.picker_provider',
+            AsCronJob::class => 'contao.cronjob',
+            AsHook::class => 'contao.hook',
+            AsCallback::class => 'contao.callback',
+        ];
 
-        $container->registerAttributeForAutoconfiguration(
-            AsHook::class,
-            static function (ChildDefinition $definition, AsHook $attribute): void {
-                $definition->addTag('contao.hook', get_object_vars($attribute));
-            }
-        );
+        foreach ($attributesForAutoconfiguration as $attributeClass => $tag) {
+            $container->registerAttributeForAutoconfiguration(
+                $attributeClass,
+                static function (ChildDefinition $definition, object $attribute, \Reflector $reflector) use ($attributeClass, $tag): void {
+                    $tagAttributes = get_object_vars($attribute);
 
-        $container->registerAttributeForAutoconfiguration(
-            AsCallback::class,
-            static function (ChildDefinition $definition, AsCallback $attribute): void {
-                $definition->addTag('contao.callback', get_object_vars($attribute));
-            }
-        );
+                    if ($reflector instanceof \ReflectionMethod) {
+                        if (isset($tagAttributes['method'])) {
+                            throw new LogicException(sprintf('%s attribute cannot declare a method on "%s::%s()".', $attributeClass, $reflector->getDeclaringClass()->getName(), $reflector->getName()));
+                        }
 
-        $container->registerAttributeForAutoconfiguration(
-            AsPage::class,
-            static function (ChildDefinition $definition, AsPage $attribute): void {
-                $definition->addTag('contao.page', get_object_vars($attribute));
-            }
-        );
+                        $tagAttributes['method'] = $reflector->getName();
+                    }
 
-        $container->registerAttributeForAutoconfiguration(
-            AsPickerProvider::class,
-            static function (ChildDefinition $definition, AsPickerProvider $attribute): void {
-                $definition->addTag('contao.picker_provider', get_object_vars($attribute));
-            }
-        );
+                    $definition->addTag($tag, $tagAttributes);
+                }
+            );
+        }
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void
     {
+        // User uploads
         $filesStorageName = 'files';
 
-        // TODO: Deprecate the 'contao.upload_path' config key. In the next
-        // major version, $uploadPath can then be replaced with 'files' and the
-        // redundant 'files' attribute removed when mounting the local adapter.
+        // TODO: Deprecate the "contao.upload_path" config key. In the next
+        // major version, $uploadPath can then be replaced with "files" and the
+        // redundant "files" attribute removed when mounting the local adapter.
         $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
 
         $config
@@ -215,6 +209,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $config
             ->addDefaultDbafs($filesStorageName, 'tl_files')
             ->addMethodCall('setDatabasePathPrefix', [$uploadPath]) // Backwards compatibility
+        ;
+
+        // Backups
+        $config
+            ->mountLocalAdapter('var/backups', 'backups', 'backups')
+            ->addVirtualFilesystem('backups', 'backups')
         ;
     }
 
@@ -284,7 +284,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $imageSizes = [];
 
-        // Do not add a size with the special name '_defaults' but merge its values into all other definitions instead.
+        // Do not add a size with the special name "_defaults" but merge its values into all other definitions instead.
         foreach ($config['image']['sizes'] as $name => $value) {
             if ('_defaults' === $name) {
                 continue;
@@ -416,7 +416,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $retentionPolicy->setArgument(1, $config['backup']['keep_intervals']);
 
         $dbDumper = $container->getDefinition('contao.doctrine.backup_manager');
-        $dbDumper->setArgument(2, $config['backup']['directory']);
         $dbDumper->setArgument(3, $config['backup']['ignore_tables']);
     }
 

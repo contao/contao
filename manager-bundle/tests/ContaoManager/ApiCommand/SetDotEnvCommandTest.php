@@ -60,7 +60,7 @@ class SetDotEnvCommandTest extends ContaoTestCase
 
     public function testCreatesDotEnvFileIfItDoesNotExist(): void
     {
-        $this->assertFileNotExists($this->tempfile);
+        $this->assertFileDoesNotExist($this->tempfile);
 
         $tester = new CommandTester($this->command);
         $tester->execute(['key' => 'FOO', 'value' => '$BAR']);

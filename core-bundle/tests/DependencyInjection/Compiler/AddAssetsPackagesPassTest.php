@@ -27,9 +27,9 @@ use Symfony\Component\Filesystem\Path;
 
 class AddAssetsPackagesPassTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $fs = new Filesystem();
         $fs->mkdir(static::getTempDir().'/FooBarBundle/Resources/public');

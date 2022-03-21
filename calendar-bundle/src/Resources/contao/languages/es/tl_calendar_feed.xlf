@@ -85,6 +85,10 @@
         <source>Feed settings</source>
         <target>Ajustes del flujo</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_feed.image_legend">
+        <source>Image settings</source>
+        <target>Opciones de la imagen</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_feed.source_teaser">
         <source>Event teasers</source>
         <target>Avances de eventos</target>

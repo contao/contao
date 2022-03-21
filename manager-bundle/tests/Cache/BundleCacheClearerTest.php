@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Test\Cache;
+namespace Contao\ManagerBundle\Tests\Cache;
 
 use Contao\ManagerBundle\Cache\BundleCacheClearer;
 use Contao\TestCase\ContaoTestCase;
@@ -29,6 +29,6 @@ class BundleCacheClearerTest extends ContaoTestCase
         $clearer = new BundleCacheClearer($fs);
         $clearer->clear($this->getTempDir());
 
-        $this->assertFileNotExists($this->getTempDir().'/bundles.map');
+        $this->assertFileDoesNotExist($this->getTempDir().'/bundles.map');
     }
 }

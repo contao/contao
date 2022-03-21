@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
+use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -41,6 +42,15 @@ use Twig\TwigFunction;
 
 class ContaoExtensionTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([ContaoFramework::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testAddsTheNodeVisitors(): void
     {
         $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();

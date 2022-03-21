@@ -17,10 +17,6 @@
         <source>Description</source>
         <target>Description</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.maintenanceMode">
-        <source>Maintenance mode</source>
-        <target>Mode de maintenance</target>
-      </trans-unit>
       <trans-unit id="tl_maintenance.clearCache">
         <source>Purge data</source>
         <target>Purger des données</target>
@@ -81,6 +77,12 @@
         <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
         <target>Supprime les images générées automatiquement, puis purge le cache serveur, il n'y a donc aucun lien vers les ressources supprimées.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.0">
+        <source>Purge the preview cache</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.1">
+        <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+      </trans-unit>
       <trans-unit id="tl_maintenance_jobs.scripts.0">
         <source>Purge the script cache</source>
         <target>Purger le cache des scripts</target>
@@ -119,6 +121,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.1">
         <source>Recreates the symlinks in the public folder (document root).</source>
+        <target>Recrée les liens symboliques dans le dossier public (racine du document).</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawler">
         <source>Crawler</source>
@@ -163,10 +166,6 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Rechercher les liens morts</target>
-      </trans-unit>
-      <trans-unit id="tl_maintenance.crawlMaintenance">
-        <source>Crawling is not possible while the maintenance mode is enabled.</source>
-        <target>L'exploration du site n'est pas possible tant que le site est en mode maintenance.</target>
       </trans-unit>
     </body>
   </file>

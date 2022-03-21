@@ -27,6 +27,11 @@ services:
         arguments:
             - '@contao.doctrine.backup_manager'
 
+    contao.command.backup_stream_content:
+        class: Contao\CoreBundle\Command\Backup\BackupStreamContentCommand
+        arguments:
+            - '@contao.doctrine.backup_manager'
+
     contao.command.crawl:
         class: Contao\CoreBundle\Command\CrawlCommand
         arguments:

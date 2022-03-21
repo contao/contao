@@ -46,16 +46,16 @@ class FilesystemConfiguration
     /**
      * Adds another new VirtualFilesystem service.
      *
-     * Setting the name to 'foo' will create a 'contao.filesystem.virtual.foo'
+     * Setting the name to "foo" will create a "contao.filesystem.virtual.foo"
      * service and additionally enable constructor injection with an argument
-     * 'VirtualFilesystemInterface $fooStorage' if autowiring is available.
+     * "VirtualFilesystemInterface $fooStorage" if autowiring is available.
      *
      * @return Definition the newly created definition
      */
     public function addVirtualFilesystem(string $name, string $prefix, bool $readonly = false): Definition
     {
         if (null !== $this->getVirtualFilesystem($name)) {
-            throw new InvalidConfigurationException("A virtual filesystem with the name '$name' is already defined.");
+            throw new InvalidConfigurationException(sprintf('A virtual filesystem with the name "%s" is already defined.', $name));
         }
 
         $definition = new Definition(VirtualFilesystem::class, [$prefix, $readonly]);
@@ -78,7 +78,7 @@ class FilesystemConfiguration
      * @see https://github.com/thephpleague/flysystem-bundle#basic-usage
      *
      * The $mountPath must be a path relative to and inside the project root
-     * (e.g. 'files/foo' or 'assets/images').
+     * (e.g. "files/foo" or "assets/images").
      *
      * If you do not set a name, the id/alias for the adapter service will be
      * derived from the mount path.
@@ -117,7 +117,7 @@ class FilesystemConfiguration
      * mountAdapter() instead.
      *
      * The $mountPath must be a path relative to and inside the project root
-     * (e.g. 'files/foo' or 'assets/images'); the $filesystemPath can either
+     * (e.g. "files/foo" or "assets/images"); the $filesystemPath can either
      * be absolute or relative to the project root and may contain
      * placeholders (%name%).
      *
@@ -133,7 +133,15 @@ class FilesystemConfiguration
 
         $path = $this->container->getParameterBag()->resolveValue($path);
 
-        $this->mountAdapter('local', ['directory' => $path], $mountPath, $name);
+        $this->mountAdapter(
+            'local',
+            [
+                'directory' => $path,
+                'skip_links' => true,
+            ],
+            Path::normalize($mountPath),
+            $name
+        );
 
         return $this;
     }
@@ -166,7 +174,7 @@ class FilesystemConfiguration
     public function addDefaultDbafs(string $virtualFilesystemName, string $table, string $hashFunction = 'md5', bool $useLastModified = true): Definition
     {
         if (null === ($virtualFilesystem = $this->getVirtualFilesystem($virtualFilesystemName))) {
-            throw new InvalidConfigurationException("A virtual filesystem with the name '$virtualFilesystemName' does not exist.");
+            throw new InvalidConfigurationException(sprintf('A virtual filesystem with the name "%s" does not exist.', $virtualFilesystemName));
         }
 
         // Add an individual hash generator

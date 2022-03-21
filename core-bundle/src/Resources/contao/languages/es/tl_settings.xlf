@@ -83,12 +83,15 @@
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.0">
         <source>Allowed HTML attributes</source>
+        <target>Atributos HTML permitidos </target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributes.1">
         <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+        <target>Lista de atributos HTML permitidos que no se eliminarán. El nombre de etiqueta o atributo &lt;code&gt;*&lt;/code&gt; representa todas las etiquetas o atributos. Los comodines se pueden usar para atributos con guiones como &lt;code&gt;data-*&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>Permitir atributos &lt;code&gt;*&lt;/code&gt;  puede ser explotado para ataques XSS. ¡Haga esto solo si todos los usuarios de back-end son de confianza! </target>
       </trans-unit>
       <trans-unit id="tl_settings.disableRefererCheck.0">
         <source>Disable request tokens</source>
@@ -168,6 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.defaultGroup.1">
         <source>Here you can select a user group as the default owner of a page.</source>
+        <target>Aquí puede seleccionar un grupo de usuarios como propietario predeterminado de una página.</target>
       </trans-unit>
       <trans-unit id="tl_settings.defaultChmod.0">
         <source>Default access rights</source>

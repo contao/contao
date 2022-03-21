@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\Config;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Image\ResizeConfiguration;
@@ -19,7 +20,6 @@ use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
@@ -62,6 +62,19 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->variableNode('localconfig')
                     ->info('Allows to set TL_CONFIG variables, overriding settings stored in localconfig.php. Changes in the Contao back end will not have any effect.')
+                    ->validate()
+                        ->always(
+                            static function (array $options): array {
+                                foreach (array_keys($options) as $option) {
+                                    if ($newKey = Config::getNewKey($option)) {
+                                        trigger_deprecation('contao/core-bundle', '4.12', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
+                                    }
+                                }
+
+                                return $options;
+                            }
+                        )
+                    ->end()
                 ->end()
                 ->arrayNode('locales')
                     ->info('Allows to configure which languages can be used in the Contao back end. Defaults to all languages for which a translation exists.')
@@ -79,7 +92,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(false)
                 ->end()
                 ->scalarNode('preview_script')
-                    ->info("An optional entry point script that bypasses the front end cache for previewing changes (e.g. '/preview.php').")
+                    ->info('An optional entry point script that bypasses the front end cache for previewing changes (e.g. "/preview.php").')
                     ->cannotBeEmpty()
                     ->defaultValue('')
                     ->validate()
@@ -106,7 +119,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
                     ->setDeprecated('contao/core-bundle', '4.13', 'Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->getDefaultWebDir())
+                    ->defaultValue('public')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
@@ -119,6 +132,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addBackendNode())
                 ->append($this->addInsertTagsNode())
                 ->append($this->addBackupNode())
+                ->append($this->addSanitizerNode())
             ->end()
         ;
 
@@ -164,6 +178,9 @@ class Configuration implements ConfigurationInterface
                         ->integerNode('jxl_quality')
                         ->end()
                         ->booleanNode('jxl_lossless')
+                        ->end()
+                        ->booleanNode('flatten')
+                            ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
                         ->end()
                         ->scalarNode('interlace')
                             ->defaultValue(ImageInterface::INTERLACE_PLANE)
@@ -631,10 +648,6 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
-                ->scalarNode('directory')
-                    ->info('The directory the backups are stored in.')
-                    ->defaultValue('%kernel.project_dir%/var/backups')
-                ->end()
                 ->arrayNode('ignore_tables')
                     ->info('These tables are ignored by default when creating and restoring backups.')
                     ->defaultValue(['tl_crawl_queue', 'tl_log', 'tl_search', 'tl_search_index', 'tl_search_term'])
@@ -667,14 +680,30 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
-    private function getDefaultWebDir(): string
+    private function addSanitizerNode(): NodeDefinition
     {
-        $webDir = Path::join($this->projectDir, 'web');
+        return (new TreeBuilder('sanitizer'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_url_protocols')
+                    ->prototype('scalar')->end()
+                    ->defaultValue(['http', 'https', 'ftp', 'mailto', 'tel', 'data', 'skype', 'whatsapp'])
+                    ->validate()
+                        ->always(
+                            static function (array $protocols): array {
+                                foreach ($protocols as $protocol) {
+                                    if (!preg_match('/^[a-z][a-z0-9\-+.]*$/i', (string) $protocol)) {
+                                        throw new \InvalidArgumentException(sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
+                                    }
+                                }
 
-        if ((new Filesystem())->exists($webDir)) {
-            return $webDir;
-        }
-
-        return Path::join($this->projectDir, 'public');
+                                return $protocols;
+                            }
+                        )
+                    ->end()
+                ->end()
+            ->end()
+        ;
     }
 }

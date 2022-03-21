@@ -21,6 +21,7 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 
@@ -32,11 +33,7 @@ class InheritanceTest extends TestCase
     public function testInheritsMultipleTimes(): void
     {
         $environment = $this->getDemoEnvironment();
-
-        $html = $environment->render(
-            '@Contao/text.html.twig',
-            ['content' => 'This &amp; that']
-        );
+        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This &amp; that']);
 
         // Global > App > BarBundle > FooBundle > CoreBundle
         $expected = '<global><app><bar><foo>Content: This &amp; that</foo></bar></app></global>';
@@ -53,10 +50,7 @@ class InheritanceTest extends TestCase
 
         $GLOBALS['objPage'] = $page;
 
-        $html = $environment->render(
-            '@Contao/text.html.twig',
-            ['content' => 'This &amp; that']
-        );
+        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This &amp; that']);
 
         // Theme > Global > App > BarBundle > FooBundle > CoreBundle
         $expected = '<theme><global><app><bar><foo>Content: This &amp; that</foo></bar></app></global></theme>';
@@ -71,7 +65,7 @@ class InheritanceTest extends TestCase
         $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle');
 
         $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage("There cannot be more than one 'foo' template in '$bundlePath/templates'.");
+        $this->expectExceptionMessage('There cannot be more than one "foo" template in "'.$bundlePath.'/templates".');
 
         $this->getDemoEnvironment(['InvalidBundle' => ['path' => $bundlePath]]);
     }
@@ -102,8 +96,9 @@ class InheritanceTest extends TestCase
 
         $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $themeNamespace, $connection);
         $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace, $projectDir);
+        $filesystem = $this->createMock(Filesystem::class);
 
-        $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'prod');
+        $warmer = new ContaoFilesystemLoaderWarmer($loader, $templateLocator, $projectDir, 'cache', 'prod', $filesystem);
         $warmer->warmUp('');
 
         $environment = new Environment($loader);

@@ -172,7 +172,7 @@ body:not(.fullscreen) #header .inner {
 	position: absolute;
 	top:-5px;
 }
-#tmenu .icon-alert {
+#tmenu .icon-alert,#tmenu .icon-manual {
 	width:16px;
 	margin-bottom:-2px;
 	position:relative;
@@ -180,6 +180,9 @@ body:not(.fullscreen) #header .inner {
 	overflow:hidden;
 	white-space:nowrap;
 	text-indent:28px; /* 16px width + 12px padding */
+}
+#tmenu .icon-manual {
+	background:url("icons/manual.svg") center center no-repeat;
 }
 #tmenu .icon-profile {
 	background:url("icons/profile_dark.svg") 20px center no-repeat;
@@ -255,6 +258,7 @@ body:not(.fullscreen) #container {
 .popup #main .content {
 	margin:0;
 	border:0;
+	overflow:auto;
 }
 
 /* Navigation */
@@ -343,23 +347,25 @@ body:not(.fullscreen) #container {
 	margin:18px 0;
 	padding:0 16px;
 	font-size:1.1rem;
+	display:flex;
 }
 .popup #main_headline {
 	display:none;
 }
 #main_headline span {
 	display:inline-block;
-	max-width:30%;
+	max-width:max-content;
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
 	line-height:22px;
+	flex:1 0 0;
 }
 #main_headline span:nth-child(even) {
 	font-weight:400;
 }
 #main_headline span + span::before {
-	content: '› ';
+	content: "\A0› "; /* Non-breaking-space to prevent collapsing whitespace */
 	font-weight: 600;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
@@ -409,9 +415,11 @@ h2.sub_headline {
 	color:#d68c23;
 }
 .widget .tl_error,.widget .tl_confirm,.widget .tl_info,.widget .tl_new {
-	margin:1px 0;
 	padding:8px 10px 8px 30px;
 	background-position:9px 9px;
+}
+.tl_error strong,.tl_confirm strong,.tl_info strong,.tl_new strong {
+	color:inherit;
 }
 
 /* Filter */
@@ -1042,7 +1050,7 @@ table.tl_listing {
 .tl_content h1,.tl_content h2,.tl_content h3,.tl_content h4,.tl_content h5,.tl_content h6 {
 	font-size:.875rem;
 }
-.tl_content img,.selector_container img {
+.tl_content img,.selector_container img,.tl_undo_preview img {
 	max-width:320px;
 	height:auto;
 }
@@ -1070,7 +1078,7 @@ table.tl_listing {
 	float:right;
 	text-align:right;
 	margin-left:12px;
-	margin-top:-1px;
+	margin-bottom:-1px;
 }
 .tl_right button,.tl_content_right button {
 	margin:0;

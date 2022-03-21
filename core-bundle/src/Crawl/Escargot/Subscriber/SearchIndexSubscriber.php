@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -110,6 +111,19 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             return SubscriberInterface::DECISION_NEGATIVE;
         }
 
+        // Skip any redirected URLs that are now outside our base hosts (#4213)
+        $actualHost = (new Uri($response->getInfo('url')))->getHost();
+
+        if ($crawlUri->getUri()->getHost() !== $actualHost && !$this->escargot->getBaseUris()->containsHost($actualHost)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Did not index because it was not part of the base URI collection.'
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
         // No HTML, no index
         if (!Util::isOfContentType($response, 'text/html')) {
             $this->logWithCrawlUri(
@@ -184,18 +198,18 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function onTransportException(CrawlUri $crawlUri, TransportExceptionInterface $exception, ResponseInterface $response): void
     {
-        $this->logError($crawlUri, 'Could not request properly: '.$exception->getMessage());
+        $this->logWarning($crawlUri, 'Could not request properly: '.$exception->getMessage());
     }
 
     public function onHttpException(CrawlUri $crawlUri, HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk): void
     {
-        $this->logError($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
+        $this->logWarning($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
     }
 
-    private function logError(CrawlUri $crawlUri, string $message): void
+    private function logWarning(CrawlUri $crawlUri, string $message): void
     {
-        ++$this->stats['error'];
+        ++$this->stats['warning'];
 
-        $this->logWithCrawlUri($crawlUri, LogLevel::ERROR, sprintf('Broken link! %s.', $message));
+        $this->logWithCrawlUri($crawlUri, LogLevel::DEBUG, sprintf('Broken link! %s.', $message));
     }
 }

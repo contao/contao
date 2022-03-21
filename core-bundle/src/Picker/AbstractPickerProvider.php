@@ -43,7 +43,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
 
         if (null === $this->translator) {
             trigger_deprecation('contao/core-bundle', '4.4', 'Using a picker provider without injecting the translator service has been deprecated and will no longer work in Contao 5.0.');
-            $label = $GLOBALS['TL_LANG']['MSC'][$name];
+            $label = $GLOBALS['TL_LANG']['MSC'][$name] ?? $name;
         } else {
             $label = $this->translator->trans('MSC.'.$name, [], 'contao_default');
         }

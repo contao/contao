@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="MSC.cal_repeat">
         <source>This event is repeated %s%s. The next event will take place on &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt;.</source>
+        <target>Cet événement est répété %s%s. Le prochain événement aura lieu le &lt;time datetime=&quot;%s&quot;&gt;%s&lt;/time&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.cal_repeat_ended">
         <source>This event was repeated %s%s.</source>
@@ -83,6 +84,9 @@
       <trans-unit id="MSC.eventPicker">
         <source>Events</source>
         <target>Calendrier/Événements</target>
+      </trans-unit>
+      <trans-unit id="MSC.eventOverview">
+        <source>Back to the event overview</source>
       </trans-unit>
     </body>
   </file>

@@ -27,9 +27,7 @@ use Contao\Model\Collection;
  * @property string|array      $widthRight
  * @property string|array|null $sections
  * @property string|array      $framework
- * @property string|array|null $stylesheet
  * @property string|array|null $external
- * @property string            $loadingOrder
  * @property string|boolean    $combineScripts
  * @property string|array|null $modules
  * @property string            $template
@@ -68,9 +66,7 @@ use Contao\Model\Collection;
  * @method static LayoutModel|null findOneByWidthRight($val, array $opt=array())
  * @method static LayoutModel|null findOneBySections($val, array $opt=array())
  * @method static LayoutModel|null findOneByFramework($val, array $opt=array())
- * @method static LayoutModel|null findOneByStylesheet($val, array $opt=array())
  * @method static LayoutModel|null findOneByExternal($val, array $opt=array())
- * @method static LayoutModel|null findOneByLoadingOrder($val, array $opt=array())
  * @method static LayoutModel|null findOneByCombineScripts($val, array $opt=array())
  * @method static LayoutModel|null findOneByModules($val, array $opt=array())
  * @method static LayoutModel|null findOneByTemplate($val, array $opt=array())
@@ -105,9 +101,7 @@ use Contao\Model\Collection;
  * @method static Collection|LayoutModel[]|LayoutModel|null findByWidthRight($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findBySections($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByFramework($val, array $opt=array())
- * @method static Collection|LayoutModel[]|LayoutModel|null findByStylesheet($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByExternal($val, array $opt=array())
- * @method static Collection|LayoutModel[]|LayoutModel|null findByLoadingOrder($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByCombineScripts($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByModules($val, array $opt=array())
  * @method static Collection|LayoutModel[]|LayoutModel|null findByTemplate($val, array $opt=array())
@@ -146,9 +140,7 @@ use Contao\Model\Collection;
  * @method static integer countByWidthRight($val, array $opt=array())
  * @method static integer countBySections($val, array $opt=array())
  * @method static integer countByFramework($val, array $opt=array())
- * @method static integer countByStylesheet($val, array $opt=array())
  * @method static integer countByExternal($val, array $opt=array())
- * @method static integer countByLoadingOrder($val, array $opt=array())
  * @method static integer countByCombineScripts($val, array $opt=array())
  * @method static integer countByModules($val, array $opt=array())
  * @method static integer countByTemplate($val, array $opt=array())

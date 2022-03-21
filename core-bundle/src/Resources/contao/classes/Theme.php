@@ -97,8 +97,6 @@ class Theme extends Backend
 			(
 				'tl_files'           => $this->Database->getFieldNames('tl_files'),
 				'tl_theme'           => $this->Database->getFieldNames('tl_theme'),
-				'tl_style_sheet'     => $this->Database->getFieldNames('tl_style_sheet'),
-				'tl_style'           => $this->Database->getFieldNames('tl_style'),
 				'tl_module'          => $this->Database->getFieldNames('tl_module'),
 				'tl_layout'          => $this->Database->getFieldNames('tl_layout'),
 				'tl_image_size'      => $this->Database->getFieldNames('tl_image_size'),
@@ -204,7 +202,7 @@ class Theme extends Backend
 				$table = $tables->item($i)->getAttribute('name');
 
 				// Skip invalid tables
-				if ($table != 'tl_theme' && $table != 'tl_style_sheet' && $table != 'tl_style' && $table != 'tl_module' && $table != 'tl_layout' && $table != 'tl_image_size' && $table != 'tl_image_size_item')
+				if ($table != 'tl_theme' && $table != 'tl_module' && $table != 'tl_layout' && $table != 'tl_image_size' && $table != 'tl_image_size_item')
 				{
 					continue;
 				}
@@ -394,8 +392,6 @@ class Theme extends Backend
 			(
 				'tl_files'           => 'WRITE',
 				'tl_theme'           => 'WRITE',
-				'tl_style_sheet'     => 'WRITE',
-				'tl_style'           => 'WRITE',
 				'tl_module'          => 'WRITE',
 				'tl_layout'          => 'WRITE',
 				'tl_image_size'      => 'WRITE',
@@ -413,8 +409,6 @@ class Theme extends Backend
 			// Get the current auto_increment values
 			$tl_files = $this->Database->getNextId('tl_files');
 			$tl_theme = $this->Database->getNextId('tl_theme');
-			$tl_style_sheet = $this->Database->getNextId('tl_style_sheet');
-			$tl_style = $this->Database->getNextId('tl_style');
 			$tl_module = $this->Database->getNextId('tl_module');
 			$tl_layout = $this->Database->getNextId('tl_layout');
 			$tl_image_size = $this->Database->getNextId('tl_image_size');
@@ -493,11 +487,7 @@ class Theme extends Backend
 						// Increment the parent IDs
 						elseif ($name == 'pid')
 						{
-							if ($table == 'tl_style')
-							{
-								$value = $arrMapper['tl_style_sheet'][$value];
-							}
-							elseif ($table == 'tl_image_size_item')
+							if ($table == 'tl_image_size_item')
 							{
 								$value = $arrMapper['tl_image_size'][$value];
 							}
@@ -511,22 +501,6 @@ class Theme extends Backend
 						elseif ($name == 'fallback')
 						{
 							$value = '';
-						}
-
-						// Adjust the style sheet IDs of the page layout
-						elseif ($table == 'tl_layout' && $name == 'stylesheet')
-						{
-							$stylesheets = StringUtil::deserialize($value);
-
-							if (\is_array($stylesheets))
-							{
-								foreach (array_keys($stylesheets) as $key)
-								{
-									$stylesheets[$key] = $arrMapper['tl_style_sheet'][$stylesheets[$key]];
-								}
-
-								$value = serialize($stylesheets);
-							}
 						}
 
 						// Adjust the module IDs of the page layout
@@ -548,8 +522,8 @@ class Theme extends Backend
 							}
 						}
 
-						// Adjust duplicate theme and style sheet names
-						elseif (($table == 'tl_theme' || $table == 'tl_style_sheet') && $name == 'name')
+						// Adjust duplicate theme names
+						elseif ($table == 'tl_theme' && $name == 'name')
 						{
 							$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM " . $table . " WHERE name=?")
 													   ->execute($value);
@@ -557,12 +531,12 @@ class Theme extends Backend
 							if ($objCount->count > 0)
 							{
 								$value = preg_replace('/[ -][0-9]+$/', '', $value);
-								$value .= (($table == 'tl_style_sheet') ? '-' : ' ') . ${$table};
+								$value .= ' ' . ${$table};
 							}
 						}
 
-						// Adjust the file paths in style sheets and tl_files
-						elseif (($table == 'tl_style_sheet' || $table == 'tl_style' || ($table == 'tl_files' && $name == 'path')) && strpos($value, 'files') !== false)
+						// Adjust the file paths in tl_files
+						elseif ($table == 'tl_files' && $name == 'path' && strpos($value, 'files') !== false)
 						{
 							$tmp = StringUtil::deserialize($value);
 
@@ -666,10 +640,6 @@ class Theme extends Backend
 			// Unlock the tables
 			$this->Database->unlockTables();
 
-			// Update the style sheets
-			$this->import(StyleSheets::class, 'StyleSheets');
-			$this->StyleSheets->updateStyleSheets();
-
 			// Notify the user
 			Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_theme']['theme_imported'], basename($strZipFile)));
 
@@ -684,7 +654,7 @@ class Theme extends Backend
 				}
 			}
 
-			unset($tl_files, $tl_theme, $tl_style_sheet, $tl_style, $tl_module, $tl_layout, $tl_image_size, $tl_image_size_item);
+			unset($tl_files, $tl_theme, $tl_module, $tl_layout, $tl_image_size, $tl_image_size_item);
 		}
 
 		$objSession = System::getContainer()->get('session');
@@ -729,7 +699,6 @@ class Theme extends Backend
 
 		// Add the tables
 		$this->addTableTlTheme($xml, $tables, $objTheme);
-		$this->addTableTlStyleSheet($xml, $tables, $objTheme);
 		$this->addTableTlImageSize($xml, $tables, $objTheme);
 		$this->addTableTlModule($xml, $tables, $objTheme);
 		$this->addTableTlLayout($xml, $tables, $objTheme);
@@ -787,66 +756,6 @@ class Theme extends Backend
 
 		// Add the row
 		$this->addDataRow($xml, $table, $objTheme->row(), $arrOrder);
-	}
-
-	/**
-	 * Add the table tl_style_sheet
-	 *
-	 * @param \DOMDocument         $xml
-	 * @param \DOMNode|\DOMElement $tables
-	 * @param Result               $objTheme
-	 */
-	protected function addTableTlStyleSheet(\DOMDocument $xml, \DOMNode $tables, Result $objTheme)
-	{
-		// Add the table
-		$table = $xml->createElement('table');
-		$table->setAttribute('name', 'tl_style_sheet');
-		$table = $tables->appendChild($table);
-
-		// Load the DCA
-		$this->loadDataContainer('tl_style_sheet');
-
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_style_sheet');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
-		// Get all style sheets
-		$objStyleSheet = $this->Database->prepare("SELECT * FROM tl_style_sheet WHERE pid=? ORDER BY name")
-										->execute($objTheme->id);
-
-		// Add the rows
-		while ($objStyleSheet->next())
-		{
-			$this->addDataRow($xml, $table, $objStyleSheet->row(), $arrOrder);
-		}
-
-		$objStyleSheet->reset();
-
-		// Add the child table
-		$table = $xml->createElement('table');
-		$table->setAttribute('name', 'tl_style');
-		$table = $tables->appendChild($table);
-
-		// Load the DCA
-		$this->loadDataContainer('tl_style');
-
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_style');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
-		// Add the child rows
-		while ($objStyleSheet->next())
-		{
-			// Get all format definitions
-			$objStyle = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? ORDER BY sorting")
-									   ->execute($objStyleSheet->id);
-
-			// Add the rows
-			while ($objStyle->next())
-			{
-				$this->addDataRow($xml, $table, $objStyle->row(), $arrOrder);
-			}
-		}
 	}
 
 	/**
@@ -1055,10 +964,6 @@ class Theme extends Backend
 						$v = 'NULL';
 					}
 				}
-			}
-			elseif ($t == 'tl_style' && ($k == 'bgimage' || $k == 'liststyleimage'))
-			{
-				$v = $this->standardizeUploadPath($v);
 			}
 
 			$value = $xml->createTextNode($v);

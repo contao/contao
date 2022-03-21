@@ -91,7 +91,7 @@ class ModuleEventReader extends Events
 		if ($this->overviewPage)
 		{
 			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
-			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['eventOverview'];
+			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['eventOverview'];
 		}
 		else
 		{

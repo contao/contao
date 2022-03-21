@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
-		'root_page_dependent_modules' => '{title_legend},name,type;{config_legend},rootPageDependentModules;{template_legend:hide},customTpl;{protected_legend:hide},protected'
+		'root_page_dependent_modules' => '{title_legend},name,type;{config_legend},rootPageDependentModules;{protected_legend:hide},protected'
 	),
 
 	// Subpalettes
@@ -419,13 +419,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "binary(16) NULL"
-		),
-		'url' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(2048) NOT NULL default ''"
 		),
 		'imgSize' => array
 		(

@@ -45,6 +45,10 @@
         <source>News</source>
         <target>Aktualności</target>
       </trans-unit>
+      <trans-unit id="MSC.newsOverview">
+        <source>Back to the news overview</source>
+        <target>Wstecz do podglądu aktualności</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

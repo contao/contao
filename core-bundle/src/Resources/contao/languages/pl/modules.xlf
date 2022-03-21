@@ -121,6 +121,14 @@
         <source>Adjust the Contao configuration</source>
         <target>Ten moduł pozwala ci na zmodyfikowanie lokalnej instalacji i zmianę podstawowych parametrów, takich jak format daty czy czcionka.</target>
       </trans-unit>
+      <trans-unit id="MOD.preview_link.0">
+        <source>Preview links</source>
+        <target>Linki podglądu</target>
+      </trans-unit>
+      <trans-unit id="MOD.preview_link.1">
+        <source>Manage preview links for the front end.</source>
+        <target>Zarządzaj linkami podglądu we frontendzie.</target>
+      </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
         <target>Utrzymanie systemu</target>
@@ -385,6 +393,14 @@
         <source>Allows you to add custom HTML code</source>
         <target>Ten moduł pozwala na dołączenie do strony własnego kodu HTML.</target>
       </trans-unit>
+      <trans-unit id="FMD.template.0">
+        <source>Custom template</source>
+        <target>Własny szablon</target>
+      </trans-unit>
+      <trans-unit id="FMD.template.1">
+        <source>Generates a module to insert a custom template.</source>
+        <target>Generuje moduł do wstawienia własnego szablonu.</target>
+      </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader</source>
         <target>Czytnik RSS</target>
@@ -400,6 +416,14 @@
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
         <target>Generuje formularz do skonfigurowania lub zmiany uwierzytelnienia dwuskładnikowego</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.0">
+        <source>Root page dependent modules</source>
+        <target>Moduły zależne od punktu startowego</target>
+      </trans-unit>
+      <trans-unit id="FMD.root_page_dependent_modules.1">
+        <source>Generates different modules depending on the root page</source>
+        <target>Generuje różne moduły w zależności od punktu startowego.</target>
       </trans-unit>
     </body>
   </file>

@@ -27,11 +27,11 @@ class FilesystemUtil
         if (false === \is_resource($contents)) {
             $type = \gettype($contents);
 
-            throw new \LogicException("Invalid stream provided, expected stream resource, received '$type'.");
+            throw new \LogicException(sprintf('Invalid stream provided, expected stream resource, received "%s".', $type));
         }
 
         if ('stream' !== ($type = get_resource_type($contents))) {
-            throw new \LogicException("Invalid stream provided, expected stream resource, received resource of type '$type'.");
+            throw new \LogicException(sprintf('Invalid stream provided, expected stream resource, received resource of type "%s".', $type));
         }
     }
 

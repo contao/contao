@@ -140,15 +140,6 @@
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Format definitions</source>
-      </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-      </trans-unit>
-      <trans-unit id="MOD.css">
-        <source>Style sheets</source>
-      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
       </trans-unit>
@@ -317,7 +308,7 @@
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
       </trans-unit>
-      <trans-unit id="FMD.root_page_dependent_module.1">
+      <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
       </trans-unit>
     </body>

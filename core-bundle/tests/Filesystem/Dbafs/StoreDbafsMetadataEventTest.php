@@ -70,22 +70,22 @@ class StoreDbafsMetadataEventTest extends TestCase
     {
         yield 'path missing' => [
             ['foo' => 'bar', 'uuid' => '12345'],
-            "Row must contain key 'path'.",
+            'Row must contain key "path".',
         ];
 
         yield 'path has wrong type' => [
             ['path' => 123, 'uuid' => '12345'],
-            "Row key 'path' must be of type string, got integer.",
+            'Row key "path" must be of type string, got integer.',
         ];
 
         yield 'uuid missing' => [
             ['path' => 'foo/bar', 'baz' => 42],
-            "Row must contain key 'uuid'.",
+            'Row must contain key "uuid".',
         ];
 
         yield 'uuid has wrong type' => [
             ['uuid' => new \stdClass(), 'path' => 'foo/bar'],
-            "Row key 'uuid' must be of type string, got object.",
+            'Row key "uuid" must be of type string, got object.',
         ];
     }
 }

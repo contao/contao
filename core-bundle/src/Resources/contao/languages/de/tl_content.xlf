@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>Dem Inhaltselement ein Bild hinzufügen.</target>
       </trans-unit>
+      <trans-unit id="tl_content.showPreview.0">
+        <source>Show preview images</source>
+        <target>Vorschaubilder anzeigen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.showPreview.1">
+        <source>Show preview images of the selected files.</source>
+        <target>Vorschaubilder der gewählten Dateien anzeigen.</target>
+      </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
         <target>Im Browser anzeigen</target>
@@ -72,14 +80,6 @@
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Hier können Sie den Titel des Bildes eingeben (&lt;em&gt;title&lt;/em&gt;-Attribut).</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.0">
-        <source>Image size</source>
-        <target>Bildgröße</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.1">
-        <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Hier können Sie die Abmessungen des Bildes und den Skalierungsmodus festlegen.</target>
       </trans-unit>
       <trans-unit id="tl_content.imagemargin.0">
         <source>Image margin</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_content.shClass.1">
         <source>Here you can configure the syntax highlighter (e.g. &lt;em&gt;gutter: false;&lt;/em&gt;).</source>
-        <target>Hier können Sie den Syntax-Highlighter konfigurieren (z.B. &lt;em&gt;gutter: false;&lt;/em&gt;).</target>
+        <target>Hier können Sie den Syntax-Highlighter konfigurieren (z. B. &lt;em&gt;gutter: false;&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.highlight.0">
         <source>Syntax highlighting</source>
@@ -305,6 +305,14 @@
         <source>File</source>
         <target>Datei</target>
       </trans-unit>
+      <trans-unit id="tl_content.data.0">
+        <source>Template data</source>
+        <target>Template-Daten</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>Sie können über &lt;code&gt;$this-&gt;data&lt;/code&gt; auf die Werte im Template zugreifen.</target>
+      </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
         <target>Link-Text</target>
@@ -327,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_content.embed.1">
         <source>Use the wildcard &quot;%s&quot; to embed the link in a phrase (e.g. &lt;em&gt;For more information please visit %s&lt;/em&gt;).</source>
-        <target>Verwenden Sie den Platzhalter &quot;%s&quot;, um den Link in einen Text einzubetten (z.B. &lt;em&gt;Für mehr Informationen besuchen Sie %s&lt;/em&gt;).</target>
+        <target>Verwenden Sie den Platzhalter &quot;%s&quot;, um den Link in einen Text einzubetten (z. B. &lt;em&gt;Für mehr Informationen besuchen Sie %s&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.rel.0">
         <source>Lightbox</source>
@@ -423,7 +431,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube.1">
         <source>Please enter the YouTube video ID (e.g. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</source>
-        <target>Bitte geben Sie die YouTube-Video-ID ein (z.B. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</target>
+        <target>Bitte geben Sie die YouTube-Video-ID ein (z. B. &lt;em&gt;j0sYj4wxyk0&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo.0">
         <source>Vimeo ID</source>
@@ -431,7 +439,7 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo.1">
         <source>Please enter the Vimeo video ID (e.g. &lt;em&gt;275028611&lt;/em&gt;).</source>
-        <target>Bitte geben Sie die Vimeo-Video-ID ein (z.B. &lt;em&gt;275028611&lt;/em&gt;).</target>
+        <target>Bitte geben Sie die Vimeo-Video-ID ein (z. B. &lt;em&gt;275028611&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_content.posterSRC.0">
         <source>Preview image</source>
@@ -447,7 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
         <source>Width and height of the media player in pixels (e.g. 640x480).</source>
-        <target>Breite und Höhe des Mediaplayers in Pixeln (z.B. 640x480).</target>
+        <target>Breite und Höhe des Mediaplayers in Pixeln (z. B. 640x480).</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
@@ -511,7 +519,7 @@
       </trans-unit>
       <trans-unit id="tl_content.playerColor.1">
         <source>Here you can enter a hexadecimal color (e.g. ff0000) for the video controls.</source>
-        <target>Hier können Sie einen hexadezimalen Farbcode (z.B. ff0000) für die Steuerelemente eingeben.</target>
+        <target>Hier können Sie einen hexadezimalen Farbcode (z. B. ff0000) für die Steuerelemente eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_content.sliderDelay.0">
         <source>Sliding interval</source>
@@ -656,6 +664,10 @@
       <trans-unit id="tl_content.download_legend">
         <source>Download settings</source>
         <target>Download-Einstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.preview_legend">
+        <source>Preview settings</source>
+        <target>Vorschau-Einstellungen</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -852,6 +864,10 @@
       <trans-unit id="tl_content.vimeo_byline">
         <source>Hide the author</source>
         <target>Den Autor ausblenden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_dnt">
+        <source>Prevent session data tracking</source>
+        <target>Sitzungsdaten nicht verfolgen</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

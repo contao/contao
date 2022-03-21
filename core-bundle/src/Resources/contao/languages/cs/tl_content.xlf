@@ -33,6 +33,12 @@
         <source>Add an image to the content element.</source>
         <target>Přidat obrázek k obsahovému elementu.</target>
       </trans-unit>
+      <trans-unit id="tl_content.showPreview.0">
+        <source>Show preview images</source>
+      </trans-unit>
+      <trans-unit id="tl_content.showPreview.1">
+        <source>Show preview images of the selected files.</source>
+      </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
         <target>Zobrazit v prohlížeči</target>
@@ -72,14 +78,6 @@
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Zde můžete přidat název obrázku (&lt;em&gt;název&lt;/em&gt; atribut).</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.0">
-        <source>Image size</source>
-        <target>Velikost obrázku</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.1">
-        <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Zde můžete zadat rozměry a metodu zobrazení obrázku.</target>
       </trans-unit>
       <trans-unit id="tl_content.imagemargin.0">
         <source>Image margin</source>
@@ -304,6 +302,14 @@
       <trans-unit id="tl_content.markdownSource.sourceFile">
         <source>File</source>
         <target>Soubor</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.0">
+        <source>Template data</source>
+        <target>Data předlohy</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>Tyto hodnoty se nacházejí v předloze jako &lt;code&gt;$this-&gt;data&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -657,6 +663,9 @@
         <source>Download settings</source>
         <target>Nastavení stahování</target>
       </trans-unit>
+      <trans-unit id="tl_content.preview_legend">
+        <source>Preview settings</source>
+      </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
         <target>Nastavení jezdce</target>
@@ -852,6 +861,10 @@
       <trans-unit id="tl_content.vimeo_byline">
         <source>Hide the author</source>
         <target>Skrýt autora</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_dnt">
+        <source>Prevent session data tracking</source>
+        <target>Zabránit sezení sledující data</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

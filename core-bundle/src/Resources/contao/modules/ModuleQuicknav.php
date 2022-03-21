@@ -116,7 +116,8 @@ class ModuleQuicknav extends Module
 		}
 
 		++$level;
-		$security = System::getContainer()->get('security.helper');
+		$container = System::getContainer();
+		$security = $container->get('security.helper');
 		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		foreach ($objSubpages as $objSubpage)
@@ -150,7 +151,7 @@ class ModuleQuicknav extends Module
 					}
 					catch (ExceptionInterface $exception)
 					{
-						System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+						$container->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
 
 						continue;
 					}

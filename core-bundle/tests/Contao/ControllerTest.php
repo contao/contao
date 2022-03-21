@@ -12,23 +12,48 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\InvalidResourceException;
+use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\Environment;
 use Contao\FilesModel;
+use Contao\PageModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 
 class ControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Controller::reset();
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
 
     /**
      * @group legacy
@@ -184,6 +209,8 @@ class ControllerTest extends TestCase
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag.parser', $insertTagParser);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
+
+        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
 
         System::setContainer($container);
 
@@ -347,7 +374,7 @@ class ControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.image.studio', $studio);
         $container->set('contao.insert_tag.parser', $insertTagParser);
-        $container->set('contao.monolog.logger.error', $logger);
+        $container->set('monolog.logger.contao.error', $logger);
 
         System::setContainer($container);
 
@@ -465,5 +492,299 @@ class ControllerTest extends TestCase
         $this->assertSame('?do=page&amp;id=2&amp;act=edit&amp;ref=cri', Controller::addToUrl('act=edit&amp;id=2', false));
         $this->assertSame('?do=page&amp;id=4&amp;act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
         $this->assertSame('?do=page&amp;key=foo&amp;ref=cri', Controller::addToUrl('key=foo', true, ['id']));
+    }
+
+    /**
+     * @dataProvider pageStatusIconProvider
+     */
+    public function testPageStatusIcon(PageModel $pageModel, string $expected): void
+    {
+        $this->assertSame($expected, Controller::getPageStatusIcon($pageModel));
+        $this->assertFileExists(__DIR__.'/../../src/Resources/contao/themes/flexible/icons/'.$expected);
+    }
+
+    public function pageStatusIconProvider(): \Generator
+    {
+        yield 'Published' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'regular.svg',
+        ];
+
+        yield 'Unpublished' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'regular_1.svg',
+        ];
+
+        yield 'Hidden in menu' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '1',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'regular_2.svg',
+        ];
+
+        yield 'Unpublished and hidden from menu' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '1',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'regular_3.svg',
+        ];
+
+        yield 'Protected' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'regular_4.svg',
+        ];
+
+        yield 'Unpublished and protected' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'regular_5.svg',
+        ];
+
+        yield 'Unpublished and protected and hidden from menu' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '1',
+                'protected' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'regular_7.svg',
+        ];
+
+        yield 'Unpublished by stop date' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '',
+                'start' => '',
+                'stop' => '100',
+                'published' => '1',
+            ]),
+            'regular_1.svg',
+        ];
+
+        yield 'Unpublished by start date' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'regular',
+                'hide' => '',
+                'protected' => '',
+                'start' => PHP_INT_MAX,
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'regular_1.svg',
+        ];
+
+        yield 'Root page' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'root.svg',
+        ];
+
+        yield 'Unpublished root page' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'root_1.svg',
+        ];
+
+        yield 'Hidden root page' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '1',
+                'protected' => '',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'root.svg',
+        ];
+
+        yield 'Protected root page' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '',
+                'protected' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'root.svg',
+        ];
+
+        yield 'Root in maintenance mode' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '',
+                'protected' => '',
+                'maintenanceMode' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '1',
+            ]),
+            'root_2.svg',
+        ];
+
+        yield 'Unpublished root in maintenance mode' => [
+            $this->mockClassWithProperties(PageModel::class, [
+                'type' => 'root',
+                'hide' => '',
+                'protected' => '',
+                'maintenanceMode' => '1',
+                'start' => '',
+                'stop' => '',
+                'published' => '',
+            ]),
+            'root_1.svg',
+        ];
+    }
+
+    /**
+     * @dataProvider redirectProvider
+     */
+    public function testReplacesOldBePathsInRedirect(string $location, array $routes, string $expected): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->exactly(\count($routes)))
+            ->method('generate')
+            ->withConsecutive(...array_map(static fn ($route) => [$route], $routes))
+            ->willReturnOnConsecutiveCalls(...array_map(static fn ($route) => '/'.$route, $routes))
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('router', $router);
+        System::setContainer($container);
+
+        Environment::reset();
+        Environment::set('path', '');
+        Environment::set('base', '');
+
+        try {
+            Controller::redirect($location);
+        } catch (RedirectResponseException $exception) {
+            /** @var RedirectResponse $response */
+            $response = $exception->getResponse();
+
+            $this->assertInstanceOf(RedirectResponse::class, $response);
+            $this->assertSame($expected, $response->getTargetUrl());
+        }
+    }
+
+    public function redirectProvider(): \Generator
+    {
+        yield 'Never calls the router without old backend path' => [
+            'https://example.com',
+            [],
+            'https://example.com',
+        ];
+
+        yield 'Replaces multiple paths (not really expected)' => [
+            'https://example.com/contao/main.php?contao/file.php=foo',
+            ['contao_backend', 'contao_backend_file'],
+            'https://example.com/contao_backend?contao_backend_file=foo',
+        ];
+
+        $pathMap = [
+            'contao/confirm.php' => 'contao_backend_confirm',
+            'contao/file.php' => 'contao_backend_file',
+            'contao/help.php' => 'contao_backend_help',
+            'contao/index.php' => 'contao_backend_login',
+            'contao/main.php' => 'contao_backend',
+            'contao/page.php' => 'contao_backend_page',
+            'contao/password.php' => 'contao_backend_password',
+            'contao/popup.php' => 'contao_backend_popup',
+            'contao/preview.php' => 'contao_backend_preview',
+        ];
+
+        foreach ($pathMap as $old => $new) {
+            yield 'Replaces '.$old.' with '.$new.' route' => [
+                "https://example.com/$old?foo=bar",
+                [$new],
+                "https://example.com/$new?foo=bar",
+            ];
+        }
+    }
+
+    public function testCachesOldBackendPaths(): void
+    {
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->exactly(2))
+            ->method('generate')
+            ->withConsecutive(['contao_backend'], ['contao_backend_file'])
+            ->willReturn('/contao', '/contao/file')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('router', $router);
+        System::setContainer($container);
+
+        Environment::reset();
+        Environment::set('path', '');
+        Environment::set('base', '');
+
+        $ref = new \ReflectionClass(Controller::class);
+        $method = $ref->getMethod('replaceOldBePaths');
+        $method->setAccessible(true);
+
+        $this->assertSame(
+            $method->invoke(null, 'This is a template with link to <a href="/contao/main.php">backend main</a> and <a href="/contao/main.php?do=articles">articles</a>'),
+            'This is a template with link to <a href="/contao">backend main</a> and <a href="/contao?do=articles">articles</a>'
+        );
+
+        $this->assertSame(
+            $method->invoke(null, 'Link to <a href="/contao/main.php">backend main</a> and <a href="/contao/file.php?x=y">files</a>'),
+            'Link to <a href="/contao">backend main</a> and <a href="/contao/file?x=y">files</a>'
+        );
     }
 }

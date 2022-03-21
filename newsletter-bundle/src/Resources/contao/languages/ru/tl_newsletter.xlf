@@ -179,7 +179,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
-        <target>Неверных/отключенных e-mail адресов: %s шт. (см. system log).</target>
+        <target>%s неверных e-mail адрес(а) было отключено (см. системный журнал).</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.skipped">
+        <source>%s e-mail address(es) has/have been skipped.</source>
+        <target>%s e-mail адрес(а) было пропущено.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>

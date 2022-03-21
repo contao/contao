@@ -9,6 +9,10 @@
         <source>FAQ</source>
         <target>پرسش و پاسخ</target>
       </trans-unit>
+      <trans-unit id="MSC.faqOverview">
+        <source>Back to the FAQ overview</source>
+        <target>بازگشت به بررسی کلی سوالات متداول</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
