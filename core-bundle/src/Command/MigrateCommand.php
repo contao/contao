@@ -79,6 +79,7 @@ class MigrateCommand extends Command
             ->addOption('migrations-only', null, InputOption::VALUE_NONE, 'Only execute the migrations.')
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Show pending migrations and schema updates without executing them.')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, ndjson)', 'txt')
+            ->addOption('hash', null, InputOption::VALUE_REQUIRED, 'Hash')
             ->setDescription('Executes migrations and updates the database schema.')
         ;
     }
@@ -110,6 +111,7 @@ class MigrateCommand extends Command
     {
         $dryRun = (bool) $input->getOption('dry-run');
         $asJson = 'ndjson' === $input->getOption('format');
+        $specifiedHash = $input->getOption('hash');
 
         if (!\in_array($input->getOption('format'), ['txt', 'ndjson'], true)) {
             throw new InvalidOptionException(sprintf('Unsupported format "%s".', $input->getOption('format')));
@@ -128,22 +130,22 @@ class MigrateCommand extends Command
                 throw new InvalidOptionException('--migrations-only cannot be combined with --with-deletes');
             }
 
-            return $this->executeMigrations($dryRun, $asJson) ? 0 : 1;
+            return $this->executeMigrations($dryRun, $asJson, $specifiedHash) ? 0 : 1;
         }
 
         if ($input->getOption('schema-only')) {
-            return $this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes')) ? 0 : 1;
+            return $this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash) ? 0 : 1;
         }
 
-        if (!$this->executeMigrations($dryRun, $asJson)) {
+        if (!$this->executeMigrations($dryRun, $asJson, $specifiedHash)) {
             return 1;
         }
 
-        if (!$this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'))) {
+        if (!$this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash)) {
             return 1;
         }
 
-        if (!$dryRun && !$this->executeMigrations($dryRun, $asJson)) {
+        if (!$dryRun && !$this->executeMigrations($dryRun, $asJson, $specifiedHash)) {
             return 1;
         }
 
@@ -154,10 +156,12 @@ class MigrateCommand extends Command
         return 0;
     }
 
-    private function executeMigrations(bool $dryRun, bool $asJson): bool
+    private function executeMigrations(bool $dryRun, bool $asJson, string $specifiedHash = null): bool
     {
         while (true) {
             $first = true;
+
+            $migrationLabels = [];
 
             foreach ($this->migrations->getPendingNames() as $migration) {
                 if ($first) {
@@ -168,9 +172,9 @@ class MigrateCommand extends Command
                     $first = false;
                 }
 
-                if ($asJson) {
-                    $this->writeNdjson('migration-pending', ['name' => $migration]);
-                } else {
+                $migrationLabels[] = $migration;
+
+                if (!$asJson) {
                     $this->io->writeln(' * '.$migration);
                 }
             }
@@ -190,15 +194,25 @@ class MigrateCommand extends Command
                     $first = false;
                 }
 
-                if ($asJson) {
-                    $this->writeNdjson('migration-pending', ['name' => 'Runonce file: '.$file]);
-                } else {
+                $migrationLabels[] = "Runonce file: $file";
+
+                if (!$asJson) {
                     $this->io->writeln(' * Runonce file: '.$file);
                 }
             }
 
+            $actualHash = hash('sha256', json_encode($migrationLabels));
+
+            if ($asJson) {
+                $this->writeNdjson('migration-pending', ['names' => $migrationLabels, 'hash' => $actualHash]);
+            }
+
             if ($first || $dryRun) {
                 break;
+            }
+
+            if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
+                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
             }
 
             if (!$asJson) {
@@ -247,6 +261,11 @@ class MigrateCommand extends Command
             if (!$asJson) {
                 $this->io->success('Executed '.$count.' migrations.');
             }
+
+            // Do not run the update recursive if a hash was specified
+            if (null !== $specifiedHash) {
+                break;
+            }
         }
 
         return true;
@@ -277,7 +296,7 @@ class MigrateCommand extends Command
         (new Filesystem())->remove($this->projectDir.'/'.$file);
     }
 
-    private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption): bool
+    private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string $specifiedHash = null): bool
     {
         if (null === $this->installer) {
             $this->io->error('Service "contao.installer" not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
@@ -290,9 +309,7 @@ class MigrateCommand extends Command
         while (true) {
             $this->installer->compileCommands();
 
-            if (!$commands = $this->installer->getCommands(false)) {
-                return true;
-            }
+            $commands = $this->installer->getCommands(false);
 
             $hasNewCommands = \count(array_filter(
                 array_keys($commands),
@@ -301,26 +318,31 @@ class MigrateCommand extends Command
                 }
             ));
 
+            $commandsByHash = $commands;
+            $actualHash = hash('sha256', json_encode($commands));
+
+            if ($asJson) {
+                $this->writeNdjson('schema-pending', [
+                    'commands' => array_values($commandsByHash),
+                    'hash' => $actualHash,
+                ]);
+            }
+
             if (!$hasNewCommands) {
                 return true;
             }
 
             if (!$asJson) {
-                $this->io->section('Pending database migrations');
-            }
-
-            $commandsByHash = $commands;
-
-            if ($asJson) {
-                $this->writeNdjson('schema-pending', [
-                    'commands' => array_values($commandsByHash),
-                ]);
-            } else {
+                $this->io->section("Pending database migrations ($actualHash)");
                 $this->io->listing($commandsByHash);
             }
 
             if ($dryRun) {
                 return true;
+            }
+
+            if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
+                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
             }
 
             $options = $withDeletesOption
@@ -400,6 +422,11 @@ class MigrateCommand extends Command
 
             if (\count($exceptions)) {
                 return false;
+            }
+
+            // Do not run the update recursive if a hash was specified
+            if (null !== $specifiedHash) {
+                break;
             }
         }
 

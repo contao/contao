@@ -39,7 +39,14 @@ class MigrateCommandTest extends TestCase
         $this->assertSame(0, $code);
 
         if ('ndjson' === $format) {
-            $this->assertEmpty(trim($display));
+            $this->assertSame(
+                [
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                ],
+                $this->jsonArrayFromNdjson($display)
+            );
         } else {
             $this->assertRegExp('/All migrations completed/', $display);
         }
@@ -66,10 +73,12 @@ class MigrateCommandTest extends TestCase
         if ('ndjson' === $format) {
             $this->assertSame(
                 [
-                    ['type' => 'migration-pending', 'name' => 'Migration 1'],
-                    ['type' => 'migration-pending', 'name' => 'Migration 2'],
+                    ['type' => 'migration-pending', 'names' => ['Migration 1', 'Migration 2'], 'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd'],
                     ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => true],
                     ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                 ],
                 $this->jsonArrayFromNdjson($display)
             );
@@ -112,8 +121,15 @@ class MigrateCommandTest extends TestCase
         if ('ndjson' === $format) {
             $this->assertSame(
                 [
-                    ['type' => 'migration-pending', 'name' => 'Runonce file: runonceFile.php'],
+                    [
+                        'type' => 'migration-pending',
+                        'names' => ['Runonce file: runonceFile.php'],
+                        'hash' => '1ff509c324643092e7d68c763d03832e4b96f5be8fa3a95ea6765abfe96443ca',
+                    ],
                     ['type' => 'migration-result', 'message' => 'Executed runonce file: runonceFile.php', 'isSuccessful' => true],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                 ],
                 $this->jsonArrayFromNdjson($display)
             );
@@ -166,16 +182,19 @@ class MigrateCommandTest extends TestCase
         if ('ndjson' === $format) {
             $this->assertSame(
                 [
-                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2']],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2'], 'hash' => 'f8e23e09e1009f794eabb39a6883800162ff828f9a1ccf0c5920fd646204fe58'],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 2'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 2', 'isSuccessful' => true],
-                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY']],
+                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '1cde239fb3063750c8594c21d522b2372d86547d96672f1823f782083f70c788'],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'Second call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 2'],
                     ['type' => 'schema-result', 'command' => 'Second call QUERY 2', 'isSuccessful' => true],
+                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                 ],
                 $this->jsonArrayFromNdjson($display)
             );
@@ -236,12 +255,15 @@ class MigrateCommandTest extends TestCase
         if ('ndjson' === $format) {
             $this->assertSame(
                 [
-                    ['type' => 'migration-pending', 'name' => 'Migration 1'],
-                    ['type' => 'migration-pending', 'name' => 'Migration 2'],
-                    ['type' => 'migration-pending', 'name' => 'Runonce file: runonceFile.php'],
+                    [
+                        'type' => 'migration-pending',
+                        'names' => ['Migration 1', 'Migration 2', 'Runonce file: runonceFile.php'],
+                        'hash' => 'fd96e0795abea843b443ccd39c746b5f1491c45131611f14a7c5bfb518824252',
+                    ],
                     [
                         'type' => 'schema-pending',
                         'commands' => ['First call QUERY 1', 'First call QUERY 2'],
+                        'hash' => 'f8e23e09e1009f794eabb39a6883800162ff828f9a1ccf0c5920fd646204fe58',
                     ],
                 ],
                 $this->jsonArrayFromNdjson($display)
@@ -305,10 +327,12 @@ class MigrateCommandTest extends TestCase
         if ('ndjson' === $format) {
             $this->assertSame(
                 [
-                    ['type' => 'migration-pending', 'name' => 'Migration 1'],
-                    ['type' => 'migration-pending', 'name' => 'Migration 2'],
+                    ['type' => 'migration-pending', 'names' => ['Migration 1', 'Migration 2'], 'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd'],
                     ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => false],
                     ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                 ],
                 $this->jsonArrayFromNdjson($display)
             );
@@ -346,7 +370,7 @@ class MigrateCommandTest extends TestCase
 
         $this->assertSame(1, $code);
 
-        $json = $this->jsonArrayFromNdjson($display)[0];
+        $json = $this->jsonArrayFromNdjson($display)[1];
 
         $this->assertSame('error', $json['type']);
         $this->assertSame('Fatal', $json['message']);
