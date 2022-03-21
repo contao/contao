@@ -626,5 +626,3 @@ class DcaExtractor extends Controller
 		return self::$arrDatabaseSqlFiles = $files;
 	}
 }
-
-class_alias(DcaExtractor::class, 'DcaExtractor');

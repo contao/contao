@@ -91,7 +91,6 @@ class Config
 		'smtpEnc'          => 'mailer_encryption',
 		'uploadPath'       => 'contao.upload_path',
 		'editableFiles'    => 'contao.editable_files',
-		'debugMode'        => 'kernel.debug',
 		'characterSet'     => 'kernel.charset',
 		'enableSearch'     => 'contao.search.default_indexer.enable',
 		'indexProtected'   => 'contao.search.index_protected',
@@ -596,5 +595,3 @@ class Config
 		return "'" . str_replace('\\"', '"', preg_replace('/[\n\r\t ]+/', ' ', addslashes($varValue))) . "'";
 	}
 }
-
-class_alias(Config::class, 'Config');

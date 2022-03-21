@@ -798,5 +798,3 @@ abstract class System
 		return substr_replace($strIp, '.0', strrpos($strIp, '.'));
 	}
 }
-
-class_alias(System::class, 'System');

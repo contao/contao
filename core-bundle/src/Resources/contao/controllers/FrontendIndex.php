@@ -206,5 +206,3 @@ class FrontendIndex extends Frontend
 		}
 	}
 }
-
-class_alias(FrontendIndex::class, 'FrontendIndex');

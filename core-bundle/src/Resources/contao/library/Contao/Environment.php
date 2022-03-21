@@ -636,5 +636,3 @@ class Environment
 		static::set($strKey, $varValue);
 	}
 }
-
-class_alias(Environment::class, 'Environment');

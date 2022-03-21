@@ -375,5 +375,3 @@ trait TemplateInheritance
 		return $twig->render($templateCandidate, $context);
 	}
 }
-
-class_alias(TemplateInheritance::class, 'TemplateInheritance');

@@ -144,5 +144,3 @@ class OptionWizard extends Widget
   <script>Backend.optionsWizard("ctrl_' . $this->strId . '")</script>';
 	}
 }
-
-class_alias(OptionWizard::class, 'OptionWizard');

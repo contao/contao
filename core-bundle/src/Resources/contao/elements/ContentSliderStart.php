@@ -42,5 +42,3 @@ class ContentSliderStart extends ContentElement
 		$this->Template->config = $this->sliderDelay . ',' . $this->sliderSpeed . ',' . $this->sliderStartSlide . ',' . $this->sliderContinuous;
 	}
 }
-
-class_alias(ContentSliderStart::class, 'ContentSliderStart');

@@ -1458,5 +1458,3 @@ abstract class Backend extends Controller
 		return $strFiles . $strFolders;
 	}
 }
-
-class_alias(Backend::class, 'Backend');

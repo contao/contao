@@ -843,5 +843,3 @@ class Search
 		return strcmp($strUrlA, $strUrlB);
 	}
 }
-
-class_alias(Search::class, 'Search');

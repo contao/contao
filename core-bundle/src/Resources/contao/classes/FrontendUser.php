@@ -282,5 +282,3 @@ class FrontendUser extends User
 		return $this->roles;
 	}
 }
-
-class_alias(FrontendUser::class, 'FrontendUser');

@@ -445,5 +445,3 @@ class PageSelector extends Widget
 		}
 	}
 }
-
-class_alias(PageSelector::class, 'PageSelector');

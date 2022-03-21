@@ -48,5 +48,3 @@ class SyncExclude extends \RecursiveFilterIterator
 		return !$objFolder->isUnsynchronized();
 	}
 }
-
-class_alias(SyncExclude::class, 'Filter\SyncExclude');

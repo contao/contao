@@ -253,5 +253,3 @@ class BackendMain extends Backend
 		return $data;
 	}
 }
-
-class_alias(BackendMain::class, 'BackendMain');

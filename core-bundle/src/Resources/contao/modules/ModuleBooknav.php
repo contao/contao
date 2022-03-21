@@ -221,5 +221,3 @@ class ModuleBooknav extends Module
 		}
 	}
 }
-
-class_alias(ModuleBooknav::class, 'ModuleBooknav');

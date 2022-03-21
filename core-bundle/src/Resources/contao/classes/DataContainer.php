@@ -1779,5 +1779,3 @@ abstract class DataContainer extends Backend
 		return $label;
 	}
 }
-
-class_alias(DataContainer::class, 'DataContainer');

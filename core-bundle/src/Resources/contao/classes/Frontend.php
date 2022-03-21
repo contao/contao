@@ -331,5 +331,3 @@ abstract class Frontend extends Controller
 		return null;
 	}
 }
-
-class_alias(Frontend::class, 'Frontend');

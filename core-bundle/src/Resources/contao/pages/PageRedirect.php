@@ -77,5 +77,3 @@ class PageRedirect extends Frontend
 		$container->get('translator')->setLocale($locale);
 	}
 }
-
-class_alias(PageRedirect::class, 'PageRedirect');

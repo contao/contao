@@ -310,5 +310,3 @@ class ModuleArticle extends Module
 		return array();
 	}
 }
-
-class_alias(ModuleArticle::class, 'ModuleArticle');
