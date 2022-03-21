@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
+use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
@@ -47,6 +48,8 @@ class TemplateLocator
     }
 
     /**
+     * @throws InvalidThemePathException
+     *
      * @return array<string, string>
      */
     public function findThemeDirectories(): array
@@ -70,7 +73,6 @@ class TemplateLocator
             }
 
             $slug = $this->themeNamespace->generateSlug(Path::makeRelative($themePath, 'templates'));
-
             $directories[$slug] = $absolutePath;
         }
 
