@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
