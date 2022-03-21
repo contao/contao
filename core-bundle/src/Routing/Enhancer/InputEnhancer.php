@@ -77,15 +77,6 @@ class InputEnhancer implements RouteEnhancerInterface
                 throw new ResourceNotFoundException(sprintf('Duplicate parameter "%s" in path', $fragments[$i]));
             }
 
-            // Abort if the request contains an auto_item keyword (duplicate content) (see #4012)
-            if (
-                isset($GLOBALS['TL_AUTO_ITEM'])
-                && $config->get('useAutoItem')
-                && \in_array($fragments[$i], $GLOBALS['TL_AUTO_ITEM'], true)
-            ) {
-                throw new ResourceNotFoundException(sprintf('"%s" is an auto_item keyword (duplicate content)', $fragments[$i]));
-            }
-
             $inputKeys[] = $fragments[$i];
             $input->setGet($fragments[$i], $fragments[$i + 1], true);
         }

@@ -23,13 +23,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_AUTO_ITEM']);
-
-        parent::tearDown();
-    }
-
     public function testReturnsTheDefaultsIfThereIsNoPageModel(): void
     {
         $framework = $this->mockContaoFramework();
@@ -163,32 +156,6 @@ class InputEnhancerTest extends TestCase
         $this->expectExceptionMessage('Duplicate parameter "foo" in path');
 
         $enhancer->enhance($defaults, Request::create('/?foo=bar'));
-    }
-
-    public function testThrowsAnExceptionIfAnAutoItemKeywordIsPresent(): void
-    {
-        $input = $this->mockAdapter(['setGet']);
-        $input
-            ->expects($this->once())
-            ->method('setGet')
-            ->with('auto_item', 'foo')
-        ;
-
-        $framework = $this->mockContaoFramework([Input::class => $input]);
-
-        $defaults = [
-            'pageModel' => $this->mockPageModel('en', ''),
-            'parameters' => '/foo/bar/bar',
-        ];
-
-        $GLOBALS['TL_AUTO_ITEM'] = ['bar'];
-
-        $enhancer = new InputEnhancer($framework);
-
-        $this->expectException(ResourceNotFoundException::class);
-        $this->expectExceptionMessage('"bar" is an auto_item keyword (duplicate content)');
-
-        $enhancer->enhance($defaults, Request::create('/'));
     }
 
     public function testThrowsAnExceptionIfTheNumberOfArgumentsIsInvalid(): void
