@@ -48,17 +48,14 @@ class RoutingTest extends FunctionalTestCase
 
         $_GET = [];
 
-        Config::set('useAutoItem', true);
         $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
     }
 
     /**
      * @dataProvider getAliases
      */
-    public function testResolvesAliases(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    public function testResolvesAliases(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
     {
-        Config::set('useAutoItem', $autoItem);
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
@@ -344,10 +341,8 @@ class RoutingTest extends FunctionalTestCase
     /**
      * @dataProvider getAliasesWithLocale
      */
-    public function testResolvesAliasesWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    public function testResolvesAliasesWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
     {
-        Config::set('useAutoItem', $autoItem);
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
@@ -649,10 +644,8 @@ class RoutingTest extends FunctionalTestCase
     /**
      * @dataProvider getAliasesWithoutUrlSuffix
      */
-    public function testResolvesAliasesWithoutUrlSuffix(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
+    public function testResolvesAliasesWithoutUrlSuffix(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
     {
-        Config::set('useAutoItem', $autoItem);
-
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = $host;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';

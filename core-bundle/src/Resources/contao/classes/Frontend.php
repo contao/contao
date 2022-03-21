@@ -129,7 +129,14 @@ abstract class Frontend extends Controller
 		// Compile the parameters string
 		foreach ($arrGet as $k=>$v)
 		{
-			$strParams .= $strConnector . urlencode($k) . $strSeparator . urlencode($v);
+			if ($k == 'auto_item')
+			{
+				$strParams = $strConnector . urlencode($v) . $strParams;
+			}
+			else
+			{
+				$strParams .= $strConnector . urlencode($k) . $strSeparator . urlencode($v);
+			}
 		}
 
 		$strUrl = System::getContainer()->get('router')->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $objPage, 'parameters' => $strParams));

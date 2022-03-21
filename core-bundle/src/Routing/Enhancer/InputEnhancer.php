@@ -53,16 +53,11 @@ class InputEnhancer implements RouteEnhancerInterface
             return $defaults;
         }
 
-        $config = $this->framework->getAdapter(Config::class);
         $fragments = explode('/', substr($defaults['parameters'], 1));
         $inputKeys = [];
 
         // Add the second fragment as auto_item if the number of fragments is even
         if (0 !== \count($fragments) % 2) {
-            if (!$config->get('useAutoItem')) {
-                throw new ResourceNotFoundException('Invalid number of arguments');
-            }
-
             array_unshift($fragments, 'auto_item');
         }
 

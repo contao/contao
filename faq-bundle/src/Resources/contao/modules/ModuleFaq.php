@@ -93,7 +93,7 @@ class ModuleFaq extends Frontend
 					}
 
 					// Generate the URL
-					$arrProcessed[$objFaq->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
+					$arrProcessed[$objFaq->jumpTo] = $objParent->getAbsoluteUrl('/%s');
 				}
 
 				$strUrl = $arrProcessed[$objFaq->jumpTo];

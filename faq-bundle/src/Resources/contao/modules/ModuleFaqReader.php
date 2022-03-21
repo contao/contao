@@ -52,18 +52,6 @@ class ModuleFaqReader extends Module
 			return $objTemplate->parse();
 		}
 
-		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
-		{
-			Input::setGet('items', Input::get('auto_item'));
-		}
-
-		// Return an empty string if "items" is not set (to combine list and reader on same page)
-		if (!Input::get('items'))
-		{
-			return '';
-		}
-
 		$this->faq_categories = StringUtil::deserialize($this->faq_categories);
 
 		if (empty($this->faq_categories) || !\is_array($this->faq_categories))
@@ -88,7 +76,7 @@ class ModuleFaqReader extends Module
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['faqOverview'];
 		}
 
-		$objFaq = FaqModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->faq_categories);
+		$objFaq = FaqModel::findPublishedByParentAndIdOrAlias(Input::get('auto_item'), $this->faq_categories);
 
 		if (null === $objFaq)
 		{

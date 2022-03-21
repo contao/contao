@@ -77,7 +77,7 @@ class InsertTagsListener
         }
 
         $config = $this->framework->getAdapter(Config::class);
-        $params = ($config->get('useAutoItem') ? '/' : '/items/').($faq->alias ?: $faq->id);
+        $params = '/'.($faq->alias ?: $faq->id);
 
         return $absolute ? $jumpTo->getAbsoluteUrl($params) : $jumpTo->getFrontendUrl($params);
     }

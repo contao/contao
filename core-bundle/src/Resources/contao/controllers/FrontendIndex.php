@@ -62,6 +62,12 @@ class FrontendIndex extends Frontend
 			}
 		}
 
+		// Trigger the 404 page if an item is required but not given (see #8361)
+		if ($objPage->requireItem && null === Input::get('auto_item'))
+		{
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+		}
+
 		// Inherit the settings from the parent pages
 		$objPage->loadDetails();
 		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
