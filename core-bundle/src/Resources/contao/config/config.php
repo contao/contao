@@ -97,6 +97,9 @@ use Contao\ModuleTwoFactor;
 use Contao\ModuleWizard;
 use Contao\OptInModel;
 use Contao\OptionWizard;
+use Contao\PageError401;
+use Contao\PageError403;
+use Contao\PageError404;
 use Contao\PageForward;
 use Contao\PageLogout;
 use Contao\PageModel;
@@ -383,6 +386,9 @@ $GLOBALS['TL_PTY'] = array
 	'forward'   => PageForward::class,
 	'redirect'  => PageRedirect::class,
 	'logout'    => PageLogout::class,
+	'error_401' => PageError401::class,
+	'error_403' => PageError403::class,
+	'error_404' => PageError404::class
 );
 
 // Maintenance
