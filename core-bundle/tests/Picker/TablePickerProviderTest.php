@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Picker;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Picker\PickerConfig;
 use Contao\CoreBundle\Picker\TablePickerProvider;
+use Contao\DC_Table;
 use Contao\DcaLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
@@ -49,7 +50,7 @@ class TablePickerProviderTest extends ContaoTestCase
 
     public function testSupportsContext(): void
     {
-        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = Contao\DC_Table::class;
+        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = DC_Table::class;
         $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
 
         $provider = $this->createTableProvider($this->mockFrameworkWithDcaLoader('tl_foobar'));
@@ -76,7 +77,7 @@ class TablePickerProviderTest extends ContaoTestCase
 
     public function testDoesNotSupportContextWithoutModule(): void
     {
-        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = Contao\DC_Table::class;
+        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = DC_Table::class;
         $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_page'];
 
         $provider = $this->createTableProvider($this->mockFrameworkWithDcaLoader('tl_foobar'));
