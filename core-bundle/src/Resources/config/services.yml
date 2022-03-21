@@ -47,6 +47,13 @@ services:
             - '@?fos_http_cache.http.symfony_response_tagger'
             - '@?fos_http_cache.cache_manager'
 
+    contao.cache.generated_entity_warmer:
+        class: Contao\CoreBundle\Cache\GeneratedEntityCacheWarmer
+        arguments:
+            - '@contao.orm.entity_collector'
+            - '@contao.orm.extension_collector'
+            - '@contao.orm.entity_factory'
+
     contao.cache.warmer:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
         public: true
@@ -461,6 +468,19 @@ services:
         public: true
         arguments:
             - '@contao.framework'
+
+    contao.orm.entity_collector:
+        class: Contao\CoreBundle\Orm\Collector\EntityCollector
+        arguments:
+            - '%contao.entity_paths%'
+
+    contao.orm.entity_factory:
+        class: Contao\CoreBundle\Orm\EntityFactory
+
+    contao.orm.extension_collector:
+        class: Contao\CoreBundle\Orm\Collector\ExtensionCollector
+        arguments:
+            - '%contao.entity_paths%'
 
     contao.picker.article_provider:
         class: Contao\CoreBundle\Picker\ArticlePickerProvider

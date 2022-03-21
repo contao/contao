@@ -74,6 +74,7 @@
         "monolog/monolog": "^2.0",
         "nelmio/cors-bundle": "^2.0.1",
         "nelmio/security-bundle": "^2.2",
+        "nette/php-generator": "^4.0",
         "nikic/php-parser": "^4.9",
         "nyholm/psr7": "^1.2",
         "paragonie/constant_time_encoding": "^2.2",
