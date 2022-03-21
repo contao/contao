@@ -1,10 +1,5 @@
 # Deprecated features
 
-## $GLOBALS['TL_CSS_UNITS']
-
-The `$GLOBALS['TL_CSS_UNITS']` variable has been deprecated and will be removed
-in Contao 5.0. Set the appropriate units in the DCA file instead.
-
 ## $GLOBALS['TL_AUTO_ITEM']
 
 The `$GLOBALS['TL_AUTO_ITEM']` variable has been deprecated and will be removed
