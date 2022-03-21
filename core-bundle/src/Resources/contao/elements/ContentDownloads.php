@@ -118,7 +118,7 @@ class ContentDownloads extends ContentDownload
 			{
 				$objFile = new File($objFiles->path);
 
-				if (!\in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+				if (!\in_array($objFile->extension, $allowedDownload))
 				{
 					continue;
 				}
@@ -211,7 +211,7 @@ class ContentDownloads extends ContentDownload
 
 					$objFile = new File($objSubfiles->path);
 
-					if (!\in_array($objFile->extension, $allowedDownload) || preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+					if (!\in_array($objFile->extension, $allowedDownload))
 					{
 						continue;
 					}
