@@ -103,8 +103,6 @@ class Ajax extends Backend
 			// Toggle nodes of the file or page tree
 			case 'toggleStructure':
 			case 'toggleFileManager':
-			case 'togglePagetree':
-			case 'toggleFiletree':
 				$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
 				$this->strAjaxKey = str_replace('_' . $this->strAjaxId, '', Input::post('id'));
 
@@ -123,8 +121,6 @@ class Ajax extends Backend
 			// Load nodes of the file or page tree
 			case 'loadStructure':
 			case 'loadFileManager':
-			case 'loadPagetree':
-			case 'loadFiletree':
 				$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
 				$this->strAjaxKey = str_replace('_' . $this->strAjaxId, '', Input::post('id'));
 
@@ -198,86 +194,6 @@ class Ajax extends Backend
 			// Load nodes of the file manager tree
 			case 'loadFileManager':
 				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView(Input::post('folder', true), (int) Input::post('level'))));
-
-			// Load nodes of the page tree
-			case 'loadPagetree':
-				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=loadPagetree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
-				$varValue = null;
-				$strField = $dc->field = Input::post('name');
-
-				if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]))
-				{
-					throw new BadRequestHttpException('Invalid field name: ' . $strField);
-				}
-
-				// Call the load_callback
-				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] ?? null))
-				{
-					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
-					{
-						if (\is_array($callback))
-						{
-							$this->import($callback[0]);
-							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
-						}
-						elseif (\is_callable($callback))
-						{
-							$varValue = $callback($varValue, $dc);
-						}
-					}
-				}
-
-				/** @var PageSelector $strClass */
-				$strClass = $GLOBALS['BE_FFL']['pageSelector'] ?? null;
-
-				/** @var PageSelector $objWidget */
-				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
-
-				throw new ResponseException($this->convertToResponse($objWidget->generateAjax($this->strAjaxId, Input::post('field'), (int) Input::post('level'))));
-
-			// Load nodes of the file tree
-			case 'loadFiletree':
-				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=loadFiletree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
-				$varValue = null;
-				$strField = $dc->field = Input::post('name');
-
-				if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]))
-				{
-					throw new BadRequestHttpException('Invalid field name: ' . $strField);
-				}
-
-				// Call the load_callback
-				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] ?? null))
-				{
-					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
-					{
-						if (\is_array($callback))
-						{
-							$this->import($callback[0]);
-							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
-						}
-						elseif (\is_callable($callback))
-						{
-							$varValue = $callback($varValue, $dc);
-						}
-					}
-				}
-
-				/** @var FileSelector $strClass */
-				$strClass = $GLOBALS['BE_FFL']['fileSelector'] ?? null;
-
-				/** @var FileSelector $objWidget */
-				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
-
-				// Load a particular node
-				if (Input::post('folder', true))
-				{
-					throw new ResponseException($this->convertToResponse($objWidget->generateAjax(Input::post('folder', true), Input::post('field'), (int) Input::post('level'))));
-				}
-
-				throw new ResponseException($this->convertToResponse($objWidget->generate()));
 
 			// Reload the page/file picker
 			case 'reloadPagetree':

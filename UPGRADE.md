@@ -1,5 +1,12 @@
 # API changes
 
+## Version 4.* to 5.0
+
+### pageSelector and fileSelector widgets
+
+The back end widgets `pageSelector` and `fileSelector` have been removed. Use the `picker` widget instead.
+
+
 ## Version 4.* to 4.11
 
 Loading MooTools and jQuery from CDN is no longer supported, because it does
@@ -279,11 +286,9 @@ previous PHP entry points have been removed and a route has been set up for
 each one instead.
 
  - `contao/confirm.php`  -> `contao_backend_confirm`
- - `contao/file.php`     -> `contao_backend_file`
  - `contao/help.php`     -> `contao_backend_help`
  - `contao/index.php`    -> `contao_backend_login`
  - `contao/main.php`     -> `contao_backend`
- - `contao/page.php`     -> `contao_backend_page`
  - `contao/password.php` -> `contao_backend_password`
  - `contao/popup.php`    -> `contao_backend_popup`
  - `contao/preview.php`  -> `contao_backend_preview`

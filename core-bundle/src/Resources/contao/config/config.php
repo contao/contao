@@ -40,7 +40,6 @@ use Contao\ContentVimeo;
 use Contao\ContentYouTube;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\Crawl;
-use Contao\FileSelector;
 use Contao\FilesModel;
 use Contao\FileTree;
 use Contao\Form;
@@ -107,7 +106,6 @@ use Contao\PageModel;
 use Contao\PageRedirect;
 use Contao\PageRegular;
 use Contao\PageRoot;
-use Contao\PageSelector;
 use Contao\PageTree;
 use Contao\Password;
 use Contao\Picker;
@@ -347,9 +345,7 @@ $GLOBALS['BE_FFL'] = array
 	'chmod'                   => ChmodTable::class,
 	'picker'                  => Picker::class,
 	'pageTree'                => PageTree::class,
-	'pageSelector'            => PageSelector::class,
 	'fileTree'                => FileTree::class,
-	'fileSelector'            => FileSelector::class,
 	'fileUpload'              => Upload::class,
 	'tableWizard'             => TableWizard::class,
 	'listWizard'              => ListWizard::class,
