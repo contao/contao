@@ -15,9 +15,11 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Provide methods to handle data container arrays.
@@ -127,6 +129,41 @@ abstract class DataContainer extends Backend
 	 * Sort descending
 	 */
 	public const SORT_DESC = 12;
+
+	/**
+	 * Prefix for all DCA related permission attributes
+	 */
+	public const PERMISSION_PREFIX = 'contao.dca.';
+
+	/**
+	 * Create permission
+	 */
+	public const PERMISSION_CREATE = self::PERMISSION_PREFIX . 'create';
+
+	/**
+	 * View permission
+	 */
+	public const PERMISSION_VIEW = self::PERMISSION_PREFIX . 'view';
+
+	/**
+	 * Edit permission
+	 */
+	public const PERMISSION_EDIT = self::PERMISSION_PREFIX . 'edit';
+
+	/**
+	 * Copy permission
+	 */
+	public const PERMISSION_COPY = self::PERMISSION_PREFIX . 'copy';
+
+	/**
+	 * Move permission
+	 */
+	public const PERMISSION_MOVE = self::PERMISSION_PREFIX . 'move';
+
+	/**
+	 * Delete permission
+	 */
+	public const PERMISSION_DELETE = self::PERMISSION_PREFIX . 'delete';
 
 	/**
 	 * Current ID
@@ -856,6 +893,29 @@ abstract class DataContainer extends Backend
 		$strUrl = TL_SCRIPT . '?' . implode('&', $arrKeys);
 
 		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+	}
+
+	/**
+	 * @throws AccessDeniedException
+	 */
+	public function denyAccessIfDisallowed($attributes, $subject): void
+	{
+		/** @var Security $security */
+		$security = System::getContainer()->get('security.helper');
+
+		if ($security->isGranted($attributes, $subject))
+		{
+			return;
+		}
+
+		$message = 'Permission denied.';
+
+		if ($subject instanceof DataContainerSubject)
+		{
+			$message = sprintf('Permission denied for %s [%s].', $subject, $attributes);
+		}
+
+		throw new AccessDeniedException($message);
 	}
 
 	/**

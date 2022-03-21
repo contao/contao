@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
@@ -644,6 +645,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->import(Files::class, 'Files');
 		$strFolder = Input::get('pid', true);
 
+		$this->denyAccessIfDisallowed(self::PERMISSION_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
+
 		if (!$strFolder || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
@@ -682,6 +685,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			$source = $this->intId;
 		}
+
+		$this->denyAccessIfDisallowed(self::PERMISSION_MOVE, new DataContainerSubject($this->strTable, $source));
 
 		$this->isValid($source);
 
@@ -794,6 +799,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
+				// No need for permission check here, it's done in cut()
+
 				$this->cut($id); // do not urldecode() here (see #6840)
 			}
 		}
@@ -829,6 +836,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			$destination = str_replace(\dirname($source), $strFolder, $source);
 		}
+
+		$this->denyAccessIfDisallowed(self::PERMISSION_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
 
 		$this->isValid($source);
 		$this->isValid($destination);
@@ -964,6 +973,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
+				// No need for permission check here, it's done in copy()
+
 				$this->copy($id); // do not urldecode() here (see #6840)
 			}
 		}
@@ -992,6 +1003,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			$source = $this->intId;
 		}
+
+		$this->denyAccessIfDisallowed(self::PERMISSION_DELETE, new DataContainerSubject($this->strTable, $source));
 
 		$this->isValid($source);
 
@@ -1077,6 +1090,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			foreach ($ids as $id)
 			{
+				// No need for permission check here, it's done in delete()
+
 				$this->delete($id); // do not urldecode() here (see #6840)
 			}
 		}
@@ -1305,6 +1320,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	{
 		$return = '';
 		$this->noReload = false;
+
+		$this->denyAccessIfDisallowed(self::PERMISSION_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+
 		$this->isValid($this->intId);
 
 		if (!file_exists($this->strRootDir . '/' . $this->intId) || !$this->isMounted($this->intId))
@@ -1638,6 +1656,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Walk through each record
 			foreach ($ids as $id)
 			{
+				$this->denyAccessIfDisallowed(self::PERMISSION_EDIT, new DataContainerSubject($this->strTable, $id));
+
 				$this->intId = $id;
 				$this->initialId = $id;
 				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
@@ -1920,6 +1940,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function source()
 	{
+		$this->denyAccessIfDisallowed(self::PERMISSION_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+
 		$this->isValid($this->intId);
 
 		if (is_dir($this->strRootDir . '/' . $this->intId))
@@ -2475,6 +2497,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 		$session = $objSessionBag->all();
+
+		$this->denyAccessIfDisallowed(self::PERMISSION_VIEW, new DataContainerSubject($this->strTable, $path));
 
 		// Get the session data and toggle the nodes
 		if (Input::get('tg'))

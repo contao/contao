@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    contao.security.backend_access_voter:
+        class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: kernel.reset, method: reset }
+
+    contao.security.data_container.default_dca_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDcaVoter
+        tags:
+            - { name: security.voter, priority: -1024 } # Should come last, always
+
+    contao.security.member_group_voter:
+        class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
