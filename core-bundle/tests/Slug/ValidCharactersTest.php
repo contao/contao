@@ -26,18 +26,16 @@ class ValidCharactersTest extends TestCase
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
-            ->with(
-                $this->callback(
-                    function (SlugValidCharactersEvent $event): bool {
-                        $this->assertArrayHasKey('\pN\p{Ll}', $event->getOptions());
-                        $this->assertArrayHasKey('\pN\pL', $event->getOptions());
-                        $this->assertArrayHasKey('0-9a-z', $event->getOptions());
-                        $this->assertArrayHasKey('0-9a-zA-Z', $event->getOptions());
+            ->with($this->callback(
+                function (SlugValidCharactersEvent $event): bool {
+                    $this->assertArrayHasKey('\pN\p{Ll}', $event->getOptions());
+                    $this->assertArrayHasKey('\pN\pL', $event->getOptions());
+                    $this->assertArrayHasKey('0-9a-z', $event->getOptions());
+                    $this->assertArrayHasKey('0-9a-zA-Z', $event->getOptions());
 
-                        return true;
-                    }
-                )
-            )
+                    return true;
+                }
+            ))
         ;
 
         $translator = $this->createMock(TranslatorInterface::class);
