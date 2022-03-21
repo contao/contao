@@ -298,7 +298,7 @@ class FileSelector extends Widget
 		$this->loadDataContainer($this->strTable);
 
 		// Load the current values
-		switch(true)
+		switch (true)
 		{
 			case is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_File::class, true):
 				if (Config::get($this->strField))
