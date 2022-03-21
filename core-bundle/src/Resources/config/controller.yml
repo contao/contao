@@ -88,16 +88,6 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\InitializeController:
-        arguments:
-            - '@contao.framework'
-            - '@request_stack'
-            - '@event_dispatcher'
-            - '@http_kernel'
-            - '@kernel'
-        tags:
-            - controller.service_arguments
-
     Contao\CoreBundle\Controller\InsertTagsController:
         arguments:
             - '@contao.insert_tag.parser'
