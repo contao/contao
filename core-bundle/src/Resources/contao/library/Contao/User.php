@@ -97,7 +97,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property object $objLogin
  * @property object $objLogout
  */
-abstract class User extends System implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, \Serializable
+abstract class User extends System implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface
 {
 	/**
 	 * Object instance (Singleton)
