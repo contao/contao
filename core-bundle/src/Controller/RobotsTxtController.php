@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
@@ -60,7 +59,7 @@ class RobotsTxtController
         $parser->setSource((string) $rootPage->robotsTxt);
         $file = $parser->getFile();
 
-        $this->eventDispatcher->dispatch(new RobotsTxtEvent($file, $request, $rootPage), ContaoCoreEvents::ROBOTS_TXT);
+        $this->eventDispatcher->dispatch(new RobotsTxtEvent($file, $request, $rootPage));
 
         return new Response((string) $file, 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
     }

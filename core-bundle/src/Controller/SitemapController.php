@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller;
 
 use Contao\ArticleModel;
-use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -85,7 +84,7 @@ class SitemapController extends AbstractController
 
         $this->container
             ->get('event_dispatcher')
-            ->dispatch(new SitemapEvent($sitemap, $request, $rootPageIds), ContaoCoreEvents::SITEMAP)
+            ->dispatch(new SitemapEvent($sitemap, $request, $rootPageIds))
         ;
 
         // Cache the response for a month in the shared cache and tag it for invalidation purposes

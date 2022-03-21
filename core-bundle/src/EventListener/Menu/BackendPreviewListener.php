@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Menu;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Symfony\Component\HttpFoundation\Request;
@@ -95,7 +94,7 @@ class BackendPreviewListener
         $url = $this->router->generate('contao_backend_preview');
 
         $event = new PreviewUrlCreateEvent($do, $id);
-        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::PREVIEW_URL_CREATE);
+        $this->eventDispatcher->dispatch($event);
 
         if ($query = $event->getQuery()) {
             return $url.'?'.$query;

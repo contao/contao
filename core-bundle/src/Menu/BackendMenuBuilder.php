@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Menu;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\MenuEvent;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
@@ -39,7 +38,7 @@ class BackendMenuBuilder
             ->setChildrenAttribute('class', 'menu_level_0')
         ;
 
-        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
+        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree));
 
         return $tree;
     }
@@ -51,7 +50,7 @@ class BackendMenuBuilder
             ->setChildrenAttribute('id', 'tmenu')
         ;
 
-        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree), ContaoCoreEvents::BACKEND_MENU_BUILD);
+        $this->eventDispatcher->dispatch(new MenuEvent($this->factory, $tree));
 
         return $tree;
     }

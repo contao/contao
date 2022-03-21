@@ -36,20 +36,12 @@ use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\ContaoCoreExtension;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
-use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\GenerateSymlinksEvent;
-use Contao\CoreBundle\Event\MenuEvent;
-use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
-use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Event\RobotsTxtEvent;
-use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoCoreBundle extends Bundle
@@ -69,17 +61,6 @@ class ContaoCoreBundle extends Bundle
         /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new ContaoLoginFactory());
-
-        $container->addCompilerPass(
-            new AddEventAliasesPass([
-                GenerateSymlinksEvent::class => ContaoCoreEvents::GENERATE_SYMLINKS,
-                MenuEvent::class => ContaoCoreEvents::BACKEND_MENU_BUILD,
-                PreviewUrlCreateEvent::class => ContaoCoreEvents::PREVIEW_URL_CREATE,
-                PreviewUrlConvertEvent::class => ContaoCoreEvents::PREVIEW_URL_CONVERT,
-                RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
-                SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
-            ])
-        );
 
         $container->addCompilerPass(new MakeServicesPublicPass());
         $container->addCompilerPass(new AddAssetsPackagesPass());

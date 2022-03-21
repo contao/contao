@@ -35,13 +35,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TranslationDataCollectorPass;
 use Contao\CoreBundle\DependencyInjection\Security\ContaoLoginFactory;
-use Contao\CoreBundle\Event\ContaoCoreEvents;
-use Contao\CoreBundle\Event\GenerateSymlinksEvent;
-use Contao\CoreBundle\Event\MenuEvent;
-use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
-use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
-use Contao\CoreBundle\Event\RobotsTxtEvent;
-use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -92,19 +85,6 @@ class ContaoCoreBundleTest extends TestCase
             ->method('addCompilerPass')
             ->with($this->callback(
                 function (CompilerPassInterface $pass) use ($passes): bool {
-                    if ($pass instanceof AddEventAliasesPass) {
-                        $eventAliases = [
-                            GenerateSymlinksEvent::class => ContaoCoreEvents::GENERATE_SYMLINKS,
-                            MenuEvent::class => ContaoCoreEvents::BACKEND_MENU_BUILD,
-                            PreviewUrlCreateEvent::class => ContaoCoreEvents::PREVIEW_URL_CREATE,
-                            PreviewUrlConvertEvent::class => ContaoCoreEvents::PREVIEW_URL_CONVERT,
-                            RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
-                            SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
-                        ];
-
-                        $this->assertEquals(new AddEventAliasesPass($eventAliases), $pass);
-                    }
-
                     $this->assertContains(\get_class($pass), $passes);
 
                     return true;

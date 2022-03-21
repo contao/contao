@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Slug;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Slug\ValidCharacters;
 use PHPUnit\Framework\TestCase;
@@ -37,8 +36,7 @@ class ValidCharactersTest extends TestCase
 
                         return true;
                     }
-                ),
-                ContaoCoreEvents::SLUG_VALID_CHARACTERS
+                )
             )
         ;
 

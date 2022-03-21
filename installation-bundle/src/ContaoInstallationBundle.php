@@ -12,22 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle;
 
-use Contao\InstallationBundle\Event\ContaoInstallationEvents;
-use Contao\InstallationBundle\Event\InitializeApplicationEvent;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoInstallationBundle extends Bundle
 {
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-
-        $container->addCompilerPass(
-            new AddEventAliasesPass([
-                InitializeApplicationEvent::class => ContaoInstallationEvents::INITIALIZE_APPLICATION,
-            ])
-        );
-    }
 }

@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Analyzer\HtaccessAnalyzer;
 use Contao\CoreBundle\Config\ResourceFinderInterface;
-use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\GenerateSymlinksEvent;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Symfony\Component\Console\Command\Command;
@@ -160,7 +159,7 @@ class SymlinksCommand extends Command
     {
         $event = new GenerateSymlinksEvent();
 
-        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::GENERATE_SYMLINKS);
+        $this->eventDispatcher->dispatch($event);
 
         foreach ($event->getSymlinks() as $target => $link) {
             $this->symlink($target, $link);

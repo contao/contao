@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -69,7 +68,7 @@ class BackendPreviewController
 
         $urlConvertEvent = new PreviewUrlConvertEvent($request);
 
-        $this->dispatcher->dispatch($urlConvertEvent, ContaoCoreEvents::PREVIEW_URL_CONVERT);
+        $this->dispatcher->dispatch($urlConvertEvent);
 
         if (null !== ($response = $urlConvertEvent->getResponse())) {
             return $response;

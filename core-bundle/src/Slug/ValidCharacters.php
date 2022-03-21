@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Slug;
 
-use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -53,7 +52,7 @@ class ValidCharacters
 
         $event = new SlugValidCharactersEvent($options);
 
-        $this->eventDispatcher->dispatch($event, ContaoCoreEvents::SLUG_VALID_CHARACTERS);
+        $this->eventDispatcher->dispatch($event);
 
         return $event->getOptions();
     }
