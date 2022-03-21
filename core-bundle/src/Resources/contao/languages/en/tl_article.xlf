@@ -26,12 +26,6 @@
       <trans-unit id="tl_article.inColumn.1">
         <source>Please choose the layout section you want the article to be displayed in.</source>
       </trans-unit>
-      <trans-unit id="tl_article.keywords.0">
-        <source>Meta keywords</source>
-      </trans-unit>
-      <trans-unit id="tl_article.keywords.1">
-        <source>Here you can enter a list of comma separated keywords. Keywords, however, are no longer relevant to most search engines (including Google).</source>
-      </trans-unit>
       <trans-unit id="tl_article.teaserCssID.0">
         <source>Teaser CSS ID/class</source>
       </trans-unit>
@@ -114,7 +108,7 @@
         <source>Title and author</source>
       </trans-unit>
       <trans-unit id="tl_article.layout_legend">
-        <source>Section and keywords</source>
+        <source>Sections</source>
       </trans-unit>
       <trans-unit id="tl_article.syndication_legend">
         <source>Syndication</source>

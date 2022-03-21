@@ -1,10 +1,5 @@
 # Deprecated features
 
-## $GLOBALS['TL_CSS_UNITS']
-
-The `$GLOBALS['TL_CSS_UNITS']` variable has been deprecated and will be removed
-in Contao 5.0. Set the appropriate units in the DCA file instead.
-
 ## BE_USER_LOGGED_IN
 
 The constant `BE_USER_LOGGED_IN` has been deprecated and will be removed in

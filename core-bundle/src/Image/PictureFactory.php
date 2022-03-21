@@ -61,9 +61,9 @@ class PictureFactory implements PictureFactoryInterface
         $this->imagineOptions = $imagineOptions;
     }
 
-    public function setDefaultDensities($densities): self
+    public function setDefaultDensities(string $densities): static
     {
-        $this->defaultDensities = (string) $densities;
+        $this->defaultDensities = $densities;
 
         return $this;
     }
@@ -76,7 +76,7 @@ class PictureFactory implements PictureFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    public function create($path, $size = null, ResizeOptions $options = null): PictureInterface
+    public function create(string|ImageInterface $path, int|string|array|PictureConfiguration|null $size = null, ResizeOptions $options = null): PictureInterface
     {
         $attributes = [];
 

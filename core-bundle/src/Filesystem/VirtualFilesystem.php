@@ -58,32 +58,32 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return $this->readonly;
     }
 
-    public function has($location, int $accessFlags = self::NONE): bool
+    public function has(string|Uuid $location, int $accessFlags = self::NONE): bool
     {
         return $this->checkResourceExists($location, $accessFlags, 'has');
     }
 
-    public function fileExists($location, int $accessFlags = self::NONE): bool
+    public function fileExists(string|Uuid $location, int $accessFlags = self::NONE): bool
     {
         return $this->checkResourceExists($location, $accessFlags, 'fileExists');
     }
 
-    public function directoryExists($location, int $accessFlags = self::NONE): bool
+    public function directoryExists(string|Uuid $location, int $accessFlags = self::NONE): bool
     {
         return $this->checkResourceExists($location, $accessFlags, 'directoryExists');
     }
 
-    public function read($location): string
+    public function read(string|Uuid $location): string
     {
         return $this->mountManager->read($this->resolve($location));
     }
 
-    public function readStream($location)
+    public function readStream(string|Uuid $location)
     {
         return $this->mountManager->readStream($this->resolve($location));
     }
 
-    public function write($location, string $contents, array $options = []): void
+    public function write(string|Uuid $location, string $contents, array $options = []): void
     {
         $this->ensureNotReadonly();
 
@@ -93,7 +93,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($path);
     }
 
-    public function writeStream($location, $contents, array $options = []): void
+    public function writeStream(string|Uuid $location, $contents, array $options = []): void
     {
         $this->ensureNotReadonly();
 
@@ -105,7 +105,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($path);
     }
 
-    public function delete($location): void
+    public function delete(string|Uuid $location): void
     {
         $this->ensureNotReadonly();
 
@@ -115,7 +115,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($path);
     }
 
-    public function deleteDirectory($location): void
+    public function deleteDirectory(string|Uuid $location): void
     {
         $this->ensureNotReadonly();
 
@@ -125,7 +125,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($path);
     }
 
-    public function createDirectory($location, array $options = []): void
+    public function createDirectory(string|Uuid $location, array $options = []): void
     {
         $this->ensureNotReadonly();
 
@@ -135,7 +135,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($path);
     }
 
-    public function copy($source, string $destination, array $options = []): void
+    public function copy(string|Uuid $source, string $destination, array $options = []): void
     {
         $this->ensureNotReadonly();
 
@@ -146,7 +146,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($pathFrom, $pathTo);
     }
 
-    public function move($source, string $destination, array $options = []): void
+    public function move(string|Uuid $source, string $destination, array $options = []): void
     {
         $this->ensureNotReadonly();
 
@@ -157,7 +157,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($pathFrom, $pathTo);
     }
 
-    public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): FilesystemItemIterator
+    public function listContents(string|Uuid $location, bool $deep = false, int $accessFlags = self::NONE): FilesystemItemIterator
     {
         $path = $this->resolve($location);
 
@@ -168,7 +168,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return new FilesystemItemIterator($this->doListContents($path, $deep, $accessFlags));
     }
 
-    public function getLastModified($location, int $accessFlags = self::NONE): int
+    public function getLastModified(string|Uuid $location, int $accessFlags = self::NONE): int
     {
         $path = $this->resolve($location);
 
@@ -183,7 +183,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return $this->mountManager->getLastModified($path);
     }
 
-    public function getFileSize($location, int $accessFlags = self::NONE): int
+    public function getFileSize(string|Uuid $location, int $accessFlags = self::NONE): int
     {
         $path = $this->resolve($location);
 
@@ -198,7 +198,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return $this->mountManager->getFileSize($path);
     }
 
-    public function getMimeType($location, int $accessFlags = self::NONE): string
+    public function getMimeType(string|Uuid $location, int $accessFlags = self::NONE): string
     {
         $path = $this->resolve($location);
 
@@ -213,7 +213,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return $this->mountManager->getMimeType($path);
     }
 
-    public function getExtraMetadata($location, int $accessFlags = self::NONE): array
+    public function getExtraMetadata(string|Uuid $location, int $accessFlags = self::NONE): array
     {
         $path = $this->resolve($location);
 
@@ -228,7 +228,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return $this->dbafsManager->getExtraMetadata($path);
     }
 
-    public function setExtraMetadata($location, array $metadata): void
+    public function setExtraMetadata(string|Uuid $location, array $metadata): void
     {
         $this->ensureNotReadonly();
 
@@ -236,12 +236,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
     }
 
     /**
-     * @param string|Uuid                          $location
      * @param 'fileExists'|'directoryExists'|'has' $method
      *
      * @throws VirtualFilesystemException
      */
-    private function checkResourceExists($location, int $accessFlags, string $method): bool
+    private function checkResourceExists(string|Uuid $location, int $accessFlags, string $method): bool
     {
         if ($location instanceof Uuid) {
             if ($accessFlags & self::BYPASS_DBAFS) {
@@ -315,10 +314,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         }
     }
 
-    /**
-     * @param string|Uuid $location
-     */
-    private function resolve($location): string
+    private function resolve(string|Uuid $location): string
     {
         $path = $location instanceof Uuid ?
             Path::canonicalize($this->dbafsManager->resolveUuid($location, $this->prefix)) :

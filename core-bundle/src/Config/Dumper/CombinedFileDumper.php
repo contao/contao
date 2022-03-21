@@ -45,7 +45,7 @@ class CombinedFileDumper implements DumperInterface
         $this->header = $header;
     }
 
-    public function dump($files, $cacheFile, array $options = []): void
+    public function dump(array|string $files, string $cacheFile, array $options = []): void
     {
         $buffer = $this->header;
         $type = $options['type'] ?? null;
