@@ -10,16 +10,12 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingExceptionInterface;
-use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * Provide methods to manage front end controllers.
@@ -58,350 +54,27 @@ abstract class Frontend extends Controller
 	}
 
 	/**
-	 * Split the current request into fragments, strip the URL suffix, recreate the $_GET array and return the page ID
-	 *
-	 * @return mixed
-	 *
-	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0.
-	 *             Use the Symfony routing instead.
-	 */
-	public static function getPageIdFromUrl()
-	{
-		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\Frontend::getPageIdFromUrl()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.');
-
-		if (!System::getContainer()->getParameter('contao.legacy_routing'))
-		{
-			throw new LegacyRoutingException('Frontend::getPageIdFromUrl() requires legacy routing. Configure "prepend_locale" or "url_suffix" in your app configuration (e.g. config.yml).');
-		}
-
-		$strRequest = Environment::get('relativeRequest');
-
-		if (!$strRequest)
-		{
-			return null;
-		}
-
-		// Get the request without the query string
-		list($strRequest) = explode('?', $strRequest, 2);
-
-		// URL decode here (see #6232)
-		$strRequest = rawurldecode($strRequest);
-
-		// The request string must not contain "auto_item" (see #4012)
-		if (strpos($strRequest, '/auto_item/') !== false)
-		{
-			return false;
-		}
-
-		// Extract the language
-		if (Config::get('addLanguageToUrl'))
-		{
-			$arrMatches = array();
-
-			// Use the matches instead of substr() (thanks to Mario Müller)
-			if (preg_match('@^([a-z]{2}(-[A-Z]{2})?)/(.*)$@', $strRequest, $arrMatches))
-			{
-				Input::setGet('language', $arrMatches[1]);
-
-				// Trigger the root page if only the language was given
-				if (!$arrMatches[3])
-				{
-					return null;
-				}
-
-				$strRequest = $arrMatches[3];
-			}
-			else
-			{
-				return false; // Language not provided
-			}
-		}
-
-		// Remove the URL suffix if not just a language root (e.g. en/) is requested
-		if ($strRequest && (!Config::get('addLanguageToUrl') || !preg_match('@^[a-z]{2}(-[A-Z]{2})?/$@', $strRequest)))
-		{
-			$intSuffixLength = \strlen(Config::get('urlSuffix'));
-
-			// Return false if the URL suffix does not match (see #2864)
-			if ($intSuffixLength > 0)
-			{
-				if (substr($strRequest, -$intSuffixLength) != Config::get('urlSuffix'))
-				{
-					return false;
-				}
-
-				$strRequest = substr($strRequest, 0, -$intSuffixLength);
-			}
-		}
-
-		$arrFragments = null;
-
-		// Use folder-style URLs
-		if (strpos($strRequest, '/') !== false)
-		{
-			$strAlias = $strRequest;
-			$arrOptions = array($strAlias);
-
-			// Compile all possible aliases by applying dirname() to the request (e.g. news/archive/item, news/archive, news)
-			while ($strAlias != '/' && strpos($strAlias, '/') !== false)
-			{
-				$strAlias = \dirname($strAlias);
-				$arrOptions[] = $strAlias;
-			}
-
-			/** @var ContaoFramework $framework */
-			$framework = System::getContainer()->get('contao.framework');
-			$objPageModel = $framework->getAdapter(PageModel::class);
-
-			// Check if there are pages with a matching alias
-			$objPages = $objPageModel->findByAliases($arrOptions);
-
-			if ($objPages !== null)
-			{
-				$arrPages = array();
-
-				// Order by domain and language
-				while ($objPages->next())
-				{
-					/** @var PageModel $objModel */
-					$objModel = $objPages->current();
-					$objPage  = $objModel->loadDetails();
-
-					$domain = $objPage->domain ?: '*';
-					$arrPages[$domain][$objPage->rootLanguage][] = $objPage;
-
-					// Also store the fallback language
-					if ($objPage->rootIsFallback)
-					{
-						$arrPages[$domain]['*'][] = $objPage;
-					}
-				}
-
-				$arrAliases = array();
-				$strHost = Environment::get('host');
-
-				// Look for a root page whose domain name matches the host name
-				$arrLangs = $arrPages[$strHost] ?? $arrPages['*'] ?? array();
-
-				// Use the first result (see #4872)
-				if (!Config::get('addLanguageToUrl'))
-				{
-					$arrAliases = current($arrLangs);
-				}
-				// Try to find a page matching the language parameter
-				elseif (($lang = Input::get('language')) && isset($arrLangs[$lang]))
-				{
-					$arrAliases = $arrLangs[$lang];
-				}
-
-				// Return if there are no matches
-				if (empty($arrAliases))
-				{
-					return false;
-				}
-
-				$objPage = $arrAliases[0];
-
-				// The request consists of the alias only
-				if ($strRequest == $objPage->alias)
-				{
-					$arrFragments = array($strRequest);
-				}
-				// Remove the alias from the request string, explode it and then re-insert the alias at the beginning
-				else
-				{
-					$arrFragments = explode('/', substr($strRequest, \strlen($objPage->alias) + 1));
-					array_unshift($arrFragments, $objPage->alias);
-				}
-			}
-		}
-
-		// If folderUrl is deactivated or did not find a matching page
-		if ($arrFragments === null)
-		{
-			if ($strRequest == '/')
-			{
-				return false;
-			}
-
-			$arrFragments = explode('/', $strRequest);
-		}
-
-		// Add the second fragment as auto_item if the number of fragments is even
-		if (\count($arrFragments) % 2 == 0)
-		{
-			if (!Config::get('useAutoItem'))
-			{
-				return false; // see #264
-			}
-
-			ArrayUtil::arrayInsert($arrFragments, 1, array('auto_item'));
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['getPageIdFromUrl']) && \is_array($GLOBALS['TL_HOOKS']['getPageIdFromUrl']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getPageIdFromUrl'] as $callback)
-			{
-				$arrFragments = static::importStatic($callback[0])->{$callback[1]}($arrFragments);
-			}
-		}
-
-		// Return if the alias is empty (see #4702 and #4972)
-		if (!$arrFragments[0] && \count($arrFragments) > 1)
-		{
-			return false;
-		}
-
-		// Add the fragments to the $_GET array
-		for ($i=1, $c=\count($arrFragments); $i<$c; $i+=2)
-		{
-			// Return false if the key is empty (see #4702 and #263)
-			if (!$arrFragments[$i])
-			{
-				return false;
-			}
-
-			// Return false if there is a duplicate parameter (duplicate content) (see #4277)
-			if (isset($_GET[$arrFragments[$i]]))
-			{
-				return false;
-			}
-
-			// Return false if the request contains an auto_item keyword (duplicate content) (see #4012)
-			if (Config::get('useAutoItem') && \in_array($arrFragments[$i], $GLOBALS['TL_AUTO_ITEM']))
-			{
-				return false;
-			}
-
-			Input::setGet($arrFragments[$i], $arrFragments[$i+1], true);
-		}
-
-		return $arrFragments[0] ?: null;
-	}
-
-	/**
-	 * Return the root page ID
-	 *
-	 * @return integer
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Frontend::getRootPageFromUrl()->id instead.
-	 */
-	public static function getRootIdFromUrl()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Frontend::getRootIdFromUrl()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Frontend::getRootPageFromUrl()->id" instead.');
-
-		return static::getRootPageFromUrl()->id;
-	}
-
-	/**
 	 * Try to find a root page based on language and URL
 	 *
 	 * @return PageModel
 	 */
 	public static function getRootPageFromUrl()
 	{
-		if (!System::getContainer()->getParameter('contao.legacy_routing'))
+		$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if ($objRequest instanceof Request)
 		{
-			$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$objPage = $objRequest->attributes->get('pageModel');
 
-			if ($objRequest instanceof Request)
+			if ($objPage instanceof PageModel)
 			{
-				$objPage = $objRequest->attributes->get('pageModel');
+				$objPage->loadDetails();
 
-				if ($objPage instanceof PageModel)
-				{
-					$objPage->loadDetails();
-
-					return PageModel::findByPk($objPage->rootId);
-				}
-			}
-
-			throw new NoRootPageFoundException('No root page found');
-		}
-
-		$accept_language = Environment::get('httpAcceptLanguage');
-		$blnAddLanguageToUrl = System::getContainer()->getParameter('contao.prepend_locale');
-
-		// Get the language from the URL if it is not set (see #456)
-		if (!isset($_GET['language']) && $blnAddLanguageToUrl)
-		{
-			$arrMatches = array();
-
-			// Get the request without the query string
-			list($strRequest) = explode('?', Environment::get('relativeRequest'), 2);
-
-			if (preg_match('@^([a-z]{2}(-[A-Z]{2})?)/@', $strRequest, $arrMatches))
-			{
-				Input::setGet('language', $arrMatches[1]);
+				return PageModel::findByPk($objPage->rootId);
 			}
 		}
 
-		// The language is set in the URL
-		if (!empty($_GET['language']) && $blnAddLanguageToUrl)
-		{
-			$strUri = Environment::get('url') . '/' . Input::get('language') . '/';
-		}
-
-		// No language given
-		else
-		{
-			$strUri = Environment::get('url') . '/';
-		}
-
-		$objRequest = Request::create($strUri);
-		$objRequest->headers->set('Accept-Language', $accept_language);
-
-		try
-		{
-			$arrParameters = System::getContainer()->get('contao.routing.nested_matcher')->matchRequest($objRequest);
-		}
-		catch (RoutingExceptionInterface $exception)
-		{
-			try
-			{
-				$arrParameters = System::getContainer()->get('contao.routing.nested_404_matcher')->matchRequest($objRequest);
-			}
-			catch (RoutingExceptionInterface $exception)
-			{
-				throw new NoRootPageFoundException('No root page found', 0, $exception);
-			}
-		}
-
-		$objRootPage = $arrParameters['pageModel'] ?? null;
-
-		if (!$objRootPage instanceof PageModel)
-		{
-			throw new MissingMandatoryParametersException('Every Contao route must have a "pageModel" parameter');
-		}
-
-		// Redirect to the website root or language root (e.g. en/)
-		if (!Environment::get('relativeRequest'))
-		{
-			if ($blnAddLanguageToUrl)
-			{
-				$arrParams = array('_locale' => LocaleUtil::formatAsLocale($objRootPage->language));
-
-				$strUrl = System::getContainer()->get('router')->generate('contao_index', $arrParams);
-				$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
-
-				static::redirect($strUrl);
-			}
-
-			// Redirect if the page alias is not "index" or "/" (see #8498, #8560 and #1210)
-			elseif ($objRootPage->type !== 'root' && !\in_array($objRootPage->alias, array('index', '/')))
-			{
-				static::redirect($objRootPage->getAbsoluteUrl());
-			}
-		}
-
-		if ($objRootPage->type != 'root')
-		{
-			return PageModel::findByPk($objRootPage->rootId);
-		}
-
-		return $objRootPage;
+		throw new NoRootPageFoundException('No root page found');
 	}
 
 	/**

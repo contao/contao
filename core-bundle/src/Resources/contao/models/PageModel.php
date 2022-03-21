@@ -1082,12 +1082,6 @@ class PageModel extends Model
 					$this->rootFallbackLanguage = $objFallback->language;
 				}
 			}
-
-			if (System::getContainer()->getParameter('contao.legacy_routing'))
-			{
-				$this->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? LocaleUtil::formatAsLanguageTag($objParentPage->language) : '';
-				$this->urlSuffix = System::getContainer()->getParameter('contao.url_suffix');
-			}
 		}
 
 		// No root page found
@@ -1167,11 +1161,6 @@ class PageModel extends Model
 			$page->preventSaving(false);
 			$page->language = $strForceLang;
 			$page->rootLanguage = $strForceLang;
-
-			if (System::getContainer()->getParameter('contao.legacy_routing'))
-			{
-				$page->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
-			}
 		}
 
 		$objRouter = System::getContainer()->get('router');

@@ -89,8 +89,6 @@ class Config
 		'smtpPass'         => 'mailer_password',
 		'smtpPort'         => 'mailer_port',
 		'smtpEnc'          => 'mailer_encryption',
-		'addLanguageToUrl' => 'contao.prepend_locale',
-		'urlSuffix'        => 'contao.url_suffix',
 		'uploadPath'       => 'contao.upload_path',
 		'editableFiles'    => 'contao.editable_files',
 		'characterSet'     => 'kernel.charset',

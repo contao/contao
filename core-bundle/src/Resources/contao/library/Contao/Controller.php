@@ -1261,11 +1261,6 @@ abstract class Controller extends System
 
 			$page->language = $strForceLang;
 			$page->rootLanguage = $strForceLang;
-
-			if (System::getContainer()->getParameter('contao.legacy_routing'))
-			{
-				$page->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
-			}
 		}
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)

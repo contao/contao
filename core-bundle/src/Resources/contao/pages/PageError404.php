@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -103,36 +102,6 @@ class PageError404 extends Frontend
 		else
 		{
 			$objRootPage = $this->getRootPageFromUrl();
-		}
-
-		// Forward if the language should be but is not set (see #4028)
-		if ($objRootPage->urlPrefix && System::getContainer()->getParameter('contao.legacy_routing'))
-		{
-			// Get the request string without the script name
-			$strRequest = Environment::get('relativeRequest');
-
-			// Only redirect if there is no language fragment (see #4669)
-			if ($strRequest && !preg_match('@^[a-z]{2}(-[A-Z]{2})?/@', $strRequest))
-			{
-				// Handle language fragments without trailing slash (see #7666)
-				if (preg_match('@^[a-z]{2}(-[A-Z]{2})?$@', $strRequest))
-				{
-					$this->redirect(Environment::get('request') . '/', 301);
-				}
-				else
-				{
-					if ($strRequest == Environment::get('request'))
-					{
-						$strRequest = LocaleUtil::formatAsLanguageTag($objRootPage->language) . '/' . $strRequest;
-					}
-					else
-					{
-						$strRequest = Environment::get('script') . '/' . LocaleUtil::formatAsLanguageTag($objRootPage->language) . '/' . $strRequest;
-					}
-
-					$this->redirect($strRequest);
-				}
-			}
 		}
 
 		// Look for a 404 page

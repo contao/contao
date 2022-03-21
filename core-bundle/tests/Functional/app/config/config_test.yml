@@ -43,7 +43,6 @@ doctrine:
         auto_generate_proxy_classes: true
 
 contao:
-    legacy_routing: false
     localconfig:
         disableCron: true
 
