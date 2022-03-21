@@ -149,7 +149,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             'type' => 'error_401',
             'rootLanguage' => '',
             'protected' => '1',
-            'groups' => ''
+            'groups' => '',
         ]);
 
         $request = $this->getRequest('frontend');
