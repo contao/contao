@@ -187,21 +187,6 @@ to pass the correct form ID (e.g. `tl_login_12` instead of `tl_login`).
 If a front end form is set up to store the submitted data in the database, date
 and time fields are now automatically converted to Unix timestamps.
 
-### Meta keywords
-
-The meta keywords tag has been removed from the `fe_page.html5` template, as
-it does not serve a purpose anymore. If you still want to use it, adjust the
-template as follows:
-
-```php
-<?php $this->extend('fe_page'); ?>
-
-<?php $this->block('meta'); ?>
-  <?php $this->parent(); ?>
-  <meta name="keywords" content="<?= $this->keywords ?>">
-<?php $this->endblock(); ?>
-```
-
 ### Template name changes
 
 The following templates have been renamed to match the content element or

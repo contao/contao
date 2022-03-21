@@ -23,7 +23,6 @@ use Contao\Model\Collection;
  * @property string         $alias
  * @property string|integer $author
  * @property string         $inColumn
- * @property string|null    $keywords
  * @property string|boolean $showTeaser
  * @property string         $teaserCssID
  * @property string|null    $teaser
@@ -48,7 +47,6 @@ use Contao\Model\Collection;
  * @method static ArticleModel|null findOneByAlias($val, array $opt=array())
  * @method static ArticleModel|null findOneByAuthor($val, array $opt=array())
  * @method static ArticleModel|null findOneByInColumn($val, array $opt=array())
- * @method static ArticleModel|null findOneByKeywords($val, array $opt=array())
  * @method static ArticleModel|null findOneByShowTeaser($val, array $opt=array())
  * @method static ArticleModel|null findOneByTeaserCssID($val, array $opt=array())
  * @method static ArticleModel|null findOneByTeaser($val, array $opt=array())
@@ -70,7 +68,6 @@ use Contao\Model\Collection;
  * @method static Collection|ArticleModel[]|ArticleModel|null findByAlias($val, array $opt=array())
  * @method static Collection|ArticleModel[]|ArticleModel|null findByAuthor($val, array $opt=array())
  * @method static Collection|ArticleModel[]|ArticleModel|null findByInColumn($val, array $opt=array())
- * @method static Collection|ArticleModel[]|ArticleModel|null findByKeywords($val, array $opt=array())
  * @method static Collection|ArticleModel[]|ArticleModel|null findByShowTeaser($val, array $opt=array())
  * @method static Collection|ArticleModel[]|ArticleModel|null findByTeaserCssID($val, array $opt=array())
  * @method static Collection|ArticleModel[]|ArticleModel|null findByTeaser($val, array $opt=array())
@@ -96,7 +93,6 @@ use Contao\Model\Collection;
  * @method static integer countByAlias($val, array $opt=array())
  * @method static integer countByAuthor($val, array $opt=array())
  * @method static integer countByInColumn($val, array $opt=array())
- * @method static integer countByKeywords($val, array $opt=array())
  * @method static integer countByShowTeaser($val, array $opt=array())
  * @method static integer countByTeaserCssID($val, array $opt=array())
  * @method static integer countByTeaser($val, array $opt=array())
