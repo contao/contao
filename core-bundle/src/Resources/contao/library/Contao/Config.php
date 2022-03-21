@@ -353,7 +353,7 @@ class Config
 	 */
 	public static function isComplete()
 	{
-		return static::$blnHasLcf !== null && static::has('licenseAccepted');
+		return static::$blnHasLcf !== null;
 	}
 
 	/**
