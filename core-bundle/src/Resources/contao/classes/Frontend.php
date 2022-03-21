@@ -10,16 +10,12 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\ExceptionInterface as RoutingExceptionInterface;
-use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * Provide methods to manage front end controllers.
