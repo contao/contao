@@ -469,13 +469,6 @@ class Versions extends Controller
 							$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
 						}
 
-						// Decrypt the values
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'] ?? null)
-						{
-							$to[$k] = Encryption::decrypt($to[$k]);
-							$from[$k] = Encryption::decrypt($from[$k]);
-						}
-
 						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null) || \in_array($k, $arrOrderFields))
 						{
 							if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['csv']))

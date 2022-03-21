@@ -233,12 +233,6 @@ abstract class Widget extends Controller
 
 			case 'value':
 				$this->varValue = StringUtil::deserialize($varValue);
-
-				// Decrypt the value if it is encrypted
-				if ($this->arrConfiguration['encrypt'] ?? null)
-				{
-					$this->varValue = Encryption::decrypt($this->varValue);
-				}
 				break;
 
 			case 'class':
@@ -374,12 +368,6 @@ abstract class Widget extends Controller
 				return $this->strLabel;
 
 			case 'value':
-				// Encrypt the value
-				if (isset($this->arrConfiguration['encrypt']) && $this->arrConfiguration['encrypt'])
-				{
-					return Encryption::encrypt($this->varValue);
-				}
-
 				if ($this->varValue === '')
 				{
 					return $this->getEmptyStringOrNull();
