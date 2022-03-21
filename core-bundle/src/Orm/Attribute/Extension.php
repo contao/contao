@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Orm\Attribute;
 #[\Attribute]
 final class Extension
 {
-    public function __construct(public readonly string $entity, public readonly ?array $indexes,)
+    public function __construct(public readonly string $entity, public readonly array $indexes = [],)
     {
     }
 }

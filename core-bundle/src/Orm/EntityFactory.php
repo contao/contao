@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Orm;
 use Contao\CoreBundle\Exception\GenerateEntityException;
 use Contao\CoreBundle\Orm\Attribute\Extension;
 use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -48,27 +49,21 @@ class EntityFactory
             $attribute = $attributes[0];
             $arguments = $attribute->getArguments();
 
-            $index = $arguments['entity'];
+            /** @var string $index */
+            $index = $arguments[0];
 
             if (!\in_array($index, $entities, true)) {
                 continue;
             }
 
             if (!\array_key_exists($index, $tree)) {
-                $tree[$index] = [
-                    'extensions' => [],
-                    'indexes' => [],
-                ];
+                $tree[$index] = [];
             }
 
-            $tree[$index]['extensions'][] = $extensionClass;
-            $tree[$index]['indexes'] = array_merge($tree[$index]['indexes'], $arguments['indexes']);
+            $tree[$index][] = $extensionClass;
         }
 
-        foreach ($tree as $entity => $config) {
-            $extensions = $config['extensions'];
-            // $indexes = $config['indexes'];
-
+        foreach ($tree as $entity => $extensions) {
             try {
                 $reflectionClass = new \ReflectionClass($entity);
             } catch (\ReflectionException $e) {
@@ -80,16 +75,43 @@ class EntityFactory
 
             foreach ($extensions as $extension) {
                 $class->addTrait($extension);
+
+                // Check if extensions has other attributes than Extension
+                // If so, attach to class as attribute
+                try {
+                    $reflectionExtension = new \ReflectionClass($extension);
+                } catch (\ReflectionException $e) {
+                    continue;
+                }
+
+                $attributes = $reflectionExtension->getAttributes();
+
+                foreach ($attributes as $attribute) {
+                    if (Extension::class === $attribute->getName()) {
+                        continue;
+                    }
+
+                    $class->addAttribute($attribute->getName(), $attribute->getArguments());
+                }
             }
 
             $comment = 'This entity is auto generated.';
 
+            $printer = new CodePrinter();
+
+            $namespace = new PhpNamespace('Contao\CoreBundle\GeneratedEntity');
+
             $class->setComment($comment);
             $class->setAbstract(false);
             $class->setExtends($entity);
+            $class->setFinal(true);
 
-            $printer = new CodePrinter();
-            $generated = $printer->printClass($class, new PhpNamespace('Contao\CoreBundle\GeneratedEntity'));
+            $file = new PhpFile();
+            $file->setStrictTypes(true);
+            $file->addComment('This file is auto generated');
+            $file->addNamespace($namespace);
+
+            $generated = sprintf("%s\n\n%s", $printer->printFile($file), $printer->printClass($class, $namespace));
 
             $filesystem = new Filesystem();
             $filesystem->dumpFile(sprintf('%s/%s.php', $directory, $reflectionClass->getShortName()), $generated);
