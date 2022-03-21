@@ -131,5 +131,3 @@ class FormModel extends Model
 		return Config::get('maxFileSize');
 	}
 }
-
-class_alias(FormModel::class, 'FormModel');

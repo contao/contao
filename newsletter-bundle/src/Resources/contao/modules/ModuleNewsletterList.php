@@ -141,5 +141,3 @@ class ModuleNewsletterList extends Module
 		$this->Template->newsletters = $arrNewsletter;
 	}
 }
-
-class_alias(ModuleNewsletterList::class, 'ModuleNewsletterList');

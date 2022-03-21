@@ -80,5 +80,3 @@ class ModuleSitemap extends Module
 		$this->Template->items = $this->renderNavigation($this->rootPage, 1, $host, $lang);
 	}
 }
-
-class_alias(ModuleSitemap::class, 'ModuleSitemap');

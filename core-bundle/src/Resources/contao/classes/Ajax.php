@@ -514,5 +514,3 @@ class Ajax extends Backend
 		return new Response(Controller::replaceOldBePaths($str));
 	}
 }
-
-class_alias(Ajax::class, 'Ajax');

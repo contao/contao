@@ -689,5 +689,3 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return false;
 	}
 }
-
-class_alias(User::class, 'User');

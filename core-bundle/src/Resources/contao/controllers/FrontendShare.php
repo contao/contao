@@ -54,5 +54,3 @@ class FrontendShare extends Frontend
 		throw new BadRequestHttpException(sprintf('Invalid action "%s"', Input::get('p')));
 	}
 }
-
-class_alias(FrontendShare::class, 'FrontendShare');

@@ -6169,4 +6169,3 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 }
 
-class_alias(DC_Table::class, 'DC_Table');

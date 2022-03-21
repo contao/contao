@@ -368,5 +368,3 @@ abstract class ModuleNews extends Module
 		);
 	}
 }
-
-class_alias(ModuleNews::class, 'ModuleNews');

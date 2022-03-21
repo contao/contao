@@ -289,5 +289,3 @@ class ContentGallery extends ContentElement
 		$this->Template->images = $objTemplate->parse();
 	}
 }
-
-class_alias(ContentGallery::class, 'ContentGallery');

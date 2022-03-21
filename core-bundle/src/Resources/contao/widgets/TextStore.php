@@ -95,5 +95,3 @@ class TextStore extends Widget
 		);
 	}
 }
-
-class_alias(TextStore::class, 'TextStore');

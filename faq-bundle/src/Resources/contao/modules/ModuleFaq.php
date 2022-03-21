@@ -150,5 +150,3 @@ class ModuleFaq extends Frontend
 		return $jsonLd;
 	}
 }
-
-class_alias(ModuleFaq::class, 'ModuleFaq');

@@ -849,5 +849,3 @@ class Versions extends Controller
 		return trim($buffer);
 	}
 }
-
-class_alias(Versions::class, 'Versions');

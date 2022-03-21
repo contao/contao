@@ -2151,5 +2151,3 @@ abstract class Controller extends System
 		return array_keys($files);
 	}
 }
-
-class_alias(Controller::class, 'Controller');

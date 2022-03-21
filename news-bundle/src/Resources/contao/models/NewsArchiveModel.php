@@ -90,5 +90,3 @@ class NewsArchiveModel extends Model
 	 */
 	protected static $strTable = 'tl_news_archive';
 }
-
-class_alias(NewsArchiveModel::class, 'NewsArchiveModel');

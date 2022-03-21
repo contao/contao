@@ -90,5 +90,3 @@ class ImageSizeModel extends Model
 	 */
 	protected static $strTable = 'tl_image_size';
 }
-
-class_alias(ImageSizeModel::class, 'ImageSizeModel');

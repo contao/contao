@@ -187,5 +187,3 @@ class NewsletterModel extends Model
 		return static::findBy($arrColumns, null, $arrOptions);
 	}
 }
-
-class_alias(NewsletterModel::class, 'NewsletterModel');

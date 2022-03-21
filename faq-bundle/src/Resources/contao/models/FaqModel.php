@@ -226,5 +226,3 @@ class FaqModel extends Model
 		return static::findBy($arrColumns, null, $arrOptions);
 	}
 }
-
-class_alias(FaqModel::class, 'FaqModel');

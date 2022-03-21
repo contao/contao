@@ -673,5 +673,3 @@ class BackendUser extends User
 		return parent::isEqualTo($user);
 	}
 }
-
-class_alias(BackendUser::class, 'BackendUser');

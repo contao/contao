@@ -65,5 +65,3 @@ class ContentMarkdown extends ContentElement
 		$this->Template->content = Input::stripTags($this->code, Config::get('allowedTags'), Config::get('allowedAttributes'));
 	}
 }
-
-class_alias(ContentMarkdown::class, 'ContentMarkdown');

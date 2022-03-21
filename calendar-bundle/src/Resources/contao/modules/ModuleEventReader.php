@@ -531,5 +531,3 @@ class ModuleEventReader extends Events
 		return array($strDate, $strTime);
 	}
 }
-
-class_alias(ModuleEventReader::class, 'ModuleEventReader');

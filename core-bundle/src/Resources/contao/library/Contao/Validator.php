@@ -400,5 +400,3 @@ class Validator
 		return preg_match('/^[A-Za-z0-9[\]_-]+$/', $strName);
 	}
 }
-
-class_alias(Validator::class, 'Validator');

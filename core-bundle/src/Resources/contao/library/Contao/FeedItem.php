@@ -143,5 +143,3 @@ class FeedItem
 		$this->arrData['enclosure'][] = $mediaData;
 	}
 }
-
-class_alias(FeedItem::class, 'FeedItem');
