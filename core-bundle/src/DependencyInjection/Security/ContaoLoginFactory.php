@@ -49,10 +49,10 @@ class ContaoLoginFactory extends AbstractFactory implements AuthenticatorFactory
 
     public function createAuthenticator(ContainerBuilder $container, string $firewallName, array $config, string $userProviderId)
     {
-        $authenticatorId = 'contao.security.authenticator.'.$firewallName;
+        $authenticatorId = 'contao.security.login_authenticator.'.$firewallName;
         $options = array_intersect_key($config, $this->options);
         $container
-            ->setDefinition($authenticatorId, new ChildDefinition('contao.security.authenticator'))
+            ->setDefinition($authenticatorId, new ChildDefinition('contao.security.login_authenticator'))
             ->replaceArgument(0, new Reference($userProviderId))
             ->replaceArgument(1, new Reference($this->createAuthenticationSuccessHandler($container, $firewallName, $config)))
             ->replaceArgument(2, new Reference($this->createAuthenticationFailureHandler($container, $firewallName, $config)))
