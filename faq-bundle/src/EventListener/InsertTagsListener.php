@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\EventListener;
 
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
