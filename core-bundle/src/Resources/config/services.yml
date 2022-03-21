@@ -531,12 +531,6 @@ services:
         calls:
             - [matchAttribute, [_scope, backend]]
 
-    contao.routing.page_candidates:
-        class: Contao\CoreBundle\Routing\Candidates\PageCandidates
-        arguments:
-            - '@database_connection'
-            - '@contao.routing.page_registry'
-
     contao.routing.frontend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
         calls:
@@ -605,6 +599,12 @@ services:
             - '@contao.routing.route_404_provider'
         tags:
             - { name: router, priority: -200 }
+
+    contao.routing.page_candidates:
+        class: Contao\CoreBundle\Routing\Candidates\PageCandidates
+        arguments:
+            - '@database_connection'
+            - '@contao.routing.page_registry'
 
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry
