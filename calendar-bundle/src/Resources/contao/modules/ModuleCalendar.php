@@ -71,7 +71,9 @@ class ModuleCalendar extends Events
 			return '';
 		}
 
-		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
+		$request = System::getContainer()->get('request_stack')->getMainRequest();
+
+		$this->strUrl = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
 		$this->strLink = $this->strUrl;
 
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)

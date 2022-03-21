@@ -1273,12 +1273,6 @@ abstract class Controller extends System
 		$objRouter = System::getContainer()->get('router');
 		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams));
 
-		// Remove path from absolute URLs
-		if (0 === strncmp($strUrl, '/', 1) && 0 !== strncmp($strUrl, '//', 2))
-		{
-			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
-		}
-
 		// Decode sprintf placeholders
 		if (strpos($strParams, '%') !== false)
 		{
@@ -1824,21 +1818,22 @@ abstract class Controller extends System
 
 		$arrEnclosures = array();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getMainRequest();
+		$projectDir = $container->getParameter('kernel.project_dir');
 
 		// Add download links
 		while ($objFiles->next())
 		{
 			if ($objFiles->type == 'file')
 			{
-				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
 				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($projectDir . '/' . $objFiles->path))
 				{
 					continue;
 				}
 
 				$objFile = new File($objFiles->path);
-				$strHref = Environment::get('request');
+				$strHref = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
 
 				// Remove an existing file parameter (see #5683)
 				if (preg_match('/(&(amp;)?|\?)file=/', $strHref))

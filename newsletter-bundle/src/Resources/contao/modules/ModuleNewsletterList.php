@@ -75,7 +75,10 @@ class ModuleNewsletterList extends Module
 		$arrJumpTo = array();
 		$arrNewsletter = array();
 
-		$strRequest = StringUtil::ampersand(Environment::get('request'));
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getMainRequest();
+
+		$strRequest = null !== $request ? StringUtil::ampersand($request->getBaseUrl() . $request->getPathInfo()) : '';
 		$objNewsletter = NewsletterModel::findSentByPids($this->nl_channels);
 
 		if ($objNewsletter !== null)
@@ -131,9 +134,9 @@ class ModuleNewsletterList extends Module
 			}
 
 			// Tag the newsletters (see #2137)
-			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+			if ($container->has('fos_http_cache.http.symfony_response_tagger'))
 			{
-				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger = $container->get('fos_http_cache.http.symfony_response_tagger');
 				$responseTagger->addTags($tags);
 			}
 		}

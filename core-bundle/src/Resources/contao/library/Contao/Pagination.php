@@ -220,7 +220,8 @@ class Pagination
 		}
 
 		$blnQuery = false;
-		list($this->strUrl) = explode('?', Environment::get('request'), 2);
+		$request = System::getContainer()->get('request_stack')->getMainRequest();
+		$this->strUrl = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
 
 		// Prepare the URL
 		foreach (preg_split('/&(amp;)?/', Environment::get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment)

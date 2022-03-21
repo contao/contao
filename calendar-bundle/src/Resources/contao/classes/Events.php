@@ -459,7 +459,9 @@ abstract class Events extends Module
 
 			if (!$objPage instanceof PageModel)
 			{
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('request'));
+				$request = System::getContainer()->get('request_stack')->getMainRequest();
+
+				self::$arrUrlCache[$strCacheKey] = null !== $request ? StringUtil::ampersand($request->getRequestUri()) : '';
 			}
 			else
 			{

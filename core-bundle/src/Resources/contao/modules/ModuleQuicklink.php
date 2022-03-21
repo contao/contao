@@ -152,9 +152,11 @@ class ModuleQuicklink extends Module
 			}
 		}
 
+		$request = $container->get('request_stack')->getMainRequest();
+
 		$this->Template->items = $items;
 		$this->Template->formId = 'tl_quicklink_' . $this->id;
-		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
+		$this->Template->request = null !== $request ? StringUtil::ampersand($request->getBaseUrl() . $request->getPathInfo()) : '';
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();

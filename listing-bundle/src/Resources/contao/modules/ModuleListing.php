@@ -231,8 +231,10 @@ class ModuleListing extends Module
 
 		$objData = $objDataStmt->execute($varKeyword);
 
+		$request = System::getContainer()->get('request_stack')->getMainRequest();
+
 		// Prepare the URL
-		$strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
+		$strUrl = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
 		$blnQuery = false;
 
 		foreach (preg_split('/&(amp;)?/', Environment::get('queryString')) as $fragment)

@@ -101,14 +101,17 @@ class ContentDownloads extends ContentDownload
 		$auxDate = array();
 
 		$objFiles = $this->objFiles;
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
+		$requestStack = $container->get('request_stack');
+		$request = $requestStack->getCurrentRequest();
+		$mainRequest = $requestStack->getMainRequest();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 
 		// Get all files
 		while ($objFiles->next())
 		{
 			// Continue if the files has been processed or does not exist
-			if (isset($files[$objFiles->path]) || !file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFiles->path))
+			if (isset($files[$objFiles->path]) || !file_exists($container->getParameter('kernel.project_dir') . '/' . $objFiles->path))
 			{
 				continue;
 			}
@@ -123,7 +126,7 @@ class ContentDownloads extends ContentDownload
 					continue;
 				}
 
-				if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+				if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 				{
 					$arrMeta = $this->getMetaData($objFiles->meta, $GLOBALS['TL_LANGUAGE']);
 				}
@@ -154,7 +157,7 @@ class ContentDownloads extends ContentDownload
 					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 				}
 
-				$strHref = Environment::get('request');
+				$strHref = null !== $mainRequest ? $mainRequest->getBasePath() . $mainRequest->getPathInfo() : '';
 
 				// Remove an existing file parameter (see #5683)
 				if (isset($_GET['file']))
@@ -216,7 +219,7 @@ class ContentDownloads extends ContentDownload
 						continue;
 					}
 
-					if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+					if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 					{
 						$arrMeta = $this->getMetaData($objSubfiles->meta, $GLOBALS['TL_LANGUAGE']);
 					}
@@ -247,7 +250,7 @@ class ContentDownloads extends ContentDownload
 						$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 					}
 
-					$strHref = Environment::get('request');
+					$strHref = null !== $mainRequest ? $mainRequest->getBasePath() . $mainRequest->getPathInfo() : '';
 
 					// Remove an existing file parameter (see #5683)
 					if (preg_match('/(&(amp;)?|\?)file=/', $strHref))

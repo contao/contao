@@ -427,8 +427,10 @@ abstract class Module extends Frontend
 		$row = $objSubpage->row();
 		$trail = \in_array($objSubpage->id, $objPage->trail);
 
+		$request = System::getContainer()->get('request_stack')->getMainRequest();
+
 		// Use the path without query string to check for active pages (see #480)
-		list($path) = explode('?', Environment::get('request'), 2);
+		$path = $request->getBaseUrl() . $request->getPathInfo();
 
 		// Active page
 		if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == $path)

@@ -318,7 +318,7 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Return a route relative to the base URL
+	 * Generate a URL for the given route
 	 *
 	 * @param string $strName   The route name
 	 * @param array  $arrParams The route parameters
@@ -328,7 +328,6 @@ abstract class Template extends Controller
 	public function route($strName, $arrParams=array())
 	{
 		$strUrl = System::getContainer()->get('router')->generate($strName, $arrParams);
-		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		return StringUtil::ampersand($strUrl);
 	}
@@ -356,7 +355,6 @@ abstract class Template extends Controller
 		$context->setBaseUrl($previewScript);
 
 		$strUrl = $router->generate($strName, $arrParams);
-		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		$context->setBaseUrl('');
 

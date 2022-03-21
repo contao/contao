@@ -444,7 +444,9 @@ class News extends Frontend
 
 			if (!$objPage instanceof PageModel)
 			{
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('request'));
+				$request = System::getContainer()->get('request_stack')->getMainRequest();
+
+				self::$arrUrlCache[$strCacheKey] = null !== $request ? StringUtil::ampersand($request->getBaseUrl() . $request->getPathInfo()) : '';
 			}
 			else
 			{

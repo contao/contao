@@ -50,9 +50,11 @@ class ModuleNewsMenu extends ModuleNews
 	 */
 	public function generate()
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
+		$requestStack = $container->get('request_stack');
+		$request = $requestStack->getCurrentRequest();
 
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['newsmenu'][0] . ' ###';
@@ -71,7 +73,9 @@ class ModuleNewsMenu extends ModuleNews
 			return '';
 		}
 
-		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
+		$mainRequest = $requestStack->getMainRequest();
+
+		$this->strUrl = null !== $mainRequest ? $mainRequest->getBaseUrl() . $mainRequest->getPathInfo() : '';
 
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{

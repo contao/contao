@@ -88,9 +88,11 @@ class ContentDownload extends ContentElement
 	protected function compile()
 	{
 		$objFile = new File($this->singleSRC);
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
+		$requestStack = $container->get('request_stack');
+		$request = $requestStack->getCurrentRequest();
 
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$arrMeta = Frontend::getMetaData($this->objFile->meta, $GLOBALS['TL_LANGUAGE']);
 		}
@@ -118,7 +120,8 @@ class ContentDownload extends ContentElement
 			$this->titleText = sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
 		}
 
-		$strHref = Environment::get('request');
+		$mainRequest = $requestStack->getMainRequest();
+		$strHref = null !== $mainRequest ? $mainRequest->getBasePath() . $mainRequest->getPathInfo() : '';
 
 		// Remove an existing file parameter (see #5683)
 		if (isset($_GET['file']))
