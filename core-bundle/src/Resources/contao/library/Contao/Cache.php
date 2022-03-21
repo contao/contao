@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the Cache library is deprecated and will no longer work in Contao 5.0. Use symfony/cache instead.');
+
 /**
  * A static class to store non-persistent data
  *
@@ -29,6 +31,8 @@ namespace Contao;
  *     }
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ * @deprecated Using the Cache library is deprecated and will no longer work in Contao 5.0. Use symfony/cache instead.
  */
 class Cache
 {

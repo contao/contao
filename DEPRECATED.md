@@ -1,5 +1,10 @@
 # Deprecated features
 
+## Cache library
+
+Using `Contao/Cache` is deprecated and will no longer work in Contao 5.0. Use your own in-memory
+caches instead. Use `symfony/cache` for persistence.
+
 ## $GLOBALS['TL_CSS_UNITS']
 
 The `$GLOBALS['TL_CSS_UNITS']` variable has been deprecated and will be removed
