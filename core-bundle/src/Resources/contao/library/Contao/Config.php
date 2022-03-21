@@ -107,8 +107,6 @@ class Config
 
 	private static $arrToBeRemoved = array
 	(
-		'os'                    => true,
-		'browser'               => true,
 		'dbCharset'             => true,
 		'dbCollation'           => true,
 		'disableRefererCheck'   => true,
