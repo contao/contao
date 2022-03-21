@@ -347,16 +347,6 @@ has been set up for each one instead (see UPGRADE.md).
 
 Using the old paths is deprecated and will no longer work in Contao 5.0.
 
-## ModuleLoader
-
-The `ModuleLoader` class is no longer used and only kept for reasons of
-backwards compatibility. It is deprecated and will be removed in Contao 5.0.
-Use the container parameter `kernel.bundles` instead:
-
-```php
-$bundles = System::getContainer()->getParameter('kernel.bundles');
-```
-
 ## database.sql files
 
 Using `database.sql` files to set up tables is deprecated in Contao 4.0 and

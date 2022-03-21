@@ -300,7 +300,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
             'Config',
             'ClassLoader',
             'TemplateLoader',
-            'ModuleLoader',
         ];
 
         foreach ($basicClasses as $class) {
