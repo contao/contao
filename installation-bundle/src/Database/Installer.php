@@ -211,8 +211,6 @@ class Installer
                 continue;
             }
 
-            $this->setLegacyOptions($table);
-
             $tableOptions = $this->connection->fetchAssociative(
                 'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL',
                 [$tableName]
@@ -311,23 +309,5 @@ class Installer
 
         // Dynamic rows require the Barracuda file format in MySQL <8 and MariaDB <10.3
         return 'barracuda' === strtolower((string) $fileFormat['Value']);
-    }
-
-    /**
-     * Adds the legacy table options to remain backwards compatibility with database.sql files.
-     */
-    private function setLegacyOptions(Table $table): void
-    {
-        if (!$table->hasOption('engine')) {
-            $table->addOption('engine', 'MyISAM');
-        }
-
-        if (!$table->hasOption('charset')) {
-            $table->addOption('charset', 'utf8');
-        }
-
-        if (!$table->hasOption('collate')) {
-            $table->addOption('collate', 'utf8_general_ci');
-        }
     }
 }

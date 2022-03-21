@@ -52,16 +52,9 @@ class ContaoCacheWarmerTest extends TestCase
 
     public function testCreatesTheCacheFolder(): void
     {
-        $resourceLocator = $this->createMock(FileLocator::class);
-        $resourceLocator
-            ->method('locate')
-            ->with('config/database.sql', null, false)
-            ->willThrowException(new FileLocatorFileNotFoundException())
-        ;
-
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('database_connection', $this->createMock(Connection::class));
-        $container->set('contao.resource_locator', $resourceLocator);
+        $container->set('contao.resource_locator', $this->createMock(FileLocator::class));
 
         System::setContainer($container);
 
