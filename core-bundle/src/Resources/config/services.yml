@@ -531,7 +531,7 @@ services:
         calls:
             - [matchAttribute, [_scope, backend]]
 
-    contao.routing.candidates:
+    contao.routing.page_candidates:
         class: Contao\CoreBundle\Routing\Candidates\PageCandidates
         arguments:
             - '@database_connection'
@@ -659,7 +659,7 @@ services:
         class: Contao\CoreBundle\Routing\RouteProvider
         arguments:
             - '@contao.framework'
-            - '@contao.routing.candidates'
+            - '@contao.routing.page_candidates'
             - '@contao.routing.page_registry'
 
     contao.routing.scope_matcher:
