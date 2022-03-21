@@ -31,11 +31,34 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
 class DbafsTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
+    private int $codePageBackup = 0;
+
+    protected function setUp(): void
+    {
+        if (\function_exists('sapi_windows_cp_get')) {
+            $this->codePageBackup = sapi_windows_cp_get();
+        }
+
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        if (\function_exists('sapi_windows_cp_set')) {
+            sapi_windows_cp_set($this->codePageBackup);
+        }
+    }
+
     public function testResolvePaths(): void
     {
         $uuid1 = $this->generateUuid(1);
@@ -169,11 +192,7 @@ class DbafsTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAllAssociative')
-            ->with(
-                'SELECT * FROM tl_files WHERE path LIKE ? ORDER BY path',
-                ['foo/%'],
-                []
-            )
+            ->with('SELECT * FROM tl_files WHERE path LIKE ? ORDER BY path', ['foo/%'], [])
             ->willReturn([
                 ['id' => 1, 'uuid' => $this->generateUuid(1)->toBinary(), 'path' => 'foo/first', 'type' => 'file'],
                 ['id' => 2, 'uuid' => $this->generateUuid(2)->toBinary(), 'path' => 'foo/second', 'type' => 'file'],
@@ -209,9 +228,7 @@ class DbafsTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAssociative')
-            ->willReturn(
-                ['id' => 1, 'uuid' => $uuid->toBinary(), 'path' => 'some/path', 'type' => 'file'],
-            )
+            ->willReturn(['id' => 1, 'uuid' => $uuid->toBinary(), 'path' => 'some/path', 'type' => 'file'])
         ;
 
         $getColumn = function (string $name): Column {
@@ -560,23 +577,9 @@ class DbafsTest extends TestCase
 
         $changeSet = $dbafs->computeChangeSet(...((array) $paths));
 
-        $this->assertSame(
-            $expected->getItemsToCreate(),
-            $changeSet->getItemsToCreate(),
-            'items to create'
-        );
-
-        $this->assertSame(
-            $expected->getItemsToUpdate(),
-            $changeSet->getItemsToUpdate(),
-            'items to update'
-        );
-
-        $this->assertSame(
-            $expected->getItemsToDelete(),
-            $changeSet->getItemsToDelete(),
-            'items to delete'
-        );
+        $this->assertSame($expected->getItemsToCreate(), $changeSet->getItemsToCreate(), 'items to create');
+        $this->assertSame($expected->getItemsToUpdate(), $changeSet->getItemsToUpdate(), 'items to update');
+        $this->assertSame($expected->getItemsToDelete(), $changeSet->getItemsToDelete(), 'items to delete');
     }
 
     public function provideFilesystemsAndExpectedChangeSets(): \Generator
@@ -839,6 +842,7 @@ class DbafsTest extends TestCase
         $filesystem11->write('new/'.Dbafs::FILE_MARKER_PUBLIC, '');
         $filesystem11->createDirectory('ignored');
         $filesystem11->write('ignored/'.Dbafs::FILE_MARKER_EXCLUDED, '');
+        $filesystem11->write('ignored/.DS_Store', '');
         $filesystem11->move('file1', 'new/file1');
         $filesystem11->move('file2', 'new/new-name');
         $filesystem11->delete('bar/file5a');
@@ -1153,10 +1157,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('delete')
-            ->with(
-                'tl_files',
-                ['path' => 'files/bar.file', 'type' => 'file']
-            )
+            ->with('tl_files', ['path' => 'files/bar.file', 'type' => 'file'])
         ;
 
         $filesystem = new VirtualFilesystem(
@@ -1214,6 +1215,38 @@ class DbafsTest extends TestCase
         $dbafs->useLastModified(true);
 
         $this->assertSame(DbafsInterface::FEATURE_LAST_MODIFIED, $dbafs->getSupportedFeatures());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSkipsNonUtf8FilesAndDirectories(): void
+    {
+        // Set a compatible codepage under Windows, so that dirname() calls
+        // used in the InMemoryFilesystemAdapter implementation do not alter
+        // our non-UTF-8 test paths.
+        if (\function_exists('sapi_windows_cp_set')) {
+            sapi_windows_cp_set(1252);
+        }
+
+        $filesystem = new VirtualFilesystem(
+            new MountManager(new InMemoryFilesystemAdapter()),
+            $this->createMock(DbafsManager::class)
+        );
+
+        $filesystem->createDirectory("b\xE4r");
+        $filesystem->write("b\xE4r/file.txt", '');
+        $filesystem->write("foob\xE4r.txt", '');
+        $filesystem->write('valid.txt', '');
+
+        $dbafs = $this->getDbafs(null, $filesystem);
+
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Filesystem resources with non-UTF-8 paths will no longer be skipped but throw an exception in Contao 5.0.');
+
+        $changeSet = $dbafs->computeChangeSet();
+
+        $this->assertCount(1, $changeSet->getItemsToCreate());
+        $this->assertSame('valid.txt', $changeSet->getItemsToCreate()[0][ChangeSet::ATTR_PATH]);
     }
 
     private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null, EventDispatcherInterface $eventDispatcher = null): Dbafs

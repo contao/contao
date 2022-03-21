@@ -26,18 +26,18 @@ class ArticlePickerProviderTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $GLOBALS['TL_LANG']['MSC']['articlePicker'] = 'Article picker';
     }
 
-    public static function tearDownAfterClass(): void
+    protected function tearDown(): void
     {
-        parent::tearDownAfterClass();
-
         unset($GLOBALS['TL_LANG']);
+
+        parent::tearDown();
     }
 
     /**

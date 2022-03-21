@@ -26,6 +26,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class NewsPickerProviderTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testCreatesTheMenuItem(): void
     {
         $config = json_encode([

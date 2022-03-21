@@ -373,6 +373,10 @@
         <source>Generates a headline (h1 - h6).</source>
         <target>Maakt een titel (h1 - h6).</target>
       </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>Diverse</target>
+      </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
         <target>Tekst</target>
@@ -447,12 +451,15 @@
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a Markdown text.</source>
+        <target>Genereert HTML-code van een Markdown-tekst.</target>
       </trans-unit>
       <trans-unit id="CTE.template.0">
         <source>Custom template</source>
+        <target>Custom template</target>
       </trans-unit>
       <trans-unit id="CTE.template.1">
         <source>Generates an element to insert a custom template.</source>
+        <target>Genereert een element om een aangepaste sjabloon in te voegen.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -788,9 +795,11 @@
       </trans-unit>
       <trans-unit id="PTY.error_503.0">
         <source>503 Service unavailable</source>
+        <target>503 Service niet beschikbaar</target>
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
         <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>Wanneer een hoofdpagina zich in de onderhoudsmodus bevindt, wordt voor alle verzoeken een 503-foutpagina weergegeven.</target>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -2674,6 +2683,7 @@
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
         <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>De interne CSS-editor is verouderd en wordt verwijderd in Contao 5.0! Overweeg om uw bestaande stylesheets te exporteren en ze opnieuw toe te voegen aan de paginalay-out als externe stylesheets.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2737,9 +2747,14 @@
       </trans-unit>
       <trans-unit id="MSC.shareURL">
         <source>Share URL</source>
+        <target>Deel URL</target>
       </trans-unit>
       <trans-unit id="MSC.parent">
         <source>Parent</source>
+        <target>Ouder</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

@@ -30,6 +30,8 @@ class EnvironmentTest extends TestCase
     {
         parent::setUp();
 
+        $this->backupServerEnvGetPost();
+
         $this->projectDir = strtr($this->getFixturesDir(), '\\', '/');
 
         Environment::reset();
@@ -50,6 +52,14 @@ class EnvironmentTest extends TestCase
 
         require __DIR__.'/../../src/Resources/contao/config/default.php';
         require __DIR__.'/../../src/Resources/contao/config/agents.php';
+    }
+
+    protected function tearDown(): void
+    {
+        $this->restoreServerEnvGetPost();
+        $this->resetStaticProperties([Environment::class, [Environment::class, ['strSapi']], System::class]);
+
+        parent::tearDown();
     }
 
     /**

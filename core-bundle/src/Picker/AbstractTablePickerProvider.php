@@ -169,7 +169,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     {
         $modules = [];
 
-        foreach ($GLOBALS['BE_MOD'] as $v) {
+        foreach ($GLOBALS['BE_MOD'] ?? [] as $v) {
             foreach ($v as $name => $module) {
                 if (
                     isset($module['tables'])

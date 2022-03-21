@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\Config;
 use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
@@ -24,6 +25,7 @@ use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Image\ResizeOptions;
@@ -38,6 +40,15 @@ use Symfony\Component\Filesystem\Path;
 
 class FigureBuilderTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([DcaLoader::class, System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testFromFilesModel(): void
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
@@ -61,7 +72,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertSame("DBAFS item 'foo' is not a file.", $exception->getMessage());
+        $this->assertSame('DBAFS item "foo" is not a file.', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -79,7 +90,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
+        $this->assertMatchesRegularExpression('/No resource could be located at path .*/', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -118,7 +129,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertSame("DBAFS item with UUID 'invalid-uuid' could not be found.", $exception->getMessage());
+        $this->assertSame('DBAFS item with UUID "invalid-uuid" could not be found.', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -156,7 +167,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertSame("DBAFS item with ID '99' could not be found.", $exception->getMessage());
+        $this->assertSame('DBAFS item with ID "99" could not be found.', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -215,7 +226,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
+        $this->assertMatchesRegularExpression('/No resource could be located at path .*/', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -255,7 +266,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertRegExp('/No resource could be located at path .*/', $exception->getMessage());
+        $this->assertMatchesRegularExpression('/No resource could be located at path .*/', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -325,7 +336,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertSame("The defined resource is 'null'.", $exception->getMessage());
+        $this->assertSame('The defined resource is "null".', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -384,7 +395,7 @@ class FigureBuilderTest extends TestCase
 
         $image = $this->createMock(ImageInterface::class);
         $image
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getPath')
             ->willReturn($absoluteFilePath)
         ;
@@ -463,11 +474,7 @@ class FigureBuilderTest extends TestCase
         foreach ($setInvalidResourceOperations as [$method, $argument]) {
             $figureBuilder->$method($argument);
 
-            $this->assertNotSame(
-                $exception,
-                $figureBuilder->getLastException(),
-                'new exception replaces old one'
-            );
+            $this->assertNotSame($exception, $figureBuilder->getLastException(), 'new exception replaces old one');
 
             $exception = $figureBuilder->getLastException();
 

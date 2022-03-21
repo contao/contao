@@ -80,7 +80,7 @@ class PreviewFactoryTest extends TestCase
         $this->assertFileExists($preview->getPath());
         $this->assertSame(128, $preview->getDimensions()->getSize()->getWidth());
         $this->assertSame(256, $preview->getDimensions()->getSize()->getHeight());
-        $this->assertRegExp('(/[0-9a-z]/foo-[0-9a-z]{15}\.png$)', $preview->getPath());
+        $this->assertMatchesRegularExpression('(/[0-9a-z]/foo-[0-9a-z]{15}\.png$)', $preview->getPath());
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
 
@@ -104,12 +104,12 @@ class PreviewFactoryTest extends TestCase
             $this->assertFileExists($preview->getPath());
             $this->assertSame(256, $preview->getDimensions()->getSize()->getWidth());
             $this->assertSame(512, $preview->getDimensions()->getSize()->getHeight());
-            $this->assertRegExp('(/[0-9a-z]/foo-[0-9a-z]{15}(-\d)?\.png$)', $preview->getPath());
+            $this->assertMatchesRegularExpression('(/[0-9a-z]/foo-[0-9a-z]{15}(-\d)?\.png$)', $preview->getPath());
         }
 
         $lastPagePath = substr($previews[0]->getPath(), 0, -4).'-last.png';
 
-        $this->assertFileNotExists($lastPagePath);
+        $this->assertFileDoesNotExist($lastPagePath);
 
         $previews = $factory->createPreviews($sourcePath, 200, 9999, 2);
 
@@ -124,7 +124,7 @@ class PreviewFactoryTest extends TestCase
             $this->assertFileExists($preview->getPath());
             $this->assertSame(499, $preview->getDimensions()->getSize()->getWidth());
             $this->assertSame(998, $preview->getDimensions()->getSize()->getHeight());
-            $this->assertRegExp('(/[0-9a-z]/foo-[0-9a-z]{15}-\d\.png$)', $preview->getPath());
+            $this->assertMatchesRegularExpression('(/[0-9a-z]/foo-[0-9a-z]{15}-\d\.png$)', $preview->getPath());
         }
 
         $previews = $factory->createPreviews($sourcePath, 128, 9999, 4);
@@ -189,22 +189,15 @@ class PreviewFactoryTest extends TestCase
                     [
                         'width' => 50,
                         'height' => 123,
-                        'densities' => '0.5x',
                     ],
                 ],
             ],
         ]);
 
-        $this->assertSame(
-            $expectedSize,
-            $factory->getPreviewSizeFromImageSize($size),
-        );
+        $this->assertSame($expectedSize, $factory->getPreviewSizeFromImageSize($size));
 
         if (\is_array($size)) {
-            $this->assertSame(
-                $expectedSize,
-                $factory->getPreviewSizeFromImageSize($size),
-            );
+            $this->assertSame($expectedSize, $factory->getPreviewSizeFromImageSize($size));
         }
     }
 
@@ -229,23 +222,14 @@ class PreviewFactoryTest extends TestCase
         yield [[0, 0, 456], 789];
         yield [[500, 500, 456], 789];
 
-        yield [
-            (new ResizeConfiguration())
-                ->setWidth(123)
-                ->setHeight(456),
-            456,
-        ];
+        yield [(new ResizeConfiguration())->setWidth(123)->setHeight(456), 456];
 
         yield [
             (new PictureConfiguration())
                 ->setSize(
                     (new PictureConfigurationItem())
                         ->setDensities('1.5x')
-                        ->setResizeConfig(
-                            (new ResizeConfiguration())
-                                ->setWidth(123)
-                                ->setHeight(456)
-                        )
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(456))
                 ),
             684,
         ];
@@ -255,27 +239,15 @@ class PreviewFactoryTest extends TestCase
                 ->setSize(
                     (new PictureConfigurationItem())
                         ->setDensities('1.5x')
-                        ->setResizeConfig(
-                            (new ResizeConfiguration())
-                                ->setWidth(123)
-                                ->setHeight(123)
-                        )
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(123))
                 )
                 ->setSizeItems([
                     (new PictureConfigurationItem())
                         ->setDensities('543w, 1.2x')
-                        ->setResizeConfig(
-                            (new ResizeConfiguration())
-                                ->setWidth(100)
-                                ->setHeight(150)
-                        ),
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(100)->setHeight(150)),
                     (new PictureConfigurationItem())
                         ->setDensities('432w, 1.2x')
-                        ->setResizeConfig(
-                            (new ResizeConfiguration())
-                                ->setWidth(100)
-                                ->setHeight(150)
-                        ),
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(100)->setHeight(150)),
                 ]),
             543,
         ];

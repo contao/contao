@@ -206,7 +206,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         yield 'Test does not report successful responses if url not in base collection' => [
             new CrawlUri(new Uri('https://github.com'), 0),
-            $this->mockResponse(),
+            $this->mockResponse(200, 'https://github.com'),
             SubscriberInterface::DECISION_NEGATIVE,
             '',
             '',
@@ -220,6 +220,15 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
             '',
             '',
             ['ok' => 2, 'error' => 0],
+            ['ok' => 1, 'error' => 0],
+        ];
+
+        yield 'Test does not report redirected responses outside the target domain' => [
+            new CrawlUri(new Uri('https://contao.org'), 0),
+            $this->mockResponse(200, 'https://example.com'),
+            SubscriberInterface::DECISION_NEGATIVE,
+            '',
+            '',
             ['ok' => 1, 'error' => 0],
         ];
     }
@@ -361,7 +370,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     /**
      * @return ResponseInterface&MockObject
      */
-    private function mockResponse(int $statusCode = 200): ResponseInterface
+    private function mockResponse(int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface
     {
         $response = $this->createMock(ResponseInterface::class);
         $response
@@ -372,13 +381,13 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $response
             ->method('getInfo')
             ->willReturnCallback(
-                static function (string $key) use ($statusCode) {
+                static function (string $key) use ($statusCode, $url) {
                     if ('http_code' === $key) {
                         return $statusCode;
                     }
 
                     if ('url' === $key) {
-                        return '';
+                        return $url;
                     }
 
                     if ('response_headers' === $key) {

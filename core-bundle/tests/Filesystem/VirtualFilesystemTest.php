@@ -23,13 +23,13 @@ use Symfony\Component\Uid\Uuid;
 
 class VirtualFilesystemTest extends TestCase
 {
-    private static Uuid $defaultUuid;
+    private Uuid $defaultUuid;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
-        self::$defaultUuid = Uuid::v1();
+        $this->defaultUuid = Uuid::v1();
     }
 
     public function testGetPrefix(): void
@@ -107,7 +107,7 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager = $this->createMock(DbafsManager::class);
         $dbafsManager
             ->method('resolveUuid')
-            ->with(self::$defaultUuid)
+            ->with($this->defaultUuid)
             ->willReturn($path)
         ;
 
@@ -120,7 +120,7 @@ class VirtualFilesystemTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage($message);
 
-        $filesystem->read(self::$defaultUuid);
+        $filesystem->read($this->defaultUuid);
     }
 
     public function provideInvalidPaths(): \Generator
@@ -146,7 +146,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testResourceExistsWithUuid(bool $resourceExists): void
     {
-        $uuid = self::$defaultUuid;
+        $uuid = $this->defaultUuid;
 
         $dbafsManager = $this->createMock(DbafsManager::class);
         $invocationMocker = $dbafsManager
@@ -335,7 +335,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = $this->getVirtualFilesystem($mountManager);
 
         $this->assertSame('foo', $filesystem->read('path'));
-        $this->assertSame('foo', $filesystem->read(self::$defaultUuid));
+        $this->assertSame('foo', $filesystem->read($this->defaultUuid));
     }
 
     public function testReadStream(): void
@@ -346,7 +346,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = $this->getVirtualFilesystem($mountManager);
 
         $this->assertSame($resource, $filesystem->readStream('path'));
-        $this->assertSame($resource, $filesystem->readStream(self::$defaultUuid));
+        $this->assertSame($resource, $filesystem->readStream($this->defaultUuid));
 
         fclose($resource);
     }
@@ -357,7 +357,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
 
         $filesystem->write('path', 'foo', ['some' => 'option']);
-        $filesystem->write(self::$defaultUuid, 'foo', ['some' => 'option']);
+        $filesystem->write($this->defaultUuid, 'foo', ['some' => 'option']);
     }
 
     public function testWriteStream(): void
@@ -368,7 +368,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
 
         $filesystem->writeStream('path', $resource, ['some' => 'option']);
-        $filesystem->writeStream(self::$defaultUuid, $resource, ['some' => 'option']);
+        $filesystem->writeStream($this->defaultUuid, $resource, ['some' => 'option']);
 
         fclose($resource);
     }
@@ -379,7 +379,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
 
         $filesystem->delete('path');
-        $filesystem->delete(self::$defaultUuid);
+        $filesystem->delete($this->defaultUuid);
     }
 
     public function testDeleteDirectory(): void
@@ -388,7 +388,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
 
         $filesystem->deleteDirectory('path');
-        $filesystem->deleteDirectory(self::$defaultUuid);
+        $filesystem->deleteDirectory($this->defaultUuid);
     }
 
     public function testCreateDirectory(): void
@@ -397,7 +397,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path']);
 
         $filesystem->createDirectory('path', ['some' => 'option']);
-        $filesystem->createDirectory(self::$defaultUuid, ['some' => 'option']);
+        $filesystem->createDirectory($this->defaultUuid, ['some' => 'option']);
     }
 
     public function testCopy(): void
@@ -406,7 +406,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path', 'prefix/to/path']);
 
         $filesystem->copy('path', 'to/path', ['some' => 'option']);
-        $filesystem->copy(self::$defaultUuid, 'to/path', ['some' => 'option']);
+        $filesystem->copy($this->defaultUuid, 'to/path', ['some' => 'option']);
     }
 
     public function testMove(): void
@@ -415,7 +415,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = $this->getVirtualFilesystem($mountManager, ['prefix/path', 'prefix/to/path']);
 
         $filesystem->move('path', 'to/path', ['some' => 'option']);
-        $filesystem->move(self::$defaultUuid, 'to/path', ['some' => 'option']);
+        $filesystem->move($this->defaultUuid, 'to/path', ['some' => 'option']);
     }
 
     /**
@@ -448,10 +448,7 @@ class VirtualFilesystemTest extends TestCase
         /** @var array<FilesystemItem> $listedContents */
         $listedContents = [...$filesystem->listContents('foo/bar', $deep, VirtualFilesystemInterface::BYPASS_DBAFS)];
 
-        $this->assertSame(
-            ['extra' => 'data'],
-            $listedContents[0]->getExtraMetadata()
-        );
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
 
         // Normalize listing for comparison
         $listing = array_map(
@@ -534,11 +531,7 @@ class VirtualFilesystemTest extends TestCase
         /** @var array<FilesystemItem> $listedContents */
         $listedContents = [...$filesystem->listContents('foo/bar', $deep)];
 
-        $this->assertSame(
-            ['extra' => 'data'],
-            $listedContents[0]->getExtraMetadata()
-        );
-
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
         $this->assertSame(1024, $listedContents[0]->getFileSize());
 
         // Normalize listing for comparison
@@ -631,13 +624,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetLastModified(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'lastModified',
-            123450,
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('lastModified', 123450, $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -645,13 +632,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetFileSize(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'fileSize',
-            1024,
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('fileSize', 1024, $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -659,13 +640,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetMimeType(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'mimeType',
-            'image/png',
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('mimeType', 'image/png', $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -677,7 +652,7 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager
             ->expects($this->once())
             ->method('resolveUuid')
-            ->with(self::$defaultUuid, 'prefix')
+            ->with($this->defaultUuid, 'prefix')
             ->willReturn('path')
         ;
 
@@ -703,7 +678,7 @@ class VirtualFilesystemTest extends TestCase
         $expected = $shouldReadFromDbafs ? ['extra' => 'data'] : [];
 
         $this->assertSame($expected, $filesystem->getExtraMetadata('path', $accessFlags));
-        $this->assertSame($expected, $filesystem->getExtraMetadata(self::$defaultUuid, $accessFlags));
+        $this->assertSame($expected, $filesystem->getExtraMetadata($this->defaultUuid, $accessFlags));
     }
 
     public function provideAccessFlags(): \Generator
@@ -731,7 +706,7 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager
             ->expects($this->once())
             ->method('resolveUuid')
-            ->with(self::$defaultUuid, 'prefix')
+            ->with($this->defaultUuid, 'prefix')
             ->willReturn('path')
         ;
 
@@ -748,7 +723,7 @@ class VirtualFilesystemTest extends TestCase
         );
 
         $filesystem->setExtraMetadata('path', ['extra' => 'data']);
-        $filesystem->setExtraMetadata(self::$defaultUuid, ['extra' => 'data']);
+        $filesystem->setExtraMetadata($this->defaultUuid, ['extra' => 'data']);
     }
 
     /**
@@ -825,7 +800,7 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager
             ->expects($this->once())
             ->method('resolveUuid')
-            ->with(self::$defaultUuid, 'prefix')
+            ->with($this->defaultUuid, 'prefix')
             ->willReturn('path1')
         ;
 
@@ -848,7 +823,7 @@ class VirtualFilesystemTest extends TestCase
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
 
-        $this->assertSame($value, $filesystem->$method(self::$defaultUuid, $accessFlags));
+        $this->assertSame($value, $filesystem->$method($this->defaultUuid, $accessFlags));
         $this->assertSame($value, $filesystem->$method('path1', $accessFlags));
         $this->assertSame($value, $filesystem->$method('path2', $accessFlags));
     }
@@ -879,7 +854,7 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager
             ->expects($this->once())
             ->method('resolveUuid')
-            ->with(self::$defaultUuid, 'prefix')
+            ->with($this->defaultUuid, 'prefix')
             ->willReturn('path')
         ;
 

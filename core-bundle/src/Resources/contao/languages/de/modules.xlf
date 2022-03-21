@@ -251,7 +251,7 @@
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
         <source>Generates a drop-down menu from the site structure</source>
-        <target>Erzeugt ein Drop-Down-Menü aus der Seitenstruktur</target>
+        <target>Erzeugt ein Dropdown-Menü aus der Seitenstruktur</target>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -259,7 +259,7 @@
       </trans-unit>
       <trans-unit id="FMD.quicklink.1">
         <source>Generates a custom drop-down menu</source>
-        <target>Erzeugt ein individuelles Drop-Down-Menü</target>
+        <target>Erzeugt ein individuelles Dropdown-Menü</target>
       </trans-unit>
       <trans-unit id="FMD.booknav.0">
         <source>Book navigation</source>
@@ -421,7 +421,7 @@
         <source>Root page dependent modules</source>
         <target>Startpunktabhängige Module</target>
       </trans-unit>
-      <trans-unit id="FMD.root_page_dependent_module.1">
+      <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
         <target>Erzeugt abhängig vom Startpunkt verschiedene Module</target>
       </trans-unit>

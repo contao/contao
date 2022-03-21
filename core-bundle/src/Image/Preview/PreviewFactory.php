@@ -107,11 +107,7 @@ class PreviewFactory
         }
 
         $size = $this->normalizeSize($size);
-
-        $targetPath = Path::join(
-            $this->cacheDir,
-            $this->createCachePath($path, $size, $previewOptions)
-        );
+        $targetPath = Path::join($this->cacheDir, $this->createCachePath($path, $size, $previewOptions));
 
         if (null !== ($cachedPreviews = $this->getCachedPreviews($targetPath, $firstPage, $lastPage))) {
             return array_map(fn ($path) => $this->imageFactory->create($path), $cachedPreviews);
@@ -324,7 +320,7 @@ class PreviewFactory
                     $this->getPreviewSizeFromWidthHeightDensities(
                         $sizeItem['width'] ?? 0,
                         $sizeItem['height'] ?? 0,
-                        $sizeItem['densities'],
+                        $sizeItem['densities'] ?? '',
                     ),
                 );
             }
@@ -378,7 +374,7 @@ class PreviewFactory
     {
         // Unlike the Contao\Image\PictureFactory, the PictureFactoryInterface
         // does not know about ResizeOptions. We therefore check if the third
-        // argument of the 'create' method allows setting them.
+        // argument of the "create" method allows setting them.
         // TODO: Adjust this in Contao 5 after the interface has been adjusted.
         $canHandleResizeOptions = static function (PictureFactoryInterface $factory): bool {
             if ($factory instanceof PictureFactory) {
@@ -489,12 +485,7 @@ class PreviewFactory
             }
         }
 
-        return (int) round(
-            max(
-                max($width, $height) * $scaleFactor,
-                $widthDescriptor,
-            )
-        );
+        return (int) round(max(max($width, $height) * $scaleFactor, $widthDescriptor));
     }
 
     private function createCachePath(string $path, int $size, array $previewOptions): string

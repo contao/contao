@@ -123,6 +123,7 @@
       </trans-unit>
       <trans-unit id="MOD.preview_link.0">
         <source>Preview links</source>
+        <target>پیش‌نمایش لینک‌ها</target>
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
         <source>Manage preview links for the front end.</source>
@@ -418,7 +419,7 @@
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>
       </trans-unit>
-      <trans-unit id="FMD.root_page_dependent_module.1">
+      <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
       </trans-unit>
     </body>

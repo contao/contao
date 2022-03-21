@@ -18,7 +18,6 @@ use Contao\Folder;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
-use Contao\StyleSheets;
 use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_theme'] = array
@@ -27,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	'config' => array
 	(
 		'dataContainer'               => 'Table',
-		'ctable'                      => array('tl_module', 'tl_style_sheet', 'tl_layout', 'tl_image_size'),
+		'ctable'                      => array('tl_module', 'tl_layout', 'tl_image_size'),
 		'notCopyable'                 => true,
 		'enableVersioning'            => true,
 		'sql' => array
@@ -40,7 +39,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		'onload_callback' => array
 		(
 			array('tl_theme', 'checkPermission'),
-			array('tl_theme', 'updateStyleSheet')
 		),
 		'oncopy_callback' => array
 		(
@@ -106,13 +104,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			(
 				'href'                => 'act=show',
 				'icon'                => 'show.svg',
-				'attributes'          => 'style="margin-right:3px"'
-			),
-			'css' => array
-			(
-				'href'                => 'table=tl_style_sheet',
-				'icon'                => 'css.svg',
-				'button_callback'     => array('tl_theme', 'editCss')
 			),
 			'modules' => array
 			(
@@ -199,12 +190,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'options_callback'        => array('tl_theme', 'getTemplateFolders'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
-		),
-		'vars' => array
-		(
-			'inputType'               => 'keyValueWizard',
-			'exclude'                 => true,
-			'sql'                     => "text NULL"
 		)
 	)
 );
@@ -281,34 +266,6 @@ class tl_theme extends Backend
 	}
 
 	/**
-	 * Check for modified style sheets and update them if necessary
-	 */
-	public function updateStyleSheet()
-	{
-		$objSession = System::getContainer()->get('session');
-
-		if ($objSession->get('style_sheet_update_all'))
-		{
-			$this->import(StyleSheets::class, 'StyleSheets');
-			$this->StyleSheets->updateStyleSheets();
-		}
-
-		$objSession->set('style_sheet_update_all', null);
-	}
-
-	/**
-	 * Schedule a style sheet update
-	 *
-	 * This method is triggered when a single theme or multiple themes are
-	 * modified (edit/editAll) or duplicated (copy/copyAll).
-	 */
-	public function scheduleUpdate()
-	{
-		$objSession = System::getContainer()->get('session');
-		$objSession->set('style_sheet_update_all', true);
-	}
-
-	/**
 	 * Return all template folders as array
 	 *
 	 * @return array
@@ -367,23 +324,6 @@ class tl_theme extends Backend
 	public function themeStore()
 	{
 		return '<a href="https://themes.contao.org" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_theme']['store'][1]) . '" class="header_store" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['tl_theme']['store'][0] . '</a>';
-	}
-
-	/**
-	 * Return the "edit CSS" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editCss($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_STYLE_SHEETS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
 
 	/**

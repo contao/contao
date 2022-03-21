@@ -111,7 +111,7 @@ class InsertTags extends Controller
 	private function executeReplace(string $strBuffer, bool $blnCache)
 	{
 		/** @var PageModel $objPage */
-		global $objPage;
+		$objPage = $GLOBALS['objPage'] ?? null;
 
 		$container = System::getContainer();
 
@@ -416,12 +416,6 @@ class InsertTags extends Controller
 						}
 
 						$value = StringUtil::deserialize($value);
-
-						// Decrypt the value
-						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'] ?? null)
-						{
-							$value = Encryption::decrypt($value);
-						}
 
 						$rgxp = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['rgxp'] ?? null;
 						$opts = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['options'] ?? null;
@@ -1286,7 +1280,7 @@ class InsertTags extends Controller
 	private function parseUrlWithQueryString(string $url): array
 	{
 		// Restore [&] and &amp;
-		$url = str_replace(array('[&]', '&amp;'), '&', $url);
+		$url = str_replace(array('&#61;', '[&]', '&amp;'), array('=', '&', '&'), $url);
 
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';

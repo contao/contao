@@ -25,7 +25,7 @@ abstract class AbstractConfig
         $this->backup = $backup;
 
         // Enable gz compression by default if path ends on .gz
-        $this->gzCompression = 0 === strcasecmp(substr($backup->getFilepath(), -3), '.gz');
+        $this->gzCompression = 0 === strcasecmp(substr($backup->getFilename(), -3), '.gz');
     }
 
     public function getTablesToIgnore(): array
@@ -68,20 +68,17 @@ abstract class AbstractConfig
     /**
      * @return static
      */
-    public function withFilePath(string $filePath)/*: static*/
+    public function withFileName(string $filename)/*: static*/
     {
         $new = clone $this;
-        $new->backup = new Backup($filePath);
+        $new->backup = new Backup($filename);
 
         return $new;
     }
 
     private function filterTablesToIgnore(array $currentTables, array $newTables): array
     {
-        $newList = array_filter(
-            $newTables,
-            static fn ($table) => !\in_array($table[0], ['-', '+'], true)
-        );
+        $newList = array_filter($newTables, static fn ($table) => !\in_array($table[0], ['-', '+'], true));
 
         if ($newList) {
             $currentTables = $newList;

@@ -134,11 +134,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         );
 
         // Do not remove cookies that match the allow list
-        $removeCookies = preg_grep(
-            '/^(?:'.implode(')$|^(?:', $allowList).')$/i',
-            $removeCookies,
-            PREG_GREP_INVERT
-        );
+        $removeCookies = preg_grep('/^(?:'.implode(')$|^(?:', $allowList).')$/i', $removeCookies, PREG_GREP_INVERT);
 
         foreach ($removeCookies as $name) {
             $request->cookies->remove($name);

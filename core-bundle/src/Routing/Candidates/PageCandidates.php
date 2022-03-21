@@ -79,6 +79,9 @@ class PageCandidates extends AbstractCandidates
         $paths = [];
 
         foreach ($pathMap as $type => $pathRegex) {
+            // Remove existing named subpatterns
+            $pathRegex = preg_replace('/\?P<[^>]+>/', '', $pathRegex);
+
             $path = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$') - 2).')';
             $lastParam = strrpos($path, '[^/]++');
 

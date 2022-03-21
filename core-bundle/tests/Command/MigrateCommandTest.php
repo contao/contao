@@ -23,6 +23,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -30,6 +31,13 @@ use Symfony\Component\Filesystem\Path;
 class MigrateCommandTest extends TestCase
 {
     use ExpectDeprecationTrait;
+
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([Terminal::class]);
+
+        parent::tearDown();
+    }
 
     /**
      * @dataProvider getOutputFormats
@@ -46,7 +54,7 @@ class MigrateCommandTest extends TestCase
         if ('ndjson' === $format) {
             $this->assertEmpty(trim($display));
         } else {
-            $this->assertRegExp('/All migrations completed/', $display);
+            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
         }
     }
 
@@ -75,7 +83,7 @@ class MigrateCommandTest extends TestCase
             $expected = [];
 
             if ($backupsEnabled) {
-                $expected[] = ['type' => 'backup-result', 'createdAt' => '2021-11-01T14:12:54+00:00', 'size' => 0, 'path' => 'valid_backup_filename__20211101141254.sql'];
+                $expected[] = ['type' => 'backup-result', 'createdAt' => '2021-11-01T14:12:54+00:00', 'size' => 0, 'name' => 'valid_backup_filename__20211101141254.sql'];
             }
 
             $expected = array_merge(
@@ -138,9 +146,9 @@ class MigrateCommandTest extends TestCase
                 $this->jsonArrayFromNdjson($display)
             );
         } else {
-            $this->assertRegExp('/runonceFile.php/', $display);
-            $this->assertRegExp('/All migrations completed/', $display);
-            $this->assertFileNotExists($runOnceFile, 'File should be gone once executed');
+            $this->assertMatchesRegularExpression('/runonceFile.php/', $display);
+            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
+            $this->assertFileDoesNotExist($runOnceFile, 'File should be gone once executed');
         }
     }
 
@@ -200,13 +208,13 @@ class MigrateCommandTest extends TestCase
                 $this->jsonArrayFromNdjson($display)
             );
         } else {
-            $this->assertRegExp('/First call QUERY 1/', $display);
-            $this->assertRegExp('/First call QUERY 2/', $display);
-            $this->assertRegExp('/Second call QUERY 1/', $display);
-            $this->assertRegExp('/Second call QUERY 2/', $display);
-            $this->assertRegExp('/Executed 2 SQL queries/', $display);
-            $this->assertNotRegExp('/Executed 3 SQL queries/', $display);
-            $this->assertRegExp('/All migrations completed/', $display);
+            $this->assertMatchesRegularExpression('/First call QUERY 1/', $display);
+            $this->assertMatchesRegularExpression('/First call QUERY 2/', $display);
+            $this->assertMatchesRegularExpression('/Second call QUERY 1/', $display);
+            $this->assertMatchesRegularExpression('/Second call QUERY 2/', $display);
+            $this->assertMatchesRegularExpression('/Executed 2 SQL queries/', $display);
+            $this->assertDoesNotMatchRegularExpression('/Executed 3 SQL queries/', $display);
+            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
         }
     }
 
@@ -269,19 +277,19 @@ class MigrateCommandTest extends TestCase
                 $this->jsonArrayFromNdjson($display)
             );
         } else {
-            $this->assertRegExp('/Migration 1/', $display);
-            $this->assertRegExp('/Migration 2/', $display);
-            $this->assertNotRegExp('/Result 1/', $display);
-            $this->assertNotRegExp('/Result 2/', $display);
+            $this->assertMatchesRegularExpression('/Migration 1/', $display);
+            $this->assertMatchesRegularExpression('/Migration 2/', $display);
+            $this->assertDoesNotMatchRegularExpression('/Result 1/', $display);
+            $this->assertDoesNotMatchRegularExpression('/Result 2/', $display);
 
-            $this->assertRegExp('/runonceFile.php/', $display);
+            $this->assertMatchesRegularExpression('/runonceFile.php/', $display);
             $this->assertFileExists($runOnceFile, 'File should not be gone in dry-run mode');
 
-            $this->assertRegExp('/First call QUERY 1/', $display);
-            $this->assertRegExp('/First call QUERY 2/', $display);
-            $this->assertNotRegExp('/Executed 2 SQL queries/', $display);
+            $this->assertMatchesRegularExpression('/First call QUERY 1/', $display);
+            $this->assertMatchesRegularExpression('/First call QUERY 2/', $display);
+            $this->assertDoesNotMatchRegularExpression('/Executed 2 SQL queries/', $display);
 
-            $this->assertRegExp('/All migrations completed/', $display);
+            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
         }
     }
 
@@ -299,11 +307,11 @@ class MigrateCommandTest extends TestCase
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
-        $this->assertRegExp('/Migration 1/', $display);
-        $this->assertRegExp('/Migration 2/', $display);
-        $this->assertNotRegExp('/Result 1/', $display);
-        $this->assertNotRegExp('/Result 2/', $display);
-        $this->assertNotRegExp('/All migrations completed/', $display);
+        $this->assertMatchesRegularExpression('/Migration 1/', $display);
+        $this->assertMatchesRegularExpression('/Migration 2/', $display);
+        $this->assertDoesNotMatchRegularExpression('/Result 1/', $display);
+        $this->assertDoesNotMatchRegularExpression('/Result 2/', $display);
+        $this->assertDoesNotMatchRegularExpression('/All migrations completed/', $display);
     }
 
     /**
@@ -335,12 +343,12 @@ class MigrateCommandTest extends TestCase
                 $this->jsonArrayFromNdjson($display)
             );
         } else {
-            $this->assertRegExp('/Migration 1/', $display);
-            $this->assertRegExp('/Migration 2/', $display);
-            $this->assertRegExp('/Result 1/', $display);
-            $this->assertRegExp('/Migration failed/', $display);
-            $this->assertRegExp('/Result 2/', $display);
-            $this->assertRegExp('/All migrations completed/', $display);
+            $this->assertMatchesRegularExpression('/Migration 1/', $display);
+            $this->assertMatchesRegularExpression('/Migration 2/', $display);
+            $this->assertMatchesRegularExpression('/Result 1/', $display);
+            $this->assertMatchesRegularExpression('/Migration failed/', $display);
+            $this->assertMatchesRegularExpression('/Result 2/', $display);
+            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
         }
     }
 
