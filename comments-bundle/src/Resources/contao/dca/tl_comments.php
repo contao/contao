@@ -10,7 +10,6 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\Cache;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Comments;
 use Contao\CommentsModel;
