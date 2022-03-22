@@ -2373,7 +2373,7 @@ var Backend =
 
 		// Empty the last element instead of removing it (see #4858)
 		if (li.getPrevious() === null && li.getNext() === null) {
-			li.getElements('input').each(function(input) {
+			li.getElements('input, textarea').each(function(input) {
 				input.value = '';
 			});
 		} else {
