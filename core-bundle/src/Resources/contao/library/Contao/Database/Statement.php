@@ -13,7 +13,6 @@ namespace Contao\Database;
 use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
-use Doctrine\DBAL\Exception\DriverException;
 
 /**
  * Create and execute queries
