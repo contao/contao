@@ -16,6 +16,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\LayoutModel;
@@ -31,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_page',
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,
@@ -146,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('protected'),
-		'default'                     => '{title_legend},title,alias,author;{layout_legend},inColumn,keywords;{teaser_legend:hide},teaserCssID,showTeaser,teaser;{syndication_legend},printable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},title,alias,author;{layout_legend},inColumn;{teaser_legend:hide},teaserCssID,showTeaser,teaser;{syndication_legend},printable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -219,14 +220,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
 			'sql'                     => "varchar(32) NOT NULL default 'main'"
-		),
-		'keywords' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'textarea',
-			'search'                  => true,
-			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
 		),
 		'showTeaser' => array
 		(

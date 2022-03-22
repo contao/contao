@@ -22,7 +22,7 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * Usage:
  *
- *     ClassLoader::addFile('moo_mediabox', 'core/templates');
+ *     TemplateLoader::addFile('moo_mediabox', 'core/templates');
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -198,5 +198,3 @@ class TemplateLoader
 		self::$files = array();
 	}
 }
-
-class_alias(TemplateLoader::class, 'TemplateLoader');

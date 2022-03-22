@@ -74,5 +74,3 @@ class ContentImage extends ContentElement
 		}
 	}
 }
-
-class_alias(ContentImage::class, 'ContentImage');

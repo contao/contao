@@ -383,5 +383,3 @@ class Automator extends System
 		System::getContainer()->get('monolog.logger.contao.cron')->info('Generated the internal cache');
 	}
 }
-
-class_alias(Automator::class, 'Automator');

@@ -163,5 +163,3 @@ class InputUnit extends Widget
 		);
 	}
 }
-
-class_alias(InputUnit::class, 'InputUnit');

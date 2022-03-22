@@ -51,5 +51,3 @@ class FrontendCron extends Frontend
 		return false;
 	}
 }
-
-class_alias(FrontendCron::class, 'FrontendCron');

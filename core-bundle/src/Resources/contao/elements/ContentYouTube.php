@@ -149,5 +149,3 @@ class ContentYouTube extends ContentElement
 		$this->Template->caption = $this->playerCaption;
 	}
 }
-
-class_alias(ContentYouTube::class, 'ContentYouTube');

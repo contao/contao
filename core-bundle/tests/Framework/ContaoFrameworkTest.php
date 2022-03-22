@@ -374,8 +374,7 @@ class ContaoFrameworkTest extends TestCase
             $this->createMock(TokenChecker::class),
             $urlGenerator,
             $this->getTempDir(),
-            error_reporting(),
-            false
+            error_reporting()
         );
 
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -415,8 +414,7 @@ class ContaoFrameworkTest extends TestCase
             $this->createMock(TokenChecker::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
-            error_reporting(),
-            false
+            error_reporting()
         );
 
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -699,8 +697,7 @@ class ContaoFrameworkTest extends TestCase
             $tokenChecker ?? $this->createMock(TokenChecker::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
-            error_reporting(),
-            false
+            error_reporting()
         );
 
         $adapters = [

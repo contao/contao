@@ -103,9 +103,10 @@ class ConfigureFilesystemPassTest extends TestCase
         // Setup directories with symlink
         $filesystem = new Filesystem();
         $filesystem->mkdir(Path::join($tempDir, 'files'));
-        $filesystem->dumpFile(Path::join($tempDir, 'vendor/foo/dummy.txt'), 'dummy');
+        $filesystem->dumpFile($dummyFile = Path::join($tempDir, 'vendor/foo/dummy.txt'), 'dummy');
 
         $this->createSymlink($target, $link, Path::join($tempDir, 'files'));
+        $this->createSymlink($dummyFile, 'dummy.txt', Path::join($tempDir, 'files')); // should get ignored
 
         $container = new ContainerBuilder(
             new ParameterBag([
@@ -169,7 +170,10 @@ class ConfigureFilesystemPassTest extends TestCase
             $target = str_replace('/', '\\', $target);
             $link = str_replace('/', '\\', $link);
 
-            Process::fromShellCommandline('mklink /d "${:link}" "${:target}"', $cwd)->mustRun(null, compact('link', 'target'));
+            $isDirectory = !str_ends_with($target, '.txt');
+            $command = sprintf('mklink%s "${:link}" "${:target}"', $isDirectory ? ' /d' : '');
+
+            Process::fromShellCommandline($command, $cwd)->mustRun(null, compact('link', 'target'));
         } else {
             chdir($cwd);
 

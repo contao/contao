@@ -1612,24 +1612,10 @@ abstract class DataContainer extends Backend
 	 * @param string $table
 	 *
 	 * @return string
-	 *
-	 * @todo Change the return type to ?string in Contao 5.0
 	 */
-	public static function getDriverForTable(string $table): string
+	public static function getDriverForTable(string $table): ?string
 	{
-		if (!isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer']))
-		{
-			return '';
-		}
-
-		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
-
-		if (false === strpos($dataContainer, '\\'))
-		{
-			$dataContainer = 'DC_' . $dataContainer;
-		}
-
-		return $dataContainer;
+		return $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? null;
 	}
 
 	/**
@@ -1779,5 +1765,3 @@ abstract class DataContainer extends Backend
 		return $label;
 	}
 }
-
-class_alias(DataContainer::class, 'DataContainer');

@@ -54,7 +54,6 @@ class ImageTest extends TestCase
 
         System::setContainer($this->getContainerWithImageServices());
 
-        $GLOBALS['TL_CONFIG']['debugMode'] = false;
         $GLOBALS['TL_CONFIG']['gdMaxImgWidth'] = 3000;
         $GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
         $GLOBALS['TL_CONFIG']['validImageTypes'] = 'jpeg,jpg,svg,svgz';
@@ -994,7 +993,6 @@ class ImageTest extends TestCase
 
     /**
      * @group legacy
-     * @psalm-suppress NullArgument
      */
     public function testDoesNotFactorImagesInTheLegacyMethodIfTheArgumentIsInvalid(): void
     {

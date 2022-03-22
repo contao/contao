@@ -450,5 +450,3 @@ class FilesModel extends Model
 		return null;
 	}
 }
-
-class_alias(FilesModel::class, 'FilesModel');

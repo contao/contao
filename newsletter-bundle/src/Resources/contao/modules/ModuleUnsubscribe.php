@@ -294,5 +294,3 @@ class ModuleUnsubscribe extends Module
 		$this->reload();
 	}
 }
-
-class_alias(ModuleUnsubscribe::class, 'ModuleUnsubscribe');

@@ -171,5 +171,3 @@ class Cache
 		static::remove($strKey);
 	}
 }
-
-class_alias(Cache::class, 'Cache');

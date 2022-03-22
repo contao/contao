@@ -223,5 +223,3 @@ class BackendTemplate extends Template
 		}
 	}
 }
-
-class_alias(BackendTemplate::class, 'BackendTemplate');

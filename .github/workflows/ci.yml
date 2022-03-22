@@ -117,31 +117,6 @@ jobs:
             - name: Run PHPStan
               run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
 
-    psalm:
-        name: Psalm
-        runs-on: ubuntu-latest
-        if: github.event_name != 'push'
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Checkout
-              uses: actions/checkout@v1
-
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin psalm install --no-interaction --no-progress
-
-            - name: Run Psalm
-              run: tools/psalm/vendor/bin/psalm --no-suggestions --no-progress
-
     yamllint:
         name: YAMLlint
         runs-on: ubuntu-latest

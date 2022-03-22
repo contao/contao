@@ -78,7 +78,6 @@ class PageRegular extends Frontend
 	 */
 	protected function prepare($objPage)
 	{
-		$GLOBALS['TL_KEYWORDS'] = '';
 		$GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($objPage->language);
 
 		$locale = LocaleUtil::formatAsLocale($objPage->language);
@@ -665,5 +664,3 @@ class PageRegular extends Frontend
 		};
 	}
 }
-
-class_alias(PageRegular::class, 'PageRegular');

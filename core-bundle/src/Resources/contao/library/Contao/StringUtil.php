@@ -1118,5 +1118,3 @@ class StringUtil
 		return $strValue;
 	}
 }
-
-class_alias(StringUtil::class, 'StringUtil');

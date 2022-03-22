@@ -263,5 +263,3 @@ class ModuleBreadcrumb extends Module
 		}
 	}
 }
-
-class_alias(ModuleBreadcrumb::class, 'ModuleBreadcrumb');

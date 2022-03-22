@@ -89,11 +89,8 @@ class Config
 		'smtpPass'         => 'mailer_password',
 		'smtpPort'         => 'mailer_port',
 		'smtpEnc'          => 'mailer_encryption',
-		'addLanguageToUrl' => 'contao.prepend_locale',
-		'urlSuffix'        => 'contao.url_suffix',
 		'uploadPath'       => 'contao.upload_path',
 		'editableFiles'    => 'contao.editable_files',
-		'debugMode'        => 'kernel.debug',
 		'characterSet'     => 'kernel.charset',
 		'enableSearch'     => 'contao.search.default_indexer.enable',
 		'indexProtected'   => 'contao.search.index_protected',
@@ -354,7 +351,7 @@ class Config
 	 */
 	public static function isComplete()
 	{
-		return static::$blnHasLcf !== null && static::has('licenseAccepted');
+		return static::$blnHasLcf !== null;
 	}
 
 	/**
@@ -598,5 +595,3 @@ class Config
 		return "'" . str_replace('\\"', '"', preg_replace('/[\n\r\t ]+/', ' ', addslashes($varValue))) . "'";
 	}
 }
-
-class_alias(Config::class, 'Config');

@@ -173,5 +173,3 @@ class ModuleFaqPage extends Module
 		};
 	}
 }
-
-class_alias(ModuleFaqPage::class, 'ModuleFaqPage');

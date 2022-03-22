@@ -136,10 +136,6 @@ services:
         class: Contao\CoreBundle\DataCollector\ContaoDataCollector
         arguments:
             - '@contao.security.token_checker'
-            - '%contao.legacy_routing%'
-            - '%kernel.project_dir%'
-            - '%contao.prepend_locale%'
-            - '%contao.url_suffix%'
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
@@ -239,7 +235,6 @@ services:
             - '@router'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
-            - '%contao.legacy_routing%'
         tags:
             - { name: kernel.reset, method: reset }
 
@@ -536,12 +531,6 @@ services:
         calls:
             - [matchAttribute, [_scope, backend]]
 
-    contao.routing.candidates:
-        class: Contao\CoreBundle\Routing\Candidates\PageCandidates
-        arguments:
-            - '@database_connection'
-            - '@contao.routing.page_registry'
-
     contao.routing.frontend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
         calls:
@@ -611,6 +600,12 @@ services:
         tags:
             - { name: router, priority: -200 }
 
+    contao.routing.page_candidates:
+        class: Contao\CoreBundle\Routing\Candidates\PageCandidates
+        arguments:
+            - '@database_connection'
+            - '@contao.routing.page_registry'
+
     contao.routing.page_registry:
         class: Contao\CoreBundle\Routing\Page\PageRegistry
         public: true
@@ -664,10 +659,8 @@ services:
         class: Contao\CoreBundle\Routing\RouteProvider
         arguments:
             - '@contao.framework'
-            - '@contao.routing.candidates'
+            - '@contao.routing.page_candidates'
             - '@contao.routing.page_registry'
-            - '%contao.legacy_routing%'
-            - '%contao.prepend_locale%'
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher
