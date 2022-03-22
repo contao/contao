@@ -1,0 +1,5 @@
+services:
+    contao.debug.security.access.decision_manager:
+        class: Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager
+        arguments:
+            - '@.inner'
