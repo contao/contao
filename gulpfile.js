@@ -13,7 +13,11 @@ gulp.task('minify-public', function (cb) {
         [
             gulp.src('core-bundle/src/Resources/public/*.js'),
             ignore.exclude('*.min.js'),
-            uglify(),
+            uglify({
+                output: {
+                    comments: false
+                }
+            }),
             rename({
                 suffix: '.min'
             }),
@@ -28,7 +32,11 @@ gulp.task('minify-theme-js', function (cb) {
         [
             gulp.src('core-bundle/src/Resources/contao/themes/flexible/*.js'),
             ignore.exclude('*.min.js'),
-            uglify(),
+            uglify({
+                output: {
+                    comments: false
+                }
+            }),
             rename({
                 suffix: '.min'
             }),
