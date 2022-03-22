@@ -780,7 +780,7 @@ class StringUtil
 				continue;
 			}
 
-			$file = FilesModel::findByPath($paths[$i+3]);
+			$file = FilesModel::findByPath(rawurldecode($paths[$i+3]));
 
 			if ($file !== null)
 			{
