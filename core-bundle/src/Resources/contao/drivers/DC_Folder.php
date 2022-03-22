@@ -800,9 +800,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
-				// No need for permission check here, it's done in cut()
-
-				$this->cut($id); // do not urldecode() here (see #6840)
+				try
+				{
+					$this->cut($id); // do not urldecode() here (see #6840)
+				}
+				catch (AccessDeniedException)
+				{
+					// noop
+				}
 			}
 		}
 
@@ -974,9 +979,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
-				// No need for permission check here, it's done in copy()
-
-				$this->copy($id); // do not urldecode() here (see #6840)
+				try
+				{
+					$this->copy($id); // do not urldecode() here (see #6840)
+				}
+				catch (AccessDeniedException)
+				{
+					// noop
+				}
 			}
 		}
 
