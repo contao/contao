@@ -133,7 +133,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			if (!isset($_GET['rt']) || !RequestToken::validate(Input::get('rt')))
 			{
-				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));
+				$request = System::getContainer()->get('request_stack')->getMainRequest();
+				$objSession->set('INVALID_TOKEN_URL', $request->getRequestUri());
 				$this->redirect('contao/confirm.php');
 			}
 		}
@@ -1878,9 +1879,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$blnIsError = ($_POST && empty($_POST['all_fields']));
 
+			$requestUri = System::getContainer()->get('request_stack')->getMainRequest()->getRequestUri();
+
 			// Return the select menu
 			$return .= '
-<form action="' . StringUtil::ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
+<form action="' . StringUtil::ampersand($requestUri) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($blnIsError ? '

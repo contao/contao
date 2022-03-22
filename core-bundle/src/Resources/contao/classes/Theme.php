@@ -114,10 +114,12 @@ class Theme extends Backend
 			}
 		}
 
+		$requestUri = System::getContainer()->get('request_stack')->getMainRequest()->getRequestUri();
+
 		// Return the form
 		return Message::generate() . '
 <div id="tl_buttons">
-<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', $requestUri)) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
@@ -154,9 +156,11 @@ class Theme extends Backend
 	 */
 	protected function compareThemeFiles($arrFiles, $arrDbFields)
 	{
+		$requestUri = System::getContainer()->get('request_stack')->getMainRequest()->getRequestUri();
+
 		$return = Message::generate() . '
 <div id="tl_buttons">
-<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', $requestUri)) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
@@ -661,7 +665,9 @@ class Theme extends Backend
 		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSymlinks();
 
-		$this->redirect(str_replace('&key=importTheme', '', Environment::get('request')));
+		$requestUri = System::getContainer()->get('request_stack')->getMainRequest()->getRequestUri();
+
+		$this->redirect(str_replace('&key=importTheme', '', $requestUri));
 	}
 
 	/**

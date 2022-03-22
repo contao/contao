@@ -407,8 +407,10 @@ abstract class System
 				return $path . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 			};
 
+			$request = self::getContainer()->get('request_stack')->getMainRequest();
+
 			// Determine current or last
-			$strUrl = ($cleanUrl($session['current'] ?? null) != $cleanUrl(Environment::get('request'))) ? ($session['current'] ?? null) : ($session['last'] ?? null);
+			$strUrl = ($cleanUrl($session['current'] ?? null) != $cleanUrl($request->getRequestUri())) ? ($session['current'] ?? null) : ($session['last'] ?? null);
 
 			// Remove the "toggle" and "toggle all" parameters
 			$return = $cleanUrl($strUrl, array('tg', 'ptg'));
