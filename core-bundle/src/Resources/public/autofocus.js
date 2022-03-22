@@ -7,21 +7,20 @@
  */
 
 window.addEventListener('DOMContentLoaded', function () {
-    var edit = document.querySelector('#main .tl_formbody_edit');
+    const edit = document.querySelector('#main .tl_formbody_edit');
     if (!edit) return;
 
     // Copy from MooTools
     function isHidden (el) {
-        var w = el.offsetWidth, h = el.offsetHeight,
+        const w = el.offsetWidth, h = el.offsetHeight,
             force = /^tr$/i.test(el.tagName);
         return (w===0 && h===0 && !force) ? true : (w!==0 && h!==0 && !force) ? false : el.style.display === 'none';
     }
 
-    var inputs = edit.querySelectorAll('input, textarea'),
-        i;
+    const inputs = edit.querySelectorAll('input, textarea');
 
-    for (i = 0; i < inputs.length; i++) {
-        var input = inputs[i];
+    for (let i = 0; i < inputs.length; i++) {
+        const input = inputs[i];
 
         if (
             !input.getAttribute('disabled')
