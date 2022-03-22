@@ -19,10 +19,7 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class GeneratedEntityCacheWarmer implements CacheWarmerInterface
 {
-    public function __construct(
-        private EntityExtensionCollector $entityExtensionCollector,
-        private EntityFactory $factory,
-        private string $entityDirectory)
+    public function __construct(private EntityExtensionCollector $entityExtensionCollector, private EntityFactory $factory, private string $entityDirectory)
     {
     }
 

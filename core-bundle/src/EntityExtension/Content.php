@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\EntityExtension;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\EntityExtension;
@@ -22,7 +30,7 @@ trait Content
     #[Column(type: 'string', length: 64, nullable: false, options: ['default' => 'text'])]
     private ?string $type;
 
-    #[Column(type: 'string', length: 255, nullable: false, options: ['default' => "a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}"])]
+    #[Column(type: 'string', length: 255, nullable: false, options: ['default' => 'a:2:{s:5:"value";s:0:"";s:4:"unit";s:2:"h2";}'])]
     private ?string $headline;
 
     public function getPid(): ?int
@@ -69,6 +77,7 @@ trait Content
     public function setType(string $type): self
     {
         $this->type = $type;
+
         return $this;
     }
 

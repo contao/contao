@@ -83,7 +83,7 @@ class EntityFactory
 
         // TODO: Properly create table name
         $class->addAttribute(Table::class, [
-            'name' => sprintf('tl_%s', strtolower($class->getName()))
+            'name' => sprintf('tl_%s', strtolower($class->getName())),
         ]);
 
         // Create id property
@@ -97,8 +97,8 @@ class EntityFactory
         $id->addAttribute(Column::class, [
             'type' => 'integer',
             'options' => [
-                'unsigned' => true
-            ]
+                'unsigned' => true,
+            ],
         ]);
         $id->addAttribute(GeneratedValue::class);
 

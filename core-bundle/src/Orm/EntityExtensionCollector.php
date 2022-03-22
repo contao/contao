@@ -2,6 +2,14 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Orm;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\EntityExtension;
@@ -17,7 +25,7 @@ class EntityExtensionCollector
         $this->paths = $paths;
     }
 
-    public function collect()
+    public function collect(): array
     {
         if (null !== $this->cached) {
             return $this->cached;
