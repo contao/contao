@@ -243,5 +243,3 @@ class ImageSize extends Widget
 		);
 	}
 }
-
-class_alias(ImageSize::class, 'ImageSize');

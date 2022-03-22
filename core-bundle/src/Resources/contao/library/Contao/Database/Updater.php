@@ -14,6 +14,8 @@ use Contao\ArrayUtil;
 use Contao\Controller;
 use Contao\Database;
 use Contao\Dbafs;
+use Contao\DC_File;
+use Contao\DC_Folder;
 use Contao\File;
 use Contao\Files;
 use Contao\FilesModel;
@@ -604,8 +606,6 @@ class Updater extends Controller
 			$strPath = System::getContainer()->getParameter('contao.upload_path');
 		}
 
-		$arrMeta = array();
-		$arrMapper = array();
 		$arrFolders = array();
 		$arrFiles = array();
 
@@ -643,42 +643,11 @@ class Updater extends Controller
 		// Files
 		foreach ($arrFiles as $strFile)
 		{
-			$matches = array();
-
-			// Handle meta.txt files
-			if (preg_match('/^meta(_([a-z]{2}))?\.txt$/', basename($strFile), $matches))
-			{
-				$key = $matches[2] ?: 'en';
-				$arrData = file($projectDir . '/' . $strFile, FILE_IGNORE_NEW_LINES);
-
-				foreach ($arrData as $line)
-				{
-					list($name, $info) = explode('=', $line, 2);
-					list($title, $link, $caption) = explode('|', $info);
-					$arrMeta[trim($name)][$key] = array('title'=>trim($title), 'link'=>trim($link), 'caption'=>trim($caption));
-				}
-			}
-
 			$objFile = new File($strFile);
 			$strUuid = $this->Database->getUuid();
 
 			$this->Database->prepare("INSERT INTO tl_files (pid, tstamp, uuid, name, type, path, extension, hash) VALUES (?, ?, ?, ?, 'file', ?, ?, ?)")
 						   ->execute($pid, time(), $strUuid, basename($strFile), $strFile, $objFile->extension, $objFile->hash);
-
-			$arrMapper[basename($strFile)] = $strUuid;
-		}
-
-		// Insert the metadata AFTER the file entries have been created
-		if (!empty($arrMeta))
-		{
-			foreach ($arrMeta as $file=>$meta)
-			{
-				if (isset($arrMapper[$file]))
-				{
-					$this->Database->prepare("UPDATE tl_files SET meta=? WHERE uuid=?")
-								   ->execute(serialize($meta), $arrMapper[$file]);
-				}
-			}
 		}
 	}
 
@@ -720,12 +689,12 @@ class Updater extends Controller
 			$arrConfig = &$GLOBALS['TL_DCA'][$strTable]['config'];
 
 			// Skip non-database DCAs
-			if ($arrConfig['dataContainer'] == 'File')
+			if (is_a($arrConfig['dataContainer'], DC_File::class, true))
 			{
 				continue;
 			}
 
-			if ($arrConfig['dataContainer'] == 'Folder' && !$arrConfig['databaseAssisted'])
+			if (is_a($arrConfig['dataContainer'], DC_Folder::class, true) && !$arrConfig['databaseAssisted'])
 			{
 				continue;
 			}
@@ -981,5 +950,3 @@ class Updater extends Controller
 		$this->Database->prepare("INSERT INTO tl_content %s")->set($set)->execute();
 	}
 }
-
-class_alias(Updater::class, 'Database\Updater');

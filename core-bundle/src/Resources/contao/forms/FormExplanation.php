@@ -59,5 +59,3 @@ class FormExplanation extends Widget
 		return StringUtil::encodeEmail($this->text);
 	}
 }
-
-class_alias(FormExplanation::class, 'FormExplanation');

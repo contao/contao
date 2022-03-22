@@ -131,5 +131,3 @@ class ContentVimeo extends ContentElement
 		$this->Template->caption = $this->playerCaption;
 	}
 }
-
-class_alias(ContentVimeo::class, 'ContentVimeo');

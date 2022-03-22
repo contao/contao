@@ -174,5 +174,3 @@ class LayoutModel extends Model
 	 */
 	protected static $strTable = 'tl_layout';
 }
-
-class_alias(LayoutModel::class, 'LayoutModel');

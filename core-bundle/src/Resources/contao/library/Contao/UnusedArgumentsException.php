@@ -13,5 +13,3 @@ namespace Contao;
 class UnusedArgumentsException extends \Exception
 {
 }
-
-class_alias(UnusedArgumentsException::class, 'UnusedArgumentsException');

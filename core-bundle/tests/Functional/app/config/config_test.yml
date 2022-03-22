@@ -43,9 +43,7 @@ doctrine:
         auto_generate_proxy_classes: true
 
 contao:
-    legacy_routing: false
     localconfig:
-        licenseAccepted: true
         disableCron: true
 
 scheb_two_factor:

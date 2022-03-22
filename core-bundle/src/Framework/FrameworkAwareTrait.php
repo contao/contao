@@ -20,20 +20,4 @@ trait FrameworkAwareTrait
     {
         $this->framework = $framework;
     }
-
-    /**
-     * @throws \LogicException
-     *
-     * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0
-     */
-    public function getFramework(): ContaoFramework
-    {
-        trigger_deprecation('contao/core-bundle', '4.3', 'Using "Contao\CoreBundle\Framework\FrameworkAwareTrait::getFramework()" has been deprecated and will no longer work in Contao 5.0.');
-
-        if (null === $this->framework) {
-            throw new \LogicException('The framework service has not been set.');
-        }
-
-        return $this->framework;
-    }
 }

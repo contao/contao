@@ -1306,5 +1306,3 @@ abstract class Model
 		return System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
 	}
 }
-
-class_alias(Model::class, 'Model');

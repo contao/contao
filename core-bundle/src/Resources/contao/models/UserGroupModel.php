@@ -110,5 +110,3 @@ class UserGroupModel extends Model
 	 */
 	protected static $strTable = 'tl_user_group';
 }
-
-class_alias(UserGroupModel::class, 'UserGroupModel');

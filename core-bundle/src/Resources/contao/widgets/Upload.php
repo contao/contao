@@ -77,5 +77,3 @@ class Upload extends Widget implements UploadableWidgetInterface
 		return ltrim($this->objUploader->generateMarkup());
 	}
 }
-
-class_alias(Upload::class, 'Upload');

@@ -200,23 +200,6 @@ class Automator extends System
 	}
 
 	/**
-	 * Purge the search cache
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
-	 */
-	public function purgeSearchCache()
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Automator::purgeSearchCache()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$strCacheDir = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
-
-		$objFolder = new Folder($strCacheDir . '/contao/search');
-		$objFolder->purge();
-
-		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the search cache');
-	}
-
-	/**
 	 * Purge the internal cache
 	 */
 	public function purgeInternalCache()
@@ -400,5 +383,3 @@ class Automator extends System
 		System::getContainer()->get('monolog.logger.contao.cron')->info('Generated the internal cache');
 	}
 }
-
-class_alias(Automator::class, 'Automator');

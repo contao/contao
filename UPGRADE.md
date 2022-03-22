@@ -7,6 +7,10 @@
 The function `log_message()` has been removed. Use the Symfony logger services instead.
 Consequently, also `Automator::rotateLogs()` has been removed.
 
+### pageSelector and fileSelector widgets
+
+The back end widgets `pageSelector` and `fileSelector` have been removed. Use the `picker` widget instead.
+
 ## Version 4.* to 4.11
 
 Loading MooTools and jQuery from CDN is no longer supported, because it does
@@ -187,21 +191,6 @@ to pass the correct form ID (e.g. `tl_login_12` instead of `tl_login`).
 If a front end form is set up to store the submitted data in the database, date
 and time fields are now automatically converted to Unix timestamps.
 
-### Meta keywords
-
-The meta keywords tag has been removed from the `fe_page.html5` template, as
-it does not serve a purpose anymore. If you still want to use it, adjust the
-template as follows:
-
-```php
-<?php $this->extend('fe_page'); ?>
-
-<?php $this->block('meta'); ?>
-  <?php $this->parent(); ?>
-  <meta name="keywords" content="<?= $this->keywords ?>">
-<?php $this->endblock(); ?>
-```
-
 ### Template name changes
 
 The following templates have been renamed to match the content element or
@@ -286,11 +275,9 @@ previous PHP entry points have been removed and a route has been set up for
 each one instead.
 
  - `contao/confirm.php`  -> `contao_backend_confirm`
- - `contao/file.php`     -> `contao_backend_file`
  - `contao/help.php`     -> `contao_backend_help`
  - `contao/index.php`    -> `contao_backend_login`
  - `contao/main.php`     -> `contao_backend`
- - `contao/page.php`     -> `contao_backend_page`
  - `contao/password.php` -> `contao_backend_password`
  - `contao/popup.php`    -> `contao_backend_popup`
  - `contao/preview.php`  -> `contao_backend_preview`

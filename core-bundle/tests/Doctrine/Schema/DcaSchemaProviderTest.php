@@ -12,50 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
-use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
-    use ExpectDeprecationTrait;
-
-    /**
-     * @group legacy
-     */
-    public function testCreateSchema(): void
-    {
-        $schema = $this->createMock(Schema::class);
-
-        $schemaProvider = $this->createMock(SchemaProvider::class);
-        $schemaProvider
-            ->expects($this->once())
-            ->method('createSchema')
-            ->willReturn($schema)
-        ;
-
-        $dcaSchemaProvider = new DcaSchemaProvider(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(Registry::class),
-            $schemaProvider
-        );
-
-        $this->expectDeprecation('Since contao/core-bundle 4.11: Using the DcaSchemaProvider class to create the schema has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider\SchemaProvider class instead.');
-
-        $this->assertSame($schema, $dcaSchemaProvider->createSchema());
-    }
-
     /**
      * @dataProvider provideDefinitions
      */

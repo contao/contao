@@ -146,5 +146,3 @@ class PageError401 extends Frontend
 		return $obj401;
 	}
 }
-
-class_alias(PageError401::class, 'PageError401');

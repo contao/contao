@@ -217,5 +217,3 @@ class ModuleEventMenu extends ModuleCalendar
 		$this->Template->activeYear = Input::get('year');
 	}
 }
-
-class_alias(ModuleEventMenu::class, 'ModuleEventMenu');

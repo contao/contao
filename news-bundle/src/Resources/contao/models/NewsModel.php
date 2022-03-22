@@ -426,5 +426,3 @@ class NewsModel extends Model
 		return static::countBy($arrColumns, array($intFrom, $intTo), $arrOptions);
 	}
 }
-
-class_alias(NewsModel::class, 'NewsModel');

@@ -486,5 +486,3 @@ class ModuleListing extends Module
 		return $value;
 	}
 }
-
-class_alias(ModuleListing::class, 'ModuleListing');

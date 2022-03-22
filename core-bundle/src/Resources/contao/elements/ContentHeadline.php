@@ -30,5 +30,3 @@ class ContentHeadline extends ContentElement
 	{
 	}
 }
-
-class_alias(ContentHeadline::class, 'ContentHeadline');

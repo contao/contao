@@ -26,22 +26,6 @@
                 </div>
             </div>
         {% endif %}
-        {% if collector.summary.legacy_routing %}
-            <div class="sf-toolbar-info-group">
-                <div class="sf-toolbar-info-piece">
-                    <b>Legacy Routing</b>
-                    <span class="sf-toolbar-status sf-toolbar-status-yellow">enabled</span>
-                </div>
-                <div class="sf-toolbar-info-piece">
-                    <b>Prepend locale</b>
-                    <span>{% if collector.legacyrouting.prepend_locale %}yes{% else %}no{% endif %}</span>
-                </div>
-                <div class="sf-toolbar-info-piece">
-                    <b>URL suffix</b>
-                    <span>{{ collector.legacyrouting.url_suffix }}</span>
-                </div>
-            </div>
-        {% endif %}
         <div class="sf-toolbar-info-group">
             <div class="sf-toolbar-info-piece">
                 <b>Resources</b>
@@ -53,7 +37,7 @@
             </div>
         </div>
     {% endset %}
-    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true, name: 'contao', additional_classes: (((collector.summary.preview or collector.summary.legacy_routing) ? 'sf-toolbar-status-yellow ' : '') ~ 'sf-toolbar-block-right') }) }}
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true, name: 'contao', additional_classes: (((collector.summary.preview) ? 'sf-toolbar-status-yellow ' : '') ~ 'sf-toolbar-block-right') }) }}
 {% endblock %}
 
 {% block menu %}
@@ -82,54 +66,7 @@
                 <span class="label">Page layout</span>
             </div>
         {% endif %}
-
-        <div class="metric">
-            {% if collector.summary.legacy_routing %}
-                <span class="value status-warning">enabled</span>
-            {% else %}
-                <span class="value">disabled</span>
-            {% endif %}
-            <span class="label">Legacy Routing</span>
-        </div>
     </div>
-
-    {% if collector.summary.legacy_routing or collector.legacyrouting.hooks %}
-        <h2>Legacy Routing</h2>
-        {% if collector.summary.legacy_routing %}
-            <div class="metrics">
-                <div class="metric">
-                <span class="value">{% if collector.legacyrouting.prepend_locale %}yes{% else %}no{% endif %}</span>
-                    <span class="label">Prepend locale</span>
-                </div>
-                <div class="metric">
-                    <span class="value">{{ collector.legacyrouting.url_suffix }}</span>
-                    <span class="label">URL Suffix</span>
-                </div>
-            </div>
-        {% endif %}
-        {% if collector.legacyrouting.hooks %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Hook</th>
-                        <th>Class</th>
-                        <th>Method</th>
-                        <th>Composer Package</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for hook in collector.legacyrouting.hooks %}
-                        <tr>
-                            <td><code>{{ hook.name }}</code></td>
-                            <td><code>{{ hook.class }}</code></td>
-                            <td><code>{{ hook.method }}</code></td>
-                            <td><code>{{ hook.package }}</code></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% endif %}
-    {% endif %}
 
     <h2>Classes set</h2>
     <table>

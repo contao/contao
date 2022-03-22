@@ -445,5 +445,3 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return new \ArrayIterator($this->arrModels);
 	}
 }
-
-class_alias(Collection::class, 'Model\Collection');

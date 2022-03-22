@@ -292,5 +292,3 @@ class ModuleModel extends Model
 	 */
 	protected static $strTable = 'tl_module';
 }
-
-class_alias(ModuleModel::class, 'ModuleModel');

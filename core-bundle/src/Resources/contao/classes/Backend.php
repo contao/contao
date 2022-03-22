@@ -541,7 +541,7 @@ abstract class Backend extends Controller
 					$this->loadDataContainer($ptable);
 				}
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)
@@ -1362,14 +1362,6 @@ abstract class Backend extends Controller
 	 */
 	public function createFileList($strFilter='', $filemount=false)
 	{
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($strFilter === true)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" to "Contao\Backend::createFileList()" has been deprecated and will no longer work in Contao 5.0.');
-
-			$strFilter = 'gif,jpg,jpeg,png';
-		}
-
 		$this->import(BackendUser::class, 'User');
 
 		if ($this->User->isAdmin)
@@ -1412,14 +1404,6 @@ abstract class Backend extends Controller
 	 */
 	protected function doCreateFileList($strFolder=null, $level=-1, $strFilter='')
 	{
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($strFilter === true)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" to "Contao\Backend::doCreateFileList()" has been deprecated and will no longer work in Contao 5.0.');
-
-			$strFilter = 'gif,jpg,jpeg,png';
-		}
-
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$arrPages = Folder::scan($projectDir . '/' . $strFolder);
 
@@ -1474,5 +1458,3 @@ abstract class Backend extends Controller
 		return $strFiles . $strFolders;
 	}
 }
-
-class_alias(Backend::class, 'Backend');

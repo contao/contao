@@ -436,5 +436,3 @@ class ModuleEventlist extends Events
 		}
 	}
 }
-
-class_alias(ModuleEventlist::class, 'ModuleEventlist');

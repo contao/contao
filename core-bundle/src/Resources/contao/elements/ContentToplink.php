@@ -38,5 +38,3 @@ class ContentToplink extends ContentElement
 		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
 	}
 }
-
-class_alias(ContentToplink::class, 'ContentToplink');

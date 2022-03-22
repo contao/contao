@@ -62,7 +62,7 @@ class PickerBuilder implements PickerBuilderInterface
         return new Picker($this->menuFactory, $providers, $config);
     }
 
-    public function createFromData($data): ?Picker
+    public function createFromData(string $data): ?Picker
     {
         try {
             $config = PickerConfig::urlDecode($data);
@@ -73,7 +73,7 @@ class PickerBuilder implements PickerBuilderInterface
         return $this->create($config);
     }
 
-    public function supportsContext($context, array $allowed = null): bool
+    public function supportsContext(string $context, array $allowed = null): bool
     {
         $providers = $this->providers;
 
@@ -90,7 +90,7 @@ class PickerBuilder implements PickerBuilderInterface
         return false;
     }
 
-    public function getUrl($context, array $extras = [], $value = ''): string
+    public function getUrl(string $context, array $extras = [], string $value = ''): string
     {
         $providers = isset($extras['providers']) && \is_array($extras['providers']) ? $extras['providers'] : null;
 

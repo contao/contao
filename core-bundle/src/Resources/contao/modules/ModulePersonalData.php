@@ -395,5 +395,3 @@ class ModulePersonalData extends Module
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
-
-class_alias(ModulePersonalData::class, 'ModulePersonalData');
