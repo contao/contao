@@ -105,7 +105,6 @@ class ModulePassword extends Module
 			);
 		}
 
-		$row = 0;
 		$strFields = '';
 		$doNotSubmit = false;
 		$strFormId = 'tl_lost_password_' . $this->id;
@@ -125,10 +124,7 @@ class ModulePassword extends Module
 
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
-
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $row;
-			++$row;
 
 			// Validate the widget
 			if (Input::post('FORM_SUBMIT') == $strFormId)
@@ -173,7 +169,6 @@ class ModulePassword extends Module
 		$this->Template->username = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['username']);
 		$this->Template->email = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['emailAddress']);
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['requestPassword']);
-		$this->Template->rowLast = 'row_' . $row;
 	}
 
 	/**
@@ -236,11 +231,6 @@ class ModulePassword extends Module
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, 'password'));
-
-		// Set row classes
-		$objWidget->rowClass = 'row_0';
-		$objWidget->rowClassConfirm = 'row_1';
-		$this->Template->rowLast = 'row_2';
 
 		$objSession = System::getContainer()->get('session');
 

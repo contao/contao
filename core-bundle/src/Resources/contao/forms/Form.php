@@ -144,9 +144,6 @@ class Form extends Hybrid
 		// Process the fields
 		if (!empty($arrFields) && \is_array($arrFields))
 		{
-			$row = 0;
-			$max_row = \count($arrFields);
-
 			foreach ($arrFields as $objField)
 			{
 				/** @var FormFieldModel $objField */
@@ -162,16 +159,6 @@ class Form extends Hybrid
 
 				$arrData['decodeEntities'] = true;
 				$arrData['allowHtml'] = $this->allowTags;
-				$arrData['rowClass'] = 'row_' . $row;
-
-				// Increase the row count if it's a password field
-				if ($objField->type == 'password')
-				{
-					++$row;
-					++$max_row;
-
-					$arrData['rowClassConfirm'] = 'row_' . $row;
-				}
 
 				// Submit buttons do not use the name attribute
 				if ($objField->type == 'submit')
@@ -236,7 +223,6 @@ class Form extends Hybrid
 				if ($objWidget instanceof FormHidden)
 				{
 					$this->Template->hidden .= $objWidget->parse();
-					--$max_row;
 					continue;
 				}
 
@@ -246,7 +232,6 @@ class Form extends Hybrid
 				}
 
 				$this->Template->fields .= $objWidget->parse();
-				++$row;
 			}
 		}
 

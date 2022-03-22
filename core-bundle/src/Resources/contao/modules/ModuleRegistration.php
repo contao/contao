@@ -157,7 +157,6 @@ class ModuleRegistration extends Module
 		$arrUser = array();
 		$arrFields = array();
 		$hasUpload = false;
-		$i = 0;
 
 		// Build the form
 		foreach ($this->editable as $field)
@@ -197,13 +196,6 @@ class ModuleRegistration extends Module
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $i;
-
-			// Increase the row count if it's a password field
-			if ($objWidget instanceof FormPassword)
-			{
-				$objWidget->rowClassConfirm = 'row_' . ++$i;
-			}
 
 			// Validate input
 			if (Input::post('FORM_SUBMIT') == $strFormId)
@@ -303,21 +295,17 @@ class ModuleRegistration extends Module
 			}
 
 			$arrFields[$arrData['eval']['feGroup']][$field] .= $temp;
-
-			++$i;
 		}
 
 		// Captcha
 		if (!$this->disableCaptcha)
 		{
-			$objCaptcha->rowClass = 'row_' . $i;
 			$strCaptcha = $objCaptcha->parse();
 
 			$this->Template->fields .= $strCaptcha;
 			$arrFields['captcha']['captcha'] = ($arrFields['captcha']['captcha'] ?? '') . $strCaptcha;
 		}
 
-		$this->Template->rowLast = 'row_' . ++$i;
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->hasError = $doNotSubmit;
 
