@@ -2,10 +2,14 @@
 
 ## Version 4.* to 5.0
 
+### Removed log_message()
+
+The function `log_message()` has been removed. Use the Symfony logger services instead.
+Consequently, also `Automator::rotateLogs()` has been removed.
+
 ### pageSelector and fileSelector widgets
 
 The back end widgets `pageSelector` and `fileSelector` have been removed. Use the `picker` widget instead.
-
 
 ## Version 4.* to 4.11
 
