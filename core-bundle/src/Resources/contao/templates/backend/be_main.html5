@@ -17,9 +17,9 @@
       $objCombiner = new Contao\Combiner();
       $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
       $objCombiner->add('assets/colorpicker/css/mooRainbow.min.css');
-      $objCombiner->add('assets/chosen/css/chosen.min.css');
       $objCombiner->add('assets/simplemodal/css/simplemodal.min.css');
       $objCombiner->add('assets/datepicker/css/datepicker.min.css');
+      $objCombiner->add('assets/choices/css/choices.min.css');
       $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
       $objCombiner->add('system/themes/'.$this->theme.'/main.min.css');
       echo $objCombiner->getCombinedFile();
@@ -31,11 +31,12 @@
       $objCombiner = new Contao\Combiner();
       $objCombiner->add('assets/mootools/js/mootools.min.js');
       $objCombiner->add('assets/colorpicker/js/mooRainbow.min.js');
-      $objCombiner->add('assets/chosen/js/chosen.min.js');
       $objCombiner->add('assets/simplemodal/js/simplemodal.min.js');
       $objCombiner->add('assets/datepicker/js/datepicker.min.js');
+      $objCombiner->add('assets/choices/js/choices.min.js');
       $objCombiner->add('bundles/contaocore/mootao.min.js');
       $objCombiner->add('bundles/contaocore/core.min.js');
+      $objCombiner->add('bundles/contaocore/choices.min.js');
       $objCombiner->add('system/themes/'.$this->theme.'/hover.min.js');
       echo $objCombiner->getCombinedFile();
     ?>"></script>

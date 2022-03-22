@@ -1645,7 +1645,6 @@ var Backend =
 								}
 								ntr.inject(tr, 'after');
 								ntr.getElement('.chzn-container').destroy();
-								new Chosen(ntr.getElement('select.tl_select'));
 								addEventsTo(ntr);
 								makeSortable(tbody);
 								Backend.addInteractiveHelp();
@@ -2568,11 +2567,6 @@ window.addEvent('domready', function() {
 	Backend.enableToggleSelect();
 	Backend.autoFocusFirstInputField();
 
-	// Chosen
-	if (Elements.chosen != undefined) {
-		$$('select.tl_chosen').chosen();
-	}
-
 	// Remove line wraps from textareas
 	$$('textarea.monospace').each(function(el) {
 		Backend.toggleWrap(el);
@@ -2594,11 +2588,4 @@ window.addEvent('ajax_change', function() {
 	Backend.addInteractiveHelp();
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
-
-	// Chosen
-	if (Elements.chosen != undefined) {
-		$$('select.tl_chosen').filter(function(el) {
-			return el.getStyle('display') != 'none';
-		}).chosen();
-	}
 });

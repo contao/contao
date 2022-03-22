@@ -37,6 +37,7 @@
         "bacon/bacon-qr-code": "^2.0",
         "contao-components/ace": "^1.2",
         "contao-components/chosen": "^1.2",
+        "contao-components/choices": "dev-main",
         "contao-components/colorbox": "^1.6",
         "contao-components/colorpicker": "^1.5",
         "contao-components/contao": "^9.1",
