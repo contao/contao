@@ -1591,8 +1591,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function undo()
 	{
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_MOVE, new DataContainerSubject($this->strTable, $this->intId));
-
 		$objRecords = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
 									 ->limit(1)
 									 ->execute($this->intId);
