@@ -199,12 +199,6 @@ Using `$this->language` in TinyMCE configuration files has been deprecated in
 Contao 4.0 and will no longer work in Contao 5.0. Use the static method
 `Backend::getTinyMceLanguage()` instead.
 
-## $GLOBALS['TL_LANGUAGE'] and $_SESSION['TL_LANGUAGE']
-
-Using the globals `$GLOBALS['TL_LANGUAGE']` and `$_SESSION['TL_LANGUAGE']` has
-been deprecated in Contao 4.0 and will no longer work in Contao 5.0. Use the
-locale from the request object instead:
-
 ```php
 $locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
 ```

@@ -17,7 +17,6 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Environment;
 use Contao\Input;
@@ -256,7 +255,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         // Preload the configuration (see #5872)
         $config->preload();
 
-        $this->initializeLegacySessionAccess();
         $this->setDefaultLanguage();
 
         // Fully load the configuration
@@ -294,23 +292,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
             if (!class_exists($class, false)) {
                 require_once __DIR__.'/../Resources/contao/library/Contao/'.$class.'.php';
             }
-        }
-    }
-
-    /**
-     * Initializes session access for $_SESSION['FE_DATA'] and $_SESSION['BE_DATA'].
-     */
-    private function initializeLegacySessionAccess(): void
-    {
-        if (!$session = $this->getSession()) {
-            return;
-        }
-
-        if (!$session->isStarted()) {
-            $_SESSION = new LazySessionAccess($session, $this->request && $this->request->hasPreviousSession());
-        } else {
-            $_SESSION['BE_DATA'] = $session->getBag('contao_backend');
-            $_SESSION['FE_DATA'] = $session->getBag('contao_frontend');
         }
     }
 

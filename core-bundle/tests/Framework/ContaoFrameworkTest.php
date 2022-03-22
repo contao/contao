@@ -21,8 +21,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
-use Contao\CoreBundle\Session\LazySessionAccess;
-use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\Input;
@@ -288,8 +286,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(FE_USER_LOGGED_IN);
         $this->assertSame('', TL_PATH);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
-        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
-        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
     }
 
     /**
@@ -451,41 +447,6 @@ class ContaoFrameworkTest extends TestCase
         $this->expectException('LogicException');
 
         $framework->initialize();
-    }
-
-    /**
-     * @group legacy
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testRegistersTheLazySessionAccessObject(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.');
-
-        $beBag = new ArrayAttributeBag();
-        $beBag->setName('contao_backend');
-
-        $feBag = new ArrayAttributeBag();
-        $feBag->setName('contao_frontend');
-
-        $session = new Session(new MockNativeSessionStorage());
-        $session->registerBag($beBag);
-        $session->registerBag($feBag);
-
-        $request = Request::create('/index.html');
-        $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_scope', 'frontend');
-        $request->setSession($session);
-
-        $framework = $this->getFramework($request);
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize();
-
-        /** @phpstan-ignore-next-line */
-        $this->assertInstanceOf(LazySessionAccess::class, $_SESSION);
-        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
-        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
     }
 
     public function testCreatesAnObjectInstance(): void
