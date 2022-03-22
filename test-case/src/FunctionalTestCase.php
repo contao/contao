@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\TestCase;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -27,7 +26,7 @@ abstract class FunctionalTestCase extends WebTestCase
             throw new \RuntimeException('Please boot the kernel before calling '.__METHOD__);
         }
 
-        $doctrine = self::$container->get('doctrine');
+        $doctrine = static::getContainer()->get('doctrine');
 
         /** @var Connection $connection */
         $connection = $doctrine->getConnection();
@@ -35,8 +34,7 @@ abstract class FunctionalTestCase extends WebTestCase
         if ($truncateTables) {
             $platform = $connection->getDatabasePlatform();
 
-            /** @var Table $table */
-            foreach ($connection->getSchemaManager()->listTables() as $table) {
+            foreach ($connection->createSchemaManager()->listTables() as $table) {
                 $connection->executeStatement($platform->getTruncateTableSQL($table->getName()));
             }
         }
@@ -57,14 +55,13 @@ abstract class FunctionalTestCase extends WebTestCase
             throw new \RuntimeException('Please boot the kernel before calling '.__METHOD__);
         }
 
-        $doctrine = self::$container->get('doctrine');
+        $doctrine = static::getContainer()->get('doctrine');
 
         /** @var Connection $connection */
         $connection = $doctrine->getConnection();
-        $schemaManager = $connection->getSchemaManager();
+        $schemaManager = $connection->createSchemaManager();
         $platform = $connection->getDatabasePlatform();
 
-        /** @var Table $table */
         foreach ($schemaManager->listTables() as $table) {
             $connection->executeStatement($platform->getDropTableSQL($table));
         }
