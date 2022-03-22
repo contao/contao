@@ -79,7 +79,7 @@ class ProviderTest extends TestCase
         $authenticator = $this->createMock(Authenticator::class);
         $provider = new Provider($authenticator);
 
-        $this->assertFalse($provider->validateAuthenticationCode(null, ''));
+        $this->assertFalse($provider->validateAuthenticationCode(new \stdClass(), ''));
     }
 
     public function testDoesNotValidateTheAuthenticationCodeIfTheCodeIsInvalid(): void
