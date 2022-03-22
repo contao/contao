@@ -128,6 +128,7 @@ class ContaoLoginFactory extends AbstractFactory implements AuthenticatorFactory
             ->setDefinition($listenerId, new ChildDefinition(TwoFactorFactory::AUTHENTICATION_TOKEN_CREATED_LISTENER_DEFINITION_ID))
             ->replaceArgument(0, $firewallName)
             // Important: register event only for the specific firewall
-            ->addTag('kernel.event_subscriber', ['dispatcher' => 'security.event_dispatcher.'.$firewallName]);
+            ->addTag('kernel.event_subscriber', ['dispatcher' => 'security.event_dispatcher.'.$firewallName])
+        ;
     }
 }
