@@ -40,11 +40,11 @@ and then add them as external CSS files to the page layout.
 The function `log_message()` has been removed. Use the Symfony logger services instead. Consequently, the
 `Automator::rotateLogs()` method has been removed, too.
 
-### DCA 'dataContainer' definition
+### config.dataContainer
 
-The class name of the 'dataContainer' property needs to be a FQCN in 5.0 and above.
+The DCA `config.dataContainer` property needs to be a FQCN instead of just `Table` or `Folder`.
 
-More information: https://github.com/contao/contao/pull/4322 and https://github.com/contao/docs/pull/1026
+More information: https://github.com/contao/contao/pull/4322
 
 ### pageSelector and fileSelector widgets
 
