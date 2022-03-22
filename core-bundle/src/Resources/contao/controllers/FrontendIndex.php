@@ -63,7 +63,7 @@ class FrontendIndex extends Frontend
 		}
 
 		// Trigger the 404 page if an item is required but not given (see #8361)
-		if ($objPage->requireItem && null === Input::get('auto_item', false, true))
+		if ($objPage->requireItem && !isset($_GET['auto_item']))
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}

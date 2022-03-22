@@ -60,7 +60,7 @@ class ModuleNewsList extends ModuleNews
 		}
 
 		// Show the news reader if an item has been selected
-		if ($this->news_readerModule > 0 && null !== Input::get('auto_item', false, true))
+		if ($this->news_readerModule > 0 && isset($_GET['auto_item']))
 		{
 			return $this->getFrontendModule($this->news_readerModule, $this->strColumn);
 		}
