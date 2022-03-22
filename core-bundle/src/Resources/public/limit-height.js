@@ -8,20 +8,20 @@
 
 window.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('div.limit_height').forEach(function (div) {
-        var parent = div.parentNode.closest('.tl_content');
+        const parent = div.parentNode.closest('.tl_content');
 
         // Return if the element is a wrapper
         if (parent && (parent.classList.contains('wrapper_start') || parent.classList.contains('wrapper_stop'))) return;
 
-        var hgt = Number(div.className.replace(/[^0-9]*/, ''))
+        const hgt = Number(div.className.replace(/[^0-9]*/, ''))
 
         // Return if there is no height value
         if (!hgt) return;
 
-        var toggler = document.createElement('div');
+        const toggler = document.createElement('div');
         toggler.classList.add('limit_toggler');
 
-        var button = document.createElement('button');
+        const button = document.createElement('button');
         button.setAttribute('type', 'button');
         button.innerHTML = '<span>...</span>';
         button.classList.add('unselectable');
