@@ -1091,9 +1091,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			foreach ($ids as $id)
 			{
-				// No need for permission check here, it's done in delete()
-
-				$this->delete($id); // do not urldecode() here (see #6840)
+				try {
+					$this->delete($id); // do not urldecode() here (see #6840)
+				} catch (AccessDeniedException) {
+					// noop
+				}
 			}
 		}
 
@@ -1657,7 +1659,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Walk through each record
 			foreach ($ids as $id)
 			{
-				$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
+				try {
+					$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
+				} catch (AccessDeniedException) {
+					continue;
+				}
 
 				$this->intId = $id;
 				$this->initialId = $id;
@@ -2498,8 +2504,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 		$session = $objSessionBag->all();
-
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_VIEW, new DataContainerSubject($this->strTable, $path));
 
 		// Get the session data and toggle the nodes
 		if (Input::get('tg'))
