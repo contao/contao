@@ -54,7 +54,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     private RouterInterface $router;
     private UriSigner $uriSigner;
     private ContaoFramework $framework;
-    private $options;
+    private array $options;
 
     public function __construct(UserProviderInterface $userProvider, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, ScopeMatcher $scopeMatcher, RouterInterface $router, UriSigner $uriSigner, ContaoFramework $framework, array $options)
     {
