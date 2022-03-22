@@ -873,11 +873,11 @@ abstract class DataContainer extends Backend
 			return;
 		}
 
-		$message = 'Permission denied.';
+		$message = 'Access denied.';
 
 		if ($subject instanceof DataContainerSubject)
 		{
-			$message = sprintf('Permission denied for %s [%s].', $subject, $attributes);
+			$message = sprintf('Access denied to %s [%s].', $subject, $attributes);
 		}
 
 		throw new AccessDeniedException($message);
