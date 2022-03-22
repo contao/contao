@@ -999,9 +999,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						continue;
 					}
 
-					try {
+					try
+					{
 						$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($v, $objCTable->id));
-					} catch (AccessDeniedException) {
+					}
+					catch (AccessDeniedException)
+					{
 						continue;
 					}
 
@@ -2746,9 +2749,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				foreach ($ids as $id)
 				{
-					try {
+					try
+					{
 						$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
-					} catch (AccessDeniedException) {
+					}
+					catch (AccessDeniedException)
+					{
 						continue;
 					}
 

@@ -1091,9 +1091,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			foreach ($ids as $id)
 			{
-				try {
+				try
+				{
 					$this->delete($id); // do not urldecode() here (see #6840)
-				} catch (AccessDeniedException) {
+				}
+				catch (AccessDeniedException)
+				{
 					// noop
 				}
 			}
@@ -1659,9 +1662,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Walk through each record
 			foreach ($ids as $id)
 			{
-				try {
+				try
+				{
 					$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
-				} catch (AccessDeniedException) {
+				}
+				catch (AccessDeniedException)
+				{
 					continue;
 				}
 
