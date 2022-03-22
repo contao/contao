@@ -237,9 +237,8 @@ class ContentGallery extends ContentElement
 
 				// Add column width and class
 				$cellData['colWidth'] = $colwidth . '%';
-				$cellData['class'] = 'col_' . $j;
 
-				$body['row_' . $rowcount][$j] = (object) $cellData;
+				$body[$rowcount][$j] = (object) $cellData;
 			}
 
 			++$rowcount;

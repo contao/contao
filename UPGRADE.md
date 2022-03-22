@@ -4,7 +4,7 @@
 
 ### CSS classes "first", "last", "even" and "odd"
 
-The CSS classes "first", "last", "even" and "odd" are no longer applied anywhere.
+The CSS classes `first`, `last`, `even`, `odd`, `row_*` and `col_*` are no longer applied anywhere.
 Use CSS selectors instead.
 
 ### Template changes

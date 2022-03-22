@@ -291,7 +291,6 @@ class ModuleListing extends Module
 		for ($i=0, $c=\count($arrRows); $i<$c; $i++)
 		{
 			$j = 0;
-			$class = 'row_' . $i;
 
 			foreach ($arrRows[$i] as $k=>$v)
 			{
@@ -314,11 +313,10 @@ class ModuleListing extends Module
 
 				$value = $this->formatValue($k, $v);
 
-				$arrTd[$class][$k] = array
+				$arrTd[$i][$k] = array
 				(
 					'raw' => $v,
 					'content' => $value ?: '&nbsp;',
-					'class' => 'col_' . $j,
 					'id' => $arrRows[$i][$this->strPk],
 					'field' => $k,
 					'url' => $strUrl . $strVarConnector . 'show=' . $arrRows[$i][$this->strPk],
@@ -346,7 +344,6 @@ class ModuleListing extends Module
 		$this->Template->for = $strFor;
 		$this->Template->order_by = $order_by;
 		$this->Template->sort = $sort;
-		$this->Template->col_last = 'col_' . $j;
 		$this->Template->no_results = sprintf($GLOBALS['TL_LANG']['MSC']['sNoResult'], $strFor);
 	}
 
@@ -388,14 +385,11 @@ class ModuleListing extends Module
 				continue;
 			}
 
-			$class = 'row_' . ++$count;
-
 			$arrFields[$k] = array
 			(
 				'raw' => $v,
 				'label' => $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['label'][0] ?? $k,
-				'content' => $this->formatValue($k, $v, true),
-				'class' => $class
+				'content' => $this->formatValue($k, $v, true)
 			);
 		}
 

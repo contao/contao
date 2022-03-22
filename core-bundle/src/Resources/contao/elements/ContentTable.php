@@ -51,7 +51,7 @@ class ContentTable extends ContentElement
 			{
 				$arrHeader[] = array
 				(
-					'class' => 'head_' . $i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[0]) - 1)) ? ' col_last' : '') . (($i == 0 && $this->tleft) ? ' unsortable' : ''),
+					'class' => (($i == 0 && $this->tleft) ? 'unsortable' : ''),
 					'content' => ((string) $v !== '' ? $this->nl2br($v) : '&nbsp;')
 				);
 			}
@@ -67,9 +67,8 @@ class ContentTable extends ContentElement
 		{
 			foreach ($rows[$j] as $i=>$v)
 			{
-				$arrBody['row_' . $j][] = array
+				$arrBody[$j][] = array
 				(
-					'class' => 'col_' . $i,
 					'content' => ((string) $v !== '' ? $this->nl2br($v) : '&nbsp;')
 				);
 			}
@@ -84,7 +83,6 @@ class ContentTable extends ContentElement
 			{
 				$arrFooter[] = array
 				(
-					'class' => 'foot_' . $i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[(\count($rows)-1)]) - 1)) ? ' col_last' : ''),
 					'content' => ((string) $v !== '' ? $this->nl2br($v) : '&nbsp;')
 				);
 			}
