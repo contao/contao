@@ -10,15 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Security\Logout;
+namespace Contao\ManagerBundle\EventListener\Security;
 
 use Contao\ManagerBundle\HttpKernel\JwtManager;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Http\Logout\LogoutHandlerInterface;
+use Symfony\Component\Security\Http\Event\LogoutEvent;
 
-class LogoutHandler implements LogoutHandlerInterface
+class LogoutListener
 {
     /**
      * @internal Do not inherit from this class; decorate the "contao_manager.security.logout_handler" service instead
@@ -27,8 +25,14 @@ class LogoutHandler implements LogoutHandlerInterface
     {
     }
 
-    public function logout(Request $request, Response $response, TokenInterface $token): void
+    public function __invoke(LogoutEvent $event): void
     {
+        $response = $event->getResponse();
+
+        if (!$response instanceof Response) {
+            return;
+        }
+
         $this->jwtManager?->clearResponseCookie($response);
     }
 }

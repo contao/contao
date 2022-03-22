@@ -440,8 +440,8 @@ services:
         tags:
             - kernel.event_listener
 
-    contao.listener.security.logout_success:
-        class: Contao\CoreBundle\EventListener\Security\LogoutSuccessListener
+    contao.listener.security.logout:
+        class: Contao\CoreBundle\EventListener\Security\LogoutListener
         arguments:
             - '@security.http_utils'
             - '@contao.routing.scope_matcher'

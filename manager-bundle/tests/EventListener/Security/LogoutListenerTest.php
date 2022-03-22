@@ -10,16 +10,16 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Tests\Security\Logout;
+namespace Contao\ManagerBundle\Tests\EventListener\Security;
 
+use Contao\ManagerBundle\EventListener\Security\LogoutListener;
 use Contao\ManagerBundle\HttpKernel\JwtManager;
-use Contao\ManagerBundle\Security\Logout\LogoutHandler;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Http\Event\LogoutEvent;
 
-class LogoutHandlerTest extends ContaoTestCase
+class LogoutListenerTest extends ContaoTestCase
 {
     public function testClearsCookieOnResponse(): void
     {
@@ -32,24 +32,20 @@ class LogoutHandlerTest extends ContaoTestCase
             ->with($response)
         ;
 
-        $handler = new LogoutHandler($jwtManager);
+        $event = new LogoutEvent($this->createMock(Request::class), null);
+        $event->setResponse($this->createMock(Response::class));
 
-        $handler->logout(
-            $this->createMock(Request::class),
-            $this->createMock(Response::class),
-            $this->createMock(TokenInterface::class)
-        );
+        $listener = new LogoutListener($jwtManager);
+        $listener($event);
     }
 
     public function testDoesNothingIfJwtManagerIsNotSet(): void
     {
-        $handler = new LogoutHandler();
+        $event = new LogoutEvent($this->createMock(Request::class), null);
+        $event->setResponse($this->createMock(Response::class));
 
-        $handler->logout(
-            $this->createMock(Request::class),
-            $this->createMock(Response::class),
-            $this->createMock(TokenInterface::class)
-        );
+        $listener = new LogoutListener();
+        $listener($event);
 
         $this->expectNotToPerformAssertions();
     }

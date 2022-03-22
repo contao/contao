@@ -26,7 +26,7 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class LogoutSuccessListener
+class LogoutListener
 {
     use TargetPathTrait;
 

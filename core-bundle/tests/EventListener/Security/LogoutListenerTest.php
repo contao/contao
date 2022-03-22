@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\Security;
 
-use Contao\BackendUser;
-use Contao\CoreBundle\EventListener\Security\LogoutSuccessListener;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\EventListener\Security\LogoutListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\System;
@@ -32,7 +30,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\HttpUtils;
 
-class LogoutSuccessListenerTest extends TestCase
+class LogoutListenerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
@@ -50,7 +48,7 @@ class LogoutSuccessListenerTest extends TestCase
         $event = new LogoutEvent(new Request(), null);
         $event->setResponse($response);
 
-        $listener = $this->mockLogoutSuccessListener();
+        $listener = new LogoutListener($this->createMock(HttpUtils::class), $this->createMock(ScopeMatcher::class));
         $listener($event);
 
         $this->assertSame($response, $event->getResponse());
@@ -78,7 +76,7 @@ class LogoutSuccessListenerTest extends TestCase
 
         $event = new LogoutEvent($request, null);
 
-        $listener = $this->mockLogoutSuccessListener($httpUtils, $scopeMatcher);
+        $listener = new LogoutListener($httpUtils, $scopeMatcher);
         $listener($event);
 
         $response = $event->getResponse();
@@ -109,7 +107,7 @@ class LogoutSuccessListenerTest extends TestCase
 
         $event = new LogoutEvent($request, null);
 
-        $listener = $this->mockLogoutSuccessListener($httpUtils, $scopeMatcher);
+        $listener = new LogoutListener($httpUtils, $scopeMatcher);
         $listener($event);
 
         $response = $event->getResponse();
@@ -140,7 +138,7 @@ class LogoutSuccessListenerTest extends TestCase
 
         $event = new LogoutEvent($request, null);
 
-        $listener = $this->mockLogoutSuccessListener($httpUtils, $scopeMatcher);
+        $listener = new LogoutListener($httpUtils, $scopeMatcher);
         $listener($event);
 
         $response = $event->getResponse();
@@ -170,7 +168,8 @@ class LogoutSuccessListenerTest extends TestCase
 
         $event = new LogoutEvent($request, null);
 
-        $listener = $this->mockLogoutSuccessListener($httpUtils, $scopeMatcher);
+        $listener = new LogoutListener($httpUtils, $scopeMatcher);
+
         $listener($event);
 
         $response = $event->getResponse();
