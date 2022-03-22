@@ -273,7 +273,7 @@ class RouteProviderTest extends TestCase
     public function testReturnsAnEmptyCollectionIfTheLanguageIsNotGiven(): void
     {
         $request = $this->mockRequestWithPath('/foo.html');
-        $provider = $this->getRouteProvider($this->mockFramework($this->mockAdapter(['findBy'])), null, true);
+        $provider = $this->getRouteProvider($this->mockFramework($this->mockAdapter(['findBy'])));
 
         $this->assertEmpty($provider->getRouteCollectionForRequest($request));
     }
@@ -652,7 +652,7 @@ class RouteProviderTest extends TestCase
             ->willReturn(true)
         ;
 
-        $provider = $this->getRouteProvider($framework, $pageRegistry, $prependLocale);
+        $provider = $this->getRouteProvider($framework, $pageRegistry);
         $collection = $provider->getRouteCollectionForRequest($request);
 
         $this->assertCount(1, $collection);
@@ -873,7 +873,7 @@ class RouteProviderTest extends TestCase
         return $page;
     }
 
-    private function getRouteProvider(ContaoFramework $framework = null, PageRegistry $pageRegistry = null, bool $prependLocale = false): RouteProvider
+    private function getRouteProvider(ContaoFramework $framework = null, PageRegistry $pageRegistry = null): RouteProvider
     {
         $candidates = $this->createMock(CandidatesInterface::class);
         $candidates
@@ -891,6 +891,6 @@ class RouteProviderTest extends TestCase
             ;
         }
 
-        return new RouteProvider($framework, $candidates, $pageRegistry, false, $prependLocale);
+        return new RouteProvider($framework, $candidates, $pageRegistry);
     }
 }

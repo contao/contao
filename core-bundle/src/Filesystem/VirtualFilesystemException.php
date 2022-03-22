@@ -28,10 +28,11 @@ class VirtualFilesystemException extends \RuntimeException
     public const UNABLE_TO_MOVE = 8;
     public const UNABLE_TO_LIST_CONTENTS = 9;
     public const UNABLE_TO_RETRIEVE_METADATA = 10;
+    public const ENCOUNTERED_INVALID_PATH = 11;
 
     private string $path;
 
-    private function __construct(string $path, string $message, int $code, \Throwable $previous)
+    private function __construct(string $path, string $message, int $code, \Throwable|null $previous = null)
     {
         $this->path = $path;
 
@@ -150,6 +151,15 @@ class VirtualFilesystemException extends \RuntimeException
             sprintf('Unable to retrieve metadata from "%s".', $path),
             self::UNABLE_TO_RETRIEVE_METADATA,
             $previous
+        );
+    }
+
+    public static function encounteredInvalidPath(string $path): self
+    {
+        return new self(
+            $path,
+            sprintf('The path "%s" is not supported, because it contains non-UTF-8 characters.', $path),
+            self::ENCOUNTERED_INVALID_PATH
         );
     }
 }

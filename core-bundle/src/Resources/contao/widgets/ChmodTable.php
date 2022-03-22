@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to handle CHMOD tables.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ChmodTable extends Widget
 {

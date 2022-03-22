@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Framework;
 
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\LegacyRoutingException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -53,13 +52,12 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     private UrlGeneratorInterface $urlGenerator;
     private string $projectDir;
     private int $errorLevel;
-    private bool $legacyRouting;
     private ?Request $request = null;
     private bool $isFrontend = false;
     private array $adapterCache = [];
     private array $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $urlGenerator, string $projectDir, int $errorLevel, bool $legacyRouting)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $urlGenerator, string $projectDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
@@ -67,7 +65,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         $this->urlGenerator = $urlGenerator;
         $this->projectDir = $projectDir;
         $this->errorLevel = $errorLevel;
-        $this->legacyRouting = $legacyRouting;
     }
 
     public function reset(): void
@@ -115,10 +112,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         $this->setConstants();
         $this->initializeFramework();
-
-        if (!$this->legacyRouting) {
-            $this->throwOnLegacyRoutingHooks();
-        }
     }
 
     public function setHookListeners(array $hookListeners): void
@@ -133,7 +126,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
      *
      * @return T
      */
-    public function createInstance($class, array $args = [])
+    public function createInstance(string $class, array $args = [])
     {
         if (\in_array('getInstance', get_class_methods($class), true)) {
             return \call_user_func_array([$class, 'getInstance'], $args);
@@ -153,7 +146,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
      *
      * @phpstan-return Adapter<T>
      */
-    public function getAdapter($class): Adapter
+    public function getAdapter(string $class): Adapter
     {
         return $this->adapterCache[$class] ??= new Adapter($class);
     }
@@ -417,14 +410,5 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
             $GLOBALS['TL_HOOKS'][$hookName] = array_merge(...$priorities);
         }
-    }
-
-    private function throwOnLegacyRoutingHooks(): void
-    {
-        if (empty($GLOBALS['TL_HOOKS']['getPageIdFromUrl']) && empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])) {
-            return;
-        }
-
-        throw new LegacyRoutingException('Legacy routing is required to support the "getPageIdFromUrl" and "getRootPageFromUrl" hooks. Check the Symfony inspector for more information.');
     }
 }

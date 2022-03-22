@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\News;
@@ -27,7 +28,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ctable'                      => array('tl_news'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
@@ -255,7 +256,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
  *
  * @property News $News
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_news_archive extends Backend
 {

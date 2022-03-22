@@ -20,8 +20,6 @@ namespace Contao;
  *
  *     echo Environment::get('scriptName');
  *     echo Environment::get('requestUri');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Environment
 {
@@ -221,8 +219,6 @@ class Environment
 	 * Return the first eight accepted languages as array
 	 *
 	 * @return array The languages array
-	 *
-	 * @author Leo Unglaub <https://github.com/LeoUnglaub>
 	 */
 	protected static function httpAcceptLanguage()
 	{

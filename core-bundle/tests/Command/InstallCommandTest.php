@@ -32,7 +32,6 @@ class InstallCommandTest extends TestCase
         $fs->remove($this->getTempDir().'/public/system');
         $fs->remove($this->getTempDir().'/system/cache');
         $fs->remove($this->getTempDir().'/system/config');
-        $fs->remove($this->getTempDir().'/system/initialize.php');
         $fs->remove($this->getTempDir().'/system/modules/.gitignore');
         $fs->remove($this->getTempDir().'/system/themes');
         $fs->remove($this->getTempDir().'/system/tmp');

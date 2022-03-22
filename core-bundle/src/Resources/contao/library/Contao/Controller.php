@@ -43,8 +43,6 @@ use Symfony\Component\Finder\Glob;
  *     {
  *         return $this->getArticle(2);
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Controller extends System
 {
@@ -1190,11 +1188,9 @@ abstract class Controller extends System
 		$arrMapper = array
 		(
 			'contao/confirm.php'   => 'contao_backend_confirm',
-			'contao/file.php'      => 'contao_backend_file',
 			'contao/help.php'      => 'contao_backend_help',
 			'contao/index.php'     => 'contao_backend_login',
 			'contao/main.php'      => 'contao_backend',
-			'contao/page.php'      => 'contao_backend_page',
 			'contao/password.php'  => 'contao_backend_password',
 			'contao/popup.php'     => 'contao_backend_popup',
 			'contao/preview.php'   => 'contao_backend_preview',
@@ -1263,11 +1259,6 @@ abstract class Controller extends System
 
 			$page->language = $strForceLang;
 			$page->rootLanguage = $strForceLang;
-
-			if (System::getContainer()->getParameter('contao.legacy_routing'))
-			{
-				$page->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
-			}
 		}
 
 		// Add the domain if it differs from the current one (see #3765 and #6927)

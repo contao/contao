@@ -14,11 +14,9 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\BackendAlerts;
 use Contao\BackendConfirm;
-use Contao\BackendFile;
 use Contao\BackendHelp;
 use Contao\BackendIndex;
 use Contao\BackendMain;
-use Contao\BackendPage;
 use Contao\BackendPassword;
 use Contao\BackendPopup;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
@@ -109,23 +107,6 @@ class BackendController extends AbstractController
     }
 
     /**
-     * @Route("/file", name="contao_backend_file")
-     *
-     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-     *             Use the picker instead.
-     */
-    public function fileAction(): Response
-    {
-        trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the picker instead.', __CLASS__, __METHOD__);
-
-        $this->initializeContaoFramework();
-
-        $controller = new BackendFile();
-
-        return $controller->run();
-    }
-
-    /**
      * @Route("/help", name="contao_backend_help")
      */
     public function helpAction(): Response
@@ -133,23 +114,6 @@ class BackendController extends AbstractController
         $this->initializeContaoFramework();
 
         $controller = new BackendHelp();
-
-        return $controller->run();
-    }
-
-    /**
-     * @Route("/page", name="contao_backend_page")
-     *
-     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-     *             Use the picker instead.
-     */
-    public function pageAction(): Response
-    {
-        trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the picker instead.', __CLASS__, __METHOD__);
-
-        $this->initializeContaoFramework();
-
-        $controller = new BackendPage();
 
         return $controller->run();
     }

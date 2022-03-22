@@ -63,7 +63,7 @@ jobs:
                   composer bin ecs install --no-interaction --no-progress
 
             - name: Run ECS
-              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests tools/*/src --config tools/ecs/config/default.php --no-progress-bar --ansi
+              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --no-progress-bar --ansi
 
     ecs-legacy:
         name: ECS Legacy
@@ -116,31 +116,6 @@ jobs:
 
             - name: Run PHPStan
               run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
-
-    psalm:
-        name: Psalm
-        runs-on: ubuntu-latest
-        if: github.event_name != 'push'
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Checkout
-              uses: actions/checkout@v1
-
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin psalm install --no-interaction --no-progress
-
-            - name: Run Psalm
-              run: tools/psalm/vendor/bin/psalm --no-suggestions --no-progress
 
     yamllint:
         name: YAMLlint
@@ -373,6 +348,10 @@ jobs:
                           if ("contao/news-bundle" !== $data["name"]) {
                               $data["repositories"][2]["type"] = "path";
                               $data["repositories"][2]["url"] = "../news-bundle";
+                          }
+                          if ("contao/test-case" !== $data["name"]) {
+                              $data["repositories"][3]["type"] = "path";
+                              $data["repositories"][3]["url"] = "../test-case";
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
