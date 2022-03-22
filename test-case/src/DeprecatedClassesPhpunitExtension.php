@@ -19,7 +19,7 @@ use PHPUnit\Runner\BeforeFirstTestHook;
 
 abstract class DeprecatedClassesPhpunitExtension implements AfterLastTestHook, BeforeFirstTestHook
 {
-    private $failed = false;
+    private bool $failed = false;
 
     public function executeAfterLastTest(): void
     {
@@ -78,7 +78,7 @@ abstract class DeprecatedClassesPhpunitExtension implements AfterLastTestHook, B
 
                 return false;
             },
-            \E_DEPRECATED | \E_USER_DEPRECATED
+            E_DEPRECATED | E_USER_DEPRECATED
         );
 
         try {
