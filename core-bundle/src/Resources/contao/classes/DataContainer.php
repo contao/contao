@@ -30,8 +30,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $palette
  * @property object|null    $activeRecord
  * @property array          $rootIds
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class DataContainer extends Backend
 {

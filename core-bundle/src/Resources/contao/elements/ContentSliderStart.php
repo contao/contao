@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "slider" (wrapper start).
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentSliderStart extends ContentElement
 {

@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to handle file uploads in the back end.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DropZone extends FileUpload
 {

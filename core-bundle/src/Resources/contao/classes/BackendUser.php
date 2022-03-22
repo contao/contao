@@ -28,8 +28,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property string  $fop
  * @property array   $alexf
  * @property array   $imageSizes
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendUser extends User
 {

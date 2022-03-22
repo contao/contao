@@ -20,8 +20,6 @@ use Symfony\Component\Filesystem\Path;
  *     $short = StringUtil::substr($str, 32);
  *     $html  = StringUtil::substrHtml($str, 32);
  *     $xhtml = StringUtil::toXhtml($html5);
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class StringUtil
 {
@@ -787,7 +785,7 @@ class StringUtil
 	 */
 	public static function convertEncoding($str, $to, $from=null)
 	{
-		if ($str !== null && !is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
+		if ($str !== null && !\is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
 		{
 			trigger_deprecation('contao/core-bundle', '4.9', 'Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated an will no longer work in Contao 5.0.');
 

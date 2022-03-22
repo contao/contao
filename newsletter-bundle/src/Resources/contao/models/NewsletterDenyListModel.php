@@ -34,8 +34,6 @@ use Contao\Model\Collection;
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
  * @method static integer countByHash($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class NewsletterDenyListModel extends Model
 {

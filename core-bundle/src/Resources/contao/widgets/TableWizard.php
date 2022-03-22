@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  *
  * @property integer $rows
  * @property integer $cols
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class TableWizard extends Widget
 {

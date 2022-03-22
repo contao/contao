@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Main front end controller.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FrontendIndex extends Frontend
 {

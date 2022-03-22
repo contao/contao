@@ -28,8 +28,6 @@ use Contao\Image\ResizeConfiguration;
  * @property string  $path
  * @property string  $extensions
  * @property string  $fieldType
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FileTree extends Widget
 {
