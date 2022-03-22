@@ -863,7 +863,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * @throws AccessDeniedException
 	 */
-	public function denyAccessIfDisallowed($attributes, $subject): void
+	protected function denyAccessUnlessGranted($attributes, $subject): void
 	{
 		/** @var Security $security */
 		$security = System::getContainer()->get('security.helper');

@@ -646,7 +646,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->import(Files::class, 'Files');
 		$strFolder = Input::get('pid', true);
 
-		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
 
 		if (!$strFolder || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
@@ -687,7 +687,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$source = $this->intId;
 		}
 
-		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_MOVE, new DataContainerSubject($this->strTable, $source));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_MOVE, new DataContainerSubject($this->strTable, $source));
 
 		$this->isValid($source);
 
@@ -838,7 +838,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$destination = str_replace(\dirname($source), $strFolder, $source);
 		}
 
-		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
 
 		$this->isValid($source);
 		$this->isValid($destination);
@@ -1005,7 +1005,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$source = $this->intId;
 		}
 
-		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_DELETE, new DataContainerSubject($this->strTable, $source));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_DELETE, new DataContainerSubject($this->strTable, $source));
 
 		$this->isValid($source);
 
@@ -1322,7 +1322,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$return = '';
 		$this->noReload = false;
 
-		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$this->isValid($this->intId);
 
@@ -1657,7 +1657,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Walk through each record
 			foreach ($ids as $id)
 			{
-				$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
+				$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
 
 				$this->intId = $id;
 				$this->initialId = $id;
@@ -1941,7 +1941,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function source()
 	{
-		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$this->isValid($this->intId);
 
@@ -2499,7 +2499,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 		$session = $objSessionBag->all();
 
-		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_VIEW, new DataContainerSubject($this->strTable, $path));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_VIEW, new DataContainerSubject($this->strTable, $path));
 
 		// Get the session data and toggle the nodes
 		if (Input::get('tg'))
