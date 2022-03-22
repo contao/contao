@@ -13,7 +13,20 @@ window.tinymce && tinymce.init({
   min_height: 336,
   language: '<?= Backend::getTinyMceLanguage() ?>',
   element_format: 'html',
+  relative_urls : false,
+  remove_script_host : true,
   document_base_url: '<?= Environment::get('base') ?>',
+  urlconverter_callback: function(url, node, on_save, name) {
+    // Do not convert insert tags
+    if (url.match(/^{{[a-zA-Z0-9\x80-\xFF]+/)) {
+      return url;
+    }
+
+    // Convert to absolute
+    url = this.documentBaseURI.toAbsolute(url, true);
+
+    return url;
+  },
   entities: '160,nbsp,60,lt,62,gt,173,shy',
   branding: false,
   setup: function(editor) {
