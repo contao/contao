@@ -44,7 +44,7 @@ class ContaoLoginFactoryTest extends TestCase
 
         $this->assertSame('contao.security.authentication_provider.contao_frontend', $authProviderId);
         $this->assertSame('contao.security.login_authentication_listener.contao_frontend', $listenerId);
-        $this->assertSame('contao.security.authentication_entry_point', $defaultEntryPoint);
+        $this->assertSame('contao.security.login_authenticator', $defaultEntryPoint);
 
         $this->assertTrue($container->hasDefinition($authProviderId));
 
