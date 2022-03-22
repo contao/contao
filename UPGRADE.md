@@ -2,43 +2,42 @@
 
 ## Version 4.* to 5.0
 
-### Dropped legacy Simple Token Parser
+### Simple Token Parser
 
-Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are not supported anymore.
+Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are not supported anymore by the
+Simple Token Parser.
 
-### Dropped $GLOBALS['TL_KEYWORDS']
+### $GLOBALS['TL_KEYWORDS']
 
-Keyword support in articles, and as such also `$GLOBALS['TL_KEYWORDS']`, have been removed without
-replacement.
+Keyword support in articles, and as such also `$GLOBALS['TL_KEYWORDS']`, has been removed.
 
-### Dropped legacy routing
+### Legacy routing
 
-The legacy routing support has been dropped. As such, the `getPageIdFromUrl` and `getRootPageFromUrl`
-hooks do not exist anymore. Use Symfony routing instead.
+The legacy routing has been dropped. As such, the `getPageIdFromUrl` and `getRootPageFromUrl` hooks do
+not exist anymore. Use Symfony routing instead.
 
-### Removed initialize.php
+### initialize.php
 
-The `initialize.php` support has been removed without replacement. Register your own Symfony
-Routes to the routing instead.
+The `initialize.php` support has been removed. Register your own Symfony routes to the routing instead.
 
-### Removed ClassLoader class
+### ClassLoader
 
-The `Contao\ClassLoader` has been removed without replacement. Use Composer autoloading instead.
+The `Contao\ClassLoader` has been removed. Use Composer autoloading instead.
 
-### Removed Encryption class
+### Encryption
 
-The `Contao\Encryption` and the `eval->encrypt` DCA flag have been removed without replacement.
-Use `save_callback` and `load_callback` and libraries such as `phpseclib/phpseclib`.
+The `Contao\Encryption` class and the `eval->encrypt` DCA flag have been removed. Use `save_callback`
+and `load_callback` and libraries such as `phpseclib/phpseclib` instead.
 
-### Removed the internal CSS editor
+### Internal CSS editor
 
-The internal CSS editor has been removed without any replacement. If you still use it, make
-sure to copy the generated CSS file to your assets.
+The internal CSS editor has been removed. Export your existing CSS files, import them in the file manager
+and then add them as external CSS files to the page layout.
 
-### Removed log_message()
+### log_message()
 
-The function `log_message()` has been removed. Use the Symfony logger services instead.
-Consequently, also `Automator::rotateLogs()` has been removed.
+The function `log_message()` has been removed. Use the Symfony logger services instead. Consequently, the
+`Automator::rotateLogs()` method has been removed, too.
 
 ### pageSelector and fileSelector widgets
 
@@ -46,5 +45,4 @@ The back end widgets `pageSelector` and `fileSelector` have been removed. Use th
 
 ### Public folder
 
-The public folder is now called `public` by default. It can be renamed in the
-`composer.json` file.
+The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
