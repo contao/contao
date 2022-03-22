@@ -19,17 +19,17 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * @internal
  */
-class AddEntityPathsPass implements CompilerPassInterface
+class AddEntityExtensionPathsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $container->setParameter('contao.entity_paths', $this->getEntityPaths($container));
+        $container->setParameter('contao.entity_extension_paths', $this->getEntityExtensionPaths($container));
     }
 
     /**
      * @return array<string>
      */
-    private function getEntityPaths(ContainerBuilder $container): array
+    private function getEntityExtensionPaths(ContainerBuilder $container): array
     {
         $paths = [];
         $rootDir = $container->getParameter('kernel.project_dir');
@@ -40,13 +40,13 @@ class AddEntityPathsPass implements CompilerPassInterface
         foreach ($bundles as $name => $class) {
             if (ContaoModuleBundle::class === $class) {
                 $paths[] = $meta[$name]['path'];
-            } elseif (is_dir($path = $meta[$name]['path'].'/Orm')) {
+            } elseif (is_dir($path = $meta[$name]['path'].'/EntityExtension')) {
                 $paths[] = $path;
             }
         }
 
-        if (is_dir($rootDir.'/src/Orm')) {
-            $paths[] = $rootDir.'/src/Orm';
+        if (is_dir($rootDir.'/src/EntityExtension')) {
+            $paths[] = $rootDir.'/src/EntityExtension';
         }
 
         return $paths;

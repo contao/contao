@@ -12,8 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Orm;
 
-use Contao\CoreBundle\Exception\GenerateEntityException;
-use Contao\CoreBundle\Orm\Attribute\Extension;
+use Contao\CoreBundle\DependencyInjection\Attribute\EntityExtension;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpFile;
 use Nette\PhpGenerator\PhpNamespace;
@@ -21,68 +25,19 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class EntityFactory
 {
-    public function generateEntityClasses(string $directory, array $entities, array $extensions): void
+    public function generateEntityClasses(string $directory, array $entities): void
     {
         if (0 === \count($entities)) {
             return;
         }
 
-        $tree = [];
-
-        foreach ($extensions as $extensionClass) {
-            try {
-                $reflectionClass = new \ReflectionClass($extensionClass);
-            } catch (\ReflectionException $e) {
-                continue;
-            }
-
-            $attributes = $reflectionClass->getAttributes(Extension::class);
-
-            if (\count($attributes) > 1) {
-                throw new GenerateEntityException('Extension of more than one entity is not supported');
-            }
-
-            if (0 === \count($attributes)) {
-                continue;
-            }
-
-            $attribute = $attributes[0];
-            $arguments = $attribute->getArguments();
-
-            /** @var string $index */
-            $index = $arguments[0];
-
-            if (!\in_array($index, $entities, true)) {
-                continue;
-            }
-
-            if (!\array_key_exists($index, $tree)) {
-                $tree[$index] = [];
-            }
-
-            $tree[$index][] = $extensionClass;
-        }
-
-        foreach ($tree as $entity => $extensions) {
-            try {
-                $reflectionClass = new \ReflectionClass($entity);
-            } catch (\ReflectionException $e) {
-                continue;
-            }
-
-            $class = new ClassType($reflectionClass->getShortName());
-            $class->setExtends($entity);
+        foreach ($entities as $entity => $extensions) {
+            $class = new ClassType($entity);
             $class->setComment('This entity is auto generated.');
             $class->setAbstract(false);
             $class->setFinal(true);
 
-
-            // Set class attributes
-            $attributes = $reflectionClass->getAttributes();
-
-            foreach ($attributes as $attribute) {
-                $class->addAttribute($attribute->getName(), $attribute->getArguments());
-            }
+            $this->makeClassToEntity($class);
 
             foreach ($extensions as $extension) {
                 $class->addTrait($extension);
@@ -98,7 +53,7 @@ class EntityFactory
                 $attributes = $reflectionExtension->getAttributes();
 
                 foreach ($attributes as $attribute) {
-                    if (Extension::class === $attribute->getName()) {
+                    if (EntityExtension::class === $attribute->getName()) {
                         continue;
                     }
 
@@ -110,7 +65,6 @@ class EntityFactory
 
             $namespace = new PhpNamespace('GeneratedEntity');
 
-
             $file = new PhpFile();
             $file->setStrictTypes(true);
             $file->addComment('This file is auto generated');
@@ -119,7 +73,41 @@ class EntityFactory
             $generated = sprintf("%s\n\n%s", $printer->printFile($file), $printer->printClass($class, $namespace));
 
             $filesystem = new Filesystem();
-            $filesystem->dumpFile(sprintf('%s/%s.php', $directory, $reflectionClass->getShortName()), $generated);
+            $filesystem->dumpFile(sprintf('%s/%s.php', $directory, $class->getName()), $generated);
         }
+    }
+
+    private function makeClassToEntity(ClassType $class): void
+    {
+        $class->addAttribute(Entity::class);
+
+        // TODO: Properly create table name
+        $class->addAttribute(Table::class, [
+            'name' => sprintf('tl_%s', strtolower($class->getName()))
+        ]);
+
+        // Create id property
+        $class->addProperty('id');
+
+        $id = $class->getProperty('id');
+        $id->setPrivate();
+        $id->setType('int');
+        $id->setNullable(true);
+        $id->addAttribute(Id::class);
+        $id->addAttribute(Column::class, [
+            'type' => 'integer',
+            'options' => [
+                'unsigned' => true
+            ]
+        ]);
+        $id->addAttribute(GeneratedValue::class);
+
+        // Create id getter
+        $class->addMethod('getId');
+
+        $idGetter = $class->getMethod('getId');
+        $idGetter->setPublic();
+        $idGetter->setReturnType('?int');
+        $idGetter->setBody('return $this->id;');
     }
 }

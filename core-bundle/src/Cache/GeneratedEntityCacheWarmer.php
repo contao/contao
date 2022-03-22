@@ -12,28 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cache;
 
-use Contao\CoreBundle\Orm\Collector\EntityCollector;
-use Contao\CoreBundle\Orm\Collector\ExtensionCollector;
+use Contao\CoreBundle\Orm\EntityExtensionCollector;
 use Contao\CoreBundle\Orm\EntityFactory;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class GeneratedEntityCacheWarmer implements CacheWarmerInterface
 {
-    public function __construct(private EntityCollector $entityCollector, private ExtensionCollector $extensionCollector, private EntityFactory $factory)
+    public function __construct(
+        private EntityExtensionCollector $entityExtensionCollector,
+        private EntityFactory $factory,
+        private string $entityDirectory)
     {
     }
 
     public function warmUp(string $cacheDir): array
     {
-        $directory = sprintf('%s/../../entities', $cacheDir);
+        $this->ensureCacheDirectoryExists($cacheDir);
 
-        $this->ensureCacheDirectoryExists($directory);
+        $extensions = $this->entityExtensionCollector->collect();
 
-        $entities = $this->entityCollector->collect();
-        $extensions = $this->extensionCollector->collect();
-
-        $this->factory->generateEntityClasses($directory, $entities, $extensions);
+        $this->factory->generateEntityClasses($this->entityDirectory, $extensions);
 
         return [];
     }

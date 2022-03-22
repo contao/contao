@@ -51,8 +51,8 @@ services:
         class: Contao\CoreBundle\Cache\GeneratedEntityCacheWarmer
         arguments:
             - '@contao.orm.entity_collector'
-            - '@contao.orm.extension_collector'
             - '@contao.orm.entity_factory'
+            - '%kernel.cache_dir%/contao/entities'
 
     contao.cache.warmer:
         class: Contao\CoreBundle\Cache\ContaoCacheWarmer
@@ -470,17 +470,12 @@ services:
             - '@contao.framework'
 
     contao.orm.entity_collector:
-        class: Contao\CoreBundle\Orm\Collector\EntityCollector
+        class: Contao\CoreBundle\Orm\EntityExtensionCollector
         arguments:
-            - '%contao.entity_paths%'
+            - '%contao.entity_extension_paths%'
 
     contao.orm.entity_factory:
         class: Contao\CoreBundle\Orm\EntityFactory
-
-    contao.orm.extension_collector:
-        class: Contao\CoreBundle\Orm\Collector\ExtensionCollector
-        arguments:
-            - '%contao.entity_paths%'
 
     contao.picker.article_provider:
         class: Contao\CoreBundle\Picker\ArticlePickerProvider

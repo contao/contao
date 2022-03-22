@@ -16,7 +16,7 @@ use Composer\InstalledVersions;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddEntityPathsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddEntityExtensionPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
@@ -87,7 +87,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new AddAssetsPackagesPass());
         $container->addCompilerPass(new AddSessionBagsPass());
         $container->addCompilerPass(new AddResourcesPathsPass());
-        $container->addCompilerPass(new AddEntityPathsPass());
+        $container->addCompilerPass(new AddEntityExtensionPathsPass());
         $container->addCompilerPass(new TaggedMigrationsPass());
         $container->addCompilerPass(new PickerProviderPass());
         $container->addCompilerPass(new RegisterPagesPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
