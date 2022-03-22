@@ -83,7 +83,7 @@ class ContaoCoreBundleTest extends TestCase
         $security = $this->createMock(SecurityExtension::class);
         $security
             ->expects($this->once())
-            ->method('addSecurityListenerFactory')
+            ->method('addAuthenticatorFactory')
             ->with($this->callback(static fn ($param) => $param instanceof ContaoLoginFactory))
         ;
 
