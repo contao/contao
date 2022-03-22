@@ -76,7 +76,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         ], $options);
     }
 
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse|Response
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
             return $this->redirectToBackend($request);
@@ -107,7 +107,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
             && 0 === strncmp($request->request->get('FORM_SUBMIT'), 'tl_login', 8);
     }
 
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
         $credentials = $this->getCredentials($request);
 

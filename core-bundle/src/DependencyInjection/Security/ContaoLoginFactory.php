@@ -99,7 +99,7 @@ class ContaoLoginFactory extends AbstractFactory implements AuthenticatorFactory
 
     protected function createEntryPoint(ContainerBuilder $container, string $id, array $config, string|null $defaultEntryPointId): string
     {
-        return 'contao.security.authentication_entry_point';
+        return 'contao.security.login_authenticator';
     }
 
     protected function createAuthenticationSuccessHandler(ContainerBuilder $container, string $id, array $config): string
