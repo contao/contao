@@ -991,13 +991,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 												->execute($id);
 				}
 
-				$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($v, $objCTable->id));
-
 				while ($objCTable->next())
 				{
 					// Exclude the duplicated record itself
 					if ($v == $table && $objCTable->id == $parentId)
 					{
+						continue;
+					}
+
+					try {
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($v, $objCTable->id));
+					} catch (AccessDeniedException) {
 						continue;
 					}
 
