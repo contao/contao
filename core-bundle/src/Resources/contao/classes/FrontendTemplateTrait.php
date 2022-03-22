@@ -18,8 +18,6 @@ namespace Contao;
  * @property array   $matches
  * @method   string  getTemplate(string $strTemplate)
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @internal
  */
 trait FrontendTemplateTrait

@@ -20,8 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Pop-up file preview (file manager).
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendPopup extends Backend
 {

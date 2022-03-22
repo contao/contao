@@ -309,8 +309,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByStop($val, array $opt=array())
  * @method static integer countByEnforceTwoFactor($val, array $opt=array())
  * @method static integer countByTwoFactorJumpTo($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageModel extends Model
 {

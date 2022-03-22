@@ -29,8 +29,6 @@ trigger_deprecation('contao/core-bundle', '4.0', 'Using the "Contao\Database\Upd
 /**
  * Adjust the database if the system is updated.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
  */
 class Updater extends Controller

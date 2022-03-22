@@ -256,8 +256,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
  *
  * @property Calendar $Calendar
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @internal
  */
 class tl_calendar extends Backend

@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle an error 404 page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageError404 extends Frontend
 {

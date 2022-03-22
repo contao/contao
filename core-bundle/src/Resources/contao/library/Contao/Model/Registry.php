@@ -17,8 +17,6 @@ use Contao\Model;
  *
  * The class handles traversing a set of models and lazy loads the database
  * result rows upon their first usage.
- *
- * @author Tristan Lins <https://github.com/tristanlins>
  */
 class Registry implements \Countable
 {
