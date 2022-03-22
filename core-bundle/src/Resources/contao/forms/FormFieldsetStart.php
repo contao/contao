@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Class FormFieldsetStart
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FormFieldsetStart extends Widget
 {

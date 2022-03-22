@@ -18,8 +18,6 @@ use Symfony\Component\Filesystem\Path;
  *
  * Custom settings above or below the `### INSTALL SCRIPT ###` markers will be
  * preserved.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Config
 {
@@ -336,7 +334,7 @@ class Config
 		}
 
 		// Recompile the APC file (thanks to Trenker)
-		if (\function_exists('apc_compile_file') && !ini_get('apc.stat'))
+		if (\function_exists('apc_compile_file') && !\ini_get('apc.stat'))
 		{
 			apc_compile_file($strDestination);
 		}

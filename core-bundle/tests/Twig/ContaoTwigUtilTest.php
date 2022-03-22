@@ -105,12 +105,12 @@ class ContaoTwigUtilTest extends TestCase
 
         yield 'complex name (html5)' => [
             '@Foo/bar/foo.html5',
-            'foo',
+            'bar/foo',
         ];
 
         yield 'complex name (Twig)' => [
             '@Foo/bar/foo.html.twig',
-            'foo',
+            'bar/foo',
         ];
 
         yield 'not a Contao template extension' => [

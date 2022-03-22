@@ -18,8 +18,6 @@ namespace Contao;
  *     $zip = new ZipWriter('test.zip');
  *     $zip->addFile('test.txt');
  *     $zip->close();
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ZipWriter
 {

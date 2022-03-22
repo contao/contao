@@ -22,8 +22,6 @@ namespace Contao;
  * @property integer $minlength
  * @property integer $maxlength
  * @property string  $src
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FormSubmit extends Widget
 {

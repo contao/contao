@@ -41,8 +41,6 @@ use Contao\Model\Registry;
  *
  * @property integer $id        The ID
  * @property string  $customTpl A custom template
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Model
 {

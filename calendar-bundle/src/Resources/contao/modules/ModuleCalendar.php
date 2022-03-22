@@ -19,8 +19,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property array  $cal_calendar
  * @property string $cal_ctemplate
  * @property string $cal_featured
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleCalendar extends Events
 {

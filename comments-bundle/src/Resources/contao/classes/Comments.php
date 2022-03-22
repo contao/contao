@@ -15,8 +15,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 
 /**
  * Class Comments
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Comments extends Frontend
 {

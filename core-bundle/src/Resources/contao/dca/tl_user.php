@@ -485,8 +485,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @internal
  */
 class tl_user extends Backend

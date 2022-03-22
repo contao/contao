@@ -16,8 +16,6 @@ use Contao\CoreBundle\Exception\ResponseException;
  * Front end module "personal data".
  *
  * @property array $editable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModulePersonalData extends Module
 {
