@@ -880,7 +880,11 @@ abstract class DataContainer extends Backend
 			$message = sprintf('Access denied to %s [%s].', $subject, $attributes);
 		}
 
-		throw new AccessDeniedException($message);
+		$exception = new AccessDeniedException($message);
+		$exception->setAttributes($attributes);
+		$exception->setSubject($subject);
+
+		throw $exception;
 	}
 
 	/**
