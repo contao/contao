@@ -393,27 +393,4 @@ class StringUtilTest extends TestCase
             'UTF-8',
         ];
     }
-
-    /**
-     * @param array|object $value
-     *
-     * @group legacy
-     *
-     * @dataProvider invalidEncodingsProvider
-     */
-    public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues($value): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.');
-
-        /** @phpstan-ignore-next-line */
-        $result = StringUtil::convertEncoding($value, 'UTF-8');
-
-        $this->assertSame('', $result);
-    }
-
-    public function invalidEncodingsProvider(): \Generator
-    {
-        yield 'Array' => [[]];
-        yield 'Non-stringable object' => [new \stdClass()];
-    }
 }
