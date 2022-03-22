@@ -31,7 +31,6 @@ parameters:
             # Ignore the forward compatible phpDoc comment of the Symfony token classes
             message: '#expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
             paths:
-                - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
                 - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/Token/FrontendPreviewToken.php
 
         -
