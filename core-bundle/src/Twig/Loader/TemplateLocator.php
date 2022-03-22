@@ -173,8 +173,6 @@ class TemplateLocator
 
                     if ($this->isNamespaceRoot($path)) {
                         $namespaceRoots[] = $path;
-
-                        return true;
                     }
 
                     return true;
