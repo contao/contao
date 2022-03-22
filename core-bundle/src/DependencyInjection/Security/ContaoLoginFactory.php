@@ -81,22 +81,22 @@ class ContaoLoginFactory extends AbstractFactory implements AuthenticatorFactory
 
     protected function createAuthProvider(ContainerBuilder $container, string $id, array $config, string $userProviderId): string
     {
-        throw new \Exception('The old authentication system is not supported with contao_login.');
+        throw new \RuntimeException('The old authentication system is not supported with contao_login.');
     }
 
     protected function getListenerId(): string
     {
-        throw new \Exception('The old authentication system is not supported with contao_login.');
+        throw new \RuntimeException('The old authentication system is not supported with contao_login.');
     }
 
     protected function createListener(ContainerBuilder $container, string $id, array $config, string $userProvider): string
     {
-        throw new \Exception('The old authentication system is not supported with contao_login.');
+        throw new \RuntimeException('The old authentication system is not supported with contao_login.');
     }
 
     protected function createEntryPoint(ContainerBuilder $container, string $id, array $config, string|null $defaultEntryPointId): string
     {
-        throw new \Exception('The old authentication system is not supported with contao_login.');
+        throw new \RuntimeException('The old authentication system is not supported with contao_login.');
     }
 
     protected function createAuthenticationSuccessHandler(ContainerBuilder $container, string $id, array $config): string
