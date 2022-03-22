@@ -1,7 +1,6 @@
 # API changes
 
 ## Version 4.* to 5.0
-<<<<<<< HEAD
 
 ### CSS classes "first", "last", "even" and "odd"
 
@@ -26,8 +25,6 @@ containing the list item's CSS class and content. Instead it will only be the co
 ```
 
 ## Version 4.* to 4.11
-=======
->>>>>>> origin/5.x
 
 ### Simple Token Parser
 
