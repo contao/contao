@@ -1242,7 +1242,7 @@ class PageModel extends Model
 		$baseUrl = $context->getBaseUrl();
 
 		// Add the preview script
-		$context->setBaseUrl($previewScript);
+		$context->setBaseUrl(\dirname($context->getBaseUrl()) . $previewScript);
 
 		$objRouter = System::getContainer()->get('router');
 

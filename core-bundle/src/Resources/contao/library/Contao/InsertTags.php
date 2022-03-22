@@ -1068,7 +1068,15 @@ class InsertTags extends Controller
 
 						if ($objFile !== null)
 						{
-							$arrCache[$strTag] = System::urlEncode($objFile->path);
+							$staticUrl = '';
+
+							// Prepend static URL if insert tag is used as URL attribute
+							if (\in_array('urlattr', $flags, true))
+							{
+								$staticUrl = $container->get('contao.assets.files_context')->getStaticUrl();
+							}
+
+							$arrCache[$strTag] = System::urlEncode($staticUrl . $objFile->path);
 							break;
 						}
 					}

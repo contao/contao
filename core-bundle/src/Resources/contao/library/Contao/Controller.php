@@ -1160,7 +1160,7 @@ abstract class Controller extends System
 		$strLocation = static::replaceOldBePaths($strLocation);
 
 		// Make the location an absolute URL
-		if (!preg_match('@^https?://@i', $strLocation))
+		if (!preg_match('@^(https?://|/)@i', $strLocation))
 		{
 			$strLocation = Environment::get('base') . ltrim($strLocation, '/');
 		}

@@ -39,7 +39,7 @@ class BackendPreviewControllerTest extends TestCase
         $response = $controller(new Request());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('preview.php', $response->getTargetUrl());
+        $this->assertSame('preview.php/', $response->getTargetUrl());
     }
 
     public function testDeniesAccessIfNotGranted(): void
