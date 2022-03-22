@@ -428,7 +428,7 @@ abstract class Module extends Frontend
 		$request = System::getContainer()->get('request_stack')->getMainRequest();
 
 		// Use the path without query string to check for active pages (see #480)
-		$path = $request->getBaseUrl() . $request->getPathInfo();
+		$path = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
 
 		// Active page
 		if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == $path)
