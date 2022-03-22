@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+## eval->orderField in PageTree and Picker widgets
+
+Support for a separate database `orderField` column has been removed. Use `isSortable` instead which
+stores the order in the same database column.
+
 ### Simple Token Parser
 
 Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are not supported anymore by the
