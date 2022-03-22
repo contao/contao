@@ -299,7 +299,7 @@ class InsertTags extends Controller
 					{
 						try
 						{
-							$arrCache[$strTag] = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array($keys[1]))[$keys[1]];
+							$arrCache[$strTag] = $container->get('contao.intl.locales')->getDisplayNames(array($keys[1]))[$keys[1]];
 							break;
 						}
 						catch (\Throwable $exception)
@@ -312,7 +312,7 @@ class InsertTags extends Controller
 					{
 						try
 						{
-							$arrCache[$strTag] = System::getContainer()->get('contao.intl.countries')->getCountries()[strtoupper($keys[1])] ?? '';
+							$arrCache[$strTag] = $container->get('contao.intl.countries')->getCountries()[strtoupper($keys[1])] ?? '';
 							break;
 						}
 						catch (\Throwable $exception)
@@ -380,7 +380,7 @@ class InsertTags extends Controller
 					}
 					catch (\InvalidArgumentException $exception)
 					{
-						System::getContainer()->get('monolog.logger.contao.error')->error('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage());
+						$container->get('monolog.logger.contao.error')->error('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage());
 					}
 
 					if (\count($keys) == 2)
@@ -813,7 +813,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+					$responseContext = $container->get('contao.routing.response_context_accessor')->getResponseContext();
 
 					if ($responseContext && $responseContext->has(HtmlHeadBag::class) && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{
@@ -1146,7 +1146,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					System::getContainer()->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
+					$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
 					break;
 			}
 
@@ -1261,7 +1261,7 @@ class InsertTags extends Controller
 								}
 							}
 
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'));
+							$container->get('monolog.logger.contao.error')->error('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'));
 							break;
 					}
 				}
