@@ -2746,7 +2746,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				foreach ($ids as $id)
 				{
-					$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
+					try {
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
+					} catch (AccessDeniedException) {
+						continue;
+					}
 
 					$this->intId = $id;
 					$this->procedure = array('id=?');
@@ -3855,8 +3859,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function generateTree($table, $id, $arrPrevNext, $blnHasSorting, $intMargin=0, $arrClipboard=null, $blnCircularReference=false, $protectedPage=false, $blnNoRecursion=false, $arrFound=array())
 	{
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_VIEW, new DataContainerSubject($table, $id));
-
 		// Check if the ID is visible in the root trail or allowed by permissions (or their children)
 		// in tree mode or if $table differs from $this->strTable. The latter will be false in extended
 		// tree mode if both $table and $this->strTable point to the child table.
