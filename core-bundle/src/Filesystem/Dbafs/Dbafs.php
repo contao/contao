@@ -722,14 +722,6 @@ class Dbafs implements DbafsInterface, ResetInterface
             foreach ($this->filesystem->listContents($directory, false, VirtualFilesystemInterface::BYPASS_DBAFS) as $item) {
                 $path = $item->getPath();
 
-                // Ignore paths with non-UTF-8 characters
-                // TODO: Move check to VirtualFilesystem#listContents() and throw a VirtualFilesystemException instead in Contao 5.
-                if (1 !== preg_match('//u', $path)) {
-                    trigger_deprecation('contao/core-bundle', '4.13', 'Filesystem resources with non-UTF-8 paths will no longer be skipped but throw an exception in Contao 5.0.');
-
-                    continue;
-                }
-
                 if (!$item->isFile()) {
                     if (!$shallow) {
                         yield from $traverseRecursively($path);

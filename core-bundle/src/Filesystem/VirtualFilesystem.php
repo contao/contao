@@ -307,6 +307,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         foreach ($this->mountManager->listContents($path, $deep) as $item) {
             $path = $item->getPath();
 
+            // Detect paths with non-UTF-8 characters
+            if (1 !== preg_match('//u', $path)) {
+                throw VirtualFilesystemException::encounteredInvalidPath($path);
+            }
+
             yield $item
                 ->withPath(Path::makeRelative($path, $this->prefix))
                 ->withExtraMetadata(fn () => $this->dbafsManager->getExtraMetadata($path))
