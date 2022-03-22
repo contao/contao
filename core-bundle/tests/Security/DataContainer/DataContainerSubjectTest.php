@@ -38,11 +38,15 @@ class DataContainerSubjectTest extends TestCase
         $subject = new DataContainerSubject(
             'foobar_table',
             '18e8880b-0442-4629-9651-9c667f6c1d4a',
-            ['foobar']
+            [
+                'foobar' => null,
+                'key' => 'value',
+                'object' => new \stdClass(),
+            ]
         );
 
         $this->assertSame(
-            '[Subject: Table: foobar_table; ID: 18e8880b-0442-4629-9651-9c667f6c1d4a; Attributes: foobar]',
+            '[Subject: Table: foobar_table; ID: 18e8880b-0442-4629-9651-9c667f6c1d4a; Attributes: {"foobar":null,"key":"value","object":{}}]',
             (string) $subject
         );
     }

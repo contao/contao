@@ -35,7 +35,7 @@ class DataContainerSubject
         }
 
         if ($attributes = $this->getAttributes()) {
-            $subject[] = 'Attributes: '.implode(', ', $attributes);
+            $subject[] = 'Attributes: '.json_encode($attributes);
         }
 
         return sprintf('[Subject: %s]', implode('; ', $subject));
