@@ -26,7 +26,7 @@ class GeneratedEntityCacheWarmer implements CacheWarmerInterface
 
     public function warmUp(string $cacheDir): array
     {
-        $directory = sprintf('%s/contao/entities', $cacheDir);
+        $directory = sprintf('%s/../../entities', $cacheDir);
 
         $this->ensureCacheDirectoryExists($directory);
 

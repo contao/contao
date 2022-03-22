@@ -70,8 +70,19 @@ class EntityFactory
                 continue;
             }
 
-            /** @var ClassType $class */
-            $class = ClassType::from($entity, true);
+            $class = new ClassType($reflectionClass->getShortName());
+            $class->setExtends($entity);
+            $class->setComment('This entity is auto generated.');
+            $class->setAbstract(false);
+            $class->setFinal(true);
+
+
+            // Set class attributes
+            $attributes = $reflectionClass->getAttributes();
+
+            foreach ($attributes as $attribute) {
+                $class->addAttribute($attribute->getName(), $attribute->getArguments());
+            }
 
             foreach ($extensions as $extension) {
                 $class->addTrait($extension);
@@ -95,16 +106,10 @@ class EntityFactory
                 }
             }
 
-            $comment = 'This entity is auto generated.';
-
             $printer = new CodePrinter();
 
-            $namespace = new PhpNamespace('Contao\CoreBundle\GeneratedEntity');
+            $namespace = new PhpNamespace('GeneratedEntity');
 
-            $class->setComment($comment);
-            $class->setAbstract(false);
-            $class->setExtends($entity);
-            $class->setFinal(true);
 
             $file = new PhpFile();
             $file->setStrictTypes(true);

@@ -16,7 +16,7 @@ class GeneratedEntityAutoloader
 {
     public static function register(string $directory): callable
     {
-        $namespace = 'Contao\CoreBundle\GeneratedEntity';
+        $namespace = 'GeneratedEntity';
 
         $autoloader = function (string $className) use ($directory, $namespace): void {
             if (!str_starts_with($className, $namespace)) {
