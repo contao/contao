@@ -5,7 +5,7 @@ var gulp = require('gulp'),
     ignore = require('gulp-ignore'),
     rename = require('gulp-rename'),
     svgo = require('gulp-svgo'),
-    uglify = require('gulp-uglify'),
+    uglify = require('gulp-uglify-es').default,
     pump = require('pump');
 
 gulp.task('minify-public', function (cb) {
