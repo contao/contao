@@ -1831,7 +1831,7 @@ abstract class Controller extends System
 				}
 
 				$objFile = new File($objFiles->path);
-				$strHref = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
+				$strHref = null !== $request ? $request->getRequestUri() : '';
 
 				// Remove an existing file parameter (see #5683)
 				if (preg_match('/(&(amp;)?|\?)file=/', $strHref))

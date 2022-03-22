@@ -65,7 +65,7 @@ class ModuleArticleList extends Module
 
 		$request = System::getContainer()->get('request_stack')->getMainRequest();
 
-		$this->Template->request = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
+		$this->Template->request = null !== $request ? $request->getRequestUri() : '';
 
 		// Show the articles of a different page
 		if ($this->defineRoot && ($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)

@@ -35,6 +35,6 @@ class ContentToplink extends ContentElement
 
 		$this->Template->label = $this->linkTitle;
 		$this->Template->title = StringUtil::specialchars($this->linkTitle);
-		$this->Template->request = null !== $request ? StringUtil::ampersand($request->getBaseUrl() . $request->getPathInfo()) : '';
+		$this->Template->request = null !== $request ? StringUtil::ampersand($request->getRequestUri()) : '';
 	}
 }

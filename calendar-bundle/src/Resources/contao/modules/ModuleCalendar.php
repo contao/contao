@@ -71,6 +71,7 @@ class ModuleCalendar extends Events
 
 		$request = System::getContainer()->get('request_stack')->getMainRequest();
 
+		// Get request URL without query string
 		$this->strUrl = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
 		$this->strLink = $this->strUrl;
 

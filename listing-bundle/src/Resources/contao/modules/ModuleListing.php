@@ -231,7 +231,7 @@ class ModuleListing extends Module
 
 		$request = System::getContainer()->get('request_stack')->getMainRequest();
 
-		// Prepare the URL
+		// Prepare the URL without query string
 		$strUrl = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
 		$blnQuery = false;
 

@@ -164,7 +164,7 @@ class ModuleFaqList extends Module
 		{
 			$request = System::getContainer()->get('request_stack')->getMainRequest();
 
-			$this->arrTargets[$jumpTo] = null !== $request ? StringUtil::ampersand($request->getBaseUrl() . $request->getPathInfo()) : '';
+			$this->arrTargets[$jumpTo] = null !== $request ? StringUtil::ampersand($request->getRequestUri()) : '';
 
 			if ($jumpTo > 0 && ($objTarget = PageModel::findByPk($jumpTo)) !== null)
 			{

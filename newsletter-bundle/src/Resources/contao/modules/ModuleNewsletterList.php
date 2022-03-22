@@ -76,7 +76,7 @@ class ModuleNewsletterList extends Module
 		$container = System::getContainer();
 		$request = $container->get('request_stack')->getMainRequest();
 
-		$strRequest = null !== $request ? StringUtil::ampersand($request->getBaseUrl() . $request->getPathInfo()) : '';
+		$strRequest = null !== $request ? StringUtil::ampersand($request->getRequestUri()) : '';
 		$objNewsletter = NewsletterModel::findSentByPids($this->nl_channels);
 
 		if ($objNewsletter !== null)

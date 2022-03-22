@@ -444,7 +444,7 @@ class News extends Frontend
 			{
 				$request = System::getContainer()->get('request_stack')->getMainRequest();
 
-				self::$arrUrlCache[$strCacheKey] = null !== $request ? StringUtil::ampersand($request->getBaseUrl() . $request->getPathInfo()) : '';
+				self::$arrUrlCache[$strCacheKey] = null !== $request ? StringUtil::ampersand($request->getRequestUri()) : '';
 			}
 			else
 			{
