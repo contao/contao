@@ -32,6 +32,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -242,7 +243,7 @@ class ContaoFrameworkTest extends TestCase
         $feBag = new ArrayAttributeBag();
         $feBag->setName('contao_frontend');
 
-        $session = new Session(new MockNativeSessionStorage());
+        $session = new Session(new MockArraySessionStorage());
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
