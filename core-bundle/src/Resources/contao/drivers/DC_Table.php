@@ -2084,11 +2084,22 @@ class DC_Table extends DataContainer implements \listable, \editable
 <input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
 		}
 
+		$strBackUrl = $this->getReferer(true);
+
+		if ((string) $this->objActiveRecord->tstamp === '0')
+		{
+			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
+			$return .= '<script>
+				history.pushState({}, "");
+				window.addEventListener("popstate", () => fetch(document.querySelector(".header_back").href).then(() => history.back()));
+			</script>';
+		}
+
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = $version . Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
 <div id="tl_buttons">' . (Input::get('nb') ? '&nbsp;' : '
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>') . '
+<a href="' . $strBackUrl . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>') . '
 </div>
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
@@ -3328,60 +3339,37 @@ class DC_Table extends DataContainer implements \listable, \editable
 		}
 
 		// Delete all new but incomplete records (tstamp=0)
-		if (!empty($new_records[$this->strTable]) && \is_array($new_records[$this->strTable]))
+		if ($strReviseTable = Input::get('revise'))
 		{
-			$intPreserved = null;
+			list($strTable, $intId) = explode('.', $strReviseTable, 2);
 
-			// Unset the preserved record (see #1129)
-			if ($this->intPreserveRecord && ($index = array_search($this->intPreserveRecord, $new_records[$this->strTable])) !== false)
-			{
-				$intPreserved = $new_records[$this->strTable][$index];
-				unset($new_records[$this->strTable][$index]);
-			}
-
-			// Remove the entries from the database
-			if (!empty($new_records[$this->strTable]))
+			if ($intId && $strTable === $this->strTable)
 			{
 				$origId = $this->id;
 				$origActiveRecord = $this->activeRecord;
-				$ids = array_map('\intval', $new_records[$this->strTable]);
 
-				foreach ($ids as $id)
-				{
-					// Get the current record
-					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-											 ->limit(1)
-											 ->execute($id);
+				// Get the current record
+				$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+										 ->limit(1)
+										 ->execute((int) $intId);
 
-					$this->id = $id;
-					$this->activeRecord = $objRow;
+				$this->id = $intId;
+				$this->activeRecord = $objRow;
 
-					// Invalidate cache tags (no need to invalidate the parent)
-					$this->invalidateCacheTags();
-				}
+				// Invalidate cache tags (no need to invalidate the parent)
+				$this->invalidateCacheTags();
 
 				$this->id = $origId;
 				$this->activeRecord = $origActiveRecord;
 
-				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', $ids) . ") AND tstamp=0");
+				$objStmt = $this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id = ? AND tstamp=0")
+										  ->execute((int) $intId);
 
 				if ($objStmt->affectedRows > 0)
 				{
 					$reload = true;
 				}
 			}
-
-			// Remove the entries from the session
-			if ($intPreserved !== null)
-			{
-				$new_records[$this->strTable] = array($intPreserved);
-			}
-			else
-			{
-				unset($new_records[$this->strTable]);
-			}
-
-			$objSessionBag->set('new_records', $new_records);
 		}
 
 		// Delete all records of the current table that are not related to the parent table
@@ -3911,7 +3899,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 		$session[$node][$id] = (\is_int($session[$node][$id])) ? $session[$node][$id] : 0;
 		$mouseover = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 || $table == $this->strTable) ? ' toggle_select hover-div' : '';
 
-		$return .= "\n  " . '<li class="' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
+		$return .= "\n  " . '<li class="' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) $objRow->tstamp === '0' ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
 		$args = array();
@@ -4476,6 +4464,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 						}
 					}
 
+					$blnDraft = (string) $row[$i]['tstamp'] === '0';
 					$blnWrapperStart = \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['start']);
 					$blnWrapperSeparator = \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['separator']);
 					$blnWrapperStop = \in_array($row[$i]['type'], $GLOBALS['TL_WRAPPERS']['stop']);
@@ -4489,7 +4478,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 
 					$return .= '
-<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
+<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ($blnDraft ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . (($i%2 == 0) ? ' even' : ' odd') . ' click2edit toggle_select hover-div">
 <div class="tl_content_right">';
 
 					// Opening wrappers
@@ -4992,7 +4981,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 				}
 
 				$return .= '
-  <tr class="' . ((++$eoCount % 2 == 0) ? 'even' : 'odd') . ' click2edit toggle_select hover-row">
+  <tr class="' . ((++$eoCount % 2 == 0) ? 'even' : 'odd') . ((string) ($row['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit toggle_select hover-row">
     ';
 
 				$colspan = 1;
