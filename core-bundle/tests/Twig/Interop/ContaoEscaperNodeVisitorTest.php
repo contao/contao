@@ -81,19 +81,9 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $templateContent = '{{ heart() }} {{ target|trim }}';
 
         $environment = $this->getEnvironment($templateContent);
-        $environment->addFunction(
-            new TwigFunction(
-                'heart',
-                static fn () => '&#9829;'
-            )
-        );
+        $environment->addFunction(new TwigFunction('heart', static fn () => '&#9829;'));
 
-        $output = $environment->render(
-            'legacy.html.twig',
-            [
-                'target' => ' Twig &amp; Contao ',
-            ]
-        );
+        $output = $environment->render('legacy.html.twig', ['target' => ' Twig &amp; Contao ']);
 
         $this->assertSame('&#9829; Twig &amp; Contao', $output);
     }

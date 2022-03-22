@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Provide methods to handle file uploads in the back end.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FileUpload extends Backend
 {
@@ -257,21 +255,6 @@ class FileUpload extends Backend
 	 * Return the maximum upload file size in bytes
 	 *
 	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.6, to be removed in Contao 5.0.
-	 *             Use FileUpload::getMaxUploadSize() instead.
-	 */
-	protected function getMaximumUploadSize()
-	{
-		trigger_deprecation('contao/core-bundle', '4.6', 'Using "Contao\FileUpload::getMaximumUploadSize()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\FileUpload::getMaxUploadSize()" instead.');
-
-		return static::getMaxUploadSize();
-	}
-
-	/**
-	 * Return the maximum upload file size in bytes
-	 *
-	 * @return string
 	 */
 	public static function getMaxUploadSize()
 	{
@@ -347,5 +330,3 @@ class FileUpload extends Backend
 		return false;
 	}
 }
-
-class_alias(FileUpload::class, 'FileUpload');

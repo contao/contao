@@ -34,7 +34,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
     /**
      * We evaluate affected templates on the fly so that rules can be adjusted
      * after building the container. Expects a list of regular expressions to
-     * be returned. A template counts as 'affected' if it matches any of the
+     * be returned. A template counts as "affected" if it matches any of the
      * rules.
      */
     private \Closure $rules;

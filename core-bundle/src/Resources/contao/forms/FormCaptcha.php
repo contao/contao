@@ -17,8 +17,6 @@ namespace Contao;
  * @property string $question
  * @property string $placeholder
  * @property string $rowClass
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FormCaptcha extends Widget
 {
@@ -272,5 +270,3 @@ class FormCaptcha extends Widget
 		);
 	}
 }
-
-class_alias(FormCaptcha::class, 'FormCaptcha');

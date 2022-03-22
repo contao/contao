@@ -84,8 +84,8 @@ class DbafsManager
      *
      * The returned path will always be relative to the provided prefix:
      *
-     *     resolveUuid($uuid); // returns 'files/foo/bar'
-     *     resolveUuid($uuid, 'files/foo'); // returns 'bar'
+     *     resolveUuid($uuid); // returns "files/foo/bar"
+     *     resolveUuid($uuid, 'files/foo'); // returns "bar"
      *
      * @throws UnableToResolveUuidException
      */
@@ -315,9 +315,9 @@ class DbafsManager
      * Ensures that all DBAFS with a more specific prefix are also supporting
      * everything each less specific one does.
      *
-     * For example, a DBAFS with prefix 'files/media' must also support
-     * 'fileSize' if the DBAFS under 'files' does. It could, however, support
-     * additional properties like 'mimeType' even if the 'files' DBAFS does not.
+     * For example, a DBAFS with prefix "files/media" must also support
+     * "fileSize" if the DBAFS under "files" does. It could, however, support
+     * additional properties like "mimeType" even if the "files" DBAFS does not.
      */
     private function validateTransitiveProperties(): void
     {

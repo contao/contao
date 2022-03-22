@@ -33,11 +33,7 @@ class InheritanceTest extends TestCase
     public function testInheritsMultipleTimes(): void
     {
         $environment = $this->getDemoEnvironment();
-
-        $html = $environment->render(
-            '@Contao/text.html.twig',
-            ['content' => 'This &amp; that']
-        );
+        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This &amp; that']);
 
         // Global > App > BarBundle > FooBundle > CoreBundle
         $expected = '<global><app><bar><foo>Content: This &amp; that</foo></bar></app></global>';
@@ -54,10 +50,7 @@ class InheritanceTest extends TestCase
 
         $GLOBALS['objPage'] = $page;
 
-        $html = $environment->render(
-            '@Contao/text.html.twig',
-            ['content' => 'This &amp; that']
-        );
+        $html = $environment->render('@Contao/text.html.twig', ['content' => 'This &amp; that']);
 
         // Theme > Global > App > BarBundle > FooBundle > CoreBundle
         $expected = '<theme><global><app><bar><foo>Content: This &amp; that</foo></bar></app></global></theme>';

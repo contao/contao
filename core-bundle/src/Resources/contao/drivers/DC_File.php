@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provide methods to edit the local configuration file.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DC_File extends DataContainer implements EditableDataContainerInterface
 {
@@ -387,7 +385,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				}
 				else
 				{
-					$varValue = serialize(array_map('StringUtil::binToUuid', $varValue));
+					$varValue = serialize(array_map('\Contao\StringUtil::binToUuid', $varValue));
 				}
 			}
 
@@ -409,7 +407,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				}
 				else
 				{
-					$varValue = serialize(array_map('StringUtil::restoreBasicEntities', $varValue));
+					$varValue = serialize(array_map('\Contao\StringUtil::restoreBasicEntities', $varValue));
 				}
 			}
 		}
@@ -560,5 +558,3 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		return $strPalette;
 	}
 }
-
-class_alias(DC_File::class, 'DC_File');

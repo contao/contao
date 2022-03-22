@@ -106,7 +106,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $menu->getFirstChild();
     }
 
-    public function supportsContext($context): bool
+    public function supportsContext(string $context): bool
     {
         if (0 !== strpos($context, self::PREFIX)) {
             return false;
@@ -160,7 +160,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, $value)/*: int*/
+    public function convertDcaValue(PickerConfig $config, mixed $value): string|int
     {
         return (int) $value;
     }

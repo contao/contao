@@ -76,14 +76,6 @@ services:
         arguments:
             - '@database_connection'
 
-    contao.migration.version_410.routing:
-        class: Contao\CoreBundle\Migration\Version410\RoutingMigration
-        arguments:
-            - '@database_connection'
-            - '@contao.framework'
-            - '%contao.url_suffix%'
-            - '%contao.prepend_locale%'
-
     contao.migration.version_411.merge_webfonts:
         class: Contao\CoreBundle\Migration\Version411\MergeWebfontsMigration
         arguments:

@@ -14,6 +14,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -22,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_theme',
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'name',
@@ -420,13 +421,6 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "binary(16) NULL"
 		),
-		'url' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'text',
-			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(2048) NOT NULL default ''"
-		),
 		'imgSize' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
@@ -655,7 +649,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_module extends Backend
 {

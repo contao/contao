@@ -79,8 +79,6 @@ use Contao\Model\Collection;
  * @method static integer countByBbcode($val, array $opt=array())
  * @method static integer countByRequireLogin($val, array $opt=array())
  * @method static integer countByDisableCaptcha($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class CalendarModel extends Model
 {
@@ -90,5 +88,3 @@ class CalendarModel extends Model
 	 */
 	protected static $strTable = 'tl_calendar';
 }
-
-class_alias(CalendarModel::class, 'CalendarModel');

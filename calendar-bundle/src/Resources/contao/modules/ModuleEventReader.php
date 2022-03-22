@@ -22,8 +22,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property string   $com_template
  * @property string   $cal_template
  * @property array    $cal_calendar
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventReader extends Events
 {
@@ -92,13 +90,6 @@ class ModuleEventReader extends Events
 		{
 			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['eventOverview'];
-		}
-		else
-		{
-			trigger_deprecation('contao/calendar-bundle', '4.13', 'If you do not select an overview page in the event reader module, the "go back" link will no longer be shown in Contao 5.0.');
-
-			$this->Template->referer = 'javascript:history.go(-1)';
-			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 		}
 
 		// Get the current event
@@ -538,5 +529,3 @@ class ModuleEventReader extends Events
 		return array($strDate, $strTime);
 	}
 }
-
-class_alias(ModuleEventReader::class, 'ModuleEventReader');

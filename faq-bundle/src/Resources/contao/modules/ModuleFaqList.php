@@ -15,8 +15,6 @@ namespace Contao;
  *
  * @property array $faq_categories
  * @property int   $faq_readerModule
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaqList extends Module
 {
@@ -162,5 +160,3 @@ class ModuleFaqList extends Module
 		return sprintf(preg_replace('/%(?!s)/', '%%', $this->arrTargets[$jumpTo]), ($objFaq->alias ?: $objFaq->id));
 	}
 }
-
-class_alias(ModuleFaqList::class, 'ModuleFaqList');

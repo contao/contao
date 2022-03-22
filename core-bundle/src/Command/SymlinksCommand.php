@@ -65,15 +65,7 @@ class SymlinksCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->webDir = $input->getArgument('target');
-
-        if (null === $this->webDir) {
-            if ((new Filesystem())->exists($this->projectDir.'/web')) {
-                $this->webDir = 'web'; // backwards compatibility
-            } else {
-                $this->webDir = 'public';
-            }
-        }
+        $this->webDir = $input->getArgument('target') ?? 'public';
 
         $this->generateSymlinks();
 
@@ -250,10 +242,7 @@ class SymlinksCommand extends Command
                 unset($files[$key]);
 
                 $this->rows[] = [
-                    sprintf(
-                        '<fg=yellow;options=bold>%s</>',
-                        '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'
-                    ),
+                    sprintf('<fg=yellow;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'),
                     Path::join($this->webDir, $prepend, $path),
                     sprintf('<comment>Skipped because %s will be symlinked.</comment>', Path::join($prepend, $otherPath)),
                 ];

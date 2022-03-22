@@ -17,8 +17,6 @@ namespace Contao;
  * @property boolean $mandatory
  * @property string  $placeholder
  * @property array   $options
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InputUnit extends Widget
 {
@@ -163,5 +161,3 @@ class InputUnit extends Widget
 		);
 	}
 }
-
-class_alias(InputUnit::class, 'InputUnit');

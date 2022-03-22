@@ -91,6 +91,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private function generateDcaCache(string $cacheDir): void
     {
         $dumper = new CombinedFileDumper($this->filesystem, new PhpFileLoader(), Path::join($cacheDir, 'contao'));
+
         $processed = [];
         $files = $this->findDcaFiles();
 
@@ -104,11 +105,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
             $processed[] = $baseName;
             $path = Path::join('dca', $baseName);
 
-            $dumper->dump(
-                $this->locator->locate($path, null, false),
-                $path,
-                ['type' => 'namespaced']
-            );
+            $dumper->dump($this->locator->locate($path, null, false), $path, ['type' => 'namespaced']);
         }
     }
 

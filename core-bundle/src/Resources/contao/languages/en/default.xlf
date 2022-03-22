@@ -224,9 +224,6 @@
       <trans-unit id="ERR.fileNotFoundSync">
         <source>No database entry found for %s. Please synchronize the file system.</source>
       </trans-unit>
-      <trans-unit id="ERR.invalidGoogleId">
-        <source>Please enter a numeric Google+ ID or vanity name!</source>
-      </trans-unit>
       <trans-unit id="ERR.invalidFieldName">
         <source>Please enter only the following characters: A-Z0-9[]_-</source>
       </trans-unit>
@@ -1188,7 +1185,7 @@
         <source>Back end keyboard shortcuts</source>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href="https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/" title="Keyboard shortcuts overview" target="_blank" rel="noreferrer noopener"&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <source>Learn more about speeding up your workflow by using &lt;a href="https://to.contao.org/shortcuts" target="_blank" rel="noreferrer noopener"&gt;keyboard shortcuts&lt;/a&gt;.</source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1525,18 +1522,6 @@
       </trans-unit>
       <trans-unit id="MSC.articlePicker">
         <source>Articles</source>
-      </trans-unit>
-      <trans-unit id="MSC.fileManager">
-        <source>File manager</source>
-      </trans-unit>
-      <trans-unit id="MSC.pageManager">
-        <source>Site structure</source>
-      </trans-unit>
-      <trans-unit id="MSC.filePickerHome">
-        <source>Back to the file picker</source>
-      </trans-unit>
-      <trans-unit id="MSC.pagePickerHome">
-        <source>Back to the page picker</source>
       </trans-unit>
       <trans-unit id="MSC.systemMessages">
         <source>Alerts</source>
@@ -2011,9 +1996,6 @@
       </trans-unit>
       <trans-unit id="MSC.disable">
         <source>Disable</source>
-      </trans-unit>
-      <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

@@ -68,7 +68,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader = $this->getContaoFilesystemLoader();
 
         $this->expectException(LoaderError::class);
-        $this->expectExceptionMessage("Tried to register an invalid Contao namespace 'Foo'.");
+        $this->expectExceptionMessage('Tried to register an invalid Contao namespace "Foo".');
 
         $loader->addPath('foo/path', 'Foo');
     }
@@ -78,7 +78,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader = $this->getContaoFilesystemLoader();
 
         $this->expectException(LoaderError::class);
-        $this->expectExceptionMessage("Tried to register an invalid Contao namespace 'Foo'.");
+        $this->expectExceptionMessage('Tried to register an invalid Contao namespace "Foo".');
 
         $loader->prependPath('foo/path', 'Foo');
     }
@@ -143,11 +143,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $cacheAdapter = new ArrayAdapter();
 
         $loader1 = $this->getContaoFilesystemLoader($cacheAdapter, $locator);
-        $loader1->addPath(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1'),
-            'Contao_App',
-            true
-        );
+        $loader1->addPath(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1'), 'Contao_App', true);
 
         $chains = $loader1->getInheritanceChains();
 
@@ -426,15 +422,16 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $expectedChains = [
             'text' => [
-                $themePath = Path::join($projectDir, '/templates/my/theme/text.html.twig') => '@Contao_Theme_my_theme/text.html.twig',
-                $globalPath = Path::join($projectDir, '/templates/text.html.twig') => '@Contao_Global/text.html.twig',
-                $appPath = Path::join($projectDir, '/contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
-                $barPath = Path::join($projectDir, '/vendor-bundles/BarBundle/contao/templates/text.html.twig') => '@Contao_BarBundle/text.html.twig',
-                $fooPath = Path::join($projectDir, '/vendor-bundles/FooBundle/templates/any/text.html.twig') => '@Contao_FooBundle/text.html.twig',
-                $corePath = Path::join($projectDir, '/vendor-bundles/CoreBundle/Resources/contao/templates/text.html.twig') => '@Contao_CoreBundle/text.html.twig',
+                $themePath = Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Theme_my_theme/text.html.twig',
+                $globalPath = Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig',
+                $appPath = Path::join($projectDir, 'contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
+                $barPath = Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates/text.html.twig') => '@Contao_BarBundle/text.html.twig',
+                $fooPath = Path::join($projectDir, 'vendor-bundles/FooBundle/templates/any/text.html.twig') => '@Contao_FooBundle/text.html.twig',
+                $corePath = Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates/text.html.twig') => '@Contao_CoreBundle/text.html.twig',
             ],
-            'bar' => [Path::join($projectDir, '/src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
-            'baz' => [Path::join($projectDir, '/app/Resources/contao/templates/baz.html.twig') => '@Contao_App/baz.html.twig'],
+            'nested-dir/foo' => [Path::join($projectDir, 'contao/templates/other/nested-dir/foo.html.twig') => '@Contao_App/nested-dir/foo.html.twig'],
+            'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
+            'baz' => [Path::join($projectDir, 'app/Resources/contao/templates/baz.html.twig') => '@Contao_App/baz.html.twig'],
         ];
 
         // Full hierarchy

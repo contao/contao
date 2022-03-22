@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "image".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentImage extends ContentElement
 {
@@ -74,5 +72,3 @@ class ContentImage extends ContentElement
 		}
 	}
 }
-
-class_alias(ContentImage::class, 'ContentImage');

@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_module_newsletter extends Backend
 {

@@ -32,10 +32,6 @@ use Imagine\Image\Box;
  *                     ->setResizeMode('center_center')
  *                     ->executeResize()
  *                     ->getResizedPath();
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Martin Auswöger <https://github.com/ausi>
- * @author Yanick Witschi <https://github.com/Toflar>
  */
 class Image
 {
@@ -945,5 +941,3 @@ class Image
 		return 0;
 	}
 }
-
-class_alias(Image::class, 'Image');

@@ -16,8 +16,6 @@ use Contao\CoreBundle\Exception\ResponseException;
  * Front end module "personal data".
  *
  * @property array $editable
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModulePersonalData extends Module
 {
@@ -279,12 +277,6 @@ class ModulePersonalData extends Module
 						$varValue = $objWidget->getEmptyValue();
 					}
 
-					// Encrypt the value (see #7815)
-					if ($arrData['eval']['encrypt'] ?? null)
-					{
-						$varValue = Encryption::encrypt($varValue);
-					}
-
 					// Set the new value
 					if ($varValue !== $this->User->$field)
 					{
@@ -321,12 +313,6 @@ class ModulePersonalData extends Module
 		{
 			$objMember->tstamp = time();
 			$objMember->save();
-
-			// Create a new version
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)
-			{
-				$objVersions->create();
-			}
 		}
 
 		$this->Template->hasError = $doNotSubmit;
@@ -359,6 +345,12 @@ class ModulePersonalData extends Module
 						$callback($this->User, $this);
 					}
 				}
+			}
+
+			// Create a new version
+			if ($blnModified && ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null))
+			{
+				$objVersions->create();
 			}
 
 			// Check whether there is a jumpTo page
@@ -401,5 +393,3 @@ class ModulePersonalData extends Module
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
-
-class_alias(ModulePersonalData::class, 'ModulePersonalData');

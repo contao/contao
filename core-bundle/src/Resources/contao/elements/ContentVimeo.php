@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Content element "Vimeo".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentVimeo extends ContentElement
 {
@@ -131,5 +129,3 @@ class ContentVimeo extends ContentElement
 		$this->Template->caption = $this->playerCaption;
 	}
 }
-
-class_alias(ContentVimeo::class, 'ContentVimeo');

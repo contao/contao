@@ -19,12 +19,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class DefaultIndexerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     /**
      * @dataProvider indexProvider
      */
@@ -209,46 +206,6 @@ class DefaultIndexerTest extends TestCase
             ],
             null,
             true,
-        ];
-    }
-
-    /**
-     * @group legacy
-     * @dataProvider indexProviderDeprecated
-     */
-    public function testIndexesADocumentWithDeprecatedJsonLd(Document $document, ?array $expectedIndexParams, string $expectedMessage = null, bool $indexProtected = false): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.');
-
-        $this->testIndexesADocument($document, $expectedIndexParams, $expectedMessage, $indexProtected);
-    }
-
-    public function indexProviderDeprecated(): \Generator
-    {
-        yield 'Test valid index when using deprecated JSON-LD @type RegularPage' => [
-            new Document(new Uri('https://example.com/valid'), 200, [], '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:RegularPage","contao:pageId":2,"contao:noSearch":false,"contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>'),
-            [
-                'url' => 'https://example.com/valid',
-                'content' => '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:RegularPage","contao:pageId":2,"contao:noSearch":false,"contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>',
-                'protected' => '',
-                'groups' => [],
-                'pid' => 2,
-                'title' => 'undefined',
-                'language' => 'en',
-                'meta' => [
-                    [
-                        '@context' => ['contao' => 'https://schema.contao.org/'],
-                        '@type' => 'https://schema.contao.org/RegularPage',
-                        'https://schema.contao.org/pageId' => 2,
-                        'https://schema.contao.org/noSearch' => false,
-                        'https://schema.contao.org/protected' => false,
-                        'https://schema.contao.org/groups' => [],
-                        'https://schema.contao.org/fePreview' => false,
-                    ],
-                ],
-            ],
-            null,
-            false,
         ];
     }
 

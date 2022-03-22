@@ -322,25 +322,6 @@ class PluginTest extends ContaoTestCase
         );
     }
 
-    /**
-     * @group legacy
-     */
-    public function testHandlesThePrependLocaleParameter(): void
-    {
-        $this->expectDeprecation('Since contao/manager-bundle 4.6: Defining the "prepend_locale" parameter in the parameters.yml file %s.');
-
-        $container = $this->getContainer();
-        $container->setParameter('prepend_locale', true);
-
-        $expect = [[
-            'prepend_locale' => '%prepend_locale%',
-        ]];
-
-        $extensionConfig = (new Plugin())->getExtensionConfig('contao', [], $container);
-
-        $this->assertSame($expect, $extensionConfig);
-    }
-
     public function testSetsTheAppSecret(): void
     {
         $container = $this->getContainer();
@@ -983,6 +964,60 @@ class PluginTest extends ContaoTestCase
         yield['?host=localhost'];
 
         yield['foo://localhost'];
+    }
+
+    public function testUpdatesTheClickjackingPaths(): void
+    {
+        $extensionConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'ALLOW',
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+
+        $expectedConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'ALLOW',
+                    ],
+                ],
+            ],
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/.*' => 'SAMEORIGIN',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedConfigs, $extensionConfig);
+    }
+
+    public function testDoesNotOverrideDefaultClickjackingPath(): void
+    {
+        $extensionConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'DENY',
+                        '^/.*' => 'ALLOW',
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
     public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void

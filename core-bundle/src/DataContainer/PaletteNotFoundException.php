@@ -12,6 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
-class PaletteNotFoundException extends \Contao\CoreBundle\Exception\PaletteNotFoundException
+class PaletteNotFoundException extends \InvalidArgumentException
 {
 }

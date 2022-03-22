@@ -29,8 +29,6 @@ namespace Contao;
  * @property boolean $storeValues
  * @property string  $targetTable
  * @property string  $customTpl
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Form extends Hybrid
 {
@@ -559,7 +557,7 @@ class Form extends Hybrid
 		// Store the submission time to invalidate the session later on
 		$_SESSION['FORM_DATA']['SUBMITTED_AT'] = time();
 
-		$arrFiles = $_SESSION['FILES'];
+		$arrFiles = $_SESSION['FILES'] ?? null;
 
 		// HOOK: process form data callback
 		if (isset($GLOBALS['TL_HOOKS']['processFormData']) && \is_array($GLOBALS['TL_HOOKS']['processFormData']))
@@ -592,21 +590,6 @@ class Form extends Hybrid
 		}
 
 		$this->reload();
-	}
-
-	/**
-	 * Get the maximum file size that is allowed for file uploads
-	 *
-	 * @return integer
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use $this->objModel->getMaxUploadFileSize() instead.
-	 */
-	protected function getMaxFileSize()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Form::getMaxFileSize()" has been deprecated and will no longer work in Contao 5.0. Use "$this->objModel->getMaxUploadFileSize()" instead.');
-
-		return $this->objModel->getMaxUploadFileSize();
 	}
 
 	/**
@@ -644,5 +627,3 @@ class Form extends Hybrid
 		}
 	}
 }
-
-class_alias(Form::class, 'Form');

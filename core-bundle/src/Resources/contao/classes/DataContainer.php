@@ -30,8 +30,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $palette
  * @property object|null    $activeRecord
  * @property array          $rootIds
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class DataContainer extends Backend
 {
@@ -637,7 +635,7 @@ abstract class DataContainer extends Backend
 
 		$hasWizardClass = \in_array('wizard', $arrClasses);
 
-		if ($wizard)
+		if ($wizard && !($arrData['eval']['disabled'] ?? false) && !($arrData['eval']['readonly'] ?? false))
 		{
 			$objWidget->wizard = $wizard;
 
@@ -845,7 +843,7 @@ abstract class DataContainer extends Backend
 	protected function switchToEdit($id)
 	{
 		$arrKeys = array();
-		$arrUnset = array('act', 'id', 'table', 'mode', 'pid');
+		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
 		foreach (array_keys($_GET) as $strKey)
 		{
@@ -1612,24 +1610,10 @@ abstract class DataContainer extends Backend
 	 * @param string $table
 	 *
 	 * @return string
-	 *
-	 * @todo Change the return type to ?string in Contao 5.0
 	 */
-	public static function getDriverForTable(string $table): string
+	public static function getDriverForTable(string $table): ?string
 	{
-		if (!isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer']))
-		{
-			return '';
-		}
-
-		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
-
-		if (false === strpos($dataContainer, '\\'))
-		{
-			$dataContainer = 'DC_' . $dataContainer;
-		}
-
-		return $dataContainer;
+		return $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? null;
 	}
 
 	/**
@@ -1649,12 +1633,6 @@ abstract class DataContainer extends Backend
 
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			// Decrypt the value
-			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
-			{
-				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
-			}
-
 			if (strpos($v, ':') !== false)
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
@@ -1696,7 +1674,7 @@ abstract class DataContainer extends Backend
 
 					foreach ($row_v as $option)
 					{
-						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?: $option;
+						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
 					}
 
 					$args[$k] = implode(', ', $args_k);
@@ -1785,5 +1763,3 @@ abstract class DataContainer extends Backend
 		return $label;
 	}
 }
-
-class_alias(DataContainer::class, 'DataContainer');

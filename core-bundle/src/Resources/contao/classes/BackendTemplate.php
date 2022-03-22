@@ -21,8 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
  * @property string $mootools
  * @property string $attributes
  * @property string $badgeTitle
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendTemplate extends Template
 {
@@ -223,5 +221,3 @@ class BackendTemplate extends Template
 		}
 	}
 }
-
-class_alias(BackendTemplate::class, 'BackendTemplate');

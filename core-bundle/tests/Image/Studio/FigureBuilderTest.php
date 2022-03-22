@@ -72,7 +72,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertSame("DBAFS item 'foo' is not a file.", $exception->getMessage());
+        $this->assertSame('DBAFS item "foo" is not a file.', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -129,7 +129,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertSame("DBAFS item with UUID 'invalid-uuid' could not be found.", $exception->getMessage());
+        $this->assertSame('DBAFS item with UUID "invalid-uuid" could not be found.', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -167,7 +167,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertSame("DBAFS item with ID '99' could not be found.", $exception->getMessage());
+        $this->assertSame('DBAFS item with ID "99" could not be found.', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -336,7 +336,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertSame("The defined resource is 'null'.", $exception->getMessage());
+        $this->assertSame('The defined resource is "null".', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);
@@ -474,11 +474,7 @@ class FigureBuilderTest extends TestCase
         foreach ($setInvalidResourceOperations as [$method, $argument]) {
             $figureBuilder->$method($argument);
 
-            $this->assertNotSame(
-                $exception,
-                $figureBuilder->getLastException(),
-                'new exception replaces old one'
-            );
+            $this->assertNotSame($exception, $figureBuilder->getLastException(), 'new exception replaces old one');
 
             $exception = $figureBuilder->getLastException();
 

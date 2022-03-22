@@ -25,8 +25,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property int    $cal_readerModule
  * @property bool   $cal_hideRunning
  * @property string $cal_featured
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventlist extends Events
 {
@@ -435,5 +433,3 @@ class ModuleEventlist extends Events
 		}
 	}
 }
-
-class_alias(ModuleEventlist::class, 'ModuleEventlist');

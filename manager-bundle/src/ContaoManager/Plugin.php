@@ -219,9 +219,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
         switch ($extensionName) {
-            case 'contao':
-                return $this->handlePrependLocale($extensionConfigs, $container);
-
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs, $container);
@@ -249,33 +246,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
 
                 return $this->enableStrictMode($extensionConfigs, $container);
+
+            case 'nelmio_security':
+                return $this->checkClickjackingPaths($extensionConfigs);
         }
-
-        return $extensionConfigs;
-    }
-
-    /**
-     * Adds backwards compatibility for the %prepend_locale% parameter.
-     *
-     * @return array<string,array<string,mixed>>
-     */
-    private function handlePrependLocale(array $extensionConfigs, ContainerBuilder $container): array
-    {
-        if (!$container->hasParameter('prepend_locale')) {
-            return $extensionConfigs;
-        }
-
-        foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['prepend_locale'])) {
-                return $extensionConfigs;
-            }
-        }
-
-        trigger_deprecation('contao/manager-bundle', '4.6', 'Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5.0. Define the "contao.prepend_locale" parameter in the config.yml file instead.');
-
-        $extensionConfigs[] = [
-            'prepend_locale' => '%prepend_locale%',
-        ];
 
         return $extensionConfigs;
     }
@@ -507,7 +481,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         // If URL is set, it overrides the driver option
-        if (null !== $url) {
+        if (!empty($url)) {
             $driver = str_replace('-', '_', parse_url($url, PHP_URL_SCHEME));
         }
 
@@ -517,6 +491,30 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         }
 
         return [$driver, array_replace([], ...$options)];
+    }
+
+    /**
+     * Adds a clickjacking configuration for "^/.*" if not already defined.
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function checkClickjackingPaths(array $extensionConfigs): array
+    {
+        foreach ($extensionConfigs as $extensionConfig) {
+            if (isset($extensionConfig['clickjacking']['paths']['^/.*'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        $extensionConfigs[] = [
+            'clickjacking' => [
+                'paths' => [
+                    '^/.*' => 'SAMEORIGIN',
+                ],
+            ],
+        ];
+
+        return $extensionConfigs;
     }
 
     private function getDatabaseUrl(ContainerBuilder $container, array $extensionConfigs): string
@@ -543,7 +541,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $dbName = '';
 
         if ($name = $container->getParameter('database_name')) {
-            $dbName = '/'.$this->encodeUrlParameter($name);
+            $dbName .= '/'.$this->encodeUrlParameter($name);
+        }
+
+        if ($container->hasParameter('database_version') && $version = $container->getParameter('database_version')) {
+            $dbName .= '?serverVersion='.$this->encodeUrlParameter($version);
         }
 
         return sprintf(

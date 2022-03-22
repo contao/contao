@@ -17,8 +17,10 @@ use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Symfony\Component\Uid\Uuid;
 
 class VirtualFilesystemTest extends TestCase
@@ -448,10 +450,7 @@ class VirtualFilesystemTest extends TestCase
         /** @var array<FilesystemItem> $listedContents */
         $listedContents = [...$filesystem->listContents('foo/bar', $deep, VirtualFilesystemInterface::BYPASS_DBAFS)];
 
-        $this->assertSame(
-            ['extra' => 'data'],
-            $listedContents[0]->getExtraMetadata()
-        );
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
 
         // Normalize listing for comparison
         $listing = array_map(
@@ -534,11 +533,7 @@ class VirtualFilesystemTest extends TestCase
         /** @var array<FilesystemItem> $listedContents */
         $listedContents = [...$filesystem->listContents('foo/bar', $deep)];
 
-        $this->assertSame(
-            ['extra' => 'data'],
-            $listedContents[0]->getExtraMetadata()
-        );
-
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
         $this->assertSame(1024, $listedContents[0]->getFileSize());
 
         // Normalize listing for comparison
@@ -631,13 +626,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetLastModified(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'lastModified',
-            123450,
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('lastModified', 123450, $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -645,13 +634,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetFileSize(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'fileSize',
-            1024,
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('fileSize', 1024, $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -659,13 +642,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetMimeType(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'mimeType',
-            'image/png',
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('mimeType', 'image/png', $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -806,6 +783,28 @@ class VirtualFilesystemTest extends TestCase
         yield 'set extra metadata' => [
             'setExtraMetadata', 'foo/bar', ['some' => 'data'],
         ];
+    }
+
+    public function testFailsWithNonUtf8Paths(): void
+    {
+        // Set a compatible codepage under Windows, so that dirname() calls
+        // used in the InMemoryFilesystemAdapter implementation do not alter
+        // our non-UTF-8 test paths.
+        if (\function_exists('sapi_windows_cp_set')) {
+            sapi_windows_cp_set(1252);
+        }
+
+        $filesystem = new VirtualFilesystem(
+            new MountManager(new InMemoryFilesystemAdapter()),
+            $this->createMock(DbafsManager::class)
+        );
+
+        $filesystem->createDirectory("b\xE4r");
+
+        $this->expectException(VirtualFilesystemException::class);
+        $this->expectErrorMessage("The path \"b\xE4r\" is not supported, because it contains non-UTF-8 characters.");
+
+        iterator_to_array($filesystem->listContents('', true));
     }
 
     /**
