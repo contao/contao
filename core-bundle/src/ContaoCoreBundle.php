@@ -69,7 +69,7 @@ class ContaoCoreBundle extends Bundle
 
         /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
-        $extension->addSecurityListenerFactory(new ContaoLoginFactory());
+        $extension->addAuthenticatorFactory(new ContaoLoginFactory());
 
         $container->addCompilerPass(
             new AddEventAliasesPass([

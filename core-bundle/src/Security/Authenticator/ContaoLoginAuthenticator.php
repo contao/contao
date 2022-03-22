@@ -17,6 +17,9 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageError401;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
+use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
+use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +28,7 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
@@ -53,9 +57,11 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     private RouterInterface $router;
     private UriSigner $uriSigner;
     private ContaoFramework $framework;
+    private TokenStorageInterface $tokenStorage;
+    private TwoFactorAuthenticator $twoFactorAuthenticator;
     private array $options;
 
-    public function __construct(UserProviderInterface $userProvider, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, ScopeMatcher $scopeMatcher, RouterInterface $router, UriSigner $uriSigner, ContaoFramework $framework, array $options)
+    public function __construct(UserProviderInterface $userProvider, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, ScopeMatcher $scopeMatcher, RouterInterface $router, UriSigner $uriSigner, ContaoFramework $framework, TokenStorageInterface $tokenStorage, TwoFactorAuthenticator $twoFactorAuthenticator, array $options)
     {
         $this->userProvider = $userProvider;
         $this->successHandler = $successHandler;
@@ -64,6 +70,8 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $this->router = $router;
         $this->uriSigner = $uriSigner;
         $this->framework = $framework;
+        $this->tokenStorage = $tokenStorage;
+        $this->twoFactorAuthenticator = $twoFactorAuthenticator;
         $this->options = array_merge([
             'username_parameter' => 'username',
             'password_parameter' => 'password',
@@ -108,6 +116,14 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function authenticate(Request $request): Passport
     {
+        // When the firewall is lazy, the token is not initialized in the "supports" stage, so this check does only work
+        // within the "authenticate" stage.
+        $currentToken = $this->tokenStorage->getToken();
+
+        if ($currentToken instanceof TwoFactorTokenInterface) {
+            return $this->twoFactorAuthenticator->authenticate($request);
+        }
+
         $credentials = $this->getCredentials($request);
 
         $passport = new Passport(
@@ -127,6 +143,26 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         return $passport;
     }
 
+    public function createToken(Passport $passport, string $firewallName): TokenInterface
+    {
+        $credentialsBadge = $passport->getBadge(TwoFactorCodeCredentials::class);
+
+        if ($credentialsBadge instanceof TwoFactorCodeCredentials) {
+            $twoFactorToken = $credentialsBadge->getTwoFactorToken();
+
+            if ($this->isTwoFactorAuthenticationComplete($twoFactorToken)) {
+                $authenticatedToken = $twoFactorToken->getAuthenticatedToken(); // Authentication complete, unwrap the token
+                $authenticatedToken->setAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE, true);
+
+                return $authenticatedToken;
+            }
+
+            return $twoFactorToken;
+        }
+
+        return parent::createToken($passport, $firewallName);
+    }
+
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         return $this->successHandler->onAuthenticationSuccess($request, $token);
@@ -140,6 +176,11 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     public function isInteractive(): bool
     {
         return true;
+    }
+
+    private function isTwoFactorAuthenticationComplete(TwoFactorTokenInterface $token): bool
+    {
+        return $token->allTwoFactorProvidersAuthenticated();
     }
 
     private function getCredentials(Request $request): array

@@ -724,21 +724,6 @@ services:
         arguments:
             - '@?logger'
 
-    contao.security.authentication_provider:
-        class: Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider
-        abstract: true
-        arguments:
-            - ~
-            - ~
-            - ~
-            - '@security.password_hasher_factory'
-            - '@contao.framework'
-            - ~
-            - '@scheb_two_factor.authenticated_token_handler'
-            - '@scheb_two_factor.authentication_context_factory'
-            - '@request_stack'
-            - '@contao.security.two_factor.trusted_device_manager'
-
     contao.security.authentication_success_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationSuccessHandler
         arguments:
@@ -793,22 +778,6 @@ services:
             - '@contao.framework'
             - Contao\FrontendUser
 
-    contao.security.login_authentication_listener:
-        class: Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener
-        arguments:
-            - '@security.token_storage'
-            - '@security.authentication.manager'
-            - '@security.authentication.session_strategy'
-            - '@security.http_utils'
-            - ~
-            - '@contao.security.authentication_success_handler'
-            - '@contao.security.authentication_failure_handler'
-            - []
-            - '@?logger'
-            - '@?event_dispatcher'
-        tags:
-            - { name: monolog.logger, channel: security }
-
     contao.security.login_authenticator:
         class: Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator
         arguments:
@@ -819,6 +788,8 @@ services:
             - '@router.default'
             - '@uri_signer'
             - '@contao.framework'
+            - '@security.token_storage'
+            - ~
             - ~
 
     contao.security.logout_handler:
@@ -826,12 +797,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@?logger'
-
-    contao.security.logout_success_handler:
-        class: Contao\CoreBundle\Security\Logout\LogoutSuccessHandler
-        arguments:
-            - '@security.http_utils'
-            - '@contao.routing.scope_matcher'
 
     contao.security.member_group_voter:
         class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
