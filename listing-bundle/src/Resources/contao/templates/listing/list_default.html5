@@ -73,7 +73,7 @@
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($this->tbody as $class => $row): ?>
+      <?php foreach ($this->tbody as $row): ?>
         <tr>
           <?php foreach ($row as $col): ?>
             <td class="body"><?= $col['content'] ?></td>
