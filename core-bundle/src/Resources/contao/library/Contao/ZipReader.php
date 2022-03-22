@@ -52,8 +52,6 @@ namespace Contao;
  * @property string  $file_dirname              The file dirname
  * @property string  $extra_field               The extra field
  * @property string  $file_comment              The file comment
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ZipReader
 {

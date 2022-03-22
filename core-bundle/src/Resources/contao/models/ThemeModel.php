@@ -55,8 +55,6 @@ use Contao\Model\Collection;
  * @method static integer countByScreenshot($val, array $opt=array())
  * @method static integer countByTemplates($val, array $opt=array())
  * @method static integer countByVars($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ThemeModel extends Model
 {

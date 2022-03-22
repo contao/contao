@@ -28,8 +28,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property boolean $published
  * @property integer $start
  * @property integer $stop
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleArticle extends Module
 {

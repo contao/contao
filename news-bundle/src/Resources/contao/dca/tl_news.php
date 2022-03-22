@@ -502,8 +502,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
  *
  * @property News $News
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @internal
  */
 class tl_news extends Backend

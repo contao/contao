@@ -20,8 +20,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property Comments $Comments
  * @property string   $com_template
  * @property array    $faq_categories
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaqReader extends Module
 {

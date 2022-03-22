@@ -27,8 +27,6 @@ use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
  *     {
  *         print_r($user->getRelations());
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DcaExtractor extends Controller
 {

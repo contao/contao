@@ -135,7 +135,7 @@ if (isset($bundles['ContaoCommentsBundle']))
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_module_news extends Backend
 {

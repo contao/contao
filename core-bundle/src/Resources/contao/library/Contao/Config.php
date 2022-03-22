@@ -18,8 +18,6 @@ use Symfony\Component\Filesystem\Path;
  *
  * Custom settings above or below the `### INSTALL SCRIPT ###` markers will be
  * preserved.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Config
 {
