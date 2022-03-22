@@ -87,9 +87,7 @@ class InputEnhancerTest extends TestCase
             ->withConsecutive(...$setters)
         ;
 
-        $adapters = [Input::class => $input];
-
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),
