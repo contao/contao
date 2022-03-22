@@ -35,7 +35,7 @@ class ResourceFinder implements ResourceFinderInterface
         return Finder::create()->in($this->paths);
     }
 
-    public function findIn($subpath): Finder
+    public function findIn(string $subpath): Finder
     {
         return Finder::create()->in($this->getExistingSubpaths($subpath));
     }

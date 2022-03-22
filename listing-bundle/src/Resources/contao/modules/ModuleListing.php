@@ -25,8 +25,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property string $list_where
  * @property string $list_search
  * @property string $list_layout
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleListing extends Module
 {

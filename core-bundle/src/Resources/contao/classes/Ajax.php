@@ -20,8 +20,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Provide methods to handle Ajax requests.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Ajax extends Backend
 {
@@ -321,22 +319,6 @@ class Ajax extends Backend
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->inputName, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
-
-			// Feature/unfeature an element
-			case 'toggleFeatured':
-				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=toggleFeatured) has been deprecated and will no longer work in Contao 5.0. Use the toggle operation instead.');
-
-				if (class_exists($dc->table, false))
-				{
-					$dca = new $dc->table();
-
-					if (method_exists($dca, 'toggleFeatured'))
-					{
-						$dca->toggleFeatured(Input::post('id'), Input::post('state') == 1, $dc);
-					}
-				}
-
-				throw new NoContentResponseException();
 
 			// Toggle subpalettes
 			case 'toggleSubpalette':

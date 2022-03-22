@@ -62,8 +62,6 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property boolean      $trustedDevicesEnabled
  * @property array        $trustedDevices
  * @property string       $currentDevice
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Template extends Controller
 {

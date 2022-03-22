@@ -25,8 +25,6 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
  * @property string  $placeholder
  * @property boolean $hideInput
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @todo Rename to FormText in Contao 5.0
  */
 class FormTextField extends Widget

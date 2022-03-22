@@ -27,8 +27,6 @@ namespace Contao;
  *         }
  *         return Cache::get('result');
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Cache
 {

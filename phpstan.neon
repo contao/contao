@@ -31,23 +31,11 @@ parameters:
 
     ignoreErrors:
         -
-            # Ignore the forward compatible phpDoc comment of the PictureFactoryInterface
-            message: '#PHPDoc tag @param references unknown parameter: \$options#'
-            path: %currentWorkingDirectory%/core-bundle/src/Image/PictureFactoryInterface.php
-
-        -
             # Ignore the forward compatible phpDoc comment of the Symfony token classes
             message: '#expects Symfony\\Component\\Security\\Core\\User\\UserInterface, string given\.#'
             paths:
                 - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/ContaoLoginAuthenticationListener.php
                 - %currentWorkingDirectory%/core-bundle/src/Security/Authentication/Token/FrontendPreviewToken.php
-
-        -
-            # Ignore missing return types in interfaces that we can only change in Contao 5
-            message: '#has no return type specified#'
-            paths:
-                - %currentWorkingDirectory%/core-bundle/src/Config/Dumper/DumperInterface.php
-                - %currentWorkingDirectory%/core-bundle/src/Framework/FrameworkAwareInterface.php
 
         -
             # Ignore incorrect assertSame detection for reference variables

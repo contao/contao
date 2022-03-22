@@ -15,8 +15,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "quick link".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleQuicklink extends Module
 {

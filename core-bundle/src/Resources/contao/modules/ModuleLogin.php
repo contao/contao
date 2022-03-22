@@ -18,8 +18,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * Front end module "login".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleLogin extends Module
 {

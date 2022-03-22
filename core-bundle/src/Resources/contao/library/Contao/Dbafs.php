@@ -23,8 +23,6 @@ use Symfony\Component\Filesystem\Path;
  * Usage:
  *
  *     $file = Dbafs::addResource('files/james-wilson.jpg');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Dbafs
 {
@@ -496,7 +494,7 @@ class Dbafs
 		// Consider the suhosin.memory_limit (see #7035)
 		if (\extension_loaded('suhosin'))
 		{
-			if (($limit = ini_get('suhosin.memory_limit')) !== '')
+			if (($limit = \ini_get('suhosin.memory_limit')) !== '')
 			{
 				@ini_set('memory_limit', $limit);
 			}
