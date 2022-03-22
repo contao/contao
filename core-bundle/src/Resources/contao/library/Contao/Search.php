@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\Database\Result;
-
 /**
  * Creates and queries the search index
  *
