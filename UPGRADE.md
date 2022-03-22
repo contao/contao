@@ -2,6 +2,17 @@
 
 ## Version 4.* to 5.0
 
+### Removed {{post::*}} insert tag
+
+The `{{post::*}}` insert tag has been removed. Accessing POST data is no longer possible with insert tags.
+To access submitted form data on forward pages, use the new `{{form_session_data::*}}` insert tag instead.
+
+### $_SESSION access no longer mapped to Symfony Session
+
+The use of `$_SESSION` is discouraged because it makes testing and configuring alternative storage
+back ends hard. In Contao 4, access to `$_SESSION` has been transparently mapped to the Symfony Session.
+This has been removed. Use `$request->getSession()` directly instead.
+
 ### Simple Token Parser
 
 Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are not supported anymore by the
