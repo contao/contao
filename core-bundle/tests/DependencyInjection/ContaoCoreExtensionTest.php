@@ -657,6 +657,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $definition = $container->findDefinition('contao.debug.security.access.decision_manager');
         $this->assertSame(TraceableAccessDecisionManager::class, $definition->getClass());
+        $this->assertSame('security.access.decision_manager', $definition->getDecoratedService()[0]);
     }
 
     public function testRegistersAsContentElementAttribute(): void
