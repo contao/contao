@@ -1962,24 +1962,6 @@ var Backend =
 	},
 
 	/**
-	 * Remove a meta entry
-	 *
-	 * @param {object} el The DOM element
-	 */
-	metaDelete: function(el) {
-		var li = el.getParent('li');
-
-		// Empty the last element instead of removing it (see #4858)
-		if (li.getPrevious() === null && li.getNext() === null) {
-			li.getElements('input').each(function(input) {
-				input.value = '';
-			});
-		} else {
-			li.destroy();
-		}
-	},
-
-	/**
 	 * Toggle the "add language" button
 	 *
 	 * @param {object} el The DOM element
