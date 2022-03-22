@@ -143,7 +143,7 @@ class TemplateLocator
         $templates = [];
 
         foreach ($finder as $file) {
-            $templates[$file->getRelativePathname()] = Path::canonicalize($file->getPathname());
+            $templates[Path::normalize($file->getRelativePathname())] = Path::canonicalize($file->getPathname());
         }
 
         return $templates;
