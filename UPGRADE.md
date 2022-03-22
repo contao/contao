@@ -16,9 +16,10 @@ Keyword support in articles, and as such also `$GLOBALS['TL_KEYWORDS']`, has bee
 The legacy routing has been dropped. As such, the `getPageIdFromUrl` and `getRootPageFromUrl` hooks do
 not exist anymore. Use Symfony routing instead.
 
-### initialize.php
+### Custom entry points
 
-The `initialize.php` support has been removed. Register your own Symfony routes to the routing instead.
+The `initialize.php` file has been removed, so custom entry points will no longer work. Register your
+entry points as controllers instead.
 
 ### ClassLoader
 
