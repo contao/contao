@@ -719,13 +719,6 @@ services:
             - !tagged_iterator security.voter
             - !php/const Symfony\Component\Security\Core\Authorization\AccessDecisionManager::STRATEGY_PRIORITY
 
-    contao.security.authentication_entry_point:
-        class: Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint
-        arguments:
-            - '@router'
-            - '@uri_signer'
-            - '@contao.routing.scope_matcher'
-
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
         arguments:
