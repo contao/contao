@@ -322,25 +322,6 @@ class PluginTest extends ContaoTestCase
         );
     }
 
-    /**
-     * @group legacy
-     */
-    public function testHandlesThePrependLocaleParameter(): void
-    {
-        $this->expectDeprecation('Since contao/manager-bundle 4.6: Defining the "prepend_locale" parameter in the parameters.yml file %s.');
-
-        $container = $this->getContainer();
-        $container->setParameter('prepend_locale', true);
-
-        $expect = [[
-            'prepend_locale' => '%prepend_locale%',
-        ]];
-
-        $extensionConfig = (new Plugin())->getExtensionConfig('contao', [], $container);
-
-        $this->assertSame($expect, $extensionConfig);
-    }
-
     public function testSetsTheAppSecret(): void
     {
         $container = $this->getContainer();

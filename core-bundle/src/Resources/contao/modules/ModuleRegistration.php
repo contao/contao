@@ -14,8 +14,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 
 /**
  * Front end module "registration".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleRegistration extends Module
 {
@@ -283,12 +281,6 @@ class ModuleRegistration extends Module
 					if ($varValue === '')
 					{
 						$varValue = $objWidget->getEmptyValue();
-					}
-
-					// Encrypt the value (see #7815)
-					if ($arrData['eval']['encrypt'] ?? null)
-					{
-						$varValue = Encryption::encrypt($varValue);
 					}
 
 					// Set the new value
@@ -660,5 +652,3 @@ class ModuleRegistration extends Module
 		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
 	}
 }
-
-class_alias(ModuleRegistration::class, 'ModuleRegistration');

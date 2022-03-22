@@ -47,8 +47,6 @@ use Contao\Model\Collection;
  * @method static integer countByEmail($val, array $opt=array())
  * @method static integer countByActive($val, array $opt=array())
  * @method static integer countByAddedOn($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class NewsletterRecipientsModel extends Model
 {
@@ -123,5 +121,3 @@ class NewsletterRecipientsModel extends Model
 		return static::createCollectionFromDbResult($objResult, $t);
 	}
 }
-
-class_alias(NewsletterRecipientsModel::class, 'NewsletterRecipientsModel');

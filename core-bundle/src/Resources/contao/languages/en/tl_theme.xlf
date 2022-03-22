@@ -32,12 +32,6 @@
       <trans-unit id="tl_theme.screenshot.1">
         <source>Here you can choose a screenshot of the theme.</source>
       </trans-unit>
-      <trans-unit id="tl_theme.vars.0">
-        <source>Global variables</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.vars.1">
-        <source>Here you can define global variables for the style sheets of the theme (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
-      </trans-unit>
       <trans-unit id="tl_theme.source.0">
         <source>Source files</source>
       </trans-unit>
@@ -55,9 +49,6 @@
       </trans-unit>
       <trans-unit id="tl_theme.config_legend">
         <source>Configuration</source>
-      </trans-unit>
-      <trans-unit id="tl_theme.vars_legend">
-        <source>Global variables</source>
       </trans-unit>
       <trans-unit id="tl_theme.theme_imported">
         <source>Theme "%s" has been imported.</source>

@@ -13,54 +13,40 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Entity;
 
 use Contao\User;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="tl_trusted_device")
- */
+#[Table(name: 'tl_trusted_device')]
+#[Entity]
 class TrustedDevice
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[Id]
+    #[Column(type: 'integer')]
+    #[GeneratedValue(strategy: 'AUTO')]
     protected ?int $id = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[Column(type: 'datetime')]
     protected \DateTimeInterface $created;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[Column(type: 'string', nullable: true)]
     protected ?string $userClass = null;
 
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
+    #[Column(type: 'integer', nullable: true)]
     protected ?int $userId = null;
 
-    /**
-     * @ORM\Column(type="text", name="user_agent", nullable=true)
-     */
+    #[Column(name: 'user_agent', type: 'text', nullable: true)]
     protected ?string $userAgent = null;
 
-    /**
-     * @ORM\Column(type="string", name="ua_family", nullable=true)
-     */
+    #[Column(name: 'ua_family', type: 'string', nullable: true)]
     protected ?string $uaFamily = null;
 
-    /**
-     * @ORM\Column(type="string", name="os_family", nullable=true)
-     */
+    #[Column(name: 'os_family', type: 'string', nullable: true)]
     protected ?string $osFamily = null;
 
-    /**
-     * @ORM\Column(type="string", name="device_family", nullable=true)
-     */
+    #[Column(name: 'device_family', type: 'string', nullable: true)]
     protected ?string $deviceFamily = null;
 
     public function __construct(User $user)

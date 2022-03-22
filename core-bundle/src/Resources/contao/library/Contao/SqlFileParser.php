@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Parses a database.sql file.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class SqlFileParser
 {
@@ -97,5 +95,3 @@ class SqlFileParser
 		return $return;
 	}
 }
-
-class_alias(SqlFileParser::class, 'SqlFileParser');

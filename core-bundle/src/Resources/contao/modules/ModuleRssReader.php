@@ -14,8 +14,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 
 /**
  * Front end module "rss reader".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleRssReader extends Module
 {
@@ -180,5 +178,3 @@ class ModuleRssReader extends Module
 		$this->Template->items = array_values($items);
 	}
 }
-
-class_alias(ModuleRssReader::class, 'ModuleRssReader');

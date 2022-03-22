@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\EventListener\DoctrineSchemaListener;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Schema\Schema;
@@ -41,8 +40,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
 
         $dcaSchemaProvider = new DcaSchemaProvider(
             $framework,
-            $this->mockDoctrineRegistry(),
-            $this->createMock(SchemaProvider::class)
+            $this->mockDoctrineRegistry()
         );
 
         $listener = new DoctrineSchemaListener($dcaSchemaProvider);

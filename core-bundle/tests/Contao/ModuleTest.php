@@ -27,13 +27,10 @@ use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -63,24 +60,21 @@ class ModuleTest extends TestCase
         (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
 
         System::setContainer($container);
+
+        $GLOBALS['TL_MODELS']['tl_page'] = PageModel::class;
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_MODELS'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
 
         $this->resetStaticProperties([Registry::class, DcaExtractor::class, DcaLoader::class, Database::class, Model::class, System::class, Config::class]);
 
         parent::tearDown();
     }
 
-    /**
-     * @group legacy
-     */
     public function testGetPublishedSubpagesWithoutGuestsByPid(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: Not registering table "tl_page" in $GLOBALS[\'TL_MODELS\'] has been deprecated %s.');
-
         $databaseResultFirstQuery = [
             ['id' => '1', 'hasSubpages' => '0'],
             ['id' => '2', 'hasSubpages' => '1'],

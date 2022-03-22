@@ -18,8 +18,6 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 /**
  * Front end module "login".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleLogin extends Module
 {
@@ -200,5 +198,3 @@ class ModuleLogin extends Module
 		$this->Template->autoLabel = $GLOBALS['TL_LANG']['MSC']['autologin'];
 	}
 }
-
-class_alias(ModuleLogin::class, 'ModuleLogin');

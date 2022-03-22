@@ -16,8 +16,6 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -100,7 +98,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,stylesheet,external,loadingOrder,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head'
+		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,external,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head'
 	),
 
 	// Subpalettes
@@ -214,21 +212,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			),
 			'sql'                     => "varchar(255) NOT NULL default 'a:2:{i:0;s:10:\"layout.css\";i:1;s:14:\"responsive.css\";}'"
 		),
-		'stylesheet' => array
-		(
-			'exclude'                 => true,
-			'filter'                  => true,
-			'inputType'               => 'checkboxWizard',
-			'foreignKey'              => 'tl_style_sheet.name',
-			'options_callback'        => array('tl_layout', 'getStyleSheets'),
-			'eval'                    => array('multiple'=>true),
-			'xlabel' => array
-			(
-				array('tl_layout', 'styleSheetLink')
-			),
-			'sql'                     => "blob NULL",
-			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
-		),
 		'external' => array
 		(
 			'exclude'                 => true,
@@ -236,20 +219,11 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'css,scss,less', 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
-		'loadingOrder' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'select',
-			'options'                 => array('external_first', 'internal_first'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(16) NOT NULL default 'external_first'"
-		),
 		'combineScripts' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default '1'"
 		),
 		'modules' => array
@@ -446,7 +420,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_layout extends Backend
 {
@@ -478,40 +452,6 @@ class tl_layout extends Backend
 	}
 
 	/**
-	 * Return all style sheets of the current theme
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 */
-	public function getStyleSheets(DataContainer $dc)
-	{
-		$intPid = $dc->activeRecord->pid ?? null;
-
-		if (Input::get('act') == 'overrideAll')
-		{
-			$intPid = Input::get('id');
-		}
-
-		$objStyleSheet = $this->Database->prepare("SELECT id, name FROM tl_style_sheet WHERE pid=?")
-										->execute($intPid);
-
-		if ($objStyleSheet->numRows < 1)
-		{
-			return array();
-		}
-
-		$return = array();
-
-		while ($objStyleSheet->next())
-		{
-			$return[$objStyleSheet->id] = $objStyleSheet->name;
-		}
-
-		return $return;
-	}
-
-	/**
 	 * List a page layout
 	 *
 	 * @param array $row
@@ -521,18 +461,6 @@ class tl_layout extends Backend
 	public function listLayout($row)
 	{
 		return '<div class="tl_content_left">' . $row['name'] . '</div>';
-	}
-
-	/**
-	 * Add a link to edit the stylesheets of the theme
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 */
-	public function styleSheetLink(DataContainer $dc)
-	{
-		return ' <a href="contao/main.php?do=themes&amp;table=tl_style_sheet&amp;id=' . $dc->activeRecord->pid . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_styles']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_styles'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>';
 	}
 
 	/**

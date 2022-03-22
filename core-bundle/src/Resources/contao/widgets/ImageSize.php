@@ -16,8 +16,6 @@ namespace Contao;
  * @property integer $maxlength
  * @property array   $options
  * @property array   $unknownOption
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ImageSize extends Widget
 {
@@ -243,5 +241,3 @@ class ImageSize extends Widget
 		);
 	}
 }
-
-class_alias(ImageSize::class, 'ImageSize');

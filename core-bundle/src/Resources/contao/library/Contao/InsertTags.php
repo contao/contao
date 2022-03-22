@@ -26,8 +26,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
  *
  *     $it = new InsertTags();
  *     echo $it->replace($text);
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InsertTags extends Controller
 {
@@ -416,12 +414,6 @@ class InsertTags extends Controller
 						}
 
 						$value = StringUtil::deserialize($value);
-
-						// Decrypt the value
-						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'] ?? null)
-						{
-							$value = Encryption::decrypt($value);
-						}
 
 						$rgxp = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['rgxp'] ?? null;
 						$opts = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['options'] ?? null;
@@ -1505,5 +1497,3 @@ class InsertTags extends Controller
 		return false;
 	}
 }
-
-class_alias(InsertTags::class, 'InsertTags');

@@ -1,0 +1,18 @@
+name: 🐞 Report a bug
+description: Report errors and problems
+labels: [bug, unconfirmed]
+body:
+    - type: input
+      id: affected-versions
+      attributes:
+          label: Affected version(s)
+          placeholder: x.y.z
+      validations:
+          required: true
+    - type: textarea
+      id: description
+      attributes:
+          label: Description
+          description: Please describe the issue and provide detailed instructions on how to reproduce it either on https://demo.contao.org or in a fresh Contao installation without third-party extensions.
+      validations:
+          required: true

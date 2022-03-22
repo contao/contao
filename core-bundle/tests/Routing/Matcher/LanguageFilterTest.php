@@ -69,13 +69,6 @@ class LanguageFilterTest extends TestCase
             true,
         ];
 
-        yield 'Does not remove a root page route if contao.prepend_locale is enabled' => [
-            'tl_page.2.root',
-            $this->mockClassWithProperties(PageModel::class, ['rootIsFallback' => false, 'rootLanguage' => 'en', 'urlPrefix' => 'en']),
-            'de',
-            false,
-        ];
-
         yield 'Does not remove a route if there is no Contao page object' => [
             'tl_page.2.fallback',
             null,

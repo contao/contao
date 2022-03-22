@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "toplink".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentToplink extends ContentElement
 {
@@ -38,5 +36,3 @@ class ContentToplink extends ContentElement
 		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
 	}
 }
-
-class_alias(ContentToplink::class, 'ContentToplink');

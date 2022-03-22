@@ -36,7 +36,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return 'pagePicker';
     }
 
-    public function supportsContext($context): bool
+    public function supportsContext(string $context): bool
     {
         return \in_array($context, ['page', 'link'], true) && $this->security->isGranted('contao_user.modules', 'page');
     }
@@ -50,7 +50,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(): string
+    public function getDcaTable(PickerConfig $config = null): string
     {
         return 'tl_page';
     }
@@ -91,12 +91,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $attributes;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return string|int
-     */
-    public function convertDcaValue(PickerConfig $config, $value)
+    public function convertDcaValue(PickerConfig $config, mixed $value): string|int
     {
         if ('page' === $config->getContext()) {
             return (int) $value;

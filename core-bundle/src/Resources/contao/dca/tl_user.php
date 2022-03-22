@@ -299,7 +299,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'options'                 => array('css', 'modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
+			'options'                 => array('modules', 'layout', 'image_sizes', 'theme_import', 'theme_export'),
 			'reference'               => &$GLOBALS['TL_LANG']['MOD'],
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "blob NULL"
@@ -485,7 +485,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_user extends Backend
 {

@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "accordion" (wrapper start).
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentAccordionStart extends ContentElement
 {
@@ -46,5 +44,3 @@ class ContentAccordionStart extends ContentElement
 		$this->Template->headline = $this->mooHeadline;
 	}
 }
-
-class_alias(ContentAccordionStart::class, 'ContentAccordionStart');

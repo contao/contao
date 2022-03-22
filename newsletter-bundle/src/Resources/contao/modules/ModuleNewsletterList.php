@@ -14,8 +14,6 @@ namespace Contao;
  * Front end module "newsletter list".
  *
  * @property array $nl_channels
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsletterList extends Module
 {
@@ -141,5 +139,3 @@ class ModuleNewsletterList extends Module
 		$this->Template->newsletters = $arrNewsletter;
 	}
 }
-
-class_alias(ModuleNewsletterList::class, 'ModuleNewsletterList');

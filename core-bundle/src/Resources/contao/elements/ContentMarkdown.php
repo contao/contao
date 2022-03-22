@@ -16,8 +16,6 @@ trigger_deprecation('contao/core-bundle', '4.12', 'ContentMarkdown has been depr
 
 /**
  * Front end content element "code".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentMarkdown extends ContentElement
 {
@@ -65,5 +63,3 @@ class ContentMarkdown extends ContentElement
 		$this->Template->content = Input::stripTags($this->code, Config::get('allowedTags'), Config::get('allowedAttributes'));
 	}
 }
-
-class_alias(ContentMarkdown::class, 'ContentMarkdown');

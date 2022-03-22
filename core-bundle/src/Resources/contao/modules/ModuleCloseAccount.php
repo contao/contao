@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end module "close account".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleCloseAccount extends Module
 {
@@ -148,5 +146,3 @@ class ModuleCloseAccount extends Module
 		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
-
-class_alias(ModuleCloseAccount::class, 'ModuleCloseAccount');

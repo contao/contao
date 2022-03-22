@@ -15,8 +15,6 @@ use Contao\Model\Collection;
 
 /**
  * Proxy for new content element fragments, so they are accessible via $GLOBALS['TL_CTE'].
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class ContentProxy extends ContentElement
 {
@@ -84,5 +82,3 @@ class ContentProxy extends ContentElement
 		// noop
 	}
 }
-
-class_alias(ContentProxy::class, 'ContentProxy');

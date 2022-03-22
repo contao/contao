@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Stores result from the Search::query() method
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class SearchResult
 {

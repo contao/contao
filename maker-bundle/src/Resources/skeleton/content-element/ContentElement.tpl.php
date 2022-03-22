@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 <?php endif; ?>
 class <?= $className ?> extends AbstractContentElementController
 {
-    protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response
+    protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
         return $template->getResponse();
     }

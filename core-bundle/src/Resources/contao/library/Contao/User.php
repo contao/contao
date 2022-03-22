@@ -100,8 +100,6 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property object $objAuth
  * @property object $objLogin
  * @property object $objLogout
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class User extends System implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
@@ -689,5 +687,3 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return false;
 	}
 }
-
-class_alias(User::class, 'User');

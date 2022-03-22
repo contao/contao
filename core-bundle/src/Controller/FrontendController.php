@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\CoreBundle\Cron\Cron;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\FrontendIndex;
 use Contao\FrontendShare;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,17 +28,6 @@ use Symfony\Component\Security\Core\Exception\LogoutException;
  */
 class FrontendController extends AbstractController
 {
-    public function indexAction(): Response
-    {
-        $this->initializeContaoFramework();
-
-        trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\FrontendController::indexAction()" has been deprecated and will no longer work in Contao 5.0. Use the Symfony routing instead.');
-
-        $controller = new FrontendIndex();
-
-        return $controller->run();
-    }
-
     /**
      * @Route("/_contao/cron", name="contao_frontend_cron")
      */

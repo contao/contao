@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provide methods regarding calendars.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Calendar extends Frontend
 {
@@ -641,5 +639,3 @@ class Calendar extends Frontend
 		return self::$arrPageCache[$intPageId];
 	}
 }
-
-class_alias(Calendar::class, 'Calendar');

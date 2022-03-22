@@ -32,8 +32,6 @@ use Doctrine\DBAL\Exception\DriverException;
  * @property string  $error        The last error message
  * @property integer $affectedRows The number of affected rows
  * @property integer $insertId     The last insert ID
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Statement
 {
@@ -439,5 +437,3 @@ class Statement
 		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
 }
-
-class_alias(Statement::class, 'Database\Statement');

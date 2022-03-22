@@ -91,8 +91,6 @@ use Contao\Model\Collection;
  * @method static integer countBySenderName($val, array $opt=array())
  * @method static integer countBySent($val, array $opt=array())
  * @method static integer countByDate($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class NewsletterModel extends Model
 {
@@ -187,5 +185,3 @@ class NewsletterModel extends Model
 		return static::findBy($arrColumns, null, $arrOptions);
 	}
 }
-
-class_alias(NewsletterModel::class, 'NewsletterModel');

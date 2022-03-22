@@ -20,8 +20,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property array  $news_archives
  * @property string $news_order
  * @property string $news_format
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsMenu extends ModuleNews
 {
@@ -367,5 +365,3 @@ class ModuleNewsMenu extends ModuleNews
 		return $arrDays;
 	}
 }
-
-class_alias(ModuleNewsMenu::class, 'ModuleNewsMenu');

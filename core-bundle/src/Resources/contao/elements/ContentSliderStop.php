@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "slider" (wrapper stop).
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentSliderStop extends ContentElement
 {
@@ -41,5 +39,3 @@ class ContentSliderStop extends ContentElement
 		$this->Template->next = $GLOBALS['TL_LANG']['MSC']['next'];
 	}
 }
-
-class_alias(ContentSliderStop::class, 'ContentSliderStop');

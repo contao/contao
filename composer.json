@@ -21,7 +21,7 @@
         "docs": "https://docs.contao.org"
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.1",
         "ext-dom": "*",
         "ext-filter": "*",
         "ext-gd": "*",
@@ -62,7 +62,7 @@
         "dragonmantank/cron-expression": "^2.3",
         "friendsofsymfony/http-cache": "^2.6",
         "friendsofsymfony/http-cache-bundle": "^2.6",
-        "imagine/imagine": "^1.0",
+        "imagine/imagine": "^1.2.4",
         "knplabs/knp-menu": "^3.1",
         "knplabs/knp-menu-bundle": "^3.0",
         "knplabs/knp-time-bundle": "^1.11",
@@ -78,6 +78,7 @@
         "nyholm/psr7": "^1.2",
         "paragonie/constant_time_encoding": "^2.2",
         "phpspec/php-diff": "^1.0",
+        "phpunit/phpunit": "^9.5",
         "psr/cache": "^1.0 || ^2.0 || ^3.0",
         "psr/container": "^1.0",
         "psr/http-message": "^1.0",
@@ -157,9 +158,7 @@
         "ext-fileinfo": "*",
         "bamarni/composer-bin-plugin": "^1.4",
         "composer/composer": "^2.0",
-        "contao/test-case": "^4.6",
         "league/flysystem-memory": "^2.0 || ^3.0",
-        "phpunit/phpunit": "^9.3",
         "roave/better-reflection": "^4.12.2 || ^5.0",
         "symfony/browser-kit": "^5.4",
         "symfony/phpunit-bridge": "^5.4"
@@ -174,7 +173,8 @@
         "contao/maker-bundle": "self.version",
         "contao/manager-bundle": "self.version",
         "contao/news-bundle": "self.version",
-        "contao/newsletter-bundle": "self.version"
+        "contao/newsletter-bundle": "self.version",
+        "contao/test-case": "self.version"
     },
     "conflict": {
         "contao-community-alliance/composer-plugin": "<3.0",
@@ -184,6 +184,8 @@
         "doctrine/cache": "<1.10",
         "doctrine/dbal": "3.3.0",
         "nikic/php-parser": "4.7.0",
+        "phpunit/phpunit": "<8.0",
+        "roave/better-reflection": "<4.12.2 || >=6.0",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2",
         "zendframework/zend-code": "<3.3.1"
@@ -199,7 +201,8 @@
             "Contao\\MakerBundle\\": "maker-bundle/src/",
             "Contao\\ManagerBundle\\": "manager-bundle/src/",
             "Contao\\NewsBundle\\": "news-bundle/src/",
-            "Contao\\NewsletterBundle\\": "newsletter-bundle/src/"
+            "Contao\\NewsletterBundle\\": "newsletter-bundle/src/",
+            "Contao\\TestCase\\": "test-case/src/"
         },
         "classmap": [
             "calendar-bundle/src/Resources/contao/",
@@ -296,7 +299,6 @@
             "@cs-fixer",
             "@service-linter",
             "@phpstan",
-            "@psalm",
             "@require-checker",
             "@monorepo-tools"
         ],
@@ -305,13 +307,12 @@
             "@ecs-legacy",
             "@ecs-templates"
         ],
-        "ecs": "@php tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests tools/*/src --config tools/ecs/config/default.php --fix --ansi",
+        "ecs": "@php tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --fix --ansi",
         "ecs-legacy": "@php tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --fix --ansi",
         "ecs-templates": "@php tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --fix --ansi",
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
         "monorepo-tools": "@php tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
         "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyze --ansi",
-        "psalm": "@php tools/psalm/vendor/bin/psalm --no-suggestions",
         "require-checker": "@php tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json",
         "service-linter": "@php tools/service-linter/bin/lint-service-ids --ansi",
         "unit-tests": "@php vendor/bin/phpunit --colors=always"

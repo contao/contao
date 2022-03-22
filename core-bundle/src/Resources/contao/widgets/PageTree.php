@@ -17,8 +17,6 @@ namespace Contao;
  * @property boolean $multiple
  * @property array   $rootNodes
  * @property string  $fieldType
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageTree extends Widget
 {
@@ -267,5 +265,3 @@ class PageTree extends Widget
 		return $extras;
 	}
 }
-
-class_alias(PageTree::class, 'PageTree');

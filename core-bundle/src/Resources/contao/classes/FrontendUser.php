@@ -17,8 +17,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
  *
  * @property array  $allGroups
  * @property string $loginPage
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FrontendUser extends User
 {
@@ -282,5 +280,3 @@ class FrontendUser extends User
 		return $this->roles;
 	}
 }
-
-class_alias(FrontendUser::class, 'FrontendUser');

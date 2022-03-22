@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provide methods to edit the local configuration file.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DC_File extends DataContainer implements EditableDataContainerInterface
 {
@@ -560,5 +558,3 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		return $strPalette;
 	}
 }
-
-class_alias(DC_File::class, 'DC_File');

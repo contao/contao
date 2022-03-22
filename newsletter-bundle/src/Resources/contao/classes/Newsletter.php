@@ -18,8 +18,6 @@ use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
  * Provide methods to handle newsletters.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Newsletter extends Backend
 {
@@ -445,18 +443,6 @@ class Newsletter extends Backend
 		if ($objEmail->hasFailures())
 		{
 			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['sendNewsletter']) && \is_array($GLOBALS['TL_HOOKS']['sendNewsletter']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Using the "sendNewsletter" hook has been deprecated and will no longer work in Contao 5.0. Use the SendNewsletterEvent instead.');
-
-			foreach ($GLOBALS['TL_HOOKS']['sendNewsletter'] as $callback)
-			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objEmail, $objNewsletter, $arrRecipient, $text, $html);
-			}
 		}
 
 		return true;
@@ -1093,5 +1079,3 @@ class Newsletter extends Backend
 		return $arrPages;
 	}
 }
-
-class_alias(Newsletter::class, 'Newsletter');
