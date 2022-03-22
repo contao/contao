@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
-use Contao\DataContainer;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -25,7 +25,7 @@ class DefaultDcaVoter extends Voter
 {
     protected function supports(string $attribute, $subject)
     {
-        return str_starts_with($attribute, DataContainer::PERMISSION_PREFIX);
+        return str_starts_with($attribute, ContaoCorePermissions::DCA_PREFIX);
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)

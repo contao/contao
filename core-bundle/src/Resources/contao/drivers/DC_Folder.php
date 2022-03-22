@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
@@ -645,7 +646,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->import(Files::class, 'Files');
 		$strFolder = Input::get('pid', true);
 
-		$this->denyAccessIfDisallowed(self::PERMISSION_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
+		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
 
 		if (!$strFolder || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
@@ -686,7 +687,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$source = $this->intId;
 		}
 
-		$this->denyAccessIfDisallowed(self::PERMISSION_MOVE, new DataContainerSubject($this->strTable, $source));
+		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_MOVE, new DataContainerSubject($this->strTable, $source));
 
 		$this->isValid($source);
 
@@ -837,7 +838,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$destination = str_replace(\dirname($source), $strFolder, $source);
 		}
 
-		$this->denyAccessIfDisallowed(self::PERMISSION_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
+		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
 
 		$this->isValid($source);
 		$this->isValid($destination);
@@ -1004,7 +1005,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$source = $this->intId;
 		}
 
-		$this->denyAccessIfDisallowed(self::PERMISSION_DELETE, new DataContainerSubject($this->strTable, $source));
+		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_DELETE, new DataContainerSubject($this->strTable, $source));
 
 		$this->isValid($source);
 
@@ -1321,7 +1322,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$return = '';
 		$this->noReload = false;
 
-		$this->denyAccessIfDisallowed(self::PERMISSION_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$this->isValid($this->intId);
 
@@ -1656,7 +1657,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Walk through each record
 			foreach ($ids as $id)
 			{
-				$this->denyAccessIfDisallowed(self::PERMISSION_EDIT, new DataContainerSubject($this->strTable, $id));
+				$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
 
 				$this->intId = $id;
 				$this->initialId = $id;
@@ -1940,7 +1941,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function source()
 	{
-		$this->denyAccessIfDisallowed(self::PERMISSION_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$this->isValid($this->intId);
 
@@ -2498,7 +2499,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 		$session = $objSessionBag->all();
 
-		$this->denyAccessIfDisallowed(self::PERMISSION_VIEW, new DataContainerSubject($this->strTable, $path));
+		$this->denyAccessIfDisallowed(ContaoCorePermissions::DCA_VIEW, new DataContainerSubject($this->strTable, $path));
 
 		// Get the session data and toggle the nodes
 		if (Input::get('tg'))

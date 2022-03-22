@@ -131,41 +131,6 @@ abstract class DataContainer extends Backend
 	public const SORT_DESC = 12;
 
 	/**
-	 * Prefix for all DCA related permission attributes
-	 */
-	public const PERMISSION_PREFIX = 'contao.dca.';
-
-	/**
-	 * Create permission
-	 */
-	public const PERMISSION_CREATE = self::PERMISSION_PREFIX . 'create';
-
-	/**
-	 * View permission
-	 */
-	public const PERMISSION_VIEW = self::PERMISSION_PREFIX . 'view';
-
-	/**
-	 * Edit permission
-	 */
-	public const PERMISSION_EDIT = self::PERMISSION_PREFIX . 'edit';
-
-	/**
-	 * Copy permission
-	 */
-	public const PERMISSION_COPY = self::PERMISSION_PREFIX . 'copy';
-
-	/**
-	 * Move permission
-	 */
-	public const PERMISSION_MOVE = self::PERMISSION_PREFIX . 'move';
-
-	/**
-	 * Delete permission
-	 */
-	public const PERMISSION_DELETE = self::PERMISSION_PREFIX . 'delete';
-
-	/**
 	 * Current ID
 	 * @var integer|string
 	 */
