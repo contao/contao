@@ -18,6 +18,9 @@ class AutoExpiringAttribute
     private int $ttl;
     private mixed $value;
 
+    /**
+     * @param int $ttl Time to live in seconds
+     */
     public function __construct(int $ttl, mixed $value, \DateTimeInterface|null $createdAt = null)
     {
         $this->tstamp = ($createdAt ?? new \DateTime())->getTimestamp();
