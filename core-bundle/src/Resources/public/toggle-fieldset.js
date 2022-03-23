@@ -63,7 +63,7 @@ window.addEventListener('DOMContentLoaded', function () {
     });
 
     AjaxRequest.toggleFieldset = function (el, id, table) {
-        window.console && console.warn('Using AjaxRequest.toggleFieldset is deprecated and will be removed in Contao 6.');
+        window.console && console.warn('Using AjaxRequest.toggleFieldset is deprecated and will be removed in Contao 6. Add the data-toggle-fieldset attribute instead.');
 
         toggleState(el, id, table)
     };
