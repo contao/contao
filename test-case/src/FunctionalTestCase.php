@@ -65,7 +65,7 @@ abstract class FunctionalTestCase extends WebTestCase
                 WHERE statement IN (
                     'create_view',
                     'drop_index',
-                    'crate_index',
+                    'create_index',
                     'drop_table',
                     'alter_table',
                     'create_table'
