@@ -16,16 +16,6 @@ namespace Contao;
  * The class takes the HTML markup of a page, extracts the content and writes
  * it to the database (search index). It also provides a method to query the
  * search index, returning the matching entries.
- *
- * Usage:
- *
- *     Search::indexPage($objPage->row());
- *     $result = Search::searchFor('keyword');
- *
- *     while ($result->next())
- *     {
- *         echo $result->url;
- *     }
  */
 class Search
 {
@@ -274,7 +264,7 @@ class Search
 				VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
 				ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
 			")
-			->execute(array_map('strval', array_keys($arrIndex)));
+			->execute(...array_map('strval', array_keys($arrIndex)));
 
 		// Remove obsolete terms
 		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
@@ -285,7 +275,7 @@ class Search
 				FROM tl_search_term
 				WHERE term IN (" . implode(',', array_fill(0, \count($arrIndex), '?')) . ")
 			")
-			->execute(array_map('strval', array_keys($arrIndex)));
+			->execute(...array_map('strval', array_keys($arrIndex)));
 
 		$arrTermIds = array();
 
@@ -312,7 +302,7 @@ class Search
 
 		// Create the new index
 		$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
-					->execute($arrValues);
+					->execute(...$arrValues);
 
 		$row = $objDatabase->query("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")->fetchRow();
 
@@ -728,7 +718,7 @@ class Search
 
 		// Return result
 		$objResultStmt = Database::getInstance()->prepare($strQuery);
-		$objResult = $objResultStmt->execute($arrValues);
+		$objResult = $objResultStmt->execute(...$arrValues);
 		$arrResult = $objResult->fetchAllAssoc();
 
 		return new SearchResult($arrResult, array_merge($arrKeywords, $arrIncluded), $arrWildcards, $arrPhrases);
