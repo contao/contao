@@ -346,7 +346,7 @@ abstract class DataContainer extends Backend
 		// Toggle line wrap (textarea)
 		if (($arrData['inputType'] ?? null) == 'textarea' && !isset($arrData['eval']['rte']))
 		{
-			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_' . $this->strInputName . '\')"');
+			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap"');
 		}
 
 		// Add the help wizard
