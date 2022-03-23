@@ -49,7 +49,12 @@ abstract class FunctionalTestCase extends WebTestCase
 
         /** @var Connection $connection */
         $connection = $doctrine->getConnection();
-        $connection->executeStatement('SET GLOBAL information_schema_stats_expiry = 0');
+
+        try {
+            $connection->executeStatement('SET @@SESSION.information_schema_stats_expiry = 0');
+        } catch (\Throwable) {
+            // Ignore
+        }
 
         if (!empty(self::$tableColumns)) {
             $allColumns = $connection->fetchAllNumeric('
