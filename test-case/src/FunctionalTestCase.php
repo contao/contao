@@ -24,6 +24,7 @@ abstract class FunctionalTestCase extends WebTestCase
     private static array $tableColumns = [];
     private static array $tableSchemas = [];
     private static int $alterCount = -1;
+    private static bool $supportsAlterCount;
 
     protected static function loadFixtures(array $yamlFiles, bool $truncateTables = true): void
     {
@@ -72,8 +73,17 @@ abstract class FunctionalTestCase extends WebTestCase
             ");
         };
 
+        if (!isset(self::$supportsAlterCount)) {
+            self::$supportsAlterCount = true;
+            try {
+                $getAlterCount();
+            } catch (\Throwable $exception) {
+                self::$supportsAlterCount = false;
+            }
+        }
+
         if (!empty(self::$tableColumns)) {
-            if ($getAlterCount() !== self::$alterCount) {
+            if (!self::$supportsAlterCount || $getAlterCount() !== self::$alterCount) {
                 $allColumns = $connection->fetchAllNumeric('
                     SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME
                     FROM information_schema.COLUMNS
@@ -93,7 +103,7 @@ abstract class FunctionalTestCase extends WebTestCase
                     }
                 }
 
-                self::$alterCount = $getAlterCount();
+                self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
             }
 
             $truncateTables = $connection->fetchFirstColumn('
@@ -144,7 +154,7 @@ abstract class FunctionalTestCase extends WebTestCase
             )[1];
         }
 
-        self::$alterCount = $getAlterCount();
+        self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
     }
 
     private static function importFixture(Connection $connection, string $file): void
