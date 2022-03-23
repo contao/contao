@@ -23,6 +23,7 @@ abstract class FunctionalTestCase extends WebTestCase
 {
     private static array $tableColumns = [];
     private static array $tableSchemas = [];
+    private static int $alterCount = -1;
 
     protected static function loadFixtures(array $yamlFiles, bool $truncateTables = true): void
     {
@@ -56,24 +57,43 @@ abstract class FunctionalTestCase extends WebTestCase
             // Ignore
         }
 
+        $getAlterCount = function () use ($connection): int {
+            return (int) $connection->fetchOne("
+                SELECT SUM(total)
+                FROM sys.host_summary_by_statement_type
+                WHERE statement IN (
+                    'create_view',
+                    'drop_index',
+                    'crate_index',
+                    'drop_table',
+                    'alter_table',
+                    'create_table'
+                )
+            ");
+        };
+
         if (!empty(self::$tableColumns)) {
-            $allColumns = $connection->fetchAllNumeric('
-                SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME
-                FROM information_schema.COLUMNS
-                WHERE TABLE_SCHEMA = DATABASE()
-            ');
+            if ($getAlterCount() !== self::$alterCount) {
+                $allColumns = $connection->fetchAllNumeric('
+                    SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME
+                    FROM information_schema.COLUMNS
+                    WHERE TABLE_SCHEMA = DATABASE()
+                ');
 
-            $tableColumns = [];
+                $tableColumns = [];
 
-            foreach ($allColumns as $column) {
-                $tableColumns[$column[0]][] = $column;
-            }
-
-            foreach (array_keys(self::$tableColumns) as $tableName) {
-                if ($tableColumns[$tableName] !== self::$tableColumns[$tableName]) {
-                    $connection->executeStatement('DROP TABLE '.$connection->quoteIdentifier($tableName));
-                    $connection->executeStatement(self::$tableSchemas[$tableName]);
+                foreach ($allColumns as $column) {
+                    $tableColumns[$column[0]][] = $column;
                 }
+
+                foreach (array_keys(self::$tableColumns) as $tableName) {
+                    if ($tableColumns[$tableName] !== self::$tableColumns[$tableName]) {
+                        $connection->executeStatement('DROP TABLE '.$connection->quoteIdentifier($tableName));
+                        $connection->executeStatement(self::$tableSchemas[$tableName]);
+                    }
+                }
+
+                self::$alterCount = $getAlterCount();
             }
 
             $truncateTables = $connection->fetchFirstColumn('
@@ -123,6 +143,8 @@ abstract class FunctionalTestCase extends WebTestCase
                 'SHOW CREATE TABLE '.$connection->quoteIdentifier($table->getName())
             )[1];
         }
+
+        self::$alterCount = $getAlterCount();
     }
 
     private static function importFixture(Connection $connection, string $file): void
