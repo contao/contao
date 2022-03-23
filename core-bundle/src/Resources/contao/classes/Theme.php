@@ -320,9 +320,9 @@ class Theme extends Backend
 </div><div class="w50 widget"' . ($count ? ' style="display: none"' : '') . ' id="ctrl_example_website_import">
   <h3><label>' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][0] ?? '') . '</label></h3>
   <select name="example_website_import" class="tl_select">
-    <option value="full">Full SQL import</option>
-    <option value="data">Data only</option>
-    <option value="data_no_truncate">Data only without truncating tables</option>
+    <option value="full">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['full'] ?? '') . '</option>
+    <option value="data">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['data'] ?? '') . '</option>
+    <option value="data_no_truncate">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['data_no_truncate'] ?? '') . '</option>
   </select>
   <p class="tl_help tl_tip" title="">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][1] ?? '') . '</p>
 </div><br class="clr">';

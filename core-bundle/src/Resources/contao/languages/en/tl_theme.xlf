@@ -134,6 +134,15 @@
       <trans-unit id="tl_theme.exampleWebsiteImportType.1">
         <source>How shoud the SQL file be imported.</source>
       </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.full">
+        <source>Full SQL import</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data">
+        <source>Data only</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data_no_truncate">
+        <source>Data only without truncating tables</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
