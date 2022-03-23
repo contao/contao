@@ -52,7 +52,7 @@ abstract class FunctionalTestCase extends WebTestCase
 
         try {
             $connection->executeStatement('SET @@SESSION.information_schema_stats_expiry = 0');
-        } catch (\Throwable) {
+        } catch (\Throwable $exception) {
             // Ignore
         }
 
