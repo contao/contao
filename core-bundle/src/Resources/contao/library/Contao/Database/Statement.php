@@ -140,6 +140,11 @@ class Statement
 	 */
 	public function set($arrParams)
 	{
+		if (substr_count((string) $this->strQuery, '%s') !== 1 || !\in_array(strtoupper(substr($this->strQuery, 0, 6)), array('INSERT', 'UPDATE'), true))
+		{
+			throw new \InvalidArgumentException(sprintf('Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder.', __METHOD__));
+		}
+
 		$this->arrSetParams = array_values($arrParams);
 
 		$arrParamNames = array_map(
