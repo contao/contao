@@ -16,7 +16,7 @@ namespace Contao\CoreBundle\String;
  * @implements \IteratorAggregate<string, string>
  * @implements \ArrayAccess<string, string|int|bool|\Stringable|null>
  */
-class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
+class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
     /**
      * @var array<string, string>
@@ -194,6 +194,11 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         unset($this->attributes[$offset]);
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->attributes;
     }
 
     /**
