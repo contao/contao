@@ -810,7 +810,7 @@ class RoutingTest extends WebTestCase
 
     public function getRootAliases(): \Generator
     {
-        yield'Renders the root page if one of the accept languages matches' => [
+        yield 'Renders the root page if one of the accept languages matches' => [
             '/',
             200,
             'Index - Root with index page',
@@ -818,7 +818,7 @@ class RoutingTest extends WebTestCase
             'root-with-index.local',
         ];
 
-        yield'Renders the fallback page if none of the accept languages matches' => [
+        yield 'Renders the fallback page if none of the accept languages matches' => [
             '/',
             200,
             'Index - Root with index page',
@@ -826,7 +826,7 @@ class RoutingTest extends WebTestCase
             'root-with-index.local',
         ];
 
-        yield'Matches a root page without hostname' => [
+        yield 'Matches a root page without hostname' => [
             '/',
             200,
             'Home - Domain without hostname',
@@ -834,7 +834,7 @@ class RoutingTest extends WebTestCase
             'domain-without-hostname.local',
         ];
 
-        yield'Matches a hostname with port' => [
+        yield 'Matches a hostname with port' => [
             '/',
             200,
             'Home - Domain with port',
@@ -842,7 +842,7 @@ class RoutingTest extends WebTestCase
             'domain-with-port.local:8080',
         ];
 
-        yield'Renders the 404 page if no language matches' => [
+        yield 'Renders the 404 page if no language matches' => [
             '/',
             404,
             '(404 Not Found)',
@@ -850,7 +850,7 @@ class RoutingTest extends WebTestCase
             'root-without-fallback-language.local',
         ];
 
-        yield'Redirects to the first language root if the accept languages matches' => [
+        yield 'Redirects to the first language root if the accept languages matches' => [
             '/',
             303,
             'Redirecting to http://same-domain-root.local/english-site.html',
@@ -858,7 +858,7 @@ class RoutingTest extends WebTestCase
             'same-domain-root.local',
         ];
 
-        yield'Redirects to the second language root if the accept languages matches' => [
+        yield 'Redirects to the second language root if the accept languages matches' => [
             '/',
             303,
             'Redirecting to http://same-domain-root.local/german-site.html',
@@ -866,7 +866,7 @@ class RoutingTest extends WebTestCase
             'same-domain-root.local',
         ];
 
-        yield'Redirects to the fallback root if none of the accept languages matches' => [
+        yield 'Redirects to the fallback root if none of the accept languages matches' => [
             '/',
             303,
             'Redirecting to http://same-domain-root.local/english-site.html',
