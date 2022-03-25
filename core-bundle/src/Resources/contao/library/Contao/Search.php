@@ -328,14 +328,9 @@ class Search
 
 		foreach ($iterator->getPartsIterator() as $part)
 		{
-			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
+			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE && !\in_array($part, $variants, true) && \in_array($transliterator->transliterate($part), $arrMatches, true))
 			{
-				if (
-					\in_array($transliterator->transliterate($part), $arrMatches, true)
-					&& !\in_array($part, $variants, true)
-				) {
-					$variants[] = $part;
-				}
+				$variants[] = $part;
 			}
 		}
 
