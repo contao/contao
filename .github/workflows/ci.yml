@@ -374,6 +374,10 @@ jobs:
                               $data["repositories"][2]["type"] = "path";
                               $data["repositories"][2]["url"] = "../news-bundle";
                           }
+                          if ("contao/test-case" !== $data["name"]) {
+                              $data["repositories"][3]["type"] = "path";
+                              $data["repositories"][3]["url"] = "../test-case";
+                          }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '
                       COMPOSER_ROOT_VERSION=dev-${{ env.GITHUB_SHA }} composer install --no-interaction --no-progress
