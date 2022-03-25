@@ -12,11 +12,6 @@ namespace Contao;
 
 use Contao\Image\DeferredImageInterface;
 
-/**
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Martin Auswöger <https://github.com/ausi>
- * @author Yanick Witschi <https://github.com/Toflar>
- */
 class Image
 {
 	/**

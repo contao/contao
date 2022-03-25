@@ -16,8 +16,6 @@ use Contao\DcaExtractor;
 /**
  * The class reads the relation metadata from the DCA and creates the necessary
  * JOIN queries to retrieve an object from the database.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class QueryBuilder
 {

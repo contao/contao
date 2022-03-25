@@ -387,7 +387,6 @@ class TemplateTest extends TestCase
         $page->minifyMarkup = false;
 
         $GLOBALS['objPage'] = $page;
-        $GLOBALS['TL_KEYWORDS'] = '';
 
         $template = new class($buffer) extends FrontendTemplate {
             private ?string $testBuffer;
@@ -419,7 +418,7 @@ class TemplateTest extends TestCase
 
         $this->assertSame($expectedOutput, $template->testCompile());
 
-        unset($GLOBALS['objPage'],$GLOBALS['TL_KEYWORDS']);
+        unset($GLOBALS['objPage']);
     }
 
     public function provideBuffer(): \Generator

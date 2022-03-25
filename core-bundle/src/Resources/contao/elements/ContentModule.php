@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "module".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentModule extends ContentElement
 {

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Picker;
 
 use Contao\BackendUser;
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -32,12 +33,12 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $this->translator = $translator;
     }
 
-    public function getUrl(PickerConfig $config)/*: ?string*/
+    public function getUrl(PickerConfig $config): ?string
     {
         return $this->generateUrl($config, false);
     }
 
-    public function createMenuItem(PickerConfig $config)/*: ItemInterface*/
+    public function createMenuItem(PickerConfig $config): ItemInterface
     {
         $name = $this->getName();
 
@@ -70,7 +71,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function isCurrent(PickerConfig $config)/*: bool*/
+    public function isCurrent(PickerConfig $config): bool
     {
         return $config->getCurrent() === $this->getName();
     }
@@ -111,7 +112,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      *
      * @return array<string,string|int>
      */
-    abstract protected function getRouteParameters(PickerConfig $config = null)/*: array*/;
+    abstract protected function getRouteParameters(PickerConfig $config = null): array;
 
     /**
      * Generates the URL for the picker.

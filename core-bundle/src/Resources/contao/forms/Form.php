@@ -29,8 +29,6 @@ namespace Contao;
  * @property boolean $storeValues
  * @property string  $targetTable
  * @property string  $customTpl
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Form extends Hybrid
 {

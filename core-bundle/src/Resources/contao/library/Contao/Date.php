@@ -37,8 +37,6 @@ namespace Contao;
  * @property integer $yearBegin  The beginning of the current year
  * @property integer $yearEnd    The end of the current year
  * @property string  $format     The date format string
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Date
 {

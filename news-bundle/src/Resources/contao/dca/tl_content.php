@@ -27,7 +27,7 @@ if (Input::get('do') == 'news')
  *
  * @property News $News
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_content_news extends Backend
 {

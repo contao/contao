@@ -42,9 +42,6 @@ class SimpleTokenParser implements LoggerAwareInterface
      */
     public function parse(string $subject, array $tokens, bool $allowHtml = true): string
     {
-        // Check if we can use the expression language or if legacy tokens have been used
-        $canUseExpressionLanguage = $this->canUseExpressionLanguage($tokens);
-
         // The last item is true if it is inside a matching if-tag
         $stack = [true];
 
@@ -74,11 +71,11 @@ class SimpleTokenParser implements LoggerAwareInterface
             $currentIf = $ifStack[\count($ifStack) - 1];
 
             if (0 === strncmp($decodedTag, '{if ', 4)) {
-                $expression = $this->evaluateExpression(substr($decodedTag, 4, -1), $tokens, $canUseExpressionLanguage);
+                $expression = $this->evaluateExpression(substr($decodedTag, 4, -1), $tokens);
                 $stack[] = $current && $expression;
                 $ifStack[] = $expression;
             } elseif (0 === strncmp($decodedTag, '{elseif ', 8)) {
-                $expression = $this->evaluateExpression(substr($decodedTag, 8, -1), $tokens, $canUseExpressionLanguage);
+                $expression = $this->evaluateExpression(substr($decodedTag, 8, -1), $tokens);
                 array_pop($stack);
                 array_pop($ifStack);
                 $stack[] = !$currentIf && $stack[\count($stack) - 1] && $expression;
@@ -123,25 +120,8 @@ class SimpleTokenParser implements LoggerAwareInterface
         );
     }
 
-    private function canUseExpressionLanguage(array $data): bool
+    private function evaluateExpression(string $expression, array $data): bool
     {
-        foreach (array_keys($data) as $token) {
-            if (!preg_match('/^[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*$/', (string) $token)) {
-                trigger_deprecation('contao/core-bundle', '4.10', 'Using tokens that are not valid PHP variables has been deprecated and will no longer work in Contao 5.0. Falling back to legacy token parsing.');
-
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private function evaluateExpression(string $expression, array $data, bool $canUseExpressionLanguage): bool
-    {
-        if (!$canUseExpressionLanguage) {
-            return $this->evaluateExpressionLegacy($expression, $data);
-        }
-
         $unmatchedVariables = array_diff($this->getVariables($expression), array_keys($data));
 
         if (!empty($unmatchedVariables)) {
@@ -158,78 +138,6 @@ class SimpleTokenParser implements LoggerAwareInterface
             return (bool) $this->expressionLanguage->evaluate($expression, $data);
         } catch (SyntaxError $e) {
             throw new \InvalidArgumentException($e->getMessage(), 0, $e);
-        }
-    }
-
-    private function evaluateExpressionLegacy(string $expression, array $data): bool
-    {
-        if (!preg_match('/^([^=!<>\s]+) *([=!<>]+)(.+)$/s', $expression, $matches)) {
-            return false;
-        }
-
-        [, $token, $operator, $value] = $matches;
-
-        if (!\array_key_exists($token, $data)) {
-            $this->logUnmatchedVariables($token);
-
-            $tokenValue = null;
-        } else {
-            $tokenValue = $data[$token];
-        }
-
-        // Normalize types
-        $value = trim($value, ' ');
-
-        if (is_numeric($value)) {
-            if (false === strpos($value, '.')) {
-                $value = (int) $value;
-            } else {
-                $value = (float) $value;
-            }
-        } elseif ('true' === strtolower($value)) {
-            $value = true;
-        } elseif ('false' === strtolower($value)) {
-            $value = false;
-        } elseif ('null' === strtolower($value)) {
-            $value = null;
-        } elseif (0 === strncmp($value, '"', 1) && '"' === substr($value, -1)) {
-            $value = str_replace('\"', '"', substr($value, 1, -1));
-        } elseif (0 === strncmp($value, "'", 1) && "'" === substr($value, -1)) {
-            $value = str_replace("\\'", "'", substr($value, 1, -1));
-        } else {
-            throw new \InvalidArgumentException(sprintf('Unknown data type of comparison value "%s".', $value));
-        }
-
-        // Evaluate
-        switch ($operator) {
-            case '==':
-                // We explicitly want to compare with type juggling here
-                return \in_array($tokenValue, [$value], false);
-
-            case '!=':
-                // We explicitly want to compare with type juggling here
-                return !\in_array($tokenValue, [$value], false);
-
-            case '===':
-                return $tokenValue === $value;
-
-            case '!==':
-                return $tokenValue !== $value;
-
-            case '<':
-                return $tokenValue < $value;
-
-            case '>':
-                return $tokenValue > $value;
-
-            case '<=':
-                return $tokenValue <= $value;
-
-            case '>=':
-                return $tokenValue >= $value;
-
-            default:
-                throw new \InvalidArgumentException(sprintf('Unknown simple token comparison operator "%s".', $operator));
         }
     }
 

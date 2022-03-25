@@ -28,8 +28,6 @@ use Contao\Database\Result;
  *     {
  *         echo $result->url;
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Search
 {

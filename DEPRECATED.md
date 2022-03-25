@@ -1,10 +1,5 @@
 # Deprecated features
 
-## $GLOBALS['TL_CSS_UNITS']
-
-The `$GLOBALS['TL_CSS_UNITS']` variable has been deprecated and will be removed
-in Contao 5.0. Set the appropriate units in the DCA file instead.
-
 ## $GLOBALS['TL_AUTO_ITEM']
 
 The `$GLOBALS['TL_AUTO_ITEM']` variable has been deprecated and will be removed
@@ -384,21 +379,3 @@ $GLOBALS['TL_DCA']['tl_example'] = array
 );
 
 ```
-
-## dcaconfig.php
-
-Using the `dcaconfig.php` file to adjust a data container is deprecated in
-Contao 4.0 and will no longer be supported in Contao 5.0. Add the DCA files
-with your modifications to the `contao/dca` folder instead.
-
-## initconfig.php
-
-Using the `initconfig.php` file to customize the initialization process is
-deprecated in Contao 4.0 and will no longer be supported in Contao 5.0.
-Subscribe to one of the Symfony events instead (e.g. `kernel.request`).
-
-## langconfig.php
-
-Using the `langconfig.php` file to adjust translations is deprecated in Contao
-4.0 and will no longer be supported in Contao 5.0. Add the language files with
-your modifications to the `contao/languages` folder instead.
