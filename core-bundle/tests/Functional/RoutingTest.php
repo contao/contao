@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Functional;
 
 use Contao\Config;
+use Contao\Controller;
 use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
@@ -50,6 +51,7 @@ class RoutingTest extends WebTestCase
         Input::resetUnusedGet();
         Environment::reset();
         InsertTags::reset();
+        Controller::resetControllerCache();
 
         Config::set('debugMode', false);
         Config::set('useAutoItem', true);
