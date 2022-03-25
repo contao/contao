@@ -298,16 +298,16 @@ class FileSelector extends Widget
 		$this->loadDataContainer($this->strTable);
 
 		// Load the current values
-		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'])
+		switch (true)
 		{
-			case 'File':
+			case is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_File::class, true):
 				if (Config::get($this->strField))
 				{
 					$this->varValue = Config::get($this->strField);
 				}
 				break;
 
-			case 'Table':
+			case is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'], DC_Table::class, true):
 				$this->import(Database::class, 'Database');
 
 				if (!$this->Database->fieldExists($this->strField, $this->strTable))

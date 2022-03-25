@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'closed'                      => true,
 		'notEditable'                 => true,
 		'sql' => array
