@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ptable'                      => 'tl_theme',
 		'ctable'                      => array('tl_image_size_item'),
 		'switchToEdit'                => true,

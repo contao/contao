@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'File',
+		'dataContainer'               => Contao\DC_File::class,
 		'closed'                      => true
 	),
 
