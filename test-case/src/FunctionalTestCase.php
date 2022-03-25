@@ -34,7 +34,7 @@ abstract class FunctionalTestCase extends WebTestCase
 
         static::resetDatabaseSchema();
 
-        $connection = self::$container->get('doctrine')->getConnection();
+        $connection = self::getContainer()->get('doctrine')->getConnection();
 
         foreach ($yamlFiles as $file) {
             self::importFixture($connection, $file);
@@ -47,7 +47,7 @@ abstract class FunctionalTestCase extends WebTestCase
             throw new \RuntimeException('Please boot the kernel before calling '.__METHOD__);
         }
 
-        $doctrine = self::$container->get('doctrine');
+        $doctrine = self::getContainer()->get('doctrine');
 
         /** @var Connection $connection */
         $connection = $doctrine->getConnection();
@@ -58,7 +58,7 @@ abstract class FunctionalTestCase extends WebTestCase
             // Ignore
         }
 
-        $getAlterCount = function () use ($connection): int {
+        $getAlterCount = static function () use ($connection): int {
             return (int) $connection->fetchOne("
                 SELECT SUM(total)
                 FROM sys.host_summary_by_statement_type
@@ -75,6 +75,7 @@ abstract class FunctionalTestCase extends WebTestCase
 
         if (!isset(self::$supportsAlterCount)) {
             self::$supportsAlterCount = true;
+
             try {
                 $getAlterCount();
             } catch (\Throwable $exception) {
@@ -119,14 +120,14 @@ abstract class FunctionalTestCase extends WebTestCase
             return;
         }
 
-        $schemaManager = $connection->getSchemaManager();
+        $schemaManager = $connection->createSchemaManager();
         $tables = $schemaManager->listTables();
 
         if ($tables) {
-            $connection->executeStatement('DROP TABLE '.implode(', ', array_map(
-                static fn (Table $table) => $connection->quoteIdentifier($table->getName()),
-                $tables
-            )));
+            $connection->executeStatement('DROP TABLE '.implode(
+                ', ',
+                array_map(static fn (Table $table) => $connection->quoteIdentifier($table->getName()), $tables)
+            ));
         }
 
         /** @var EntityManagerInterface $manager */
@@ -149,9 +150,9 @@ abstract class FunctionalTestCase extends WebTestCase
         }
 
         foreach ($tables as $table) {
-            self::$tableSchemas[$table->getName()] = $connection->fetchNumeric(
-                'SHOW CREATE TABLE '.$connection->quoteIdentifier($table->getName())
-            )[1];
+            $name = $table->getName();
+
+            self::$tableSchemas[$name] = $connection->fetchNumeric('SHOW CREATE TABLE '.$connection->quoteIdentifier($name))[1];
         }
 
         self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
