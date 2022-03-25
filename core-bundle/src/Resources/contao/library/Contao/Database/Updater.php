@@ -14,6 +14,8 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\Database;
 use Contao\Dbafs;
+use Contao\DC_File;
+use Contao\DC_Folder;
 use Contao\File;
 use Contao\Files;
 use Contao\FilesModel;
@@ -760,12 +762,12 @@ class Updater extends Controller
 			$arrConfig = &$GLOBALS['TL_DCA'][$strTable]['config'];
 
 			// Skip non-database DCAs
-			if ($arrConfig['dataContainer'] == 'File')
+			if (is_a($arrConfig['dataContainer'], DC_File::class, true))
 			{
 				continue;
 			}
 
-			if ($arrConfig['dataContainer'] == 'Folder' && !$arrConfig['databaseAssisted'])
+			if (is_a($arrConfig['dataContainer'], DC_Folder::class, true) && !$arrConfig['databaseAssisted'])
 			{
 				continue;
 			}

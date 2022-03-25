@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ctable'                      => array('tl_article'),
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',

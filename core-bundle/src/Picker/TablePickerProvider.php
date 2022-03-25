@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
+use Contao\DC_Table;
+
 class TablePickerProvider extends AbstractTablePickerProvider
 {
     public function getName(): string
@@ -21,6 +23,6 @@ class TablePickerProvider extends AbstractTablePickerProvider
 
     protected function getDataContainer(): string
     {
-        return 'Table';
+        return DC_Table::class;
     }
 }
