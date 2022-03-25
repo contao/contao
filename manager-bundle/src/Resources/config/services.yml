@@ -58,13 +58,6 @@ services:
         tags:
             - { name: kernel.event_listener, priority: -128 }
 
-    contao_manager.listener.install_command:
-        class: Contao\ManagerBundle\EventListener\InstallCommandListener
-        arguments:
-            - '%kernel.project_dir%'
-        tags:
-            - kernel.event_listener
-
     contao_manager.plugin_loader:
         public: true
         synthetic: true

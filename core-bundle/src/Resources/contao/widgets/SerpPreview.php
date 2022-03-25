@@ -245,11 +245,6 @@ class SerpPreview extends Widget
 		$chunks = parse_url($url);
 		$steps = array_filter(explode('/', $chunks['path']));
 
-		if (System::getContainer()->getParameter('contao.prepend_locale'))
-		{
-			array_shift($steps);
-		}
-
 		return array_merge(array($chunks['host']), $steps);
 	}
 }

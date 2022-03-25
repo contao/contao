@@ -17,8 +17,6 @@ trigger_deprecation('contao/core-bundle', '4.2', 'Using the logout module has be
 /**
  * Front end module "logout".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
  *             Use the logout page instead.
  */

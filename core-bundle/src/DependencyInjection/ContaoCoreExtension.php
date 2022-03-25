@@ -30,7 +30,6 @@ use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
@@ -134,7 +133,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
         $this->handleTokenCheckerConfig($config, $container);
-        $this->handleLegacyRouting($config, $configs, $container, $loader);
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
 
@@ -411,29 +409,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $container->removeDefinition('contao.image.fallback_preview_provider');
-    }
-
-    private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void
-    {
-        if (false === $mergedConfig['legacy_routing']) {
-            foreach ($configs as $config) {
-                if (isset($config['prepend_locale'])) {
-                    throw new InvalidConfigurationException('Setting contao.prepend_locale to "'.var_export($config['prepend_locale'], true).'" requires legacy routing.');
-                }
-
-                if (isset($config['url_suffix'])) {
-                    throw new InvalidConfigurationException('Setting contao.url_suffix to "'.$config['url_suffix'].'" requires legacy routing.');
-                }
-            }
-        }
-
-        $container->setParameter('contao.legacy_routing', $mergedConfig['legacy_routing']);
-        $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
-        $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
-
-        if ($mergedConfig['legacy_routing']) {
-            $loader->load('legacy_routing.yml');
-        }
     }
 
     private function getComposerPublicDir(string $projectDir): ?string

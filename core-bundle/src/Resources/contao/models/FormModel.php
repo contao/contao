@@ -102,8 +102,6 @@ use Contao\Model\Collection;
  * @method static integer countByFormID($val, array $opt=array())
  * @method static integer countByTableless($val, array $opt=array())
  * @method static integer countByAllowTags($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FormModel extends Model
 {

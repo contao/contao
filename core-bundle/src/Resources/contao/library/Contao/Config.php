@@ -18,8 +18,6 @@ use Symfony\Component\Filesystem\Path;
  *
  * Custom settings above or below the `### INSTALL SCRIPT ###` markers will be
  * preserved.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Config
 {
@@ -89,11 +87,8 @@ class Config
 		'smtpPass'         => 'mailer_password',
 		'smtpPort'         => 'mailer_port',
 		'smtpEnc'          => 'mailer_encryption',
-		'addLanguageToUrl' => 'contao.prepend_locale',
-		'urlSuffix'        => 'contao.url_suffix',
 		'uploadPath'       => 'contao.upload_path',
 		'editableFiles'    => 'contao.editable_files',
-		'debugMode'        => 'kernel.debug',
 		'characterSet'     => 'kernel.charset',
 		'enableSearch'     => 'contao.search.default_indexer.enable',
 		'indexProtected'   => 'contao.search.index_protected',
@@ -337,7 +332,7 @@ class Config
 		}
 
 		// Recompile the APC file (thanks to Trenker)
-		if (\function_exists('apc_compile_file') && !ini_get('apc.stat'))
+		if (\function_exists('apc_compile_file') && !\ini_get('apc.stat'))
 		{
 			apc_compile_file($strDestination);
 		}
@@ -352,7 +347,7 @@ class Config
 	 */
 	public static function isComplete()
 	{
-		return static::$blnHasLcf !== null && static::has('licenseAccepted');
+		return static::$blnHasLcf !== null;
 	}
 
 	/**

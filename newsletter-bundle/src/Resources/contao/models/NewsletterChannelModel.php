@@ -55,8 +55,6 @@ use Contao\Model\Collection;
  * @method static integer countByMailerTransport($val, array $opt=array())
  * @method static integer countBySender($val, array $opt=array())
  * @method static integer countBySenderName($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class NewsletterChannelModel extends Model
 {

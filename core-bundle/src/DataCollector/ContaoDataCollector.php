@@ -20,8 +20,6 @@ use Contao\LayoutModel;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\System;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -34,18 +32,10 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
     use FrameworkAwareTrait;
 
     private TokenChecker $tokenChecker;
-    private bool $legacyRouting;
-    private string $projectDir;
-    private bool $prependLocale;
-    private string $urlSuffix;
 
-    public function __construct(TokenChecker $tokenChecker, bool $legacyRouting, string $projectDir, bool $prependLocale, string $urlSuffix)
+    public function __construct(TokenChecker $tokenChecker)
     {
         $this->tokenChecker = $tokenChecker;
-        $this->legacyRouting = $legacyRouting;
-        $this->projectDir = $projectDir;
-        $this->prependLocale = $prependLocale;
-        $this->urlSuffix = $urlSuffix;
     }
 
     public function collect(Request $request, Response $response, \Throwable $exception = null): void
@@ -53,7 +43,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         $this->data = ['contao_version' => ContaoCoreBundle::getVersion()];
 
         $this->addSummaryData();
-        $this->addLegacyRoutingData();
 
         if (isset($GLOBALS['TL_DEBUG'])) {
             $this->data = array_merge($this->data, $GLOBALS['TL_DEBUG']);
@@ -109,11 +98,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $data;
     }
 
-    public function getLegacyRouting(): array
-    {
-        return $this->getData('legacy_routing');
-    }
-
     public function getAdditionalData(): array
     {
         $data = $this->data;
@@ -125,7 +109,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             $data['classes_aliased'],
             $data['classes_composerized'],
             $data['database_queries'],
-            $data['legacy_routing']
         );
 
         return $data;
@@ -171,47 +154,6 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             'preview' => $this->tokenChecker->isPreviewMode(),
             'layout' => $this->getLayoutName(),
             'template' => $this->getTemplateName(),
-            'legacy_routing' => $this->legacyRouting,
-        ];
-    }
-
-    private function addLegacyRoutingData(): void
-    {
-        $hooks = [];
-
-        foreach (['getPageIdFromUrl', 'getRootPageFromUrl'] as $name) {
-            if (empty($GLOBALS['TL_HOOKS'][$name]) || !\is_array($GLOBALS['TL_HOOKS'][$name])) {
-                continue;
-            }
-
-            $systemAdapter = $this->framework->getAdapter(System::class);
-
-            foreach ($GLOBALS['TL_HOOKS'][$name] as $callback) {
-                $class = $systemAdapter->importStatic($callback[0]);
-                $file = (new \ReflectionClass($class))->getFileName();
-                $vendorDir = $this->projectDir.'/vendor/';
-
-                $hook = [
-                    'name' => $name,
-                    'class' => \get_class($class),
-                    'method' => $callback[1],
-                    'package' => '',
-                ];
-
-                if (Path::isBasePath($vendorDir, $file)) {
-                    [$vendor, $package] = explode('/', Path::makeRelative($file, $vendorDir), 3);
-                    $hook['package'] = $vendor.'/'.$package;
-                }
-
-                $hooks[] = $hook;
-            }
-        }
-
-        $this->data['legacy_routing'] = [
-            'enabled' => $this->legacyRouting,
-            'prepend_locale' => $this->prependLocale,
-            'url_suffix' => $this->urlSuffix,
-            'hooks' => $hooks,
         ];
     }
 

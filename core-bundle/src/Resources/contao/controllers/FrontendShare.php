@@ -15,8 +15,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Share a page via a social network.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FrontendShare extends Frontend
 {

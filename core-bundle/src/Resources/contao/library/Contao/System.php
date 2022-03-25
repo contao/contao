@@ -52,8 +52,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
  * @property StyleSheets                      $StyleSheets The style sheets object
  * @property BackendTemplate|FrontendTemplate $Template    The template object (TODO: remove this line in Contao 5.0)
  * @property BackendUser|FrontendUser         $User        The user object
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class System
 {
