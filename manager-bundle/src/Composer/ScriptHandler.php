@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Composer;
 
+use Composer\IO\IOInterface;
 use Composer\Script\Event;
 use Composer\Util\Filesystem;
+use Composer\Util\ProcessExecutor;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Webmozart\PathUtil\Path;
@@ -27,7 +29,7 @@ class ScriptHandler
     {
         $webDir = self::getWebDir($event);
 
-        static::purgeCacheFolder();
+        static::purgeCacheFolder($event->getIO());
         static::executeCommand(['contao:install-web-dir'], $event);
         static::executeCommand(['cache:clear', '--no-warmup'], $event);
         static::executeCommand(['cache:clear', '--no-warmup'], $event, 'dev');
@@ -39,18 +41,18 @@ class ScriptHandler
         $event->getIO()->write('<info>Done! Please open the Contao install tool or run contao:migrate on the command line to make sure the database is up-to-date.</info>');
     }
 
-    public static function purgeCacheFolder(): void
+    public static function purgeCacheFolder(IOInterface $io = null): void
     {
-        $filesystem = new Filesystem();
+        $filesystem = new Filesystem(new ProcessExecutor($io));
         $filesystem->removeDirectory(Path::join(getcwd(), 'var/cache/prod'));
     }
 
     /**
      * Adds the app directory if it does not exist.
      */
-    public static function addAppDirectory(): void
+    public static function addAppDirectory(IOInterface $io = null): void
     {
-        $filesystem = new Filesystem();
+        $filesystem = new Filesystem(new ProcessExecutor($io));
         $filesystem->ensureDirectoryExists(Path::join(getcwd(), 'app'));
     }
 

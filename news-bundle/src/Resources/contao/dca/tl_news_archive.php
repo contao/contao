@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ctable'                      => array('tl_news'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
