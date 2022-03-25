@@ -142,8 +142,6 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testUnprotectsErrorPage(): void
     {
-        $exception = new UnauthorizedHttpException('', '', new InsufficientAuthenticationException());
-
         $errorPage = $this->mockPageWithProperties([
             'pid' => 1,
             'type' => 'error_401',
@@ -162,6 +160,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willReturn(new Response('foo', 401))
         ;
 
+        $exception = new UnauthorizedHttpException('', '', new InsufficientAuthenticationException());
         $event = $this->getResponseEvent($exception, $request);
 
         $listener = $this->getListener(false, false, null, $errorPage, $httpKernel);
