@@ -59,10 +59,14 @@ class tl_content_news extends Contao\Backend
 		{
 			case '': // empty
 			case 'paste':
-			case 'create':
 			case 'select':
 				// Check access to the news item
 				$this->checkAccessToElement(CURRENT_ID, $root, true);
+				break;
+
+			case 'create':
+				// Check access to the parent element if a content element is created
+				$this->checkAccessToElement(Contao\Input::get('pid'), $root, (Contao\Input::get('mode') == 2));
 				break;
 
 			case 'editAll':
