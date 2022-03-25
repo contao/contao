@@ -21,34 +21,24 @@ use Symfony\Component\Yaml\Yaml;
 
 abstract class FunctionalTestCase extends WebTestCase
 {
+    private static array $tableColumns = [];
+    private static array $tableSchemas = [];
+    private static int $alterCount = -1;
+    private static bool $supportsAlterCount;
+
     protected static function loadFixtures(array $yamlFiles, bool $truncateTables = true): void
     {
         if (!self::$booted) {
             throw new \RuntimeException('Please boot the kernel before calling '.__METHOD__);
         }
 
-        $doctrine = self::$container->get('doctrine');
+        static::resetDatabaseSchema();
 
-        /** @var Connection $connection */
-        $connection = $doctrine->getConnection();
-
-        if ($truncateTables) {
-            $platform = $connection->getDatabasePlatform();
-
-            /** @var Table $table */
-            foreach ($connection->getSchemaManager()->listTables() as $table) {
-                $connection->executeStatement($platform->getTruncateTableSQL($table->getName()));
-            }
-        }
-
-        // Start a transaction, otherwise each single statement will be autocommited
-        $connection->beginTransaction();
+        $connection = self::getContainer()->get('doctrine')->getConnection();
 
         foreach ($yamlFiles as $file) {
             self::importFixture($connection, $file);
         }
-
-        $connection->commit();
     }
 
     protected static function resetDatabaseSchema(): void
@@ -57,16 +47,87 @@ abstract class FunctionalTestCase extends WebTestCase
             throw new \RuntimeException('Please boot the kernel before calling '.__METHOD__);
         }
 
-        $doctrine = self::$container->get('doctrine');
+        $doctrine = self::getContainer()->get('doctrine');
 
         /** @var Connection $connection */
         $connection = $doctrine->getConnection();
-        $schemaManager = $connection->getSchemaManager();
-        $platform = $connection->getDatabasePlatform();
 
-        /** @var Table $table */
-        foreach ($schemaManager->listTables() as $table) {
-            $connection->executeStatement($platform->getDropTableSQL($table));
+        try {
+            $connection->executeStatement('SET @@SESSION.information_schema_stats_expiry = 0');
+        } catch (\Throwable $exception) {
+            // Ignore
+        }
+
+        $getAlterCount = static function () use ($connection): int {
+            return (int) $connection->fetchOne("
+                SELECT SUM(total)
+                FROM sys.host_summary_by_statement_type
+                WHERE statement IN (
+                    'create_view',
+                    'drop_index',
+                    'create_index',
+                    'drop_table',
+                    'alter_table',
+                    'create_table'
+                )
+            ");
+        };
+
+        if (!isset(self::$supportsAlterCount)) {
+            self::$supportsAlterCount = true;
+
+            try {
+                $getAlterCount();
+            } catch (\Throwable $exception) {
+                self::$supportsAlterCount = false;
+            }
+        }
+
+        if (!empty(self::$tableColumns)) {
+            if (!self::$supportsAlterCount || $getAlterCount() !== self::$alterCount) {
+                $allColumns = $connection->fetchAllNumeric('
+                    SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME
+                    FROM information_schema.COLUMNS
+                    WHERE TABLE_SCHEMA = DATABASE()
+                ');
+
+                $tableColumns = [];
+
+                foreach ($allColumns as $column) {
+                    $tableColumns[$column[0]][] = $column;
+                }
+
+                foreach (array_keys(self::$tableColumns) as $tableName) {
+                    if ($tableColumns[$tableName] !== self::$tableColumns[$tableName]) {
+                        $connection->executeStatement('DROP TABLE '.$connection->quoteIdentifier($tableName));
+                        $connection->executeStatement(self::$tableSchemas[$tableName]);
+                    }
+                }
+
+                self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
+            }
+
+            $truncateTables = $connection->fetchFirstColumn('
+                SELECT TABLE_NAME
+                FROM information_schema.TABLES
+                WHERE TABLE_SCHEMA = DATABASE() AND TABLE_ROWS > 0
+            ');
+
+            foreach ($truncateTables as $tableName) {
+                $connection->executeStatement('TRUNCATE TABLE '.$connection->quoteIdentifier($tableName));
+            }
+
+            return;
+        }
+
+        $schemaManager = $connection->createSchemaManager();
+        $tables = $schemaManager->listTables();
+
+        if ($tables) {
+            $connection->executeStatement('DROP TABLE '.implode(
+                ', ',
+                array_map(static fn (Table $table) => $connection->quoteIdentifier($table->getName()), $tables)
+            ));
         }
 
         /** @var EntityManagerInterface $manager */
@@ -75,6 +136,31 @@ abstract class FunctionalTestCase extends WebTestCase
 
         $tool = new SchemaTool($manager);
         $tool->createSchema($metadata);
+
+        $tables = $schemaManager->listTables();
+
+        $allColumns = $connection->fetchAllNumeric('
+            SELECT TABLE_NAME, COLUMN_NAME, COLUMN_DEFAULT, IS_NULLABLE, COLUMN_TYPE, COLLATION_NAME
+            FROM information_schema.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+        ');
+
+        foreach ($allColumns as $column) {
+            self::$tableColumns[$column[0]][] = $column;
+        }
+
+        foreach ($tables as $table) {
+            $name = $table->getName();
+
+            self::$tableSchemas[$name] = $connection->fetchNumeric('SHOW CREATE TABLE '.$connection->quoteIdentifier($name))[1];
+        }
+
+        self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
+
+        if (self::$alterCount === 0) {
+            self::$alterCount = -1;
+            self::$supportsAlterCount = false;
+        }
     }
 
     private static function importFixture(Connection $connection, string $file): void
