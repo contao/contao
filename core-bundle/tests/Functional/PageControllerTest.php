@@ -25,22 +25,6 @@ class PageControllerTest extends FunctionalTestCase
 {
     private static ?array $lastImport = null;
 
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        static::bootKernel();
-        static::resetDatabaseSchema();
-        static::ensureKernelShutdown();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        (new Filesystem())->remove(Path::canonicalize(__DIR__.'/../../var'));
-    }
-
     /**
      * @param string|false|null $path
      *

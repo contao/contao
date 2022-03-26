@@ -38,7 +38,7 @@ class ContaoApplicationTest extends ContaoTestCase
 
     public function testApplicationNameAndVersion(): void
     {
-        $app = new ContaoApplication(ContaoKernel::fromInput($this->getTempDir(), new ArgvInput()));
+        $app = new ContaoApplication(ContaoKernel::fromInput($this->getTempDir(), new ArgvInput(array_merge($_SERVER['argv'] ?? [], ['-eprod']))));
 
         $this->assertSame('Contao Managed Edition', $app->getName());
         $this->assertSame(ContaoCoreBundle::getVersion(), $app->getVersion());
@@ -46,7 +46,7 @@ class ContaoApplicationTest extends ContaoTestCase
 
     public function testDoesNotHaveNoDebugOption(): void
     {
-        $app = new ContaoApplication(ContaoKernel::fromInput($this->getTempDir(), new ArgvInput()));
+        $app = new ContaoApplication(ContaoKernel::fromInput($this->getTempDir(), new ArgvInput(array_merge($_SERVER['argv'] ?? [], ['-eprod']))));
         $options = $app->getDefinition()->getOptions();
 
         $this->assertArrayNotHasKey('no-debug', $options);

@@ -26,22 +26,6 @@ use Symfony\Component\Filesystem\Path;
 
 class DbafsTest extends FunctionalTestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        static::bootKernel();
-        static::resetDatabaseSchema();
-        static::ensureKernelShutdown();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        (new Filesystem())->remove(Path::canonicalize(__DIR__.'/../../var'));
-    }
-
     public function testAlterFilesystemAndSync(): void
     {
         $client = $this->createClient();
