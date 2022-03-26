@@ -12,13 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\TestCase;
 
-use PHPUnit\Framework\Constraint\StringMatchesFormatDescription;
-use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Runner\AfterLastTestHook;
 use PHPUnit\Runner\BeforeFirstTestHook;
 use Symfony\Component\Filesystem\Filesystem;
 
-class ClearCachePhpunitExtension implements BeforeFirstTestHook
+class ClearCachePhpunitExtension implements BeforeFirstTestHook, AfterLastTestHook
 {
     public function executeBeforeFirstTest(): void
     {
@@ -27,5 +25,10 @@ class ClearCachePhpunitExtension implements BeforeFirstTestHook
             __DIR__.'/../../var/cache',
             __DIR__.'/../../core-bundle/var/cache',
         ]);
+    }
+
+    public function executeAfterLastTest(): void
+    {
+        $this->executeBeforeFirstTest();
     }
 }
