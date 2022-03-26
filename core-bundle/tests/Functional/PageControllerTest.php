@@ -17,8 +17,6 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Route;
 
 class PageControllerTest extends FunctionalTestCase
