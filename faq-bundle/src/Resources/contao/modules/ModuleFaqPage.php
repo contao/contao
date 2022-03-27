@@ -91,8 +91,7 @@ class ModuleFaqPage extends Module
 			$objTemp = (object) $objFaq->row();
 
 			// Clean the RTE output
-			$objTemp->answer = StringUtil::toHtml5($objFaq->answer);
-			$objTemp->answer = StringUtil::encodeEmail($objTemp->answer);
+			$objTemp->answer = StringUtil::encodeEmail($objFaq->answer);
 
 			$objTemp->addImage = false;
 			$objTemp->addBefore = false;
