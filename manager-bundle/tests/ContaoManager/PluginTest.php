@@ -985,6 +985,60 @@ class PluginTest extends ContaoTestCase
         yield['foo://localhost'];
     }
 
+    public function testUpdatesTheClickjackingPaths(): void
+    {
+        $extensionConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'ALLOW',
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+
+        $expectedConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'ALLOW',
+                    ],
+                ],
+            ],
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/.*' => 'SAMEORIGIN',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedConfigs, $extensionConfig);
+    }
+
+    public function testDoesNotOverrideDefaultClickjackingPath(): void
+    {
+        $extensionConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'DENY',
+                        '^/.*' => 'ALLOW',
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+
+        $this->assertSame($extensionConfigs, $extensionConfig);
+    }
+
     public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void
     {
         $plugin = new Plugin();

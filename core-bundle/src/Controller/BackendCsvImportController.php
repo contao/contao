@@ -126,11 +126,7 @@ class BackendCsvImportController
                 return new RedirectResponse($request->getUri());
             }
 
-            $this->connection->update(
-                $table,
-                [$field => serialize($data)],
-                ['id' => $id]
-            );
+            $this->connection->update($table, [$field => serialize($data)], ['id' => $id]);
 
             return new RedirectResponse($this->getBackUrl($request));
         }

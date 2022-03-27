@@ -347,23 +347,25 @@ body:not(.fullscreen) #container {
 	margin:18px 0;
 	padding:0 16px;
 	font-size:1.1rem;
+	display:flex;
 }
 .popup #main_headline {
 	display:none;
 }
 #main_headline span {
 	display:inline-block;
-	max-width:25%;
+	max-width:max-content;
 	white-space:nowrap;
 	overflow:hidden;
 	text-overflow:ellipsis;
 	line-height:22px;
+	flex:1 0 0;
 }
 #main_headline span:nth-child(even) {
 	font-weight:400;
 }
 #main_headline span + span::before {
-	content: '› ';
+	content: "\A0› "; /* Non-breaking-space to prevent collapsing whitespace */
 	font-weight: 600;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
@@ -413,7 +415,6 @@ h2.sub_headline {
 	color:#d68c23;
 }
 .widget .tl_error,.widget .tl_confirm,.widget .tl_info,.widget .tl_new {
-	margin:1px 0;
 	padding:8px 10px 8px 30px;
 	background-position:9px 9px;
 }

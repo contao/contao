@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\Config;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
@@ -24,6 +25,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
 use Contao\Files;
+use Contao\Image\ImageInterface;
 use Contao\System;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -137,11 +139,18 @@ class FigureRendererTest extends TestCase
             Path::join($this->getTempDir(), 'files')
         );
 
+        $imageFactory = $this->createMock(ImageFactoryInterface::class);
+        $imageFactory
+            ->method('create')
+            ->willReturn($this->createMock(ImageInterface::class))
+        ;
+
         // Configure the container
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('filesystem', $filesystem);
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->mockContaoFramework()));
+        $container->set('contao.image.factory', $imageFactory);
 
         System::setContainer($container);
 

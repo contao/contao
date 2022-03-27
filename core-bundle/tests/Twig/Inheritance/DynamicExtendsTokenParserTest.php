@@ -114,9 +114,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         $templateHierarchy
             ->method('getDynamicParent')
             ->with('foo')
-            ->willThrowException(
-                new \LogicException('Template not found in hierarchy.')
-            )
+            ->willThrowException(new \LogicException('Template not found in hierarchy.'))
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));

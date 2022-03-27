@@ -459,7 +459,7 @@ abstract class Backend extends Controller
 			$this->Template->main .= $response;
 
 			// Add the name of the parent element
-			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != $arrTables[0])
+			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
 				$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
 										 ->limit(1)
@@ -476,7 +476,14 @@ abstract class Backend extends Controller
 			}
 
 			// Add the name of the submodule
-			$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1], Input::get('id')) . '</span>';
+			if (isset($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1]))
+			{
+				$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
+			}
+			else
+			{
+				$this->Template->headline .= ' <span>' . Input::get('key') . '</span>';
+			}
 		}
 
 		// Default action
@@ -527,10 +534,14 @@ abstract class Backend extends Controller
 				$pid = $dc->id;
 				$table = $strTable;
 				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
-
 				$container = System::getContainer();
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
+				if ($ptable)
+				{
+					$this->loadDataContainer($ptable);
+				}
+
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)
@@ -561,13 +572,15 @@ abstract class Backend extends Controller
 						}
 					}
 
-					System::loadLanguageFile($ptable);
-					$this->loadDataContainer($ptable);
-
 					// Next parent table
 					$pid = $objRow->pid;
 					$table = $ptable;
 					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable'] ?? null) ? $objRow->ptable : ($GLOBALS['TL_DCA'][$ptable]['config']['ptable'] ?? null);
+
+					if ($ptable)
+					{
+						$this->loadDataContainer($ptable);
+					}
 				}
 
 				// Add the last parent table
@@ -1117,7 +1130,7 @@ abstract class Backend extends Controller
 
 		foreach (array_keys($arrSections) as $k)
 		{
-			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
+			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k] ?? $k;
 		}
 
 		asort($arrSections);
@@ -1160,7 +1173,7 @@ abstract class Backend extends Controller
       e.preventDefault();
       Backend.openModalSelector({
         "id": "tl_listing",
-        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0]) . ',
+        "title": ' . json_encode($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'][0] ?? '') . ',
         "url": this.href + "&value=" + $("ctrl_' . $inputName . '").value,
         "callback": function(picker, value) {
           $("ctrl_' . $inputName . '").value = value.join(",");

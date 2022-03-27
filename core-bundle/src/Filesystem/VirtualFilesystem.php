@@ -20,7 +20,7 @@ use Symfony\Component\Uid\Uuid;
 /**
  * Use the VirtualFilesystem to access resources from mounted adapters and
  * registered DBAFS instances. The class can be instantiated with a path
- * prefix (e.g. 'assets/images') to get a different root and/or as a readonly
+ * prefix (e.g. "assets/images") to get a different root and/or as a readonly
  * view to prevent accidental mutations.
  *
  * In each method you can either pass in a path (string) or a @see Uuid to

@@ -15,6 +15,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\DC_Table;
 use Contao\Environment;
 use Contao\Input;
 use Contao\NewsletterChannelModel;
@@ -26,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_newsletter_channel',
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'subject',

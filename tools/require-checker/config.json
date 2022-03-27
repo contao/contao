@@ -44,6 +44,7 @@
         "Contao\\NewsletterChannelModel",
         "Michelf\\MarkdownExtra",
         "ProxyManager\\Configuration",
+        "Roave\\BetterReflection\\BetterReflection",
         "Symfony\\Bundle\\MonologBundle\\MonologBundle"
     ]
 }

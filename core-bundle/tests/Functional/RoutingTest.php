@@ -30,6 +30,7 @@ class RoutingTest extends FunctionalTestCase
         parent::setUpBeforeClass();
 
         static::bootKernel();
+        System::setContainer(self::$container);
         static::resetDatabaseSchema();
         static::ensureKernelShutdown();
     }
@@ -1355,6 +1356,28 @@ class RoutingTest extends FunctionalTestCase
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringContainsString('Domain1', $title);
+    }
+
+    public function testRendersLoginPageWhenRootIsProtected(): void
+    {
+        $request = 'https://protected-root.local/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'protected-root.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['theme', 'protected-root']);
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame(401, $response->getStatusCode());
+        $this->assertStringContainsString('Error 401 Page', $title);
     }
 
     private function loadFixtureFiles(array $fileNames): void

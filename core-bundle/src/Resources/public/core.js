@@ -1109,7 +1109,7 @@ var Backend =
 	 * it was defined and add the "down" CSS class to the header.
 	 */
 	initScrollOffset: function() {
-		// Kill the legacy cookie here; this way it can be sent by the server
+		// Kill the legacy cookie here; this way it can be sent by the server,
 		// but it won't be resent by the client in the next request
 		Cookie.dispose('BE_PAGE_OFFSET');
 
@@ -2409,7 +2409,7 @@ var Backend =
 
 		// Empty the last element instead of removing it (see #4858)
 		if (li.getPrevious() === null && li.getNext() === null) {
-			li.getElements('input').each(function(input) {
+			li.getElements('input, textarea').each(function(input) {
 				input.value = '';
 			});
 		} else {

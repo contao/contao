@@ -412,7 +412,7 @@ class Environment
 	}
 
 	/**
-	 * Return the relativ path to the script (e.g. index.php)
+	 * Return the relative path to the script (e.g. index.php)
 	 *
 	 * @return string The relative path to the script
 	 */
@@ -422,7 +422,7 @@ class Environment
 	}
 
 	/**
-	 * Return the relativ path to the script and include the request (e.g. index.php?id=2)
+	 * Return the relative path to the script and include the request (e.g. index.php?id=2)
 	 *
 	 * @return string The relative path to the script including the request string
 	 */
