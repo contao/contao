@@ -504,7 +504,7 @@ class VirtualFilesystemTest extends TestCase
                             static function () use (&$handlerInvocationCount) {
                                 ++$handlerInvocationCount;
 
-                                return ['extra'];
+                                return ['extra' => 'data'];
                             },
                         ),
                         'dir_b' => new FilesystemItem(false, 'foo/dir_b'),
@@ -540,9 +540,12 @@ class VirtualFilesystemTest extends TestCase
         $this->assertTrue($fileA->isFile());
 
         $this->assertSame(0, $handlerInvocationCount);
+
         $this->assertSame(54321, $fileA->getLastModified());
         $this->assertSame(2048, $fileA->getFileSize());
         $this->assertSame('text/csv', $fileA->getMimeType());
+
+        /** @phpstan-ignore-next-line */
         $this->assertSame(3, $handlerInvocationCount);
 
         // Read from the DbafsManager
@@ -558,11 +561,15 @@ class VirtualFilesystemTest extends TestCase
         $this->assertInstanceOf(FilesystemItem::class, $fileB);
         $this->assertTrue($fileB->isFile());
 
+        /** @phpstan-ignore-next-line */
         $this->assertSame(3, $handlerInvocationCount);
+
         $this->assertSame(12345, $fileB->getLastModified());
         $this->assertSame(1024, $fileB->getFileSize());
         $this->assertSame('image/png', $fileB->getMimeType());
-        $this->assertSame(['extra'], $fileB->getExtraMetadata());
+        $this->assertSame(['extra' => 'data'], $fileB->getExtraMetadata());
+
+        /** @phpstan-ignore-next-line */
         $this->assertSame(7, $handlerInvocationCount);
     }
 
