@@ -83,5 +83,6 @@
     <extension class="Contao\CoreBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
     <extension class="Contao\ManagerBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
     <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>
+    <extension class="Contao\TestCase\WarnXdebugPhpunitExtension"/>
   </extensions>
 </phpunit>
