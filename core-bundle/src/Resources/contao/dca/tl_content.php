@@ -258,7 +258,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'imageTitle' => array
 		(
@@ -266,7 +266,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'size' => array
 		(
@@ -275,7 +275,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'imagemargin' => array
 		(
@@ -283,7 +283,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'trbl',
 			'options'                 => array('px', '%', 'em', 'rem'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(128) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'imageUrl' => array
 		(
@@ -306,7 +306,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'floating' => array
 		(
@@ -363,7 +363,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'thead' => array
 		(
@@ -414,14 +414,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'long'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'mooStyle' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'mooClasses' => array
 		(
@@ -429,7 +429,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'alnum', 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'highlight' => array
 		(
@@ -492,7 +492,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'linkTitle' => array
 		(
@@ -500,14 +500,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'embed' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'rel' => array
 		(
@@ -677,7 +677,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'playerAspect' => array
 		(
@@ -857,7 +857,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'tl_class'=>'w50 clr'),
-			'sql'                     => "tinytext NULL"
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'invisible' => array
 		(
