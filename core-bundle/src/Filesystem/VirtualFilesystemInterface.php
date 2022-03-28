@@ -126,6 +126,14 @@ interface VirtualFilesystemInterface
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
+    public function get($location, int $accessFlags = self::NONE): ?FilesystemItem;
+
+    /**
+     * @param string|Uuid $location
+     *
+     * @throws VirtualFilesystemException
+     * @throws UnableToResolveUuidException
+     */
     public function listContents($location, bool $deep = false, int $accessFlags = self::NONE): FilesystemItemIterator;
 
     /**
