@@ -427,16 +427,12 @@ class VirtualFilesystemTest extends TestCase
         $mountManager = $this->createMock(MountManager::class);
         $mountManager
             ->method('fileExists')
-            ->willReturnCallback(
-                static fn (string $path): bool => 'foo/file_a' === $path
-            )
+            ->willReturnCallback(static fn (string $path): bool => 'foo/file_a' === $path)
         ;
 
         $mountManager
             ->method('directoryExists')
-            ->willReturnCallback(
-                static fn (string $path): bool => 'foo/dir_a' === $path
-            )
+            ->willReturnCallback(static fn (string $path): bool => 'foo/dir_a' === $path)
         ;
 
         $mountManager
