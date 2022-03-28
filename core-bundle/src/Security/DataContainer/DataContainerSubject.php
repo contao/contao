@@ -14,45 +14,23 @@ namespace Contao\CoreBundle\Security\DataContainer;
 
 class DataContainerSubject
 {
-    private string $table;
-    private int|string|null $id;
-    private array $attributes;
-
-    public function __construct(string $table, int|string|null $id = null, array $attributes = [])
+    public function __construct(public readonly string $table, public readonly int|string|null $id = null, public readonly array $attributes = [])
     {
-        $this->table = $table;
-        $this->id = $id;
-        $this->attributes = $attributes;
     }
 
     public function __toString(): string
     {
         $subject = [];
-        $subject[] = 'Table: '.$this->getTable();
+        $subject[] = 'Table: '.$this->table;
 
-        if ($id = $this->getId()) {
+        if ($id = $this->id) {
             $subject[] = 'ID: '.$id;
         }
 
-        if ($attributes = $this->getAttributes()) {
+        if ($attributes = $this->attributes) {
             $subject[] = 'Attributes: '.json_encode($attributes);
         }
 
         return sprintf('[Subject: %s]', implode('; ', $subject));
-    }
-
-    public function getTable(): string
-    {
-        return $this->table;
-    }
-
-    public function getId(): int|string|null
-    {
-        return $this->id;
-    }
-
-    public function getAttributes(): array
-    {
-        return $this->attributes;
     }
 }

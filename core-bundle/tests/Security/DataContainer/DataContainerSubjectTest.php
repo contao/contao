@@ -28,9 +28,9 @@ class DataContainerSubjectTest extends TestCase
             ['foobar']
         );
 
-        $this->assertSame('foobar_table', $subject->getTable());
-        $this->assertSame($id, $subject->getId());
-        $this->assertSame(['foobar'], $subject->getAttributes());
+        $this->assertSame('foobar_table', $subject->table);
+        $this->assertSame($id, $subject->id);
+        $this->assertSame(['foobar'], $subject->attributes);
     }
 
     public function testToString(): void
