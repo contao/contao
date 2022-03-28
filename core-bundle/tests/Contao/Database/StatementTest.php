@@ -44,6 +44,7 @@ class StatementTest extends TestCase
         }
 
         $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('is only supported for INSERT and UPDATE queries with the "%s" placeholder');
 
         $statement->set(['foo' => 'bar']);
     }
@@ -72,7 +73,7 @@ class StatementTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('executeQuery')
             ->willReturnCallback(
                 function (string $query, array $params) use ($doctrineResult, $expected) {
