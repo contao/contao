@@ -475,6 +475,86 @@ class ContentModel extends Model
 
 		return static::countBy($arrColumns, array($intPid, $strParentTable), $arrOptions);
 	}
+
+	/**
+	 * Find all visible content elements by their parent ID and parent table
+	 *
+	 * @param integer $intPid         The article ID
+	 * @param string  $strParentTable The parent table name
+	 * @param array   $arrOptions     An optional options array
+	 *
+	 * @return Collection|ContentModel[]|ContentModel|null A collection of models or null if there are no content elements
+	 */
+	public static function findVisibleByPidAndTable($intPid, $strParentTable, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+
+		// Also handle empty ptable fields
+		if ($strParentTable == 'tl_article')
+		{
+			$arrColumns = array("$t.pid=? AND ($t.ptable=? OR $t.ptable='')");
+		}
+		else
+		{
+			$arrColumns = array("$t.pid=? AND $t.ptable=?");
+		}
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "$t.invisible='' AND ($t.stop='' OR $t.stop>'$time')";
+		}
+
+		// Skip unsaved elements (see #2708)
+		$arrColumns[] = "$t.tstamp!=0";
+
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = "$t.sorting";
+		}
+
+		return static::findBy($arrColumns, array($intPid, $strParentTable), $arrOptions);
+	}
+
+	/**
+	 * Find content elements that have a start date in the future by their parent ID and parent table
+	 *
+	 * @param integer $intPid         The article ID
+	 * @param string  $strParentTable The parent table name
+	 * @param array   $arrOptions     An optional options array
+	 *
+	 * @return Collection|ContentModel[]|ContentModel|null A collection of models or null if there are no content elements
+	 */
+	public static function findUpcomingByPidAndTable($intPid, $strParentTable, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+
+		// Also handle empty ptable fields
+		if ($strParentTable == 'tl_article')
+		{
+			$arrColumns = array("$t.pid=? AND ($t.ptable=? OR $t.ptable='')");
+		}
+		else
+		{
+			$arrColumns = array("$t.pid=? AND $t.ptable=?");
+		}
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "$t.invisible='' AND ($t.start!='' OR $t.start>'$time') AND ($t.stop='' OR $t.stop<='$time')";
+		}
+
+		// Skip unsaved elements (see #2708)
+		$arrColumns[] = "$t.tstamp!=0";
+
+		if (!isset($arrOptions['order']))
+		{
+			$arrOptions['order'] = "$t.sorting";
+		}
+
+		return static::findBy($arrColumns, array($intPid, $strParentTable), $arrOptions);
+	}
 }
 
 class_alias(ContentModel::class, 'ContentModel');

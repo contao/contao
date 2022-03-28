@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\Model\Collection;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategyInterface;
 
 /**
  * Parent class for news modules.
@@ -80,6 +82,8 @@ abstract class ModuleNews extends Module
 	 */
 	protected function parseArticle($objArticle, $blnAddArchive=false, $strClass='', $intCount=0)
 	{
+		$needsCacheHeaders = false;
+
 		$objTemplate = new FrontendTemplate($this->news_template ?: 'news_latest');
 		$objTemplate->setData($objArticle->row());
 
@@ -126,10 +130,14 @@ abstract class ModuleNews extends Module
 		{
 			$id = $objArticle->id;
 
-			$objTemplate->text = function () use ($id)
+			// Enable cache headers if event has details but they are not generated
+			$needsCacheHeaders = true;
+
+			$objTemplate->text = function () use ($id, &$needsCacheHeaders)
 			{
+				$needsCacheHeaders = false;
 				$strText = '';
-				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_news');
+				$objElement = ContentModel::findVisibleByPidAndTable($id, 'tl_news');
 
 				if ($objElement !== null)
 				{
@@ -229,6 +237,24 @@ abstract class ModuleNews extends Module
 		{
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_news.' . $objArticle->id));
+		}
+
+		// Add cache headers for content elements in the future if they have not been generated.
+		if ($needsCacheHeaders)
+		{
+			$objElement = ContentModel::findUpcomingByPidAndTable($id, 'tl_news');
+
+			if ($objElement !== null)
+			{
+				while ($objElement->next())
+				{
+					$response = new Response();
+					$response->setPublic();
+					$response->setMaxAge($objElement->start - time());
+
+					System::getContainer()->get(ResponseCacheStrategyInterface::class)->add($response);
+				}
+			}
 		}
 
 		return $objTemplate->parse();

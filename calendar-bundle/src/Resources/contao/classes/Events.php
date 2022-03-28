@@ -342,7 +342,7 @@ abstract class Events extends Module
 			$arrEvent['details'] = function () use ($id)
 			{
 				$strDetails = '';
-				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
+				$objElement = ContentModel::findVisibleByPidAndTable($id, 'tl_calendar_events');
 
 				if ($objElement !== null)
 				{

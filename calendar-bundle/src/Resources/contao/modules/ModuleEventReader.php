@@ -14,6 +14,8 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Patchwork\Utf8;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategyInterface;
 
 /**
  * Front end module "event reader".
@@ -183,6 +185,7 @@ class ModuleEventReader extends Events
 
 		$until = '';
 		$recurring = '';
+		$needsCacheHeaders = false;
 		$arrRange = array();
 
 		// Recurring event
@@ -256,10 +259,14 @@ class ModuleEventReader extends Events
 		{
 			$id = $objEvent->id;
 
-			$objTemplate->details = function () use ($id)
+			// Enable cache headers if event has details but they are not generated
+			$needsCacheHeaders = true;
+
+			$objTemplate->details = function () use ($id, &$needsCacheHeaders)
 			{
+				$needsCacheHeaders = false;
 				$strDetails = '';
-				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
+				$objElement = ContentModel::findVisibleByPidAndTable($id, 'tl_calendar_events');
 
 				if ($objElement !== null)
 				{
@@ -391,6 +398,24 @@ class ModuleEventReader extends Events
 		};
 
 		$this->Template->event = $objTemplate->parse();
+
+		// Add cache headers for content elements in the future if they have not been generated.
+		if ($needsCacheHeaders)
+		{
+			$objElement = ContentModel::findUpcomingByPidAndTable($id, 'tl_calendar_events');
+
+			if ($objElement !== null)
+			{
+				while ($objElement->next())
+				{
+					$response = new Response();
+					$response->setPublic();
+					$response->setMaxAge($objElement->start - time());
+
+					System::getContainer()->get(ResponseCacheStrategyInterface::class)->add($response);
+				}
+			}
+		}
 
 		// Tag the event (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))

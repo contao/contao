@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +23,10 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
 {
     public function __invoke(Request $request, ContentModel $model, string $section, array $classes = null): Response
     {
+        if (null !== ($response = $this->getUpcomingResponse($request, $model))) {
+            return $response;
+        }
+
         $type = $this->getType();
         $template = $this->createTemplate($model, 'ce_'.$type);
 
@@ -35,6 +40,12 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
 
         if (null === $response) {
             $response = $template->getResponse();
+        }
+
+        $time = time();
+        if (!$response->headers->has('Cache-Control') && '' !== $model->stop && $model->stop > $time) {
+            $response->setPublic();
+            $response->setMaxAge((int) $model->stop - $time);
         }
 
         return $response;
@@ -58,6 +69,37 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         }
 
         $response->setSharedMaxAge(min($min));
+    }
+
+    protected function getUpcomingResponse(Request $request, ContentModel $model): ?Response
+    {
+        if (!$this->container->get('contao.routing.scope_matcher')->isFrontendRequest($request)) {
+            return null;
+        }
+
+        if ($this->container->get('contao.security.token_checker')->isPreviewMode()) {
+            return null;
+        }
+
+        $time = time();
+
+        if ('' !== $model->stop && $model->stop < $time) {
+            $response = new Response();
+            $response->headers->remove('Cache-Control');
+
+            return $response;
+        }
+
+        if ('' !== $model->start && $model->start > $time) {
+            $response = new Response();
+            $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+            $response->setPublic();
+            $response->setMaxAge($model->start - $time);
+
+            return $response;
+        }
+
+        return null;
     }
 
     abstract protected function getResponse(Template $template, ContentModel $model, Request $request): ?Response;

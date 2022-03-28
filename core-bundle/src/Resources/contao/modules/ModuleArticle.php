@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategyInterface;
+
 /**
  * Provides methodes to handle articles.
  *
@@ -68,6 +71,15 @@ class ModuleArticle extends Module
 			$responseTagger->addTags(array('contao.db.tl_article.' . $this->id));
 		}
 
+		if ($this->stop && $this->stop > time())
+		{
+			$response = new Response();
+			$response->setPublic();
+			$response->setMaxAge((int) $this->stop - time());
+
+			System::getContainer()->get(ResponseCacheStrategyInterface::class)->add($response);
+		}
+
 		return parent::generate();
 	}
 
@@ -95,6 +107,17 @@ class ModuleArticle extends Module
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			return false;
+		}
+
+		// If the article has start date in the future and no stop date in the past (that would be invalid),
+		// add a fake response to the ResponseCacheStrategy to clear the cache when the article becomes visible.
+		if ($this->published && $this->start && $this->start > time() && (!$this->stop || $this->stop > time() ))
+		{
+			$response = new Response();
+			$response->setPublic();
+			$response->setMaxAge($this->start - time());
+
+			System::getContainer()->get(ResponseCacheStrategyInterface::class)->add($response);
 		}
 
 		return true;
@@ -186,7 +209,7 @@ class ModuleArticle extends Module
 		}
 
 		$arrElements = array();
-		$objCte = ContentModel::findPublishedByPidAndTable($this->id, 'tl_article');
+		$objCte = ContentModel::findVisibleByPidAndTable($this->id, 'tl_article');
 
 		if ($objCte !== null)
 		{

@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpCache\ResponseCacheStrategyInterface;
+
 /**
  * Front end content element "module".
  *
@@ -96,6 +99,15 @@ class ContentModule extends ContentElement
 		{
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_content.' . $this->id));
+		}
+
+		if ($this->stop && $this->stop > time())
+		{
+			$response = new Response();
+			$response->setPublic();
+			$response->setMaxAge((int) $this->stop - time());
+
+			System::getContainer()->get(ResponseCacheStrategyInterface::class)->add($response);
 		}
 
 		$strBuffer = $objModule->generate();
