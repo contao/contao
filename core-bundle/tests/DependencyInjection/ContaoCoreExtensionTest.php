@@ -3493,7 +3493,7 @@ class ContaoCoreExtensionTest extends TestCase
                         'default_http_client_options' => [
                             'proxy' => 'http://localhost:7080',
                             'headers' => [
-                                'Foo' => 'Bar'
+                                'Foo' => 'Bar',
                             ],
                         ],
                     ],
