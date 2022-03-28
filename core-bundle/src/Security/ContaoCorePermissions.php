@@ -190,7 +190,7 @@ final class ContaoCorePermissions
     /**
      * Prefix for all DCA related permission attributes.
      */
-    public const DCA_PREFIX = 'contao.dca.';
+    public const DCA_PREFIX = 'contao_dca.';
 
     /**
      * Create DCA permission.
