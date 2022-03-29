@@ -32,7 +32,10 @@
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"/>
     <env name="SYMFONY_PATCH_TYPE_DECLARATIONS" value="deprecations=0"/>
     <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel"/>
+    <env name="DISABLE_HTTP_CACHE" value="1"/>
     <env name="APP_SECRET" value="foobar"/>
+    <env name="APP_ENV" value="test"/>
+    <env name="APP_DEBUG" value=""/>
     <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test"/>
   </php>
   <testsuites>
@@ -79,5 +82,7 @@
   <extensions>
     <extension class="Contao\CoreBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
     <extension class="Contao\ManagerBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
+    <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>
+    <extension class="Contao\TestCase\WarnXdebugPhpunitExtension"/>
   </extensions>
 </phpunit>
