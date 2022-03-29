@@ -852,7 +852,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the first language root if the accept languages matches' => [
             '/',
-            303,
+            302,
             'Redirecting to http://same-domain-root.local/english-site.html',
             'en',
             'same-domain-root.local',
@@ -860,7 +860,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the second language root if the accept languages matches' => [
             '/',
-            303,
+            302,
             'Redirecting to http://same-domain-root.local/german-site.html',
             'de',
             'same-domain-root.local',
@@ -868,7 +868,7 @@ class RoutingTest extends WebTestCase
 
         yield 'Redirects to the fallback root if none of the accept languages matches' => [
             '/',
-            303,
+            302,
             'Redirecting to http://same-domain-root.local/english-site.html',
             'fr',
             'same-domain-root.local',

@@ -29,6 +29,8 @@ class PageRedirect extends Frontend
 	 */
 	public function generate($objPage)
 	{
+		@trigger_error('Using PageRedirect::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRedirect::getResponse() method instead.', E_USER_DEPRECATED);
+
 		$this->prepare($objPage);
 
 		$this->redirect($this->replaceInsertTags($objPage->url, false), $this->getRedirectStatusCode($objPage));
