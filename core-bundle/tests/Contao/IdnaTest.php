@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Idna;
 use PHPUnit\Framework\TestCase;
-use TrueBV\Exception\DomainOutOfBoundsException;
 
 class IdnaTest extends TestCase
 {
