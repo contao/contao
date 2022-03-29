@@ -157,7 +157,7 @@ abstract class FunctionalTestCase extends WebTestCase
 
         self::$alterCount = self::$supportsAlterCount ? $getAlterCount() : -1;
 
-        if (self::$alterCount === 0) {
+        if (0 === self::$alterCount) {
             self::$alterCount = -1;
             self::$supportsAlterCount = false;
         }
