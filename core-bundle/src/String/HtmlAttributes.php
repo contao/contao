@@ -130,6 +130,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             array_unique($this->split(($this->attributes['class'] ?? '').' '.implode(' ', $classes)))
         );
 
+        if (empty($this->attributes['class'])) {
+            unset($this->attributes['class']);
+        }
+
         return $this;
     }
 
@@ -142,6 +146,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                 $this->split(implode(' ', $classes))
             )
         );
+
+        if (empty($this->attributes['class'])) {
+            unset($this->attributes['class']);
+        }
 
         return $this;
     }
