@@ -192,7 +192,7 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
 
         yield 'Sorts route with required parameters first (1)' => [
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
             new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '(/.+?)?']),
             ['de', 'de'],
             -1,
@@ -200,14 +200,14 @@ class AbstractPageRouteProviderTest extends TestCase
 
         yield 'Sorts route with required parameters first (2)' => [
             new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '(/.+?)?']),
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
             ['de', 'de'],
             1,
         ];
 
         yield 'Ignores required parameters with equal requirement' => [
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
             ['de', 'de'],
             0,
         ];
