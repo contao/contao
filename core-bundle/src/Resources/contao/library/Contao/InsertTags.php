@@ -1125,6 +1125,11 @@ class InsertTags extends Controller
 	 */
 	private function encodeHtmlAttributes($html)
 	{
+		if (strpos($html, '{{') === false && strpos($html, '}}') === false)
+		{
+			return $html;
+		}
+
 		// Regular expression to match tags according to https://html.spec.whatwg.org/#tag-open-state
 		$tagRegEx = '('
 			. '<'                         // Tag start
@@ -1150,11 +1155,6 @@ class InsertTags extends Controller
 			. '|<\?'                      // Or bogus ? comment
 			. '|</(?![a-z])'              // Or bogus / comment
 		. ')iS';
-
-		if (strpos($html, '{{') === false && strpos($html, '}}') === false)
-		{
-			return $html;
-		}
 
 		$htmlResult = '';
 		$offset = 0;
