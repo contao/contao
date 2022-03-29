@@ -34,7 +34,7 @@ class PageRoot extends Frontend
 	 */
 	public function generate($rootPageId, $blnReturn=false, $blnPreferAlias=false)
 	{
-		@trigger_error('Using PageRoot::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRoot::getResponse() method instead.');
+		@trigger_error('Using PageRoot::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRoot::getResponse() method instead.', E_USER_DEPRECATED);
 
 		if (!$blnReturn)
 		{
@@ -91,7 +91,7 @@ class PageRoot extends Frontend
 	 */
 	protected function getRedirectUrl($rootPageId)
 	{
-		return $this->getNextPage($rootPageId)->getFrontendUrl();
+		return $this->getNextPage($rootPageId)->getAbsoluteUrl();
 	}
 }
 
