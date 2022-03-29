@@ -311,7 +311,7 @@ class MigrateCommand extends Command
         if ($schemaWarnings = $this->compileSchemaWarnings()) {
             $this->io->warning(implode("\n\n", $schemaWarnings));
 
-            if (!$this->io->confirm('Continue regardless of shown warnings?')) {
+            if (!$this->io->confirm('Continue regardless of the warnings?')) {
                 return false;
             }
         }

@@ -16,6 +16,9 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
 
+/**
+ * @internal
+ */
 class MysqlInnodbRowSizeCalculator
 {
     private Connection $connection;
@@ -28,7 +31,6 @@ class MysqlInnodbRowSizeCalculator
     public function getMysqlRowSize(Table $table): int
     {
         $tableCharset = $table->hasOption('charset') ? $table->getOption('charset') : 'utf8mb4';
-
         $size = 0;
 
         foreach ($table->getColumns() as $column) {
@@ -122,7 +124,7 @@ class MysqlInnodbRowSizeCalculator
             }
         }
 
-        throw new \LogicException('Unable to determine columns size');
+        throw new \LogicException('Unable to determine the column size');
     }
 
     public function measureInnodbColumnSizeBits(Column $column, string $charset, string $rowFormat): int
@@ -161,7 +163,7 @@ class MysqlInnodbRowSizeCalculator
             }
         }
 
-        throw new \LogicException('Unable to determine columns size');
+        throw new \LogicException('Unable to determine the column size');
     }
 
     private function buildColumnSql(Column $column, string $charset): string
@@ -231,7 +233,7 @@ class MysqlInnodbRowSizeCalculator
         if (0 === $bits) {
             $bytes -= 2;
 
-            return ["col0 VARCHAR({$bytes}) CHARACTER SET latin1 NOT NULL"];
+            return ["col0 VARCHAR($bytes) CHARACTER SET latin1 NOT NULL"];
         }
 
         $columns = [];
@@ -272,11 +274,13 @@ class MysqlInnodbRowSizeCalculator
             if ($i < $bytes % $numberOfColumns) {
                 ++$colSize;
             }
+
             $null = 'NOT NULL';
 
             if ($numberOfColumns - 1 - $i < $bits) {
                 $null = 'NULL';
             }
+
             $columns[] = "col$i BINARY($colSize) $null";
         }
 
@@ -298,7 +302,7 @@ class MysqlInnodbRowSizeCalculator
         }
 
         $fixedMap = [
-            'TINYINT' => 1 * 8,
+            'TINYINT' => 8,
             'SMALLINT' => 2 * 8,
             'INT' => 4 * 8,
             'DOUBLE' => 8 * 8,
@@ -321,6 +325,7 @@ class MysqlInnodbRowSizeCalculator
             if ($bytes > 255) {
                 ++$bytes;
             }
+
             ++$bytes;
             $bits += 8 * $bytes;
         } elseif ('VARBINARY' === $sqlType) {
@@ -329,6 +334,7 @@ class MysqlInnodbRowSizeCalculator
             if ($bytes > 255) {
                 ++$bytes;
             }
+
             ++$bytes;
             $bits += 8 * $bytes;
         } elseif ('CHAR' === $sqlType) {
@@ -363,7 +369,7 @@ class MysqlInnodbRowSizeCalculator
         }
 
         $fixedMap = [
-            'TINYINT' => 1 * 8,
+            'TINYINT' => 8,
             'SMALLINT' => 2 * 8,
             'INT' => 4 * 8,
             'DOUBLE' => 8 * 8,
