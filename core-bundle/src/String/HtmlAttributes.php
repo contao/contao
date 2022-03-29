@@ -49,6 +49,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     public function mergeWith(iterable|string|self|null $attributes = null): self
     {
+        if (empty($attributes)) {
+            return $this;
+        }
+
         // Merge values if possible, set them otherwise
         $mergeSet = function (string $name, string|int|bool|\Stringable|null $value): void {
             if ('class' === $name) {
@@ -70,7 +74,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        foreach ($attributes ?? [] as $name => $value) {
+        foreach ($attributes as $name => $value) {
             $mergeSet($name, $value);
         }
 
