@@ -1126,7 +1126,7 @@ class InsertTags extends Controller
 	private function encodeHtmlAttributes($html)
 	{
 		// Regular expression to match tags according to https://html.spec.whatwg.org/#tag-open-state
-		static $tagRegEx = '('
+		$tagRegEx = '('
 			. '<'                         // Tag start
 			. '/?+'                       // Optional slash for closing element
 			. '([a-z][^\s/>]*+)'          // Tag name
