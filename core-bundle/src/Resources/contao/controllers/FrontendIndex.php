@@ -222,6 +222,7 @@ class FrontendIndex extends Frontend
 		{
 			/** @var PageRoot $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['root']();
+
 			throw new ResponseException($objHandler->getResponse($objPage->id));
 		}
 
