@@ -82,7 +82,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      * property will be unset instead. All values will be coerced to strings,
      * whereby null and true will result in an empty string.
      */
-    public function set(string $name, string|int|bool|\Stringable|null $value): self
+    public function set(string $name, string|int|bool|\Stringable|null $value = true): self
     {
         $name = strtolower($name);
 
