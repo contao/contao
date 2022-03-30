@@ -416,7 +416,6 @@ jobs:
         name: Inspect Unit Tests
         runs-on: ubuntu-latest
         if: github.event_name == 'schedule'
-        continue-on-error: true
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
