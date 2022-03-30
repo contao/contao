@@ -4,6 +4,10 @@ services:
 
     _instanceof:
         Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
+        Contao\CoreBundle\Controller\AbstractController:
             tags:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
             calls:
