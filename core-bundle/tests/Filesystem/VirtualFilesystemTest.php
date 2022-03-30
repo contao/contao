@@ -530,7 +530,7 @@ class VirtualFilesystemTest extends TestCase
 
         $this->assertInstanceOf(FilesystemItem::class, $directoryA);
         $this->assertFalse($directoryA->isFile());
-        $this->assertSame('foo/dir_a', $directoryA->getPath());
+        $this->assertSame('dir_a', $directoryA->getPath());
 
         $this->assertInstanceOf(FilesystemItem::class, $fileA);
         $this->assertTrue($fileA->isFile());
@@ -552,7 +552,7 @@ class VirtualFilesystemTest extends TestCase
 
         $this->assertInstanceOf(FilesystemItem::class, $directoryB);
         $this->assertFalse($directoryB->isFile());
-        $this->assertSame('foo/dir_b', $directoryB->getPath());
+        $this->assertSame('dir_b', $directoryB->getPath());
 
         $this->assertInstanceOf(FilesystemItem::class, $fileB);
         $this->assertTrue($fileB->isFile());
