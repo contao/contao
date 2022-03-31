@@ -170,7 +170,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         if ($this->fileExists($relativePath, $accessFlags)) {
             return new FilesystemItem(
                 true,
-                $path,
+                $relativePath,
                 fn () => $this->getLastModified($relativePath, $accessFlags),
                 fn () => $this->getFileSize($relativePath, $accessFlags),
                 fn () => $this->getMimeType($relativePath, $accessFlags),
@@ -179,7 +179,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         }
 
         if ($this->directoryExists($relativePath, $accessFlags)) {
-            return new FilesystemItem(false, $path);
+            return new FilesystemItem(false, $relativePath);
         }
 
         return null;
