@@ -185,7 +185,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options_callback'        => array('tl_module', 'getModules'),
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default 'navigation'"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default 'navigation'"
 		),
 		'levelOffset' => array
 		(
@@ -206,21 +206,21 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'showProtected' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'defineRoot' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'rootPage' => array
 		(
@@ -240,14 +240,14 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('nav_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'customTpl' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'pages' => array
 		(
@@ -267,7 +267,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'customLabel' => array
 		(
@@ -280,7 +280,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'jumpTo' => array
 		(
@@ -304,7 +304,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'editable' => array
 		(
@@ -323,7 +323,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('member_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'form' => array
 		(
@@ -342,21 +342,21 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array('and', 'or'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default 'and'"
+			'sql'                     => "varchar(8) COLLATE ascii_bin NOT NULL default 'and'"
 		),
 		'fuzzy' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'contextLength' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'tl_class'=>'w50', 'placeholder'=>array(48, 360)),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'minKeywordLength' => array
 		(
@@ -379,7 +379,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array('simple', 'advanced'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default 'simple'"
+			'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default 'simple'"
 		),
 		'searchTpl' => array
 		(
@@ -390,7 +390,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('search_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'inColumn' => array
 		(
@@ -399,7 +399,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options_callback'        => array('tl_module', 'getLayoutSections'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default 'main'"
+			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default 'main'"
 		),
 		'skipFirst' => array
 		(
@@ -412,7 +412,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'singleSRC' => array
 		(
@@ -428,21 +428,21 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(128) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'useCaption' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'fullsize' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'multiSRC' => array
 		(
@@ -494,7 +494,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 				return Controller::getTemplateGroup('rss_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'numberOfItems' => array
 		(
@@ -508,7 +508,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'reg_groups' => array
 		(
@@ -523,13 +523,13 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'reg_skipName' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'reg_close' => array
 		(
@@ -538,21 +538,21 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'options'                 => array('close_deactivate', 'close_delete'),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'reg_deleteDir' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'reg_assignDir' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'reg_homeDir' => array
 		(
@@ -566,7 +566,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'reg_jumpTo' => array
 		(
@@ -611,7 +611,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'groups' => array
 		(
@@ -627,7 +627,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'cssID' => array
 		(

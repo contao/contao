@@ -86,6 +86,8 @@ services:
             - '%kernel.project_dir%'
             - '@contao.framework'
             - '@contao.doctrine.backup_manager'
+            - '@contao.doctrine.schema_provider'
+            - '@contao.doctrine.schema.mysql_innodb_row_size_calculator'
             - '@?contao_installation.database.installer'
 
     contao.command.resize_images:

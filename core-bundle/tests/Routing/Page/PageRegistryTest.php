@@ -254,7 +254,7 @@ class PageRegistryTest extends TestCase
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add('foo', new RouteConfig(), null, false);
-        $registry->add('bar', new RouteConfig(), null, true);
+        $registry->add('bar', new RouteConfig());
 
         $this->assertFalse($registry->supportsContentComposition($fooModel));
         $this->assertTrue($registry->supportsContentComposition($barModel));

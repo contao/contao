@@ -530,7 +530,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('default_http_client_options')
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
-                    ->prototype('scalar')->end()
+                    ->prototype('variable')->end()
                     ->defaultValue([])
                 ->end()
             ->end()

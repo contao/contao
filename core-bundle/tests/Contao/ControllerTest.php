@@ -43,7 +43,7 @@ class ControllerTest extends TestCase
     {
         parent::setUp();
 
-        Controller::reset();
+        Controller::resetControllerCache();
     }
 
     protected function tearDown(): void
@@ -720,7 +720,7 @@ class ControllerTest extends TestCase
         }
 
         Environment::reset();
-        Controller::reset();
+        Controller::resetControllerCache();
     }
 
     public function redirectProvider(): \Generator
@@ -789,6 +789,6 @@ class ControllerTest extends TestCase
         );
 
         Environment::reset();
-        Controller::reset();
+        Controller::resetControllerCache();
     }
 }

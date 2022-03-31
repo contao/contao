@@ -37,7 +37,6 @@ class Search
 		$objDatabase = Database::getInstance();
 
 		$arrSet['tstamp'] = time();
-		$arrSet['url'] = $arrData['url'];
 		$arrSet['title'] = $arrData['title'];
 		$arrSet['protected'] = $arrData['protected'];
 		$arrSet['filesize'] = $arrData['filesize'] ?? null;
@@ -45,6 +44,9 @@ class Search
 		$arrSet['pid'] = $arrData['pid'];
 		$arrSet['language'] = $arrData['language'];
 		$arrSet['meta'] = json_encode((array) $arrData['meta']);
+
+		// Ensure that the URL only contains ASCII characters (see #4260)
+		$arrSet['url'] = preg_replace_callback('/[\x80-\xFF]+/', static fn ($match) => rawurlencode($match[0]), $arrData['url']);
 
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])

@@ -151,7 +151,7 @@ class LocalesTest extends TestCase
                 'de' => 'German',
                 'de_at' => 'German (Austria)',
             ],
-            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'en', false)
+            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'en')
         );
 
         $this->assertSame(
