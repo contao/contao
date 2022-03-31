@@ -326,6 +326,9 @@ class ContaoCoreExtensionTest extends TestCase
                         ],
                         'default_http_client_options' => [
                             'proxy' => 'http://localhost:7080',
+                            'headers' => [
+                                'Foo' => 'Bar',
+                            ],
                         ],
                     ],
                 ],
@@ -336,7 +339,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition('contao.crawl.escargot.factory');
 
         $this->assertSame(['https://example.com'], $definition->getArgument(2));
-        $this->assertSame(['proxy' => 'http://localhost:7080'], $definition->getArgument(3));
+        $this->assertSame(['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']], $definition->getArgument(3));
     }
 
     public function testConfiguresTheBackupManagerCorrectly(): void
