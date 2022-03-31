@@ -10,24 +10,12 @@
 
 namespace Contao;
 
-use Contao\Database\Result;
-
 /**
  * Creates and queries the search index
  *
  * The class takes the HTML markup of a page, extracts the content and writes
  * it to the database (search index). It also provides a method to query the
  * search index, returning the matching entries.
- *
- * Usage:
- *
- *     Search::indexPage($objPage->row());
- *     $result = Search::searchFor('keyword');
- *
- *     while ($result->next())
- *     {
- *         echo $result->url;
- *     }
  */
 class Search
 {
@@ -276,7 +264,7 @@ class Search
 				VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
 				ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
 			")
-			->execute(array_map('strval', array_keys($arrIndex)));
+			->execute(...array_map('strval', array_keys($arrIndex)));
 
 		// Remove obsolete terms
 		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
@@ -287,7 +275,7 @@ class Search
 				FROM tl_search_term
 				WHERE term IN (" . implode(',', array_fill(0, \count($arrIndex), '?')) . ")
 			")
-			->execute(array_map('strval', array_keys($arrIndex)));
+			->execute(...array_map('strval', array_keys($arrIndex)));
 
 		$arrTermIds = array();
 
@@ -314,7 +302,7 @@ class Search
 
 		// Create the new index
 		$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
-					->execute($arrValues);
+					->execute(...$arrValues);
 
 		$row = $objDatabase->query("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")->fetchRow();
 
@@ -433,33 +421,6 @@ class Search
 		}
 
 		return $variants;
-	}
-
-	/**
-	 * Search the index and return the result object
-	 *
-	 * @param string  $strKeywords  The keyword string
-	 * @param boolean $blnOrSearch  If true, the result can contain any keyword
-	 * @param array   $arrPid       An optional array of page IDs to limit the result to
-	 * @param integer $intRows      An optional maximum number of result rows
-	 * @param integer $intOffset    An optional result offset
-	 * @param boolean $blnFuzzy     If true, the search will be fuzzy
-	 * @param integer $intMinlength Ignore keywords deceeding the minimum length
-	 *
-	 * @return Result The database result object
-	 *
-	 * @throws \Exception If the cleaned keyword string is empty
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.
-	 *             Use the Search::query() method instead.
-	 */
-	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false, $intMinlength=0)
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Search::query()" instead.', __METHOD__);
-
-		$objSearchResult = static::query((string) $strKeywords, (bool) $blnOrSearch, \is_array($arrPid) ? $arrPid : array(), (bool) $blnFuzzy, (int) $intMinlength);
-
-		return new Result($objSearchResult->getResults($intRows ?: PHP_INT_MAX, $intOffset), 'SELECT * FROM tl_search');
 	}
 
 	/**
@@ -757,7 +718,7 @@ class Search
 
 		// Return result
 		$objResultStmt = Database::getInstance()->prepare($strQuery);
-		$objResult = $objResultStmt->execute($arrValues);
+		$objResult = $objResultStmt->execute(...$arrValues);
 		$arrResult = $objResult->fetchAllAssoc();
 
 		return new SearchResult($arrResult, array_merge($arrKeywords, $arrIncluded), $arrWildcards, $arrPhrases);
