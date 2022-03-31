@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
         <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Truncata a tabela &lt;code&gt;tl_crawl_queue&lt;/code&gt; armazena toda a informação da fila de processos de crawl.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.images.0">
         <source>Purge the image cache</source>
@@ -174,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlMaintenance">
         <source>Crawling is not possible while the maintenance mode is enabled.</source>
+        <target>O rastejamento não é possível enquanto o modo de manutenção estiver activado.</target>
       </trans-unit>
     </body>
   </file>

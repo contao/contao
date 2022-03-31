@@ -2,6 +2,30 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.28] (2022-03-31)
+
+**Fixed issues:**
+
+- [#4427] Handle long page titles and URLs in the search table ([leofeyer])
+- [#4424] Also hover over the parent records in "paste" mode ([leofeyer])
+- [#4423] Decode the folder name when checking for circular references ([leofeyer])
+- [#4219] Make the contao:install:lock command idempotent ([richardhj])
+- [#4408] Improve insert tags speed ([ausi])
+- [#4252] Fix the trigger_error() calls ([leofeyer])
+- [#4402] Fixed nested http client options not supported ([Toflar])
+- [#4357] Fix srcToInsertTag() for URL encoded paths ([fritzmg])
+- [#4294] Rename the Controller::reset() method ([aschempp])
+- [#4331] Fix typos in the Environment class ([fritzmg])
+- [#4293] Revert 'Do not use the `.tl_confirm` CSS class in the front end' ([leofeyer])
+- [#4299] Fix invalid news content element ID ([ausi])
+- [#4263] Make the search accent insensitive ([ausi])
+- [#4256] Allow fragment reference with fake model instance ([aschempp])
+- [#4236] Also create a new version if a checkbox is auto-submitted ([leofeyer])
+- [#4373] Also clean textarea of caption for last metawizard ([aschempp])
+- [#4322] Use FQCN instead of aliased class name ([bytehead])
+- [#4266] Forward IO to Composer filesystem in ScriptHandler ([aschempp])
+- [#4285] Fix DCA extractor wrongly assuming every DCA is database driven ([fritzmg])
+
 ## [4.9.27] (2022-03-09)
 
 **Fixed issues:**
@@ -861,6 +885,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.28]: https://github.com/contao/contao/releases/tag/4.9.28
 [4.9.27]: https://github.com/contao/contao/releases/tag/4.9.27
 [4.9.26]: https://github.com/contao/contao/releases/tag/4.9.26
 [4.9.25]: https://github.com/contao/contao/releases/tag/4.9.25
@@ -928,6 +953,25 @@ This project adheres to [Semantic Versioning].
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
 [zonky2]: https://github.com/zonky2
+[#4427]: https://github.com/contao/contao/pull/4427
+[#4424]: https://github.com/contao/contao/pull/4424
+[#4423]: https://github.com/contao/contao/pull/4423
+[#4219]: https://github.com/contao/contao/pull/4219
+[#4408]: https://github.com/contao/contao/pull/4408
+[#4252]: https://github.com/contao/contao/pull/4252
+[#4402]: https://github.com/contao/contao/pull/4402
+[#4357]: https://github.com/contao/contao/pull/4357
+[#4294]: https://github.com/contao/contao/pull/4294
+[#4331]: https://github.com/contao/contao/pull/4331
+[#4293]: https://github.com/contao/contao/pull/4293
+[#4299]: https://github.com/contao/contao/pull/4299
+[#4263]: https://github.com/contao/contao/pull/4263
+[#4256]: https://github.com/contao/contao/pull/4256
+[#4236]: https://github.com/contao/contao/pull/4236
+[#4373]: https://github.com/contao/contao/pull/4373
+[#4322]: https://github.com/contao/contao/pull/4322
+[#4266]: https://github.com/contao/contao/pull/4266
+[#4285]: https://github.com/contao/contao/pull/4285
 [#4248]: https://github.com/contao/contao/pull/4248
 [#4241]: https://github.com/contao/contao/pull/4241
 [#4235]: https://github.com/contao/contao/pull/4235

@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
         <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Se quiser evitar que o grupo esteja activo antes de uma determinada data/hora, pode introduzi-lo aqui. Caso contrário, deixe o campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
@@ -38,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
         <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Se quiser evitar que o grupo esteja activo após uma determinada data/hora, pode introduzi-lo aqui. Caso contrário, deixe o campo vazio.</target>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -49,6 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.elements_legend">
         <source>Allowed elements</source>
+        <target>Elementos permitidos</target>
       </trans-unit>
       <trans-unit id="tl_user_group.pagemounts_legend">
         <source>Pagemounts</source>
@@ -76,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.account_legend">
         <source>Group settings</source>
+        <target>Configurações de grupo</target>
       </trans-unit>
       <trans-unit id="tl_user_group.new.0">
         <source>New</source>
@@ -87,18 +91,23 @@
       </trans-unit>
       <trans-unit id="tl_user_group.show">
         <source>Show the details of user group ID %s</source>
+        <target>Mostrar os detalhes do ID do grupo de utilizadores %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.edit">
         <source>Edit user group ID %s</source>
+        <target>Editar ID do grupo de utilizadores %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.copy">
         <source>Duplicate user group ID %s</source>
+        <target>Duplicar o ID do grupo de utilizadores %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.delete">
         <source>Delete user group ID %s</source>
+        <target>Eliminar o ID do grupo de utilizadores %s</target>
       </trans-unit>
       <trans-unit id="tl_user_group.toggle">
         <source>Activate/deactivate user group ID %s</source>
+        <target>Activar/desactivar o ID do grupo de utilizadores %s</target>
       </trans-unit>
     </body>
   </file>
