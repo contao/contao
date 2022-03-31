@@ -10,8 +10,6 @@ services:
         Contao\CoreBundle\Controller\AbstractController:
             tags:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
-            calls:
-                - [setContainer, ['@Psr\Container\ContainerInterface']]
 
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\BackendController: ~
