@@ -27,9 +27,6 @@ use Symfony\Component\String\UnicodeString;
  * @property string  $parentTable
  * @property array   $childTable
  * @property boolean $createNewVersion
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
@@ -374,12 +371,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$value = StringUtil::deserialize($row[$i]);
 
-			// Decrypt the value
-			if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['encrypt'] ?? null)
-			{
-				$value = Encryption::decrypt($value);
-			}
-
 			// Get the field value
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['foreignKey']))
 			{
@@ -595,12 +586,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (\array_key_exists('default', $v))
 			{
 				$this->set[$k] = \is_array($v['default']) ? serialize($v['default']) : $v['default'];
-
-				// Encrypt the default value (see #3740)
-				if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'] ?? null)
-				{
-					$this->set[$k] = Encryption::encrypt($this->set[$k]);
-				}
 			}
 		}
 
@@ -722,21 +707,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$this->set['tstamp'] = time();
-
-		// HOOK: style sheet category
-		if ($this->strTable == 'tl_style')
-		{
-			/** @var AttributeBagInterface $objSessionBag */
-			$objSessionBag = $objSession->getBag('contao_backend');
-
-			$filter = $objSessionBag->get('filter');
-			$category = $filter['tl_style_' . CURRENT_ID]['category'];
-
-			if ($category)
-			{
-				$this->set['category'] = $category;
-			}
-		}
 
 		// Dynamically set the parent table of tl_content
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -862,27 +832,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$v = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['default'];
 						}
-
-						// Encrypt the default value (see #3740)
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'] ?? null)
-						{
-							$v = Encryption::encrypt($v);
-						}
 					}
 
 					$this->set[$k] = $v;
-				}
-			}
-
-			// HOOK: style sheet category
-			if ($this->strTable == 'tl_style')
-			{
-				$filter = $objSessionBag->get('filter');
-				$category = $filter['tl_style_' . CURRENT_ID]['category'];
-
-				if ($category)
-				{
-					$this->set['category'] = $category;
 				}
 			}
 		}
@@ -1066,12 +1018,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							if (\array_key_exists('default', $GLOBALS['TL_DCA'][$v]['fields'][$kk] ?? array()))
 							{
 								$vv = \is_array($GLOBALS['TL_DCA'][$v]['fields'][$kk]['default']) ? serialize($GLOBALS['TL_DCA'][$v]['fields'][$kk]['default']) : $GLOBALS['TL_DCA'][$v]['fields'][$kk]['default'];
-							}
-
-							// Encrypt the default value (see #3740)
-							if ($GLOBALS['TL_DCA'][$v]['fields'][$kk]['eval']['encrypt'] ?? null)
-							{
-								$vv = Encryption::encrypt($vv);
 							}
 						}
 
@@ -2102,25 +2048,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($this->blnCreateNewVersion)
 			{
 				$objVersions->create();
-
-				// Call the onversion_callback
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
-				{
-					trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
-
-					foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
-					{
-						if (\is_array($callback))
-						{
-							$this->import($callback[0]);
-							$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($this->strTable, $this->intId, $this);
-						}
-					}
-				}
 			}
 
 			// Show a warning if the record has been saved by another user (see #8412)
@@ -2166,7 +2093,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->redirect(TL_SCRIPT . '?do=' . Input::get('do'));
 				}
 				// TODO: try to abstract this
-				elseif (($this->ptable == 'tl_theme' && $this->strTable == 'tl_style_sheet') || ($this->ptable == 'tl_page' && $this->strTable == 'tl_article'))
+				elseif ($this->ptable == 'tl_page' && $this->strTable == 'tl_article')
 				{
 					$this->redirect($this->getReferer(false, $this->strTable));
 				}
@@ -2495,25 +2422,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if ($this->blnCreateNewVersion)
 					{
 						$objVersions->create();
-
-						// Call the onversion_callback
-						if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
-						{
-							trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
-
-							foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
-							{
-								if (\is_array($callback))
-								{
-									$this->import($callback[0]);
-									$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
-								}
-								elseif (\is_callable($callback))
-								{
-									$callback($this->strTable, $this->intId, $this);
-								}
-							}
-						}
 					}
 
 					$this->invalidateCacheTags();
@@ -2764,25 +2672,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if ($this->blnCreateNewVersion)
 		{
 			$objVersions->create();
-
-			// Call the onversion_callback
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
-			{
-				trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
-
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
-				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$callback($this->strTable, $this->intId, $this);
-					}
-				}
-			}
 		}
 
 		$this->invalidateCacheTags();
@@ -2914,25 +2803,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if ($this->blnCreateNewVersion)
 						{
 							$objVersions->create();
-
-							// Call the onversion_callback
-							if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] ?? null))
-							{
-								trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onversion_callback" has been deprecated and will no longer work in Contao 5.0. Use the "oncreate_version_callback" instead.');
-
-								foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onversion_callback'] as $callback)
-								{
-									if (\is_array($callback))
-									{
-										$this->import($callback[0]);
-										$this->{$callback[0]}->{$callback[1]}($this->strTable, $this->intId, $this);
-									}
-									elseif (\is_callable($callback))
-									{
-										$callback($this->strTable, $this->intId, $this);
-									}
-								}
-							}
 						}
 					}
 				}
@@ -4030,7 +3900,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
-		$mouseover = (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable) ? ' toggle_select hover-div' : '';
+
+		$mouseover = '';
+
+		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable)
+		{
+			$mouseover = ' toggle_select hover-div';
+		}
+		elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && Input::get('act') == 'paste')
+		{
+			$mouseover = ' hover-div';
+		}
 
 		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
@@ -4509,15 +4389,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->current[] = $row[$i]['id'];
 				$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
 				$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
-
-				// Decrypt encrypted value
-				foreach ($row[$i] as $k=>$v)
-				{
-					if ($GLOBALS['TL_DCA'][$table]['fields'][$k]['eval']['encrypt'] ?? null)
-					{
-						$row[$i][$k] = Encryption::decrypt(StringUtil::deserialize($v));
-					}
-				}
 
 				// Make items sortable
 				if ($blnHasSorting)
@@ -6304,5 +6175,3 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return $attributes;
 	}
 }
-
-class_alias(DC_Table::class, 'DC_Table');

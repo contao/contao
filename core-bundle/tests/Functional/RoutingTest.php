@@ -16,31 +16,12 @@ use Contao\Config;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 
 class RoutingTest extends FunctionalTestCase
 {
     use ExpectDeprecationTrait;
 
     private static ?array $lastImport = null;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        static::bootKernel();
-        System::setContainer(self::$container);
-        static::resetDatabaseSchema();
-        static::ensureKernelShutdown();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        (new Filesystem())->remove(Path::canonicalize(__DIR__.'/../../var'));
-    }
 
     protected function setUp(): void
     {
@@ -65,35 +46,6 @@ class RoutingTest extends FunctionalTestCase
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
         $client = $this->createClient([], $_SERVER);
-        System::setContainer($client->getContainer());
-
-        $this->loadFixtureFiles($fixtures);
-
-        $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertSame($query, $_GET);
-        $this->assertStringContainsString($pageTitle, $title);
-    }
-
-    /**
-     * @group legacy
-     * @dataProvider getAliases
-     */
-    public function testResolvesAliasesInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
-
-        Config::set('useAutoItem', $autoItem);
-
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = $host;
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient(['environment' => 'legacy'], $_SERVER);
         System::setContainer($client->getContainer());
 
         $this->loadFixtureFiles($fixtures);
@@ -333,7 +285,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
             true,
@@ -343,7 +295,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/items/foobar.html',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
             true,
@@ -396,40 +348,6 @@ class RoutingTest extends FunctionalTestCase
         $crawler = $client->request('GET', "https://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
-
-        $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertSame($query, $_GET);
-        $this->assertStringContainsString($pageTitle, $title);
-    }
-
-    /**
-     * @group legacy
-     * @dataProvider getAliasesWithLocale
-     */
-    public function testResolvesAliasesWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
-
-        Config::set('useAutoItem', $autoItem);
-        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
-
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = $host;
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
-        System::setContainer($client->getContainer());
-
-        $this->loadFixtureFiles($fixtures);
-
-        $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        if (!isset($query['language'])) {
-            unset($_GET['language']);
-        }
 
         $this->assertSame($statusCode, $response->getStatusCode());
         $this->assertSame($query, $_GET);
@@ -662,7 +580,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/en/folder/url/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
             true,
@@ -672,7 +590,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/en/folder/url/home/items/foobar.html',
             404,
-            '(404 Not Found)',
+            'Not Found',
             ['language' => 'en'],
             'root-with-folder-urls.local',
             true,
@@ -731,35 +649,6 @@ class RoutingTest extends FunctionalTestCase
             ->getConnection()
             ->executeStatement("UPDATE tl_page SET urlSuffix=''")
         ;
-
-        $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertSame($query, $_GET);
-        $this->assertStringContainsString($pageTitle, $title);
-    }
-
-    /**
-     * @group legacy
-     * @dataProvider getAliasesWithoutUrlSuffix
-     */
-    public function testResolvesAliasesWithoutUrlSuffixInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host, bool $autoItem): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
-
-        Config::set('useAutoItem', $autoItem);
-
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = $host;
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient(['environment' => 'suffix'], $_SERVER);
-        System::setContainer($client->getContainer());
-
-        $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', "https://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -946,7 +835,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/auto_item/foo',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
             true,
@@ -956,7 +845,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/items/foobar',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
             true,
@@ -1028,7 +917,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-without-fallback-language'],
             '/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-without-fallback-language.local',
         ];
@@ -1081,34 +970,6 @@ class RoutingTest extends FunctionalTestCase
             ->getConnection()
             ->executeStatement("UPDATE tl_page SET urlPrefix=language WHERE urlPrefix=''")
         ;
-
-        $crawler = $client->request('GET', "https://$host$request");
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame($statusCode, $response->getStatusCode());
-        $this->assertStringContainsString($pageTitle, $title);
-    }
-
-    /**
-     * @group legacy
-     * @dataProvider getRootAliasesWithLocale
-     */
-    public function testResolvesTheRootPageWithLocaleInLegacyMode(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
-
-        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
-
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = $host;
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguages;
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
-        System::setContainer($client->getContainer());
-
-        $this->loadFixtureFiles($fixtures);
 
         $crawler = $client->request('GET', "https://$host$request");
         $title = trim($crawler->filterXPath('//head/title')->text());
@@ -1178,7 +1039,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-without-fallback-language'],
             '/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-without-fallback-language.local',
         ];
@@ -1223,7 +1084,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-index'],
             '/de/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-with-index.local',
         ];
@@ -1232,7 +1093,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-without-fallback-language'],
             '/fr/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-without-fallback-language.local',
         ];
@@ -1276,8 +1137,6 @@ class RoutingTest extends FunctionalTestCase
 
     public function testOrdersThePageModelsByCandidates(): void
     {
-        Config::set('folderUrl', true);
-
         $request = 'https://root-zh.local/main/sub-zh.html';
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -1298,64 +1157,26 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('', $title);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCorrectPageForUnknownLanguage(): void
+    public function testRendersLoginPageWhenRootIsProtected(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
-
-        Config::set('folderUrl', true);
-        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
-
-        $request = 'https://domain1.local/it/';
+        $request = 'https://protected-root.local/';
 
         $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = 'domain1.local';
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de,en';
+        $_SERVER['HTTP_HOST'] = 'protected-root.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
 
-        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
+        $client = $this->createClient([], $_SERVER);
         System::setContainer($client->getContainer());
 
-        $this->loadFixtureFiles(['issue-2465']);
+        $this->loadFixtureFiles(['theme', 'protected-root']);
 
         $crawler = $client->request('GET', $request);
         $title = trim($crawler->filterXPath('//head/title')->text());
         $response = $client->getResponse();
 
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertStringContainsString('Domain1', $title);
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testFindsFallbackPageForUnknownLanguage(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: Using the "Contao\CoreBundle\Routing\FrontendLoader" class has been deprecated %s.');
-
-        Config::set('folderUrl', true);
-        $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = true;
-
-        $request = 'https://domain1.local/de/';
-
-        $_SERVER['REQUEST_URI'] = $request;
-        $_SERVER['HTTP_HOST'] = 'domain1.local';
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'af';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient(['environment' => 'locale'], $_SERVER);
-        System::setContainer($client->getContainer());
-
-        $this->loadFixtureFiles(['issue-2819']);
-
-        $crawler = $client->request('GET', $request);
-        $title = trim($crawler->filterXPath('//head/title')->text());
-        $response = $client->getResponse();
-
-        $this->assertSame(200, $response->getStatusCode());
-        $this->assertStringContainsString('Domain1', $title);
+        $this->assertSame(401, $response->getStatusCode());
+        $this->assertStringContainsString('Error 401 Page', $title);
     }
 
     private function loadFixtureFiles(array $fileNames): void

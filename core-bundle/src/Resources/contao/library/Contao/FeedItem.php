@@ -37,8 +37,6 @@ use Symfony\Component\Filesystem\Path;
  * @property integer $end         The end date
  * @property string  $author      The item author
  * @property string  $description The item description
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FeedItem
 {
@@ -143,5 +141,3 @@ class FeedItem
 		$this->arrData['enclosure'][] = $mediaData;
 	}
 }
-
-class_alias(FeedItem::class, 'FeedItem');

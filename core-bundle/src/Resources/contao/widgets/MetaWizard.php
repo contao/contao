@@ -16,8 +16,6 @@ use Contao\CoreBundle\Util\LocaleUtil;
  * Provide methods to handle file meta information.
  *
  * @property array $metaFields
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class MetaWizard extends Widget
 {
@@ -185,5 +183,3 @@ class MetaWizard extends Widget
 		return $return;
 	}
 }
-
-class_alias(MetaWizard::class, 'MetaWizard');

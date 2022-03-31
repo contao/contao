@@ -17,9 +17,6 @@ trigger_deprecation('contao/core-bundle', '4.12', 'Using the "Contao\PageRoot" c
 
 /**
  * Provide methods to handle a website root page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/Toflar>
  */
 class PageRoot extends Frontend
 {
@@ -97,5 +94,3 @@ class PageRoot extends Frontend
 		return $this->getNextPage($rootPageId)->getFrontendUrl();
 	}
 }
-
-class_alias(PageRoot::class, 'PageRoot');

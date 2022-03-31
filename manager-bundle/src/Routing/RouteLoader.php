@@ -78,25 +78,10 @@ class RouteLoader implements RouteLoaderInterface
 
     private function getConfigFile(): ?string
     {
-        foreach (['routes.yaml', 'routes.yml', 'routing.yaml', 'routing.yml'] as $file) {
+        foreach (['routes.yaml', 'routes.yml'] as $file) {
             $path = Path::join($this->projectDir, 'config', $file);
 
             if (file_exists($path)) {
-                if ('routing' === Path::getFilenameWithoutExtension($file)) {
-                    trigger_deprecation('contao/manager-bundle', '4.9', sprintf('Using a "%s" file has been deprecated and will no longer work in Contao 5.0. Rename it to "routes.yaml" instead.', $file));
-                }
-
-                return $path;
-            }
-        }
-
-        // Fallback to the legacy config file (see #566)
-        foreach (['routes.yaml', 'routes.yml', 'routing.yaml', 'routing.yml'] as $file) {
-            $path = Path::join($this->projectDir, 'app/config', $file);
-
-            if (file_exists($path)) {
-                trigger_deprecation('contao/manager-bundle', '4.9', sprintf('Storing the "%s" file in the "app/config" folder has been deprecated and will no longer work in Contao 5.0. Move it to the "config" folder instead.', $file));
-
                 return $path;
             }
         }

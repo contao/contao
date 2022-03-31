@@ -30,8 +30,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $palette
  * @property object|null    $activeRecord
  * @property array          $rootIds
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class DataContainer extends Backend
 {
@@ -1612,24 +1610,10 @@ abstract class DataContainer extends Backend
 	 * @param string $table
 	 *
 	 * @return string
-	 *
-	 * @todo Change the return type to ?string in Contao 5.0
 	 */
-	public static function getDriverForTable(string $table): string
+	public static function getDriverForTable(string $table): ?string
 	{
-		if (!isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer']))
-		{
-			return '';
-		}
-
-		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
-
-		if (false === strpos($dataContainer, '\\'))
-		{
-			$dataContainer = 'DC_' . $dataContainer;
-		}
-
-		return $dataContainer;
+		return $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? null;
 	}
 
 	/**
@@ -1649,12 +1633,6 @@ abstract class DataContainer extends Backend
 
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			// Decrypt the value
-			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
-			{
-				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
-			}
-
 			if (strpos($v, ':') !== false)
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
@@ -1785,5 +1763,3 @@ abstract class DataContainer extends Backend
 		return $label;
 	}
 }
-
-class_alias(DataContainer::class, 'DataContainer');

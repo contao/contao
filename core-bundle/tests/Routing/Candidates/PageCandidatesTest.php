@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\Candidates;
 
-use Contao\CoreBundle\Routing\Candidates\LegacyCandidates;
 use Contao\CoreBundle\Routing\Candidates\LocaleCandidates;
 use Contao\CoreBundle\Routing\Candidates\PageCandidates;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
@@ -48,18 +47,6 @@ class PageCandidatesTest extends TestCase
         $candidates = new LocaleCandidates($pageRegistry);
 
         $this->assertSame($expected['locale'] ?? $expected['default'], $candidates->getCandidates($request));
-    }
-
-    /**
-     * @group legacy
-     * @dataProvider getCandidatesProvider
-     */
-    public function testGetCandidatesInLegacyMode(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
-    {
-        $request = $this->mockRequest($pathInfo);
-        $candidates = (new LegacyCandidates('' !== $languages[0], $urlSuffixes[0]))->getCandidates($request);
-
-        $this->assertSame($expected['legacy'] ?? $expected['default'], $candidates);
     }
 
     public function getCandidatesProvider(): \Generator

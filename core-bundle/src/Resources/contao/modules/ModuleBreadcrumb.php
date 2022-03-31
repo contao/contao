@@ -14,8 +14,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "breadcrumb".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleBreadcrumb extends Module
 {
@@ -263,5 +261,3 @@ class ModuleBreadcrumb extends Module
 		}
 	}
 }
-
-class_alias(ModuleBreadcrumb::class, 'ModuleBreadcrumb');

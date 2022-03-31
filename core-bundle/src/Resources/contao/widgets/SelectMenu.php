@@ -19,8 +19,6 @@ namespace Contao;
  * @property array   $options
  * @property array   $unknownOption
  * @property boolean $chosen
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class SelectMenu extends Widget
 {
@@ -208,5 +206,3 @@ class SelectMenu extends Widget
 		);
 	}
 }
-
-class_alias(SelectMenu::class, 'SelectMenu');

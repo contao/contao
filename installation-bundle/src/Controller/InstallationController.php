@@ -67,10 +67,6 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('not_writable.html.twig');
         }
 
-        if ($installTool->shouldAcceptLicense()) {
-            return $this->acceptLicense();
-        }
-
         if ('' === $installTool->getConfig('installPassword')) {
             return $this->setPassword();
         }
@@ -125,28 +121,6 @@ class InstallationController implements ContainerAwareInterface
         }
 
         return null;
-    }
-
-    /**
-     * Renders a form to accept the license.
-     *
-     * @return Response|RedirectResponse
-     */
-    private function acceptLicense(): Response
-    {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-
-        if (null === $request) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
-
-        if ('tl_license' !== $request->request->get('FORM_SUBMIT')) {
-            return $this->render('license.html.twig');
-        }
-
-        $this->container->get('contao_installation.install_tool')->persistConfig('licenseAccepted', true);
-
-        return $this->getRedirectResponse();
     }
 
     /**
@@ -248,7 +222,7 @@ class InstallationController implements ContainerAwareInterface
             opcache_reset();
         }
 
-        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !\ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
@@ -277,7 +251,7 @@ class InstallationController implements ContainerAwareInterface
             opcache_reset();
         }
 
-        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !\ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }

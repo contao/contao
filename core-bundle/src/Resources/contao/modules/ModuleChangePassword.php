@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end module "change password".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleChangePassword extends Module
 {
@@ -223,5 +221,3 @@ class ModuleChangePassword extends Module
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
-
-class_alias(ModuleChangePassword::class, 'ModuleChangePassword');

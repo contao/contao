@@ -13,8 +13,6 @@ namespace Contao;
 /**
  * Front end module "lost password".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @todo Rename to ModuleLostPassword in Contao 5.0
  */
 class ModulePassword extends Module
@@ -338,5 +336,3 @@ class ModulePassword extends Module
 		$this->reload();
 	}
 }
-
-class_alias(ModulePassword::class, 'ModulePassword');

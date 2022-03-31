@@ -23,28 +23,14 @@ class DcaSchemaProvider
 {
     private ContaoFramework $framework;
     private Registry $doctrine;
-    private SchemaProvider $schemaProvider;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.doctrine.dca_schema_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Registry $doctrine, SchemaProvider $schemaProvider)
+    public function __construct(ContaoFramework $framework, Registry $doctrine)
     {
         $this->framework = $framework;
         $this->doctrine = $doctrine;
-        $this->schemaProvider = $schemaProvider;
-    }
-
-    /**
-     * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0;
-     *             use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider
-     *             class instead.
-     */
-    public function createSchema(): Schema
-    {
-        trigger_deprecation('contao/core-bundle', '4.11', 'Using the DcaSchemaProvider class to create the schema has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider\SchemaProvider class instead.');
-
-        return $this->schemaProvider->createSchema();
     }
 
     /**
@@ -87,6 +73,18 @@ class DcaSchemaProvider
                         $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
                     }
 
+                    if (isset($options['customSchemaOptions']['charset'])) {
+                        $options['platformOptions']['charset'] = $options['customSchemaOptions']['charset'];
+                    }
+
+                    if (isset($options['customSchemaOptions']['collation'])) {
+                        if (!isset($options['customSchemaOptions']['charset'])) {
+                            $options['platformOptions']['charset'] = explode('_', $options['customSchemaOptions']['collation'], 2)[0];
+                        }
+
+                        $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
+                    }
+
                     $table->addColumn($config['name'], $config['type'], $options);
                 }
             }
@@ -124,6 +122,7 @@ class DcaSchemaProvider
         $scale = null;
         $precision = null;
         $default = null;
+        $charset = null;
         $collation = null;
         $unsigned = false;
         $notnull = false;
@@ -148,6 +147,7 @@ class DcaSchemaProvider
             }
 
             if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
+                $charset = explode('_', $match[1], 2)[0];
                 $collation = $match[1];
             }
 
@@ -178,8 +178,18 @@ class DcaSchemaProvider
             $options['precision'] = $precision;
         }
 
+        $platformOptions = [];
+
+        if (null !== $charset) {
+            $platformOptions['charset'] = $charset;
+        }
+
         if (null !== $collation) {
-            $options['platformOptions'] = ['collation' => $collation];
+            $platformOptions['collation'] = $collation;
+        }
+
+        if (!empty($platformOptions)) {
+            $options['platformOptions'] = $platformOptions;
         }
 
         $table->addColumn($columnName, $type, $options);

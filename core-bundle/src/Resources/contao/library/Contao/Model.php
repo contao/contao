@@ -41,8 +41,6 @@ use Contao\Model\Registry;
  *
  * @property integer $id        The ID
  * @property string  $customTpl A custom template
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Model
 {
@@ -1306,5 +1304,3 @@ abstract class Model
 		return System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
 	}
 }
-
-class_alias(Model::class, 'Model');

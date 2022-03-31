@@ -15,8 +15,6 @@ namespace Contao;
  *
  * @property integer $cols
  * @property array   $options
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class RadioTable extends Widget
 {
@@ -141,5 +139,3 @@ class RadioTable extends Widget
   </table>';
 	}
 }
-
-class_alias(RadioTable::class, 'RadioTable');

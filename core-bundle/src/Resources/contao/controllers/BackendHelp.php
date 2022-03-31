@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Back end help wizard.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendHelp extends Backend
 {
@@ -156,5 +154,3 @@ class BackendHelp extends Backend
 		return $objTemplate->getResponse();
 	}
 }
-
-class_alias(BackendHelp::class, 'BackendHelp');

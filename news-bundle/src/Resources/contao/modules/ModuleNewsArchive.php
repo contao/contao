@@ -20,8 +20,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property string $news_format
  * @property string $news_order
  * @property int    $news_readerModule
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsArchive extends ModuleNews
 {
@@ -236,5 +234,3 @@ class ModuleNewsArchive extends ModuleNews
 		$this->Template->empty = $GLOBALS['TL_LANG']['MSC']['empty'];
 	}
 }
-
-class_alias(ModuleNewsArchive::class, 'ModuleNewsArchive');

@@ -208,147 +208,6 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle the page tree input field
-	 *
-	 * @param {object} el    The DOM element
-	 * @param {string} id    The ID of the target element
-	 * @param {string} field The field name
-	 * @param {string} name  The Ajax field name
-	 * @param {int}    level The indentation level
-	 *
-	 * @returns {boolean}
-	 */
-	togglePagetree: function (el, id, field, name, level) {
-		el.blur();
-		Backend.getScrollOffset();
-
-		var item = $(id),
-			image = $(el).getFirst('img');
-
-		if (item) {
-			if (item.getStyle('display') == 'none') {
-				item.setStyle('display', null);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
-				$(el).store('tip:title', Contao.lang.collapse);
-				new Request.Contao({field:el}).post({'action':'togglePagetree', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
-			} else {
-				item.setStyle('display', 'none');
-				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
-				$(el).store('tip:title', Contao.lang.expand);
-				new Request.Contao({field:el}).post({'action':'togglePagetree', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
-			}
-			return false;
-		}
-
-		new Request.Contao({
-			field: el,
-			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
-			onSuccess: function(txt) {
-				var li = new Element('li', {
-					'id': id,
-					'class': 'parent',
-					'styles': {
-						'display': 'inline'
-					}
-				});
-
-				new Element('ul', {
-					'class': 'level_' + level,
-					'html': txt
-				}).inject(li, 'bottom');
-
-				li.inject($(el).getParent('li'), 'after');
-
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
-
-				$(el).store('tip:title', Contao.lang.collapse);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
-				AjaxRequest.hideBox();
-
-				// HOOK
-				window.fireEvent('ajax_change');
-   			}
-		}).post({'action':'loadPagetree', 'id':id, 'level':level, 'field':field, 'name':name, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
-
-		return false;
-	},
-
-	/**
-	 * Toggle the file tree input field
-	 *
-	 * @param {object} el     The DOM element
-	 * @param {string} id     The ID of the target element
-	 * @param {string} folder The folder name
-	 * @param {string} field  The field name
-	 * @param {string} name   The Ajax field name
-	 * @param {int}    level  The indentation level
-	 *
-	 * @returns {boolean}
-	 */
-	toggleFiletree: function (el, id, folder, field, name, level) {
-		el.blur();
-		Backend.getScrollOffset();
-
-		var item = $(id),
-			image = $(el).getFirst('img');
-
-		if (item) {
-			if (item.getStyle('display') == 'none') {
-				item.setStyle('display', null);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
-				$(el).store('tip:title', Contao.lang.collapse);
-				new Request.Contao({field:el}).post({'action':'toggleFiletree', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
-			} else {
-				item.setStyle('display', 'none');
-				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
-				$(el).store('tip:title', Contao.lang.expand);
-				new Request.Contao({field:el}).post({'action':'toggleFiletree', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
-			}
-			return false;
-		}
-
-		new Request.Contao({
-			field: el,
-			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
-			onSuccess: function(txt) {
-				var li = new Element('li', {
-					'id': id,
-					'class': 'parent',
-					'styles': {
-						'display': 'inline'
-					}
-				});
-
-				new Element('ul', {
-					'class': 'level_' + level,
-					'html': txt
-				}).inject(li, 'bottom');
-
-				li.inject($(el).getParent('li'), 'after');
-
-				// Update the referer ID
-				li.getElements('a').each(function(el) {
-					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
-				});
-
-				$(el).store('tip:title', Contao.lang.collapse);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
-				AjaxRequest.hideBox();
-
-				// HOOK
-				window.fireEvent('ajax_change');
-   			}
-		}).post({'action':'loadFiletree', 'id':id, 'folder':folder, 'level':level, 'field':field, 'name':name, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
-
-		return false;
-	},
-
-	/**
 	 * Toggle subpalettes in edit mode
 	 *
 	 * @param {object} el    The DOM element
@@ -517,220 +376,6 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle the visibility of an element
-	 *
-	 * @param {object} el    The DOM element
-	 * @param {string} id    The ID of the target element
-	 * @param {string} table The table name
-	 *
-	 * @returns {boolean}
-	 *
-	 * @deprecated
-	 */
-	toggleVisibility: function(el, id, table) {
-		window.console && console.warn('AjaxRequest.toggleVisibility() is deprecated. Please use the new toggle operation.');
-
-		el.blur();
-
-		var img = null,
-			image = $(el).getFirst('img'),
-			published = (image.get('data-state') == 1),
-			div = el.getParent('div'),
-			index, next, icon, icond, pa, params;
-
-		// Backwards compatibility
-		if (image.get('data-state') === null) {
-			published = (image.src.indexOf('invisible') == -1);
-			window.console && console.warn('Using a visibility toggle without a "data-state" attribute is deprecated. Please adjust your Contao DCA file.');
-		}
-
-		// Find the icon depending on the view (tree view, list view, parent view)
-		if (div.hasClass('tl_right')) {
-			img = div.getPrevious('div').getElement('img');
-		} else if (div.hasClass('tl_listing_container')) {
-			img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
-			if (img === null) { // comments
-				img = el.getParent('td').getPrevious('td').getElement('div.cte_type');
-			}
-			if (img === null) { // showColumns
-				img = el.getParent('tr').getFirst('td').getElement('div.list_icon_new');
-			}
-		} else if (next = div.getNext('div')) {
-			if (next.hasClass('cte_type')) {
-				img = next;
-			}
-			if (img === null) { // newsletter recipients
-				img = next.getFirst('div.list_icon');
-			}
-		}
-
-		// Change the icon
-		if (img !== null) {
-			// Tree view
-			if (img.nodeName.toLowerCase() == 'img') {
-				if (img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
-					icon = img.get('data-icon');
-					icond = img.get('data-icon-disabled');
-
-					// Backwards compatibility
-					if (icon === null) {
-						icon = img.src.replace(/(.*)\/([a-z0-9]+)_?\.(gif|png|jpe?g|svg)$/, '$1/$2.$3');
-						window.console && console.warn('Using a row icon without a "data-icon" attribute is deprecated. Please adjust your Contao DCA file.');
-					}
-					if (icond === null) {
-						icond = img.src.replace(/(.*)\/([a-z0-9]+)_?\.(gif|png|jpe?g|svg)$/, '$1/$2_.$3');
-						window.console && console.warn('Using a row icon without a "data-icon-disabled" attribute is deprecated. Please adjust your Contao DCA file.');
-					}
-
-					// Prepend the theme path
-					if (icon.indexOf('/') == -1) {
-						icon = AjaxRequest.themePath + (icon.match(/\.svg$/) ? 'icons/' : 'images/') + icon;
-					}
-					if (icond.indexOf('/') == -1) {
-						icond = AjaxRequest.themePath + (icond.match(/\.svg$/) ? 'icons/' : 'images/') + icond;
-					}
-
-					img.src = !published ? icon : icond;
-				} else {
-					pa = img.getParent('a');
-
-					if (pa && pa.href.indexOf('contao/preview') == -1) {
-						if (next = pa.getNext('a')) {
-							img = next.getFirst('img');
-						} else {
-							img = new Element('img'); // no icons used (see #2286)
-						}
-					}
-
-					icon = img.get('data-icon');
-					icond = img.get('data-icon-disabled');
-
-					// Backwards compatibility
-					if (icon === null) {
-						index = img.src.replace(/.*_([0-9])\.(gif|png|jpe?g|svg)/, '$1');
-						icon = img.src.replace(/_[0-9]\.(gif|png|jpe?g|svg)/, ((index.toInt() == 1) ? '' : '_' + (index.toInt() - 1)) + '.$1').split(/[\\/]/).pop();
-						window.console && console.warn('Using a row icon without a "data-icon" attribute is deprecated. Please adjust your Contao DCA file.');
-					}
-					if (icond === null) {
-						index = img.src.replace(/.*_([0-9])\.(gif|png|jpe?g|svg)/, '$1');
-						icond = img.src.replace(/(_[0-9])?\.(gif|png|jpe?g|svg)/, ((index == img.src) ? '_1' : '_' + (index.toInt() + 1)) + '.$2').split(/[\\/]/).pop();
-						window.console && console.warn('Using a row icon without a "data-icon-disabled" attribute is deprecated. Please adjust your Contao DCA file.');
-					}
-
-					// Prepend the theme path
-					if (icon.indexOf('/') == -1) {
-						icon = AjaxRequest.themePath + (icon.match(/\.svg$/) ? 'icons/' : 'images/') + icon;
-					}
-					if (icond.indexOf('/') == -1) {
-						icond = AjaxRequest.themePath + (icond.match(/\.svg$/) ? 'icons/' : 'images/') + icond;
-					}
-
-					img.src = !published ? icon : icond;
-				}
-			}
-			// Parent view
-			else if (img.hasClass('cte_type')) {
-				if (!published) {
-					img.addClass('published');
-					img.removeClass('unpublished');
-				} else {
-					img.addClass('unpublished');
-					img.removeClass('published');
-				}
-			}
-			// List view
-			else {
-				icon = img.get('data-icon');
-				icond = img.get('data-icon-disabled');
-
-				// Backwards compatibility
-				if (icon === null) {
-					icon = img.getStyle('background-image').replace(/(.*)\/([a-z0-9]+)_?\.(gif|png|jpe?g|svg)\);?$/, '$1/$2.$2');
-					window.console && console.warn('Using a row icon without a "data-icon" attribute is deprecated. Please adjust your Contao DCA file.');
-				}
-				if (icond === null) {
-					icond = img.getStyle('background-image').replace(/(.*)\/([a-z0-9]+)_?\.(gif|png|jpe?g|svg)\);?$/, '$1/$2_.$3');
-					window.console && console.warn('Using a row icon without a "data-icon-disabled" attribute is deprecated. Please adjust your Contao DCA file.');
-				}
-
-				// Prepend the theme path
-				if (icon.indexOf('/') == -1) {
-					icon = AjaxRequest.themePath + (icon.match(/\.svg$/) ? 'icons/' : 'images/') + icon;
-				}
-				if (icond.indexOf('/') == -1) {
-					icond = AjaxRequest.themePath + (icond.match(/\.svg$/) ? 'icons/' : 'images/') + icond;
-				}
-
-				img.setStyle('background-image', 'url(' + (!published ? icon : icond) + ')');
-			}
-		}
-
-		// Mark disabled format definitions
-		if (table == 'tl_style') {
-			div.getParent('div').getElement('pre').toggleClass('disabled');
-		}
-
-		icon = image.get('data-icon') || AjaxRequest.themePath + 'icons/visible.svg';
-		icond = image.get('data-icon-disabled') || AjaxRequest.themePath + 'icons/invisible.svg';
-
-		// Send request
-		if (el.href.indexOf('act=toggle') !== -1) {
-			image.src = !published ? icon : icond;
-			image.set('data-state', !published ? 1 : 0);
-
-			new Request.Contao({'url':el.href, 'followRedirects':false}).get();
-		} else {
-			image.src = published ? icond : icon;
-			image.set('data-state', published ? 0 : 1);
-
-			params = {'state':published ? 0 : 1, 'rt':Contao.request_token};
-			params[$(el).get('data-tid') || 'tid'] = id;
-
-			new Request.Contao({'url':window.location.href, 'followRedirects':false}).get(params);
-		}
-
-		return false;
-	},
-
-	/**
-	 * Feature/unfeature an element
-	 *
-	 * @param {object} el The DOM element
-	 * @param {string} id The ID of the target element
-	 *
-	 * @returns {boolean}
-	 *
-	 * @deprecated
-	 */
-	toggleFeatured: function(el, id) {
-		window.console && console.warn('AjaxRequest.toggleFeatured() is deprecated. Please use the new toggle operation.');
-
-		el.blur();
-
-		var image = $(el).getFirst('img'),
-			featured = (image.get('data-state') == 1);
-
-		// Backwards compatibility
-		if (image.get('data-state') === null) {
-			featured = (image.src.indexOf('featured_') == -1);
-			window.console && console.warn('Using a featured toggle without a "data-state" attribute is deprecated. Please adjust your Contao DCA file.');
-		}
-
-		// Send the request
-		if (!featured) {
-			image.src = AjaxRequest.themePath + 'icons/featured.svg';
-			image.set('data-state', 1);
-			new Request.Contao().post({'action':'toggleFeatured', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
-		} else {
-			image.src = AjaxRequest.themePath + 'icons/featured_.svg';
-			image.set('data-state', 0);
-			new Request.Contao().post({'action':'toggleFeatured', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
-		}
-
-		return false;
-	},
-
-	/**
 	 * Toggle the visibility of a fieldset
 	 *
 	 * @param {object} el    The DOM element
@@ -870,18 +515,6 @@ var Backend =
 	currentId: null,
 
 	/**
-	 * The x mouse position
-	 * @member {int}
-	 */
-	xMousePosition: 0,
-
-	/**
-	 * The Y mouse position
-	 * @member {int}
-	 */
-	yMousePosition: 0,
-
-	/**
 	 * The popup window
 	 * @member {object}
 	 */
@@ -892,32 +525,6 @@ var Backend =
 	 * @member {string}
 	 */
 	themePath: Contao.script_url + 'system/themes/' + Contao.theme + '/',
-
-	/**
-	 * Get the current mouse position
-	 *
-	 * @param {object} event The event object
-	 */
-	getMousePosition: function(event) {
-		Backend.xMousePosition = event.client.x;
-		Backend.yMousePosition = event.client.y;
-	},
-
-	/**
-	 * Open a new window
-	 *
-	 * @param {object} el     The DOM element
-	 * @param {int}    width  The width in pixels
-	 * @param {int}    height The height in pixels
-	 *
-	 * @deprecated Use Backend.openModalWindow() instead
-	 */
-	openWindow: function(el, width, height) {
-		el.blur();
-		width = Browser.ie ? (width + 40) : (width + 17);
-		height = Browser.ie ? (height + 30) : (height + 17);
-		Backend.popupWindow = window.open(el.href, '', 'width=' + width + ',height=' + height + ',modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');
-	},
 
 	/**
 	 * Open a modal window
@@ -1044,30 +651,7 @@ var Backend =
 					val.splice(sIndex, 1);
 				}
 			}
-			if (opt.callback) {
-				opt.callback(ul.get('data-table'), val);
-			} else if (opt.tag && (field = $(opt.tag))) {
-				window.console && console.warn('Using the modal selector without a callback function is deprecated. Please adjust your Contao DCA file.');
-				field.value = val.join(',');
-				if (it = ul.get('data-inserttag')) {
-					field.value = '{{' + it + '::' + field.value + '}}';
-				}
-				opt.self.set('href', opt.self.get('href').replace(/&value=[^&]*/, '&value=' + val.join(',')));
-			} else if (opt.id && (field = $('ctrl_' + opt.id)) && (act = ul.get('data-callback'))) {
-				window.console && console.warn('Using the modal selector without a callback function is deprecated. Please adjust your Contao DCA file.');
-				field.value = val.join("\t");
-				new Request.Contao({
-					field: field,
-					evalScripts: false,
-					onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
-					onSuccess: function(txt, json) {
-						$('ctrl_' + opt.id).getParent('div').set('html', json.content);
-						json.javascript && Browser.exec(json.javascript);
-						AjaxRequest.hideBox();
-						window.fireEvent('ajax_change');
-					}
-				}).post({'action':act, 'name':opt.id, 'value':field.value, 'REQUEST_TOKEN':Contao.request_token});
-			}
+			opt.callback(ul.get('data-table'), val);
 			this.hide();
 		});
 		M.show({
@@ -1105,14 +689,10 @@ var Backend =
 	},
 
 	/**
-	 * Remove the legacy BE_PAGE_OFFSET cookie, scroll to the current offset if
+	 * Scroll to the current offset if
 	 * it was defined and add the "down" CSS class to the header.
 	 */
 	initScrollOffset: function() {
-		// Kill the legacy cookie here; this way it can be sent by the server,
-		// but it won't be resent by the client in the next request
-		Cookie.dispose('BE_PAGE_OFFSET');
-
 		// Add events to the submit buttons, so they can reset the offset
 		// (except for "save", which always stays on the same page)
 		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
@@ -1204,55 +784,6 @@ var Backend =
 	},
 
 	/**
-	 * Limit the height of the preview pane
-	 */
-	limitPreviewHeight: function() {
-		var hgt = 0;
-
-		$$('div.limit_height').each(function(div) {
-			var parent = div.getParent('.tl_content'),
-				toggler, button, size, style;
-
-			// Return if the element is a wrapper
-			if (parent && (parent.hasClass('wrapper_start') || parent.hasClass('wrapper_stop'))) return;
-
-			if (hgt === 0) {
-				hgt = div.className.replace(/[^0-9]*/, '').toInt();
-			}
-
-			// Return if there is no height value
-			if (!hgt) return;
-
-			toggler = new Element('div', {
-				'class': 'limit_toggler'
-			});
-
-			button = new Element('button', {
-				'type': 'button',
-				'html': '<span>...</span>',
-				'class': 'unselectable',
-				'data-state': 0
-			}).inject(toggler);
-
-			size = div.getCoordinates();
-			div.setStyle('height', hgt);
-
-			// Disable the function if the preview height is below the max-height
-			if (size.height <= hgt) {
-				return;
-			}
-
-			button.addEvent('click', function() {
-				style = toggler.getPrevious('div').getStyle('height').toInt();
-				toggler.getPrevious('div').setStyle('height', ((style > hgt) ? hgt : ''));
-				button.set('data-state', button.get('data-state') ? 0 : 1);
-			});
-
-			toggler.inject(div, 'after');
-		});
-	},
-
-	/**
 	 * Toggle checkboxes
 	 *
 	 * @param {object} el   The DOM element
@@ -1333,24 +864,6 @@ var Backend =
 		$$('#result-list .tl_confirm').each(function(el) {
 			el.toggleClass('hidden');
 		});
-	},
-
-	/**
-	 * Toggle the opacity of the paste buttons
-	 *
-	 * @deprecated Not required anymore
-	 */
-	blink: function() {},
-
-	/**
-	 * Initialize the mootools color picker
-	 *
-	 * @returns {boolean}
-	 *
-	 * @deprecated Not required anymore
-	 */
-	addColorPicker: function() {
-		return true;
 	},
 
 	/**
@@ -2409,7 +1922,7 @@ var Backend =
 
 		// Empty the last element instead of removing it (see #4858)
 		if (li.getPrevious() === null && li.getNext() === null) {
-			li.getElements('input').each(function(input) {
+			li.getElements('input, textarea').each(function(input) {
 				input.value = '';
 			});
 		} else {
@@ -2990,11 +2503,6 @@ var Backend =
 	}
 };
 
-// Track the mousedown event
-document.addEvent('mousedown', function(event) {
-	Backend.getMousePosition(event);
-});
-
 // Initialize the back end script
 window.addEvent('domready', function() {
 	$(document.body).addClass('js');
@@ -3025,11 +2533,6 @@ window.addEvent('domready', function() {
 // Resize the table wizard
 window.addEvent('resize', function() {
 	Backend.tableWizardSetWidth();
-});
-
-// Limit the height of the preview fields
-window.addEvent('load', function() {
-	Backend.limitPreviewHeight();
 });
 
 // Re-apply certain changes upon ajax_change

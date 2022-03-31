@@ -18,8 +18,6 @@ use Symfony\Component\Filesystem\Path;
  *
  * Custom settings above or below the `### INSTALL SCRIPT ###` markers will be
  * preserved.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Config
 {
@@ -89,11 +87,8 @@ class Config
 		'smtpPass'         => 'mailer_password',
 		'smtpPort'         => 'mailer_port',
 		'smtpEnc'          => 'mailer_encryption',
-		'addLanguageToUrl' => 'contao.prepend_locale',
-		'urlSuffix'        => 'contao.url_suffix',
 		'uploadPath'       => 'contao.upload_path',
 		'editableFiles'    => 'contao.editable_files',
-		'debugMode'        => 'kernel.debug',
 		'characterSet'     => 'kernel.charset',
 		'enableSearch'     => 'contao.search.default_indexer.enable',
 		'indexProtected'   => 'contao.search.index_protected',
@@ -113,8 +108,6 @@ class Config
 		'dbCollation'           => true,
 		'disableRefererCheck'   => true,
 		'requestTokenWhitelist' => true,
-		'encryptionMode'        => true,
-		'encryptionCipher'      => true,
 		'sessionTimeout'        => true,
 		'disableInsertTags'     => true,
 		'rootFiles'             => true,
@@ -341,7 +334,7 @@ class Config
 		}
 
 		// Recompile the APC file (thanks to Trenker)
-		if (\function_exists('apc_compile_file') && !ini_get('apc.stat'))
+		if (\function_exists('apc_compile_file') && !\ini_get('apc.stat'))
 		{
 			apc_compile_file($strDestination);
 		}
@@ -356,22 +349,7 @@ class Config
 	 */
 	public static function isComplete()
 	{
-		return static::$blnHasLcf !== null && static::has('licenseAccepted');
-	}
-
-	/**
-	 * Return all active modules as array
-	 *
-	 * @return array An array of active modules
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use the container parameter "kernel.bundles" instead.
-	 */
-	public function getActiveModules()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Config::getActiveModules()" has been deprecated and will no longer work in Contao 5.0. Use "kernel.bundles" instead.');
-
-		return ModuleLoader::getActive();
+		return static::$blnHasLcf !== null;
 	}
 
 	/**
@@ -615,5 +593,3 @@ class Config
 		return "'" . str_replace('\\"', '"', preg_replace('/[\n\r\t ]+/', ' ', addslashes($varValue))) . "'";
 	}
 }
-
-class_alias(Config::class, 'Config');

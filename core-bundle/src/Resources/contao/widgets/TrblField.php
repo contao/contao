@@ -15,8 +15,6 @@ namespace Contao;
  *
  * @property integer $maxlength
  * @property array   $options
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class TrblField extends Widget
 {
@@ -158,5 +156,3 @@ class TrblField extends Widget
 		);
 	}
 }
-
-class_alias(TrblField::class, 'TrblField');

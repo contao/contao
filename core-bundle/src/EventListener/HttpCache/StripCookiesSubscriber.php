@@ -79,17 +79,6 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         $this->allowList = $allowList;
     }
 
-    /**
-     * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0; use the
-     *             getAllowList() method instead
-     */
-    public function getWhitelist(): array
-    {
-        trigger_deprecation('contao/core-bundle', '4.10', 'Using the "getWhitelist()" method has been deprecated and will no longer work in Contao 5.0. Use the "getAllowList()" method instead.');
-
-        return $this->getAllowList();
-    }
-
     public function getAllowList(): array
     {
         return $this->allowList;

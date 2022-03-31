@@ -24,13 +24,10 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property string  $teaser
  * @property string  $teaserCssID
  * @property string  $classes
- * @property string  $keywords
  * @property boolean $printable
  * @property boolean $published
  * @property integer $start
  * @property integer $stop
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleArticle extends Module
 {
@@ -206,12 +203,6 @@ class ModuleArticle extends Module
 		$this->Template->teaser = $this->teaser;
 		$this->Template->elements = $arrElements;
 
-		// Backwards compatibility
-		if ($this->keywords)
-		{
-			$GLOBALS['TL_KEYWORDS'] .= ($GLOBALS['TL_KEYWORDS'] ? ', ' : '') . $this->keywords;
-		}
-
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($this->printable == 1)
 		{
@@ -310,5 +301,3 @@ class ModuleArticle extends Module
 		return array();
 	}
 }
-
-class_alias(ModuleArticle::class, 'ModuleArticle');

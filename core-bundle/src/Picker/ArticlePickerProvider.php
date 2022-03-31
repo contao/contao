@@ -36,7 +36,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return 'articlePicker';
     }
 
-    public function supportsContext($context): bool
+    public function supportsContext(string $context): bool
     {
         return 'link' === $context && $this->security->isGranted('contao_user.modules', 'article');
     }
@@ -46,7 +46,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(): string
+    public function getDcaTable(PickerConfig $config = null): string
     {
         return 'tl_article';
     }
@@ -70,7 +70,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, $value): string
+    public function convertDcaValue(PickerConfig $config, mixed $value): string|int
     {
         return sprintf($this->getInsertTag($config), $value);
     }

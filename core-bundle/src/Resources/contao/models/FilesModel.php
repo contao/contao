@@ -81,8 +81,6 @@ use Symfony\Component\Filesystem\Path;
  * @method static integer countByImportantPartWidth($val, array $opt=array())
  * @method static integer countByImportantPartHeight($val, array $opt=array())
  * @method static integer countByMeta($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FilesModel extends Model
 {
@@ -450,5 +448,3 @@ class FilesModel extends Model
 		return null;
 	}
 }
-
-class_alias(FilesModel::class, 'FilesModel');

@@ -19,8 +19,6 @@ use Contao\Model\Collection;
  * @property array  $news_archives
  * @property string $news_featured
  * @property string $news_order
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsList extends ModuleNews
 {
@@ -255,5 +253,3 @@ class ModuleNewsList extends ModuleNews
 		return NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset, array('order'=>$order));
 	}
 }
-
-class_alias(ModuleNewsList::class, 'ModuleNewsList');

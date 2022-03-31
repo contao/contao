@@ -21,8 +21,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property Comments $Comments
  * @property string   $com_template
  * @property array    $news_archives
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsReader extends ModuleNews
 {
@@ -88,13 +86,6 @@ class ModuleNewsReader extends ModuleNews
 		{
 			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['newsOverview'];
-		}
-		else
-		{
-			trigger_deprecation('contao/news-bundle', '4.13', 'If you do not select an overview page in the news reader module, the "go back" link will no longer be shown in Contao 5.0.');
-
-			$this->Template->referer = 'javascript:history.go(-1)';
-			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
 		}
 
 		// Get the news item
@@ -227,5 +218,3 @@ class ModuleNewsReader extends ModuleNews
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
 	}
 }
-
-class_alias(ModuleNewsReader::class, 'ModuleNewsReader');

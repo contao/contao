@@ -16,9 +16,6 @@ namespace Contao;
  * @property array   $options
  * @property array   $unknownOption
  * @property boolean $multiple
- *
- * @author John Brand <http://www.thyon.com>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class CheckBoxWizard extends Widget
 {
@@ -201,5 +198,3 @@ class CheckBoxWizard extends Widget
 		);
 	}
 }
-
-class_alias(CheckBoxWizard::class, 'CheckBoxWizard');

@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\Config;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -28,15 +26,13 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  */
 class RequestTokenListener
 {
-    private ContaoFramework $framework;
     private ScopeMatcher $scopeMatcher;
     private ContaoCsrfTokenManager $csrfTokenManager;
     private string $csrfTokenName;
     private string $csrfCookiePrefix;
 
-    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher, ContaoCsrfTokenManager $csrfTokenManager, string $csrfTokenName, string $csrfCookiePrefix = 'csrf_')
+    public function __construct(ScopeMatcher $scopeMatcher, ContaoCsrfTokenManager $csrfTokenManager, string $csrfTokenName, string $csrfCookiePrefix = 'csrf_')
     {
-        $this->framework = $framework;
         $this->scopeMatcher = $scopeMatcher;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->csrfTokenName = $csrfTokenName;
@@ -65,32 +61,6 @@ class RequestTokenListener
             || (!$request->attributes->has('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
         ) {
             return;
-        }
-
-        $config = $this->framework->getAdapter(Config::class);
-
-        if (\defined('BYPASS_TOKEN_CHECK')) {
-            trigger_deprecation('contao/core-bundle', '4.0', 'Defining the BYPASS_TOKEN_CHECK constant has been deprecated and will no longer work in Contao 5.0.');
-
-            return;
-        }
-
-        if ($config->get('disableRefererCheck')) {
-            trigger_deprecation('contao/core-bundle', '4.0', 'Using the "disableRefererCheck" setting has been deprecated and will no longer work in Contao 5.0.');
-
-            return;
-        }
-
-        if ($config->get('requestTokenWhitelist')) {
-            trigger_deprecation('contao/core-bundle', '4.0', 'Using the "requestTokenWhitelist" setting has been deprecated and will no longer work in Contao 5.0.');
-
-            $hostname = gethostbyaddr($request->getClientIp());
-
-            foreach ($config->get('requestTokenWhitelist') as $domain) {
-                if ($domain === $hostname || preg_match('/\.'.preg_quote($domain, '/').'$/', $hostname)) {
-                    return;
-                }
-            }
         }
 
         $token = new CsrfToken($this->csrfTokenName, $this->getTokenFromRequest($request));

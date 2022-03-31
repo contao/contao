@@ -171,8 +171,6 @@ use Contao\Model\Registry;
  * @method static integer countByUseTwoFactor($val, array $opt=array())
  * @method static integer countByBackupCodes($val, array $opt=array())
  * @method static integer countByTrustedTokenVersion($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class MemberModel extends Model
 {
@@ -262,5 +260,3 @@ class MemberModel extends Model
 		return static::createCollectionFromDbResult($objResult, $t);
 	}
 }
-
-class_alias(MemberModel::class, 'MemberModel');

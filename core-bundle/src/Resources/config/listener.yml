@@ -223,11 +223,6 @@ services:
             - '@security.helper'
             - '@contao.image.sizes'
 
-    contao.listener.initialize_controller:
-        class: Contao\CoreBundle\EventListener\InitializeControllerListener
-        tags:
-            - { name: kernel.event_listener, priority: 1000 }
-
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
         arguments:
@@ -402,7 +397,6 @@ services:
     contao.listener.request_token:
         class: Contao\CoreBundle\EventListener\RequestTokenListener
         arguments:
-            - '@contao.framework'
             - '@contao.routing.scope_matcher'
             - '@contao.csrf.token_manager'
             - '%contao.csrf_token_name%'
@@ -438,6 +432,9 @@ services:
         arguments:
             - '@security.http_utils'
             - '@contao.routing.scope_matcher'
+            - '@contao.framework'
+            - '@security.helper'
+            - '@logger'
         tags:
             - kernel.event_listener
 

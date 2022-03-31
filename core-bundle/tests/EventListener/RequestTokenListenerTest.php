@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\Config;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
@@ -85,9 +84,6 @@ class RequestTokenListenerTest extends TestCase
 
     public function testValidatesTheRequestTokenUponContaoRequests(): void
     {
-        $config = $this->mockConfiguredAdapter(['get' => false]);
-        $framework = $this->mockContaoFramework([Config::class => $config]);
-
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
@@ -119,14 +115,12 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
     }
 
     public function testFailsIfTheRequestTokenIsInvalid(): void
     {
-        $config = $this->mockConfiguredAdapter(['get' => false]);
-        $framework = $this->mockContaoFramework([Config::class => $config]);
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
 
         $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
@@ -154,7 +148,7 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
 
         $this->expectException(InvalidRequestTokenException::class);
 
@@ -163,12 +157,6 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenUponNonPostRequests(): void
     {
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->expects($this->never())
-            ->method('getAdapter')
-        ;
-
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
@@ -190,18 +178,12 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
     }
 
     public function testDoesNotValidateTheRequestTokenUponAjaxRequests(): void
     {
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->expects($this->never())
-            ->method('getAdapter')
-        ;
-
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
@@ -224,18 +206,12 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
     }
 
     public function testDoesNotValidateTheRequestTokenIfTheRequestAttributeIsFalse(): void
     {
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->expects($this->never())
-            ->method('getAdapter')
-        ;
-
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
@@ -257,18 +233,12 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
     }
 
     public function testDoesNotValidateTheRequestTokenIfNoRequestAttributeAndNotAContaoRequest(): void
     {
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->expects($this->never())
-            ->method('getAdapter')
-        ;
-
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->expects($this->once())
@@ -295,18 +265,12 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
     }
 
     public function testDoesNotValidateTheRequestTokenIfNotAMainRequest(): void
     {
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->expects($this->never())
-            ->method('getAdapter')
-        ;
-
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
@@ -322,14 +286,12 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
     }
 
     private function validateRequestTokenForRequest(Request $request, bool $shouldValidate = true): void
     {
-        $config = $this->mockConfiguredAdapter(['get' => false]);
-        $framework = $this->mockContaoFramework([Config::class => $config]);
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
 
         $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
@@ -363,7 +325,7 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
     }
 }

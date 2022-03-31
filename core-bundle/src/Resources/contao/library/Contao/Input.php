@@ -24,8 +24,6 @@ namespace Contao;
  *         $username = Input::post('username');
  *         $password = Input::post('password');
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Input
 {
@@ -1033,5 +1031,3 @@ class Input
 		return static::$objInstance;
 	}
 }
-
-class_alias(Input::class, 'Input');
