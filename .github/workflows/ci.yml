@@ -11,59 +11,6 @@ on:
         - cron: 0 13 * * MON,THU
 
 jobs:
-    windows:
-        name: Windows
-        runs-on: windows-2019
-        if: github.event_name != 'push'
-        steps:
-            - name: Setup cache environment
-              id: extcache
-              uses: shivammathur/cache-extensions@v1
-              with:
-                  php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  key: cache-v1
-
-            - name: Cache extensions
-              uses: actions/cache@v2
-              with:
-                  path: ${{ steps.extcache.outputs.dir }}
-                  key: ${{ steps.extcache.outputs.key }}
-                  restore-keys: ${{ steps.extcache.outputs.key }}
-
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  ini-values: memory_limit=1G
-                  coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Adjust the Git autocrlf setting
-              run: git config --global core.autocrlf false
-
-            - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Get the Composer cache directory
-              id: composer-cache
-              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-            - name: Cache the dependencies
-              uses: actions/cache@v3
-              with:
-                  path: ${{ steps.composer-cache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                  restore-keys: ${{ runner.os }}-composer-
-
-            - name: Install the dependencies
-              run: composer install --no-interaction --no-progress
-
-            - name: Run the unit tests
-              run: vendor/bin/phpunit.bat --colors=always
-
     coverage:
         name: Coverage
         runs-on: ubuntu-latest
@@ -414,6 +361,59 @@ jobs:
                       vendor/bin/phpunit --colors=always
                       cd ..
                   done
+
+    windows:
+        name: Windows
+        runs-on: windows-2019
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup cache environment
+              id: extcache
+              uses: shivammathur/cache-extensions@v1
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  key: cache-v1
+
+            - name: Cache extensions
+              uses: actions/cache@v2
+              with:
+                  path: ${{ steps.extcache.outputs.dir }}
+                  key: ${{ steps.extcache.outputs.key }}
+                  restore-keys: ${{ steps.extcache.outputs.key }}
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  ini-values: memory_limit=1G
+                  coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Adjust the Git autocrlf setting
+              run: git config --global core.autocrlf false
+
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Get the Composer cache directory
+              id: composer-cache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache the dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install the dependencies
+              run: composer install --no-interaction --no-progress
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit.bat --colors=always
 
     dependencies:
         name: Dependencies
