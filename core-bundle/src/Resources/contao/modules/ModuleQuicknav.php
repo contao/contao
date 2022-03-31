@@ -15,8 +15,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "quick navigation".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleQuicknav extends Module
 {

@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 
 $GLOBALS['TL_DCA']['tl_member_group'] = array
@@ -18,7 +19,7 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'sql' => array
 		(
@@ -163,8 +164,6 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_member_group extends Backend
 {

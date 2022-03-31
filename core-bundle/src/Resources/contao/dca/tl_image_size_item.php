@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\System;
 
 System::loadLanguageFile('tl_image_size');
@@ -22,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_image_size',
 		'enableVersioning'            => true,
 		'onload_callback' => array
@@ -197,8 +198,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_image_size_item extends Backend
 {

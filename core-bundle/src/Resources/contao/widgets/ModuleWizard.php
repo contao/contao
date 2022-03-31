@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to handle modules of a page layout.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleWizard extends Widget
 {

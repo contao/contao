@@ -27,8 +27,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * Provide methods to manage back end controllers.
  *
  * @property Ajax $objAjax
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Backend extends Controller
 {
@@ -541,7 +539,7 @@ abstract class Backend extends Controller
 					$this->loadDataContainer($ptable);
 				}
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)

@@ -18,8 +18,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * Front end module "newsletter reader".
  *
  * @property array $nl_channels
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsletterReader extends Module
 {

@@ -80,8 +80,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $groups
  * @property string  $cssID
  * @property string  $hl
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Module extends Frontend
 {

@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 <?php endif; ?>
 class <?= $className ?> extends AbstractFrontendModuleController
 {
-    protected function getResponse(Template $template, ModuleModel $model, Request $request): ?Response
+    protected function getResponse(Template $template, ModuleModel $model, Request $request): Response
     {
         return $template->getResponse();
     }

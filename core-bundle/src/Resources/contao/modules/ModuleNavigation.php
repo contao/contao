@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end module "navigation".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNavigation extends Module
 {

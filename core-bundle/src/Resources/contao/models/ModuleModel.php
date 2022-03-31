@@ -281,8 +281,6 @@ use Contao\Model\Collection;
  * @method static integer countByGuests($val, array $opt=array())
  * @method static integer countByCssID($val, array $opt=array())
  * @method static integer countBySpace($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleModel extends Model
 {

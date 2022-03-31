@@ -194,8 +194,6 @@ use Contao\Model\Collection;
  * @method static integer countByLocked($val, array $opt=array())
  * @method static integer countByBackupCodes($val, array $opt=array())
  * @method static integer countByTrustedTokenVersion($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class UserModel extends Model
 {

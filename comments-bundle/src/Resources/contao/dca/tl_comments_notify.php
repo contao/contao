@@ -8,12 +8,14 @@
  * @license LGPL-3.0-or-later
  */
 
+use Contao\DC_Table;
+
 $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 (
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'closed'                      => true,
 		'notEditable'                 => true,
 		'sql' => array

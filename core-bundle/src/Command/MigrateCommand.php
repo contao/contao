@@ -13,10 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
+use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Schema\Table;
 use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
@@ -38,16 +41,20 @@ class MigrateCommand extends Command
     private string $projectDir;
     private ContaoFramework $framework;
     private BackupManager $backupManager;
+    private SchemaProvider $schemaProvider;
+    private MysqlInnodbRowSizeCalculator $rowSizeCalculator;
     private ?Installer $installer;
     private ?SymfonyStyle $io = null;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, Installer $installer = null)
+    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Installer $installer = null)
     {
         $this->migrations = $migrations;
         $this->fileLocator = $fileLocator;
         $this->projectDir = $projectDir;
         $this->framework = $framework;
         $this->backupManager = $backupManager;
+        $this->schemaProvider = $schemaProvider;
+        $this->rowSizeCalculator = $rowSizeCalculator;
         $this->installer = $installer;
 
         parent::__construct();
@@ -301,6 +308,14 @@ class MigrateCommand extends Command
             return false;
         }
 
+        if ($schemaWarnings = $this->compileSchemaWarnings()) {
+            $this->io->warning(implode("\n\n", $schemaWarnings));
+
+            if (!$this->io->confirm('Continue regardless of the warnings?')) {
+                return false;
+            }
+        }
+
         $commandsByHash = [];
 
         while (true) {
@@ -446,5 +461,39 @@ class MigrateCommand extends Command
         if (JSON_ERROR_NONE !== json_last_error()) {
             throw new \JsonException(json_last_error_msg());
         }
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function compileSchemaWarnings(): array
+    {
+        $warnings = [];
+        $schema = $this->schemaProvider->createSchema();
+
+        foreach ($schema->getTables() as $table) {
+            $warnings = [...$warnings, ...$this->compileTableWarnings($table)];
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function compileTableWarnings(Table $table): array
+    {
+        $warnings = [];
+
+        $mysqlSize = $this->rowSizeCalculator->getMysqlRowSize($table);
+        $mysqlLimit = $this->rowSizeCalculator->getMysqlRowSizeLimit();
+        $innodbSize = $this->rowSizeCalculator->getInnodbRowSize($table);
+        $innodbLimit = $this->rowSizeCalculator->getInnodbRowSizeLimit();
+
+        if ($mysqlSize > $mysqlLimit || $innodbSize > $innodbLimit) {
+            $warnings[] = "The row size of table {$table->getName()} is too large:\n - MySQL row size: $mysqlSize of $mysqlLimit bytes\n - InnoDB row size: $innodbSize of $innodbLimit bytes";
+        }
+
+        return $warnings;
     }
 }

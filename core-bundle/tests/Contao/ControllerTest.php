@@ -43,7 +43,7 @@ class ControllerTest extends TestCase
     {
         parent::setUp();
 
-        Controller::reset();
+        Controller::resetControllerCache();
     }
 
     protected function tearDown(): void

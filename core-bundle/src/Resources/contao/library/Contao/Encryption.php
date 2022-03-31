@@ -23,8 +23,6 @@ trigger_deprecation('contao/core-bundle', '3.5', 'Using the "Contao\Encryption" 
  *     $encrypted = Encryption::encrypt('Leo Feyer');
  *     $decrypted = Encryption::decrypt($encrypted);
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 3.5, to be removed in Contao 5.0.
  *             Use the PHP password_* functions and a third-party library such as OpenSSL or phpseclib instead.
  */

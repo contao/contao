@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end module "sitemap".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleSitemap extends Module
 {

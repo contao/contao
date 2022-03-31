@@ -16,8 +16,6 @@ trigger_deprecation('contao/core-bundle', '4.12', 'ContentMarkdown has been depr
 
 /**
  * Front end content element "code".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentMarkdown extends ContentElement
 {

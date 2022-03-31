@@ -27,9 +27,6 @@ use Symfony\Component\String\UnicodeString;
  * @property string  $parentTable
  * @property array   $childTable
  * @property boolean $createNewVersion
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
@@ -4030,7 +4027,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
-		$mouseover = (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable) ? ' toggle_select hover-div' : '';
+
+		$mouseover = '';
+
+		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable)
+		{
+			$mouseover = ' toggle_select hover-div';
+		}
+		elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && Input::get('act') == 'paste')
+		{
+			$mouseover = ' hover-div';
+		}
 
 		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 

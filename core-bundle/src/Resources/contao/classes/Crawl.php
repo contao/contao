@@ -25,8 +25,6 @@ use Terminal42\Escargot\Exception\InvalidJobIdException;
 
 /**
  * Maintenance module "crawl".
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class Crawl extends Backend implements MaintenanceModuleInterface
 {

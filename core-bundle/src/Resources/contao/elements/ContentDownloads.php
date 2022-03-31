@@ -15,8 +15,6 @@ use Contao\Model\Collection;
 
 /**
  * Front end content element "downloads".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentDownloads extends ContentDownload
 {

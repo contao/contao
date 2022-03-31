@@ -14,8 +14,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 
 /**
  * Front end module "rss reader".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleRssReader extends Module
 {

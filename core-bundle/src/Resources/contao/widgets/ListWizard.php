@@ -18,8 +18,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  * Provide methods to handle list items.
  *
  * @property integer $maxlength
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ListWizard extends Widget
 {
