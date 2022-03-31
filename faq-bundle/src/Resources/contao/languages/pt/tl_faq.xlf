@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.robots.1">
         <source>Here you can overwrite how search engines handle the FAQ.</source>
+        <target>Aqui pode escrever por cima da forma como os motores de busca lidam com as FAQ.</target>
       </trans-unit>
       <trans-unit id="tl_faq.description.0">
         <source>Meta description</source>
@@ -106,6 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.meta_legend">
         <source>Metadata</source>
+        <target>Metadado</target>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>

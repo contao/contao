@@ -2,6 +2,33 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.2] (2022-03-31)
+
+**Fixed issues:**
+
+- [#4431] Allow to purge the preview cache in the user profile ([leofeyer])
+- [#4433] Always create an article if page has no layout ([aschempp])
+- [#4426] Add the service subscriber tag to the correct controller ([m-vo])
+- [#4303] Move the logic from LogoutHandler to LogoutSuccessListener ([bytehead])
+- [#4301] Remove file title from sources element ([CMSworker])
+- [#4425] Return the prefix-relative path when getting filesystem items from the VFS ([m-vo])
+- [#4410] Use symfony/polyfill-intl-idn instead of true/punycode ([leofeyer])
+- [#4179] Add a warning for too large database row sizes ([ausi])
+- [#4297] Fix requireItem sorting ([aschempp])
+- [#4346] Drop useless framework initialization ([m-vo])
+- [#4397] Fix several VFS bugs ([m-vo])
+- [#4398] Add missing annotations in ContentModel for showPreview ([m-vo])
+- [#4311] Remove nullable response in controllers ([aschempp])
+- [#4353] Ensure the decorated access decision manager shows up in profiler ([Toflar])
+- [#4302] Always render protected pages in the pretty error screen listener ([aschempp])
+- [#4376] Increase the speed of the functional tests ([ausi])
+- [#4374] Fix minor typo in InsertTags ([fritzmg])
+- [#4359] Fix code style for InsertTags::executeReplace ([fritzmg])
+- [#4300] Fix symlink tests on Windows ([m-vo])
+- [#4287] Fix the route sorting in the Route404Provider ([leofeyer])
+- [#4288] Revert an accidental change in the cal_ templates ([leofeyer])
+- [#4292] Ignore file symlinks when auto-mounting adapters ([m-vo])
+
 ## [4.13.1] (2022-03-15)
 
 **Fixed issues:**
@@ -272,6 +299,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.2]: https://github.com/contao/contao/releases/tag/4.13.2
 [4.13.1]: https://github.com/contao/contao/releases/tag/4.13.1
 [4.13.0]: https://github.com/contao/contao/releases/tag/4.13.0
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
@@ -282,6 +310,7 @@ This project adheres to [Semantic Versioning].
 [ausi]: https://github.com/ausi
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
+[CMSworker]: https://github.com/CMSworker
 [dennisbohn]: https://github.com/dennisbohn
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
@@ -298,6 +327,28 @@ This project adheres to [Semantic Versioning].
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
 [xprojects-de]: https://github.com/xprojects-de
+[#4431]: https://github.com/contao/contao/pull/4431
+[#4433]: https://github.com/contao/contao/pull/4433
+[#4426]: https://github.com/contao/contao/pull/4426
+[#4303]: https://github.com/contao/contao/pull/4303
+[#4301]: https://github.com/contao/contao/pull/4301
+[#4425]: https://github.com/contao/contao/pull/4425
+[#4410]: https://github.com/contao/contao/pull/4410
+[#4179]: https://github.com/contao/contao/pull/4179
+[#4297]: https://github.com/contao/contao/pull/4297
+[#4346]: https://github.com/contao/contao/pull/4346
+[#4397]: https://github.com/contao/contao/pull/4397
+[#4398]: https://github.com/contao/contao/pull/4398
+[#4311]: https://github.com/contao/contao/pull/4311
+[#4353]: https://github.com/contao/contao/pull/4353
+[#4302]: https://github.com/contao/contao/pull/4302
+[#4376]: https://github.com/contao/contao/pull/4376
+[#4374]: https://github.com/contao/contao/pull/4374
+[#4359]: https://github.com/contao/contao/pull/4359
+[#4300]: https://github.com/contao/contao/pull/4300
+[#4287]: https://github.com/contao/contao/pull/4287
+[#4288]: https://github.com/contao/contao/pull/4288
+[#4292]: https://github.com/contao/contao/pull/4292
 [#4026]: https://github.com/contao/contao/pull/4026
 [#4281]: https://github.com/contao/contao/pull/4281
 [#4279]: https://github.com/contao/contao/pull/4279

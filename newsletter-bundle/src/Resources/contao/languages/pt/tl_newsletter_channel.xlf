@@ -1,0 +1,110 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_newsletter_channel.php" source-language="en" target-language="pt">
+    <body>
+      <trans-unit id="tl_newsletter_channel.title.0">
+        <source>Title</source>
+        <target>Título</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.title.1">
+        <source>Please enter the title of the channel.</source>
+        <target>Favor inserir o título do canal.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.jumpTo.0">
+        <source>Redirect page</source>
+        <target>Redirecionar página</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.jumpTo.1">
+        <source>Please choose the newsletter reader page to which visitors will be redirected when clicking a newsletter.</source>
+        <target>Por favor, escolha a página para a qual os visitantes serão direcionados ao clicarem na newsletter.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template.0">
+        <source>E-mail template</source>
+        <target>Exemplo de e-mail</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template.1">
+        <source>Here you can select an e-mail template.</source>
+        <target>Aqui pode seleccionar um modelo de e-mail.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>Transporte de reboque</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.mailerTransport.1">
+        <source>Here you can override the mailer transport used to send newsletters in this channel.</source>
+        <target>Aqui pode anular o transporte de correio utilizado para o envio de boletins informativos neste canal.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender.0">
+        <source>Sender e-mail address</source>
+        <target>Endereço de e-mail do remetente</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender.1">
+        <source>Please enter the e-mail address of the sender.</source>
+        <target>Por favor introduza o endereço de e-mail do remetente.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.senderName.0">
+        <source>Sender name</source>
+        <target>Nome do remetente</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.senderName.1">
+        <source>Here you can enter an optional sender name.</source>
+        <target>Aqui pode introduzir um nome de remetente opcional.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.tstamp.0">
+        <source>Revision date</source>
+        <target>Data da última alteração</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Data e hora da última alteração</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.title_legend">
+        <source>Title and redirect</source>
+        <target>Título e redirecionamento</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.template_legend">
+        <source>Template settings</source>
+        <target>Configurações de modelos</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.sender_legend">
+        <source>Sender settings</source>
+        <target>Configurações do remetente</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.new.0">
+        <source>New</source>
+        <target>Novo</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.new.1">
+        <source>Create a new channel</source>
+        <target>Criar um novo canal</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.show">
+        <source>Show the details of channel ID %s</source>
+        <target>Mostrar detalhes do canal com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.edit">
+        <source>Edit channel ID %s</source>
+        <target>Editar o canal com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.editheader">
+        <source>Edit the settings of channel ID %s</source>
+        <target>Editar as configurações de canal com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.editmeta">
+        <source>Edit the channel settings</source>
+        <target>Editar as configurações de canal</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.copy">
+        <source>Duplicate channel ID %s</source>
+        <target>Copiar o canal com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.delete">
+        <source>Delete channel ID %s</source>
+        <target>Remover o canal com ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_channel.recipients">
+        <source>Edit the recipients of channel ID %s</source>
+        <target>Editar os destinatários do canal com ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
