@@ -57,7 +57,7 @@ parameters:
             path: %currentWorkingDirectory%/core-bundle/tests/Contao/SystemTest.php
 
         -
-            # Ignore unused properties in deprecated LogoutHandler
+            # Ignore unused properties in the deprecated LogoutHandler
             message: '#Property Contao\\CoreBundle\\Security\\Logout\\LogoutHandler::.* is never read, only written\.#'
             path: %currentWorkingDirectory%/core-bundle/src/Security/Logout/LogoutHandler.php
 

@@ -42,5 +42,6 @@ class LogoutHandler implements LogoutHandlerInterface
 
     public function logout(Request $request, ?Response $response, TokenInterface $token): void
     {
+        trigger_deprecation('contao/core-bundle', '4.13', 'Using the LogoutHandler has been deprecated an will no longer work in Contao 5. Use the Symfony\Component\Security\Http\Event\LogoutEvent instead.');
     }
 }
