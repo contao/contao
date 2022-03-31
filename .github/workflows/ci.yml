@@ -147,7 +147,7 @@ jobs:
                   COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Checkout
-              uses: actions/checkout@v3
+              uses: actions/checkout@v2
 
             - name: Install the dependencies
               run: |
