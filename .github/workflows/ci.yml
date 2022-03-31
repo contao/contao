@@ -16,8 +16,20 @@ jobs:
         runs-on: windows-2019
         if: github.event_name != 'push'
         steps:
-            - name: Disable IPv6
-              run: reg ADD  HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters /v DisabledComponents /t REG_DWORD /d 255 /f
+            - name: Setup cache environment
+              id: extcache
+              uses: shivammathur/cache-extensions@v1
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  key: cache-v1
+
+            - name: Cache extensions
+              uses: actions/cache@v2
+              with:
+                  path: ${{ steps.extcache.outputs.dir }}
+                  key: ${{ steps.extcache.outputs.key }}
+                  restore-keys: ${{ steps.extcache.outputs.key }}
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -39,7 +51,8 @@ jobs:
               id: composer-cache
               run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-            - uses: actions/cache@v3
+            - name: Cache the dependencies
+              uses: actions/cache@v3
               with:
                   path: ${{ steps.composer-cache.outputs.dir }}
                   key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
