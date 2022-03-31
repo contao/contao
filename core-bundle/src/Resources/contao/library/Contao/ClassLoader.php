@@ -22,8 +22,6 @@ namespace Contao;
  *     ClassLoader::addNamespace('Custom');
  *     ClassLoader::addClass('Custom\Calendar', 'calendar/Calendar.php');
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
  *             Use the Composer autoloader instead.
  */

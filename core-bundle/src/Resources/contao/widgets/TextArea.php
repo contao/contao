@@ -18,8 +18,6 @@ namespace Contao;
  * @property boolean $rte
  * @property integer $rows
  * @property integer $cols
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class TextArea extends Widget
 {

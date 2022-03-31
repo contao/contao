@@ -170,8 +170,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_newsletter_recipients extends Backend
 {

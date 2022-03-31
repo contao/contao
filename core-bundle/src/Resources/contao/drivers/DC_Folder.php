@@ -34,8 +34,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property array   $editableFileTypes
  * @property boolean $createNewVersion
  * @property boolean $isDbAssisted
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DC_Folder extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {

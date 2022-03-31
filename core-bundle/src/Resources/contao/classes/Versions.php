@@ -19,8 +19,6 @@ use Doctrine\DBAL\Types\Types;
 
 /**
  * Provide methods to handle versioning.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Versions extends Controller
 {

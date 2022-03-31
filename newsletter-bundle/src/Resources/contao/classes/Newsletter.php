@@ -18,8 +18,6 @@ use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
  * Provide methods to handle newsletters.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Newsletter extends Backend
 {

@@ -46,8 +46,6 @@ if (isset($bundles['ContaoCommentsBundle']))
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_module_faq extends Backend
 {

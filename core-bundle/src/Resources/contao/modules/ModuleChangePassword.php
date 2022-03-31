@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end module "change password".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleChangePassword extends Module
 {

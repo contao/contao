@@ -379,8 +379,6 @@ use Contao\Model\Collection;
  * @method static integer countByStart($val, array $opt=array())
  * @method static integer countByStop($val, array $opt=array())
  * @method static integer countByShowPreview($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentModel extends Model
 {

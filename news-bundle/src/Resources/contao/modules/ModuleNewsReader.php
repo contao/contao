@@ -21,8 +21,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property Comments $Comments
  * @property string   $com_template
  * @property array    $news_archives
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsReader extends ModuleNews
 {

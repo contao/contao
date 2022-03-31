@@ -111,8 +111,6 @@ use Contao\Model\Collection;
  * @property string  $typePrefix
  * @property integer $origId
  * @property string  $hl
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class ContentElement extends Frontend
 {

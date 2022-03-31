@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to render a pagination menu.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Pagination
 {

@@ -20,8 +20,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Provide methods to handle Ajax requests.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Ajax extends Backend
 {
