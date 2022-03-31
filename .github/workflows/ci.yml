@@ -29,6 +29,9 @@ jobs:
             - name: Adjust the Git autocrlf setting
               run: git config --global core.autocrlf false
 
+            - name: Disable IPv6
+              run: reg ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters /v DisabledComponents /t REG_DWORD /d ffffffff
+
             - name: Checkout
               uses: actions/checkout@v3
 
