@@ -35,8 +35,6 @@ namespace Contao;
  * @property string  $username The auth username
  * @property boolean $redirect The follow redirects status
  * @property integer $rlimit   The maximum number of redirects
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Request
 {

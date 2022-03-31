@@ -44,8 +44,6 @@ use Symfony\Component\Finder\Glob;
  *     {
  *         return $this->getArticle(2);
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Controller extends System
 {
@@ -1429,7 +1427,13 @@ abstract class Controller extends System
 		$loader->load($blnNoCache);
 	}
 
-	public static function reset()
+	/**
+	 * Do not name this "reset" because it might result in conflicts with child classes
+	 * @see https://github.com/contao/contao/issues/4257
+	 *
+	 * @internal
+	 */
+	public static function resetControllerCache()
 	{
 		self::$arrQueryCache = array();
 		self::$arrOldBePathCache = array();
@@ -2272,8 +2276,6 @@ abstract class Controller extends System
 
 	/**
 	 * Return the IDs of all child records of a particular record (see #2475)
-	 *
-	 * @author Andreas Schempp
 	 *
 	 * @param mixed   $arrParentIds An array of parent IDs
 	 * @param string  $strTable     The table name

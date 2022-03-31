@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "accordion" (wrapper stop).
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentAccordionStop extends ContentElement
 {

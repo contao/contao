@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end module "article list".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleArticlenav extends Module
 {

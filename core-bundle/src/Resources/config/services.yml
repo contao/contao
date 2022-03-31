@@ -175,6 +175,11 @@ services:
             - '@contao.doctrine.orm.fail_tolerant_proxy_cache_warmer.inner'
             - '@database_connection'
 
+    contao.doctrine.schema.mysql_innodb_row_size_calculator:
+        class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
+        arguments:
+            - '@database_connection'
+
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\SchemaProvider
         arguments:

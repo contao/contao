@@ -20,8 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle a regular front end page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 #[\AllowDynamicProperties]
 class PageRegular extends Frontend

@@ -10,13 +10,14 @@
 
 use Contao\Backend;
 use Contao\DataContainer;
+use Contao\DC_Table;
 
 $GLOBALS['TL_DCA']['tl_log'] = array
 (
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'closed'                      => true,
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
@@ -127,8 +128,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_log extends Backend
 {

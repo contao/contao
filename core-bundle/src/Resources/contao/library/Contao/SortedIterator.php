@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Sort iterator items ascending
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class SortedIterator extends \SplHeap
 {
