@@ -367,21 +367,6 @@ jobs:
         runs-on: windows-2019
         if: github.event_name != 'push'
         steps:
-            - name: Setup cache environment
-              id: extcache
-              uses: shivammathur/cache-extensions@v1
-              with:
-                  php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  key: cache-v1
-
-            - name: Cache extensions
-              uses: actions/cache@v2
-              with:
-                  path: ${{ steps.extcache.outputs.dir }}
-                  key: ${{ steps.extcache.outputs.key }}
-                  restore-keys: ${{ steps.extcache.outputs.key }}
-
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
