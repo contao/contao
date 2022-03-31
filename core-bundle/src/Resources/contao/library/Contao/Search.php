@@ -61,7 +61,8 @@ class Search
 		// Ensure that the URL only contains ASCII characters (see #4260)
 		$arrSet['url'] = preg_replace_callback(
 			'/[\x80-\xFF]+/',
-			static function ($match) {
+			static function ($match)
+			{
 				return rawurlencode($match[0]);
 			},
 			$arrData['url']
