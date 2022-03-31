@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Class FormHidden
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FormHidden extends Widget
 {

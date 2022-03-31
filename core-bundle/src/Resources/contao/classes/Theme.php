@@ -15,8 +15,6 @@ use Symfony\Component\String\UnicodeString;
 
 /**
  * Provide methods to handle themes.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Theme extends Backend
 {

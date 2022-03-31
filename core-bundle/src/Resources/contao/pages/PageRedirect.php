@@ -14,9 +14,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provide methods to handle a redirect page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/Toflar>
  */
 class PageRedirect extends Frontend
 {

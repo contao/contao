@@ -42,7 +42,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_featured'] = array
 	'options'                 => array('all_items', 'featured', 'unfeatured', 'featured_first'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50 clr'),
-	'sql'                     => "varchar(16) NOT NULL default 'all_items'"
+	'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default 'all_items'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_jumpToCurrent'] = array
@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_jumpToCurrent'] = array
 	'options'                 => array('hide_module', 'show_current', 'all_items'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(16) NOT NULL default ''"
+	'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_readerModule'] = array
@@ -72,7 +72,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_metaFields'] = array
 	'options'                 => array('date', 'author', 'comments'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "varchar(255) NOT NULL default 'a:2:{i:0;s:4:\"date\";i:1;s:6:\"author\";}'"
+	'sql'                     => "varchar(255) COLLATE ascii_bin NOT NULL default 'a:2:{i:0;s:4:\"date\";i:1;s:6:\"author\";}'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
@@ -84,7 +84,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 		return Controller::getTemplateGroup('news_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
@@ -94,7 +94,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
 	'options'                 => array('news_day', 'news_month', 'news_year'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50 clr', 'submitOnChange'=>true),
-	'sql'                     => "varchar(32) NOT NULL default 'news_month'"
+	'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default 'news_month'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_startDay'] = array
@@ -114,14 +114,14 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_order'] = array
 	'options_callback'        => array('tl_module_news', 'getSortingOptions'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(32) NOT NULL default 'order_date_desc'"
+	'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default 'order_date_desc'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $bundles = System::getContainer()->getParameter('kernel.bundles');
@@ -134,8 +134,6 @@ if (isset($bundles['ContaoCommentsBundle']))
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_module_news extends Backend
 {

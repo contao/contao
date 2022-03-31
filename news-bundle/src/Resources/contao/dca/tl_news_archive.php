@@ -255,8 +255,6 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property News $News
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_news_archive extends Backend
 {

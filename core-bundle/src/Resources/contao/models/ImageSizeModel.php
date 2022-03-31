@@ -79,8 +79,6 @@ use Contao\Model\Collection;
  * @method static integer countByFormats($val, array $opt=array())
  * @method static integer countBySkipIfDimensionsMatch($val, array $opt=array())
  * @method static integer countByLazyLoading($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ImageSizeModel extends Model
 {

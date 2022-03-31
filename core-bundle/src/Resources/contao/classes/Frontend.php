@@ -23,8 +23,6 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * Provide methods to manage front end controllers.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Frontend extends Controller
 {

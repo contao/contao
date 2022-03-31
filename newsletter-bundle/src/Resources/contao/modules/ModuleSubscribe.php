@@ -18,8 +18,6 @@ namespace Contao;
  * @property string $nl_template
  * @property string $nl_text
  * @property bool   $nl_hideChannels
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleSubscribe extends Module
 {

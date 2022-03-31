@@ -79,8 +79,6 @@ use Contao\Model\Collection;
  * @method static integer countByBbcode($val, array $opt=array())
  * @method static integer countByRequireLogin($val, array $opt=array())
  * @method static integer countByDisableCaptcha($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class NewsArchiveModel extends Model
 {

@@ -109,12 +109,10 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         //}
 
         if ($this->imagine instanceof ImagickImagine) {
-            /** @psalm-suppress UndefinedClass */
             return \in_array(strtoupper($format), \Imagick::queryFormats(strtoupper($format)), true);
         }
 
         if ($this->imagine instanceof GmagickImagine) {
-            /** @psalm-suppress UndefinedClass */
             return \in_array(strtoupper($format), (new \Gmagick())->queryformats(strtoupper($format)), true);
         }
 
@@ -127,13 +125,11 @@ class ImaginePreviewProvider implements PreviewProviderInterface
 
     private function openImagick(string $sourcePath, int $size, int $firstPage, int $lastPage): ImageInterface
     {
-        /** @psalm-suppress UndefinedClass */
         return $this->openMagick(\Imagick::class, $sourcePath, $size, $firstPage, $lastPage);
     }
 
     private function openGmagick(string $sourcePath, int $size, int $firstPage, int $lastPage): ImageInterface
     {
-        /** @psalm-suppress UndefinedClass */
         return $this->openMagick(\Gmagick::class, $sourcePath, $size, $firstPage, $lastPage);
     }
 

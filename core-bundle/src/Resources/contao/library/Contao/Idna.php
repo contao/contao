@@ -10,9 +10,6 @@
 
 namespace Contao;
 
-use TrueBV\Exception\LabelOutOfBoundsException;
-use TrueBV\Punycode;
-
 /**
  * An idna_encode adapter class
  *
@@ -24,8 +21,6 @@ use TrueBV\Punycode;
  *     echo Idna::encode('bürger.de');
  *     echo Idna::encodeEmail('mit@bürger.de');
  *     echo Idna::encodeUrl('http://www.bürger.de');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Idna
 {
@@ -43,16 +38,12 @@ class Idna
 			return '';
 		}
 
-		$objPunycode = new Punycode();
-
-		try
-		{
-			return $objPunycode->encode($strDomain);
-		}
-		catch (LabelOutOfBoundsException $e)
+		if (($encoded = idn_to_ascii($strDomain)) === false)
 		{
 			return '';
 		}
+
+		return $encoded;
 	}
 
 	/**
@@ -69,16 +60,12 @@ class Idna
 			return '';
 		}
 
-		$objPunycode = new Punycode();
-
-		try
-		{
-			return $objPunycode->decode($strDomain);
-		}
-		catch (LabelOutOfBoundsException $e)
+		if (($decoded = idn_to_utf8($strDomain)) === false)
 		{
 			return '';
 		}
+
+		return $decoded;
 	}
 
 	/**
