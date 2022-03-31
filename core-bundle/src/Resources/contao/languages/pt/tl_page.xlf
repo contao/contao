@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_page.redirectBack.1">
         <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>Redireccionar o membro de volta para a última página visitada em vez da página de redireccionamento.</target>
       </trans-unit>
       <trans-unit id="tl_page.fallback.0">
         <source>Language fallback</source>
@@ -90,15 +91,19 @@
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
+        <target>Favicon</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.1">
         <source>Here you can select a favicon for the website.</source>
+        <target>Aqui pode seleccionar um favicon para o website.</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.0">
         <source>Custom robots.txt content</source>
+        <target>Conteúdo robots.txt personalizado</target>
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.1">
         <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+        <target>Aqui pode inserir conteúdos robots.txt personalizados. Pode ser alargado automaticamente através de extensões.</target>
       </trans-unit>
       <trans-unit id="tl_page.dns.0">
         <source>Domain name</source>
@@ -130,6 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_page.adminEmail.1">
         <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Este endereço de correio electrónico será utilizado para enviar e receber mensagens do sistema.</target>
       </trans-unit>
       <trans-unit id="tl_page.dateFormat.0">
         <source>Date format</source>
@@ -241,6 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
         <source>The period after which the page should no longer be considered fresh by a shared cache.</source>
+        <target>O período após o qual a página já não deve ser considerada fresca por uma cache partilhada.</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysLoadFromCache.0">
         <source>Always load from shared cache</source>
@@ -256,6 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The period after which the page should no longer be considered fresh by a private cache.</source>
+        <target>O período após o qual a página já não deve ser considerada fresca por uma cache privada.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
@@ -335,6 +343,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
+        <target>Esconder a página se um membro estiver logado.</target>
       </trans-unit>
       <trans-unit id="tl_page.tabindex.0">
         <source>Tab index</source>
@@ -390,6 +399,7 @@
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Por favor escolha a página para a qual os membros serão redireccionados para estabelecer uma autenticação com dois factores.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -413,6 +423,7 @@
       </trans-unit>
       <trans-unit id="tl_page.website_legend">
         <source>Website settings</source>
+        <target>Configurações do website</target>
       </trans-unit>
       <trans-unit id="tl_page.global_legend">
         <source>Global settings</source>
