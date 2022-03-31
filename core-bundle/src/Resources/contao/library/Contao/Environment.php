@@ -188,7 +188,7 @@ class Environment
 	}
 
 	/**
-	 * Return the request URI [path]?[query] (e.g. /index.php?id=2)
+	 * Return the request URI [path]?[query] (e.g. /contao/index.php?id=2)
 	 *
 	 * @return string The request URI
 	 */
