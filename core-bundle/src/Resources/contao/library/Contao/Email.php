@@ -39,8 +39,6 @@ use Symfony\Component\Mime\Email as EmailMessage;
  * @property boolean $embedImages Whether to embed images inline
  * @property string  $logFile     The log file path
  * @property array   $failures    An array of rejected e-mail addresses
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Email
 {

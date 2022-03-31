@@ -21,8 +21,6 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
  * @property boolean $multiple
  * @property boolean $hideInput
  * @property integer $size
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class TextField extends Widget
 {

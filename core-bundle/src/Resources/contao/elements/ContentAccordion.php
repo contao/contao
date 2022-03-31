@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "accordion".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentAccordion extends ContentElement
 {

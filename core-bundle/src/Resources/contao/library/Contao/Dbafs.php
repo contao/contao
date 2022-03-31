@@ -23,8 +23,6 @@ use Symfony\Component\Filesystem\Path;
  * Usage:
  *
  *     $file = Dbafs::addResource('files/james-wilson.jpg');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Dbafs
 {

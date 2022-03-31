@@ -129,9 +129,6 @@ class XliffFileLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @psalm-suppress InvalidArrayOffset
-     */
     public function testOverridesKeysInLanguageArray(): void
     {
         $GLOBALS['TL_LANG']['MSC']['third'] = 'is-a-string';

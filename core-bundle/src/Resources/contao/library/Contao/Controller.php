@@ -44,8 +44,6 @@ use Symfony\Component\Finder\Glob;
  *     {
  *         return $this->getArticle(2);
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Controller extends System
 {
@@ -2278,8 +2276,6 @@ abstract class Controller extends System
 
 	/**
 	 * Return the IDs of all child records of a particular record (see #2475)
-	 *
-	 * @author Andreas Schempp
 	 *
 	 * @param mixed   $arrParentIds An array of parent IDs
 	 * @param string  $strTable     The table name

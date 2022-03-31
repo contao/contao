@@ -21,8 +21,6 @@ namespace Contao;
  *     echo Idna::encode('bürger.de');
  *     echo Idna::encodeEmail('mit@bürger.de');
  *     echo Idna::encodeUrl('http://www.bürger.de');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Idna
 {

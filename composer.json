@@ -299,7 +299,6 @@
             "@cs-fixer",
             "@service-linter",
             "@phpstan",
-            "@psalm",
             "@require-checker",
             "@monorepo-tools"
         ],
@@ -314,7 +313,6 @@
         "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
         "monorepo-tools": "@php tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
         "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyze --ansi",
-        "psalm": "@php tools/psalm/vendor/bin/psalm --no-suggestions",
         "require-checker": "@php tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json",
         "service-linter": "@php tools/service-linter/bin/lint-service-ids --ansi",
         "unit-tests": "@php vendor/bin/phpunit --colors=always"

@@ -20,8 +20,6 @@ namespace Contao;
  * @property bool     $com_requireLogin
  * @property string   $com_order
  * @property string   $com_template
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleComments extends Module
 {

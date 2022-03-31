@@ -212,8 +212,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_theme extends Backend
 {

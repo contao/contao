@@ -26,8 +26,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
  *
  *     $it = new InsertTags();
  *     echo $it->replace($text);
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InsertTags extends Controller
 {

@@ -24,8 +24,6 @@ namespace Contao;
  *         $username = Input::post('username');
  *         $password = Input::post('password');
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Input
 {

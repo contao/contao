@@ -27,8 +27,6 @@ trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\FileSelecto
  * @property boolean $filesOnly
  * @property string  $extensions
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
  *             Use the picker instead.
  */

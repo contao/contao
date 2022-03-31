@@ -70,8 +70,6 @@ use Contao\Model\Collection;
  * @method static integer countByMaxItems($val, array $opt=array())
  * @method static integer countByFeedBase($val, array $opt=array())
  * @method static integer countByDescription($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class NewsFeedModel extends Model
 {

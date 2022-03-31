@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Provide methods to handle file uploads in the back end.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FileUpload extends Backend
 {

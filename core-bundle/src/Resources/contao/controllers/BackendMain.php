@@ -20,8 +20,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Main back end controller.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendMain extends Backend
 {

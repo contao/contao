@@ -546,8 +546,6 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_style extends Backend
 {

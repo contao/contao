@@ -19,8 +19,6 @@ use Contao\Model\Collection;
  * @property array  $news_archives
  * @property string $news_featured
  * @property string $news_order
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsList extends ModuleNews
 {
