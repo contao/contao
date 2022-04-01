@@ -60,14 +60,17 @@ class FilesystemItemIterator implements \IteratorAggregate
     {
         $listing = $this->toArray();
 
-        match ($sortMode) {
-            SortMode::pathAscending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => strcasecmp($a->getPath(), $b->getPath())),
-            SortMode::pathDescending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => -strcasecmp($a->getPath(), $b->getPath())),
-            SortMode::pathNaturalAscending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => strnatcasecmp($a->getPath(), $b->getPath())),
-            SortMode::pathNaturalDescending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => -strnatcasecmp($a->getPath(), $b->getPath())),
-            SortMode::lastModifiedAscending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => $a->getLastModified() <=> $b->getLastModified()),
-            SortMode::lastModifiedDescending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => $b->getLastModified() <=> $a->getLastModified()),
-        };
+        usort(
+            $listing,
+            match ($sortMode) {
+                SortMode::pathAscending => static fn (FilesystemItem $a, FilesystemItem $b): int => strcasecmp($a->getPath(), $b->getPath()),
+                SortMode::pathDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => -strcasecmp($a->getPath(), $b->getPath()),
+                SortMode::pathNaturalAscending => static fn (FilesystemItem $a, FilesystemItem $b): int => strnatcasecmp($a->getPath(), $b->getPath()),
+                SortMode::pathNaturalDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => -strnatcasecmp($a->getPath(), $b->getPath()),
+                SortMode::lastModifiedAscending => static fn (FilesystemItem $a, FilesystemItem $b): int => $a->getLastModified() <=> $b->getLastModified(),
+                SortMode::lastModifiedDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => $b->getLastModified() <=> $a->getLastModified(),
+            },
+        );
 
         return new self($listing);
     }
