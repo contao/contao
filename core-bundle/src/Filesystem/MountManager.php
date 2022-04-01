@@ -16,6 +16,8 @@ use League\Flysystem\Config;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemReader;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Path;
 
 /**
@@ -30,10 +32,17 @@ use Symfony\Component\Filesystem\Path;
  */
 class MountManager
 {
+    private EventDispatcherInterface $eventDispatcher;
+
     /**
      * @var array<string, FilesystemAdapter>
      */
     private array $mounts = [];
+
+    public function __construct(EventDispatcherInterface $eventDispatcher = null)
+    {
+        $this->eventDispatcher = $eventDispatcher ?? new EventDispatcher();
+    }
 
     public function mount(FilesystemAdapter $adapter, string $path = ''): self
     {
@@ -369,6 +378,17 @@ class MountManager
         } catch (FilesystemException $e) {
             throw VirtualFilesystemException::unableToRetrieveMetadata($path, $e);
         }
+    }
+
+    public function getPublicUri(string $path, PublicFileUriOptions $options = null): ?string
+    {
+        /** @var FilesystemAdapter $adapter */
+        [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
+
+        $event = new PublicFileUriEvent($adapter, $adapterPath, $options ?? new PublicFileUriOptions());
+        $this->eventDispatcher->dispatch($event);
+
+        return $event->getPublicPath();
     }
 
     private function getAdapterAndPath(string $path): array

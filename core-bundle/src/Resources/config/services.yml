@@ -194,7 +194,7 @@ services:
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
         arguments:
-            - ~
+            - '@event_dispatcher'
 
     contao.filesystem.virtual_factory:
         class: Contao\CoreBundle\Filesystem\VirtualFilesystemFactory

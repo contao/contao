@@ -390,6 +390,14 @@ services:
         tags:
             - kernel.event_listener
 
+    contao.listener.public_file_uri:
+        class: Contao\CoreBundle\EventListener\PublicFileUriListener
+        arguments:
+            - '@contao.filesystem.adapter.files'
+            - '%contao.upload_path%'
+        tags:
+            - kernel.event_listener
+
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
         arguments:

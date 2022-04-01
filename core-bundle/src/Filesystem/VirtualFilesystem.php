@@ -263,6 +263,13 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
     }
 
+    public function getPublicUri($location, PublicFileUriOptions $options = null): ?string
+    {
+        $path = $this->resolve($location);
+
+        return $this->mountManager->getPublicUri($path, $options);
+    }
+
     /**
      * @param string|Uuid                          $location
      * @param 'fileExists'|'directoryExists'|'has' $method

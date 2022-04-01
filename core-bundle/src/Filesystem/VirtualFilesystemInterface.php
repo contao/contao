@@ -178,4 +178,11 @@ interface VirtualFilesystemInterface
      * @throws UnableToResolveUuidException
      */
     public function setExtraMetadata($location, array $metadata): void;
+
+    /**
+     * @param string|Uuid $location
+     *
+     * @throws UnableToResolveUuidException
+     */
+    public function getPublicUri($location, PublicFileUriOptions $options = null): ?string;
 }
