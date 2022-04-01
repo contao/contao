@@ -99,7 +99,7 @@ class ModuleListing extends Module
 
 		// Add the search menu
 		$strWhere = '';
-		$varKeyword = '';
+		$varKeyword = array();
 		$strOptions = '';
 		$strSearch = Input::get('search');
 		$strFor = Input::get('for');
@@ -120,7 +120,7 @@ class ModuleListing extends Module
 
 			if ($strSearch && $strFor)
 			{
-				$varKeyword = '%' . $strFor . '%';
+				$varKeyword[] = '%' . $strFor . '%';
 				$strWhere = (!$this->list_where ? " WHERE " : " AND ") . Database::quoteIdentifier($strSearch) . " LIKE ?";
 			}
 
@@ -141,7 +141,7 @@ class ModuleListing extends Module
 		}
 
 		$strQuery .= $strWhere;
-		$objTotal = $this->Database->prepare($strQuery)->execute(...($varKeyword ? array($varKeyword) : array()));
+		$objTotal = $this->Database->prepare($strQuery)->execute(...$varKeyword);
 
 		// Validate the page count
 		$id = 'page_l' . $this->id;
@@ -227,7 +227,7 @@ class ModuleListing extends Module
 			$objDataStmt->limit($this->perPage, (($page - 1) * $per_page));
 		}
 
-		$objData = $objDataStmt->execute(...($varKeyword ? array($varKeyword) : array()));
+		$objData = $objDataStmt->execute(...$varKeyword);
 
 		// Prepare the URL
 		$strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
