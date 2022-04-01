@@ -155,7 +155,7 @@ class ModuleListing extends Module
 		}
 
 		// Get the selected records
-		$strQuery = "SELECT " . Database::quoteIdentifier($this->strPk) . ", " . implode(', ', array_map('Database::quoteIdentifier', $arrFields));
+		$strQuery = "SELECT " . Database::quoteIdentifier($this->strPk) . ", " . implode(', ', array_map(array(Database::class, 'quoteIdentifier'), $arrFields));
 
 		if ($this->list_info_where)
 		{
@@ -365,7 +365,7 @@ class ModuleListing extends Module
 		$this->list_info = StringUtil::deserialize($this->list_info);
 		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_info_where);
 
-		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map('Database::quoteIdentifier', StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
+		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map(array(Database::class, 'quoteIdentifier'), StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
 									->limit(1)
 									->execute($id);
 
