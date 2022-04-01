@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
+use Contao\CoreBundle\Filesystem\SortMode;
 use Contao\CoreBundle\Tests\TestCase;
 
 class FilesystemItemIteratorTest extends TestCase
@@ -67,8 +68,8 @@ class FilesystemItemIteratorTest extends TestCase
 
     public function testSort(): void
     {
-        $fileA = new FilesystemItem(true, 'foo/a', 100);
-        $fileB = new FilesystemItem(true, 'foo/b', 200);
+        $fileA = new FilesystemItem(true, 'foo/img2', 100);
+        $fileB = new FilesystemItem(true, 'foo/img10', 200);
         $fileC = new FilesystemItem(true, 'bar/a', 300);
         $fileD = new FilesystemItem(true, 'bar/b', 400);
         $dirFoo = new FilesystemItem(false, 'foo', null);
@@ -76,28 +77,27 @@ class FilesystemItemIteratorTest extends TestCase
 
         $iterator = new FilesystemItemIterator([$fileA, $fileB, $fileC, $fileD, $dirFoo, $dirBar]);
 
-        $sortedByPathAsc = $iterator->sort(FilesystemItemIterator::SORT_BY_PATH_ASC);
-        $sortedByPathDesc = $sortedByPathAsc->sort(FilesystemItemIterator::SORT_BY_PATH_DESC);
-        $sortedByDateAsc = $sortedByPathDesc->sort(FilesystemItemIterator::SORT_BY_LAST_MODIFIED_ASC);
-        $sortedByDateDesc = $sortedByDateAsc->sort(FilesystemItemIterator::SORT_BY_LAST_MODIFIED_DESC);
+        $sortedByPathAsc = $iterator->sort(SortMode::pathAscending);
+        $sortedByPathDesc = $sortedByPathAsc->sort(SortMode::pathDescending);
+        $sortedByPathNaturalAsc = $sortedByPathDesc->sort(SortMode::pathNaturalAscending);
+        $sortedByPathNaturalDesc = $sortedByPathNaturalAsc->sort(SortMode::pathNaturalDescending);
+        $sortedByDateAsc = $sortedByPathNaturalDesc->sort(SortMode::lastModifiedAscending);
+        $sortedByDateDesc = $sortedByDateAsc->sort(SortMode::lastModifiedDescending);
 
-        $expectedByPath = [$dirBar, $fileC, $fileD, $dirFoo, $fileA, $fileB];
+        $expectedByPath = [$dirBar, $fileC, $fileD, $dirFoo, $fileB, $fileA];
 
         $this->assertSame($expectedByPath, iterator_to_array($sortedByPathAsc));
         $this->assertSame(array_reverse($expectedByPath), iterator_to_array($sortedByPathDesc));
+
+        $expectedByNaturalPath = [$dirBar, $fileC, $fileD, $dirFoo, $fileA, $fileB];
+
+        $this->assertSame($expectedByNaturalPath, iterator_to_array($sortedByPathNaturalAsc));
+        $this->assertSame(array_reverse($expectedByNaturalPath), iterator_to_array($sortedByPathNaturalDesc));
 
         $expectedByDate = [$dirFoo, $fileA, $fileB, $fileC, $fileD, $dirBar];
 
         $this->assertSame($expectedByDate, iterator_to_array($sortedByDateAsc));
         $this->assertSame(array_reverse($expectedByDate), iterator_to_array($sortedByDateDesc));
-    }
-
-    public function testThrowsIfSortingModeIsNotSupported(): void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unsupported sorting mode "foobar", must be one of "name_asc", "name_desc", "date_asc", "date_desc".');
-
-        (new FilesystemItemIterator([]))->sort('foobar');
     }
 
     public function testAny(): void

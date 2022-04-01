@@ -17,17 +17,6 @@ namespace Contao\CoreBundle\Filesystem;
  */
 class FilesystemItemIterator implements \IteratorAggregate
 {
-    public const SORT_BY_PATH_ASC = 'name_asc';
-    public const SORT_BY_PATH_DESC = 'name_desc';
-    public const SORT_BY_LAST_MODIFIED_ASC = 'date_asc';
-    public const SORT_BY_LAST_MODIFIED_DESC = 'date_desc';
-
-    public static array $supportedSortingModes = [
-        self::SORT_BY_PATH_ASC,
-        self::SORT_BY_PATH_DESC,
-        self::SORT_BY_LAST_MODIFIED_ASC,
-        self::SORT_BY_LAST_MODIFIED_DESC,
-    ];
     /**
      * @var iterable<FilesystemItem>
      */
@@ -67,16 +56,17 @@ class FilesystemItemIterator implements \IteratorAggregate
         return $this->filter(static fn (FilesystemItem $item) => !$item->isFile());
     }
 
-    public function sort(string $sortingMode = self::SORT_BY_PATH_ASC): self
+    public function sort(SortMode $sortMode = SortMode::pathAscending): self
     {
         $listing = $this->toArray();
 
-        match ($sortingMode) {
-            self::SORT_BY_PATH_ASC => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => strnatcasecmp($a->getPath(), $b->getPath())),
-            self::SORT_BY_PATH_DESC => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => -strnatcasecmp($a->getPath(), $b->getPath())),
-            self::SORT_BY_LAST_MODIFIED_ASC => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => $a->getLastModified() <=> $b->getLastModified()),
-            self::SORT_BY_LAST_MODIFIED_DESC => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => $b->getLastModified() <=> $a->getLastModified()),
-            default => throw new \InvalidArgumentException(sprintf('Unsupported sorting mode "%s", must be one of "%s".', $sortingMode, implode('", "', self::$supportedSortingModes)))
+        match ($sortMode) {
+            SortMode::pathAscending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => strcasecmp($a->getPath(), $b->getPath())),
+            SortMode::pathDescending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => -strcasecmp($a->getPath(), $b->getPath())),
+            SortMode::pathNaturalAscending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => strnatcasecmp($a->getPath(), $b->getPath())),
+            SortMode::pathNaturalDescending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => -strnatcasecmp($a->getPath(), $b->getPath())),
+            SortMode::lastModifiedAscending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => $a->getLastModified() <=> $b->getLastModified()),
+            SortMode::lastModifiedDescending => usort($listing, static fn (FilesystemItem $a, FilesystemItem $b): int => $b->getLastModified() <=> $a->getLastModified()),
         };
 
         return new self($listing);
