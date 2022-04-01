@@ -141,7 +141,7 @@ class ModuleListing extends Module
 		}
 
 		$strQuery .= $strWhere;
-		$objTotal = $this->Database->prepare($strQuery)->execute($varKeyword);
+		$objTotal = $this->Database->prepare($strQuery)->execute(...($varKeyword ? array($varKeyword) : array()));
 
 		// Validate the page count
 		$id = 'page_l' . $this->id;
@@ -227,7 +227,7 @@ class ModuleListing extends Module
 			$objDataStmt->limit($this->perPage, (($page - 1) * $per_page));
 		}
 
-		$objData = $objDataStmt->execute($varKeyword);
+		$objData = $objDataStmt->execute(...($varKeyword ? array($varKeyword) : array()));
 
 		// Prepare the URL
 		$strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
