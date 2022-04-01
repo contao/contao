@@ -65,6 +65,41 @@ class FilesystemItemIteratorTest extends TestCase
         $this->assertSameItems(['bar', 'baz.txt'], $iterator->filter($customFilter)->toArray());
     }
 
+    public function testSort(): void
+    {
+        $fileA = new FilesystemItem(true, 'foo/a', 100);
+        $fileB = new FilesystemItem(true, 'foo/b', 200);
+        $fileC = new FilesystemItem(true, 'bar/a', 300);
+        $fileD = new FilesystemItem(true, 'bar/b', 400);
+        $dirFoo = new FilesystemItem(false, 'foo', null);
+        $dirBar = new FilesystemItem(false, 'bar', 500);
+
+        $iterator = new FilesystemItemIterator([$fileA, $fileB, $fileC, $fileD, $dirFoo, $dirBar]);
+
+        $sortedByPathAsc = $iterator->sort(FilesystemItemIterator::SORT_BY_PATH_ASC);
+        $sortedByPathDesc = $sortedByPathAsc->sort(FilesystemItemIterator::SORT_BY_PATH_DESC);
+        $sortedByDateAsc = $sortedByPathDesc->sort(FilesystemItemIterator::SORT_BY_LAST_MODIFIED_ASC);
+        $sortedByDateDesc = $sortedByDateAsc->sort(FilesystemItemIterator::SORT_BY_LAST_MODIFIED_DESC);
+
+        $expectedByPath = [$dirBar, $fileC, $fileD, $dirFoo, $fileA, $fileB];
+
+        $this->assertSame($expectedByPath, iterator_to_array($sortedByPathAsc));
+        $this->assertSame(array_reverse($expectedByPath), iterator_to_array($sortedByPathDesc));
+
+        $expectedByDate = [$dirFoo, $fileA, $fileB, $fileC, $fileD, $dirBar];
+
+        $this->assertSame($expectedByDate, iterator_to_array($sortedByDateAsc));
+        $this->assertSame(array_reverse($expectedByDate), iterator_to_array($sortedByDateDesc));
+    }
+
+    public function testThrowsIfSortingModeIsNotSupported(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unsupported sorting mode "foobar", must be one of "name_asc", "name_desc", "date_asc", "date_desc".');
+
+        (new FilesystemItemIterator([]))->sort('foobar');
+    }
+
     /**
      * @dataProvider provideInvalidItems
      *
