@@ -26,7 +26,7 @@ class MountManagerTest extends TestCase
 {
     public function testMountAdapters(): void
     {
-        $manager = new MountManager($rootAdapter = new InMemoryFilesystemAdapter());
+        $manager = $this->getMountManagerWithRootAdapter($rootAdapter = new InMemoryFilesystemAdapter());
 
         $this->assertSame(
             [
@@ -73,7 +73,7 @@ class MountManagerTest extends TestCase
         $filesAdapter = $this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod);
         $filesMediaAdapter = $this->mockFilesystemAdapterWithCall($delegateMethod, ['foo', ...$delegateArguments], $delegateReturn);
 
-        $manager = new MountManager($rootAdapter);
+        $manager = $this->getMountManagerWithRootAdapter($rootAdapter);
         $manager->mount($filesAdapter, 'files');
         $manager->mount($filesMediaAdapter, 'files/media');
 
@@ -92,7 +92,7 @@ class MountManagerTest extends TestCase
         $rootAdapter = $this->mockFilesystemAdapterWithCall($delegateMethod, ['some/place', ...$delegateArguments], $delegateReturn);
         $filesAdapter = $this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod);
 
-        $manager = new MountManager($rootAdapter);
+        $manager = $this->getMountManagerWithRootAdapter($rootAdapter);
         $manager->mount($filesAdapter, 'files');
 
         [$method, $arguments, $return] = $call;
@@ -288,7 +288,7 @@ class MountManagerTest extends TestCase
             ->willThrowException($flysystemException)
         ;
 
-        $manager = new MountManager($this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod));
+        $manager = $this->getMountManagerWithRootAdapter($this->mockFilesystemAdapterThatDoesNotReceiveACall($delegateMethod));
         $manager->mount($adapter, 'some');
 
         [$method, $arguments,] = $call;
@@ -384,7 +384,7 @@ class MountManagerTest extends TestCase
         $filesMediaExtraAdapter->write('cat.avif', '', $config);
         $filesMediaExtraAdapter->write('videos/funny.mov', '', $config);
 
-        $manager = new MountManager($rootAdapter);
+        $manager = $this->getMountManagerWithRootAdapter($rootAdapter);
         $manager->mount($filesSpecialAdapter, 'files/special');
         $manager->mount($filesMediaExtraAdapter, 'files/media/extra');
 
@@ -530,7 +530,7 @@ class MountManagerTest extends TestCase
 
     public function testEarlyReturnsForExistenceChecks(): void
     {
-        $manager = new MountManager(new InMemoryFilesystemAdapter());
+        $manager = $this->getMountManagerWithRootAdapter(new InMemoryFilesystemAdapter());
 
         $this->assertFalse($manager->fileExists(''));
         $this->assertFalse($manager->directoryExists(''));
@@ -549,11 +549,16 @@ class MountManagerTest extends TestCase
         $rootAdapter->createDirectory('b', $config);
         $rootAdapter->write('c', '', $config);
 
-        $manager = new MountManager($rootAdapter);
+        $manager = $this->getMountManagerWithRootAdapter($rootAdapter);
 
         $this->assertFalse($manager->directoryExists('a'));
         $this->assertTrue($manager->directoryExists('b'));
         $this->assertFalse($manager->directoryExists('c'));
+    }
+
+    private function getMountManagerWithRootAdapter(FilesystemAdapter $adapter): MountManager
+    {
+        return (new MountManager())->mount($adapter);
     }
 
     private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter

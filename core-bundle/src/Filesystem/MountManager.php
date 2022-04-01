@@ -35,18 +35,13 @@ class MountManager
      */
     private array $mounts = [];
 
-    public function __construct(FilesystemAdapter $rootAdapter = null)
-    {
-        if (null !== $rootAdapter) {
-            $this->mounts = ['' => $rootAdapter];
-        }
-    }
-
-    public function mount(FilesystemAdapter $adapter, string $path): void
+    public function mount(FilesystemAdapter $adapter, string $path = ''): self
     {
         $this->mounts[$path] = $adapter;
 
         krsort($this->mounts);
+
+        return $this;
     }
 
     /**
