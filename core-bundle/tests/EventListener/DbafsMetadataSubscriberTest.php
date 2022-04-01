@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\DbafsMetadataSubscriber;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
 use Contao\CoreBundle\Tests\TestCase;
@@ -52,11 +53,12 @@ class DbafsMetadataSubscriberTest extends TestCase
         $this->assertSame(0.3, $importantPart->getWidth());
         $this->assertSame(0.4, $importantPart->getHeight());
 
-        $metadata = $extraMetadata['metadata']['de'] ?? null;
+        $fileMetadata = $extraMetadata['metadata'] ?? null;
+        $this->assertInstanceOf(MetadataBag::class, $fileMetadata);
 
-        $this->assertInstanceOf(Metadata::class, $metadata);
-        $this->assertSame('my title', $metadata->getTitle());
-        $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $metadata->getUuid());
+        $this->assertInstanceOf(Metadata::class, $fileMetadata['de']);
+        $this->assertSame('my title', $fileMetadata['de']->getTitle());
+        $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $fileMetadata['de']->getUuid());
     }
 
     public function testOnlyEnhancesMetadataOnDefaultTable(): void
@@ -111,12 +113,12 @@ class DbafsMetadataSubscriberTest extends TestCase
         ];
 
         $metadata = [
-            'metadata' => [
+            'metadata' => new MetadataBag([
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',
                     Metadata::VALUE_UUID => '64c738b4-5aad-11ec-bf63-0242ac130002',
                 ]),
-            ],
+            ]),
         ];
 
         $event = new StoreDbafsMetadataEvent('tl_files', $rowData, $metadata);
@@ -146,12 +148,12 @@ class DbafsMetadataSubscriberTest extends TestCase
     {
         return [
             'importantPart' => new ImportantPart(0.1, 0.2, 0.3, 0.4),
-            'metadata' => [
+            'metadata' => new MetadataBag([
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',
                     Metadata::VALUE_UUID => 'f372c7d8-5aab-11ec-bf63-0242ac130002',
                 ]),
-            ],
+            ]),
         ];
     }
 }
