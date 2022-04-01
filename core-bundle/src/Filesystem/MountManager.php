@@ -422,7 +422,9 @@ class MountManager
             // If $deep is true we shallow-read directories recursively, because
             // there could be another adapter mounted further down in the tree.
             foreach ($adapter->listContents($adapterPath, FilesystemReader::LIST_SHALLOW) as $flysystemItem) {
-                yield FilesystemItem::fromStorageAttributes($flysystemItem, $prefix);
+                yield FilesystemItem::fromStorageAttributes($flysystemItem, $prefix)
+                    ->withPublicUri(fn () => $this->getPublicUri(Path::join($prefix, $flysystemItem->path())))
+                ;
 
                 if ($deep && $flysystemItem->isDir()) {
                     yield from $this->doListContents(Path::join($prefix, $flysystemItem->path()), true);
