@@ -83,6 +83,34 @@ class FilesystemItemIterator implements \IteratorAggregate
     }
 
     /**
+     * @param callable(FilesystemItem):bool $condition
+     */
+    public function any(callable $condition): bool
+    {
+        foreach ($this as $item) {
+            if ($condition($item)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param callable(FilesystemItem):bool $condition
+     */
+    public function all(callable $condition): bool
+    {
+        foreach ($this as $item) {
+            if (!$condition($item)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @return \Traversable<FilesystemItem>
      */
     public function getIterator(): \Traversable

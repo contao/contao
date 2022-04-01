@@ -100,6 +100,34 @@ class FilesystemItemIteratorTest extends TestCase
         (new FilesystemItemIterator([]))->sort('foobar');
     }
 
+    public function testAny(): void
+    {
+        $iterator = new FilesystemItemIterator([
+            new FilesystemItem(true, 'foo.jpg'),
+            new FilesystemItem(false, 'bar'),
+            new FilesystemItem(true, 'baz.txt'),
+            new FilesystemItem(false, 'foobar'),
+        ]);
+
+        $this->assertTrue($iterator->any(static fn (FilesystemItem $f): bool => $f->isFile()));
+        $this->assertTrue($iterator->any(static fn (FilesystemItem $f): bool => str_starts_with($f->getPath(), 'ba')));
+        $this->assertFalse($iterator->any(static fn (FilesystemItem $f): bool => str_starts_with($f->getPath(), 'x')));
+    }
+
+    public function testAll(): void
+    {
+        $iterator = new FilesystemItemIterator([
+            new FilesystemItem(true, 'foo.jpg'),
+            new FilesystemItem(true, 'foo.csv'),
+            new FilesystemItem(true, 'baz.txt'),
+            new FilesystemItem(true, 'foo_bar'),
+        ]);
+
+        $this->assertTrue($iterator->all(static fn (FilesystemItem $f): bool => $f->isFile()));
+        $this->assertTrue($iterator->all(static fn (FilesystemItem $f): bool => 7 === \strlen($f->getPath())));
+        $this->assertFalse($iterator->all(static fn (FilesystemItem $f): bool => str_starts_with($f->getPath(), 'foo')));
+    }
+
     /**
      * @dataProvider provideInvalidItems
      *
