@@ -86,7 +86,6 @@ class MetadataBagTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Setting metadata to a Contao\CoreBundle\File\MetadataBag is not supported.');
 
-        /** @phpstan-ignore-next-line */
         $bag['de'] = new Metadata([]);
     }
 
@@ -97,7 +96,54 @@ class MetadataBagTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Unsetting metadata from a Contao\CoreBundle\File\MetadataBag is not supported.');
 
-        /** @phpstan-ignore-next-line */
         unset($bag['en']);
+    }
+
+    /**
+     * @dataProvider provideInvalidElements
+     */
+    public function testPreventsConstructingWithInvalidObjects(array $elements, string $type): void
+    {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage("Contao\\CoreBundle\\File\\MetadataBag can only contain elements of type Contao\\CoreBundle\\File\\Metadata, got $type.");
+
+        new MetadataBag($elements);
+    }
+
+    public function provideInvalidElements(): \Generator
+    {
+        yield 'not an object' => [
+            ['en' => new Metadata([]), 'de' => 'foo'],
+            'string',
+        ];
+
+        yield 'invalid object' => [[
+            'en' => new Metadata([]), 'de' => new \stdClass(), ],
+            \stdClass::class,
+        ];
+    }
+
+    /**
+     * @dataProvider provideInvalidLocales
+     */
+    public function testPreventsConstructingWithInvalidLocales(array $locales, string $type): void
+    {
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage("Contao\\CoreBundle\\File\\MetadataBag can only be constructed with default locales of type string, got $type.");
+
+        new MetadataBag([], $locales);
+    }
+
+    public function provideInvalidLocales(): \Generator
+    {
+        yield 'contains non-string literal' => [
+            ['en', 42],
+            'integer',
+        ];
+
+        yield 'contains objects' => [
+            ['en', new \stdClass()],
+            \stdClass::class,
+        ];
     }
 }

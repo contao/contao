@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\File;
 /**
  * This class acts as a collection for \Contao\CoreBundle\File\Metadata
  * instances of different locales for the same entity.
+ *
+ * @implements \ArrayAccess<string, Metadata>
  */
 class MetadataBag implements \ArrayAccess
 {
@@ -26,19 +28,17 @@ class MetadataBag implements \ArrayAccess
     {
         foreach ($metadata as $item) {
             if (!$item instanceof Metadata) {
-                /** @phpstan-ignore-next-line */
                 $type = \is_object($item) ? \get_class($item) : \gettype($item);
 
                 throw new \TypeError(sprintf('%s can only contain elements of type %s, got %s.', __CLASS__, Metadata::class, $type));
             }
         }
 
-        foreach ($this->defaultLocales as $locale) {
+        foreach ($defaultLocales as $locale) {
             if (!\is_string($locale)) {
-                /** @phpstan-ignore-next-line */
                 $type = \is_object($locale) ? \get_class($locale) : \gettype($locale);
 
-                throw new \TypeError(sprintf('%s can only contain locales of type string, got %s.', __CLASS__, $type));
+                throw new \TypeError(sprintf('%s can only be constructed with default locales of type string, got %s.', __CLASS__, $type));
             }
         }
     }
