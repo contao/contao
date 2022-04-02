@@ -366,20 +366,14 @@ class SimpleTokenParserTest extends TestCase
             true,
         ];
 
-        yield 'Test unknown token is equal to empty string' => [
-            "foo === ''",
+        yield 'Test unknown token is equal to be null' => [
+            'foo === null',
             'Tried to evaluate unknown simple token(s): "foo".',
             true,
         ];
 
         yield 'Test single unknown token (array test)' => [
             'foo in [1, 2, 3]',
-            'Tried to evaluate unknown simple token(s): "foo".',
-            false,
-        ];
-
-        yield 'Test single unknown token (regex test)' => [
-            'foo matches "/whatever/"',
             'Tried to evaluate unknown simple token(s): "foo".',
             false,
         ];
@@ -622,6 +616,7 @@ class SimpleTokenParserTest extends TestCase
         yield 'Unknown operator (=)' => ['{if foo="bar"}{endif}'];
         yield 'Unknown operator (====)' => ['{if foo===="bar"}{endif}'];
         yield 'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'];
+        yield 'Unknown subject with match' => ['{if baz matches "/whatever/"}{endif}'];
     }
 
     public function testParseSimpleTokenWithCustomExtensionProvider(): void
