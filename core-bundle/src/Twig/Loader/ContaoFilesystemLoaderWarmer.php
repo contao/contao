@@ -107,7 +107,10 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 
         foreach ($this->loader->getInheritanceChains() as $chain) {
             foreach ($chain as $path => $name) {
-                $mappings[Path::getDirectory(Path::makeRelative($path, $targetDir))] = ContaoTwigUtil::parseContaoName($name)[0];
+                [$namespace, $file] = ContaoTwigUtil::parseContaoName($name);
+                $templateDir = preg_replace('%(.*)/'.preg_quote($file, '%').'%', '$1', $path);
+
+                $mappings[Path::makeRelative($templateDir, $targetDir)] = $namespace;
             }
         }
 
