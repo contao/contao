@@ -366,8 +366,8 @@ class SimpleTokenParserTest extends TestCase
             true,
         ];
 
-        yield 'Test unknown token is equal to be null' => [
-            'foo === null',
+        yield 'Test unknown token is equal to empty string' => [
+            "foo === ''",
             'Tried to evaluate unknown simple token(s): "foo".',
             true,
         ];
@@ -379,7 +379,8 @@ class SimpleTokenParserTest extends TestCase
         ];
 
         yield 'Test single unknown token (regex test)' => [
-            'foo matches "/whatever/"', 'Tried to evaluate unknown simple token(s): "foo".',
+            'foo matches "/whatever/"',
+            'Tried to evaluate unknown simple token(s): "foo".',
             false,
         ];
 

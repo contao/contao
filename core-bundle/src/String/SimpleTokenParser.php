@@ -160,7 +160,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
             // Define variables that weren't provided with the value 'null'
             $data = array_merge(
-                array_combine($unmatchedVariables, array_fill(0, \count($unmatchedVariables), null)),
+                array_combine($unmatchedVariables, array_fill(0, \count($unmatchedVariables), '')),
                 $data
             );
         }
