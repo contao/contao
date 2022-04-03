@@ -15,7 +15,9 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\FragmentTemplate;
+use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\CoreBundle\Twig\Interop\ContextFactory;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\FrontendTemplate;
 use Contao\Model;
 use Contao\PageModel;
@@ -28,6 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
     protected array $options = [];
+    private string|null $view = null;
 
     public function setFragmentOptions(array $options): void
     {
@@ -43,6 +46,8 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
         $services['request_stack'] = RequestStack::class;
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
+        $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
+        $services['contao.twig.interop.context_factory'] = ContextFactory::class;
 
         return $services;
     }
@@ -59,36 +64,66 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * Creates a template by name or from the "customTpl" field of the model.
+     * Creates a FragmentTemplate container object by template name or from the
+     * "customTpl" field of the model and registers the effective template as
+     * default view when using render().
+     *
+     * Calling getResponse() method on the returned object will internally call
+     * render() with the set parameters and return the response.
+     *
+     * Note: The $fallbackTemplateName argument will be removed in Contao 6;
+     * always set a template via the fragment options, instead.
      */
-    protected function createTemplate(Model $model, string $templateName): Template
+    protected function createTemplate(Model $model, string|null $fallbackTemplateName = null): FragmentTemplate
     {
-        if (isset($this->options['template'])) {
-            $templateName = $this->options['template'];
+        $templateName = $this->getTemplateName($model, $fallbackTemplateName);
+
+        if ($isLegacyTemplate = $this->isLegacyTemplate($templateName)) {
+            // TODO: enable deprecation once existing fragments have been adjusted
+            // trigger_deprecation('contao/core-bundle', '5.0', 'Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
         }
 
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        // Allow calling render() without a view
+        $this->view = !$isLegacyTemplate ? "@Contao/$templateName.html.twig" : null;
 
-        if ($model->customTpl) {
-            // Use the custom template unless it is a back end request
-            if (null === $request || !$this->container->get('contao.routing.scope_matcher')->isBackendRequest($request)) {
-                $templateName = $model->customTpl;
+        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($templateName, $isLegacyTemplate): Response {
+            if ($isLegacyTemplate) {
+                // Render using the legacy framework
+                $legacyTemplate = $this->container->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
+                $legacyTemplate->setData($template->getData());
+
+                $response = $legacyTemplate->getResponse();
+
+                if (null !== $preBuiltResponse) {
+                    return $preBuiltResponse->setContent($response->getContent());
+                }
+
+                $this->markResponseForInternalCaching($response);
+
+                return $response;
             }
+
+            // Directly render with Twig
+            $context = $this->container->get('contao.twig.interop.context_factory')->fromData($template->getData());
+
+            return $this->render($template->getName(), $context, $preBuiltResponse);
+        };
+
+        $template = new FragmentTemplate($templateName, $onGetResponse);
+
+        if ($isLegacyTemplate) {
+            $template->setData((array) $model->row());
         }
-
-        $templateClass = FragmentTemplate::class;
-
-        // Current request is the main request (e.g. ESI fragment), so we have to replace
-        // insert tags etc. on the template output
-        if ($request === $this->container->get('request_stack')->getMainRequest()) {
-            $templateClass = FrontendTemplate::class;
-        }
-
-        /** @var Template $template */
-        $template = $this->container->get('contao.framework')->createInstance($templateClass, [$templateName]);
-        $template->setData($model->row());
 
         return $template;
+    }
+
+    /**
+     * @internal
+     */
+    protected function isLegacyTemplate(string $templateName): bool
+    {
+        return !str_contains($templateName, '/');
     }
 
     protected function addHeadlineToTemplate(Template $template, array|string|null $headline): void
@@ -139,8 +174,19 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return Container::underscore($className);
     }
 
-    protected function render(string $view, array $parameters = [], Response $response = null): Response
+    /**
+     * Renders a template. If $view is set to null, the default template of
+     * this fragment will rendered.
+     *
+     * By default, the returned response will have the appropriate headers set,
+     * that allow our SubrequestCacheSubscriber to merge it with others of the
+     * same page. Pass a prebuilt Response if you want to have full control -
+     * no headers will be set then.
+     */
+    protected function render(string|null $view = null, array $parameters = [], Response $response = null): Response
     {
+        $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');
+
         if (null === $response) {
             $response = new Response();
 
@@ -157,5 +203,23 @@ abstract class AbstractFragmentController extends AbstractController implements 
     {
         $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         $response->headers->remove('Cache-Control');
+    }
+
+    private function getTemplateName(Model $model, string|null $fallbackTemplateName): string
+    {
+        // If set, use the custom template unless it is a back end request
+        if ($model->customTpl && !$this->isBackendScope()) {
+            return $model->customTpl;
+        }
+
+        $definedTemplateName = $this->options['template'] ?? null;
+
+        // Always use the defined name for legacy templates and for modern
+        // templates that exist (= those that do not need to have a fallback)
+        if (null !== $definedTemplateName && ($this->isLegacyTemplate($definedTemplateName) || $this->container->get('contao.twig.filesystem_loader')->exists("@Contao/$definedTemplateName.html.twig"))) {
+            return $definedTemplateName;
+        }
+
+        return $fallbackTemplateName ?? throw new \InvalidArgumentException('No template was set in the fragment options.');
     }
 }
