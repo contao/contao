@@ -48,7 +48,7 @@ class RelLightboxMigration extends AbstractMigration
             }
 
             $test = $this->connection->fetchOne(
-                "SELECT TRUE FROM $table WHERE `$column` REGEXP ' rel="lightbox(\\\\[([^\\\\]]+)\\\\])?\"' LIMIT 1;"
+                "SELECT TRUE FROM $table WHERE `$column` REGEXP ' rel=\"lightbox(\\\\[([^\\\\]]+)\\\\])?\"' LIMIT 1;"
             );
 
             if (false !== $test) {
@@ -63,7 +63,7 @@ class RelLightboxMigration extends AbstractMigration
     {
         foreach ($this->getTargets() as [$table, $column]) {
             $values = $this->connection->fetchAllKeyValue(
-                "SELECT id, value FROM $table WHERE `$column` REGEXP ' rel="lightbox(\\\\[([^\\\\]]+)\\\\])?\"'"
+                "SELECT id, value FROM $table WHERE `$column` REGEXP ' rel=\"lightbox(\\\\[([^\\\\]]+)\\\\])?\"'"
             );
 
             foreach ($values as $id => $value) {
