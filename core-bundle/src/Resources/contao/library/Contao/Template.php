@@ -62,6 +62,8 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property boolean      $trustedDevicesEnabled
  * @property array        $trustedDevices
  * @property string       $currentDevice
+ *
+ * @deprecated this class will be removed in Contao 6, use Twig templates instead
  */
 abstract class Template extends Controller
 {
