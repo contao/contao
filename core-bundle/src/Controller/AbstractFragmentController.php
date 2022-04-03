@@ -26,6 +26,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -230,9 +231,9 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return parent::render($view, $parameters, $response);
     }
 
-    protected function isBackendScope(): bool
+    protected function isBackendScope(Request $request = null): bool
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
+        $request ??= $this->container->get('request_stack')->getCurrentRequest();
 
         return null !== $request && $this->container->get('contao.routing.scope_matcher')->isBackendRequest($request);
     }
