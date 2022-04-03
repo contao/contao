@@ -616,7 +616,6 @@ class SimpleTokenParserTest extends TestCase
         yield 'Unknown operator (=)' => ['{if foo="bar"}{endif}'];
         yield 'Unknown operator (====)' => ['{if foo===="bar"}{endif}'];
         yield 'Unknown operator (<==)' => ['{if foo<=="bar"}{endif}'];
-        yield 'Unknown subject with match' => ['{if baz matches "/whatever/"}{endif}'];
     }
 
     public function testParseSimpleTokenWithCustomExtensionProvider(): void
