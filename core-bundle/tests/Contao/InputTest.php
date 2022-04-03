@@ -30,6 +30,8 @@ class InputTest extends TestCase
     {
         parent::setUp();
 
+        $this->backupServerEnvGetPost();
+
         include __DIR__.'/../../src/Resources/contao/config/default.php';
 
         $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
@@ -52,20 +54,221 @@ class InputTest extends TestCase
     {
         unset($GLOBALS['TL_CONFIG']);
 
-        $this->resetStaticProperties([System::class]);
+        $this->restoreServerEnvGetPost();
+        $this->resetStaticProperties([System::class, Input::class]);
 
         parent::tearDown();
     }
 
     /**
+     * @dataProvider encodeInputProvider
+     */
+    public function testCleansTheGlobalArrays(string $source, string $expected): void
+    {
+        $_GET = $_POST = $_COOKIE = [$source => 1];
+
+        Input::initialize();
+
+        $this->assertSame($expected, array_keys($_GET)[0]);
+        $this->assertSame($expected, array_keys($_POST)[0]);
+        $this->assertSame($expected, array_keys($_COOKIE)[0]);
+    }
+
+    /**
+     * @dataProvider encodeInputProvider
+     */
+    public function testGetAndPostEncoded(string $source, string $expected, string|null $expectedEncoded = null): void
+    {
+        $expectedEncoded ??= $expected;
+
+        $_GET = $_POST = $_COOKIE = ['key' => $source];
+
+        Config::set('allowedTags', '');
+        Config::set('allowedAttributes', '');
+
+        $this->assertSame($expected, Input::get('key', true));
+        $this->assertSame($expected, Input::post('key', true));
+        $this->assertSame($expected, Input::postHtml('key', true));
+        $this->assertSame($expected, Input::cookie('key', true));
+
+        $this->assertSame($expectedEncoded, Input::get('key', false));
+        $this->assertSame($expectedEncoded, Input::post('key', false));
+        $this->assertSame($expectedEncoded, Input::postHtml('key', false));
+        $this->assertSame($expectedEncoded, Input::cookie('key', false));
+
+        $this->assertSame($source, Input::postUnsafeRaw('key'));
+    }
+
+    public function testEncodesInsertTags(): void
+    {
+        $source = '{{ foo }}';
+        $encoded = '&#123;&#123; foo &#125;&#125;';
+
+        $_GET = $_POST = $_COOKIE = [
+            'key' => $source,
+            $source => 'value',
+        ];
+
+        Input::initialize();
+
+        // Insert tags do not get encoded in keys
+        $this->assertSame($source, array_keys($_GET)[1]);
+        $this->assertSame($source, array_keys($_POST)[1]);
+        $this->assertSame($source, array_keys($_COOKIE)[1]);
+
+        $this->assertSame($encoded, Input::get('key', true));
+        $this->assertSame($encoded, Input::post('key', true));
+        $this->assertSame($encoded, Input::postHtml('key', true));
+        $this->assertSame($encoded, Input::cookie('key', true));
+
+        $this->assertSame($encoded, Input::get('key', false));
+        $this->assertSame($encoded, Input::post('key', false));
+        $this->assertSame($encoded, Input::postHtml('key', false));
+        $this->assertSame($encoded, Input::cookie('key', false));
+
+        $this->assertSame($encoded, Input::postRaw('key'));
+        $this->assertSame($source, Input::postUnsafeRaw('key'));
+    }
+
+    public function encodeInputProvider(): \Generator
+    {
+        yield [
+            'foo',
+            'foo',
+        ];
+
+        yield [
+            '<span>',
+            '&lt;span>',
+            '&lt;span&#62;',
+        ];
+
+        yield [
+            '<script>',
+            '&lt;script>',
+            '&lt;script&#62;',
+        ];
+
+        yield [
+            '&',
+            '&',
+        ];
+
+        yield [
+            '[&amp;],&amp;,[&lt;],&lt;,[&gt;],&gt;,[&nbsp;],&nbsp;,[&shy;],&shy;',
+            '[&],[&],[lt],[lt],[gt],[gt],[nbsp],[nbsp],[-],[-]',
+        ];
+
+        yield [
+            '[<]',
+            '[&lt;]',
+        ];
+
+        yield [
+            '&#x26;amp; &#x26; &#x26;#xD;',
+            "&amp; & \r",
+        ];
+
+        yield [
+            '&ouml;',
+            'ö',
+        ];
+
+        yield [
+            '&#246;',
+            'ö',
+        ];
+
+        yield [
+            '&#xF6;',
+            'ö',
+        ];
+
+        yield [
+            '&quot;',
+            '"',
+            '&#34;',
+        ];
+
+        yield [
+            '&#0;',
+            '',
+        ];
+
+        yield [
+            '&#x0;',
+            '',
+        ];
+
+        yield [
+            "\0",
+            '',
+        ];
+
+        yield [
+            '\0',
+            '&#92;0',
+        ];
+
+        yield [
+            " \x001",
+            ' 1',
+        ];
+
+        yield [
+            "&##aa \x00\x01\x02\t\n\r ;",
+            '&##aa;',
+            '&&#35;&#35;aa;',
+        ];
+
+        yield [
+            "a\rb\nc\r\nd\n\re\r",
+            "ab\nc\nd\ne",
+        ];
+
+        yield [
+            '">>>"<<<"',
+            '">>>"&lt;&lt;&lt;"',
+            '&#34;&#62;&#62;&#62;&#34;&lt;&lt;&lt;&#34;',
+        ];
+
+        yield [
+            '<!--',
+            '<!--',
+            '&#60;!--',
+        ];
+
+        yield [
+            '&#x26;lt;!--',
+            '<!--',
+            '&#60;!--',
+        ];
+
+        yield [
+            "I   l i k e   J a v a\tS c r i p t",
+            'I   l i k e   JavaScript',
+        ];
+
+        yield [
+            "B-Win \n Dow Jones, Apple \n T-Mobile",
+            'B-WinDow Jones, AppleT-Mobile',
+        ];
+    }
+
+    /**
      * @dataProvider stripTagsProvider
      */
-    public function testStripTags(string $source, string $expected): void
+    public function testStripTags(string $source, string $expected, string|null $expectedEncoded = null): void
     {
+        $expectedEncoded ??= str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $expected);
+
+        $_POST = ['key' => $source];
+
         $allowedTags = Config::get('allowedTags');
         $allowedAttributes = Config::get('allowedAttributes');
 
         $this->assertSame($expected, Input::stripTags($source, $allowedTags, $allowedAttributes));
+        $this->assertSame($expectedEncoded, Input::postHtml('key', true));
     }
 
     public function stripTagsProvider(): \Generator
@@ -98,6 +301,7 @@ class InputTest extends TestCase
         yield 'Reformats attributes' => [
             "<span \n \t title = \nwith-spaces class\n=' with \" and &#039; quotes' lang \t =\"with &quot; and ' quotes \t \n \" data-boolean-flag data-int = 0>",
             "<span title=\"with-spaces\" class=\" with &quot; and &#039; quotes\" lang=\"with &quot; and &#039; quotes \t \n \" data-boolean-flag=\"\" data-int=\"0\">",
+            '',
         ];
 
         yield 'Encodes insert tags in attributes' => [
@@ -148,11 +352,13 @@ class InputTest extends TestCase
         yield 'Do not destroy quoted JSON attributes' => [
             '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}}">',
             '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
+            '<span data-myjson="{">',
         ];
 
         yield 'Do not destroy nested quoted JSON attributes' => [
             '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}},12.3,&quot;string&quot;]">',
             '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
+            '<span data-myjson="[{">',
         ];
 
         yield 'Trick insert tag detection with JSON' => [
@@ -173,6 +379,7 @@ class InputTest extends TestCase
         yield 'Does not encode allowed elements in comments' => [
             '<!-- my comment <span non-allowed="should be removed" title="--&#62;"> --> <span non-allowed="should be removed">',
             '<!-- my comment <span title="--&#62;"> --> <span>',
+            '<!-- my comment <span title="--"> --> <span>',
         ];
 
         yield 'Normalize short comments' => [
@@ -253,16 +460,19 @@ class InputTest extends TestCase
         yield [
             '\<a onmouseover="alert(document.cookie)"\>xxs link\</a\>',
             '\<a>xxs link\&lt;/a\&#62;',
+            '\xxs link\&lt;/a\&#62;',
         ];
 
         yield [
             '\<a onmouseover=alert(document.cookie)\>xxs link\</a\>',
             '\<a>xxs link\&lt;/a\&#62;',
+            '\xxs link\&lt;/a\&#62;',
         ];
 
         yield [
             '<IMG """><SCRIPT>alert("XSS")</SCRIPT>"\>',
             '<img>',
+            'alert(&#34;XSS&#34;)&lt;/SCRIPT&#62;&#34;\&#62;',
         ];
 
         yield [
@@ -273,6 +483,7 @@ class InputTest extends TestCase
         yield [
             '<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>',
             '<img src="&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;%3A&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;">',
+            '<img src="javascript%3Aalert(&#039;XSS&#039;)">',
         ];
 
         yield [
@@ -283,11 +494,13 @@ class InputTest extends TestCase
         yield [
             '<IMG SRC="jav&#x0A;ascript:alert(\'XSS\');">',
             '<img src="jav&#x0A;ascript%3Aalert(&#039;XSS&#039;);">',
+            '<img src="javascript%3Aalert(&#039;XSS&#039;);">',
         ];
 
         yield [
             '<IMG SRC=" &#14; javascript:alert(\'XSS\');">',
             '<img src=" &#14; javascript%3Aalert(&#039;XSS&#039;);">',
+            "<img src=\" \x0E javascript%3Aalert(&#039;XSS&#039;);\">",
         ];
 
         yield [
