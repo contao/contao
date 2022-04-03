@@ -75,12 +75,30 @@ class ContextFactoryTest extends TestCase
 
                 OUTPUT;
 
-        $output = (new Environment(new ArrayLoader(['test.html.twig' => $content])))->render(
-            'test.html.twig',
-            (new ContextFactory())->fromContaoTemplate($template)
-        );
+        $context = (new ContextFactory())->fromContaoTemplate($template);
+
+        $this->assertSame($template, $context['Template']);
+
+        $output = (new Environment(new ArrayLoader(['test.html.twig' => $content])))->render('test.html.twig', $context);
 
         $this->assertSame($expectedOutput, $output);
+    }
+
+    public function testCreatesContextFromData(): void
+    {
+        $data = [
+            'foo' => 'a',
+            'bar' => static fn () => 'b',
+            'baz' => [
+                'foobar' => static fn () => 'c',
+            ],
+        ];
+
+        $context = (new ContextFactory())->fromData($data);
+
+        $this->assertSame('a', $context['foo']);
+        $this->assertSame('b', $context['bar']());
+        $this->assertSame('c', (string) $context['baz']['foobar']);
     }
 
     /**
