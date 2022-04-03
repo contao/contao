@@ -108,8 +108,8 @@ class InputTest extends TestCase
 
         // html_entity_decode simulates the browser here
         $_POST = [
-            'decoded' => html_entity_decode(StringUtil::specialchars($expected)),
-            'encoded' => html_entity_decode(StringUtil::specialchars($expectedEncoded)),
+            'decoded' => html_entity_decode(StringUtil::specialchars($expected, false, true)),
+            'encoded' => html_entity_decode(StringUtil::specialchars($expectedEncoded, false, true)),
         ];
 
         Config::set('allowedTags', '');
@@ -162,14 +162,14 @@ class InputTest extends TestCase
 
         yield [
             '<span>',
-            '&lt;span>',
-            '&lt;span&#62;',
+            '&#60;span>',
+            '&#60;span&#62;',
         ];
 
         yield [
             '<script>',
-            '&lt;script>',
-            '&lt;script&#62;',
+            '&#60;script>',
+            '&#60;script&#62;',
         ];
 
         yield [
@@ -184,43 +184,46 @@ class InputTest extends TestCase
 
         yield [
             '[<]',
-            '[&lt;]',
+            '[&#60;]',
         ];
 
         yield [
             '&ouml;',
-            'ö',
+            '&ouml;',
         ];
 
         yield [
             '&#246;',
-            'ö',
+            '&#246;',
+            '&&#35;246;',
         ];
 
         yield [
             '&#xF6;',
-            'ö',
+            '&#xF6;',
+            '&&#35;xF6;',
         ];
 
         yield [
             '&quot;',
-            '"',
-            '&#34;',
+            '&quot;',
         ];
 
         yield [
             '&#0;',
-            '',
+            '&#0;',
+            '&&#35;0;',
         ];
 
         yield [
             '&#x0;',
-            '',
+            '&#x0;',
+            '&&#35;x0;',
         ];
 
         yield [
             "\0",
-            '',
+            "\u{FFFD}",
         ];
 
         yield [
@@ -230,46 +233,46 @@ class InputTest extends TestCase
 
         yield [
             " \x001",
-            ' 1',
+            " \u{FFFD}1",
         ];
 
         yield [
             "&##aa \x00\x01\x02\t\n\r ;",
-            '&##aa;',
-            '&&#35;&#35;aa;',
+            "&##aa \u{FFFD}\x01\x02\t\n\n ;",
+            "&&#35;&#35;aa \u{FFFD}\x01\x02\t\n\n ;",
         ];
 
         yield [
             "a\rb\nc\r\nd\n\re\r",
-            "ab\nc\nd\ne",
+            "a\nb\nc\nd\n\ne\n",
         ];
 
         yield [
             '">>>"<<<"',
-            '">>>"&lt;&lt;&lt;"',
-            '&#34;&#62;&#62;&#62;&#34;&lt;&lt;&lt;&#34;',
+            '">>>"&#60;&#60;&#60;"',
+            '&#34;&#62;&#62;&#62;&#34;&#60;&#60;&#60;&#34;',
         ];
 
         yield [
             '<!--',
-            '<!--',
+            '&#60;!--',
             '&#60;!--',
         ];
 
         yield [
             '&#x26;lt;!--',
-            '<!--',
-            '&#60;!--',
+            '&#x26;lt;!--',
+            '&&#35;x26;lt;!--',
         ];
 
         yield [
             "I   l i k e   J a v a\tS c r i p t",
-            'I   l i k e   JavaScript',
+            "I   l i k e   J a v a\tS c r i p t",
         ];
 
         yield [
             "B-Win \n Dow Jones, Apple \n T-Mobile",
-            'B-WinDow Jones, AppleT-Mobile',
+            "B-Win \n Dow Jones, Apple \n T-Mobile",
         ];
     }
 
@@ -293,12 +296,12 @@ class InputTest extends TestCase
     {
         yield 'Encodes tags' => [
             'Text <with> tags',
-            'Text &lt;with&#62; tags',
+            'Text &#60;with&#62; tags',
         ];
 
         yield 'Keeps allowed tags' => [
             'Text <with> <span> tags',
-            'Text &lt;with&#62; <span> tags',
+            'Text &#60;with&#62; <span> tags',
         ];
 
         yield 'Removes attributes' => [
@@ -319,7 +322,6 @@ class InputTest extends TestCase
         yield 'Reformats attributes' => [
             "<span \n \t title = \nwith-spaces class\n=' with \" and &#039; quotes' lang \t =\"with &quot; and ' quotes \t \n \" data-boolean-flag data-int = 0>",
             "<span title=\"with-spaces\" class=\" with &quot; and &#039; quotes\" lang=\"with &quot; and &#039; quotes \t \n \" data-boolean-flag=\"\" data-int=\"0\">",
-            '',
         ];
 
         yield 'Encodes insert tags in attributes' => [
@@ -370,13 +372,11 @@ class InputTest extends TestCase
         yield 'Do not destroy quoted JSON attributes' => [
             '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}}">',
             '<span data-myjson="{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;">',
-            '<span data-myjson="{">',
         ];
 
         yield 'Do not destroy nested quoted JSON attributes' => [
             '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;}},12.3,&quot;string&quot;]">',
             '<span data-myjson="[{&quot;foo&quot;:{&quot;bar&quot;:&quot;baz&quot;&#125;&#125;,12.3,&quot;string&quot;]">',
-            '<span data-myjson="[{">',
         ];
 
         yield 'Trick insert tag detection with JSON' => [
@@ -391,13 +391,12 @@ class InputTest extends TestCase
 
         yield 'Encodes comments contents' => [
             '<!-- my comment <script>alert(1)</script> --> <span non-allowed="should be removed">',
-            '<!-- my comment &lt;script&#62;alert(1)&lt;/script&#62; --> <span>',
+            '<!-- my comment &#60;script&#62;alert(1)&#60;/script&#62; --> <span>',
         ];
 
         yield 'Does not encode allowed elements in comments' => [
             '<!-- my comment <span non-allowed="should be removed" title="--&#62;"> --> <span non-allowed="should be removed">',
             '<!-- my comment <span title="--&#62;"> --> <span>',
-            '<!-- my comment <span title="--"> --> <span>',
         ];
 
         yield 'Normalize short comments' => [
@@ -447,12 +446,12 @@ class InputTest extends TestCase
 
         yield [
             '<SCRIPT SRC=http://xss.rocks/xss.js></SCRIPT>',
-            '&lt;SCRIPT SRC&#61;http://xss.rocks/xss.js&#62;&lt;/SCRIPT&#62;',
+            '&#60;SCRIPT SRC&#61;http://xss.rocks/xss.js&#62;&#60;/SCRIPT&#62;',
         ];
 
         yield [
             'javascript:/*--></title></style></textarea></script></xmp><svg/onload=\'+/"/+/onmouseover=1/+/[*/[]/+alert(1)//\'>',
-            'javascript:/*--&#62;&lt;/title&#62;</style></textarea>&lt;/script&#62;&lt;/xmp&#62;&lt;svg/onload&#61;&#39;+/&#34;/+/onmouseover&#61;1/+/[*/[]/+alert(1)//&#39;&#62;',
+            'javascript:/*--&#62;&#60;/title&#62;</style></textarea>&#60;/script&#62;&#60;/xmp&#62;&#60;svg/onload&#61;&#39;+/&#34;/+/onmouseover&#61;1/+/[*/[]/+alert(1)//&#39;&#62;',
         ];
 
         yield [
@@ -477,20 +476,17 @@ class InputTest extends TestCase
 
         yield [
             '\<a onmouseover="alert(document.cookie)"\>xxs link\</a\>',
-            '\<a>xxs link\&lt;/a\&#62;',
-            '\xxs link\&lt;/a\&#62;',
+            '\<a>xxs link\&#60;/a\&#62;',
         ];
 
         yield [
             '\<a onmouseover=alert(document.cookie)\>xxs link\</a\>',
-            '\<a>xxs link\&lt;/a\&#62;',
-            '\xxs link\&lt;/a\&#62;',
+            '\<a>xxs link\&#60;/a\&#62;',
         ];
 
         yield [
             '<IMG """><SCRIPT>alert("XSS")</SCRIPT>"\>',
             '<img>',
-            'alert(&#34;XSS&#34;)&lt;/SCRIPT&#62;&#34;\&#62;',
         ];
 
         yield [
@@ -501,7 +497,6 @@ class InputTest extends TestCase
         yield [
             '<IMG SRC=&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;>',
             '<img src="&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;%3A&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;">',
-            '<img src="javascript%3Aalert(&#039;XSS&#039;)">',
         ];
 
         yield [
@@ -512,28 +507,26 @@ class InputTest extends TestCase
         yield [
             '<IMG SRC="jav&#x0A;ascript:alert(\'XSS\');">',
             '<img src="jav&#x0A;ascript%3Aalert(&#039;XSS&#039;);">',
-            '<img src="javascript%3Aalert(&#039;XSS&#039;);">',
         ];
 
         yield [
             '<IMG SRC=" &#14; javascript:alert(\'XSS\');">',
             '<img src=" &#14; javascript%3Aalert(&#039;XSS&#039;);">',
-            "<img src=\" \x0E javascript%3Aalert(&#039;XSS&#039;);\">",
         ];
 
         yield [
             '<SCRIPT/SRC="http://xss.rocks/xss.js"></SCRIPT>',
-            '&lt;SCRIPT/SRC&#61;&#34;http://xss.rocks/xss.js&#34;&#62;&lt;/SCRIPT&#62;',
+            '&#60;SCRIPT/SRC&#61;&#34;http://xss.rocks/xss.js&#34;&#62;&#60;/SCRIPT&#62;',
         ];
 
         yield [
             '<BODY onload!#$%&()*~+-_.,:;?@[/|\]^`=alert("XSS")>',
-            '&lt;BODY onload!#$%&()*~+-_.,:;?@[/|\]^`&#61;alert(&#34;XSS&#34;)&#62;',
+            '&#60;BODY onload!#$%&()*~+-_.,:;?@[/|\]^`&#61;alert(&#34;XSS&#34;)&#62;',
         ];
 
         yield [
             '<<SCRIPT>alert("XSS");//\<</SCRIPT>',
-            '&lt;&lt;SCRIPT&#62;alert(&#34;XSS&#34;);//\&lt;&lt;/SCRIPT&#62;',
+            '&#60;&#60;SCRIPT&#62;alert(&#34;XSS&#34;);//\&#60;&#60;/SCRIPT&#62;',
         ];
 
         yield [
@@ -543,7 +536,7 @@ class InputTest extends TestCase
 
         yield [
             '</TITLE><SCRIPT>alert("XSS");</SCRIPT>',
-            '&lt;/TITLE&#62;&lt;SCRIPT&#62;alert(&#34;XSS&#34;);&lt;/SCRIPT&#62;',
+            '&#60;/TITLE&#62;&#60;SCRIPT&#62;alert(&#34;XSS&#34;);&#60;/SCRIPT&#62;',
         ];
 
         yield [
@@ -553,7 +546,7 @@ class InputTest extends TestCase
 
         yield [
             '<BODY BACKGROUND="javascript:alert(\'XSS\')">',
-            '&lt;BODY BACKGROUND&#61;&#34;javascript:alert(&#39;XSS&#39;)&#34;&#62;',
+            '&#60;BODY BACKGROUND&#61;&#34;javascript:alert(&#39;XSS&#39;)&#34;&#62;',
         ];
 
         yield [
@@ -568,12 +561,12 @@ class InputTest extends TestCase
 
         yield [
             '<svg/onload=alert(\'XSS\')>',
-            '&lt;svg/onload&#61;alert(&#39;XSS&#39;)&#62;',
+            '&#60;svg/onload&#61;alert(&#39;XSS&#39;)&#62;',
         ];
 
         yield [
             '<LINK REL="stylesheet" HREF="javascript:alert(\'XSS\');">',
-            '&lt;LINK REL&#61;&#34;stylesheet&#34; HREF&#61;&#34;javascript:alert(&#39;XSS&#39;);&#34;&#62;',
+            '&#60;LINK REL&#61;&#34;stylesheet&#34; HREF&#61;&#34;javascript:alert(&#39;XSS&#39;);&#34;&#62;',
         ];
     }
 
@@ -589,7 +582,7 @@ class InputTest extends TestCase
     {
         yield 'Encodes tags' => [
             'Text <with> tags',
-            'Text &lt;with> tags',
+            'Text &#60;with> tags',
         ];
 
         yield 'Does not encode other special characters' => [
@@ -616,7 +609,7 @@ class InputTest extends TestCase
     public function testStripTagsNoAttributesAllowed(): void
     {
         $html = '<dIv class=gets-normalized bar-foo-something = \'keep\'><spAN class=gets-normalized bar-foo-something = \'keep\'>foo</SPan></DiV><notallowed></notallowed>';
-        $expected = '<div><span>foo</span></div>&lt;notallowed&#62;&lt;/notallowed&#62;';
+        $expected = '<div><span>foo</span></div>&#60;notallowed&#62;&#60;/notallowed&#62;';
 
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([['key' => '', 'value' => '']])));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([[]])));
@@ -641,19 +634,6 @@ class InputTest extends TestCase
             '<script><!-- alert(foo > bar); </script>foo &#62; bar',
             Input::stripTags('<scrIpt type="VBScript"><!-- alert(foo > bar); </SCRiPT >foo > bar', '<div><span><script>', '')
         );
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testStripTagsMissingAttributesParameter(): void
-    {
-        $html = '<dIv class=gets-normalized bar-foo-something = \'keep\'><spAN notallowed="x" class=gets-normalized bar-foo-something = \'keep\'>foo</SPan></DiV><notallowed></notallowed>';
-        $expected = '<div class="gets-normalized"><span class="gets-normalized">foo</span></div>&lt;notallowed&#62;&lt;/notallowed&#62;';
-
-        $this->expectDeprecation('%sUsing Contao\Input::stripTags() with $strAllowedTags but without $strAllowedAttributes has been deprecated%s');
-
-        $this->assertSame($expected, Input::stripTags($html, '<div><span>'));
     }
 
     /**

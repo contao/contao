@@ -62,6 +62,62 @@ class Input
 	}
 
 	/**
+	 * @param bool|null $sanitizeHtml True sanitizes the HTML, false encodes tags and null keeps html tags untouched
+	 */
+	public static function encodeInput(string|array $value, bool $encodeSpecialChars = true, bool $encodeInsertTags = true, bool|null $sanitizeHtml = false): string|array
+	{
+		if (\is_array($value))
+		{
+			foreach ($value as $k=>$v)
+			{
+				$value[$k] = static::encodeInput($v, $encodeSpecialChars, $encodeInsertTags, $sanitizeHtml);
+			}
+
+			return $value;
+		}
+
+		// Ensure UTF-8 string with normalized newlines
+		$subBefore = mb_substitute_character();
+		mb_substitute_character(0xFFFD);
+		$value = preg_replace('(\r\n?)', "\n", mb_convert_encoding($value, 'UTF-8', 'UTF-8'));
+		mb_substitute_character($subBefore);
+
+		if ($sanitizeHtml === true)
+		{
+			$value = static::stripTags($value, Config::get('allowedTags'), Config::get('allowedAttributes'));
+		}
+		elseif ($sanitizeHtml === false)
+		{
+			$value = str_replace('<', '&#60;', $value);
+		}
+
+		if ($encodeSpecialChars)
+		{
+			$value = str_replace(
+				array(
+					'#', '<', '>', '(', ')', '\\', '=', '"', "'",
+					// Revert double encoded #
+					'&&#35;35;', '&&#35;60;', '&&#35;62;', '&&#35;40;', '&&#35;41;', '&&#35;92;', '&&#35;61;', '&&#35;34;', '&&#35;39;',
+				),
+				array(
+					'&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;',
+					'&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;',
+				),
+				$value,
+			);
+		}
+
+		if ($encodeInsertTags)
+		{
+			$value = str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $value);
+		}
+
+		$value = str_replace(array("\0", '\0'), array("\u{FFFD}", '&#92;0'), $value);
+
+		return $value;
+	}
+
+	/**
 	 * Return a $_GET variable
 	 *
 	 * @param string  $strKey            The variable name
@@ -83,16 +139,7 @@ class Input
 		{
 			$varValue = $_GET[$strKey];
 
-			$varValue = static::decodeEntities($varValue);
-			$varValue = static::xssClean($varValue, true);
-			$varValue = static::stripTags($varValue);
-
-			if (!$blnDecodeEntities)
-			{
-				$varValue = static::encodeSpecialChars($varValue);
-			}
-
-			$varValue = static::encodeInsertTags($varValue);
+			$varValue = static::encodeInput($varValue, !$blnDecodeEntities);
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
 		}
@@ -127,19 +174,7 @@ class Input
 				return null;
 			}
 
-			$varValue = static::decodeEntities($varValue);
-			$varValue = static::xssClean($varValue, true);
-			$varValue = static::stripTags($varValue);
-
-			if (!$blnDecodeEntities)
-			{
-				$varValue = static::encodeSpecialChars($varValue);
-			}
-
-			if (!\defined('TL_MODE') || TL_MODE != 'BE')
-			{
-				$varValue = static::encodeInsertTags($varValue);
-			}
+			$varValue = static::encodeInput($varValue, !$blnDecodeEntities, !\defined('TL_MODE') || TL_MODE != 'BE');
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
 		}
@@ -168,19 +203,7 @@ class Input
 				return null;
 			}
 
-			$varValue = static::decodeEntities($varValue);
-			$varValue = static::xssClean($varValue);
-			$varValue = static::stripTags($varValue, Config::get('allowedTags'), Config::get('allowedAttributes'));
-
-			if (!$blnDecodeEntities)
-			{
-				$varValue = static::encodeSpecialChars($varValue);
-			}
-
-			if (!\defined('TL_MODE') || TL_MODE != 'BE')
-			{
-				$varValue = static::encodeInsertTags($varValue);
-			}
+			$varValue = static::encodeInput($varValue, !$blnDecodeEntities, !\defined('TL_MODE') || TL_MODE != 'BE', true);
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
 		}
@@ -208,13 +231,7 @@ class Input
 				return null;
 			}
 
-			$varValue = static::preserveBasicEntities($varValue);
-			$varValue = static::xssClean($varValue);
-
-			if (!\defined('TL_MODE') || TL_MODE != 'BE')
-			{
-				$varValue = static::encodeInsertTags($varValue);
-			}
+			$varValue = static::encodeInput($varValue, false, !\defined('TL_MODE') || TL_MODE != 'BE', null);
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
 		}
@@ -269,16 +286,7 @@ class Input
 		{
 			$varValue = $_COOKIE[$strKey];
 
-			$varValue = static::decodeEntities($varValue);
-			$varValue = static::xssClean($varValue, true);
-			$varValue = static::stripTags($varValue);
-
-			if (!$blnDecodeEntities)
-			{
-				$varValue = static::encodeSpecialChars($varValue);
-			}
-
-			$varValue = static::encodeInsertTags($varValue);
+			$varValue = static::encodeInput($varValue, !$blnDecodeEntities);
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
 		}
@@ -444,9 +452,7 @@ class Input
 			return $return;
 		}
 
-		$varValue = static::decodeEntities($varValue);
-		$varValue = static::xssClean($varValue, true);
-		$varValue = static::stripTags($varValue);
+		$varValue = static::encodeInput($varValue, false, false);
 
 		return $varValue;
 	}
@@ -477,10 +483,9 @@ class Input
 	 */
 	public static function stripTags($varValue, $strAllowedTags='', $strAllowedAttributes='')
 	{
-		if ($strAllowedTags !== '' && \func_num_args() < 3)
+		if ($strAllowedTags === '' || $strAllowedAttributes === '')
 		{
-			trigger_deprecation('contao/core-bundle', '4.4', 'Using %s() with $strAllowedTags but without $strAllowedAttributes has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
-			$strAllowedAttributes = Config::get('allowedAttributes');
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() without setting allowed tags and allowed attributes has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
 		}
 
 		if (!$varValue)
@@ -516,7 +521,7 @@ class Input
 			{
 				if (!$matches[1] || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
 				{
-					$matches[0] = str_replace('<', '&lt;', $matches[0]);
+					$matches[0] = str_replace('<', '&#60;', $matches[0]);
 				}
 
 				return $matches[0];
@@ -524,11 +529,17 @@ class Input
 			$varValue
 		);
 
+		// Needs to be replaced here because strip_tags itself strips null bytes
+		$varValue = str_replace("\0", "\u{FFFD}", $varValue);
+
 		// Strip the tags
 		$varValue = strip_tags($varValue, $strAllowedTags);
 
-		// Restore HTML comments and recheck for encoded null bytes
-		$varValue = str_replace(array('&lt;!--', '&lt;![', '\\0'), array('<!--', '<![', '&#92;0'), $varValue);
+		if ($strAllowedTags)
+		{
+			// Restore HTML comments and recheck for encoded null bytes
+			$varValue = str_replace(array('&#60;!--', '&#60;![', '\\0'), array('<!--', '<![', '&#92;0'), $varValue);
+		}
 
 		// Strip attributes
 		if ($strAllowedTags)
@@ -729,9 +740,13 @@ class Input
 	 * @param boolean $blnStrictMode If true, the function removes also JavaScript event handlers
 	 *
 	 * @return mixed The cleaned string or array
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
 	 */
 	public static function xssClean($varValue, $blnStrictMode=false)
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
 		if (!$varValue)
 		{
 			return $varValue;
@@ -844,9 +859,13 @@ class Input
 	 * @param mixed $varValue A string or array
 	 *
 	 * @return mixed The decoded string or array
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
 	 */
 	public static function decodeEntities($varValue)
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
 		if (!$varValue)
 		{
 			return $varValue;
@@ -876,9 +895,13 @@ class Input
 	 * @param mixed $varValue A string or array
 	 *
 	 * @return mixed The string or array with the converted entities
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
 	 */
 	public static function preserveBasicEntities($varValue)
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
 		if (!$varValue)
 		{
 			return $varValue;
