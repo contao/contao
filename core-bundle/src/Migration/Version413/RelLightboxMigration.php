@@ -21,7 +21,7 @@ use Doctrine\DBAL\Connection;
  */
 class RelLightboxMigration extends AbstractMigration
 {
-    public static array $targets = [
+    private static array $targets = [
         'tl_article.teaser',
         'tl_calendar_events.teaser',
         'tl_comments.comment',
