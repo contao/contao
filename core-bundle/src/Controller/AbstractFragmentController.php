@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -126,15 +128,29 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return !str_contains($templateName, '/');
     }
 
+    /**
+     * @internal the addHeadlineToTemplate() method is considered internal in
+     * Contao 5 and won't be accessible anymore in Contao 6. Headline data is
+     * always added to the context of modern fragment templates.
+     */
     protected function addHeadlineToTemplate(Template $template, array|string|null $headline): void
     {
+        $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
+
         $data = StringUtil::deserialize($headline);
         $template->headline = \is_array($data) ? $data['value'] : $data;
         $template->hl = \is_array($data) ? $data['unit'] : 'h1';
     }
 
+    /**
+     * @internal the addCssAttributesToTemplate() method is considered internal
+     * in Contao 5 and won't be accessible anymore in Contao 6. Attributes data
+     * is always added to the context of modern fragment templates.
+     */
     protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array $classes = null): void
     {
+        $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
+
         $data = StringUtil::deserialize($cssID, true);
         $template->class = trim($templateName.' '.($data[1] ?? ''));
         $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
@@ -144,20 +160,38 @@ abstract class AbstractFragmentController extends AbstractController implements 
         }
     }
 
+    /**
+     * @internal the addPropertiesToTemplate() method is considered internal in
+     * Contao 5 and won't be accessible anymore in Contao 6. Custom properties
+     * are always added to the context of modern fragment templates.
+     */
     protected function addPropertiesToTemplate(Template $template, array $properties): void
     {
+        $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
+
         foreach ($properties as $k => $v) {
             $template->{$k} = $v;
         }
     }
 
+    /**
+     * @internal the addSectionToTemplate() method is considered internal in
+     * Contao 5 and won't be accessible anymore in Contao 6. Section data is
+     * always added to the context of modern fragment templates.
+     */
     protected function addSectionToTemplate(Template $template, string $section): void
     {
+        $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
+
         $template->inColumn = $section;
     }
 
     /**
      * Returns the type from the class name.
+     *
+     * @internal the getType() method is considered internal in Contao 5 and
+     * won't be accessible anymore in Contao 6. Retrieve the type from the
+     * fragment options instead.
      */
     protected function getType(): string
     {
@@ -196,6 +230,13 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return parent::render($view, $parameters, $response);
     }
 
+    protected function isBackendScope(): bool
+    {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
+        return null !== $request && $this->container->get('contao.routing.scope_matcher')->isBackendRequest($request);
+    }
+
     /**
      * Marks the response to affect the caching of the current page but removes any default cache header.
      */
@@ -203,6 +244,15 @@ abstract class AbstractFragmentController extends AbstractController implements 
     {
         $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         $response->headers->remove('Cache-Control');
+    }
+
+    private function triggerDeprecationIfCallingFromCustomClass(string $method): void
+    {
+        $caller = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[2]['class'];
+
+        if (!\in_array($caller, [AbstractContentElementController::class, AbstractFrontendModuleController::class], true)) {
+            trigger_deprecation('contao/core-bundle', '5.0', 'The "%s" method is considered internal and won\'t be accessible anymore in Contao 6.', $method);
+        }
     }
 
     private function getTemplateName(Model $model, string|null $fallbackTemplateName): string

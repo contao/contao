@@ -14,7 +14,11 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\BackendTemplate;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
+use Contao\CoreBundle\String\HtmlAttributes;
+use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\Model;
 use Contao\ModuleModel;
+use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,13 +32,16 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
             return $this->getBackendWildcard($model);
         }
 
-        $type = $this->getType();
-        $template = $this->createTemplate($model, 'mod_'.$type);
+        $template = $this->createTemplate($model, 'mod_'.$this->getType());
 
-        $this->addHeadlineToTemplate($template, $model->headline);
-        $this->addCssAttributesToTemplate($template, 'mod_'.$type, $model->cssID, $classes);
-        $this->addPropertiesToTemplate($template, $request->attributes->get('templateProperties', []));
-        $this->addSectionToTemplate($template, $section);
+        $this->addDefaultDataToTemplate(
+            $template,
+            (array) $model->row(),
+            $section,
+            $classes ?? [],
+            $request->attributes->get('templateProperties', []),
+        );
+
         $this->tagResponse($model);
 
         return $this->getResponse($template, $model, $request);
@@ -67,5 +74,44 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         return new Response($template->parse());
     }
 
-    abstract protected function getResponse(Template $template, ModuleModel $model, Request $request): Response;
+    /**
+     * Add default frontend module data to the template context.
+     *
+     * @param array<string, mixed> $modelData
+     * @param array<string>        $classes
+     * @param array<string, mixed> $properties
+     */
+    protected function addDefaultDataToTemplate(FragmentTemplate $template, array $modelData = [], string $section = 'main', array $classes = [], array $properties = [], bool $asOverview = false): void
+    {
+        if ($this->isLegacyTemplate($template->getName())) {
+            // Legacy fragments
+            $this->addHeadlineToTemplate($template, $modelData['headline'] ?? null);
+            $this->addCssAttributesToTemplate($template, $template->getName(), $modelData['cssID'] ?? null, $classes);
+            $this->addPropertiesToTemplate($template, $properties);
+            $this->addSectionToTemplate($template, $section);
+
+            return;
+        }
+
+        $headlineData = StringUtil::deserialize($modelData['headline'] ?? [] ?: '', true);
+        $attributesData = StringUtil::deserialize($modelData['cssID'] ?? [] ?: '', true);
+
+        $template->setData([
+            'type' => $this->getType(),
+            'template' => $template->getName(),
+            'as_overview' => $asOverview,
+            'data' => $modelData,
+            'section' => $section,
+            'properties' => $properties,
+            'attributes' => (new HtmlAttributes())
+                ->setIfExists('id', $attributesData[0] ?? null)
+                ->addClass($attributesData[1] ?? '', ...$classes),
+            'headline' => [
+                'value' => $headlineData['value'] ?? '',
+                'unit' => $headlineData['unit'] ?? 'h1',
+            ],
+        ]);
+    }
+
+    abstract protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response;
 }
