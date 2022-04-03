@@ -99,6 +99,29 @@ class InputTest extends TestCase
         $this->assertSame($source, Input::postUnsafeRaw('key'));
     }
 
+    /**
+     * @dataProvider encodeInputProvider
+     */
+    public function testBackendRoundtrip(string $source, string $expected, string|null $expectedEncoded = null): void
+    {
+        $expectedEncoded ??= $expected;
+
+        // html_entity_decode simulates the browser here
+        $_POST = [
+            'decoded' => html_entity_decode(StringUtil::specialchars($expected)),
+            'encoded' => html_entity_decode(StringUtil::specialchars($expectedEncoded)),
+        ];
+
+        Config::set('allowedTags', '');
+        Config::set('allowedAttributes', '');
+
+        $this->assertSame($expected, Input::post('decoded', true));
+        $this->assertSame($expected, Input::postHtml('decoded', true));
+
+        $this->assertSame($expectedEncoded, Input::post('encoded', false));
+        $this->assertSame($expectedEncoded, Input::postHtml('encoded', false));
+    }
+
     public function testEncodesInsertTags(): void
     {
         $source = '{{ foo }}';
@@ -162,11 +185,6 @@ class InputTest extends TestCase
         yield [
             '[<]',
             '[&lt;]',
-        ];
-
-        yield [
-            '&#x26;amp; &#x26; &#x26;#xD;',
-            "&amp; & \r",
         ];
 
         yield [
