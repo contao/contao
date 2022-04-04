@@ -7,10 +7,6 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
-            calls:
-                - [setContainer, ['@Psr\Container\ContainerInterface']]
-
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
                 - [setContainer, ['@service_container']]
@@ -168,6 +164,11 @@ services:
         decorates: doctrine.orm.proxy_cache_warmer
         arguments:
             - '@contao.doctrine.orm.fail_tolerant_proxy_cache_warmer.inner'
+            - '@database_connection'
+
+    contao.doctrine.schema.mysql_innodb_row_size_calculator:
+        class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
+        arguments:
             - '@database_connection'
 
     contao.doctrine.schema_provider:

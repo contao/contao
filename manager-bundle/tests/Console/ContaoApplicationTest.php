@@ -26,6 +26,8 @@ class ContaoApplicationTest extends ContaoTestCase
         parent::setUp();
 
         $this->backupServerEnvGetPost();
+
+        unset($_SERVER['APP_ENV'], $_ENV['APP_ENV']);
     }
 
     protected function tearDown(): void

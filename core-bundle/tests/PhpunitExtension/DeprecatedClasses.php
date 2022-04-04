@@ -14,15 +14,13 @@ namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
 use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
-use Contao\CoreBundle\Security\Logout\LogoutHandler;
 use Contao\TestCase\DeprecatedClassesPhpunitExtension;
-use Symfony\Bundle\SecurityBundle\Security\LegacyLogoutHandlerListener;
 
 final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
 {
     protected function deprecationProvider(): array
     {
-        $deprecations = [
+        return [
             ContaoLoginAuthenticationListener::class => ['%s"Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener" class is deprecated%s'],
             AuthenticationProvider::class => [
                 '%s"Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider" class is deprecated%s',
@@ -30,11 +28,5 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
                 '%s"Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface" interface is deprecated%s',
             ],
         ];
-
-        if (class_exists(LegacyLogoutHandlerListener::class)) {
-            $deprecations[LogoutHandler::class] = ['%s class implements "Symfony\Component\Security\Http\Logout\LogoutHandlerInterface" that is deprecated %s'];
-        }
-
-        return $deprecations;
     }
 }

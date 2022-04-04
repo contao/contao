@@ -251,6 +251,9 @@
       <trans-unit id="tl_user.htmlLabel">
         <source>Image cache</source>
       </trans-unit>
+      <trans-unit id="tl_user.previewLabel">
+        <source>Preview cache</source>
+      </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
       </trans-unit>
@@ -259,6 +262,9 @@
       </trans-unit>
       <trans-unit id="tl_user.htmlPurged">
         <source>The image cache has been purged</source>
+      </trans-unit>
+      <trans-unit id="tl_user.previewPurged">
+        <source>The preview cache has been purged</source>
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>
