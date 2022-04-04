@@ -16,7 +16,6 @@ use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Image\ResizeConfiguration;
-use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -727,26 +726,7 @@ abstract class DataContainer extends Backend
 
 			if ($objFile->isImage)
 			{
-				$blnCanResize = true;
-
-				if ($objFile->isSvgImage)
-				{
-					// SVG images with undefined sizes cannot be resized
-					if (!$objFile->viewWidth || !$objFile->viewHeight)
-					{
-						$blnCanResize= false;
-					}
-				}
-				elseif (System::getContainer()->get('contao.image.imagine') instanceof Imagine)
-				{
-					// Check the maximum width and height if the GDlib is used to resize images
-					if ($objFile->height > Config::get('gdMaxImgHeight') || $objFile->width > Config::get('gdMaxImgWidth'))
-					{
-						$blnCanResize = false;
-					}
-				}
-
-				if ($blnCanResize)
+				if (!$objFile->isSvgImage || ($objFile->viewWidth && $objFile->viewHeight))
 				{
 					$container = System::getContainer();
 					$projectDir = $container->getParameter('kernel.project_dir');

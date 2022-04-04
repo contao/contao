@@ -249,7 +249,7 @@ services:
         class: Contao\CoreBundle\Image\ImageFactory
         public: true
         arguments:
-            - '@contao.image.legacy_resizer'
+            - '@contao.image.resizer'
             - '@contao.image.imagine'
             - '@contao.image.imagine_svg'
             - '@filesystem'
@@ -258,7 +258,6 @@ services:
             - '%contao.image.imagine_options%'
             - '%contao.image.valid_extensions%'
             - '%kernel.project_dir%/%contao.upload_path%'
-            - '@?logger'
         tags:
             - { name: monolog.logger, channel: contao.error }
 
@@ -287,15 +286,6 @@ services:
         class: Contao\ImagineSvg\Imagine
         public: true
 
-    contao.image.legacy_resizer:
-        class: Contao\CoreBundle\Image\LegacyResizer
-        public: true
-        arguments:
-            - '%contao.image.target_dir%'
-            - '@contao.image.resize_calculator'
-            - '@filesystem'
-            - '@contao.image.deferred_image_storage'
-
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
         public: true
@@ -310,7 +300,7 @@ services:
         class: Contao\Image\PictureGenerator
         public: true
         arguments:
-            - '@contao.image.legacy_resizer'
+            - '@contao.image.resizer'
             - '@?contao.image.resize_calculator'
 
     contao.image.preview_factory:
@@ -327,6 +317,15 @@ services:
             - '%contao.image.valid_extensions%'
             - '%contao.image.preview.default_size%'
             - '%contao.image.preview.max_size%'
+
+    contao.image.resizer:
+        class: Contao\CoreBundle\Image\Resizer
+        public: true
+        arguments:
+            - '%contao.image.target_dir%'
+            - '@contao.image.resize_calculator'
+            - '@filesystem'
+            - '@contao.image.deferred_image_storage'
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator
@@ -350,7 +349,7 @@ services:
               contao.image.studio: '@contao.image.studio'
               contao.image.picture_factory: '@contao.image.picture_factory'
               contao.image.factory: '@contao.image.factory'
-              contao.image.legacy_resizer: '@contao.image.legacy_resizer'
+              contao.image.resizer: '@contao.image.resizer'
               contao.assets.files_context: '@contao.assets.files_context'
               contao.framework: '@contao.framework'
               event_dispatcher: '@event_dispatcher'
@@ -1078,14 +1077,6 @@ services:
             package: contao/core-bundle
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.sizes" instead.
-
-    contao.image.resizer:
-        alias: contao.image.legacy_resizer
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.legacy_resizer" instead.
 
     contao.opt-in:
         alias: contao.opt_in

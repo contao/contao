@@ -83,18 +83,6 @@
       <trans-unit id="tl_settings.allowedDownload.1">
         <source>Here you can enter a comma separated list of downloadable file types.</source>
       </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgWidth.0">
-        <source>Maximum GD image width</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgWidth.1">
-        <source>Here you can enter the maximum image width that the GD library shall try to handle.</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgHeight.0">
-        <source>Maximum GD image height</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.gdMaxImgHeight.1">
-        <source>Here you can enter the maximum image height that the GD library shall try to handle.</source>
-      </trans-unit>
       <trans-unit id="tl_settings.uploadTypes.0">
         <source>Upload file types</source>
       </trans-unit>
