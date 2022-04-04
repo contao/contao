@@ -368,17 +368,33 @@ class RecordPreviewListenerTest extends TestCase
 
     public function testHandlesExceptionsGracefully(): void
     {
-        $GLOBALS['TL_DCA']['tl_form']['list']['sorting']['mode'] = DataContainer::MODE_SORTED;
+        $row = [
+            'id' => 42
+        ];
 
         $framework = $this->mockContaoFramework([
             System::class => $this->createMock(System::class),
         ]);
 
+        $result = $this->createMock(Result::class);
+        $result
+            ->method('fetchAssociative')
+            ->willReturn($row)
+        ;
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->once())
             ->method('executeQuery')
-            ->willThrowException(new \Exception('exception'))
+            ->with('SELECT * FROM tl_content WHERE id = ?', ['42'])
+            ->willReturn($result)
+        ;
+
+        $connection
+            ->expects($this->once())
+            ->method('quoteIdentifier')
+            ->with('tl_content')
+            ->willReturn('tl_content')
         ;
 
         $connection
@@ -389,12 +405,13 @@ class RecordPreviewListenerTest extends TestCase
 
         $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
             'id' => '42',
-            'table' => 'tl_form',
+            'table' => 'tl_content',
         ]);
 
         $dataContainer
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('generateRecordLabel')
+            ->willThrowException(new \Exception('exception'))
         ;
 
         $listener = new RecordPreviewListener($framework, $connection);

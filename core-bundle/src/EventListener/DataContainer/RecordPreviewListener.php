@@ -18,6 +18,7 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * @internal
@@ -54,16 +55,16 @@ class RecordPreviewListener
 
     public function storePrecompiledRecordPreview(DataContainer $dc, string $undoId): void
     {
+        $row = $this->connection
+            ->executeQuery('SELECT * FROM '.$this->connection->quoteIdentifier($dc->table).' WHERE id = ?', [$dc->id])
+            ->fetchAssociative()
+        ;
+
+        if (!$row) {
+            return;
+        }
+
         try {
-            $row = $this->connection
-                ->executeQuery('SELECT * FROM '.$this->connection->quoteIdentifier($dc->table).' WHERE id = ?', [$dc->id])
-                ->fetchAssociative()
-            ;
-
-            if (!$row) {
-                return;
-            }
-
             $preview = $this->compilePreview($dc, $row);
         } catch (\Exception $exception) {
             $preview = '';
