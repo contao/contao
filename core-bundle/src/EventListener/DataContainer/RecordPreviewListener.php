@@ -60,6 +60,10 @@ class RecordPreviewListener
                 ->fetchAssociative()
             ;
 
+            if (!$row) {
+                return;
+            }
+
             $preview = $this->compilePreview($dc, $row);
         } catch (\Exception $exception) {
             $preview = '';
