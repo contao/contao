@@ -485,6 +485,10 @@ class MigrateCommand extends Command
     {
         $warnings = [];
 
+        if ($table->hasOption('engine') && 'innodb' !== strtolower($table->getOption('engine'))) {
+            return $warnings;
+        }
+
         $mysqlSize = $this->rowSizeCalculator->getMysqlRowSize($table);
         $mysqlLimit = $this->rowSizeCalculator->getMysqlRowSizeLimit();
         $innodbSize = $this->rowSizeCalculator->getInnodbRowSize($table);
