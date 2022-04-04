@@ -401,6 +401,39 @@ class RecordPreviewListenerTest extends TestCase
         $listener->storePrecompiledRecordPreview($dataContainer, '42');
     }
 
+    public function testFailsSilentlyIfRowDoesNotExist(): void
+    {
+        $framework = $this->mockContaoFramework([
+            System::class => $this->createMock(System::class),
+        ]);
+
+        $result = $this->createMock(Result::class);
+        $result
+            ->method('fetchAssociative')
+            ->willReturn(false)
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('executeQuery')
+            ->willReturn($result)
+        ;
+
+        $dataContainer = $this->mockClassWithProperties(DC_Table::class, [
+            'id' => '42',
+            'table' => 'tl_form',
+        ]);
+
+        $dataContainer
+            ->expects($this->never())
+            ->method('generateRecordLabel')
+        ;
+
+        $listener = new RecordPreviewListener($framework, $connection);
+        $listener->storePrecompiledRecordPreview($dataContainer, '42');
+    }
+
     public function loadDataContainer(): \Generator
     {
         yield 'Not a table data container' => [
