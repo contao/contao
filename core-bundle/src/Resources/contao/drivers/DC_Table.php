@@ -3534,17 +3534,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($fld == 'id')
 			{
 				$objRoot = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting" : ""))
-										  ->execute($this->values);
+										  ->execute(...$this->values);
 			}
 			elseif ($blnHasSorting)
 			{
 				$objRoot = $this->Database->prepare("SELECT pid, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort")
-										  ->execute($this->values);
+										  ->execute(...$this->values);
 			}
 			else
 			{
 				$objRoot = $this->Database->prepare("SELECT pid FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid")
-										  ->execute($this->values);
+										  ->execute(...$this->values);
 			}
 
 			if ($objRoot->numRows < 1)
@@ -4016,7 +4016,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				array_unshift($arrValues, $id);
 
 				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . (implode(' AND ', $this->procedure)) . ($blnHasSorting ? " ORDER BY sorting" : ''))
-											->execute($arrValues);
+											->execute(...$arrValues);
 			}
 			else
 			{
@@ -4361,7 +4361,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objOrderByStmt->limit($arrLimit[1], $arrLimit[0]);
 			}
 
-			$objOrderBy = $objOrderByStmt->execute($arrValues);
+			$objOrderBy = $objOrderByStmt->execute(...$arrValues);
 
 			if ($objOrderBy->numRows < 1)
 			{
@@ -4733,7 +4733,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$objRowStmt->limit($arrLimit[1], $arrLimit[0]);
 		}
 
-		$objRow = $objRowStmt->execute($this->values);
+		$objRow = $objRowStmt->execute(...$this->values);
 
 		// Display buttos
 		$return = Message::generate() . '
@@ -5310,7 +5310,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$query .= " WHERE " . implode(' AND ', $arrProcedure);
 			}
 
-			$objTotal = $this->Database->prepare($query)->execute($arrValues);
+			$objTotal = $this->Database->prepare($query)->execute(...$arrValues);
 			$this->total = $objTotal->count;
 			$options_total = 0;
 			$maxResultsPerPage = Config::get('maxResultsPerPage');
@@ -5605,7 +5605,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$objFields = $this->Database->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
-										->execute($arrValues);
+										->execute(...$arrValues);
 
 			// Begin select menu
 			$fields .= '
