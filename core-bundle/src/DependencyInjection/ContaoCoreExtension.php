@@ -58,7 +58,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     public function prepend(ContainerBuilder $container): void
     {
         $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
-        $config = $this->processConfiguration($configuration, $container->getExtensionConfig($this->getAlias()));
+
+        $config = $container->getExtensionConfig($this->getAlias());
+        $config = $container->getParameterBag()->resolveValue($config);
+        $config = $this->processConfiguration($configuration, $config);
 
         // Prepend the backend route prefix to make it available for third-party bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
