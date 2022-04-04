@@ -217,6 +217,7 @@ class FrontendModuleControllerTest extends TestCase
                     'name' => 'foo',
                     'title' => 'foo headline',
                     'request_token' => '<token>',
+                    'type' => 'foobar',
                 ],
             )
             ->willReturn('<rendered wildcard>')
@@ -231,6 +232,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $model = $this->getModuleModel([
             'id' => 42,
+            'type' => 'foobar',
             'name' => 'foo',
             'headline' => serialize(['value' => 'foo headline', 'unit' => 'h3']),
         ]);
