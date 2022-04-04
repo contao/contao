@@ -369,7 +369,7 @@ class RecordPreviewListenerTest extends TestCase
     public function testHandlesExceptionsGracefully(): void
     {
         $row = [
-            'id' => 42
+            'id' => 42,
         ];
 
         $framework = $this->mockContaoFramework([

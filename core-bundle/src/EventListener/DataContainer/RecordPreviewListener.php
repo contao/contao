@@ -18,7 +18,6 @@ use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * @internal
