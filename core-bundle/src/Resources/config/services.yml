@@ -1078,14 +1078,6 @@ services:
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.sizes" instead.
 
-    contao.image.legacy_resizer:
-        alias: contao.image.resizer
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 5.0
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.resizer" instead.
-
     contao.opt-in:
         alias: contao.opt_in
         public: true
