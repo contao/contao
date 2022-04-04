@@ -183,7 +183,7 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('main', $template['section']);
         $this->assertSame('main', $template['section']);
         $this->assertSame(['id' => 'foo-id', 'class' => 'foo-class'], $template['attributes']);
-        $this->assertSame(['value' => 'foo', 'unit' => 'h3'], $template['headline']);
+        $this->assertSame(['text' => 'foo', 'tagName' => 'h3'], $template['headline']);
         $this->assertSame($model->row(), $template['data']);
     }
 

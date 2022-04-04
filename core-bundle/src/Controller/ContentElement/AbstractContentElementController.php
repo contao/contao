@@ -93,8 +93,8 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
                 ->setIfExists('id', $attributesData[0] ?? null)
                 ->addClass($attributesData[1] ?? '', ...$classes),
             'headline' => [
-                'value' => $headlineData['value'] ?? '',
-                'unit' => $headlineData['unit'] ?? 'h1',
+                'text' => $headlineData['value'] ?? '',
+                'tagName' => $headlineData['unit'] ?? 'h1',
             ],
         ]);
     }
