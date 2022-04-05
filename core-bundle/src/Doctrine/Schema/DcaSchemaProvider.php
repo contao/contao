@@ -298,25 +298,8 @@ class DcaSchemaProvider
         $this->framework->initialize();
 
         $installer = $this->framework->createInstance(Installer::class);
-        $sqlTarget = $installer->getFromDca();
-        $sqlLegacy = $installer->getFromFile();
 
-        // Manually merge the legacy definitions (see #4766)
-        if (!empty($sqlLegacy)) {
-            foreach ($sqlLegacy as $table => $categories) {
-                foreach ($categories as $category => $fields) {
-                    if (\is_array($fields)) {
-                        foreach ($fields as $name => $sql) {
-                            $sqlTarget[$table][$category][$name] = $sql;
-                        }
-                    } else {
-                        $sqlTarget[$table][$category] = $fields;
-                    }
-                }
-            }
-        }
-
-        return $sqlTarget;
+        return $installer->getFromDca();
     }
 
     /**

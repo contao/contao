@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+### database.sql files
+
+Support for `database.sql` files has been dropped. Use DCA definitions and/or Doctrine DBAL schema
+listeners instead.
+
 ### Simple Token Parser
 
 Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are not supported anymore by the
