@@ -21,8 +21,8 @@ class FragmentTemplateTest extends TestCase
     public function testSetAndGetValues(): void
     {
         $template = $this->getFragmentTemplate();
-
         $this->assertSame('content_element/text', $template->getName());
+
         $template->setName('content_element/foobar');
         $this->assertSame('content_element/foobar', $template->getName());
 
@@ -78,7 +78,6 @@ class FragmentTemplateTest extends TestCase
     public function provideIllegalParentMethods(): \Generator
     {
         $excluded = ['__construct', '__set', '__get', '__isset', 'setData', 'getData', 'setName', 'getName', 'getResponse'];
-
         $parent = (new \ReflectionClass(FragmentTemplate::class))->getParentClass();
 
         foreach ($parent->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {

@@ -71,7 +71,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
      * "customTpl" field of the model and registers the effective template as
      * default view when using render().
      *
-     * Calling getResponse() method on the returned object will internally call
+     * Calling getResponse() on the returned object will internally call
      * render() with the set parameters and return the response.
      *
      * Note: The $fallbackTemplateName argument will be removed in Contao 6;
@@ -211,7 +211,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     /**
      * Renders a template. If $view is set to null, the default template of
-     * this fragment will rendered.
+     * this fragment will be rendered.
      *
      * By default, the returned response will have the appropriate headers set,
      * that allow our SubrequestCacheSubscriber to merge it with others of the

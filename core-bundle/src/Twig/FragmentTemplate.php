@@ -21,8 +21,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This class is a simple container object for template data.
+ *
+ * @todo Remove the base class in Contao 6
  */
-final class FragmentTemplate /* TODO: remove base class in Contao 6 */ extends Template
+final class FragmentTemplate extends Template
 {
     /**
      * @var array<string,mixed>
@@ -33,7 +35,6 @@ final class FragmentTemplate /* TODO: remove base class in Contao 6 */ extends T
      * @param \Closure(self, Response|null):Response $onGetResponse
      *
      * @internal
-     * @noinspection MagicMethodsValidityInspection
      */
     public function __construct(private string $templateName, private \Closure $onGetResponse)
     {
