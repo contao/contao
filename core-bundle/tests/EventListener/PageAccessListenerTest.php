@@ -240,10 +240,10 @@ class PageAccessListenerTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('isGranted')
-            ->with(ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1])
-            ->willReturn(false)
+            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1]])
+            ->willReturn(false, false)
         ;
 
         $pageModel = $this->mockClassWithProperties(
@@ -313,10 +313,10 @@ class PageAccessListenerTest extends TestCase
     {
         $security = $this->createMock(Security::class);
         $security
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('isGranted')
-            ->with(ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1])
-            ->willReturn(true)
+            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1]])
+            ->willReturn(false, true)
         ;
 
         $pageModel = $this->mockClassWithProperties(
