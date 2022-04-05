@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
@@ -370,8 +371,14 @@ class FigureBuilder
      * remove an auto-generated value from the results, set the respective
      * attribute to null.
      */
-    public function setLinkAttributes(array $attributes): self
+    public function setLinkAttributes(array|HtmlAttributes $attributes): self
     {
+        if ($attributes instanceof HtmlAttributes) {
+            $this->additionalLinkAttributes = iterator_to_array($attributes);
+
+            return $this;
+        }
+
         foreach ($attributes as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
                 throw new \InvalidArgumentException('Link attributes must be an array of type <string, string>.');

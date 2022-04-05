@@ -58,3 +58,8 @@ The back end widgets `pageSelector` and `fileSelector` have been removed. Use th
 ### Public folder
 
 The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
+
+### Figure
+The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
+`Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
+back to an array representation. If you are just using array access, nothing needs to be changed.

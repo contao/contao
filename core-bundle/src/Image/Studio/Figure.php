@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\Controller;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\File;
 use Contao\StringUtil;
 use Contao\Template;
@@ -152,7 +153,7 @@ class Figure
      * Returns a key-value list of all link attributes. This excludes "href" by
      * default.
      */
-    public function getLinkAttributes(bool $includeHref = false): array
+    public function getLinkAttributes(bool $includeHref = false): HtmlAttributes
     {
         $this->resolveIfClosure($this->linkAttributes);
 
@@ -196,7 +197,7 @@ class Figure
         $linkAttributes = array_filter($this->linkAttributes, static fn ($attribute): bool => null !== $attribute);
 
         // Optionally strip the href attribute
-        return $includeHref ? $linkAttributes : array_diff_key($linkAttributes, ['href' => null]);
+        return new HtmlAttributes($includeHref ? $linkAttributes : array_diff_key($linkAttributes, ['href' => null]));
     }
 
     /**
@@ -278,7 +279,7 @@ class Figure
         $originalSize = $image->getOriginalDimensions()->getSize();
         $fileInfoImageSize = (new File($image->getImageSrc(true)))->imageSize;
 
-        $linkAttributes = $this->getLinkAttributes();
+        $linkAttributes = iterator_to_array($this->getLinkAttributes());
         $metadata = $this->hasMetadata() ? $this->getMetadata() : new Metadata([]);
 
         // Primary image and metadata
