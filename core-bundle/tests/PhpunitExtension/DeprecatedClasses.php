@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
 use Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener;
 use Contao\CoreBundle\Security\Authentication\Provider\AuthenticationProvider;
-use Contao\GdImage;
 use Contao\TestCase\DeprecatedClassesPhpunitExtension;
 
 final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
@@ -22,7 +21,6 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
     protected function deprecationProvider(): array
     {
         return [
-            GdImage::class => ['%sUsing the "Contao\GdImage" class has been deprecated %s.'],
             ContaoLoginAuthenticationListener::class => ['%s"Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener" class is deprecated%s'],
             AuthenticationProvider::class => [
                 '%s"Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider" class is deprecated%s',
