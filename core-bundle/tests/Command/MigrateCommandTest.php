@@ -16,11 +16,14 @@ use Contao\CoreBundle\Command\MigrateCommand;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
+use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Terminal;
@@ -449,12 +452,20 @@ class MigrateCommandTest extends TestCase
             ->method('create')
         ;
 
+        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider
+            ->method('createSchema')
+            ->willReturn(new Schema())
+        ;
+
         return new MigrateCommand(
             $migrations,
             $fileLocator,
             $this->getTempDir(),
             $this->createMock(ContaoFramework::class),
             $backupManager,
+            $schemaProvider,
+            $this->createMock(MysqlInnodbRowSizeCalculator::class),
             $installer ?? $this->createMock(Installer::class)
         );
     }

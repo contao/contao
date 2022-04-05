@@ -1082,13 +1082,13 @@ abstract class Model
 			$objStatement->limit($arrOptions['limit'], $arrOptions['offset']);
 		}
 
-		if (!\array_key_exists('value', $arrOptions))
+		if (!isset($arrOptions['value']))
 		{
 			$arrOptions['value'] = array();
 		}
 
 		$objStatement = static::preFind($objStatement);
-		$objResult = $objStatement->execute(...(\is_array($arrOptions['value']) ? $arrOptions['value'] : array($arrOptions['value'])));
+		$objResult = $objStatement->execute(...(array) ($arrOptions['value']));
 
 		if ($objResult->numRows < 1)
 		{

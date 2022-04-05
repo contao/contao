@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\Model\Collection;
+use Contao\Model\Registry;
 
 /**
  * Proxy for new front end module fragments, so they are accessible via $GLOBALS['FE_MOD'].
@@ -38,7 +39,7 @@ class ModuleProxy extends Module
 			throw new \RuntimeException('ModuleProxy must be constructed with a ModuleModel');
 		}
 
-		$this->reference = new FrontendModuleReference($objElement, $strColumn);
+		$this->reference = new FrontendModuleReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement));
 		$this->strColumn = $strColumn;
 
 		// Do not call parent constructor

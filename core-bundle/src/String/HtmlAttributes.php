@@ -49,6 +49,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     public function mergeWith(iterable|string|self|null $attributes = null): self
     {
+        if (empty($attributes)) {
+            return $this;
+        }
+
         // Merge values if possible, set them otherwise
         $mergeSet = function (string $name, string|int|bool|\Stringable|null $value): void {
             if ('class' === $name) {
@@ -70,7 +74,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
-        foreach ($attributes ?? [] as $name => $value) {
+        foreach ($attributes as $name => $value) {
             $mergeSet($name, $value);
         }
 
@@ -82,7 +86,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      * property will be unset instead. All values will be coerced to strings,
      * whereby null and true will result in an empty string.
      */
-    public function set(string $name, string|int|bool|\Stringable|null $value): self
+    public function set(string $name, string|int|bool|\Stringable|null $value = true): self
     {
         $name = strtolower($name);
 
@@ -130,6 +134,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             array_unique($this->split(($this->attributes['class'] ?? '').' '.implode(' ', $classes)))
         );
 
+        if (empty($this->attributes['class'])) {
+            unset($this->attributes['class']);
+        }
+
         return $this;
     }
 
@@ -142,6 +150,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                 $this->split(implode(' ', $classes))
             )
         );
+
+        if (empty($this->attributes['class'])) {
+            unset($this->attributes['class']);
+        }
 
         return $this;
     }

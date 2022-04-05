@@ -262,6 +262,19 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame('foo bar baz foobar', $attributes['class']);
     }
 
+    public function testDoesNotOutputEmptyClassAttribute(): void
+    {
+        $attributes = new HtmlAttributes();
+        $attributes->addClass('');
+
+        $this->assertSame('', $attributes->toString());
+
+        $attributes->addClass('foo');
+        $attributes->removeClass('foo');
+
+        $this->assertSame('', $attributes->toString());
+    }
+
     public function testAllowsChaining(): void
     {
         $attributes = (new HtmlAttributes())
