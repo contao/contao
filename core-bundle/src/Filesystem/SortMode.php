@@ -15,14 +15,9 @@ namespace Contao\CoreBundle\Filesystem;
 enum SortMode: string
 {
     case pathAscending = 'path_asc';
-
     case pathDescending = 'path_desc';
-
     case pathNaturalAscending = 'name_asc';
-
     case pathNaturalDescending = 'name_desc';
-
     case lastModifiedAscending = 'date_asc';
-
     case lastModifiedDescending = 'date_desc';
 }
