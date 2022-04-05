@@ -20,9 +20,12 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
 use Contao\System;
+use Contao\TemplateLoader;
 use Doctrine\DBAL\Driver\Connection;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
@@ -32,6 +35,8 @@ use Twig\Environment;
 
 class AbstractBackendControllerTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -44,13 +49,20 @@ class AbstractBackendControllerTest extends TestCase
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $GLOBALS['TL_MIME']);
 
         $this->restoreServerEnvGetPost();
-        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class, System::class, Config::class]);
+        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class, System::class, Config::class, TemplateLoader::class]);
 
         parent::tearDown();
     }
 
+    /**
+     * @group legacy
+     */
     public function testAddsAndMergesBackendContext(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Environment::get(\'agent\')" has been deprecated %s');
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Config::get(\'os\')" has been deprecated.');
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Config::get(\'browser\')" has been deprecated.');
+
         $controller = new class() extends AbstractBackendController {
             public function fooAction(): Response
             {
@@ -60,7 +72,10 @@ class AbstractBackendControllerTest extends TestCase
 
         // Legacy setup
         ContaoEnvironment::reset();
-        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
+
+        $filesystem = new Filesystem();
+        $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
+        $filesystem->touch(Path::join($this->getTempDir(), 'be_main.html5'));
 
         $GLOBALS['TL_LANG']['MSC'] = [
             'version' => 'version',
@@ -73,6 +88,8 @@ class AbstractBackendControllerTest extends TestCase
 
         $_SERVER['HTTP_USER_AGENT'] = 'Contao/Foo';
         $_SERVER['HTTP_HOST'] = 'localhost';
+
+        TemplateLoader::addFile('be_main', '');
 
         $expectedContext = [
             'version' => 'my version',
@@ -88,6 +105,8 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
+            'ua' => 'unknown other ',
+            'badgeTitle' => '',
             'foo' => 'bar',
         ];
 

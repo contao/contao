@@ -17,8 +17,6 @@ namespace Contao;
  * @property string $cal_order
  * @property string $cal_format
  * @property string $cal_featured
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventMenu extends ModuleCalendar
 {
@@ -217,5 +215,3 @@ class ModuleEventMenu extends ModuleCalendar
 		$this->Template->activeYear = Input::get('year');
 	}
 }
-
-class_alias(ModuleEventMenu::class, 'ModuleEventMenu');

@@ -15,8 +15,6 @@ use Contao\Model\Collection;
 
 /**
  * Front end content element "gallery".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentGallery extends ContentElement
 {
@@ -162,11 +160,6 @@ class ContentGallery extends ContentElement
 				array_multisort($images, SORT_NUMERIC, $auxDate, SORT_DESC);
 				break;
 
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			case 'meta':
-				trigger_deprecation('contao/core-bundle', '4.0', 'The "meta" key in "Contao\ContentGallery::compile()" has been deprecated and will no longer work in Contao 5.0.');
-				// no break
-
 			case 'custom':
 				$images = ArrayUtil::sortByOrderField($images, $this->orderSRC);
 				break;
@@ -294,5 +287,3 @@ class ContentGallery extends ContentElement
 		$this->Template->images = $objTemplate->parse();
 	}
 }
-
-class_alias(ContentGallery::class, 'ContentGallery');

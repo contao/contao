@@ -14,8 +14,6 @@ use Highlight\Highlighter;
 
 /**
  * Front end content element "code".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentCode extends ContentElement
 {
@@ -77,5 +75,3 @@ class ContentCode extends ContentElement
 		$this->Template->cssClass = 'hljs ' . (strtolower($this->highlight) ?: 'nohighlight');
 	}
 }
-
-class_alias(ContentCode::class, 'ContentCode');

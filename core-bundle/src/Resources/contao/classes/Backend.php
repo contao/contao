@@ -27,8 +27,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * Provide methods to manage back end controllers.
  *
  * @property Ajax $objAjax
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Backend extends Controller
 {
@@ -534,10 +532,14 @@ abstract class Backend extends Controller
 				$pid = $dc->id;
 				$table = $strTable;
 				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
-
 				$container = System::getContainer();
 
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && ($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null) === 'Table')
+				if ($ptable)
+				{
+					$this->loadDataContainer($ptable);
+				}
+
+				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
 				{
 					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
 											 ->limit(1)
@@ -568,13 +570,15 @@ abstract class Backend extends Controller
 						}
 					}
 
-					System::loadLanguageFile($ptable);
-					$this->loadDataContainer($ptable);
-
 					// Next parent table
 					$pid = $objRow->pid;
 					$table = $ptable;
 					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable'] ?? null) ? $objRow->ptable : ($GLOBALS['TL_DCA'][$ptable]['config']['ptable'] ?? null);
+
+					if ($ptable)
+					{
+						$this->loadDataContainer($ptable);
+					}
 				}
 
 				// Add the last parent table
@@ -1124,7 +1128,7 @@ abstract class Backend extends Controller
 
 		foreach (array_keys($arrSections) as $k)
 		{
-			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k];
+			$arrSections[$k] = $GLOBALS['TL_LANG']['COLS'][$k] ?? $k;
 		}
 
 		asort($arrSections);
@@ -1356,14 +1360,6 @@ abstract class Backend extends Controller
 	 */
 	public function createFileList($strFilter='', $filemount=false)
 	{
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($strFilter === true)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" to "Contao\Backend::createFileList()" has been deprecated and will no longer work in Contao 5.0.');
-
-			$strFilter = 'gif,jpg,jpeg,png';
-		}
-
 		$this->import(BackendUser::class, 'User');
 
 		if ($this->User->isAdmin)
@@ -1406,14 +1402,6 @@ abstract class Backend extends Controller
 	 */
 	protected function doCreateFileList($strFolder=null, $level=-1, $strFilter='')
 	{
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($strFilter === true)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" to "Contao\Backend::doCreateFileList()" has been deprecated and will no longer work in Contao 5.0.');
-
-			$strFilter = 'gif,jpg,jpeg,png';
-		}
-
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$arrPages = Folder::scan($projectDir . '/' . $strFolder);
 
@@ -1468,5 +1456,3 @@ abstract class Backend extends Controller
 		return $strFiles . $strFolders;
 	}
 }
-
-class_alias(Backend::class, 'Backend');

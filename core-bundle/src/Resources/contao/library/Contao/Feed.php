@@ -33,8 +33,6 @@ namespace Contao;
  * @property string  $language    The feed language
  * @property string  $link        The feed link
  * @property integer $published   The publication date
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Feed
 {
@@ -240,5 +238,3 @@ class Feed
 		}
 	}
 }
-
-class_alias(Feed::class, 'Feed');

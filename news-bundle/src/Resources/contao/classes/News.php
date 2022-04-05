@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provide methods regarding news archives.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class News extends Frontend
 {
@@ -582,5 +580,3 @@ class News extends Frontend
 		return self::$arrPageCache[$intPageId];
 	}
 }
-
-class_alias(News::class, 'News');

@@ -57,6 +57,10 @@ class PageRoute extends Route implements RouteObjectInterface
             $options['utf8'] = true;
         }
 
+        if (!isset($options['compiler_class'])) {
+            $options['compiler_class'] = PageRouteCompiler::class;
+        }
+
         if ('' === $path) {
             $path = '/'.($pageModel->alias ?: $pageModel->id);
         } elseif (0 !== strncmp($path, '/', 1)) {

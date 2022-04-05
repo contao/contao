@@ -80,11 +80,7 @@ class ChangeSet
      */
     public function withOther(self $changeSet, string $pathPrefix = ''): self
     {
-        $itemsToCreate = array_combine(
-            array_column($this->itemsToCreate, self::ATTR_PATH),
-            $this->itemsToCreate
-        );
-
+        $itemsToCreate = array_combine(array_column($this->itemsToCreate, self::ATTR_PATH), $this->itemsToCreate);
         $itemsToUpdate = $this->itemsToUpdate;
         $itemsToDelete = $this->itemsToDelete;
         $lastModifiedUpdates = $this->lastModifiedUpdates;

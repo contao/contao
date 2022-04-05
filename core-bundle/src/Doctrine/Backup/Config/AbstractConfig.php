@@ -43,10 +43,7 @@ abstract class AbstractConfig
         return $this->gzCompression;
     }
 
-    /**
-     * @return static
-     */
-    public function withGzCompression(bool $enable)/*: static*/
+    public function withGzCompression(bool $enable): static
     {
         $new = clone $this;
         $new->gzCompression = $enable;
@@ -54,10 +51,7 @@ abstract class AbstractConfig
         return $new;
     }
 
-    /**
-     * @return static
-     */
-    public function withTablesToIgnore(array $tablesToIgnore)/*: static*/
+    public function withTablesToIgnore(array $tablesToIgnore): static
     {
         $new = clone $this;
         $new->tablesToIgnore = $this->filterTablesToIgnore($new->tablesToIgnore, $tablesToIgnore);
@@ -65,10 +59,7 @@ abstract class AbstractConfig
         return $new;
     }
 
-    /**
-     * @return static
-     */
-    public function withFileName(string $filename)/*: static*/
+    public function withFileName(string $filename): static
     {
         $new = clone $this;
         $new->backup = new Backup($filename);
@@ -78,10 +69,7 @@ abstract class AbstractConfig
 
     private function filterTablesToIgnore(array $currentTables, array $newTables): array
     {
-        $newList = array_filter(
-            $newTables,
-            static fn ($table) => !\in_array($table[0], ['-', '+'], true)
-        );
+        $newList = array_filter($newTables, static fn ($table) => !\in_array($table[0], ['-', '+'], true));
 
         if ($newList) {
             $currentTables = $newList;

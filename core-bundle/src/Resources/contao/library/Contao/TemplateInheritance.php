@@ -15,8 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the template inheritance logic
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 trait TemplateInheritance
 {
@@ -141,13 +139,6 @@ trait TemplateInheritance
 		if ($blnDebug === null)
 		{
 			$blnDebug = System::getContainer()->getParameter('kernel.debug');
-
-			// Backwards compatibility
-			if ($blnDebug !== (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false))
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Dynamically setting TL_CONFIG.debugMode has been deprecated. Use %s::setDebug() instead.', __CLASS__);
-				$blnDebug = (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false);
-			}
 		}
 
 		// Add start and end markers in debug mode
@@ -382,5 +373,3 @@ trait TemplateInheritance
 		return $twig->render($templateCandidate, $context);
 	}
 }
-
-class_alias(TemplateInheritance::class, 'TemplateInheritance');

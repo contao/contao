@@ -72,7 +72,6 @@ class ResizeImagesCommand extends Command
         $this
             ->addOption('time-limit', 'l', InputOption::VALUE_OPTIONAL, 'Time limit in seconds', '0')
             ->addOption('concurrent', 'c', InputOption::VALUE_OPTIONAL, 'Run multiple processes concurrently with a value larger than 1 or pause between resizes to limit CPU utilization with values lower than 1.0', '1')
-            ->addOption('throttle', 't', InputOption::VALUE_OPTIONAL, '(Deprecated) Use the concurrent option instead', false)
             ->addOption('image', null, InputArgument::OPTIONAL, 'Image name to resize a single image')
             ->addOption('no-sub-process', null, InputOption::VALUE_NONE, 'Do not start a sub process per resize')
             ->addOption('preserve-missing', null, InputOption::VALUE_NONE, 'Do not delete deferred image references to images that no longer exist')
@@ -97,19 +96,6 @@ class ResizeImagesCommand extends Command
 
         $timeLimit = (float) $input->getOption('time-limit');
         $concurrent = (float) $input->getOption('concurrent');
-
-        if (false !== $input->getOption('throttle')) {
-            trigger_deprecation('contao/core-bundle', '4.9', 'Using the throttle option is deprecated and will no longer work in Contao 5.0. Use the concurrent option instead.', E_USER_DEPRECATED);
-            $this->io->warning('Using the throttle option is deprecated, use the concurrent option instead.');
-
-            $throttle = (float) $input->getOption('throttle');
-
-            if ($throttle < 0.001 || $throttle > 1) {
-                throw new InvalidArgumentException(sprintf('Throttle value "%s" is invalid.', $throttle));
-            }
-
-            $concurrent *= $throttle;
-        }
 
         if ($timeLimit < 0) {
             throw new InvalidArgumentException(sprintf('Time-limit value "%s" is invalid.', $timeLimit));

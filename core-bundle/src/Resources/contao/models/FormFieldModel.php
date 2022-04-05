@@ -178,8 +178,6 @@ use Contao\Model\Collection;
  * @method static integer countByImageSubmit($val, array $opt=array())
  * @method static integer countBySingleSRC($val, array $opt=array())
  * @method static integer countByInvisible($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FormFieldModel extends Model
 {
@@ -218,5 +216,3 @@ class FormFieldModel extends Model
 		return static::findBy($arrColumns, $intPid, $arrOptions);
 	}
 }
-
-class_alias(FormFieldModel::class, 'FormFieldModel');

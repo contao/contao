@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Back end help wizard.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendPassword extends Backend
 {
@@ -129,5 +127,3 @@ class BackendPassword extends Backend
 		return $objTemplate->getResponse();
 	}
 }
-
-class_alias(BackendPassword::class, 'BackendPassword');

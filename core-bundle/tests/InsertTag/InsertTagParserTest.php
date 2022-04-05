@@ -47,11 +47,7 @@ class InsertTagParserTest extends TestCase
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class));
 
         $this->assertSame('<br>', $parser->replace('{{br}}'));
-
-        $this->assertSame(
-            [[ChunkedText::TYPE_RAW, '<br>']],
-            iterator_to_array($parser->replaceChunked('{{br}}'))
-        );
+        $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceChunked('{{br}}')));
     }
 
     public function testRender(): void

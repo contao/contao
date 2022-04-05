@@ -62,8 +62,6 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property boolean      $trustedDevicesEnabled
  * @property array        $trustedDevices
  * @property string       $currentDevice
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Template extends Controller
 {
@@ -249,19 +247,6 @@ abstract class Template extends Controller
 	public function getFormat()
 	{
 		return $this->strFormat;
-	}
-
-	/**
-	 * Print all template variables to the screen using print_r
-	 *
-	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.
-	 *             Use Template::dumpTemplateVars() instead.
-	 */
-	public function showTemplateVars()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::showTemplateVars()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::dumpTemplateVars()" instead.');
-
-		$this->dumpTemplateVars();
 	}
 
 	/**
@@ -515,16 +500,6 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Return the debug bar string
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	protected function getDebugBar()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::getDebugBar()" has been deprecated and will no longer work in Contao 5.0.');
-	}
-
-	/**
 	 * Minify the HTML markup preserving pre, script, style and textarea tags
 	 *
 	 * @param string $strHtml The HTML markup
@@ -745,33 +720,4 @@ abstract class Template extends Controller
 	{
 		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . StringUtil::specialchars($title) . '">';
 	}
-
-	/**
-	 * Flush the output buffers
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	public function flushAllData()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::flushAllData()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if (\function_exists('fastcgi_finish_request'))
-		{
-			fastcgi_finish_request();
-		}
-		elseif (\PHP_SAPI !== 'cli')
-		{
-			$status = ob_get_status(true);
-			$level = \count($status);
-
-			while ($level-- > 0 && (!empty($status[$level]['del']) || (isset($status[$level]['flags']) && ($status[$level]['flags'] & PHP_OUTPUT_HANDLER_REMOVABLE) && ($status[$level]['flags'] & PHP_OUTPUT_HANDLER_FLUSHABLE))))
-			{
-				ob_end_flush();
-			}
-
-			flush();
-		}
-	}
 }
-
-class_alias(Template::class, 'Template');

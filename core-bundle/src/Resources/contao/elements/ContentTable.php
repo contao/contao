@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "table".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentTable extends ContentElement
 {
@@ -138,5 +136,3 @@ class ContentTable extends ContentElement
 		return nl2br($strString, false);
 	}
 }
-
-class_alias(ContentTable::class, 'ContentTable');

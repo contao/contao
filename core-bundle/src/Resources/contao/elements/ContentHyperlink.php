@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "hyperlink".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentHyperlink extends ContentElement
 {
@@ -97,5 +95,3 @@ class ContentHyperlink extends ContentElement
 		}
 	}
 }
-
-class_alias(ContentHyperlink::class, 'ContentHyperlink');

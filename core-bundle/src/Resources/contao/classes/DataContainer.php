@@ -15,8 +15,8 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\Image\ResizeConfiguration;
-use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -30,8 +30,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $palette
  * @property object|null    $activeRecord
  * @property array          $rootIds
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class DataContainer extends Backend
 {
@@ -637,7 +635,7 @@ abstract class DataContainer extends Backend
 
 		$hasWizardClass = \in_array('wizard', $arrClasses);
 
-		if ($wizard)
+		if ($wizard && !($arrData['eval']['disabled'] ?? false) && !($arrData['eval']['readonly'] ?? false))
 		{
 			$objWidget->wizard = $wizard;
 
@@ -729,26 +727,7 @@ abstract class DataContainer extends Backend
 
 			if ($objFile->isImage)
 			{
-				$blnCanResize = true;
-
-				if ($objFile->isSvgImage)
-				{
-					// SVG images with undefined sizes cannot be resized
-					if (!$objFile->viewWidth || !$objFile->viewHeight)
-					{
-						$blnCanResize= false;
-					}
-				}
-				elseif (System::getContainer()->get('contao.image.imagine') instanceof Imagine)
-				{
-					// Check the maximum width and height if the GDlib is used to resize images
-					if ($objFile->height > Config::get('gdMaxImgHeight') || $objFile->width > Config::get('gdMaxImgWidth'))
-					{
-						$blnCanResize = false;
-					}
-				}
-
-				if ($blnCanResize)
+				if (!$objFile->isSvgImage || ($objFile->viewWidth && $objFile->viewHeight))
 				{
 					$container = System::getContainer();
 					$projectDir = $container->getParameter('kernel.project_dir');
@@ -845,7 +824,7 @@ abstract class DataContainer extends Backend
 	protected function switchToEdit($id)
 	{
 		$arrKeys = array();
-		$arrUnset = array('act', 'id', 'table', 'mode', 'pid');
+		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
 		foreach (array_keys($_GET) as $strKey)
 		{
@@ -858,6 +837,32 @@ abstract class DataContainer extends Backend
 		$strUrl = TL_SCRIPT . '?' . implode('&', $arrKeys);
 
 		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+	}
+
+	/**
+	 * @throws AccessDeniedException
+	 */
+	protected function denyAccessUnlessGranted($attribute, $subject): void
+	{
+		$security = System::getContainer()->get('security.helper');
+
+		if ($security->isGranted($attribute, $subject))
+		{
+			return;
+		}
+
+		$message = 'Access denied.';
+
+		if ($subject instanceof DataContainerSubject)
+		{
+			$message = sprintf('Access denied to %s [%s].', $subject, $attribute);
+		}
+
+		$exception = new AccessDeniedException($message);
+		$exception->setAttributes($attribute);
+		$exception->setSubject($subject);
+
+		throw $exception;
 	}
 
 	/**
@@ -1612,24 +1617,10 @@ abstract class DataContainer extends Backend
 	 * @param string $table
 	 *
 	 * @return string
-	 *
-	 * @todo Change the return type to ?string in Contao 5.0
 	 */
-	public static function getDriverForTable(string $table): string
+	public static function getDriverForTable(string $table): ?string
 	{
-		if (!isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer']))
-		{
-			return '';
-		}
-
-		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
-
-		if (false === strpos($dataContainer, '\\'))
-		{
-			$dataContainer = 'DC_' . $dataContainer;
-		}
-
-		return $dataContainer;
+		return $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? null;
 	}
 
 	/**
@@ -1649,12 +1640,6 @@ abstract class DataContainer extends Backend
 
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			// Decrypt the value
-			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
-			{
-				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
-			}
-
 			if (strpos($v, ':') !== false)
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
@@ -1696,7 +1681,7 @@ abstract class DataContainer extends Backend
 
 					foreach ($row_v as $option)
 					{
-						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?: $option;
+						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
 					}
 
 					$args[$k] = implode(', ', $args_k);
@@ -1785,5 +1770,3 @@ abstract class DataContainer extends Backend
 		return $label;
 	}
 }
-
-class_alias(DataContainer::class, 'DataContainer');

@@ -16,8 +16,6 @@ namespace Contao;
  * @property integer $maxlength
  * @property array   $options
  * @property boolean $mandatory
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class TimePeriod extends Widget
 {
@@ -164,5 +162,3 @@ class TimePeriod extends Widget
 		);
 	}
 }
-
-class_alias(TimePeriod::class, 'TimePeriod');

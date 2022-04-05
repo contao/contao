@@ -25,8 +25,6 @@ use ScssPhp\ScssPhp\OutputStyle;
  *     $combiner->add('css/print.less');
  *
  *     echo $combiner->getCombinedFile();
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Combiner extends System
 {
@@ -541,5 +539,3 @@ class Combiner extends System
 		return $return;
 	}
 }
-
-class_alias(Combiner::class, 'Combiner');

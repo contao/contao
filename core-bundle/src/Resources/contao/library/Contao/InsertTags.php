@@ -26,8 +26,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
  *
  *     $it = new InsertTags();
  *     echo $it->replace($text);
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InsertTags extends Controller
 {
@@ -127,7 +125,7 @@ class InsertTags extends Controller
 		$strBuffer = $this->encodeHtmlAttributes($strBuffer);
 
 		$strRegExpStart = '{{'           // Starts with two opening curly braces
-			. '('                        // Match the contents fo the tag
+			. '('                        // Match the contents of the tag
 				. '[a-zA-Z0-9\x80-\xFF]' // The first letter must not be a reserved character of Twig, Mustache or similar template engines (see #805)
 				. '(?:[^{}]|'            // Match any character not curly brace or a nested insert tag
 		;
@@ -299,7 +297,7 @@ class InsertTags extends Controller
 					{
 						try
 						{
-							$arrCache[$strTag] = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array($keys[1]))[$keys[1]];
+							$arrCache[$strTag] = $container->get('contao.intl.locales')->getDisplayNames(array($keys[1]))[$keys[1]];
 							break;
 						}
 						catch (\Throwable $exception)
@@ -312,7 +310,7 @@ class InsertTags extends Controller
 					{
 						try
 						{
-							$arrCache[$strTag] = System::getContainer()->get('contao.intl.countries')->getCountries()[strtoupper($keys[1])] ?? '';
+							$arrCache[$strTag] = $container->get('contao.intl.countries')->getCountries()[strtoupper($keys[1])] ?? '';
 							break;
 						}
 						catch (\Throwable $exception)
@@ -380,7 +378,7 @@ class InsertTags extends Controller
 					}
 					catch (\InvalidArgumentException $exception)
 					{
-						System::getContainer()->get('monolog.logger.contao.error')->error('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage());
+						$container->get('monolog.logger.contao.error')->error('Invalid label insert tag {{' . $strTag . '}} on page ' . Environment::get('uri') . ': ' . $exception->getMessage());
 					}
 
 					if (\count($keys) == 2)
@@ -416,12 +414,6 @@ class InsertTags extends Controller
 						}
 
 						$value = StringUtil::deserialize($value);
-
-						// Decrypt the value
-						if ($GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['encrypt'] ?? null)
-						{
-							$value = Encryption::decrypt($value);
-						}
 
 						$rgxp = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['eval']['rgxp'] ?? null;
 						$opts = $GLOBALS['TL_DCA']['tl_member']['fields'][$elements[1]]['options'] ?? null;
@@ -813,7 +805,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
+					$responseContext = $container->get('contao.routing.response_context_accessor')->getResponseContext();
 
 					if ($responseContext && $responseContext->has(HtmlHeadBag::class) && \in_array($elements[1], array('pageTitle', 'description'), true))
 					{
@@ -1146,7 +1138,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					System::getContainer()->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
+					$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
 					break;
 			}
 
@@ -1261,7 +1253,7 @@ class InsertTags extends Controller
 								}
 							}
 
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'));
+							$container->get('monolog.logger.contao.error')->error('Unknown insert tag flag "' . $flag . '" in {{' . $strTag . '}} on page ' . Environment::get('uri'));
 							break;
 					}
 				}
@@ -1286,7 +1278,7 @@ class InsertTags extends Controller
 	private function parseUrlWithQueryString(string $url): array
 	{
 		// Restore [&] and &amp;
-		$url = str_replace(array('[&]', '&amp;'), '&', $url);
+		$url = str_replace(array('&#61;', '[&]', '&amp;'), array('=', '&', '&'), $url);
 
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';
@@ -1318,10 +1310,15 @@ class InsertTags extends Controller
 	 */
 	private function encodeHtmlAttributes($html)
 	{
+		if (strpos($html, '{{') === false && strpos($html, '}}') === false)
+		{
+			return $html;
+		}
+
 		// Regular expression to match tags according to https://html.spec.whatwg.org/#tag-open-state
 		$tagRegEx = '('
 			. '<'                         // Tag start
-			. '/?'                        // Optional slash for closing element
+			. '/?+'                       // Optional slash for closing element
 			. '([a-z][^\s/>]*+)'          // Tag name
 			. '(?:'                       // Attribute
 				. '[\s/]*+'               // Optional white space including slash
@@ -1337,12 +1334,12 @@ class InsertTags extends Controller
 				. ')?+'                   // Assignment is optional
 			. ')*+'                       // Attributes may occur zero or more times
 			. '[\s/]*+'                   // Optional white space including slash
-			. '>?'                        // Tag end (optional if EOF)
+			. '>?+'                       // Tag end (optional if EOF)
 			. '|<!--'                     // Or comment
 			. '|<!'                       // Or bogus ! comment
 			. '|<\?'                      // Or bogus ? comment
 			. '|</(?![a-z])'              // Or bogus / comment
-		. ')i';
+		. ')iS';
 
 		$htmlResult = '';
 		$offset = 0;
@@ -1352,7 +1349,7 @@ class InsertTags extends Controller
 			$htmlResult .= substr($html, $offset, $matches[0][1] - $offset);
 
 			// Skip comments
-			if ($matches[0][0] === '<!--' || $matches[0][0] === '<!' || $matches[0][0] === '</' || $matches[0][0] === '<?')
+			if (\in_array($matches[0][0], array('<!--', '<!', '</', '<?'), true))
 			{
 				$commentCloseString = $matches[0][0] === '<!--' ? '-->' : '>';
 				$commentClosePos = strpos($html, $commentCloseString, $offset);
@@ -1365,18 +1362,21 @@ class InsertTags extends Controller
 
 			$tag = $matches[0][0];
 
-			// Encode insert tags
-			$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));
-			$tag = $tagPrefix . $this->fixUnclosedTagsAndUrlAttributes(substr($tag, \strlen($tagPrefix)));
-			$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
-			$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
+			if (strpos($tag, '{{') !== false || strpos($tag, '}}') !== false)
+			{
+				// Encode insert tags
+				$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));
+				$tag = $tagPrefix . $this->fixUnclosedTagsAndUrlAttributes(substr($tag, \strlen($tagPrefix)));
+				$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
+				$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
+			}
 
 			$offset = $matches[0][1] + \strlen($matches[0][0]);
 			$htmlResult .= $tag;
 
 			// Skip RCDATA and RAWTEXT elements https://html.spec.whatwg.org/#rcdata-state
 			if (
-				\in_array(strtolower($matches[1][0]), array('script', 'title', 'textarea', 'style', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript'))
+				\in_array(strtolower($matches[1][0]), array('script', 'title', 'textarea', 'style', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript'), true)
 				&& preg_match('(</' . preg_quote($matches[1][0]) . '[\s/>])i', $html, $endTagMatches, PREG_OFFSET_CAPTURE, $offset)
 			) {
 				$offset = $endTagMatches[0][1] + \strlen($endTagMatches[0][0]);
@@ -1411,7 +1411,7 @@ class InsertTags extends Controller
 					. '|[^>][^\s>]*+' // Or unquoted value
 				. ')?+'               // Value is optional
 			. ')?+'                   // Assignment is optional
-		. ')i';
+		. ')iS';
 
 		$attributesResult = '';
 		$offset = 0;
@@ -1505,5 +1505,3 @@ class InsertTags extends Controller
 		return false;
 	}
 }
-
-class_alias(InsertTags::class, 'InsertTags');

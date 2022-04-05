@@ -14,8 +14,6 @@ namespace Contao;
  * Provide methods to handle key value pairs.
  *
  * @property integer $maxlength
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class KeyValueWizard extends Widget
 {
@@ -157,5 +155,3 @@ class KeyValueWizard extends Widget
   <script>Backend.keyValueWizard("ctrl_' . $this->strId . '")</script>';
 	}
 }
-
-class_alias(KeyValueWizard::class, 'KeyValueWizard');

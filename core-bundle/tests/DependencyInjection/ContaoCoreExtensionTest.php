@@ -43,6 +43,7 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager;
 use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
@@ -103,70 +104,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         // Ensure that the listener is registered after the CsrfTokenCookieSubscriber
         $this->assertTrue($makeResponsePrivatePriority < (int) $csrfCookieListenerPriority);
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testOnlyRegistersTheRoutingLegacyRouteProviderInLegacyMode(): void
-    {
-        $this->expectDeprecation('%sURL suffix is configured per root page %s this option requires legacy routing%s');
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'legacy_routing' => false,
-            ],
-        ]);
-
-        $this->assertFalse($container->has('contao.routing.legacy_route_provider'));
-
-        $container = $this->getContainerBuilder();
-
-        $this->assertTrue($container->has('contao.routing.legacy_route_provider'));
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'url_suffix' => '.php',
-            ],
-        ]);
-
-        $this->assertTrue($container->has('contao.routing.legacy_route_provider'));
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testOnlyRegistersTheRoutingUrlGeneratorInLegacyMode(): void
-    {
-        $this->expectDeprecation('%sURL suffix is configured per root page %s this option requires legacy routing%s');
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'legacy_routing' => false,
-            ],
-        ]);
-
-        $this->assertFalse($container->has('contao.routing.url_generator'));
-
-        $container = $this->getContainerBuilder();
-
-        $this->assertTrue($container->has('contao.routing.url_generator'));
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'url_suffix' => '.php',
-            ],
-        ]);
-
-        $this->assertTrue($container->has('contao.routing.url_generator'));
     }
 
     public function testRegistersTheSecurityTokenCheckerWithRoleHierarchyVoter(): void
@@ -325,6 +262,9 @@ class ContaoCoreExtensionTest extends TestCase
                         ],
                         'default_http_client_options' => [
                             'proxy' => 'http://localhost:7080',
+                            'headers' => [
+                                'Foo' => 'Bar',
+                            ],
                         ],
                     ],
                 ],
@@ -335,7 +275,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition('contao.crawl.escargot.factory');
 
         $this->assertSame(['https://example.com'], $definition->getArgument(2));
-        $this->assertSame(['proxy' => 'http://localhost:7080'], $definition->getArgument(3));
+        $this->assertSame(['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']], $definition->getArgument(3));
     }
 
     public function testConfiguresTheBackupManagerCorrectly(): void
@@ -483,13 +423,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->has('contao.listener.search_index'));
     }
 
-    /**
-     * @group legacy
-     */
     public function testRegistersTheImageTargetPath(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.4: Using the "contao.image.target_path" parameter has been deprecated %s.');
-
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
@@ -503,17 +438,6 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load([], $container);
 
         $this->assertSame(Path::normalize($this->getTempDir()).'/assets/images', $container->getParameter('contao.image.target_dir'));
-
-        $params = [
-            'contao' => [
-                'image' => ['target_path' => 'my/custom/dir'],
-            ],
-        ];
-
-        $extension = new ContaoCoreExtension();
-        $extension->load($params, $container);
-
-        $this->assertSame(Path::normalize($this->getTempDir()).'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
     }
 
     /**
@@ -619,10 +543,7 @@ class ContaoCoreExtensionTest extends TestCase
         $config
             ->expects($this->exactly(2))
             ->method('mountLocalAdapter')
-            ->withConsecutive(
-                ['upload/path', 'upload/path', 'files'],
-                ['var/backups', 'backups', 'backups'],
-            )
+            ->withConsecutive(['upload/path', 'upload/path', 'files'], ['var/backups', 'backups', 'backups'])
         ;
 
         $dbafsDefinition = $this->createMock(Definition::class);
@@ -640,6 +561,26 @@ class ContaoCoreExtensionTest extends TestCase
         ;
 
         (new ContaoCoreExtension())->configureFilesystem($config);
+    }
+
+    public function testRegistersTraceableAccessDecisionMangerInDebug(): void
+    {
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.debug' => true,
+                'kernel.charset' => 'UTF-8',
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+            ])
+        );
+
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $container);
+
+        $this->assertTrue($container->hasDefinition('contao.debug.security.access.decision_manager'));
+
+        $definition = $container->findDefinition('contao.debug.security.access.decision_manager');
+        $this->assertSame(TraceableAccessDecisionManager::class, $definition->getClass());
+        $this->assertSame('security.access.decision_manager', $definition->getDecoratedService()[0]);
     }
 
     public function testRegistersAsContentElementAttribute(): void

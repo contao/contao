@@ -19,8 +19,6 @@ namespace Contao;
  *     {
  *         $email->sendTo($recipient);
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Validator
 {
@@ -255,9 +253,6 @@ class Validator
 	 * @param mixed $varValue The value to be validated
 	 *
 	 * @return boolean True if the value is a binary UUID
-	 *
-	 * @author Martin Auswöger <https://github.com/ausi>
-	 * @author Tristan Lins <https://github.com/tristanlins>
 	 */
 	public static function isBinaryUuid($varValue)
 	{
@@ -275,9 +270,6 @@ class Validator
 	 * @param mixed $varValue The value to be validated
 	 *
 	 * @return boolean True if the value is a string UUID
-	 *
-	 * @author Martin Auswöger <https://github.com/ausi>
-	 * @author Tristan Lins <https://github.com/tristanlins>
 	 */
 	public static function isStringUuid($varValue)
 	{
@@ -287,18 +279,6 @@ class Validator
 		}
 
 		return false;
-	}
-
-	/**
-	 * Valid Google+ ID or vanity name
-	 *
-	 * @param mixed $varValue The numeric ID or vanity name
-	 *
-	 * @return boolean True if the value is a Google+ ID
-	 */
-	public static function isGooglePlusId($varValue)
-	{
-		return preg_match('/^([0-9]{21}|\+[\w-]+)$/u', $varValue);
 	}
 
 	/**
@@ -400,5 +380,3 @@ class Validator
 		return preg_match('/^[A-Za-z0-9[\]_-]+$/', $strName);
 	}
 }
-
-class_alias(Validator::class, 'Validator');

@@ -20,7 +20,6 @@ use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
@@ -57,10 +56,6 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
                 ->end()
                 ->append($this->addIntlNode())
-                ->booleanNode('legacy_routing')
-                    ->defaultTrue()
-                    ->info('Disabling legacy routing allows to configure the URL prefix and suffix per root page. However, it might not be compatible with third-party extensions.')
-                ->end()
                 ->variableNode('localconfig')
                     ->info('Allows to set TL_CONFIG variables, overriding settings stored in localconfig.php. Changes in the Contao back end will not have any effect.')
                     ->validate()
@@ -83,17 +78,12 @@ class Configuration implements ConfigurationInterface
                     ->prototype('scalar')->end()
                     ->defaultValue([])
                 ->end()
-                ->booleanNode('prepend_locale')
-                    ->info('Whether or not to add the page language to the URL.')
-                    ->setDeprecated('contao/core-bundle', '4.10', 'The URL prefix is configured per root page since Contao 4.10. Using this option requires legacy routing.')
-                    ->defaultFalse()
-                ->end()
                 ->booleanNode('pretty_error_screens')
                     ->info('Show customizable, pretty error screens instead of the default PHP error messages.')
                     ->defaultValue(false)
                 ->end()
                 ->scalarNode('preview_script')
-                    ->info("An optional entry point script that bypasses the front end cache for previewing changes (e.g. '/preview.php').")
+                    ->info('An optional entry point script that bypasses the front end cache for previewing changes (e.g. "/preview.php").')
                     ->cannotBeEmpty()
                     ->defaultValue('')
                     ->validate()
@@ -112,15 +102,11 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('editable_files')
                     ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,ts,txt,xliff,xml,yml,yaml')
                 ->end()
-                ->scalarNode('url_suffix')
-                    ->setDeprecated('contao/core-bundle', '4.10', 'The URL suffix is configured per root page since Contao 4.10. Using this option requires legacy routing.')
-                    ->defaultValue('.html')
-                ->end()
                 ->scalarNode('web_dir')
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
                     ->setDeprecated('contao/core-bundle', '4.13', 'Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->getDefaultWebDir())
+                    ->defaultValue('public')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
@@ -180,6 +166,9 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->booleanNode('jxl_lossless')
                         ->end()
+                        ->booleanNode('flatten')
+                            ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
+                        ->end()
                         ->scalarNode('interlace')
                             ->defaultValue(ImageInterface::INTERLACE_PLANE)
                         ->end()
@@ -190,7 +179,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->booleanNode('reject_large_uploads')
-                    ->info('Reject uploaded images exceeding the localconfig.gdMaxImgWidth and localconfig.gdMaxImgHeight dimensions.')
+                    ->info('Reject uploaded images exceeding the localconfig.imageWidth and localconfig.imageHeight dimensions.')
                     ->defaultValue(false)
                 ->end()
                 ->arrayNode('sizes')
@@ -541,7 +530,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('default_http_client_options')
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
-                    ->prototype('scalar')->end()
+                    ->prototype('variable')->end()
                     ->defaultValue([])
                 ->end()
             ->end()
@@ -703,16 +692,5 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
-    }
-
-    private function getDefaultWebDir(): string
-    {
-        $webDir = Path::join($this->projectDir, 'web');
-
-        if ((new Filesystem())->exists($webDir)) {
-            return $webDir;
-        }
-
-        return Path::join($this->projectDir, 'public');
     }
 }

@@ -23,7 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BackupListCommand extends AbstractBackupCommand
 {
     protected static $defaultName = 'contao:backup:list';
-    protected static $defaultDescription = 'Lists the existing backups.';
+    protected static $defaultDescription = 'Lists the existing database backups.';
 
     public static function getFormattedTimeZoneOffset(\DateTimeZone $timeZone): string
     {

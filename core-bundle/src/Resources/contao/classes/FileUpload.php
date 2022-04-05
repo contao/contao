@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Provide methods to handle file uploads in the back end.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FileUpload extends Backend
 {
@@ -149,13 +147,13 @@ class FileUpload extends Backend
 				$strExtension = strtolower(substr($file['name'], strrpos($file['name'], '.') + 1));
 
 				// Image is too big
-				if (\in_array($strExtension, array('gif', 'jpg', 'jpeg', 'png', 'webp', 'avif', 'heic', 'jxl')) && System::getContainer()->getParameter('contao.image.reject_large_uploads'))
+				if (\in_array($strExtension, array('gif', 'jpg', 'jpeg', 'png', 'webp', 'avif', 'heic', 'jxl')) && Config::get('imageWidth') && Config::get('imageHeight') && System::getContainer()->getParameter('contao.image.reject_large_uploads'))
 				{
 					$arrImageSize = getimagesize($file['tmp_name']);
 
-					if ($arrImageSize[0] > Config::get('gdMaxImgWidth') || $arrImageSize[1] > Config::get('gdMaxImgHeight'))
+					if ($arrImageSize[0] > Config::get('imageWidth') || $arrImageSize[1] > Config::get('imageHeight'))
 					{
-						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['largeImage'], Config::get('gdMaxImgWidth'), Config::get('gdMaxImgHeight')));
+						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['largeImage'], Config::get('imageWidth'), Config::get('imageHeight')));
 						$this->blnHasError = true;
 
 						continue;
@@ -211,7 +209,7 @@ class FileUpload extends Backend
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
 		{
 			$return .= '
-  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('gdMaxImgWidth') . 'x' . Config::get('gdMaxImgHeight')) . '</p>';
+  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
 		}
 
 		return $return;
@@ -257,21 +255,6 @@ class FileUpload extends Backend
 	 * Return the maximum upload file size in bytes
 	 *
 	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.6, to be removed in Contao 5.0.
-	 *             Use FileUpload::getMaxUploadSize() instead.
-	 */
-	protected function getMaximumUploadSize()
-	{
-		trigger_deprecation('contao/core-bundle', '4.6', 'Using "Contao\FileUpload::getMaximumUploadSize()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\FileUpload::getMaxUploadSize()" instead.');
-
-		return static::getMaxUploadSize();
-	}
-
-	/**
-	 * Return the maximum upload file size in bytes
-	 *
-	 * @return string
 	 */
 	public static function getMaxUploadSize()
 	{
@@ -302,15 +285,6 @@ class FileUpload extends Backend
 		}
 
 		$arrImageSize = $objFile->imageSize;
-
-		// The image is too big to be handled by the GD library
-		if ($objFile->isGdImage && ($arrImageSize[0] > Config::get('gdMaxImgWidth') || $arrImageSize[1] > Config::get('gdMaxImgHeight')))
-		{
-			Message::addInfo(sprintf($GLOBALS['TL_LANG']['MSC']['fileExceeds'], $objFile->basename));
-			System::getContainer()->get('monolog.logger.contao.files')->info('File "' . $strImage . '" is too big to be resized automatically');
-
-			return false;
-		}
 
 		$blnResize = false;
 
@@ -347,5 +321,3 @@ class FileUpload extends Backend
 		return false;
 	}
 }
-
-class_alias(FileUpload::class, 'FileUpload');

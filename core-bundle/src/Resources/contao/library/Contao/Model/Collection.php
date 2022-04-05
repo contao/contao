@@ -16,8 +16,6 @@ use Contao\Model;
 /**
  * The class handles traversing a set of models and lazy loads the database
  * result rows upon their first usage.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 {
@@ -445,5 +443,3 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 		return new \ArrayIterator($this->arrModels);
 	}
 }
-
-class_alias(Collection::class, 'Model\Collection');

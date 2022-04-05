@@ -14,8 +14,6 @@ use Contao\Model\Collection;
 
 /**
  * Provide methods regarding FAQs.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaq extends Frontend
 {
@@ -150,5 +148,3 @@ class ModuleFaq extends Frontend
 		return $jsonLd;
 	}
 }
-
-class_alias(ModuleFaq::class, 'ModuleFaq');

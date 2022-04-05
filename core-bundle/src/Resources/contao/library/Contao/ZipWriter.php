@@ -18,8 +18,6 @@ namespace Contao;
  *     $zip = new ZipWriter('test.zip');
  *     $zip->addFile('test.txt');
  *     $zip->close();
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ZipWriter
 {
@@ -279,5 +277,3 @@ class ZipWriter
 		return pack("H*", $hexTime[6] . $hexTime[7] . $hexTime[4] . $hexTime[5] . $hexTime[2] . $hexTime[3] . $hexTime[0] . $hexTime[1]);
 	}
 }
-
-class_alias(ZipWriter::class, 'ZipWriter');

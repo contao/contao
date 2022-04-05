@@ -64,8 +64,6 @@ use Contao\Model\Registry;
  * @method static integer countByEmail($val, array $opt=array())
  * @method static integer countByEmailSubject($val, array $opt=array())
  * @method static integer countByEmailText($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class OptInModel extends Model
 {
@@ -87,44 +85,6 @@ class OptInModel extends Model
 		$t = static::$strTable;
 
 		return static::findBy(array("$t.removeOn>0 AND $t.removeOn<?"), time(), $arrOptions);
-	}
-
-	/**
-	 * Find an opt-in token by its related table and ID
-	 *
-	 * @param string  $strTable
-	 * @param integer $intId
-	 * @param array   $arrOptions
-	 *
-	 * @return static|null
-	 *
-	 * @deprecated Deprecated since Contao 4.7, to be removed in Contao 5.0; use the
-	 *             Contao\OptInModel::findByRelatedTableAndIds() method instead
-	 */
-	public static function findOneByRelatedTableAndId($strTable, $intId, array $arrOptions=array())
-	{
-		trigger_deprecation('contao/core-bundle', '4.7', 'Using "Contao\OptInModel::findOneByRelatedTableAndIds()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\OptInModel::findByRelatedTableAndIds()" instead.');
-
-		$t = static::$strTable;
-		$objDatabase = Database::getInstance();
-
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId=?)")
-								 ->execute($strTable, $intId);
-
-		if ($objResult->numRows < 1)
-		{
-			return null;
-		}
-
-		$objRegistry = Registry::getInstance();
-
-		/** @var OptInModel|Model $objOptIn */
-		if ($objOptIn = $objRegistry->fetch($t, $objResult->id))
-		{
-			return $objOptIn;
-		}
-
-		return new static($objResult);
 	}
 
 	/**

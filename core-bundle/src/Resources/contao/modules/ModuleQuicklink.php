@@ -15,8 +15,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "quick link".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleQuicklink extends Module
 {
@@ -160,5 +158,3 @@ class ModuleQuicklink extends Module
 		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
-
-class_alias(ModuleQuicklink::class, 'ModuleQuicklink');

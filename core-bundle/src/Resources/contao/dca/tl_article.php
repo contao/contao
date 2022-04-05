@@ -16,6 +16,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\LayoutModel;
@@ -31,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_page',
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,
@@ -146,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('protected'),
-		'default'                     => '{title_legend},title,alias,author;{layout_legend},inColumn,keywords;{teaser_legend:hide},teaserCssID,showTeaser,teaser;{syndication_legend},printable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},title,alias,author;{layout_legend},inColumn;{teaser_legend:hide},teaserCssID,showTeaser,teaser;{syndication_legend},printable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -219,14 +220,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
 			'sql'                     => "varchar(32) NOT NULL default 'main'"
-		),
-		'keywords' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'textarea',
-			'search'                  => true,
-			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
 		),
 		'showTeaser' => array
 		(
@@ -332,7 +325,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_article extends Backend
 {
@@ -764,29 +757,6 @@ class tl_article extends Backend
 		$objPage = PageModel::findById($row['pid']);
 
 		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the paste article button
-	 *
-	 * @param DataContainer $dc
-	 * @param array         $row
-	 * @param string        $table
-	 * @param boolean       $cr
-	 * @param array         $arrClipboard
-	 *
-	 * @return string
-	 *
-	 * @deprecated
-	 */
-	public function pasteArticle(DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_article::pasteArticle()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return System::getContainer()
-			->get('contao.listener.data_container.content_composition')
-			->renderArticlePasteButton($dc, $row, $table, $cr, $arrClipboard)
-		;
 	}
 
 	/**
