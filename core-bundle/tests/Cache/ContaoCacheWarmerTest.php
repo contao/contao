@@ -53,7 +53,6 @@ class ContaoCacheWarmerTest extends TestCase
     {
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('database_connection', $this->createMock(Connection::class));
-        $container->set('contao.resource_locator', $this->createMock(FileLocator::class));
 
         System::setContainer($container);
 
