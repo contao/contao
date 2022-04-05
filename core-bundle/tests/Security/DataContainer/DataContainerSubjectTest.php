@@ -22,11 +22,7 @@ class DataContainerSubjectTest extends TestCase
      */
     public function testContainer(int|string|null $id): void
     {
-        $subject = new DataContainerSubject(
-            'foobar_table',
-            $id,
-            ['foobar']
-        );
+        $subject = new DataContainerSubject('foobar_table', $id, ['foobar']);
 
         $this->assertSame('foobar_table', $subject->table);
         $this->assertSame($id, $subject->id);

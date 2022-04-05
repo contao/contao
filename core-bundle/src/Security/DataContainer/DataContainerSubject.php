@@ -14,8 +14,11 @@ namespace Contao\CoreBundle\Security\DataContainer;
 
 class DataContainerSubject
 {
-    public function __construct(public readonly string $table, public readonly int|string|null $id = null, public readonly array $attributes = [])
-    {
+    public function __construct(
+        public readonly string $table,
+        public readonly int|string|null $id = null,
+        public readonly array $attributes = []
+    ) {
     }
 
     public function __toString(): string

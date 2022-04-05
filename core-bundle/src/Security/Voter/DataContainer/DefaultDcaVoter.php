@@ -33,7 +33,7 @@ class DefaultDcaVoter implements CacheableVoterInterface
         return true;
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes)
+    public function vote(TokenInterface $token, $subject, array $attributes): int
     {
         foreach ($attributes as $attribute) {
             if ($this->supportsAttribute($attribute)) {

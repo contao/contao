@@ -18,7 +18,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * Provide methods to handle data container arrays.
@@ -843,12 +842,11 @@ abstract class DataContainer extends Backend
 	/**
 	 * @throws AccessDeniedException
 	 */
-	protected function denyAccessUnlessGranted($attributes, $subject): void
+	protected function denyAccessUnlessGranted($attribute, $subject): void
 	{
-		/** @var Security $security */
 		$security = System::getContainer()->get('security.helper');
 
-		if ($security->isGranted($attributes, $subject))
+		if ($security->isGranted($attribute, $subject))
 		{
 			return;
 		}
@@ -857,11 +855,11 @@ abstract class DataContainer extends Backend
 
 		if ($subject instanceof DataContainerSubject)
 		{
-			$message = sprintf('Access denied to %s [%s].', $subject, $attributes);
+			$message = sprintf('Access denied to %s [%s].', $subject, $attribute);
 		}
 
 		$exception = new AccessDeniedException($message);
-		$exception->setAttributes($attributes);
+		$exception->setAttributes($attribute);
 		$exception->setSubject($subject);
 
 		throw $exception;

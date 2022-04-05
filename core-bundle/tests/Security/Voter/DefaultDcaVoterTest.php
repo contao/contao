@@ -23,15 +23,15 @@ class DefaultDcaVoterTest extends TestCase
     public function testVoter(): void
     {
         $voter = new DefaultDcaVoter();
-        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $voter->vote(
-            $this->createMock(TokenInterface::class),
-            'foobar',
-            ['foobar']
-        ));
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote(
-            $this->createMock(TokenInterface::class),
-            'foobar',
-            [ContaoCorePermissions::DCA_PREFIX.'foobar']
-        ));
+
+        $this->assertSame(
+            VoterInterface::ACCESS_ABSTAIN,
+            $voter->vote($this->createMock(TokenInterface::class), 'foobar', ['foobar'])
+        );
+
+        $this->assertSame(
+            VoterInterface::ACCESS_GRANTED,
+            $voter->vote($this->createMock(TokenInterface::class), 'foobar', [ContaoCorePermissions::DCA_PREFIX.'foobar'])
+        );
     }
 }
