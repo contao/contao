@@ -748,6 +748,11 @@ services:
             - Contao\BackendUser
             - '@?logger'
 
+    contao.security.data_container.default_dca_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDcaVoter
+        tags:
+            - { name: security.voter, priority: -1024 } # Should always come last
+
     contao.security.expiring_token_based_remember_me_services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
         abstract: true

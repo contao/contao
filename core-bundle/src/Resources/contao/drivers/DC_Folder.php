@@ -15,6 +15,8 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
@@ -648,6 +650,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
 
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
+
 		$objSession = System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -699,6 +703,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			throw new InternalServerErrorException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_MOVE, new DataContainerSubject($this->strTable, $source));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -793,7 +799,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
-				$this->cut($id); // do not urldecode() here (see #6840)
+				try
+				{
+					$this->cut($id); // do not urldecode() here (see #6840)
+				}
+				catch (AccessDeniedException)
+				{
+					// noop
+				}
 			}
 		}
 
@@ -847,6 +860,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			throw new InternalServerErrorException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -963,7 +978,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
-				$this->copy($id); // do not urldecode() here (see #6840)
+				try
+				{
+					$this->copy($id); // do not urldecode() here (see #6840)
+				}
+				catch (AccessDeniedException)
+				{
+					// noop
+				}
 			}
 		}
 
@@ -994,11 +1016,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->isValid($source);
 
-		// Delete the file or folder
 		if (!file_exists($this->strRootDir . '/' . $source) || !$this->isMounted($source))
 		{
 			throw new AccessDeniedException('File or folder "' . $source . '" is not mounted or cannot be found.');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_DELETE, new DataContainerSubject($this->strTable, $source));
 
 		// Call the ondelete_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['ondelete_callback'] ?? null))
@@ -1076,7 +1099,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			foreach ($ids as $id)
 			{
-				$this->delete($id); // do not urldecode() here (see #6840)
+				try
+				{
+					$this->delete($id); // do not urldecode() here (see #6840)
+				}
+				catch (AccessDeniedException)
+				{
+					// noop
+				}
 			}
 		}
 
@@ -1304,12 +1334,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	{
 		$return = '';
 		$this->noReload = false;
+
 		$this->isValid($this->intId);
 
 		if (!file_exists($this->strRootDir . '/' . $this->intId) || !$this->isMounted($this->intId))
 		{
 			throw new AccessDeniedException('File or folder "' . $this->intId . '" is not mounted or cannot be found.');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$objModel = null;
 		$objVersions = null;
@@ -1637,6 +1670,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Walk through each record
 			foreach ($ids as $id)
 			{
+				try
+				{
+					$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
+				}
+				catch (AccessDeniedException)
+				{
+					continue;
+				}
+
 				$this->intId = $id;
 				$this->initialId = $id;
 				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
@@ -1930,6 +1972,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$objFile = new File($this->intId);
 

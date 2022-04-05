@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -836,6 +837,32 @@ abstract class DataContainer extends Backend
 		$strUrl = TL_SCRIPT . '?' . implode('&', $arrKeys);
 
 		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+	}
+
+	/**
+	 * @throws AccessDeniedException
+	 */
+	protected function denyAccessUnlessGranted($attribute, $subject): void
+	{
+		$security = System::getContainer()->get('security.helper');
+
+		if ($security->isGranted($attribute, $subject))
+		{
+			return;
+		}
+
+		$message = 'Access denied.';
+
+		if ($subject instanceof DataContainerSubject)
+		{
+			$message = sprintf('Access denied to %s [%s].', $subject, $attribute);
+		}
+
+		$exception = new AccessDeniedException($message);
+		$exception->setAttributes($attribute);
+		$exception->setSubject($subject);
+
+		throw $exception;
 	}
 
 	/**
