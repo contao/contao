@@ -100,7 +100,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('listener.yml');
         $loader->load('migrations.yml');
         $loader->load('services.yml');
-        $loader->load('voters.yml');
 
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.upload_path', $config['upload_path']);

@@ -733,6 +733,13 @@ services:
             - '@security.firewall.map'
             - '@?logger'
 
+    contao.security.backend_access_voter:
+        class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: kernel.reset, method: reset }
+
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
@@ -740,6 +747,11 @@ services:
             - '@session'
             - Contao\BackendUser
             - '@?logger'
+
+    contao.security.data_container.default_dca_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDcaVoter
+        tags:
+            - { name: security.voter, priority: -1024 } # Should always come last
 
     contao.security.expiring_token_based_remember_me_services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
@@ -798,6 +810,9 @@ services:
         arguments:
             - '@security.http_utils'
             - '@contao.routing.scope_matcher'
+
+    contao.security.member_group_voter:
+        class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
 
     contao.security.token_checker:
         public: true
