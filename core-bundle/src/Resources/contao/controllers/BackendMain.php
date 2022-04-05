@@ -223,7 +223,6 @@ class BackendMain extends Backend
 		}
 
 		$container = System::getContainer();
-		$objSession = $container->get('session');
 
 		$data['theme'] = Backend::getTheme();
 		$data['base'] = Environment::get('base');

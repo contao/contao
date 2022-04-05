@@ -691,7 +691,7 @@ class Database
 
 		if ($strQuoteCharacter === null)
 		{
-			$strQuoteCharacter = System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter();
+			$strQuoteCharacter = System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter() ?? '"';
 		}
 
 		// The identifier is quoted already

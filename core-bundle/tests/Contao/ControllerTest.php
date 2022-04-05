@@ -43,7 +43,7 @@ class ControllerTest extends TestCase
     {
         parent::setUp();
 
-        Controller::reset();
+        Controller::resetControllerCache();
     }
 
     protected function tearDown(): void
@@ -718,6 +718,9 @@ class ControllerTest extends TestCase
             $this->assertInstanceOf(RedirectResponse::class, $response);
             $this->assertSame($expected, $response->getTargetUrl());
         }
+
+        Environment::reset();
+        Controller::resetControllerCache();
     }
 
     public function redirectProvider(): \Generator
@@ -784,5 +787,8 @@ class ControllerTest extends TestCase
             $method->invoke(null, 'Link to <a href="/contao/main.php">backend main</a> and <a href="/contao/password.php?x=y">password</a>'),
             'Link to <a href="/contao">backend main</a> and <a href="/contao/password?x=y">password</a>'
         );
+
+        Environment::reset();
+        Controller::resetControllerCache();
     }
 }
