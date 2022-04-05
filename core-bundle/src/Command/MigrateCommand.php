@@ -160,7 +160,6 @@ class MigrateCommand extends Command
     {
         while (true) {
             $first = true;
-
             $migrationLabels = [];
 
             foreach ($this->migrations->getPendingNames() as $migration) {
