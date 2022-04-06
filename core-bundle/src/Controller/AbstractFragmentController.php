@@ -82,8 +82,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $templateName = $this->getTemplateName($model, $fallbackTemplateName);
 
         if ($isLegacyTemplate = $this->isLegacyTemplate($templateName)) {
-            // TODO: enable deprecation once existing fragments have been adjusted
-            // trigger_deprecation('contao/core-bundle', '5.0', 'Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+            trigger_deprecation('contao/core-bundle', '5.0', 'Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
         }
 
         // Allow calling render() without a view
