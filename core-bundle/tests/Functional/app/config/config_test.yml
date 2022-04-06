@@ -45,6 +45,9 @@ doctrine:
 contao:
     localconfig:
         disableCron: true
+    search:
+        default_indexer:
+            enable: false
 
 scheb_two_factor:
     trusted_device:

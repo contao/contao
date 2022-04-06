@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,30 +62,9 @@ class FrontendIndex extends Frontend
 		}
 
 		// Trigger the 404 page if an item is required but not given (see #8361)
-		if ($objPage->requireItem)
+		if ($objPage->requireItem && !isset($_GET['auto_item']))
 		{
-			$hasItem = false;
-
-			if (Config::get('useAutoItem'))
-			{
-				$hasItem = isset($_GET['auto_item']);
-			}
-			else
-			{
-				foreach ($GLOBALS['TL_AUTO_ITEM'] as $item)
-				{
-					if (isset($_GET[$item]))
-					{
-						$hasItem = true;
-						break;
-					}
-				}
-			}
-
-			if (!$hasItem)
-			{
-				throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-			}
+			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
 		// Inherit the settings from the parent pages
@@ -102,7 +82,8 @@ class FrontendIndex extends Frontend
 		{
 			/** @var PageRoot $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['root']();
-			$objHandler->generate($objPage->id);
+
+			throw new ResponseException($objHandler->getResponse($objPage->id));
 		}
 
 		// Set the admin e-mail address
