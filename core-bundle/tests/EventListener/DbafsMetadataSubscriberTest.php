@@ -54,8 +54,8 @@ class DbafsMetadataSubscriberTest extends TestCase
         $this->assertSame(0.4, $importantPart->getHeight());
 
         $fileMetadata = $extraMetadata['metadata'] ?? null;
-        $this->assertInstanceOf(MetadataBag::class, $fileMetadata);
 
+        $this->assertInstanceOf(MetadataBag::class, $fileMetadata);
         $this->assertInstanceOf(Metadata::class, $fileMetadata['de']);
         $this->assertSame('my title', $fileMetadata['de']->getTitle());
         $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $fileMetadata['de']->getUuid());

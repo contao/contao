@@ -28,7 +28,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class DbafsMetadataSubscriber implements EventSubscriberInterface
 {
-    /** @var array<string>|null */
+    /**
+     * @var array<string>|null
+     */
     private array|null $defaultLocales = null;
 
     public function enhanceMetadata(RetrieveDbafsMetadataEvent $event): void

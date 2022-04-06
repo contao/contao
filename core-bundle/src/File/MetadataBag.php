@@ -24,8 +24,10 @@ class MetadataBag implements \ArrayAccess
      * @param array<string, Metadata> $metadata       Metadata objects, keyed by the locale
      * @param array<string>           $defaultLocales default locales in the order they should be tried
      */
-    public function __construct(private readonly array $metadata, private readonly array $defaultLocales = [])
-    {
+    public function __construct(
+        private readonly array $metadata,
+        private readonly array $defaultLocales = []
+    ) {
         foreach ($metadata as $item) {
             if (!$item instanceof Metadata) {
                 $type = \is_object($item) ? \get_class($item) : \gettype($item);
