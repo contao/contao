@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+## eval->orderField in PageTree and Picker widgets
+
+Support for a separate database `orderField` column has been removed. Use `isSortable` instead which
+stores the order in the same database column.
+
 ### Removed {{post::*}} insert tag
 
 The `{{post::*}}` insert tag has been removed. To access submitted form data on forward pages, use the
