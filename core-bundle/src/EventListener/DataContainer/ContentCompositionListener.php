@@ -228,7 +228,7 @@ class ContentCompositionListener
         $layout = $pageModel->getRelated('layout');
 
         if (null === $layout) {
-            return null;
+            return 'main';
         }
 
         $columns = [];

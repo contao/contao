@@ -24,6 +24,7 @@ use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaLoader;
 use Contao\FilesModel;
@@ -871,7 +872,7 @@ class FigureBuilderTest extends TestCase
             }
         );
 
-        $this->assertSame(['foo' => 'bar'], $figure->getLinkAttributes());
+        $this->assertSame(['foo' => 'bar'], iterator_to_array($figure->getLinkAttributes()));
     }
 
     public function testUnsetLinkAttribute(): void
@@ -884,7 +885,7 @@ class FigureBuilderTest extends TestCase
             }
         );
 
-        $this->assertSame(['foobar' => 'test'], $figure->getLinkAttributes());
+        $this->assertSame(['foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
     }
 
     public function testSetLinkAttributes(): void
@@ -895,7 +896,18 @@ class FigureBuilderTest extends TestCase
             }
         );
 
-        $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], $figure->getLinkAttributes());
+        $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
+    }
+
+    public function testSetLinkAttributesFromHtmlAttributes(): void
+    {
+        $figure = $this->getFigure(
+            static function (FigureBuilder $builder): void {
+                $builder->setLinkAttributes(new HtmlAttributes(['foo' => 'bar', 'foobar' => 'test']));
+            }
+        );
+
+        $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
     }
 
     /**

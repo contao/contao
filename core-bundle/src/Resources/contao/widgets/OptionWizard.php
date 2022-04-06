@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to handle form field options.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class OptionWizard extends Widget
 {

@@ -114,15 +114,15 @@ class DbafsManagerTest extends TestCase
 
         $manager->register(
             $this->getDbafsCoveringUuids([
-                'foo/a' => $uuid1,
-                'foo/bar/b' => $uuid2,
+                'a' => $uuid1,
+                'bar/b' => $uuid2,
             ]),
             'foo'
         );
 
         $manager->register(
             $this->getDbafsCoveringUuids([
-                'other/c' => $uuid3,
+                'c' => $uuid3,
             ]),
             'other'
         );

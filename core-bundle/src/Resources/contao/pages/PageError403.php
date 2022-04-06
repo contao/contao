@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle an error 403 page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageError403 extends Frontend
 {

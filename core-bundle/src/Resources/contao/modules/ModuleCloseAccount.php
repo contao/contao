@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end module "close account".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleCloseAccount extends Module
 {

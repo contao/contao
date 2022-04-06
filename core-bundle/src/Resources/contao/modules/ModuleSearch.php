@@ -16,8 +16,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 
 /**
  * Front end module "search".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleSearch extends Module
 {
@@ -248,7 +246,7 @@ class ModuleSearch extends Module
 
 				$arrContext = array();
 				$strText = StringUtil::stripInsertTags($arrResult[$i]['text']);
-				$arrMatches = StringUtil::trimsplit(',', $arrResult[$i]['matches']);
+				$arrMatches = Search::getMatchVariants(StringUtil::trimsplit(',', $arrResult[$i]['matches']), $strText, $GLOBALS['TL_LANGUAGE']);
 
 				// Get the context
 				foreach ($arrMatches as $strWord)

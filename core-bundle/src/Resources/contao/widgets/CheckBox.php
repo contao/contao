@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property array   $unknownOption
  * @property boolean $multiple
  * @property boolean $collapseUncheckedGroups
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class CheckBox extends Widget
 {

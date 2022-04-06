@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "hyperlink".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentHyperlink extends ContentElement
 {

@@ -19,8 +19,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Main back end controller.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendMain extends Backend
 {
@@ -225,7 +223,6 @@ class BackendMain extends Backend
 		}
 
 		$container = System::getContainer();
-		$objSession = $container->get('session');
 
 		$data['theme'] = Backend::getTheme();
 		$data['base'] = Environment::get('base');

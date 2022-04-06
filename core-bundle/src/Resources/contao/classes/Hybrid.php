@@ -21,8 +21,6 @@ use Contao\Model\Collection;
  * @property string $typePrefix
  * @property string $hl
  * @property string $attributes
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Hybrid extends Frontend
 {

@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "HTML".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentHtml extends ContentElement
 {
