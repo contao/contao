@@ -464,7 +464,7 @@ class FileTree extends Widget
 			$objFile = new File(StringUtil::stripRootDir($previewPath));
 		}
 
-		if ($objFile->viewWidth && $objFile->viewHeight && ($objFile->isSvgImage || ($objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth'))))
+		if ($objFile->viewWidth && $objFile->viewHeight)
 		{
 			// Inline the image if no preview image will be generated (see #636)
 			if ($objFile->height !== null && $objFile->height <= 75 && $objFile->width !== null && $objFile->width <= 100)

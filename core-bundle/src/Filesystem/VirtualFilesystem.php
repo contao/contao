@@ -157,6 +157,34 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->sync($pathFrom, $pathTo);
     }
 
+    public function get(string|Uuid $location, int $accessFlags = self::NONE): ?FilesystemItem
+    {
+        $path = $this->resolve($location);
+        $relativePath = Path::makeRelative($path, $this->prefix);
+
+        if ($accessFlags & self::FORCE_SYNC) {
+            $this->dbafsManager->sync($path);
+            $accessFlags &= ~self::FORCE_SYNC;
+        }
+
+        if ($this->fileExists($relativePath, $accessFlags)) {
+            return new FilesystemItem(
+                true,
+                $relativePath,
+                fn () => $this->getLastModified($relativePath, $accessFlags),
+                fn () => $this->getFileSize($relativePath, $accessFlags),
+                fn () => $this->getMimeType($relativePath, $accessFlags),
+                fn () => $this->getExtraMetadata($relativePath, $accessFlags),
+            );
+        }
+
+        if ($this->directoryExists($relativePath, $accessFlags)) {
+            return new FilesystemItem(false, $relativePath);
+        }
+
+        return null;
+    }
+
     public function listContents(string|Uuid $location, bool $deep = false, int $accessFlags = self::NONE): FilesystemItemIterator
     {
         $path = $this->resolve($location);

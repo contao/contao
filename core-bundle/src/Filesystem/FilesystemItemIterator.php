@@ -56,6 +56,53 @@ class FilesystemItemIterator implements \IteratorAggregate
         return $this->filter(static fn (FilesystemItem $item) => !$item->isFile());
     }
 
+    public function sort(SortMode $sortMode = SortMode::pathAscending): self
+    {
+        $listing = $this->toArray();
+
+        usort(
+            $listing,
+            match ($sortMode) {
+                SortMode::pathAscending => static fn (FilesystemItem $a, FilesystemItem $b): int => strcasecmp($a->getPath(), $b->getPath()),
+                SortMode::pathDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => -strcasecmp($a->getPath(), $b->getPath()),
+                SortMode::pathNaturalAscending => static fn (FilesystemItem $a, FilesystemItem $b): int => strnatcasecmp($a->getPath(), $b->getPath()),
+                SortMode::pathNaturalDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => -strnatcasecmp($a->getPath(), $b->getPath()),
+                SortMode::lastModifiedAscending => static fn (FilesystemItem $a, FilesystemItem $b): int => $a->getLastModified() <=> $b->getLastModified(),
+                SortMode::lastModifiedDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => $b->getLastModified() <=> $a->getLastModified(),
+            },
+        );
+
+        return new self($listing);
+    }
+
+    /**
+     * @param callable(FilesystemItem):bool $condition
+     */
+    public function any(callable $condition): bool
+    {
+        foreach ($this as $item) {
+            if ($condition($item)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param callable(FilesystemItem):bool $condition
+     */
+    public function all(callable $condition): bool
+    {
+        foreach ($this as $item) {
+            if (!$condition($item)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @return \Traversable<FilesystemItem>
      */

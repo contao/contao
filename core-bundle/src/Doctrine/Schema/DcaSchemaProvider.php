@@ -73,6 +73,18 @@ class DcaSchemaProvider
                         $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
                     }
 
+                    if (isset($options['customSchemaOptions']['charset'])) {
+                        $options['platformOptions']['charset'] = $options['customSchemaOptions']['charset'];
+                    }
+
+                    if (isset($options['customSchemaOptions']['collation'])) {
+                        if (!isset($options['customSchemaOptions']['charset'])) {
+                            $options['platformOptions']['charset'] = explode('_', $options['customSchemaOptions']['collation'], 2)[0];
+                        }
+
+                        $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
+                    }
+
                     $table->addColumn($config['name'], $config['type'], $options);
                 }
             }
@@ -110,6 +122,7 @@ class DcaSchemaProvider
         $scale = null;
         $precision = null;
         $default = null;
+        $charset = null;
         $collation = null;
         $unsigned = false;
         $notnull = false;
@@ -134,6 +147,7 @@ class DcaSchemaProvider
             }
 
             if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
+                $charset = explode('_', $match[1], 2)[0];
                 $collation = $match[1];
             }
 
@@ -164,8 +178,18 @@ class DcaSchemaProvider
             $options['precision'] = $precision;
         }
 
+        $platformOptions = [];
+
+        if (null !== $charset) {
+            $platformOptions['charset'] = $charset;
+        }
+
         if (null !== $collation) {
-            $options['platformOptions'] = ['collation' => $collation];
+            $platformOptions['collation'] = $collation;
+        }
+
+        if (!empty($platformOptions)) {
+            $options['platformOptions'] = $platformOptions;
         }
 
         $table->addColumn($columnName, $type, $options);
@@ -274,25 +298,8 @@ class DcaSchemaProvider
         $this->framework->initialize();
 
         $installer = $this->framework->createInstance(Installer::class);
-        $sqlTarget = $installer->getFromDca();
-        $sqlLegacy = $installer->getFromFile();
 
-        // Manually merge the legacy definitions (see #4766)
-        if (!empty($sqlLegacy)) {
-            foreach ($sqlLegacy as $table => $categories) {
-                foreach ($categories as $category => $fields) {
-                    if (\is_array($fields)) {
-                        foreach ($fields as $name => $sql) {
-                            $sqlTarget[$table][$category][$name] = $sql;
-                        }
-                    } else {
-                        $sqlTarget[$table][$category] = $fields;
-                    }
-                }
-            }
-        }
-
-        return $sqlTarget;
+        return $installer->getFromDca();
     }
 
     /**
