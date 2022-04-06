@@ -38,12 +38,6 @@ class LockCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (file_exists($this->lockFile)) {
-            $output->writeln('<comment>The install tool has been locked already.</comment>');
-
-            return 1;
-        }
-
         $fs = new Filesystem();
         $fs->dumpFile($this->lockFile, 3);
 

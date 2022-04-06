@@ -186,4 +186,39 @@ final class ContaoCorePermissions
      * Subject must be a corresponding group ID or an array of group IDs.
      */
     public const MEMBER_IN_GROUPS = 'contao_member.groups';
+
+    /**
+     * Prefix for all DCA related permission attributes.
+     */
+    public const DCA_PREFIX = 'contao_dca.';
+
+    /**
+     * Create DCA permission.
+     */
+    public const DCA_CREATE = self::DCA_PREFIX.'create';
+
+    /**
+     * Edit DCA permission.
+     */
+    public const DCA_EDIT = self::DCA_PREFIX.'edit';
+
+    /**
+     * Delete DCA permission.
+     */
+    public const DCA_DELETE = self::DCA_PREFIX.'delete';
+
+    /**
+     * View DCA permission.
+     */
+    public const DCA_VIEW = self::DCA_PREFIX.'view';
+
+    /**
+     * Copy DCA permission.
+     */
+    public const DCA_COPY = self::DCA_PREFIX.'copy';
+
+    /**
+     * Move DCA permission.
+     */
+    public const DCA_MOVE = self::DCA_PREFIX.'move';
 }

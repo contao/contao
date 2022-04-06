@@ -177,10 +177,10 @@ class ImageResult
             return;
         }
 
-        $resizer = $this->locator->get('contao.image.legacy_resizer');
+        $resizer = $this->locator->get('contao.image.resizer');
 
         if (!$resizer instanceof DeferredResizerInterface) {
-            throw new \RuntimeException('The "contao.image.legacy_resizer" service does not support deferred resizing.');
+            throw new \RuntimeException('The "contao.image.resizer" service does not support deferred resizing.');
         }
 
         foreach ($deferredImages as $deferredImage) {
