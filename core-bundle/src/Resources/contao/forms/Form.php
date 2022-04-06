@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provide methods to handle front end forms.
@@ -333,12 +332,9 @@ class Form extends Hybrid
 			}
 		}
 
-		// Store submitted data (possibly modified by hook or data added) in session for 10 seconds
+		// Store submitted data (possibly modified by hook or data added) in the session for 10 seconds,
 		// so it can be used on any forward page using the {{form_session_data::<form-field-name>}} insert tag
-		/** @var Request|null $request */
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request)
+		if ($request = System::getContainer()->get('request_stack')->getCurrentRequest())
 		{
 			$request->getSession()->set(self::SESSION_KEY, new AutoExpiringAttribute(10, $arrSubmitted));
 		}

@@ -16,7 +16,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
@@ -149,7 +148,6 @@ class InsertTags extends Controller
 
 		$arrBuffer = array();
 		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
-		/** @var Request|null $request */
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if (static::$strAllowedTagsRegex === null)

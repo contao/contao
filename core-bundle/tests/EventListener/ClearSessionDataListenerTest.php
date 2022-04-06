@@ -28,10 +28,7 @@ class ClearSessionDataListenerTest extends TestCase
 {
     public function testClearsTheLoginData(): void
     {
-        $session = new Session(
-            new MockArraySessionStorage(),
-        );
-
+        $session = new Session(new MockArraySessionStorage());
         $session->start();
 
         $request = new Request();
@@ -56,10 +53,7 @@ class ClearSessionDataListenerTest extends TestCase
 
     public function testClearsAutoExpiringAttributes(): void
     {
-        $session = new Session(
-            new MockArraySessionStorage(),
-        );
-
+        $session = new Session(new MockArraySessionStorage());
         $session->start();
 
         $request = new Request();

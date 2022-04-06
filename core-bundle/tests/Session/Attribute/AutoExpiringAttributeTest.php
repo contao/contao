@@ -22,11 +22,7 @@ class AutoExpiringAttributeTest extends TestCase
      */
     public function testIsExpiredCalculation(\DateTime $createdAt, \DateTime $now, int $ttl, bool $shouldBeExpired): void
     {
-        $attribute = new AutoExpiringAttribute(
-            $ttl,
-            'foobar',
-            $createdAt
-        );
+        $attribute = new AutoExpiringAttribute($ttl, 'foobar', $createdAt);
 
         $this->assertSame($shouldBeExpired, $attribute->isExpired($now));
     }
