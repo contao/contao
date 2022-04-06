@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\Database\Result;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\String\UnicodeString;
 
 /**
@@ -39,6 +40,8 @@ class Theme extends Backend
 	 */
 	public function importTheme()
 	{
+		Config::set('uploadTypes', Config::get('uploadTypes') . ',cto,sql');
+
 		$objUploader = new FileUpload();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_theme_import')
@@ -68,8 +71,8 @@ class Theme extends Backend
 
 					$objFile = new File($strFile);
 
-					// Skip anything but .cto files
-					if ($objFile->extension != 'cto')
+					// Skip anything but .cto and .sql files
+					if ($objFile->extension != 'cto' && $objFile->extension != 'sql')
 					{
 						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 						continue;
@@ -165,13 +168,23 @@ class Theme extends Backend
 <input type="hidden" name="confirm" value="1">';
 
 		$count = 0;
+		$exampleWebsites = array();
 
 		// Check the theme data
 		foreach ($arrFiles as $strFile)
 		{
+			if ((new File($strFile))->extension === 'sql')
+			{
+				$exampleWebsites[] = basename($strFile);
+
+				continue;
+			}
+
+			++$count;
+
 			$return .= '
 
-<div class="tl_' . (($count++ < 1) ? 't' : '') . 'box theme_import">
+<div class="tl_tbox theme_import">
   <h3>' . basename($strFile) . '</h3>
   <h4>' . $GLOBALS['TL_LANG']['tl_theme']['tables_fields'] . '</h4>';
 
@@ -254,6 +267,11 @@ class Theme extends Backend
 					continue;
 				}
 
+				if (strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
+				{
+					$exampleWebsites[] = substr($objArchive->file_name, 10);
+				}
+
 				if (file_exists($this->strRootDir . '/' . $objArchive->file_name))
 				{
 					$blnTplExists = true;
@@ -280,6 +298,35 @@ class Theme extends Backend
 </div>';
 		}
 
+		if ($exampleWebsites)
+		{
+			$return .= '<br class="clr"><div class="w50 clr widget">
+  <h3><label>' . ($GLOBALS['TL_LANG']['tl_theme']['selectExampleWebsite'][0] ?? '') . '</label></h3>
+  <select name="example_website" class="tl_select" onchange="document.querySelector(\'#ctrl_example_website_import\').style.display = this.value ? \'\' : \'none\'">';
+
+			if ($count)
+			{
+				$return .= '<option value="">-</option>';
+			}
+
+			foreach ($exampleWebsites as $exampleWebsite)
+			{
+				$return .= '<option value="' . htmlspecialchars($exampleWebsite) . '">' . htmlspecialchars($exampleWebsite) . '</option>';
+			}
+
+			$return .= '</select>
+  <p class="tl_help tl_tip" title="">' . ($GLOBALS['TL_LANG']['tl_theme']['selectExampleWebsite'][1] ?? '') . '</p>
+</div><div class="w50 widget"' . ($count ? ' style="display: none"' : '') . ' id="ctrl_example_website_import">
+  <h3><label>' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][0] ?? '') . '</label></h3>
+  <select name="example_website_import" class="tl_select">
+    <option value="full">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['full'] ?? '') . '</option>
+    <option value="data">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['data'] ?? '') . '</option>
+    <option value="data_no_truncate">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['data_no_truncate'] ?? '') . '</option>
+  </select>
+  <p class="tl_help tl_tip" title="">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][1] ?? '') . '</p>
+</div><br class="clr">';
+		}
+
 		// Return the form
 		return $return . '
 
@@ -303,8 +350,17 @@ class Theme extends Backend
 	 */
 	protected function extractThemeFiles($arrFiles, $arrDbFields)
 	{
+		$exampleWebsites = array();
+
 		foreach ($arrFiles as $strZipFile)
 		{
+			if ((new File($strZipFile))->extension === 'sql')
+			{
+				$exampleWebsites[basename($strZipFile)] = $strZipFile;
+
+				continue;
+			}
+
 			$xml = null;
 
 			// Open the archive
@@ -333,6 +389,11 @@ class Theme extends Backend
 				try
 				{
 					File::putContent($this->customizeUploadPath($objArchive->file_name), $objArchive->unzip());
+
+					if (strncmp($objArchive->file_name, 'templates/', 10) === 0 && strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
+					{
+						$exampleWebsites[substr($objArchive->file_name, 10)] = $objArchive->file_name;
+					}
 				}
 				catch (\Exception $e)
 				{
@@ -661,7 +722,53 @@ class Theme extends Backend
 		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSymlinks();
 
+		if (($exampleWebsite = Input::post('example_website')) && isset($exampleWebsites[$exampleWebsite]))
+		{
+			$importType = Input::post('example_website_import');
+			$this->importExampleWebsite($exampleWebsites[$exampleWebsite], $importType === 'data_no_truncate', $importType !== 'full');
+		}
+
 		$this->redirect(str_replace('&key=importTheme', '', Environment::get('request')));
+	}
+
+	private function importExampleWebsite(string $exampleWebsite, bool $preserveData, bool $insertOnly): void
+	{
+		$connection = System::getContainer()->get('database_connection');
+		$userRow = $connection->fetchAssociative('SELECT * FROM tl_user WHERE id = ?', array((int) BackendUser::getInstance()->id));
+
+		if (!$preserveData && $insertOnly)
+		{
+			$tables = $connection->createSchemaManager()->listTableNames();
+
+			foreach ($tables as $table)
+			{
+				if (0 === strncmp($table, 'tl_', 3))
+				{
+					$connection->executeStatement('TRUNCATE TABLE ' . $connection->quoteIdentifier($table));
+				}
+			}
+		}
+
+		$data = file(Path::join(System::getContainer()->getParameter('kernel.project_dir'), $exampleWebsite));
+
+		try
+		{
+			foreach ($insertOnly ? preg_grep('/^INSERT /', $data) : $data as $query)
+			{
+				$connection->executeStatement($query);
+			}
+		}
+		finally
+		{
+			// Restore backend user
+			if ((int) $connection->fetchOne('SELECT COUNT(*) FROM tl_user') < 1)
+			{
+				$connection->insert(
+					'tl_user',
+					array_combine(array_map($connection->quoteIdentifier(...), array_keys($userRow)), $userRow),
+				);
+			}
+		}
 	}
 
 	/**

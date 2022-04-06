@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\EventListener;
 
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
@@ -76,8 +75,7 @@ class InsertTagsListener
             return false;
         }
 
-        $config = $this->framework->getAdapter(Config::class);
-        $params = ($config->get('useAutoItem') ? '/' : '/items/').($faq->alias ?: $faq->id);
+        $params = '/'.($faq->alias ?: $faq->id);
 
         return $absolute ? $jumpTo->getAbsoluteUrl($params) : $jumpTo->getFrontendUrl($params);
     }

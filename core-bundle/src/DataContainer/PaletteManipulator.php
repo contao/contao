@@ -43,7 +43,7 @@ class PaletteManipulator
             'name' => $name,
             'parents' => (array) $parent,
             'position' => $position,
-            'hide' => (bool) $hide,
+            'hide' => $hide,
         ];
 
         return $this;

@@ -54,18 +54,6 @@ class ModuleEventReader extends Events
 			return $objTemplate->parse();
 		}
 
-		// Set the item from the auto_item parameter
-		if (!isset($_GET['events']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
-		{
-			Input::setGet('events', Input::get('auto_item'));
-		}
-
-		// Return an empty string if "events" is not set (to combine list and reader on same page)
-		if (!Input::get('events'))
-		{
-			return '';
-		}
-
 		$this->cal_calendar = $this->sortOutProtected(StringUtil::deserialize($this->cal_calendar));
 
 		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
@@ -93,7 +81,7 @@ class ModuleEventReader extends Events
 		}
 
 		// Get the current event
-		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('events'), $this->cal_calendar);
+		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('auto_item'), $this->cal_calendar);
 
 		// The event does not exist (see #33)
 		if ($objEvent === null)

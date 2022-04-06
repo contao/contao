@@ -127,8 +127,7 @@ abstract class Frontend extends Controller
 		// Compile the parameters string
 		foreach ($arrGet as $k=>$v)
 		{
-			// Omit the key if it is an auto_item key (see #5037)
-			if ($objPage->useAutoItem && ($k == 'auto_item' || \in_array($k, $GLOBALS['TL_AUTO_ITEM'])))
+			if ($k == 'auto_item')
 			{
 				$strParams = $strConnector . urlencode($v) . $strParams;
 			}

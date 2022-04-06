@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\Enhancer;
 
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Input;
@@ -53,16 +52,11 @@ class InputEnhancer implements RouteEnhancerInterface
             return $defaults;
         }
 
-        $config = $this->framework->getAdapter(Config::class);
         $fragments = explode('/', substr($defaults['parameters'], 1));
         $inputKeys = [];
 
         // Add the second fragment as auto_item if the number of fragments is even
         if (0 !== \count($fragments) % 2) {
-            if (!$config->get('useAutoItem')) {
-                throw new ResourceNotFoundException('Invalid number of arguments');
-            }
-
             array_unshift($fragments, 'auto_item');
         }
 
@@ -75,15 +69,6 @@ class InputEnhancer implements RouteEnhancerInterface
             // Abort if there is a duplicate parameter (duplicate content) (see #4277)
             if ($request->query->has($fragments[$i]) || \in_array($fragments[$i], $inputKeys, true)) {
                 throw new ResourceNotFoundException(sprintf('Duplicate parameter "%s" in path', $fragments[$i]));
-            }
-
-            // Abort if the request contains an auto_item keyword (duplicate content) (see #4012)
-            if (
-                isset($GLOBALS['TL_AUTO_ITEM'])
-                && $config->get('useAutoItem')
-                && \in_array($fragments[$i], $GLOBALS['TL_AUTO_ITEM'], true)
-            ) {
-                throw new ResourceNotFoundException(sprintf('"%s" is an auto_item keyword (duplicate content)', $fragments[$i]));
             }
 
             $inputKeys[] = $fragments[$i];
