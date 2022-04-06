@@ -41,6 +41,7 @@ class Theme extends Backend
 	public function importTheme()
 	{
 		Config::set('uploadTypes', Config::get('uploadTypes') . ',cto,sql');
+
 		$objUploader = new FileUpload();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_theme_import')
@@ -733,7 +734,6 @@ class Theme extends Backend
 	private function importExampleWebsite(string $exampleWebsite, bool $preserveData, bool $insertOnly): void
 	{
 		$connection = System::getContainer()->get('database_connection');
-
 		$userRow = $connection->fetchAssociative('SELECT * FROM tl_user WHERE id = ?', array((int) BackendUser::getInstance()->id));
 
 		if (!$preserveData && $insertOnly)
