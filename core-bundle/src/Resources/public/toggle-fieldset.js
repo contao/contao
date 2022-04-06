@@ -1,5 +1,4 @@
 window.addEventListener('DOMContentLoaded', function () {
-
     const storeState = function (id, table, state) {
         fetch(window.location.href, {
             method: 'POST',
@@ -21,6 +20,7 @@ window.addEventListener('DOMContentLoaded', function () {
         Backend.getScrollOffset();
 
         const fs = el.parentNode;
+
         if (fs.classList.contains('collapsed')) {
             fs.classList.remove('collapsed');
             storeState(id, table, 1);
@@ -57,14 +57,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
         el.addEventListener('click', function (event) {
             event.preventDefault();
-
             toggleState(el, id, table);
         })
     });
 
     AjaxRequest.toggleFieldset = function (el, id, table) {
         window.console && console.warn('Using AjaxRequest.toggleFieldset is deprecated and will be removed in Contao 6. Add the data-toggle-fieldset attribute instead.');
-
         toggleState(el, id, table)
     };
 });
