@@ -211,7 +211,7 @@ class FrontendModuleControllerTest extends TestCase
         $twig
             ->method('render')
             ->with(
-                '@Contao/back_end/module_wildcard.html.twig',
+                '@Contao/backend/module_wildcard.html.twig',
                 [
                     'id' => 42,
                     'name' => 'foo',
