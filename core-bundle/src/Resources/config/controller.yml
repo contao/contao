@@ -4,10 +4,12 @@ services:
 
     _instanceof:
         Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
-            tags:
-                - { name: container.service_subscriber, id: contao.csrf.token_manager }
             calls:
                 - [setContainer, ['@Psr\Container\ContainerInterface']]
+
+        Contao\CoreBundle\Controller\AbstractController:
+            tags:
+                - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\BackendController: ~
@@ -82,7 +84,7 @@ services:
         public: true
         arguments:
             - '@contao.image.factory'
-            - '@contao.image.legacy_resizer'
+            - '@contao.image.resizer'
             - '%contao.image.target_dir%'
             - '@?filesystem'
         tags:

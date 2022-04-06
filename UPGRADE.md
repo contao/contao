@@ -7,6 +7,22 @@
 Support for a separate database `orderField` column has been removed. Use `isSortable` instead which
 stores the order in the same database column.
 
+### Removed {{post::*}} insert tag
+
+The `{{post::*}}` insert tag has been removed. To access submitted form data on forward pages, use the
+new `{{form_session_data::*}}` insert tag instead.
+
+### $_SESSION access no longer mapped to Symfony Session
+
+The use of `$_SESSION` is discouraged because it makes testing and configuring alternative storage
+back ends hard. In Contao 4, access to `$_SESSION` has been transparently mapped to the Symfony session.
+This has been removed. Use `$request->getSession()` directly instead.
+
+### database.sql files
+
+Support for `database.sql` files has been dropped. Use DCA definitions and/or Doctrine DBAL schema
+listeners instead.
+
 ### Simple Token Parser
 
 Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are not supported anymore by the
@@ -58,3 +74,8 @@ The back end widgets `pageSelector` and `fileSelector` have been removed. Use th
 ### Public folder
 
 The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
+
+### Figure
+The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
+`Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
+back to an array representation. If you are just using array access, nothing needs to be changed.

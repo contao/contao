@@ -24,7 +24,6 @@ use Contao\Image\ResizerInterface;
 use Contao\ImageSizeModel;
 use Contao\StringUtil;
 use Imagine\Image\ImagineInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
@@ -40,12 +39,11 @@ class ImageFactory implements ImageFactoryInterface
     private array $validExtensions;
     private string $uploadDir;
     private array $predefinedSizes = [];
-    private ?LoggerInterface $logger;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.factory" service instead
      */
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir, LoggerInterface $logger = null)
+    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir)
     {
         $this->resizer = $resizer;
         $this->imagine = $imagine;
@@ -56,7 +54,6 @@ class ImageFactory implements ImageFactoryInterface
         $this->imagineOptions = $imagineOptions;
         $this->validExtensions = $validExtensions;
         $this->uploadDir = $uploadDir;
-        $this->logger = $logger;
     }
 
     /**
@@ -277,43 +274,6 @@ class ImageFactory implements ImageFactoryInterface
 
         if (null === $file || !$file->importantPartWidth || !$file->importantPartHeight) {
             return null;
-        }
-
-        // Larger values are considered to be in the old format (in absolute
-        // pixels) so we try to convert them to the new format if possible.
-        // Because of rounding errors, the values of the new format might slightly
-        // exceed 1.0, this is why we check for ">= 2" to detect the old format.
-        if (
-            (float) $file->importantPartX + (float) $file->importantPartWidth >= 2
-            || (float) $file->importantPartY + (float) $file->importantPartHeight >= 2
-        ) {
-            trigger_deprecation('contao/core-bundle', '4.8', 'Defining the important part in absolute pixels has been deprecated and will no longer work in Contao 5.0. Run the database migration to migrate to the new format.');
-
-            if ($this->logger) {
-                $this->logger->warning(
-                    sprintf(
-                        'Invalid important part x=%s, y=%s, width=%s, height=%s for image "%s".',
-                        $file->importantPartX,
-                        $file->importantPartY,
-                        $file->importantPartWidth,
-                        $file->importantPartHeight,
-                        $image->getPath()
-                    )
-                );
-            }
-
-            try {
-                $size = $image->getDimensions()->getSize();
-
-                return new ImportantPart(
-                    (float) $file->importantPartX / $size->getWidth(),
-                    (float) $file->importantPartY / $size->getHeight(),
-                    (float) $file->importantPartWidth / $size->getWidth(),
-                    (float) $file->importantPartHeight / $size->getHeight()
-                );
-            } catch (\Throwable $exception) {
-                return new ImportantPart();
-            }
         }
 
         return new ImportantPart(

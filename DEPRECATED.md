@@ -199,12 +199,6 @@ Using `$this->language` in TinyMCE configuration files has been deprecated in
 Contao 4.0 and will no longer work in Contao 5.0. Use the static method
 `Backend::getTinyMceLanguage()` instead.
 
-## $GLOBALS['TL_LANGUAGE'] and $_SESSION['TL_LANGUAGE']
-
-Using the globals `$GLOBALS['TL_LANGUAGE']` and `$_SESSION['TL_LANGUAGE']` has
-been deprecated in Contao 4.0 and will no longer work in Contao 5.0. Use the
-locale from the request object instead:
-
 ```php
 $locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
 ```
@@ -342,40 +336,3 @@ has been set up for each one instead (see UPGRADE.md).
 
 Using the old paths is deprecated and will no longer work in Contao 5.0.
 
-## database.sql files
-
-Using `database.sql` files to set up tables is deprecated in Contao 4.0 and
-will no longer be supported in Contao 5.0. Use DCA files instead:
-
-```php
-$GLOBALS['TL_DCA']['tl_example'] = array
-(
-	'config' => array
-	(
-		'sql' => array
-		(
-			'keys' => array
-			(
-				'id' => 'primary',
-				'name' => 'unique'
-			)
-		)
-	),
-	'fields' => array
-	(
-		'id' => array
-		(
-			'sql' => "int(10) unsigned NOT NULL auto_increment"
-		),
-		'name' => array
-		(
-			'sql' => "varchar(32) NULL"
-		),
-		'value' => array
-		(
-			'sql' => "varchar(32) NOT NULL default ''"
-		)
-	)
-);
-
-```

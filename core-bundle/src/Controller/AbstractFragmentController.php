@@ -51,27 +51,11 @@ abstract class AbstractFragmentController extends AbstractController implements 
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
-        if (null === $request || !$request->attributes->has('pageModel')) {
-            return null;
-        }
-
-        $pageModel = $request->attributes->get('pageModel');
-
-        if ($pageModel instanceof PageModel) {
+        if (null !== $request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
             return $pageModel;
         }
 
-        if (
-            isset($GLOBALS['objPage'])
-            && $GLOBALS['objPage'] instanceof PageModel
-            && (int) $GLOBALS['objPage']->id === (int) $pageModel
-        ) {
-            return $GLOBALS['objPage'];
-        }
-
-        $this->initializeContaoFramework();
-
-        return $this->getContaoAdapter(PageModel::class)->findByPk((int) $pageModel);
+        return null;
     }
 
     /**
