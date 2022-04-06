@@ -1072,7 +1072,7 @@ class Newsletter extends Backend
 					}
 
 					// Generate the URL
-					$arrProcessed[$objNewsletter->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
+					$arrProcessed[$objNewsletter->jumpTo] = $objParent->getAbsoluteUrl('/%s');
 				}
 
 				$strUrl = $arrProcessed[$objNewsletter->jumpTo];

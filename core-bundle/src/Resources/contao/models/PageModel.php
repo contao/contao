@@ -117,7 +117,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property boolean        $hasMooTools
  * @property string         $template
  * @property string         $templateGroup
- * @property boolean        $useAutoItem
  *
  * @method static PageModel|null findById($id, array $opt=array())
  * @method static PageModel|null findByPk($id, array $opt=array())
@@ -1059,7 +1058,6 @@ class PageModel extends Model
 			$this->useFolderUrl = $objParentPage->useFolderUrl;
 			$this->mailerTransport = $objParentPage->mailerTransport;
 			$this->enableCanonical = $objParentPage->enableCanonical;
-			$this->useAutoItem = Config::get('useAutoItem');
 			$this->maintenanceMode = $objParentPage->maintenanceMode;
 
 			// Store whether the root page has been published

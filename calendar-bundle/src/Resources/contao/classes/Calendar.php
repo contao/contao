@@ -171,7 +171,7 @@ class Calendar extends Frontend
 				// Get the jumpTo URL
 				if (!isset($arrUrls[$jumpTo]))
 				{
-					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/events/%s');
+					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl('/%s');
 				}
 
 				$strUrl = $arrUrls[$jumpTo];
@@ -392,7 +392,7 @@ class Calendar extends Frontend
 					}
 
 					// Generate the URL
-					$arrProcessed[$objCalendar->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/events/%s');
+					$arrProcessed[$objCalendar->jumpTo] = $objParent->getAbsoluteUrl('/%s');
 				}
 
 				$strUrl = $arrProcessed[$objCalendar->jumpTo];

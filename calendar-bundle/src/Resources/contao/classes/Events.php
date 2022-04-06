@@ -461,7 +461,7 @@ abstract class Events extends Module
 			}
 			else
 			{
-				$params = (Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id);
+				$params = '/' . ($objEvent->alias ?: $objEvent->id);
 
 				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}
