@@ -26,6 +26,7 @@ use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,6 +39,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TwoFactorControllerTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);
@@ -65,8 +68,13 @@ class TwoFactorControllerTest extends TestCase
         $this->assertSame(204, $response->getStatusCode());
     }
 
+    /**
+     * @group legacy
+     */
     public function testReturnsIfTheUserIsNotAFrontendUser(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $user = $this->createMock(BackendUser::class);
 
         $container = $this->getContainerWithFrameworkTemplate(
@@ -86,8 +94,13 @@ class TwoFactorControllerTest extends TestCase
         $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
     }
 
+    /**
+     * @group legacy
+     */
     public function testReturnsAResponseIfTheUserIsAFrontendUser(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -111,8 +124,13 @@ class TwoFactorControllerTest extends TestCase
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
+    /**
+     * @group legacy
+     */
     public function testReturnsIfTwoFactorAuthenticationIsAlreadyDisabled(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -137,8 +155,13 @@ class TwoFactorControllerTest extends TestCase
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
+    /**
+     * @group legacy
+     */
     public function testRedirectsAfterTwoFactorHasBeenDisabled(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -182,8 +205,13 @@ class TwoFactorControllerTest extends TestCase
         $this->assertSame('https://localhost.wip/foobar', $response->getTargetUrl());
     }
 
+    /**
+     * @group legacy
+     */
     public function testReturnsIfTwoFactorAuthenticationIsAlreadyEnabled(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -213,8 +241,13 @@ class TwoFactorControllerTest extends TestCase
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
+    /**
+     * @group legacy
+     */
     public function testFailsIfTheTwoFactorCodeIsInvalid(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -243,8 +276,13 @@ class TwoFactorControllerTest extends TestCase
         $controller($request, $module, 'main', null, $page);
     }
 
+    /**
+     * @group legacy
+     */
     public function testDoesNotRedirectIfTheTwoFactorCodeIsInvalid(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -275,8 +313,13 @@ class TwoFactorControllerTest extends TestCase
         $controller($request, $module, 'main', null, $page);
     }
 
+    /**
+     * @group legacy
+     */
     public function testRedirectsIfTheTwoFactorCodeIsValid(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '';
@@ -314,8 +357,13 @@ class TwoFactorControllerTest extends TestCase
         $this->assertInstanceOf(RedirectResponse::class, $response);
     }
 
+    /**
+     * @group legacy
+     */
     public function testShowsTheBackupCodes(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';
@@ -341,8 +389,13 @@ class TwoFactorControllerTest extends TestCase
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
 
+    /**
+     * @group legacy
+     */
     public function testGeneratesTheBackupCodes(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
         $user->useTwoFactor = '1';

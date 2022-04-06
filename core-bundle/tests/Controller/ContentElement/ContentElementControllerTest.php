@@ -22,12 +22,15 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\System;
 use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContentElementControllerTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     private ContainerBuilder $container;
 
     protected function setUp(): void
@@ -50,8 +53,13 @@ class ContentElementControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatesTheTemplateFromTheClassName(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->getContentModel(), 'main');
@@ -60,8 +68,13 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('ce_test', $template['templateName']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatesTheTemplateFromTheTypeFragmentOptions(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController(['type' => 'foo']);
 
         $response = $controller(new Request(), $this->getContentModel(), 'main');
@@ -70,8 +83,13 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('ce_foo', $template['templateName']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatesTheTemplateFromTheTemplateFragmentOption(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController(['template' => 'ce_bar']);
 
         $response = $controller(new Request(), $this->getContentModel(), 'main');
@@ -80,8 +98,13 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('ce_bar', $template['templateName']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatesTheTemplateFromACustomTpl(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $this->container->set('request_stack', new RequestStack());
 
         $controller = $this->getTestController(['template' => 'ce_bar']);
@@ -94,8 +117,13 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('ce_bar', $template['templateName']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testDoesNotCreateTheTemplateFromACustomTplInTheBackend(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $request = new Request([], [], ['_scope' => 'backend']);
         $requestStack = new RequestStack();
         $requestStack->push($request);
@@ -113,8 +141,13 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('ce_test', $template['templateName']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheClassFromTheType(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->getContentModel(), 'main');
@@ -124,8 +157,13 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('ce_test', $template['class']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheHeadlineFromTheModel(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $model = $this->getContentModel(['headline' => serialize(['unit' => 'h6', 'value' => 'foobar'])]);
@@ -137,8 +175,13 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('h6', $template['hl']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheCssIdAndClassFromTheModel(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $model = $this->getContentModel(['cssID' => serialize(['foo', 'bar'])]);
@@ -150,8 +193,13 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('ce_test bar', $template['class']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheLayoutSection(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->getContentModel(), 'left');
@@ -160,8 +208,13 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('left', $template['inColumn']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheClasses(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->getContentModel(), 'main', ['first', 'last']);
@@ -224,8 +277,13 @@ class ContentElementControllerTest extends TestCase
         yield 'backend' => [true];
     }
 
+    /**
+     * @group legacy
+     */
     public function testAddsTheCacheTags(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $model = $this->getContentModel(['id' => 42]);
 
         $entityCacheTags = $this->createMock(EntityCacheTags::class);
@@ -242,8 +300,13 @@ class ContentElementControllerTest extends TestCase
         $controller(new Request(), $model, 'main');
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheSharedMaxAgeIfTheElementHasAStartDate(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         ClockMock::withClockMock(true);
 
         $time = time();
@@ -262,8 +325,13 @@ class ContentElementControllerTest extends TestCase
         ClockMock::withClockMock(false);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheSharedMaxAgeIfTheElementHasAStopDate(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         ClockMock::withClockMock(true);
 
         $time = time();
@@ -282,8 +350,13 @@ class ContentElementControllerTest extends TestCase
         ClockMock::withClockMock(false);
     }
 
+    /**
+     * @group legacy
+     */
     public function testDoesNotSetTheSharedMaxAgeIfTheElementHasNeitherAStartNorAStopDate(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = new TestSharedMaxAgeController();
         $controller->setContainer($this->container);
 

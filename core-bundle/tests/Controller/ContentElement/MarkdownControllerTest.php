@@ -21,6 +21,7 @@ use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\System;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class MarkdownControllerTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function tearDown(): void
     {
         $this->resetStaticProperties([System::class]);
@@ -35,8 +38,13 @@ class MarkdownControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @group legacy
+     */
     public function testWithCodeInput(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $container = $this->mockContainer('<h1>Headline</h1>'."\n");
 
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
@@ -48,8 +56,13 @@ class MarkdownControllerTest extends TestCase
         $controller(new Request(), $contentModel, 'main');
     }
 
+    /**
+     * @group legacy
+     */
     public function testDisallowedTagsAreCorrectlyStripped(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $expectedHtml = <<<'HTML'
             <h1>Headline</h1>
             &lt;iframe src&#61;&#34;https://example.com&#34;&#62;&lt;/iframe&#62;
@@ -86,8 +99,13 @@ class MarkdownControllerTest extends TestCase
         $controller(new Request(), $contentModel, 'main');
     }
 
+    /**
+     * @group legacy
+     */
     public function testWithFileInput(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $fs = new Filesystem();
         $tempTestFile = $fs->tempnam($this->getTempDir(), '');
         $fs->dumpFile($tempTestFile, '# Headline');

@@ -22,6 +22,7 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\ModuleModel;
 use Contao\System;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -29,6 +30,8 @@ use Twig\Environment;
 
 class FrontendModuleControllerTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     private ContainerBuilder $container;
 
     protected function setUp(): void
@@ -50,8 +53,13 @@ class FrontendModuleControllerTest extends TestCase
         parent::tearDown();
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatesTheTemplateFromTheClassName(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->getModuleModel(), 'main');
@@ -60,8 +68,13 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('mod_test', $template['templateName']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatesTheTemplateFromTheTypeFragmentOption(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController(['type' => 'foo']);
 
         $response = $controller(new Request(), $this->getModuleModel(), 'main');
@@ -70,8 +83,13 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('mod_foo', $template['templateName']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatesTheTemplateFromTheTemplateFragmentOption(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController(['template' => 'mod_bar']);
 
         $response = $controller(new Request(), $this->getModuleModel(), 'main');
@@ -80,8 +98,13 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('mod_bar', $template['templateName']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testCreatesTheTemplateFromACustomTpl(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $this->container->set('request_stack', new RequestStack());
 
         $controller = $this->getTestController();
@@ -94,8 +117,13 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('mod_bar', $template['templateName']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheClassFromTheType(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->getModuleModel(), 'main');
@@ -105,8 +133,13 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('mod_test', $template['class']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheHeadlineFromTheModel(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $model = $this->getModuleModel(['headline' => serialize(['unit' => 'h6', 'value' => 'foobar'])]);
@@ -118,8 +151,13 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('h6', $template['hl']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheCssIdAndClassFromTheModel(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $model = $this->getModuleModel(['cssID' => serialize(['foo', 'bar'])]);
@@ -131,8 +169,13 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertSame('mod_test bar', $template['class']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testSetsTheLayoutSection(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $controller = $this->getTestController();
 
         $response = $controller(new Request(), $this->getModuleModel(), 'left');
@@ -248,8 +291,13 @@ class FrontendModuleControllerTest extends TestCase
         yield 'backend' => [true];
     }
 
+    /**
+     * @group legacy
+     */
     public function testAddsTheCacheTags(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
+
         $model = $this->getModuleModel();
         $model->id = 42;
 
