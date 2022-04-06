@@ -428,7 +428,6 @@ class DbafsTest extends TestCase
         // that isn't part of the API. Normalizing paths is the first isolated
         // step when synchronizing, but we do not want to expose this functionality.
         $method = new \ReflectionMethod($dbafs, 'getNormalizedSearchPaths');
-        $method->setAccessible(true);
 
         [$searchPaths, $parentPaths] = $method->invoke($dbafs, ...$paths);
 

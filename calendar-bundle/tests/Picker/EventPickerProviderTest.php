@@ -165,7 +165,6 @@ class EventPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('calendar', $params['do']);
@@ -185,7 +184,6 @@ class EventPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('calendar', $params['do']);
@@ -213,7 +211,6 @@ class EventPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('calendar', $params['do']);

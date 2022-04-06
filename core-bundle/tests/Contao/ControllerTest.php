@@ -776,7 +776,6 @@ class ControllerTest extends TestCase
 
         $ref = new \ReflectionClass(Controller::class);
         $method = $ref->getMethod('replaceOldBePaths');
-        $method->setAccessible(true);
 
         $this->assertSame(
             $method->invoke(null, 'This is a template with link to <a href="/contao/main.php">backend main</a> and <a href="/contao/main.php?do=articles">articles</a>'),

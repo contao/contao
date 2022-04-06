@@ -55,7 +55,6 @@ class WidgetTest extends TestCase
 
         $class = new \ReflectionClass(Widget::class);
         $method = $class->getMethod('getPost');
-        $method->setAccessible(true);
 
         $_GET = [];
         $_POST = [$input => $value];

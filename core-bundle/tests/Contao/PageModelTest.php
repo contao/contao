@@ -377,7 +377,6 @@ class PageModelTest extends TestCase
     private function mockDatabase(Database $database): void
     {
         $property = (new \ReflectionClass($database))->getProperty('arrInstances');
-        $property->setAccessible(true);
         $property->setValue([md5(implode('', [])) => $database]);
 
         $this->assertSame($database, Database::getInstance());
