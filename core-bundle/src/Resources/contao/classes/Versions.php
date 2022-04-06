@@ -217,6 +217,8 @@ class Versions extends Controller
 			$strDescription = $data['subject'];
 		}
 
+		$strDescription = mb_substr($strDescription, 0, System::getContainer()->get('database_connection')->getSchemaManager()->listTableColumns('tl_version')['description']->getLength());
+
 		$intId = $this->Database->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, IFNULL((SELECT MAX(version) FROM (SELECT version FROM tl_version WHERE pid=? AND fromTable=?) v), 0) + 1, ?, ?, ?, ?, ?, 1, ?)")
 								->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
 								->insertId;
