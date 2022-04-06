@@ -26,10 +26,10 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     /**
      * @dataProvider provideDefinitions
      */
-    public function testAppendToSchema(array $dca = [], array $sql = []): void
+    public function testAppendToSchema(array $dca = []): void
     {
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, $sql)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasColumn('id'));
@@ -170,28 +170,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         ['name' => 'image', 'type' => 'blob', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB],
                         ['name' => 'attachment', 'type' => 'blob', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB],
                         ['name' => 'published', 'type' => 'string', 'fixed' => true, 'length' => 1],
-                    ],
-                ],
-            ],
-        ];
-
-        yield 'table fields from database.sql file' => [
-            [],
-            [
-                'tl_member' => [
-                    'TABLE_FIELDS' => [
-                        'id' => '`id` int(10) NOT NULL default 0',
-                        'pid' => '`pid` int(10) NULL',
-                        'title' => "`title` varchar(128) BINARY NOT NULL default ''",
-                        'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT '1.00'",
-                        'teaser' => '`teaser` tinytext NULL',
-                        'description' => '`description` text NULL',
-                        'content' => '`content` mediumtext NULL',
-                        'price' => '`price` decimal(6,2) NOT NULL default 1.99',
-                        'thumb' => '`thumb` tinyblob NULL',
-                        'image' => '`image` blob NULL',
-                        'attachment' => '`attachment` mediumblob NULL',
-                        'published' => "`published` char(1) NOT NULL default ''",
                     ],
                 ],
             ],
@@ -354,7 +332,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ;
 
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, [], $connection)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca, $connection)->appendToSchema($schema);
         $table = $schema->getTable('tl_files');
 
         $this->assertTrue($table->hasColumn('name'));
@@ -588,7 +566,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ;
 
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, [], $connection)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca, $connection)->appendToSchema($schema);
         $table = $schema->getTable('tl_search');
 
         $this->assertTrue($table->hasColumn('text'));

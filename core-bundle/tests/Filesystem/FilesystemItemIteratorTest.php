@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
+use Contao\CoreBundle\Filesystem\SortMode;
 use Contao\CoreBundle\Tests\TestCase;
 
 class FilesystemItemIteratorTest extends TestCase
@@ -63,6 +64,68 @@ class FilesystemItemIteratorTest extends TestCase
 
         $this->assertSameItems(['bar', 'baz.txt'], $custom);
         $this->assertSameItems(['bar', 'baz.txt'], $iterator->filter($customFilter)->toArray());
+    }
+
+    public function testSort(): void
+    {
+        $fileA = new FilesystemItem(true, 'foo/img2', 100);
+        $fileB = new FilesystemItem(true, 'foo/img10', 200);
+        $fileC = new FilesystemItem(true, 'bar/a', 300);
+        $fileD = new FilesystemItem(true, 'bar/b', 400);
+        $dirFoo = new FilesystemItem(false, 'foo', null);
+        $dirBar = new FilesystemItem(false, 'bar', 500);
+
+        $iterator = new FilesystemItemIterator([$fileA, $fileB, $fileC, $fileD, $dirFoo, $dirBar]);
+
+        $sortedByPathAsc = $iterator->sort(SortMode::pathAscending);
+        $sortedByPathDesc = $sortedByPathAsc->sort(SortMode::pathDescending);
+        $sortedByPathNaturalAsc = $sortedByPathDesc->sort(SortMode::pathNaturalAscending);
+        $sortedByPathNaturalDesc = $sortedByPathNaturalAsc->sort(SortMode::pathNaturalDescending);
+        $sortedByDateAsc = $sortedByPathNaturalDesc->sort(SortMode::lastModifiedAscending);
+        $sortedByDateDesc = $sortedByDateAsc->sort(SortMode::lastModifiedDescending);
+
+        $expectedByPath = [$dirBar, $fileC, $fileD, $dirFoo, $fileB, $fileA];
+
+        $this->assertSame($expectedByPath, iterator_to_array($sortedByPathAsc));
+        $this->assertSame(array_reverse($expectedByPath), iterator_to_array($sortedByPathDesc));
+
+        $expectedByNaturalPath = [$dirBar, $fileC, $fileD, $dirFoo, $fileA, $fileB];
+
+        $this->assertSame($expectedByNaturalPath, iterator_to_array($sortedByPathNaturalAsc));
+        $this->assertSame(array_reverse($expectedByNaturalPath), iterator_to_array($sortedByPathNaturalDesc));
+
+        $expectedByDate = [$dirFoo, $fileA, $fileB, $fileC, $fileD, $dirBar];
+
+        $this->assertSame($expectedByDate, iterator_to_array($sortedByDateAsc));
+        $this->assertSame(array_reverse($expectedByDate), iterator_to_array($sortedByDateDesc));
+    }
+
+    public function testAny(): void
+    {
+        $iterator = new FilesystemItemIterator([
+            new FilesystemItem(true, 'foo.jpg'),
+            new FilesystemItem(false, 'bar'),
+            new FilesystemItem(true, 'baz.txt'),
+            new FilesystemItem(false, 'foobar'),
+        ]);
+
+        $this->assertTrue($iterator->any(static fn (FilesystemItem $f): bool => $f->isFile()));
+        $this->assertTrue($iterator->any(static fn (FilesystemItem $f): bool => str_starts_with($f->getPath(), 'ba')));
+        $this->assertFalse($iterator->any(static fn (FilesystemItem $f): bool => str_starts_with($f->getPath(), 'x')));
+    }
+
+    public function testAll(): void
+    {
+        $iterator = new FilesystemItemIterator([
+            new FilesystemItem(true, 'foo.jpg'),
+            new FilesystemItem(true, 'foo.csv'),
+            new FilesystemItem(true, 'baz.txt'),
+            new FilesystemItem(true, 'foo_bar'),
+        ]);
+
+        $this->assertTrue($iterator->all(static fn (FilesystemItem $f): bool => $f->isFile()));
+        $this->assertTrue($iterator->all(static fn (FilesystemItem $f): bool => 7 === \strlen($f->getPath())));
+        $this->assertFalse($iterator->all(static fn (FilesystemItem $f): bool => str_starts_with($f->getPath(), 'foo')));
     }
 
     /**

@@ -15,11 +15,12 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
 use Imagine\Exception\RuntimeException;
-use Imagine\Gd\Imagine;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Response;
@@ -649,6 +650,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
 
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
+
 		$objSession = System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -700,6 +703,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			throw new InternalServerErrorException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_MOVE, new DataContainerSubject($this->strTable, $source));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -794,7 +799,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
-				$this->cut($id); // do not urldecode() here (see #6840)
+				try
+				{
+					$this->cut($id); // do not urldecode() here (see #6840)
+				}
+				catch (AccessDeniedException)
+				{
+					// noop
+				}
 			}
 		}
 
@@ -848,6 +860,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			throw new InternalServerErrorException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -964,7 +978,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
-				$this->copy($id); // do not urldecode() here (see #6840)
+				try
+				{
+					$this->copy($id); // do not urldecode() here (see #6840)
+				}
+				catch (AccessDeniedException)
+				{
+					// noop
+				}
 			}
 		}
 
@@ -995,11 +1016,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->isValid($source);
 
-		// Delete the file or folder
 		if (!file_exists($this->strRootDir . '/' . $source) || !$this->isMounted($source))
 		{
 			throw new AccessDeniedException('File or folder "' . $source . '" is not mounted or cannot be found.');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_DELETE, new DataContainerSubject($this->strTable, $source));
 
 		// Call the ondelete_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['ondelete_callback'] ?? null))
@@ -1077,7 +1099,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			foreach ($ids as $id)
 			{
-				$this->delete($id); // do not urldecode() here (see #6840)
+				try
+				{
+					$this->delete($id); // do not urldecode() here (see #6840)
+				}
+				catch (AccessDeniedException)
+				{
+					// noop
+				}
 			}
 		}
 
@@ -1305,12 +1334,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	{
 		$return = '';
 		$this->noReload = false;
+
 		$this->isValid($this->intId);
 
 		if (!file_exists($this->strRootDir . '/' . $this->intId) || !$this->isMounted($this->intId))
 		{
 			throw new AccessDeniedException('File or folder "' . $this->intId . '" is not mounted or cannot be found.');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$objModel = null;
 		$objVersions = null;
@@ -1638,6 +1670,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Walk through each record
 			foreach ($ids as $id)
 			{
+				try
+				{
+					$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
+				}
+				catch (AccessDeniedException)
+				{
+					continue;
+				}
+
 				$this->intId = $id;
 				$this->initialId = $id;
 				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
@@ -1931,6 +1972,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$objFile = new File($this->intId);
 
@@ -2619,7 +2662,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 				$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($labelPasteInto[1], $currentEncoded));
 
-				if (\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote($arrClipboard['id'], '#') . '(/|$)#i', $currentFolder)))
+				if (\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote(rawurldecode($arrClipboard['id']), '#') . '(/|$)#i', $currentFolder)))
 				{
 					$return .= Image::getHtml('pasteinto_.svg');
 				}
@@ -2704,39 +2747,28 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Generate the thumbnail
 			if ($objFile->isImage && (!$objFile->isSvgImage || $objFile->viewHeight > 0) && Config::get('thumbnails'))
 			{
-				$blnCanResize = true;
-
-				// Check the maximum width and height if the GDlib is used to resize images
-				if (!$objFile->isSvgImage && System::getContainer()->get('contao.image.imagine') instanceof Imagine)
+				try
 				{
-					$blnCanResize = $objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth');
+					// Inline the image if no preview image will be generated (see #636)
+					if ($objFile->height !== null && $objFile->height <= 75 && $objFile->width !== null && $objFile->width <= 100)
+					{
+						$thumbnail .= '<br><img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" class="preview-image">';
+					}
+					else
+					{
+						$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($this->strRootDir), '', 'class="preview-image" loading="lazy"');
+					}
+
+					$importantPart = System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
+
+					if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
+					{
+						$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important" loading="lazy"');
+					}
 				}
-
-				if ($blnCanResize)
+				catch (RuntimeException $e)
 				{
-					try
-					{
-						// Inline the image if no preview image will be generated (see #636)
-						if ($objFile->height !== null && $objFile->height <= 75 && $objFile->width !== null && $objFile->width <= 100)
-						{
-							$thumbnail .= '<br><img src="' . $objFile->dataUri . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="" class="preview-image">';
-						}
-						else
-						{
-							$thumbnail .= '<br>' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), array(100, 75, ResizeConfiguration::MODE_BOX))->getUrl($this->strRootDir), '', 'class="preview-image" loading="lazy"');
-						}
-
-						$importantPart = System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded))->getImportantPart();
-
-						if ($importantPart->getX() > 0 || $importantPart->getY() > 0 || $importantPart->getWidth() < 1 || $importantPart->getHeight() < 1)
-						{
-							$thumbnail .= ' ' . Image::getHtml(System::getContainer()->get('contao.image.factory')->create($this->strRootDir . '/' . rawurldecode($currentEncoded), (new ResizeConfiguration())->setWidth(80)->setHeight(60)->setMode(ResizeConfiguration::MODE_BOX)->setZoomLevel(100))->getUrl($this->strRootDir), '', 'class="preview-important" loading="lazy"');
-						}
-					}
-					catch (RuntimeException $e)
-					{
-						$thumbnail .= '<br><p class="preview-image broken-image">Broken image!</p>';
-					}
+					$thumbnail .= '<br><p class="preview-image broken-image">Broken image!</p>';
 				}
 			}
 

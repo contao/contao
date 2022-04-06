@@ -16,8 +16,6 @@ use Contao\Config;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 
 class RoutingTest extends FunctionalTestCase
 {
@@ -25,28 +23,12 @@ class RoutingTest extends FunctionalTestCase
 
     private static ?array $lastImport = null;
 
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        static::bootKernel();
-        System::setContainer(self::$container);
-        static::resetDatabaseSchema();
-        static::ensureKernelShutdown();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        (new Filesystem())->remove(Path::canonicalize(__DIR__.'/../../var'));
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
 
         $_GET = [];
+        unset($GLOBALS['objPage']);
 
         $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
     }
@@ -243,7 +225,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
         ];
@@ -465,7 +447,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/en/folder/url/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
         ];
@@ -651,7 +633,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/auto_item/foo',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
         ];
@@ -722,7 +704,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-without-fallback-language'],
             '/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-without-fallback-language.local',
         ];
@@ -844,7 +826,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-without-fallback-language'],
             '/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-without-fallback-language.local',
         ];
@@ -889,7 +871,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-index'],
             '/de/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-with-index.local',
         ];
@@ -898,7 +880,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-without-fallback-language'],
             '/fr/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-without-fallback-language.local',
         ];
@@ -942,8 +924,6 @@ class RoutingTest extends FunctionalTestCase
 
     public function testOrdersThePageModelsByCandidates(): void
     {
-        Config::set('folderUrl', true);
-
         $request = 'https://root-zh.local/main/sub-zh.html';
 
         $_SERVER['REQUEST_URI'] = $request;
@@ -962,6 +942,28 @@ class RoutingTest extends FunctionalTestCase
 
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringContainsString('', $title);
+    }
+
+    public function testRendersLoginPageWhenRootIsProtected(): void
+    {
+        $request = 'https://protected-root.local/';
+
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'protected-root.local';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['theme', 'protected-root']);
+
+        $crawler = $client->request('GET', $request);
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame(401, $response->getStatusCode());
+        $this->assertStringContainsString('Error 401 Page', $title);
     }
 
     private function loadFixtureFiles(array $fileNames): void

@@ -43,6 +43,7 @@ use Symfony\Component\HttpKernel\EventListener\AbstractSessionListener;
 use Symfony\Component\HttpKernel\EventListener\ErrorListener;
 use Symfony\Component\HttpKernel\EventListener\LocaleListener as BaseLocaleListener;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
+use Symfony\Component\Security\Core\Authorization\TraceableAccessDecisionManager;
 use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
@@ -261,6 +262,9 @@ class ContaoCoreExtensionTest extends TestCase
                         ],
                         'default_http_client_options' => [
                             'proxy' => 'http://localhost:7080',
+                            'headers' => [
+                                'Foo' => 'Bar',
+                            ],
                         ],
                     ],
                 ],
@@ -271,7 +275,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition('contao.crawl.escargot.factory');
 
         $this->assertSame(['https://example.com'], $definition->getArgument(2));
-        $this->assertSame(['proxy' => 'http://localhost:7080'], $definition->getArgument(3));
+        $this->assertSame(['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']], $definition->getArgument(3));
     }
 
     public function testConfiguresTheBackupManagerCorrectly(): void
@@ -557,6 +561,26 @@ class ContaoCoreExtensionTest extends TestCase
         ;
 
         (new ContaoCoreExtension())->configureFilesystem($config);
+    }
+
+    public function testRegistersTraceableAccessDecisionMangerInDebug(): void
+    {
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.debug' => true,
+                'kernel.charset' => 'UTF-8',
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+            ])
+        );
+
+        $extension = new ContaoCoreExtension();
+        $extension->load([], $container);
+
+        $this->assertTrue($container->hasDefinition('contao.debug.security.access.decision_manager'));
+
+        $definition = $container->findDefinition('contao.debug.security.access.decision_manager');
+        $this->assertSame(TraceableAccessDecisionManager::class, $definition->getClass());
+        $this->assertSame('security.access.decision_manager', $definition->getDecoratedService()[0]);
     }
 
     public function testRegistersAsContentElementAttribute(): void

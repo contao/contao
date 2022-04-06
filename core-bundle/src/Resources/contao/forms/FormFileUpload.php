@@ -205,7 +205,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 		// Store file in the session and optionally on the server
 		if (!$this->hasErrors())
 		{
-			$_SESSION['FILES'][$this->strName] = $_FILES[$this->strName];
+			$this->varValue = $_FILES[$this->strName];
 
 			if ($this->storeFile)
 			{
@@ -283,8 +283,7 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 						Dbafs::updateFolderHashes($strUploadFolder);
 					}
 
-					// Add the session entry (see #6986)
-					$_SESSION['FILES'][$this->strName] = array
+					$this->varValue = array
 					(
 						'name'     => $file['name'],
 						'type'     => $file['type'],

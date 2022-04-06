@@ -262,6 +262,19 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame('foo bar baz foobar', $attributes['class']);
     }
 
+    public function testDoesNotOutputEmptyClassAttribute(): void
+    {
+        $attributes = new HtmlAttributes();
+        $attributes->addClass('');
+
+        $this->assertSame('', $attributes->toString());
+
+        $attributes->addClass('foo');
+        $attributes->removeClass('foo');
+
+        $this->assertSame('', $attributes->toString());
+    }
+
     public function testAllowsChaining(): void
     {
         $attributes = (new HtmlAttributes())
@@ -343,5 +356,12 @@ class HtmlAttributesTest extends TestCase
 
         /** @phpstan-ignore-next-line */
         $attributes['foo'];
+    }
+
+    public function testCanBeJsonSerialized(): void
+    {
+        $attributes = new HtmlAttributes(['foo' => 'bar', 'baz' => 42]);
+
+        $this->assertSame('{"foo":"bar","baz":"42"}', json_encode($attributes, JSON_THROW_ON_ERROR));
     }
 }
