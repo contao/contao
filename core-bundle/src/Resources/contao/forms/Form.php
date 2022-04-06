@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
+
 /**
  * Provide methods to handle front end forms.
  *
@@ -32,6 +34,8 @@ namespace Contao;
  */
 class Form extends Hybrid
 {
+	public const SESSION_KEY = 'contao.form.data';
+
 	/**
 	 * Model
 	 * @var FormModel
@@ -108,8 +112,8 @@ class Form extends Hybrid
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
-		$this->initializeSession($formId);
 		$arrLabels = array();
+		$arrFiles = array();
 
 		// Get all form fields
 		$arrFields = array();
@@ -218,18 +222,16 @@ class Form extends Hybrid
 					{
 						$doNotSubmit = true;
 					}
-
-					// Store current value in the session
 					elseif ($objWidget->submitInput())
 					{
 						$arrSubmitted[$objField->name] = $objWidget->value;
-						$_SESSION['FORM_DATA'][$objField->name] = $objWidget->value;
 						unset($_POST[$objField->name]); // see #5474
 					}
 				}
 
 				if ($objWidget instanceof UploadableWidgetInterface)
 				{
+					$arrFiles[$objField->name] = $objWidget->value;
 					$hasUpload = true;
 				}
 
@@ -253,19 +255,14 @@ class Form extends Hybrid
 		// Process the form data
 		if (!$doNotSubmit && Input::post('FORM_SUBMIT') == $formId)
 		{
-			$this->processFormData($arrSubmitted, $arrLabels, $arrFields);
+			$this->processFormData($arrSubmitted, $arrLabels, $arrFields, $arrFiles);
 		}
 
 		// Remove any uploads, if form did not validate (#1185)
-		if ($doNotSubmit && $hasUpload && !empty($_SESSION['FILES']))
+		if ($doNotSubmit && $hasUpload)
 		{
-			foreach ($_SESSION['FILES'] as $field => $upload)
+			foreach ($arrFiles as $upload)
 			{
-				if (empty($arrFields[$field]))
-				{
-					continue;
-				}
-
 				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
 				{
 					$file->delete();
@@ -275,8 +272,6 @@ class Form extends Hybrid
 				{
 					unlink($upload['tmp_name']);
 				}
-
-				unset($_SESSION['FILES'][$field]);
 			}
 		}
 
@@ -323,8 +318,9 @@ class Form extends Hybrid
 	 * @param array $arrSubmitted
 	 * @param array $arrLabels
 	 * @param array $arrFields
+	 * @param array $arrFiles
 	 */
-	protected function processFormData($arrSubmitted, $arrLabels, $arrFields)
+	protected function processFormData($arrSubmitted, $arrLabels, $arrFields, $arrFiles)
 	{
 		// HOOK: prepare form data callback
 		if (isset($GLOBALS['TL_HOOKS']['prepareFormData']) && \is_array($GLOBALS['TL_HOOKS']['prepareFormData']))
@@ -334,6 +330,13 @@ class Form extends Hybrid
 				$this->import($callback[0]);
 				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $arrLabels, $arrFields, $this);
 			}
+		}
+
+		// Store submitted data (possibly modified by hook or data added) in the session for 10 seconds,
+		// so it can be used on any forward page using the {{form_session_data::<form-field-name>}} insert tag
+		if ($request = System::getContainer()->get('request_stack')->getCurrentRequest())
+		{
+			$request->getSession()->set(self::SESSION_KEY, new AutoExpiringAttribute(10, $arrSubmitted));
 		}
 
 		// Send form data via e-mail
@@ -429,7 +432,6 @@ class Form extends Hybrid
 			if (!empty($arrSubmitted['cc']))
 			{
 				$email->sendCc(Input::post('email', true));
-				unset($_SESSION['FORM_DATA']['cc']);
 			}
 
 			// Attach XML file
@@ -455,12 +457,12 @@ class Form extends Hybrid
 			$uploaded = '';
 
 			// Attach uploaded files
-			if (!empty($_SESSION['FILES']))
+			if (!empty($arrFiles))
 			{
-				foreach ($_SESSION['FILES'] as $file)
+				foreach ($arrFiles as $file)
 				{
 					// Add a link to the uploaded file
-					if ($file['uploaded'])
+					if (isset($file['uploaded']))
 					{
 						$uploaded .= "\n" . Environment::get('base') . StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
 						continue;
@@ -511,9 +513,9 @@ class Form extends Hybrid
 			}
 
 			// Files
-			if (!empty($_SESSION['FILES']))
+			if (!empty($arrFiles))
 			{
-				foreach ($_SESSION['FILES'] as $k=>$v)
+				foreach ($arrFiles as $k=>$v)
 				{
 					if ($v['uploaded'] ?? null)
 					{
@@ -548,17 +550,6 @@ class Form extends Hybrid
 			$this->Database->prepare("INSERT INTO " . $this->targetTable . " %s")->set($arrSet)->execute();
 		}
 
-		// Store all values in the session
-		foreach (array_keys($_POST) as $key)
-		{
-			$_SESSION['FORM_DATA'][$key] = $this->allowTags ? Input::postHtml($key, true) : Input::post($key, true);
-		}
-
-		// Store the submission time to invalidate the session later on
-		$_SESSION['FORM_DATA']['SUBMITTED_AT'] = time();
-
-		$arrFiles = $_SESSION['FILES'] ?? null;
-
 		// HOOK: process form data callback
 		if (isset($GLOBALS['TL_HOOKS']['processFormData']) && \is_array($GLOBALS['TL_HOOKS']['processFormData']))
 		{
@@ -568,8 +559,6 @@ class Form extends Hybrid
 				$this->{$callback[0]}->{$callback[1]}($arrSubmitted, $this->arrData, $arrFiles, $arrLabels, $this);
 			}
 		}
-
-		$_SESSION['FILES'] = array(); // DO NOT CHANGE
 
 		// Add a log entry
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
@@ -590,40 +579,5 @@ class Form extends Hybrid
 		}
 
 		$this->reload();
-	}
-
-	/**
-	 * Initialize the form in the current session
-	 *
-	 * @param string $formId
-	 */
-	protected function initializeSession($formId)
-	{
-		if (Input::post('FORM_SUBMIT') != $formId)
-		{
-			return;
-		}
-
-		$arrMessageBox = array('TL_ERROR', 'TL_CONFIRM', 'TL_INFO');
-		$_SESSION['FORM_DATA'] = \is_array($_SESSION['FORM_DATA'] ?? null) ? $_SESSION['FORM_DATA'] : array();
-
-		foreach ($arrMessageBox as $tl)
-		{
-			if (\is_array($_SESSION[$formId][$tl] ?? null))
-			{
-				$_SESSION[$formId][$tl] = array_unique($_SESSION[$formId][$tl]);
-
-				foreach ($_SESSION[$formId][$tl] as $message)
-				{
-					$objTemplate = new FrontendTemplate('form_message');
-					$objTemplate->message = $message;
-					$objTemplate->class = strtolower($tl);
-
-					$this->Template->fields .= $objTemplate->parse() . "\n";
-				}
-
-				$_SESSION[$formId][$tl] = array();
-			}
-		}
 	}
 }

@@ -13,9 +13,9 @@ namespace Contao;
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
@@ -148,6 +148,7 @@ class InsertTags extends Controller
 
 		$arrBuffer = array();
 		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if (static::$strAllowedTagsRegex === null)
 		{
@@ -196,15 +197,12 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'post' || ($elements[1] ?? null) == 'back' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'form_session_data' || ($elements[1] ?? null) == 'back' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
 
 					$attributes = array('insertTag' => '{{' . $strTag . '}}');
-
-					/** @var Request|null $request */
-					$request = $container->get('request_stack')->getCurrentRequest();
 
 					if (null !== $request && ($scope = $request->attributes->get('_scope')))
 					{
@@ -713,10 +711,13 @@ class InsertTags extends Controller
 					$arrCache[$strTag] = REQUEST_TOKEN;
 					break;
 
-				// POST data
-				case 'post':
+				// Form session data
+				case 'form_session_data':
 					$flags[] = 'attr';
-					$arrCache[$strTag] = Input::post($elements[1]);
+
+					/** @var AutoExpiringAttribute|null $attribute */
+					$attribute = $request?->getSession()->get(Form::SESSION_KEY);
+					$arrCache[$strTag] = $attribute?->getValue()[$elements[1]] ?? null;
 					break;
 
 				// Conditional tags (if, if not)
