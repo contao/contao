@@ -34,7 +34,7 @@ class PreviewLinkControllerTest extends TestCase
         $listener = new PreviewLinkController(
             $this->mockAuthenticator($showUnpublished),
             $this->mockUriSigner(true),
-            $this->mockConnection(compact('url', 'showUnpublished'))
+            $this->mockConnection(['url' => $url, 'showUnpublished' => $showUnpublished])
         );
 
         $response = $listener($request, 42);

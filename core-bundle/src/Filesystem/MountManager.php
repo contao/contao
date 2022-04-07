@@ -238,7 +238,7 @@ class MountManager
             $visibility = $options['visibility'] ?? $adapterFrom->visibility($adapterPathFrom)->visibility();
 
             $stream = $adapterFrom->readStream($adapterPathFrom);
-            $adapterTo->writeStream($adapterPathTo, $stream, new Config(compact('visibility')));
+            $adapterTo->writeStream($adapterPathTo, $stream, new Config(['visibility' => $visibility]));
         } catch (FilesystemException $e) {
             throw VirtualFilesystemException::unableToCopy($pathFrom, $pathTo, $e);
         }
@@ -265,7 +265,7 @@ class MountManager
             $visibility = $options['visibility'] ?? $adapterFrom->visibility($adapterPathFrom)->visibility();
 
             $stream = $adapterFrom->readStream($adapterPathFrom);
-            $adapterTo->writeStream($adapterPathTo, $stream, new Config(compact('visibility')));
+            $adapterTo->writeStream($adapterPathTo, $stream, new Config(['visibility' => $visibility]));
 
             $adapterFrom->delete($adapterPathFrom);
         } catch (FilesystemException $e) {

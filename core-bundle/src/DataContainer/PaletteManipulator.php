@@ -186,7 +186,7 @@ class PaletteManipulator
                 $legend = $legendCount++;
             }
 
-            $legendMap[$legend] = compact('fields', 'hide');
+            $legendMap[$legend] = ['fields' => $fields, 'hide' => $hide];
         }
 
         return $legendMap;

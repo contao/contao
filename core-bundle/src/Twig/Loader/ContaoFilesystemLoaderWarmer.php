@@ -111,7 +111,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 
         foreach ($mappings as $path => $namespace) {
             $data['namespaces'][] = ['namespace' => 'Contao', 'path' => $path];
-            $data['namespaces'][] = compact('namespace', 'path');
+            $data['namespaces'][] = ['namespace' => $namespace, 'path' => $path];
         }
 
         if (null === $this->filesystem) {
