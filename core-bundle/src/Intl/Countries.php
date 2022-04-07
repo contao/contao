@@ -21,15 +21,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Countries
 {
-    private RequestStack $requestStack;
-    private ContaoFramework $contaoFramework;
-    private string $defaultLocale;
-
-    /**
-     * @var TranslatorInterface&TranslatorBagInterface
-     */
-    private TranslatorInterface $translator;
-
     /**
      * @var array<string>
      */
@@ -38,13 +29,15 @@ class Countries
     /**
      * @param TranslatorInterface&TranslatorBagInterface $translator
      */
-    public function __construct(TranslatorInterface $translator, RequestStack $requestStack, ContaoFramework $contaoFramework, array $defaultCountries, array $configCountries, string $defaultLocale)
-    {
-        $this->translator = $translator;
-        $this->requestStack = $requestStack;
-        $this->contaoFramework = $contaoFramework;
+    public function __construct(
+        private TranslatorInterface $translator,
+        private RequestStack $requestStack,
+        private ContaoFramework $contaoFramework,
+        array $defaultCountries,
+        array $configCountries,
+        private string $defaultLocale
+    ) {
         $this->countries = $this->filterCountries($defaultCountries, $configCountries);
-        $this->defaultLocale = $defaultLocale;
     }
 
     /**

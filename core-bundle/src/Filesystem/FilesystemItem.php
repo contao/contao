@@ -21,43 +21,20 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemItem implements \Stringable
 {
-    private bool $isFile;
-    private string $path;
-
     /**
-     * @var int|(\Closure(self):int|null)|null
-     */
-    private int|\Closure|null $lastModified;
-
-    /**
-     * @var int|\Closure(self):int|null
-     */
-    private int|\Closure|null $fileSize;
-
-    /**
-     * @var string|\Closure(self):string|null
-     */
-    private string|\Closure|null $mimeType;
-
-    /**
-     * @var array<string, mixed>|\Closure(self):array<string, mixed>
-     */
-    private array|\Closure $extraMetadata;
-
-    /**
-     * @param int|(\Closure(self):int|null)|null $lastModified
-     * @param int|\Closure(self):int|null $fileSize
-     * @param string|\Closure(self):string|null $mimeType
+     * @param int|(\Closure(self):int|null)|null                       $lastModified
+     * @param int|\Closure(self):int|null                              $fileSize
+     * @param string|\Closure(self):string|null                        $mimeType
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
      */
-    public function __construct(bool $isFile, string $path, $lastModified = null, $fileSize = null, $mimeType = null, $extraMetadata = [])
-    {
-        $this->isFile = $isFile;
-        $this->path = $path;
-        $this->lastModified = $lastModified;
-        $this->fileSize = $fileSize;
-        $this->mimeType = $mimeType;
-        $this->extraMetadata = $extraMetadata;
+    public function __construct(
+        private bool $isFile,
+        private string $path,
+        private int|\Closure|null $lastModified = null,
+        private int|\Closure|null $fileSize = null,
+        private string|\Closure|null $mimeType = null,
+        private array|\Closure $extraMetadata = []
+    ) {
     }
 
     public function __toString(): string

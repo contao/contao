@@ -25,25 +25,17 @@ class ContaoContext implements \Stringable
     final public const NEWSLETTER = 'NEWSLETTER';
     final public const REPOSITORY = 'REPOSITORY';
 
-    private string $func;
-    private ?string $action;
-    private ?string $username;
-    private ?string $ip;
-    private ?string $browser;
-    private ?string $source;
-
-    public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null)
-    {
+    public function __construct(
+        private string $func,
+        private ?string $action = null,
+        private ?string $username = null,
+        private ?string $ip = null,
+        private ?string $browser = null,
+        private ?string $source = null
+    ) {
         if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
         }
-
-        $this->func = $func;
-        $this->action = $action;
-        $this->username = $username;
-        $this->ip = $ip;
-        $this->browser = $browser;
-        $this->source = $source;
     }
 
     /**

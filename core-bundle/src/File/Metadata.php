@@ -31,27 +31,11 @@ class Metadata
     final public const VALUE_LICENSE = 'license';
 
     /**
-     * Key-value pairs of metadata.
-     *
-     * @var array<string, mixed>
+     * @param array<string, mixed>      $values          Key-value pairs of metadata
+     * @param array<string, array>|null $schemaOrgJsonLd JSON-LD data where the key matches the schema.org type
      */
-    private array $values;
-
-    /**
-     * JSON-LD data where the key matches the schema.org type.
-     *
-     * @var array<string, array>|null
-     */
-    private ?array $schemaOrgJsonLd;
-
-    /**
-     * @param array<string, mixed>      $values
-     * @param array<string, array>|null $schemaOrgJsonLd
-     */
-    public function __construct(array $values, array $schemaOrgJsonLd = null)
+    public function __construct(private array $values, private ?array $schemaOrgJsonLd = null)
     {
-        $this->values = $values;
-        $this->schemaOrgJsonLd = $schemaOrgJsonLd;
     }
 
     /**
@@ -66,7 +50,7 @@ class Metadata
             return $this;
         }
 
-        return new self(array_merge($this->values, $values));
+        return new self([...$this->values, ...$values]);
     }
 
     /**

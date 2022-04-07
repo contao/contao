@@ -36,21 +36,17 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 {
     use TargetPathTrait;
 
-    private ContaoFramework $framework;
-    private TrustedDeviceManagerInterface $trustedDeviceManager;
-    private FirewallMap $firewallMap;
-    private ?LoggerInterface $logger;
     private ?User $user = null;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
      */
-    public function __construct(ContaoFramework $framework, TrustedDeviceManagerInterface $trustedDeviceManager, FirewallMap $firewallMap, LoggerInterface $logger = null)
-    {
-        $this->framework = $framework;
-        $this->trustedDeviceManager = $trustedDeviceManager;
-        $this->firewallMap = $firewallMap;
-        $this->logger = $logger;
+    public function __construct(
+        private ContaoFramework $framework,
+        private TrustedDeviceManagerInterface $trustedDeviceManager,
+        private FirewallMap $firewallMap,
+        private ?LoggerInterface $logger = null
+    ) {
     }
 
     /**

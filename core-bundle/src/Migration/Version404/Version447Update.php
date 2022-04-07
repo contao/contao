@@ -22,13 +22,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class Version447Update extends AbstractMigration
 {
-    private Connection $connection;
-    private TranslatorInterface $translator;
-
-    public function __construct(Connection $connection, TranslatorInterface $translator)
+    public function __construct(private Connection $connection, private TranslatorInterface $translator)
     {
-        $this->connection = $connection;
-        $this->translator = $translator;
     }
 
     public function getName(): string

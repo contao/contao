@@ -14,16 +14,10 @@ namespace Contao\CoreBundle\Cron;
 
 class CronJob
 {
-    private object $service;
-    private ?string $method;
-    private string $interval;
     private string $name;
 
-    public function __construct(object $service, string $interval, string $method = null)
+    public function __construct(private object $service, private string $interval, private ?string $method = null)
     {
-        $this->service = $service;
-        $this->method = $method;
-        $this->interval = $interval;
         $this->name = $service::class;
 
         if (!\is_callable($service)) {

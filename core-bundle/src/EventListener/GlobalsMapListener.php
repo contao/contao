@@ -17,11 +17,8 @@ namespace Contao\CoreBundle\EventListener;
  */
 class GlobalsMapListener
 {
-    private array $globals;
-
-    public function __construct(array $globals)
+    public function __construct(private array $globals)
     {
-        $this->globals = $globals;
     }
 
     /**

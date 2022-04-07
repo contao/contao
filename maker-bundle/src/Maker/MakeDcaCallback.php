@@ -35,21 +35,14 @@ use Symfony\Component\Yaml\Yaml;
 
 class MakeDcaCallback extends AbstractMaker
 {
-    private ContaoFramework $framework;
-    private ClassGenerator $classGenerator;
-    private ResourceFinder $resourceFinder;
-    private SignatureGenerator $signatureGenerator;
-    private ImportExtractor $importExtractor;
-    private PhpCompatUtil $phpCompatUtil;
-
-    public function __construct(ContaoFramework $framework, ClassGenerator $classGenerator, ResourceFinder $resourceFinder, SignatureGenerator $signatureGenerator, ImportExtractor $importExtractor, PhpCompatUtil $phpCompatUtil)
-    {
-        $this->framework = $framework;
-        $this->classGenerator = $classGenerator;
-        $this->resourceFinder = $resourceFinder;
-        $this->signatureGenerator = $signatureGenerator;
-        $this->importExtractor = $importExtractor;
-        $this->phpCompatUtil = $phpCompatUtil;
+    public function __construct(
+        private ContaoFramework $framework,
+        private ClassGenerator $classGenerator,
+        private ResourceFinder $resourceFinder,
+        private SignatureGenerator $signatureGenerator,
+        private ImportExtractor $importExtractor,
+        private PhpCompatUtil $phpCompatUtil
+    ) {
     }
 
     public static function getCommandName(): string

@@ -32,38 +32,24 @@ use Symfony\Component\Filesystem\Path;
 
 class PreviewFactory
 {
-    /**
-     * @var iterable<int,PreviewProviderInterface>
-     */
-    private iterable $previewProviders;
-
-    private ImageFactoryInterface $imageFactory;
-    private PictureFactoryInterface $pictureFactory;
-    private Studio $imageStudio;
-    private ContaoFramework $framework;
-    private string $secret;
-    private string $cacheDir;
-    private array $validImageExtensions;
     private string $defaultDensities = '';
     private array $predefinedSizes = [];
-    private int $defaultSize;
-    private int $maxSize;
 
     /**
      * @param iterable<int,PreviewProviderInterface> $previewProviders
      */
-    public function __construct(iterable $previewProviders, ImageFactoryInterface $imageFactory, PictureFactoryInterface $pictureFactory, Studio $imageStudio, ContaoFramework $framework, string $secret, string $cacheDir, array $validImageExtensions, int $defaultSize, int $maxSize)
-    {
-        $this->previewProviders = $previewProviders;
-        $this->imageFactory = $imageFactory;
-        $this->pictureFactory = $pictureFactory;
-        $this->imageStudio = $imageStudio;
-        $this->framework = $framework;
-        $this->secret = $secret;
-        $this->cacheDir = $cacheDir;
-        $this->validImageExtensions = $validImageExtensions;
-        $this->defaultSize = $defaultSize;
-        $this->maxSize = $maxSize;
+    public function __construct(
+        private iterable $previewProviders,
+        private ImageFactoryInterface $imageFactory,
+        private PictureFactoryInterface $pictureFactory,
+        private Studio $imageStudio,
+        private ContaoFramework $framework,
+        private string $secret,
+        private string $cacheDir,
+        private array $validImageExtensions,
+        private int $defaultSize,
+        private int $maxSize
+    ) {
     }
 
     public function setDefaultDensities(string $densities): self

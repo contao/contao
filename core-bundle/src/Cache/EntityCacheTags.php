@@ -29,20 +29,16 @@ use FOS\HttpCache\ResponseTagger;
  */
 class EntityCacheTags
 {
-    private EntityManagerInterface $entityManager;
-    private ?ResponseTagger $responseTagger;
-    private ?CacheInvalidator $cacheInvalidator;
-
     /**
      * @var array<string, ClassMetadata<object>>
      */
     private array $classMetadata = [];
 
-    public function __construct(EntityManagerInterface $entityManager, ResponseTagger $responseTagger = null, CacheInvalidator $cacheInvalidator = null)
-    {
-        $this->entityManager = $entityManager;
-        $this->responseTagger = $responseTagger;
-        $this->cacheInvalidator = $cacheInvalidator;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private ?ResponseTagger $responseTagger = null,
+        private ?CacheInvalidator $cacheInvalidator = null
+    ) {
     }
 
     /**

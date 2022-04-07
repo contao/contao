@@ -26,19 +26,13 @@ use Symfony\Component\Security\Core\Security;
  */
 class PreviewAuthenticationListener
 {
-    private ScopeMatcher $scopeMatcher;
-    private TokenChecker $tokenChecker;
-    private UrlGeneratorInterface $router;
-    private UriSigner $uriSigner;
-    private Security $security;
-
-    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $router, UriSigner $uriSigner, Security $security)
-    {
-        $this->scopeMatcher = $scopeMatcher;
-        $this->tokenChecker = $tokenChecker;
-        $this->router = $router;
-        $this->uriSigner = $uriSigner;
-        $this->security = $security;
+    public function __construct(
+        private ScopeMatcher $scopeMatcher,
+        private TokenChecker $tokenChecker,
+        private UrlGeneratorInterface $router,
+        private UriSigner $uriSigner,
+        private Security $security
+    ) {
     }
 
     public function __invoke(RequestEvent $event): void

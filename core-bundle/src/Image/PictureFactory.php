@@ -41,24 +41,19 @@ class PictureFactory implements PictureFactoryInterface
     ];
 
     private array $imageSizeItemsCache = [];
-    private PictureGeneratorInterface $pictureGenerator;
-    private ImageFactoryInterface $imageFactory;
-    private ContaoFramework $framework;
-    private bool $bypassCache;
-    private array $imagineOptions;
     private string $defaultDensities = '';
     private array $predefinedSizes = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.picture_factory" service instead
      */
-    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions)
-    {
-        $this->pictureGenerator = $pictureGenerator;
-        $this->imageFactory = $imageFactory;
-        $this->framework = $framework;
-        $this->bypassCache = $bypassCache;
-        $this->imagineOptions = $imagineOptions;
+    public function __construct(
+        private PictureGeneratorInterface $pictureGenerator,
+        private ImageFactoryInterface $imageFactory,
+        private ContaoFramework $framework,
+        private bool $bypassCache,
+        private array $imagineOptions
+    ) {
     }
 
     public function setDefaultDensities(string $densities): static

@@ -30,12 +30,8 @@ class VirtualFilesystemException extends \RuntimeException
     final public const UNABLE_TO_RETRIEVE_METADATA = 10;
     final public const ENCOUNTERED_INVALID_PATH = 11;
 
-    private string $path;
-
-    private function __construct(string $path, string $message, int $code, \Throwable|null $previous = null)
+    private function __construct(private string $path, string $message, int $code, \Throwable|null $previous = null)
     {
-        $this->path = $path;
-
         parent::__construct($message, $code, $previous);
     }
 

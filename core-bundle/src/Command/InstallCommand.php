@@ -32,17 +32,10 @@ class InstallCommand extends Command
 
     private ?Filesystem $fs = null;
     private array $rows = [];
-    private string $projectDir;
-    private string $uploadPath;
-    private string $imageDir;
     private ?string $webDir = null;
 
-    public function __construct(string $projectDir, string $uploadPath, string $imageDir)
+    public function __construct(private string $projectDir, private string $uploadPath, private string $imageDir)
     {
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->imageDir = $imageDir;
-
         parent::__construct();
     }
 

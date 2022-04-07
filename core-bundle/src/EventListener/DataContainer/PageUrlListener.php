@@ -35,23 +35,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PageUrlListener
 {
-    private ContaoFramework $framework;
-    private Slug $slug;
-    private TranslatorInterface $translator;
-    private Connection $connection;
-    private PageRegistry $pageRegistry;
-    private UrlGeneratorInterface $urlGenerator;
-    private FinalMatcherInterface $routeMatcher;
-
-    public function __construct(ContaoFramework $framework, Slug $slug, TranslatorInterface $translator, Connection $connection, PageRegistry $pageRegistry, UrlGeneratorInterface $urlGenerator, FinalMatcherInterface $routeMatcher)
-    {
-        $this->framework = $framework;
-        $this->slug = $slug;
-        $this->translator = $translator;
-        $this->connection = $connection;
-        $this->pageRegistry = $pageRegistry;
-        $this->urlGenerator = $urlGenerator;
-        $this->routeMatcher = $routeMatcher;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Slug $slug,
+        private TranslatorInterface $translator,
+        private Connection $connection,
+        private PageRegistry $pageRegistry,
+        private UrlGeneratorInterface $urlGenerator,
+        private FinalMatcherInterface $routeMatcher
+    ) {
     }
 
     /**

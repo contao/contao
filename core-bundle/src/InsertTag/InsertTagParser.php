@@ -18,13 +18,8 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class InsertTagParser implements ResetInterface
 {
-    private ContaoFramework $framework;
-    private ?InsertTags $insertTags;
-
-    public function __construct(ContaoFramework $framework, InsertTags $insertTags = null)
+    public function __construct(private ContaoFramework $framework, private ?InsertTags $insertTags = null)
     {
-        $this->framework = $framework;
-        $this->insertTags = $insertTags;
     }
 
     public function replace(string $input): string

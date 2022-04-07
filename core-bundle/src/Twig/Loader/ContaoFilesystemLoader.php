@@ -47,9 +47,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     private const CACHE_KEY_PATHS = 'contao.twig.loader_paths';
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
-    private CacheItemPoolInterface $cachePool;
-    private TemplateLocator $templateLocator;
-    private ThemeNamespace $themeNamespace;
     private string|false|null $currentThemeSlug = null;
 
     /**
@@ -62,13 +59,13 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      */
     private ?array $inheritanceChains = null;
 
-    public function __construct(CacheItemPoolInterface $cachePool, TemplateLocator $templateLocator, ThemeNamespace $themeNamespace, string $rootPath = null)
-    {
+    public function __construct(
+        private CacheItemPoolInterface $cachePool,
+        private TemplateLocator $templateLocator,
+        private ThemeNamespace $themeNamespace,
+        string $rootPath = null
+    ) {
         parent::__construct([], $rootPath);
-
-        $this->cachePool = $cachePool;
-        $this->templateLocator = $templateLocator;
-        $this->themeNamespace = $themeNamespace;
 
         // Restore paths from cache
         $pathsItem = $cachePool->getItem(self::CACHE_KEY_PATHS);

@@ -17,23 +17,13 @@ use Knp\Menu\ItemInterface;
 
 class Picker implements PickerInterface
 {
-    private FactoryInterface $menuFactory;
-    private PickerConfig $config;
     private ?ItemInterface $menu = null;
-
-    /**
-     * @var array<PickerProviderInterface>
-     */
-    private array $providers;
 
     /**
      * @param array<PickerProviderInterface> $providers
      */
-    public function __construct(FactoryInterface $menuFactory, array $providers, PickerConfig $config)
+    public function __construct(private FactoryInterface $menuFactory, private array $providers, private PickerConfig $config)
     {
-        $this->menuFactory = $menuFactory;
-        $this->providers = $providers;
-        $this->config = $config;
     }
 
     public function getConfig(): PickerConfig

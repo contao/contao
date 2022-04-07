@@ -29,31 +29,22 @@ use Symfony\Component\Filesystem\Path;
 
 class ImageFactory implements ImageFactoryInterface
 {
-    private ResizerInterface $resizer;
-    private ImagineInterface $imagine;
-    private ImagineInterface $imagineSvg;
-    private ContaoFramework $framework;
-    private Filesystem $filesystem;
-    private bool $bypassCache;
-    private array $imagineOptions;
-    private array $validExtensions;
-    private string $uploadDir;
     private array $predefinedSizes = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.factory" service instead
      */
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir)
-    {
-        $this->resizer = $resizer;
-        $this->imagine = $imagine;
-        $this->imagineSvg = $imagineSvg;
-        $this->filesystem = $filesystem;
-        $this->framework = $framework;
-        $this->bypassCache = $bypassCache;
-        $this->imagineOptions = $imagineOptions;
-        $this->validExtensions = $validExtensions;
-        $this->uploadDir = $uploadDir;
+    public function __construct(
+        private ResizerInterface $resizer,
+        private ImagineInterface $imagine,
+        private ImagineInterface $imagineSvg,
+        private Filesystem $filesystem,
+        private ContaoFramework $framework,
+        private bool $bypassCache,
+        private array $imagineOptions,
+        private array $validExtensions,
+        private string $uploadDir
+    ) {
     }
 
     /**

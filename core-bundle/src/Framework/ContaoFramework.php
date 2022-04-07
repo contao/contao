@@ -45,25 +45,19 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     private static bool $initialized = false;
     private static string $nonce = '';
 
-    private RequestStack $requestStack;
-    private ScopeMatcher $scopeMatcher;
-    private TokenChecker $tokenChecker;
-    private UrlGeneratorInterface $urlGenerator;
-    private string $projectDir;
-    private int $errorLevel;
     private ?Request $request = null;
     private bool $isFrontend = false;
     private array $adapterCache = [];
     private array $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $urlGenerator, string $projectDir, int $errorLevel)
-    {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
-        $this->tokenChecker = $tokenChecker;
-        $this->urlGenerator = $urlGenerator;
-        $this->projectDir = $projectDir;
-        $this->errorLevel = $errorLevel;
+    public function __construct(
+        private RequestStack $requestStack,
+        private ScopeMatcher $scopeMatcher,
+        private TokenChecker $tokenChecker,
+        private UrlGeneratorInterface $urlGenerator,
+        private string $projectDir,
+        private int $errorLevel
+    ) {
     }
 
     public function reset(): void

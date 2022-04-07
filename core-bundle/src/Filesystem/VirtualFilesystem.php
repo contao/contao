@@ -32,20 +32,15 @@ use Symfony\Component\Uid\Uuid;
  */
 class VirtualFilesystem implements VirtualFilesystemInterface
 {
-    private MountManager $mountManager;
-    private DbafsManager $dbafsManager;
-    private string $prefix;
-    private bool $readonly;
-
     /**
      * @internal Use the "contao.filesystem.virtual_factory" service to create new instances.
      */
-    public function __construct(MountManager $mountManager, DbafsManager $dbafsManager, string $prefix = '', bool $readonly = false)
-    {
-        $this->mountManager = $mountManager;
-        $this->dbafsManager = $dbafsManager;
-        $this->prefix = $prefix;
-        $this->readonly = $readonly;
+    public function __construct(
+        private MountManager $mountManager,
+        private DbafsManager $dbafsManager,
+        private string $prefix = '',
+        private bool $readonly = false
+    ) {
     }
 
     public function getPrefix(): string

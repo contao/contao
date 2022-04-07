@@ -41,15 +41,10 @@ use Twig\TwigFunction;
  */
 final class ContaoExtension extends AbstractExtension
 {
-    private Environment $environment;
-    private TemplateHierarchyInterface $hierarchy;
     private array $contaoEscaperFilterRules = [];
 
-    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
+    public function __construct(private Environment $environment, private TemplateHierarchyInterface $hierarchy)
     {
-        $this->environment = $environment;
-        $this->hierarchy = $hierarchy;
-
         $contaoEscaper = new ContaoEscaper();
 
         /** @var EscaperExtension $escaperExtension */

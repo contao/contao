@@ -25,15 +25,8 @@ use Symfony\Component\Routing\Route;
 
 abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
-    protected ContaoFramework $framework;
-    protected CandidatesInterface $candidates;
-    protected PageRegistry $pageRegistry;
-
-    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
+    public function __construct(protected ContaoFramework $framework, protected CandidatesInterface $candidates, protected PageRegistry $pageRegistry)
     {
-        $this->framework = $framework;
-        $this->candidates = $candidates;
-        $this->pageRegistry = $pageRegistry;
     }
 
     /**

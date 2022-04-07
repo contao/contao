@@ -27,11 +27,8 @@ use Imagine\Imagick\Imagine as ImagickImagine;
 
 class ImaginePreviewProvider implements PreviewProviderInterface
 {
-    private ImagineInterface $imagine;
-
-    public function __construct(ImagineInterface $imagine)
+    public function __construct(private ImagineInterface $imagine)
     {
-        $this->imagine = $imagine;
     }
 
     public function getFileHeaderSize(): int

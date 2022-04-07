@@ -24,18 +24,6 @@ class Cron
     final public const SCOPE_CLI = 'cli';
 
     /**
-     * @var \Closure():CronJobRepository
-     */
-    private \Closure $repository;
-
-    /**
-     * @var \Closure():EntityManagerInterface
-     */
-    private \Closure $entityManager;
-
-    private ?LoggerInterface $logger;
-
-    /**
      * @var array<CronJob>
      */
     private array $cronJobs = [];
@@ -44,11 +32,8 @@ class Cron
      * @param \Closure():CronJobRepository      $repository
      * @param \Closure():EntityManagerInterface $entityManager
      */
-    public function __construct(\Closure $repository, \Closure $entityManager, LoggerInterface $logger = null)
+    public function __construct(private \Closure $repository, private \Closure $entityManager, private ?LoggerInterface $logger = null)
     {
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
     }
 
     public function addCronJob(CronJob $cronjob): void

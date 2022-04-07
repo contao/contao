@@ -18,16 +18,10 @@ namespace Contao\CoreBundle\Filesystem;
 class FilesystemItemIterator implements \IteratorAggregate
 {
     /**
-     * @var iterable<FilesystemItem>
-     */
-    private iterable $listing;
-
-    /**
      * @param iterable<FilesystemItem> $listing
      */
-    public function __construct(iterable $listing)
+    public function __construct(private iterable $listing)
     {
-        $this->listing = $listing;
     }
 
     /**

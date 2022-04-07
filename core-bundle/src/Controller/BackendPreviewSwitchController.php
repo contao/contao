@@ -40,27 +40,17 @@ use Twig\Error\Error as TwigError;
  */
 class BackendPreviewSwitchController
 {
-    private FrontendPreviewAuthenticator $previewAuthenticator;
-    private TokenChecker $tokenChecker;
-    private Connection $connection;
-    private Security $security;
-    private TwigEnvironment $twig;
-    private ContaoCsrfTokenManager $tokenManager;
-    private RouterInterface $router;
-    private array $backendAttributes;
-    private string $backendBadgeTitle;
-
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager, array $attributes = [], string $badgeTitle = '')
-    {
-        $this->previewAuthenticator = $previewAuthenticator;
-        $this->tokenChecker = $tokenChecker;
-        $this->connection = $connection;
-        $this->security = $security;
-        $this->twig = $twig;
-        $this->router = $router;
-        $this->tokenManager = $tokenManager;
-        $this->backendAttributes = $attributes;
-        $this->backendBadgeTitle = $badgeTitle;
+    public function __construct(
+        private FrontendPreviewAuthenticator $previewAuthenticator,
+        private TokenChecker $tokenChecker,
+        private Connection $connection,
+        private Security $security,
+        private TwigEnvironment $twig,
+        private RouterInterface $router,
+        private ContaoCsrfTokenManager $tokenManager,
+        private array $backendAttributes = [],
+        private string $backendBadgeTitle = ''
+    ) {
     }
 
     /**

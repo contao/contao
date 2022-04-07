@@ -31,17 +31,12 @@ use Symfony\Component\Yaml\Yaml;
 
 class MakeEventListener extends AbstractMaker
 {
-    private ClassGenerator $classGenerator;
-    private SignatureGenerator $signatureGenerator;
-    private ImportExtractor $importExtractor;
-    private PhpCompatUtil $phpCompatUtil;
-
-    public function __construct(ClassGenerator $classGenerator, SignatureGenerator $signatureGenerator, ImportExtractor $importExtractor, PhpCompatUtil $phpCompatUtil)
-    {
-        $this->classGenerator = $classGenerator;
-        $this->signatureGenerator = $signatureGenerator;
-        $this->importExtractor = $importExtractor;
-        $this->phpCompatUtil = $phpCompatUtil;
+    public function __construct(
+        private ClassGenerator $classGenerator,
+        private SignatureGenerator $signatureGenerator,
+        private ImportExtractor $importExtractor,
+        private PhpCompatUtil $phpCompatUtil
+    ) {
     }
 
     public static function getCommandName(): string

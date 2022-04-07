@@ -18,13 +18,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class MenuEvent extends Event
 {
-    private FactoryInterface $factory;
-    private ItemInterface $tree;
-
-    public function __construct(FactoryInterface $factory, ItemInterface $tree)
+    public function __construct(private FactoryInterface $factory, private ItemInterface $tree)
     {
-        $this->factory = $factory;
-        $this->tree = $tree;
     }
 
     public function getFactory(): FactoryInterface

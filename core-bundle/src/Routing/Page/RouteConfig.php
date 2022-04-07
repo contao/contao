@@ -14,17 +14,6 @@ namespace Contao\CoreBundle\Routing\Page;
 
 final class RouteConfig
 {
-    private ?string $pathRegex;
-    private ?string $urlSuffix;
-    private array $requirements;
-    private array $options;
-    private array $defaults;
-
-    /**
-     * @var string|bool|null;
-     */
-    private bool|string|null $path;
-
     /**
      * @var array<string>
      */
@@ -33,14 +22,15 @@ final class RouteConfig
     /**
      * @param string|array<string> $methods
      */
-    public function __construct(string|bool|null $path = null, string $pathRegex = null, string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], array|string $methods = [])
-    {
-        $this->path = $path;
-        $this->pathRegex = $pathRegex;
-        $this->urlSuffix = $urlSuffix;
-        $this->requirements = $requirements;
-        $this->options = $options;
-        $this->defaults = $defaults;
+    public function __construct(
+        private bool|string|null $path = null,
+        private ?string $pathRegex = null,
+        private ?string $urlSuffix = null,
+        private array $requirements = [],
+        private array $options = [],
+        private array $defaults = [],
+        array|string $methods = []
+    ) {
         $this->methods = \is_array($methods) ? $methods : [$methods];
     }
 

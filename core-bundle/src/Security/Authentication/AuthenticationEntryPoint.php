@@ -24,18 +24,11 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
-    private RouterInterface $router;
-    private UriSigner $uriSigner;
-    private ScopeMatcher $scopeMatcher;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_entry_point" service instead
      */
-    public function __construct(RouterInterface $router, UriSigner $uriSigner, ScopeMatcher $scopeMatcher)
+    public function __construct(private RouterInterface $router, private UriSigner $uriSigner, private ScopeMatcher $scopeMatcher)
     {
-        $this->router = $router;
-        $this->uriSigner = $uriSigner;
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function start(Request $request, AuthenticationException $authException = null): RedirectResponse

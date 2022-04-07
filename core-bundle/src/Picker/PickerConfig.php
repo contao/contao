@@ -14,17 +14,8 @@ namespace Contao\CoreBundle\Picker;
 
 class PickerConfig implements \JsonSerializable
 {
-    private string $context;
-    private array $extras;
-    private string $current;
-    private int|string $value;
-
-    public function __construct(string $context, array $extras = [], int|string $value = '', string $current = '')
+    public function __construct(private string $context, private array $extras = [], private int|string $value = '', private string $current = '')
     {
-        $this->context = $context;
-        $this->extras = $extras;
-        $this->value = $value;
-        $this->current = $current;
     }
 
     public function getContext(): string

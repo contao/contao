@@ -44,12 +44,6 @@ class Dbafs implements DbafsInterface, ResetInterface
     private const RESOURCE_DOES_NOT_EXIST = -1;
     private const PATH_SUFFIX_SHALLOW_DIRECTORY = '//';
 
-    private VirtualFilesystemInterface $filesystem;
-    private HashGeneratorInterface $hashGenerator;
-    private Connection $connection;
-    private EventDispatcherInterface $eventDispatcher;
-
-    private string $table;
     private string $dbPathPrefix = '';
     private int $maxFileSize = 2147483647; // 2 GiB - 1 byte (see #4208)
     private int $bulkInsertSize = 100;
@@ -74,13 +68,13 @@ class Dbafs implements DbafsInterface, ResetInterface
     /**
      * @internal Use the "contao.filesystem.dbafs_factory" service to create new instances.
      */
-    public function __construct(HashGeneratorInterface $hashGenerator, Connection $connection, EventDispatcherInterface $eventDispatcher, VirtualFilesystemInterface $filesystem, string $table)
-    {
-        $this->hashGenerator = $hashGenerator;
-        $this->connection = $connection;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->filesystem = $filesystem;
-        $this->table = $table;
+    public function __construct(
+        private HashGeneratorInterface $hashGenerator,
+        private Connection $connection,
+        private EventDispatcherInterface $eventDispatcher,
+        private VirtualFilesystemInterface $filesystem,
+        private string $table
+    ) {
     }
 
     public function setDatabasePathPrefix(string $prefix): void

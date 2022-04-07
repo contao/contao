@@ -23,11 +23,8 @@ class CustomRgxpListener
 {
     final public const RGXP_NAME = 'custom';
 
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     public function __invoke(string $regexp, mixed $input, Widget $widget): bool
