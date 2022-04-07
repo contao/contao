@@ -55,7 +55,7 @@ class AllowedExcludedFieldsMigration extends AbstractMigration
                 alexf NOT LIKE '%tl_files::%'
         ");
 
-        if ([] === $groups) {
+        if (0 === \count($groups)) {
             return false;
         }
 

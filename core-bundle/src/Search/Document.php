@@ -165,7 +165,7 @@ class Document
                 continue;
             }
 
-            if ([] !== ($filtered = $this->filterJsonLdContexts($data, [$context]))) {
+            if (\count($filtered = $this->filterJsonLdContexts($data, [$context]))) {
                 $matching[] = $filtered;
             }
         }

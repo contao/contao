@@ -877,7 +877,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             $paths
         );
 
-        if ([] === $paths || \in_array('', $paths, true)) {
+        if (0 === \count($paths) || \in_array('', $paths, true)) {
             return [[''], []];
         }
 

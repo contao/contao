@@ -74,7 +74,7 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         }
 
         // Use a custom allow list if present, otherwise use the default deny list
-        if ([] !== $this->allowList) {
+        if (0 !== \count($this->allowList)) {
             $this->filterQueryParams($request, $this->allowList);
         } else {
             $this->filterQueryParams($request, $this->removeFromDenyList, self::DENY_LIST);
