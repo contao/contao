@@ -79,7 +79,7 @@ class SearchIndexListener
         $lds = $document->extractJsonLdScripts();
 
         // If there are no json ld scripts at all, this should not be handled by our indexer
-        if ([] === $lds) {
+        if (0 === \count($lds)) {
             return;
         }
 

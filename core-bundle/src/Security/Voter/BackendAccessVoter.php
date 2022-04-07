@@ -134,7 +134,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             $permission[] = 'u'.$flag;
         }
 
-        return [] !== array_intersect($permission, $chmod);
+        return \count(array_intersect($permission, $chmod)) > 0;
     }
 
     /**

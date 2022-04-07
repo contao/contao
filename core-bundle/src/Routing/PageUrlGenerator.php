@@ -57,10 +57,10 @@ class PageUrlGenerator extends SymfonyUrlGenerator
 
         if (
             $route instanceof PageRoute
-            && [] === array_intersect_key(
+            && 0 === \count(array_intersect_key(
                 array_filter(array_merge($route->getDefaults(), $parameters)),
                 array_flip($compiledRoute->getVariables())
-            )
+            ))
         ) {
             $staticPrefix = $compiledRoute->getStaticPrefix();
             $indexPath = ($route->getUrlPrefix() ? '/'.$route->getUrlPrefix() : '').'/index';

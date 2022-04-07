@@ -75,7 +75,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
             $this->repository->deleteExpired((int) $this->options['lifetime'], self::EXPIRATION);
             $rows = $this->repository->findBySeries($this->encodeSeries($series));
 
-            if ([] === $rows) {
+            if (0 === \count($rows)) {
                 throw new TokenNotFoundException('No token found');
             }
 

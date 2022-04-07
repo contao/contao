@@ -324,7 +324,7 @@ class PictureFactory implements PictureFactoryInterface
      */
     private function hasSingleAspectRatio(PictureInterface $picture): bool
     {
-        if ([] === $picture->getSources()) {
+        if (0 === \count($picture->getSources())) {
             return true;
         }
 

@@ -411,14 +411,14 @@ class MigrateCommand extends Command
             if (!$asJson) {
                 $this->io->success('Executed '.$count.' SQL queries.');
 
-                if ([] !== $exceptions) {
+                if (\count($exceptions)) {
                     foreach ($exceptions as $exception) {
                         $this->io->error($exception->getMessage());
                     }
                 }
             }
 
-            if ([] !== $exceptions) {
+            if (\count($exceptions)) {
                 return false;
             }
         }

@@ -29,7 +29,7 @@ final class RetentionPolicy implements RetentionPolicyInterface
         $toKeep = $allBackups;
 
         // Cleanup according to retention policy first
-        if ([] !== $this->keepIntervals) {
+        if (0 !== \count($this->keepIntervals)) {
             $latestDateTime = $latestBackup->getCreatedAt();
             $assignedPerInterval = array_fill_keys(array_keys($this->keepIntervals), null);
 
