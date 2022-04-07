@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DataContainer;
 use Contao\DcaLoader;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
@@ -136,7 +137,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->initialize();
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
-        return $this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
+        return is_a(DataContainer::getDriverForTable($table), $this->getDataContainer(), true)
             && 0 !== \count($this->getModulesForTable($table));
     }
 
