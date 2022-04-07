@@ -66,7 +66,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             return false;
         }
 
-        $permission = explode('.', $attribute, 3);
+        $permission = explode('.', (string) $attribute, 3);
 
         if ('contao_user' !== $permission[0] || !isset($permission[1])) {
             return false;

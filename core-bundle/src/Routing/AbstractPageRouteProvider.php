@@ -93,7 +93,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
                 continue;
             }
 
-            [, $id] = explode('.', $name);
+            [, $id] = explode('.', (string) $name);
 
             if (!preg_match('/^[1-9]\d*$/', $id)) {
                 continue;

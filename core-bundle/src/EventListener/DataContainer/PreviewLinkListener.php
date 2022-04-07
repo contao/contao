@@ -127,7 +127,7 @@ class PreviewLinkListener
 
         if (!$input->get('act')) {
             $message->addInfo($this->translator->trans('tl_preview_link.hintNew', [], 'contao_tl_preview_link'));
-        } elseif ('create' === $input->get('act') && str_contains($input->get('url') ?? '', $this->previewScript)) {
+        } elseif ('create' === $input->get('act') && str_contains((string) ($input->get('url') ?? ''), $this->previewScript)) {
             // Only allow creating new records from front end link with preview script in URL
             $GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable'] = false;
         }

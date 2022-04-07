@@ -75,7 +75,7 @@ class Version470Update extends AbstractMigration
 
         // Add a .nosync file in every excluded folder
         if (!empty($GLOBALS['TL_CONFIG']['fileSyncExclude'])) {
-            $folders = array_map('trim', explode(',', $GLOBALS['TL_CONFIG']['fileSyncExclude']));
+            $folders = array_map('trim', explode(',', (string) $GLOBALS['TL_CONFIG']['fileSyncExclude']));
 
             foreach ($folders as $folder) {
                 if (is_dir($path = Path::join($this->projectDir, $this->uploadPath, $folder))) {

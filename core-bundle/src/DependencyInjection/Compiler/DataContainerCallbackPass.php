@@ -74,7 +74,7 @@ class DataContainerCallbackPass implements CompilerPassInterface
 
         if (
             !str_ends_with($attributes['target'], '_callback')
-            && !str_contains($attributes['target'], '.panel_callback.')
+            && !str_contains((string) $attributes['target'], '.panel_callback.')
             && !\in_array(substr($attributes['target'], -7), ['.wizard', '.xlabel'], true)
         ) {
             $attributes['target'] .= '_callback';
@@ -109,7 +109,7 @@ class DataContainerCallbackPass implements CompilerPassInterface
             return (string) $attributes['method'];
         }
 
-        $keys = explode('.', $attributes['target']);
+        $keys = explode('.', (string) $attributes['target']);
         $callback = end($keys);
 
         if (str_starts_with($callback, 'on')) {

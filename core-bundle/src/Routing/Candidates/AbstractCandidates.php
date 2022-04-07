@@ -93,11 +93,11 @@ class AbstractCandidates implements CandidatesInterface
             $withoutPrefix = $url;
 
             if ('' !== $prefix) {
-                if (0 !== strncmp($url, $prefix.'/', \strlen($prefix) + 1)) {
+                if (0 !== strncmp($url, $prefix.'/', \strlen((string) $prefix) + 1)) {
                     continue;
                 }
 
-                $withoutPrefix = substr($url, \strlen($prefix) + 1);
+                $withoutPrefix = substr($url, \strlen((string) $prefix) + 1);
             }
 
             foreach ($this->urlSuffixes as $suffix) {
@@ -108,7 +108,7 @@ class AbstractCandidates implements CandidatesInterface
                         continue;
                     }
 
-                    $withoutSuffix = substr($withoutPrefix, 0, -\strlen($suffix));
+                    $withoutSuffix = substr($withoutPrefix, 0, -\strlen((string) $suffix));
                 }
 
                 $this->addCandidatesFor($withoutSuffix, $candidates);

@@ -81,7 +81,7 @@ class BackendMenuListener
                     ->setExtra('translation_domain', false)
                 ;
 
-                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', $categoryData['class'])) {
+                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', (string) $categoryData['class'])) {
                     $categoryNode->setAttribute('class', 'collapsed');
                 }
 
@@ -219,7 +219,7 @@ class BackendMenuListener
 
         // Remove the default CSS classes and keep potentially existing custom ones (see #1357)
         if (isset($attributes['class'])) {
-            $classes = array_flip(array_filter(explode(' ', $attributes['class'])));
+            $classes = array_flip(array_filter(explode(' ', (string) $attributes['class'])));
             unset($classes['node-expanded'], $classes['node-collapsed'], $classes['trail']);
         }
 

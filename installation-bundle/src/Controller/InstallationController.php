@@ -282,7 +282,7 @@ class InstallationController implements ContainerAwareInterface
             ],
         ];
 
-        if (str_contains($parameters['parameters']['database_name'], '.')) {
+        if (str_contains((string) $parameters['parameters']['database_name'], '.')) {
             return $this->render(
                 'database.html.twig',
                 [...$parameters, ...['database_error' => $this->trans('database_dot_in_dbname')]]
@@ -463,7 +463,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         // The username must not contain whitespace characters (see #4006)
-        if (str_contains($username, ' ')) {
+        if (str_contains((string) $username, ' ')) {
             $this->context['admin_username_error'] = $this->trans('admin_error_no_space');
 
             return null;

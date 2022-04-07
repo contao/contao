@@ -64,6 +64,6 @@ abstract class AbstractInsertTagPickerProvider extends AbstractPickerProvider
      */
     protected function isMatchingInsertTag(PickerConfig $config): bool
     {
-        return str_contains($config->getValue(), $this->getInsertTagChunks($config)[0]);
+        return str_contains($config->getValue(), (string) $this->getInsertTagChunks($config)[0]);
     }
 }

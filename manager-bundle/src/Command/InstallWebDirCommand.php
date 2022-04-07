@@ -79,7 +79,7 @@ class InstallWebDirCommand extends Command
         $existingContent = file_get_contents($targetPath);
 
         // Return if there already is a rewrite rule
-        if (preg_match('/^\s*RewriteRule\s/im', $existingContent)) {
+        if (preg_match('/^\s*RewriteRule\s/im', (string) $existingContent)) {
             return;
         }
 
