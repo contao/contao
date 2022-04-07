@@ -94,7 +94,7 @@ class DebugPagesCommand extends Command
                 $config && $config->getPath() ? $config->getPath() : '*',
                 $config && $config->getUrlSuffix() ? $config->getUrlSuffix() : '*',
                 $contentComposition,
-                isset($this->routeEnhancers[$type]) ? \get_class($this->routeEnhancers[$type]) : '-',
+                isset($this->routeEnhancers[$type]) ? $this->routeEnhancers[$type]::class : '-',
                 $config ? $this->generateArray($config->getRequirements()) : '-',
                 $config ? $this->generateArray($config->getDefaults()) : '-',
                 $config ? $this->generateArray($config->getOptions()) : '-',

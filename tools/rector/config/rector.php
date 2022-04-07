@@ -9,6 +9,7 @@ use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
 use Rector\Php74\Rector\Property\TypedPropertyRector;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
 use Rector\Php80\Rector\Class_\StringableForToStringRector;
+use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php80\Rector\FunctionLike\UnionTypesRector;
 use Rector\Php80\Rector\Identical\StrEndsWithRector;
 use Rector\Php80\Rector\Identical\StrStartsWithRector;
@@ -37,6 +38,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
     $services->set(ArrayKeyFirstLastRector::class);
     $services->set(ClassConstantToSelfClassRector::class);
+    $services->set(ClassOnObjectRector::class);
     $services->set(FinalizePublicClassConstantRector::class);
     $services->set(IntersectionTypesRector::class);
     $services->set(RemoveUnusedVariableInCatchRector::class);

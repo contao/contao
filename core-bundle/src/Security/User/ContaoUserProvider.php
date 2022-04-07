@@ -81,7 +81,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     public function refreshUser(UserInterface $user): User
     {
         if (!is_a($user, $this->userClass)) {
-            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', $user::class));
         }
 
         $user = $this->loadUserByIdentifier($user->getUserIdentifier());
@@ -106,7 +106,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     public function upgradePassword(UserInterface $user, string $newHashedPassword): void
     {
         if (!is_a($user, $this->userClass)) {
-            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', $user::class));
         }
 
         $user->password = $newHashedPassword;

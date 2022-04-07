@@ -38,7 +38,7 @@ final class ResponseContext
 
     public function add(object $service): self
     {
-        $this->registerService(\get_class($service), $service);
+        $this->registerService($service::class, $service);
 
         return $this;
     }

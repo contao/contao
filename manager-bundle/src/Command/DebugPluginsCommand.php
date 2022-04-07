@@ -95,7 +95,7 @@ class DebugPluginsCommand extends Command
 
         foreach ($plugins as $packageName => $plugin) {
             $rows[] = [
-                \get_class($plugin),
+                $plugin::class,
                 $packageName,
                 $plugin instanceof BundlePluginInterface ? $check : '',
                 $plugin instanceof RoutingPluginInterface ? $check : '',
@@ -121,7 +121,7 @@ class DebugPluginsCommand extends Command
 
         foreach ($bundles as $name => $bundle) {
             $path = '';
-            $class = \get_class($bundle);
+            $class = $bundle::class;
 
             if (ContaoModuleBundle::class === $class) {
                 $path = Path::join('system/modules', $name);
@@ -176,7 +176,7 @@ class DebugPluginsCommand extends Command
             $this->io->error(
                 sprintf(
                     'The "%s" plugin does not implement the "%s" interface.',
-                    \get_class($plugin),
+                    $plugin::class,
                     BundlePluginInterface::class
                 )
             );
@@ -184,7 +184,7 @@ class DebugPluginsCommand extends Command
             return -1;
         }
 
-        $title = sprintf('Bundles Registered by Plugin "%s"', \get_class($plugin));
+        $title = sprintf('Bundles Registered by Plugin "%s"', $plugin::class);
         $headers = ['Bundle', 'Replaces', 'Load After', 'Environment'];
         $rows = [];
         $configs = $plugin->getBundles($this->getBundleParser());
@@ -219,7 +219,7 @@ class DebugPluginsCommand extends Command
         }
 
         foreach ($plugins as $packageName => $plugin) {
-            if (\get_class($plugin) === $name) {
+            if ($plugin::class === $name) {
                 return [$packageName, $plugin];
             }
         }
