@@ -790,7 +790,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 }
 
                 // Analyze parent path
-                $analyzedPaths = array_merge($analyzedPaths, $analyzeDirectory(Path::getDirectory($searchPath)));
+                $analyzedPaths = [...$analyzedPaths, ...$analyzeDirectory(Path::getDirectory($searchPath))];
                 $isDir = $analyzedPaths[$searchPath] ??= false;
             }
 

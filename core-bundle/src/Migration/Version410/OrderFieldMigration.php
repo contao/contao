@@ -119,7 +119,7 @@ class OrderFieldMigration extends AbstractMigration
                 }
             }
 
-            $items = array_merge(array_values(array_filter($order)), array_values($items));
+            $items = [...array_values(array_filter($order)), ...array_values($items)];
 
             $this->connection
                 ->prepare("

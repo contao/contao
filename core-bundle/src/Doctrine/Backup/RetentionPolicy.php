@@ -52,7 +52,7 @@ final class RetentionPolicy implements RetentionPolicyInterface
             }
 
             // Always keep the latest
-            $toKeep = array_merge([$latestBackup], array_filter($assignedPerInterval));
+            $toKeep = [...[$latestBackup], ...array_filter($assignedPerInterval)];
 
             // Ensure sorting again
             usort($toKeep, static fn (Backup $a, Backup $b) => $b->getCreatedAt() <=> $a->getCreatedAt());

@@ -378,7 +378,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        $pageRegistry = $this->mockPageRegistry(array_merge([true], array_fill(0, \count($pages), false)), [$currentRoute, ...$aliasRoutes]);
+        $pageRegistry = $this->mockPageRegistry([...[true], ...array_fill(0, \count($pages), false)], [$currentRoute, ...$aliasRoutes]);
 
         $listener = new PageUrlListener(
             $framework,

@@ -283,10 +283,10 @@ class InstallationController implements ContainerAwareInterface
         ];
 
         if (str_contains($parameters['parameters']['database_name'], '.')) {
-            return $this->render('database.html.twig', array_merge(
-                $parameters,
-                ['database_error' => $this->trans('database_dot_in_dbname')]
-            ));
+            return $this->render(
+                'database.html.twig',
+                [...$parameters, ...['database_error' => $this->trans('database_dot_in_dbname')]]
+            );
         }
 
         $connection = ConnectionFactory::create($parameters);
@@ -295,10 +295,10 @@ class InstallationController implements ContainerAwareInterface
         $installTool->setConnection($connection);
 
         if (!$installTool->canConnectToDatabase($parameters['parameters']['database_name'])) {
-            return $this->render('database.html.twig', array_merge(
-                $parameters,
-                ['database_error' => $this->trans('database_could_not_connect')]
-            ));
+            return $this->render(
+                'database.html.twig',
+                [...$parameters, ...['database_error' => $this->trans('database_could_not_connect')]]
+            );
         }
 
         $databaseVersion = null;
