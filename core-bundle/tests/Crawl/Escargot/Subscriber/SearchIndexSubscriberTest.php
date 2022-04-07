@@ -99,22 +99,15 @@ class SearchIndexSubscriberTest extends TestCase
             (new CrawlUri(new Uri('https://contao.org'), 1, false, new Uri('https://original.contao.org'))),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.',
+            'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.',
             (new CrawlUri(new Uri('https://original.contao.org'), 0, true))->addTag(RobotsSubscriber::TAG_NOFOLLOW),
-        ];
-
-        yield 'Test skips URIs that contained the rel-nofollow tag' => [
-            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(HtmlCrawlerSubscriber::TAG_REL_NOFOLLOW),
-            SubscriberInterface::DECISION_NEGATIVE,
-            LogLevel::DEBUG,
-            'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.',
         ];
 
         yield 'Test skips URIs that were disallowed by the robots.txt content' => [
             (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_DISALLOWED_ROBOTS_TXT),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.',
+            'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.',
         ];
 
         yield 'Test skips URIs that contained the no-html-type tag' => [

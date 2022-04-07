@@ -67,12 +67,12 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function shouldRequest(CrawlUri $crawlUri): string
     {
-        // Respect robots.txt info and rel="nofollow" attributes
+        // Respect robots.txt info and nofollow meta data
         if (!Util::isAllowedToFollow($crawlUri, $this->escargot)) {
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.'
+                'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
