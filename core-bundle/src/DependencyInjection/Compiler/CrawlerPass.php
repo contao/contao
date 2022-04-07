@@ -24,7 +24,7 @@ class CrawlerPass implements CompilerPassInterface
     {
         $subscribers = $this->findAndSortTaggedServices('contao.escargot_subscriber', $container);
 
-        if (!$container->hasDefinition('contao.crawl.escargot.factory') || 0 === \count($subscribers)) {
+        if (!$container->hasDefinition('contao.crawl.escargot.factory') || [] === $subscribers) {
             // Remove factory
             $container->removeDefinition('contao.crawl.escargot.factory');
 

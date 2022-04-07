@@ -35,7 +35,7 @@ class DotenvDumper
 
         $parameters = $dotenv->parse(file_get_contents($dotenvFile));
 
-        if (0 !== \count($parameters)) {
+        if ([] !== $parameters) {
             $this->parameters = array_merge($this->parameters, $parameters);
         }
     }
@@ -60,7 +60,7 @@ class DotenvDumper
     public function dump(): void
     {
         // Remove the .env file if there are no parameters
-        if (0 === \count($this->parameters)) {
+        if ([] === $this->parameters) {
             $this->filesystem->remove($this->dotenvFile);
 
             return;

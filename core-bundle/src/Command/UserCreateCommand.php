@@ -148,7 +148,7 @@ class UserCreateCommand extends Command
             $input->setOption('admin', 'yes' === $answer);
         }
 
-        if (false === $input->getOption('admin') && ($options = $this->getGroups()) && 0 !== \count($options)) {
+        if (false === $input->getOption('admin') && ($options = $this->getGroups()) && [] !== $options) {
             $answer = $this->askMultipleChoice(
                 'Assign which groups to the user (select multiple comma-separated)?',
                 $options,

@@ -266,7 +266,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ([] !== $previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -370,7 +370,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ([] !== $previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -438,7 +438,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ([] !== $previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }

@@ -64,7 +64,7 @@ class JsonLdManager
         // Reset graphs
         $this->graphs = [];
 
-        if (0 === \count($data)) {
+        if ([] === $data) {
             return '';
         }
 
