@@ -105,9 +105,7 @@ class Cron
 
         // Execute all crons to be run
         foreach ($cronJobsToBeRun as $cron) {
-            if (null !== $this->logger) {
-                $this->logger->debug(sprintf('Executing cron job "%s"', $cron->getName()));
-            }
+            $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
             $cron($scope);
         }

@@ -45,9 +45,7 @@ class RootPageController extends AbstractController
             return $nextPage;
         }
 
-        if ($this->logger) {
-            $this->logger->error('No active page found under root page "'.$rootPageId.'"');
-        }
+        $this->logger?->error(sprintf('No active page found under root page "%s"', $rootPageId));
 
         throw new NoActivePageFoundException('No active page found under root page.');
     }
