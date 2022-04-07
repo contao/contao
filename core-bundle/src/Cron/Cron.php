@@ -20,8 +20,8 @@ use Psr\Log\LoggerInterface;
 
 class Cron
 {
-    public const SCOPE_WEB = 'web';
-    public const SCOPE_CLI = 'cli';
+    final public const SCOPE_WEB = 'web';
+    final public const SCOPE_CLI = 'cli';
 
     /**
      * @var \Closure():CronJobRepository

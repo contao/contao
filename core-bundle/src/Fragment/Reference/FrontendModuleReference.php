@@ -17,9 +17,9 @@ use Contao\ModuleProxy;
 
 class FrontendModuleReference extends FragmentReference
 {
-    public const TAG_NAME = 'contao.frontend_module';
-    public const GLOBALS_KEY = 'FE_MOD';
-    public const PROXY_CLASS = ModuleProxy::class;
+    final public const TAG_NAME = 'contao.frontend_module';
+    final public const GLOBALS_KEY = 'FE_MOD';
+    final public const PROXY_CLASS = ModuleProxy::class;
 
     public function __construct(ModuleModel $model, string $section = 'main', array $templateProperties = [], bool $inline = false)
     {

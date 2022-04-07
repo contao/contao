@@ -21,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class CustomRgxpListener
 {
-    public const RGXP_NAME = 'custom';
+    final public const RGXP_NAME = 'custom';
 
     private TranslatorInterface $translator;
 
