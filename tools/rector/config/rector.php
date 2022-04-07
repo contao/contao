@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Rector\CodingStyle\Rector\FuncCall\CountArrayToEmptyArrayComparisonRector;
 use Rector\Core\Configuration\Option;
 use Rector\Php55\Rector\Class_\ClassConstantToSelfClassRector;
 use Rector\Php73\Rector\FuncCall\ArrayKeyFirstLastRector;
@@ -42,6 +43,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(ArraySpreadInsteadOfArrayMergeRector::class);
     $services->set(ClassConstantToSelfClassRector::class);
     $services->set(ClassOnObjectRector::class);
+    $services->set(CountArrayToEmptyArrayComparisonRector::class);
     $services->set(FinalizePublicClassConstantRector::class);
     $services->set(IntersectionTypesRector::class);
     $services->set(NullToStrictStringFuncCallArgRector::class);

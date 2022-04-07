@@ -129,7 +129,7 @@ class DebugPluginsCommandTest extends ContaoTestCase
 
         $pluginLoader = $this->createMock(PluginLoader::class);
         $pluginLoader
-            ->expects(0 === \count($plugins) ? $this->never() : $this->once())
+            ->expects([] === $plugins ? $this->never() : $this->once())
             ->method('getInstances')
             ->willReturn($plugins)
         ;

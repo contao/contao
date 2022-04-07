@@ -45,7 +45,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $table = $this->getTableFromContext($config->getContext());
         $modules = $this->getModulesForTable($table);
 
-        if (0 === \count($modules)) {
+        if ([] === $modules) {
             throw new \RuntimeException(sprintf('Table "%s" is not in any back end module (context: %s)', $table, $config->getContext()));
         }
 
@@ -119,7 +119,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
         return isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer'])
             && $this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
-            && 0 !== \count($this->getModulesForTable($table));
+            && [] !== $this->getModulesForTable($table);
     }
 
     public function supportsValue(PickerConfig $config): bool
