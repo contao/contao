@@ -66,10 +66,10 @@ class EntityCacheTags
      */
     public function getTagForEntityInstance(object $instance): string
     {
-        $metadata = $this->getClassMetadata(\get_class($instance));
+        $metadata = $this->getClassMetadata($instance::class);
 
         if (null === $metadata) {
-            throw new \InvalidArgumentException(sprintf('The given object of type "%s" is no valid entity instance.', \get_class($instance)));
+            throw new \InvalidArgumentException(sprintf('The given object of type "%s" is no valid entity instance.', $instance::class));
         }
 
         $identifier = $this->entityManager

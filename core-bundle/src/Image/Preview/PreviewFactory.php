@@ -146,7 +146,7 @@ class PreviewFactory
                     }
 
                     if (\count($previews) > 1 + $lastPage - $firstPage) {
-                        throw new \LogicException(sprintf('Preview provider "%s" returned %s pages instead of the requested %s.', \get_class($provider), \count($previews), 1 + $lastPage - $firstPage));
+                        throw new \LogicException(sprintf('Preview provider "%s" returned %s pages instead of the requested %s.', $provider::class, \count($previews), 1 + $lastPage - $firstPage));
                     }
 
                     return array_map(fn ($path) => $this->imageFactory->create($path), $previews);

@@ -24,7 +24,7 @@ class CronJob
         $this->service = $service;
         $this->method = $method;
         $this->interval = $interval;
-        $this->name = \get_class($service);
+        $this->name = $service::class;
 
         if (!\is_callable($service)) {
             if (null === $this->method) {
