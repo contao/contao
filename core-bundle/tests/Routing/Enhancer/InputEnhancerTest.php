@@ -23,13 +23,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_AUTO_ITEM']);
-
-        parent::tearDown();
-    }
-
     public function testReturnsTheDefaultsIfThereIsNoPageModel(): void
     {
         $framework = $this->mockContaoFramework();
@@ -77,7 +70,7 @@ class InputEnhancerTest extends TestCase
     /**
      * @dataProvider getParameters
      */
-    public function testAddsParameters(string $parameters, bool $useAutoItem, array ...$setters): void
+    public function testAddsParameters(string $parameters, array ...$setters): void
     {
         // Input::setGet must always be called with $blnAddUnused=true
         array_walk(
@@ -94,12 +87,7 @@ class InputEnhancerTest extends TestCase
             ->withConsecutive(...$setters)
         ;
 
-        $adapters = [
-            Input::class => $input,
-            Config::class => $this->mockConfiguredAdapter(['get' => $useAutoItem]),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
+        $framework = $this->mockContaoFramework([Input::class => $input]);
 
         $defaults = [
             'pageModel' => $this->mockPageModel('en', ''),
@@ -112,11 +100,11 @@ class InputEnhancerTest extends TestCase
 
     public function getParameters(): \Generator
     {
-        yield ['/foo/bar', false, ['foo', 'bar']];
-        yield ['/foo/bar/bar/baz', false, ['foo', 'bar'], ['bar', 'baz']];
-        yield ['/foo/bar/baz', true, ['auto_item', 'foo'], ['bar', 'baz']];
-        yield ['/f%20o/bar', false, ['f%20o', 'bar']];
-        yield ['/foo/ba%20r', false, ['foo', 'ba%20r']];
+        yield ['/foo/bar', ['foo', 'bar']];
+        yield ['/foo/bar/bar/baz', ['foo', 'bar'], ['bar', 'baz']];
+        yield ['/foo/bar/baz', ['auto_item', 'foo'], ['bar', 'baz']];
+        yield ['/f%20o/bar', ['f%20o', 'bar']];
+        yield ['/foo/ba%20r', ['foo', 'ba%20r']];
     }
 
     public function testThrowsAnExceptionUponDuplicateParameters(): void
@@ -163,60 +151,6 @@ class InputEnhancerTest extends TestCase
         $this->expectExceptionMessage('Duplicate parameter "foo" in path');
 
         $enhancer->enhance($defaults, Request::create('/?foo=bar'));
-    }
-
-    public function testThrowsAnExceptionIfAnAutoItemKeywordIsPresent(): void
-    {
-        $input = $this->mockAdapter(['setGet']);
-        $input
-            ->expects($this->once())
-            ->method('setGet')
-            ->with('auto_item', 'foo')
-        ;
-
-        $framework = $this->mockContaoFramework([Input::class => $input]);
-
-        $defaults = [
-            'pageModel' => $this->mockPageModel('en', ''),
-            'parameters' => '/foo/bar/bar',
-        ];
-
-        $GLOBALS['TL_AUTO_ITEM'] = ['bar'];
-
-        $enhancer = new InputEnhancer($framework);
-
-        $this->expectException(ResourceNotFoundException::class);
-        $this->expectExceptionMessage('"bar" is an auto_item keyword (duplicate content)');
-
-        $enhancer->enhance($defaults, Request::create('/'));
-    }
-
-    public function testThrowsAnExceptionIfTheNumberOfArgumentsIsInvalid(): void
-    {
-        $input = $this->mockAdapter(['setGet']);
-        $input
-            ->expects($this->never())
-            ->method('setGet')
-        ;
-
-        $adapters = [
-            Input::class => $input,
-            Config::class => $this->mockConfiguredAdapter(['get' => false]),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $defaults = [
-            'pageModel' => $this->mockPageModel('en', ''),
-            'parameters' => '/foo/bar/baz',
-        ];
-
-        $enhancer = new InputEnhancer($framework);
-
-        $this->expectException(ResourceNotFoundException::class);
-        $this->expectExceptionMessage('Invalid number of arguments');
-
-        $enhancer->enhance($defaults, Request::create('/'));
     }
 
     public function testThrowsAnExceptionIfAFragmentKeyIsEmpty(): void

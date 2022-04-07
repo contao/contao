@@ -91,9 +91,9 @@ class DbafsManager
      */
     public function resolveUuid(Uuid $uuid, string $prefix = ''): string
     {
-        foreach ($this->getCandidatesForPrefix($prefix) as $dbafs) {
+        foreach ($this->getCandidatesForPrefix($prefix) as $dbafsPrefix => $dbafs) {
             if (null !== ($path = $dbafs->getPathFromUuid($uuid))) {
-                return Path::makeRelative($path, $prefix);
+                return Path::makeRelative(Path::join($dbafsPrefix, $path), $prefix);
             }
         }
 
@@ -203,7 +203,7 @@ class DbafsManager
             try {
                 $dbafs->setExtraMetadata($resolvedPath, $metadata);
                 $success = true;
-            } catch (\InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException) {
                 // ignore
             }
         }
@@ -288,13 +288,13 @@ class DbafsManager
     }
 
     /**
-     * @return \Generator<DbafsInterface>
+     * @return \Generator<string, DbafsInterface>
      */
     private function getCandidatesForPrefix(string $prefix): \Generator
     {
         foreach ($this->dbafs as $dbafsPrefix => $dbafs) {
             if (Path::isBasePath("/$prefix", "/$dbafsPrefix")) {
-                yield $dbafs;
+                yield $dbafsPrefix => $dbafs;
             }
         }
     }

@@ -29,16 +29,12 @@ class ContaoSetupCommand extends Command
 
     private string $webDir;
     private string $consolePath;
+    private string|false $phpPath;
 
     /**
      * @var \Closure(array<string>):Process
      */
     private \Closure $createProcessHandler;
-
-    /**
-     * @var string|false
-     */
-    private $phpPath;
 
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler

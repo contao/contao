@@ -21,16 +21,11 @@ use Doctrine\DBAL\Schema\Table;
 
 class DcaSchemaProvider
 {
-    private ContaoFramework $framework;
-    private Registry $doctrine;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.doctrine.dca_schema_provider" service instead
      */
-    public function __construct(ContaoFramework $framework, Registry $doctrine)
+    public function __construct(private ContaoFramework $framework, private Registry $doctrine)
     {
-        $this->framework = $framework;
-        $this->doctrine = $doctrine;
     }
 
     /**
@@ -45,16 +40,16 @@ class DcaSchemaProvider
 
             // Parse the table options first
             if (isset($definitions['TABLE_OPTIONS'])) {
-                if (preg_match('/ENGINE=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                if (preg_match('/ENGINE=([^ ]+)/i', (string) $definitions['TABLE_OPTIONS'], $match)) {
                     $table->addOption('engine', $match[1]);
                 }
 
-                if (preg_match('/DEFAULT CHARSET=([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                if (preg_match('/DEFAULT CHARSET=([^ ]+)/i', (string) $definitions['TABLE_OPTIONS'], $match)) {
                     $table->addOption('charset', $match[1]);
                     $table->addOption('collate', $match[1].'_general_ci');
                 }
 
-                if (preg_match('/COLLATE ([^ ]+)/i', $definitions['TABLE_OPTIONS'], $match)) {
+                if (preg_match('/COLLATE ([^ ]+)/i', (string) $definitions['TABLE_OPTIONS'], $match)) {
                     $table->addOption('collate', $match[1]);
                 }
             }
@@ -73,6 +68,18 @@ class DcaSchemaProvider
                         $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
                     }
 
+                    if (isset($options['customSchemaOptions']['charset'])) {
+                        $options['platformOptions']['charset'] = $options['customSchemaOptions']['charset'];
+                    }
+
+                    if (isset($options['customSchemaOptions']['collation'])) {
+                        if (!isset($options['customSchemaOptions']['charset'])) {
+                            $options['platformOptions']['charset'] = explode('_', (string) $options['customSchemaOptions']['collation'], 2)[0];
+                        }
+
+                        $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
+                    }
+
                     $table->addColumn($config['name'], $config['type'], $options);
                 }
             }
@@ -83,7 +90,7 @@ class DcaSchemaProvider
                         continue;
                     }
 
-                    $this->parseColumnSql($table, $fieldName, substr($sql, \strlen($fieldName) + 3));
+                    $this->parseColumnSql($table, $fieldName, substr($sql, \strlen((string) $fieldName) + 3));
                 }
             }
 
@@ -110,6 +117,7 @@ class DcaSchemaProvider
         $scale = null;
         $precision = null;
         $default = null;
+        $charset = null;
         $collation = null;
         $unsigned = false;
         $notnull = false;
@@ -134,6 +142,7 @@ class DcaSchemaProvider
             }
 
             if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
+                $charset = explode('_', (string) $match[1], 2)[0];
                 $collation = $match[1];
             }
 
@@ -164,8 +173,18 @@ class DcaSchemaProvider
             $options['precision'] = $precision;
         }
 
+        $platformOptions = [];
+
+        if (null !== $charset) {
+            $platformOptions['charset'] = $charset;
+        }
+
         if (null !== $collation) {
-            $options['platformOptions'] = ['collation' => $collation];
+            $platformOptions['collation'] = $collation;
+        }
+
+        if (!empty($platformOptions)) {
+            $options['platformOptions'] = $platformOptions;
         }
 
         $table->addColumn($columnName, $type, $options);
@@ -246,17 +265,17 @@ class DcaSchemaProvider
         $flags = [];
         $lengths = [];
 
-        foreach (explode(',', $matches[3]) as $column) {
+        foreach (explode(',', (string) $matches[3]) as $column) {
             preg_match('/`([^`]+)`(\((\d+)\))?/', $column, $cm);
 
             $columns[] = $cm[1];
             $lengths[] = isset($cm[3]) ? (int) $cm[3] : $this->getIndexLength($table, $cm[1]);
         }
 
-        if (false !== strpos($matches[1], 'unique')) {
+        if (str_contains((string) $matches[1], 'unique')) {
             $table->addUniqueIndex($columns, $matches[2]);
         } else {
-            if (false !== strpos($matches[1], 'fulltext')) {
+            if (str_contains((string) $matches[1], 'fulltext')) {
                 $flags[] = 'fulltext';
             }
 
@@ -274,25 +293,8 @@ class DcaSchemaProvider
         $this->framework->initialize();
 
         $installer = $this->framework->createInstance(Installer::class);
-        $sqlTarget = $installer->getFromDca();
-        $sqlLegacy = $installer->getFromFile();
 
-        // Manually merge the legacy definitions (see #4766)
-        if (!empty($sqlLegacy)) {
-            foreach ($sqlLegacy as $table => $categories) {
-                foreach ($categories as $category => $fields) {
-                    if (\is_array($fields)) {
-                        foreach ($fields as $name => $sql) {
-                            $sqlTarget[$table][$category][$name] = $sql;
-                        }
-                    } else {
-                        $sqlTarget[$table][$category] = $fields;
-                    }
-                }
-            }
-        }
-
-        return $sqlTarget;
+        return $installer->getFromDca();
     }
 
     /**
@@ -320,7 +322,7 @@ class DcaSchemaProvider
         }
 
         $defaultLength = $this->getDefaultIndexLength($table);
-        $bytes = 0 === strncmp($collation, 'utf8mb4', 7) ? 4 : 3;
+        $bytes = str_starts_with($collation, 'utf8mb4') ? 4 : 3;
         $indexLength = (int) floor($defaultLength / $bytes);
 
         // Return if the field is shorter than the index length
@@ -349,7 +351,7 @@ class DcaSchemaProvider
             return 3072;
         }
 
-        [$ver] = explode('-', $this->doctrine->getConnection()->fetchOne('SELECT @@version'));
+        [$ver] = explode('-', (string) $this->doctrine->getConnection()->fetchOne('SELECT @@version'));
 
         // As there is no reliable way to get the vendor (see #84), we are
         // guessing based on the version number. The check will not be run

@@ -23,13 +23,8 @@ use Doctrine\DBAL\Connection;
  */
 class PageSearchListener
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-
-    public function __construct(ContaoFramework $framework, Connection $connection)
+    public function __construct(private ContaoFramework $framework, private Connection $connection)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
     }
 
     /**
@@ -65,7 +60,7 @@ class PageSearchListener
      */
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($value === $dc->activeRecord->robots || 0 !== strncmp($value, 'noindex', 7)) {
+        if ($value === $dc->activeRecord->robots || !str_starts_with($value, 'noindex')) {
             return $value;
         }
 

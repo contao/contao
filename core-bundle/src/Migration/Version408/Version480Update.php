@@ -28,22 +28,17 @@ use Symfony\Component\Filesystem\Path;
  */
 class Version480Update extends AbstractMigration
 {
-    private Connection $connection;
-    private Filesystem $filesystem;
-    private ContaoFramework $framework;
-    private string $projectDir;
-
     /**
      * @var array<string>
      */
     private array $resultMessages = [];
 
-    public function __construct(Connection $connection, Filesystem $filesystem, ContaoFramework $framework, string $projectDir)
-    {
-        $this->connection = $connection;
-        $this->filesystem = $filesystem;
-        $this->framework = $framework;
-        $this->projectDir = $projectDir;
+    public function __construct(
+        private Connection $connection,
+        private Filesystem $filesystem,
+        private ContaoFramework $framework,
+        private string $projectDir
+    ) {
     }
 
     public function getName(): string

@@ -15,13 +15,18 @@ namespace Contao\ManagerBundle\Tests\ContaoManager\ApiCommand;
 use Contao\ManagerBundle\Api\Application;
 use Contao\ManagerBundle\Api\ManagerConfig;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class GetConfigCommandTest extends TestCase
 {
+    /**
+     * @var ManagerConfig&MockObject
+     */
+    private ManagerConfig $config;
+
     private GetConfigCommand $command;
-    private $config;
 
     protected function setUp(): void
     {

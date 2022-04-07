@@ -32,12 +32,9 @@ class InstallWebDirCommand extends Command
 
     private ?Filesystem $fs = null;
     private ?SymfonyStyle $io = null;
-    private string $projectDir;
 
-    public function __construct(string $projectDir)
+    public function __construct(private string $projectDir)
     {
-        $this->projectDir = $projectDir;
-
         parent::__construct();
     }
 
@@ -79,7 +76,7 @@ class InstallWebDirCommand extends Command
         $existingContent = file_get_contents($targetPath);
 
         // Return if there already is a rewrite rule
-        if (preg_match('/^\s*RewriteRule\s/im', $existingContent)) {
+        if (preg_match('/^\s*RewriteRule\s/im', (string) $existingContent)) {
             return;
         }
 

@@ -12,14 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
-use Contao\CoreBundle\Event\AbstractDbafsMetadataEvent;
-
 class StoreDbafsMetadataEvent extends AbstractDbafsMetadataEvent
 {
-    /**
-     * @param mixed $rowValue
-     */
-    public function set(string $rowKey, $rowValue): void
+    public function set(string $rowKey, mixed $rowValue): void
     {
         $this->row[$rowKey] = $rowValue;
     }

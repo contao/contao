@@ -112,8 +112,8 @@ class ResponseContextTest extends TestCase
         $serviceB = new class() extends Bundle implements BundleInterface {
         };
 
-        $serviceAClassname = \get_class($serviceA);
-        $serviceBClassname = \get_class($serviceB);
+        $serviceAClassname = $serviceA::class;
+        $serviceBClassname = $serviceB::class;
 
         $context->add($serviceA);
 

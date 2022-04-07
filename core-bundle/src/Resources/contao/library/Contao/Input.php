@@ -976,18 +976,7 @@ class Input
 	 */
 	public static function findPost($strKey)
 	{
-		if (isset($_POST[$strKey]))
-		{
-			return $_POST[$strKey];
-		}
-
-		// Do not check for $request->hasPreviousSession() and early return here (see #3971)
-		if (isset($_SESSION['FORM_DATA'][$strKey]))
-		{
-			return ($strKey == 'FORM_SUBMIT') ? preg_replace('/^auto_/i', '', $_SESSION['FORM_DATA'][$strKey]) : $_SESSION['FORM_DATA'][$strKey];
-		}
-
-		return null;
+		return $_POST[$strKey] ?? null;
 	}
 
 	/**

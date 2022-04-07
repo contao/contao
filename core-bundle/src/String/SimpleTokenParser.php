@@ -25,11 +25,8 @@ class SimpleTokenParser implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    private ExpressionLanguage $expressionLanguage;
-
-    public function __construct(ExpressionLanguage $expressionLanguage)
+    public function __construct(private ExpressionLanguage $expressionLanguage)
     {
-        $this->expressionLanguage = $expressionLanguage;
     }
 
     /**
@@ -70,22 +67,22 @@ class SimpleTokenParser implements LoggerAwareInterface
             $current = $stack[\count($stack) - 1];
             $currentIf = $ifStack[\count($ifStack) - 1];
 
-            if (0 === strncmp($decodedTag, '{if ', 4)) {
+            if (str_starts_with($decodedTag, '{if ')) {
                 $expression = $this->evaluateExpression(substr($decodedTag, 4, -1), $tokens);
                 $stack[] = $current && $expression;
                 $ifStack[] = $expression;
-            } elseif (0 === strncmp($decodedTag, '{elseif ', 8)) {
+            } elseif (str_starts_with($decodedTag, '{elseif ')) {
                 $expression = $this->evaluateExpression(substr($decodedTag, 8, -1), $tokens);
                 array_pop($stack);
                 array_pop($ifStack);
                 $stack[] = !$currentIf && $stack[\count($stack) - 1] && $expression;
                 $ifStack[] = $currentIf || $expression;
-            } elseif (0 === strncmp($decodedTag, '{else}', 6)) {
+            } elseif (str_starts_with($decodedTag, '{else}')) {
                 array_pop($stack);
                 array_pop($ifStack);
                 $stack[] = !$currentIf && $stack[\count($stack) - 1];
                 $ifStack[] = true;
-            } elseif (0 === strncmp($decodedTag, '{endif}', 7)) {
+            } elseif (str_starts_with($decodedTag, '{endif}')) {
                 array_pop($stack);
                 array_pop($ifStack);
             } elseif ($current) {
@@ -136,7 +133,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
         try {
             return (bool) $this->expressionLanguage->evaluate($expression, $data);
-        } catch (SyntaxError $e) {
+        } catch (\Throwable $e) {
             throw new \InvalidArgumentException($e->getMessage(), 0, $e);
         }
     }
@@ -153,7 +150,7 @@ class SimpleTokenParser implements LoggerAwareInterface
                 $tokens[] = $tokenStream->current;
                 $tokenStream->next();
             }
-        } catch (SyntaxError $e) {
+        } catch (SyntaxError) {
             // We cannot identify the variables if tokenizing fails
             return [];
         }

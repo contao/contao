@@ -14,20 +14,11 @@ namespace Contao\MakerBundle\Reflection;
 
 class MethodDefinition
 {
-    private ?string $returnType;
-
-    /**
-     * @var array<string, (string|array|null)>
-     */
-    private array $parameters;
-
     /**
      * @param array<string, (string|array|null)> $parameters
      */
-    public function __construct(?string $returnType, array $parameters)
+    public function __construct(private ?string $returnType, private array $parameters)
     {
-        $this->returnType = $returnType;
-        $this->parameters = $parameters;
     }
 
     public function getReturnType(): ?string

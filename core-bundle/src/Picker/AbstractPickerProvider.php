@@ -21,16 +21,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
-    private FactoryInterface $menuFactory;
-    private RouterInterface $router;
-    private ?TranslatorInterface $translator;
     private ?TokenStorageInterface $tokenStorage = null;
 
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
+    public function __construct(private FactoryInterface $menuFactory, private RouterInterface $router, private ?TranslatorInterface $translator = null)
     {
-        $this->menuFactory = $menuFactory;
-        $this->router = $router;
-        $this->translator = $translator;
     }
 
     public function getUrl(PickerConfig $config): ?string

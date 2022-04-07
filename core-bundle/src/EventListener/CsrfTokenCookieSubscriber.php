@@ -29,15 +29,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 {
-    private ContaoCsrfTokenManager $tokenManager;
-    private MemoryTokenStorage $tokenStorage;
-    private string $cookiePrefix;
-
-    public function __construct(ContaoCsrfTokenManager $tokenManager, MemoryTokenStorage $tokenStorage, string $cookiePrefix = 'csrf_')
+    public function __construct(private ContaoCsrfTokenManager $tokenManager, private MemoryTokenStorage $tokenStorage, private string $cookiePrefix = 'csrf_')
     {
-        $this->tokenManager = $tokenManager;
-        $this->tokenStorage = $tokenStorage;
-        $this->cookiePrefix = $cookiePrefix;
     }
 
     /**
@@ -183,16 +176,12 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
         return $tokens;
     }
 
-    /**
-     * @param mixed $key
-     * @param mixed $value
-     */
-    private function isCsrfCookie($key, $value): bool
+    private function isCsrfCookie(mixed $key, mixed $value): bool
     {
         if (!\is_string($key)) {
             return false;
         }
 
-        return 0 === strpos($key, $this->cookiePrefix) && preg_match('/^[a-z0-9_-]+$/i', $value);
+        return str_starts_with($key, $this->cookiePrefix) && preg_match('/^[a-z0-9_-]+$/i', (string) $value);
     }
 }

@@ -204,6 +204,9 @@ class ModulePersonalData extends Module
 				$objWidget->rowClassConfirm = 'row_' . ++$row . ((($row % 2) == 0) ? ' even' : ' odd');
 			}
 
+			$arrSubmitted = array();
+			$arrFiles = array();
+
 			// Validate the form data
 			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
@@ -269,7 +272,7 @@ class ModulePersonalData extends Module
 				elseif ($objWidget->submitInput())
 				{
 					// Store the form data
-					$_SESSION['FORM_DATA'][$field] = $varValue;
+					$arrSubmitted[$field] = $varValue;
 
 					// Set the correct empty value (see #6284, #6373)
 					if ($varValue === '')
@@ -291,6 +294,7 @@ class ModulePersonalData extends Module
 
 			if ($objWidget instanceof UploadableWidgetInterface)
 			{
+				$arrFiles[$objWidget->name] = $objWidget->value;
 				$hasUpload = true;
 			}
 
@@ -326,7 +330,7 @@ class ModulePersonalData extends Module
 				foreach ($GLOBALS['TL_HOOKS']['updatePersonalData'] as $callback)
 				{
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->User, $_SESSION['FORM_DATA'], $this);
+					$this->{$callback[0]}->{$callback[1]}($this->User, $arrSubmitted, $this, $arrFiles);
 				}
 			}
 

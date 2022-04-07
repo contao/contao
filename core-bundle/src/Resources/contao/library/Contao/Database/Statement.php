@@ -13,7 +13,6 @@ namespace Contao\Database;
 use Contao\Database;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
-use Doctrine\DBAL\Exception\DriverException;
 
 /**
  * Create and execute queries
@@ -141,11 +140,9 @@ class Statement
 	 */
 	public function set($arrParams)
 	{
-		if (substr_count($this->strQuery, '%s') !== 1 || !\in_array(strtoupper(substr($this->strQuery, 0, 6)), array('INSERT', 'UPDATE'), true))
+		if (substr_count((string) $this->strQuery, '%s') !== 1 || !\in_array(strtoupper(substr($this->strQuery, 0, 6)), array('INSERT', 'UPDATE'), true))
 		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder. This will throw an exception in Contao 5.0.', __METHOD__);
-
-			return $this;
+			throw new \InvalidArgumentException(sprintf('Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder.', __METHOD__));
 		}
 
 		$this->arrSetParams = array_values($arrParams);
@@ -228,16 +225,7 @@ class Statement
 	 */
 	public function execute()
 	{
-		$arrParams = \func_get_args();
-
-		if (\count($arrParams) === 1 && \is_array($arrParams[0]))
-		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" with an array parameter has been deprecated and will no longer work in Contao 5.0. Use argument unpacking via ... instead."', __METHOD__);
-
-			$arrParams = array_values($arrParams[0]);
-		}
-
-		return $this->query('', array_merge($this->arrSetParams, $arrParams));
+		return $this->query('', array_merge($this->arrSetParams, \func_get_args()));
 	}
 
 	/**
@@ -278,48 +266,7 @@ class Statement
 		$this->arrLastUsedParams = $arrParams;
 
 		// Execute the query
-		// TODO: remove the try/catch block in Contao 5.0
-		try
-		{
-			$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams, $arrTypes);
-		}
-		catch (DriverException|\ArgumentCountError $exception)
-		{
-			// SQLSTATE[HY000]: This command is not supported in the prepared statement protocol
-			if ($exception->getCode() === 1295)
-			{
-				$this->resConnection->executeStatement($this->strQuery, $arrParams, $arrTypes);
-
-				trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" for statements (instead of queries) has been deprecated and will no longer work in Contao 5.0. Use "%s::executeStatement()" instead.', __METHOD__, Connection::class);
-
-				return $this;
-			}
-
-			if (!$arrParams)
-			{
-				throw $exception;
-			}
-
-			$intTokenCount = substr_count(preg_replace("/('[^']*')/", '', $this->strQuery), '?');
-
-			if (\count($arrParams) <= $intTokenCount)
-			{
-				throw $exception;
-			}
-
-			// If we get here, there are more parameters than tokens, so we slice the array and try to execute the query again
-			$this->statement = $this->resConnection->executeQuery($this->strQuery, \array_slice($arrParams, 0, $intTokenCount), $arrTypes);
-
-			// Only trigger the deprecation if the parameter count was the reason for the exception and the previous call did not throw
-			if ($this->arrLastUsedParams === array(null))
-			{
-				trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::execute(null)" has been deprecated and will no longer work in Contao 5.0. Omit the NULL parameters instead.', __CLASS__);
-			}
-			else
-			{
-				trigger_deprecation('contao/core-bundle', '4.13', 'Passing more parameters than "?" tokens has been deprecated and will no longer work in Contao 5.0. Use the correct number of parameters instead.');
-			}
-		}
+		$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams, $arrTypes);
 
 		// No result set available
 		if ($this->statement->columnCount() < 1)
@@ -329,111 +276,5 @@ class Statement
 
 		// Instantiate a result object
 		return new Result($this->statement, $this->strQuery);
-	}
-
-	/**
-	 * Replace the wildcards in the query string
-	 *
-	 * @param array $arrValues The values array
-	 *
-	 * @throws \Exception If $arrValues has too few values to replace the wildcards in the query string
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 */
-	protected function replaceWildcards($arrValues)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
-
-		$arrValues = $this->escapeParams($arrValues);
-		$this->strQuery = preg_replace('/(?<!%)%([^bcdufosxX%])/', '%%$1', $this->strQuery);
-
-		// Replace wildcards
-		if (!$this->strQuery = @vsprintf($this->strQuery, $arrValues))
-		{
-			throw new \Exception('Too few arguments to build the query string');
-		}
-	}
-
-	/**
-	 * Escape the values and serialize objects and arrays
-	 *
-	 * @param array $arrValues The values array
-	 *
-	 * @return array The array with the escaped values
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 */
-	protected function escapeParams($arrValues)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
-
-		foreach ($arrValues as $k=>$v)
-		{
-			switch (\gettype($v))
-			{
-				case 'string':
-					$arrValues[$k] = $this->resConnection->quote($v);
-					break;
-
-				case 'boolean':
-					$arrValues[$k] = ($v === true) ? 1 : 0;
-					break;
-
-				case 'object':
-				case 'array':
-					$arrValues[$k] = $this->resConnection->quote(serialize($v));
-					break;
-
-				default:
-					$arrValues[$k] = $v ?? 'NULL';
-					break;
-			}
-		}
-
-		return $arrValues;
-	}
-
-	/**
-	 * Explain the current query
-	 *
-	 * @return string The explanation string
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 */
-	public function explain()
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
-
-		return $this->resConnection->fetchAssociative('EXPLAIN ' . $this->strQuery, $this->arrLastUsedParams);
-	}
-
-	/**
-	 * Bypass the cache and always execute the query
-	 *
-	 * @return Result The result object
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Statement::execute() instead.
-	 */
-	public function executeUncached()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Statement::executeUncached()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Statement::execute()" instead.');
-
-		return \call_user_func_array(array($this, 'execute'), \func_get_args());
-	}
-
-	/**
-	 * Always execute the query and add or replace an existing cache entry
-	 *
-	 * @return Result The result object
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Statement::execute() instead.
-	 */
-	public function executeCached()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Statement::executeCached()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Statement::execute()" instead.');
-
-		return \call_user_func_array(array($this, 'execute'), \func_get_args());
 	}
 }

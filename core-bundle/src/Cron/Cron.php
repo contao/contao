@@ -20,20 +20,8 @@ use Psr\Log\LoggerInterface;
 
 class Cron
 {
-    public const SCOPE_WEB = 'web';
-    public const SCOPE_CLI = 'cli';
-
-    /**
-     * @var \Closure():CronJobRepository
-     */
-    private \Closure $repository;
-
-    /**
-     * @var \Closure():EntityManagerInterface
-     */
-    private \Closure $entityManager;
-
-    private ?LoggerInterface $logger;
+    final public const SCOPE_WEB = 'web';
+    final public const SCOPE_CLI = 'cli';
 
     /**
      * @var array<CronJob>
@@ -44,11 +32,8 @@ class Cron
      * @param \Closure():CronJobRepository      $repository
      * @param \Closure():EntityManagerInterface $entityManager
      */
-    public function __construct(\Closure $repository, \Closure $entityManager, LoggerInterface $logger = null)
+    public function __construct(private \Closure $repository, private \Closure $entityManager, private ?LoggerInterface $logger = null)
     {
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
     }
 
     public function addCronJob(CronJob $cronjob): void

@@ -18,13 +18,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class PreviewUrlConvertEvent extends Event
 {
-    private Request $request;
     private ?string $url = null;
     private ?Response $response = null;
 
-    public function __construct(Request $request)
+    public function __construct(private Request $request)
     {
-        $this->request = $request;
     }
 
     public function getUrl(): ?string

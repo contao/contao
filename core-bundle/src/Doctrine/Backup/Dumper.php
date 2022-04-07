@@ -16,6 +16,7 @@ use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Platforms\Keywords\KeywordList;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Table;
 
@@ -41,7 +42,10 @@ class Dumper implements DumperInterface
         $this->disableQueryBuffering($connection);
 
         $schemaManager = $connection->createSchemaManager();
-        $platform = $connection->getDatabasePlatform();
+        $platform = clone $connection->getDatabasePlatform();
+
+        $reflection = (new \ReflectionClass($platform))->getProperty('_keywords');
+        $reflection->setValue($platform, $this->getCompatibleKeywords());
 
         foreach ($this->getTablesToDump($schemaManager, $config) as $table) {
             yield from $this->dumpSchema($platform, $table);
@@ -133,10 +137,7 @@ class Dumper implements DumperInterface
         }
     }
 
-    /**
-     * @param string|int|float|null $value
-     */
-    private function formatValueForDump($value, int $columnBindingType, bool $isUtf8Charset, Connection $connection): string
+    private function formatValueForDump(int|float|string|null $value, int $columnBindingType, bool $isUtf8Charset, Connection $connection): string
     {
         if (null === $value) {
             return 'NULL';
@@ -180,5 +181,25 @@ class Dumper implements DumperInterface
         }
 
         return $filteredTables;
+    }
+
+    private function getCompatibleKeywords(): KeywordList
+    {
+        return new class() extends KeywordList {
+            public function isKeyword($word): bool
+            {
+                return true;
+            }
+
+            protected function getKeywords(): array
+            {
+                return [];
+            }
+
+            public function getName(): string
+            {
+                return 'AllWordsAreKeywords';
+            }
+        };
     }
 }

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
@@ -37,16 +38,8 @@ use Symfony\Component\Filesystem\Path;
  */
 class FigureBuilder
 {
-    private ContainerInterface $locator;
-    private string $projectDir;
-    private string $uploadPath;
     private Filesystem $filesystem;
     private ?InvalidResourceException $lastException = null;
-
-    /**
-     * @var array<string>
-     */
-    private array $validExtensions;
 
     /**
      * The resource's absolute file path.
@@ -62,10 +55,8 @@ class FigureBuilder
      * User defined size configuration.
      *
      * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
-     *
-     * @var int|string|array|PictureConfiguration|null
      */
-    private $sizeConfiguration;
+    private array|int|PictureConfiguration|string|null $sizeConfiguration = null;
 
     /**
      * User defined resize options.
@@ -98,17 +89,13 @@ class FigureBuilder
 
     /**
      * User defined lightbox resource or url. This will overwrite the default if set.
-     *
-     * @var string|ImageInterface|null
      */
-    private $lightboxResourceOrUrl;
+    private ImageInterface|string|null $lightboxResourceOrUrl = null;
 
     /**
      * User defined lightbox size configuration. This will overwrite the default if set.
-     *
-     * @var int|string|array|PictureConfiguration|null
      */
-    private $lightboxSizeConfiguration;
+    private array|int|PictureConfiguration|string|null $lightboxSizeConfiguration = null;
 
     /**
      * User defined lightbox resize options.
@@ -136,14 +123,15 @@ class FigureBuilder
 
     /**
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
+     *
+     * @param array<string> $validExtensions
      */
-    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
-    {
-        $this->locator = $locator;
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->validExtensions = $validExtensions;
-
+    public function __construct(
+        private ContainerInterface $locator,
+        private string $projectDir,
+        private string $uploadPath,
+        private array $validExtensions
+    ) {
         $this->filesystem = new Filesystem();
     }
 
@@ -250,7 +238,7 @@ class FigureBuilder
      *
      * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
-    public function from($identifier): self
+    public function from(int|string|FilesModel|ImageInterface|null $identifier): self
     {
         if (null === $identifier) {
             $this->lastException = new InvalidResourceException('The defined resource is "null".');
@@ -266,9 +254,7 @@ class FigureBuilder
             return $this->fromImage($identifier);
         }
 
-        $isString = \is_string($identifier);
-
-        if ($isString && $this->getValidatorAdapter()->isUuid($identifier)) {
+        if (\is_string($identifier) && $this->getValidatorAdapter()->isUuid($identifier)) {
             return $this->fromUuid($identifier);
         }
 
@@ -276,13 +262,7 @@ class FigureBuilder
             return $this->fromId((int) $identifier);
         }
 
-        if ($isString) {
-            return $this->fromPath($identifier);
-        }
-
-        $type = \is_object($identifier) ? \get_class($identifier) : \gettype($identifier);
-
-        throw new \TypeError(sprintf('%s(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given', __METHOD__, $type));
+        return $this->fromPath($identifier);
     }
 
     /**
@@ -290,7 +270,7 @@ class FigureBuilder
      *
      * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
-    public function setSize($size): self
+    public function setSize(int|string|array|PictureConfiguration|null $size): self
     {
         $this->sizeConfiguration = $size;
 
@@ -370,8 +350,14 @@ class FigureBuilder
      * remove an auto-generated value from the results, set the respective
      * attribute to null.
      */
-    public function setLinkAttributes(array $attributes): self
+    public function setLinkAttributes(array|HtmlAttributes $attributes): self
     {
+        if ($attributes instanceof HtmlAttributes) {
+            $this->additionalLinkAttributes = iterator_to_array($attributes);
+
+            return $this;
+        }
+
         foreach ($attributes as $key => $value) {
             if (!\is_string($key) || !\is_string($value)) {
                 throw new \InvalidArgumentException('Link attributes must be an array of type <string, string>.');
@@ -402,10 +388,8 @@ class FigureBuilder
      * automatically determined from the metadata or base resource. For this
      * setting to take effect, make sure you have enabled the creation of a
      * lightbox by calling enableLightbox().
-     *
-     * @param string|ImageInterface|null $resourceOrUrl
      */
-    public function setLightboxResourceOrUrl($resourceOrUrl): self
+    public function setLightboxResourceOrUrl(string|ImageInterface|null $resourceOrUrl): self
     {
         $this->lightboxResourceOrUrl = $resourceOrUrl;
 
@@ -420,7 +404,7 @@ class FigureBuilder
      *
      * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
-    public function setLightboxSize($size): self
+    public function setLightboxSize(int|string|array|PictureConfiguration|null $size): self
     {
         $this->lightboxSizeConfiguration = $size;
 

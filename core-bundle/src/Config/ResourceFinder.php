@@ -22,10 +22,7 @@ class ResourceFinder implements ResourceFinderInterface
 {
     private array $paths;
 
-    /**
-     * @param string|array $paths
-     */
-    public function __construct($paths)
+    public function __construct(array|string $paths)
     {
         $this->paths = (array) $paths;
     }
