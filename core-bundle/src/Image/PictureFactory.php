@@ -162,7 +162,7 @@ class PictureFactory implements PictureFactoryInterface
                                 continue;
                             }
 
-                            $formats[$source] = array_unique(array_merge($formats[$source], $targets));
+                            $formats[$source] = array_unique([...$formats[$source], ...$targets]);
 
                             usort(
                                 $formats[$source],

@@ -450,22 +450,20 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
-            [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'options' => [
-                                    \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
-                                ],
+        $expect = [
+            ...$extensionConfigs,
+            ...[[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [
+                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                             ],
                         ],
                     ],
                 ],
-            ]
-        );
+            ]],
+        ];
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
@@ -567,22 +565,20 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
-            [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'options' => [
-                                    $expectedOptionKey => "SET SESSION sql_mode=CONCAT(@@sql_mode, IF(INSTR(@@sql_mode, 'STRICT_'), '', ',TRADITIONAL'))",
-                                ],
+        $expect = [
+            ...$extensionConfigs,
+            ...[[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [
+                                $expectedOptionKey => "SET SESSION sql_mode=CONCAT(@@sql_mode, IF(INSTR(@@sql_mode, 'STRICT_'), '', ',TRADITIONAL'))",
                             ],
                         ],
                     ],
                 ],
-            ]
-        );
+            ]],
+        ];
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);

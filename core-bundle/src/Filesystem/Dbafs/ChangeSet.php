@@ -177,7 +177,7 @@ class ChangeSet
             }
         }
 
-        return array_merge($lastModifiedUpdates, $itemsToUpdate);
+        return [...$lastModifiedUpdates, ...$itemsToUpdate];
     }
 
     /**
