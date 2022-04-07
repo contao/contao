@@ -429,7 +429,8 @@ class Ajax extends Backend
 						{
 							throw new ResponseException($this->convertToResponse($dc->editAll($this->strAjaxId, Input::post('id'))));
 						}
-						elseif (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+
+						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
 						{
 							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 						}
@@ -447,7 +448,8 @@ class Ajax extends Backend
 						{
 							throw new ResponseException($this->convertToResponse($dc->edit(false, Input::post('id'))));
 						}
-						elseif (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+
+						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
 						{
 							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 						}
