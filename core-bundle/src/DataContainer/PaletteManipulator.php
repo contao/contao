@@ -317,8 +317,7 @@ class PaletteManipulator
 
     private function applyFallbackPalette(array &$config, array $action): void
     {
-        end($config);
-        $fallback = key($config);
+        $fallback = array_key_last($config);
 
         if (null !== $action['fallback']) {
             if ($this->canApplyToParent($config, $action, 'fallback', 'fallbackPosition')) {

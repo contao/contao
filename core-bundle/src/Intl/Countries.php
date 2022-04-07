@@ -125,7 +125,7 @@ class Countries
      */
     private function applyLegacyHook(array $return): array
     {
-        trigger_deprecation('contao/core-bundle', '4.12', 'Using the "getCountries" hook has been deprecated and will no longer work in Contao 5.0. Decorate the %s service instead.', __CLASS__);
+        trigger_deprecation('contao/core-bundle', '4.12', 'Using the "getCountries" hook has been deprecated and will no longer work in Contao 5.0. Decorate the %s service instead.', self::class);
 
         $countries = SymfonyCountries::getNames('en');
 

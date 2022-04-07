@@ -19,7 +19,7 @@ use Symfony\Component\Filesystem\Path;
 /**
  * @experimental
  */
-class FilesystemItem
+class FilesystemItem implements \Stringable
 {
     private bool $isFile;
     private string $path;

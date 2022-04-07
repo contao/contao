@@ -35,7 +35,7 @@ class InstallCommand extends Command
     private string $projectDir;
     private string $uploadPath;
     private string $imageDir;
-    private ?string $webDir;
+    private ?string $webDir = null;
 
     public function __construct(string $projectDir, string $uploadPath, string $imageDir)
     {

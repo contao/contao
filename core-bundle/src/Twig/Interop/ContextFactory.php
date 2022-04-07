@@ -116,7 +116,7 @@ final class ContextFactory
      */
     private function getCallableWrapper(callable $callable, string $name): object
     {
-        return new class($callable, $name) {
+        return new class($callable, $name) implements \Stringable {
             /**
              * @var callable
              */
