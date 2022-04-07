@@ -48,6 +48,16 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertSame('tablePicker', $provider->getName());
     }
 
+    public function testSupportsLegacyContext(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Table';
+        $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
+
+        $provider = $this->createTableProvider($this->mockFrameworkWithDcaLoader('tl_foobar'));
+
+        $this->assertTrue($provider->supportsContext('dc.tl_foobar'));
+    }
+
     public function testSupportsContext(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = DC_Table::class;
