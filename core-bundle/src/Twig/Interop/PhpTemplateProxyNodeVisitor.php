@@ -24,7 +24,7 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  */
 final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
 {
-    public function __construct(private string $extensionName)
+    public function __construct(private readonly string $extensionName)
     {
     }
 

@@ -20,7 +20,7 @@ use Symfony\Component\Finder\Finder;
  */
 class ResourceFinder implements ResourceFinderInterface
 {
-    private array $paths;
+    private readonly array $paths;
 
     public function __construct(array|string $paths)
     {

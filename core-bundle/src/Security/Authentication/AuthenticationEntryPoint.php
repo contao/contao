@@ -27,8 +27,11 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_entry_point" service instead
      */
-    public function __construct(private RouterInterface $router, private UriSigner $uriSigner, private ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private readonly RouterInterface $router,
+        private readonly UriSigner $uriSigner,
+        private readonly ScopeMatcher $scopeMatcher
+    ) {
     }
 
     public function start(Request $request, AuthenticationException $authException = null): RedirectResponse

@@ -21,7 +21,7 @@ class InstallToolUser
     /**
      * @internal Do not inherit from this class; decorate the "contao_installation.install_tool_user" service instead
      */
-    public function __construct(private Session $session)
+    public function __construct(private readonly Session $session)
     {
     }
 

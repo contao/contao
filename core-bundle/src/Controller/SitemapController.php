@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SitemapController extends AbstractController
 {
-    public function __construct(private PageRegistry $pageRegistry)
+    public function __construct(private readonly PageRegistry $pageRegistry)
     {
     }
 

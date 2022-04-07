@@ -31,7 +31,7 @@ class UserListCommand extends Command
     protected static $defaultName = 'contao:user:list';
     protected static $defaultDescription = 'Lists Contao back end users.';
 
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
         parent::__construct();
     }

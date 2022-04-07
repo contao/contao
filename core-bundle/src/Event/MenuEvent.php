@@ -18,7 +18,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class MenuEvent extends Event
 {
-    public function __construct(private FactoryInterface $factory, private ItemInterface $tree)
+    public function __construct(private readonly FactoryInterface $factory, private readonly ItemInterface $tree)
     {
     }
 

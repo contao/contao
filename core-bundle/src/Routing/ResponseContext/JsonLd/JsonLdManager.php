@@ -28,7 +28,7 @@ class JsonLdManager
      */
     private array $graphs = [];
 
-    public function __construct(private ResponseContext $responseContext)
+    public function __construct(private readonly ResponseContext $responseContext)
     {
     }
 

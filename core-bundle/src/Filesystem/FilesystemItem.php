@@ -28,8 +28,8 @@ class FilesystemItem implements \Stringable
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
      */
     public function __construct(
-        private bool $isFile,
-        private string $path,
+        private readonly bool $isFile,
+        private readonly string $path,
         private int|\Closure|null $lastModified = null,
         private int|\Closure|null $fileSize = null,
         private string|\Closure|null $mimeType = null,

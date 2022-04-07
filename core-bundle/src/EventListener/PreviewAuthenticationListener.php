@@ -27,11 +27,11 @@ use Symfony\Component\Security\Core\Security;
 class PreviewAuthenticationListener
 {
     public function __construct(
-        private ScopeMatcher $scopeMatcher,
-        private TokenChecker $tokenChecker,
-        private UrlGeneratorInterface $router,
-        private UriSigner $uriSigner,
-        private Security $security
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly TokenChecker $tokenChecker,
+        private readonly UrlGeneratorInterface $router,
+        private readonly UriSigner $uriSigner,
+        private readonly Security $security
     ) {
     }
 

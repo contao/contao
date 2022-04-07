@@ -25,7 +25,7 @@ class InputEnhancer implements RouteEnhancerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.input_enhancer" service instead
      */
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 

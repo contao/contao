@@ -37,7 +37,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
      * be returned. A template counts as "affected" if it matches any of the
      * rules.
      */
-    private \Closure $rules;
+    private readonly \Closure $rules;
 
     public function __construct(\Closure $rules)
     {

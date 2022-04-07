@@ -27,7 +27,7 @@ class ParseJwtCookieCommand extends Command
     protected static $defaultName = 'jwt-cookie:parse';
     protected static $defaultDescription = 'Parses the content of the preview entry point cookie.';
 
-    private JwtManager $jwtManager;
+    private readonly JwtManager $jwtManager;
 
     public function __construct(Application $application, JwtManager $jwtManager = null)
     {

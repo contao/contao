@@ -33,7 +33,7 @@ class InstallWebDirCommand extends Command
     private ?Filesystem $fs = null;
     private ?SymfonyStyle $io = null;
 
-    public function __construct(private string $projectDir)
+    public function __construct(private readonly string $projectDir)
     {
         parent::__construct();
     }

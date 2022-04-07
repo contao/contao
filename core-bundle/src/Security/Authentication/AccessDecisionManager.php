@@ -20,10 +20,10 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 class AccessDecisionManager implements AccessDecisionManagerInterface
 {
     public function __construct(
-        private AccessDecisionManagerInterface $inner,
-        private AccessDecisionManagerInterface $contaoAccessDecisionManager,
-        private ScopeMatcher $scopeMatcher,
-        private RequestStack $requestStack
+        private readonly AccessDecisionManagerInterface $inner,
+        private readonly AccessDecisionManagerInterface $contaoAccessDecisionManager,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly RequestStack $requestStack
     ) {
     }
 

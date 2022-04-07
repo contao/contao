@@ -29,8 +29,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FaviconController
 {
-    public function __construct(private ContaoFramework $framework, private string $projectDir, private EntityCacheTags $entityCacheTags)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly string $projectDir,
+        private readonly EntityCacheTags $entityCacheTags
+    ) {
     }
 
     /**

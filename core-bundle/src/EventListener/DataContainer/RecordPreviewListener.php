@@ -24,7 +24,7 @@ use Doctrine\DBAL\Connection;
  */
 class RecordPreviewListener
 {
-    public function __construct(private ContaoFramework $framework, private Connection $connection)
+    public function __construct(private readonly ContaoFramework $framework, private readonly Connection $connection)
     {
     }
 

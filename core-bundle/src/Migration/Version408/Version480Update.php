@@ -34,10 +34,10 @@ class Version480Update extends AbstractMigration
     private array $resultMessages = [];
 
     public function __construct(
-        private Connection $connection,
-        private Filesystem $filesystem,
-        private ContaoFramework $framework,
-        private string $projectDir
+        private readonly Connection $connection,
+        private readonly Filesystem $filesystem,
+        private readonly ContaoFramework $framework,
+        private readonly string $projectDir
     ) {
     }
 

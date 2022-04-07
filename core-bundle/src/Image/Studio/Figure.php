@@ -42,7 +42,7 @@ class Figure
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
     public function __construct(
-        private ImageResult $image,
+        private readonly ImageResult $image,
         private Metadata|\Closure|null $metadata = null,
         private array|\Closure|null $linkAttributes = null,
         private LightboxResult|\Closure|null $lightbox = null,

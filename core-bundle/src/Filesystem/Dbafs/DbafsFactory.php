@@ -25,7 +25,7 @@ class DbafsFactory
     /**
      * @internal
      */
-    public function __construct(private Connection $connection, private EventDispatcherInterface $eventDispatcher)
+    public function __construct(private readonly Connection $connection, private readonly EventDispatcherInterface $eventDispatcher)
     {
     }
 

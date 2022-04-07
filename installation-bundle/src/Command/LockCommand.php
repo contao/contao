@@ -27,7 +27,7 @@ class LockCommand extends Command
     protected static $defaultName = 'contao:install:lock';
     protected static $defaultDescription = 'Locks the install tool.';
 
-    public function __construct(private string $lockFile)
+    public function __construct(private readonly string $lockFile)
     {
         parent::__construct();
     }

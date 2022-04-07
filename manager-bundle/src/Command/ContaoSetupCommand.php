@@ -27,14 +27,14 @@ class ContaoSetupCommand extends Command
     protected static $defaultName = 'contao:setup';
     protected static $defaultDescription = 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.';
 
-    private string $webDir;
-    private string $consolePath;
-    private string|false $phpPath;
+    private readonly string $webDir;
+    private readonly string $consolePath;
+    private readonly string|false $phpPath;
 
     /**
      * @var \Closure(array<string>):Process
      */
-    private \Closure $createProcessHandler;
+    private readonly \Closure $createProcessHandler;
 
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler

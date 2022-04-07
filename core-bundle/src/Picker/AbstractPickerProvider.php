@@ -23,8 +23,11 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
 {
     private ?TokenStorageInterface $tokenStorage = null;
 
-    public function __construct(private FactoryInterface $menuFactory, private RouterInterface $router, private ?TranslatorInterface $translator = null)
-    {
+    public function __construct(
+        private readonly FactoryInterface $menuFactory,
+        private readonly RouterInterface $router,
+        private readonly ?TranslatorInterface $translator = null
+    ) {
     }
 
     public function getUrl(PickerConfig $config): ?string

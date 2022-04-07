@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Document
 {
+    private readonly array $headers;
     private ?Crawler $crawler = null;
     private ?array $jsonLds = null;
 
@@ -31,10 +32,10 @@ class Document
      * @param array<string,array> $headers
      */
     public function __construct(
-        private UriInterface $uri,
-        private int $statusCode,
-        private array $headers,
-        private string $body = ''
+        private readonly UriInterface $uri,
+        private readonly int $statusCode,
+        array $headers,
+        private readonly string $body = ''
     ) {
         $this->headers = array_change_key_case($headers);
     }

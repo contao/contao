@@ -26,10 +26,10 @@ class RouteLoader implements RouteLoaderInterface
      * @internal Do not inherit from this class; decorate the "contao_manager.routing.route_loader" service instead
      */
     public function __construct(
-        private LoaderInterface $loader,
-        private PluginLoader $pluginLoader,
-        private KernelInterface $kernel,
-        private string $projectDir
+        private readonly LoaderInterface $loader,
+        private readonly PluginLoader $pluginLoader,
+        private readonly KernelInterface $kernel,
+        private readonly string $projectDir
     ) {
     }
 

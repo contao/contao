@@ -21,7 +21,7 @@ class ControllerResolver implements ControllerResolverInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.controller_resolver" service instead
      */
-    public function __construct(private ControllerResolverInterface $resolver, private FragmentRegistry $registry)
+    public function __construct(private readonly ControllerResolverInterface $resolver, private readonly FragmentRegistry $registry)
     {
     }
 

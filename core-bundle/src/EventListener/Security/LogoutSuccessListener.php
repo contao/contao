@@ -34,11 +34,11 @@ class LogoutSuccessListener
      * @internal
      */
     public function __construct(
-        private HttpUtils $httpUtils,
-        private ScopeMatcher $scopeMatcher,
-        private ContaoFramework $framework,
-        private Security $security,
-        private ?LoggerInterface $logger
+        private readonly HttpUtils $httpUtils,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly ContaoFramework $framework,
+        private readonly Security $security,
+        private readonly ?LoggerInterface $logger
     ) {
     }
 

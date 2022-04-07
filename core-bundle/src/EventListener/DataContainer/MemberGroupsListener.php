@@ -24,7 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class MemberGroupsListener
 {
-    public function __construct(private Connection $connection, private TranslatorInterface $translator)
+    public function __construct(private readonly Connection $connection, private readonly TranslatorInterface $translator)
     {
     }
 

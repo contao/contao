@@ -32,10 +32,10 @@ use Symfony\Component\Yaml\Yaml;
 class MakeEventListener extends AbstractMaker
 {
     public function __construct(
-        private ClassGenerator $classGenerator,
-        private SignatureGenerator $signatureGenerator,
-        private ImportExtractor $importExtractor,
-        private PhpCompatUtil $phpCompatUtil
+        private readonly ClassGenerator $classGenerator,
+        private readonly SignatureGenerator $signatureGenerator,
+        private readonly ImportExtractor $importExtractor,
+        private readonly PhpCompatUtil $phpCompatUtil
     ) {
     }
 

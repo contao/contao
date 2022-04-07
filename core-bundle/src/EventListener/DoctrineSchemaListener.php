@@ -20,7 +20,7 @@ use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
  */
 class DoctrineSchemaListener
 {
-    public function __construct(private DcaSchemaProvider $provider)
+    public function __construct(private readonly DcaSchemaProvider $provider)
     {
     }
 

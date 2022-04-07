@@ -24,15 +24,15 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     /**
      * @var \SplObjectStorage<MessageCatalogueInterface, MessageCatalogue>
      */
-    private \SplObjectStorage $catalogues;
+    private readonly \SplObjectStorage $catalogues;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.translation.translator" service instead
      */
     public function __construct(
-        private LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator,
-        private ContaoFramework $framework,
-        private ResourceFinder $resourceFinder
+        private readonly LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator,
+        private readonly ContaoFramework $framework,
+        private readonly ResourceFinder $resourceFinder
     ) {
         $this->catalogues = new \SplObjectStorage();
     }

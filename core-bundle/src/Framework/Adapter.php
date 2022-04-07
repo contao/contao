@@ -26,7 +26,7 @@ class Adapter
     /**
      * @param class-string<T> $class
      */
-    public function __construct(private string $class)
+    public function __construct(private readonly string $class)
     {
     }
 

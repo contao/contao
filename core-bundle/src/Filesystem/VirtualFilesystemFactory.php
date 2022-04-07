@@ -22,7 +22,7 @@ class VirtualFilesystemFactory
     /**
      * @internal
      */
-    public function __construct(private MountManager $mountManager, private DbafsManager $dbafsManager)
+    public function __construct(private readonly MountManager $mountManager, private readonly DbafsManager $dbafsManager)
     {
     }
 

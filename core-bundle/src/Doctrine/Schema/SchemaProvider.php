@@ -18,7 +18,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 class SchemaProvider
 {
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
     }
 

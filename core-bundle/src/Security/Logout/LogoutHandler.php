@@ -31,7 +31,7 @@ class LogoutHandler implements LogoutHandlerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.logout_handler" service instead
      */
-    public function __construct(private ContaoFramework $framework, private ?LoggerInterface $logger = null)
+    public function __construct(private readonly ContaoFramework $framework, private readonly ?LoggerInterface $logger = null)
     {
     }
 

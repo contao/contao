@@ -25,7 +25,7 @@ class MakeResponsePrivateListener
 {
     final public const DEBUG_HEADER = 'Contao-Private-Response-Reason';
 
-    public function __construct(private ScopeMatcher $scopeMatcher)
+    public function __construct(private readonly ScopeMatcher $scopeMatcher)
     {
     }
 

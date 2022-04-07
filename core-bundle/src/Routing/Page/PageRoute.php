@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Route;
 
 class PageRoute extends Route implements RouteObjectInterface
 {
-    private PageModel $pageModel;
+    private readonly PageModel $pageModel;
     private ?string $urlPrefix;
     private ?string $urlSuffix;
 

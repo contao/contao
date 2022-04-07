@@ -23,25 +23,25 @@ class Locales
     /**
      * @var array<string>
      */
-    private array $locales;
+    private readonly array $locales;
 
     /**
      * @var array<string>
      */
-    private array $enabledLocales;
+    private readonly array $enabledLocales;
 
     /**
      * @param TranslatorInterface&TranslatorBagInterface $translator
      */
     public function __construct(
-        private TranslatorInterface $translator,
-        private RequestStack $requestStack,
-        private ContaoFramework $contaoFramework,
+        private readonly TranslatorInterface $translator,
+        private readonly RequestStack $requestStack,
+        private readonly ContaoFramework $contaoFramework,
         array $defaultLocales,
         array $defaultEnabledLocales,
         array $configLocales,
         array $configEnabledLocales,
-        private string $defaultLocale
+        private readonly string $defaultLocale
     ) {
         $this->locales = $this->filterLocales($defaultLocales, $configLocales);
         $this->enabledLocales = $this->filterLocales($defaultEnabledLocales, $configEnabledLocales, $defaultLocale);

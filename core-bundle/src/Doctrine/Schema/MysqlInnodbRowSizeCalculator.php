@@ -21,7 +21,7 @@ use Doctrine\DBAL\Schema\Table;
  */
 class MysqlInnodbRowSizeCalculator
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 

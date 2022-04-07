@@ -60,7 +60,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class DateListener
 {
-    public function __construct(private ContaoFramework $framework, private RequestStack $requestStack)
+    public function __construct(private readonly ContaoFramework $framework, private readonly RequestStack $requestStack)
     {
     }
 

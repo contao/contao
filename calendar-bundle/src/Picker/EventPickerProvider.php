@@ -31,8 +31,12 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
     /**
      * @internal Do not inherit from this class; decorate the "contao_calendar.picker.event_provider" service instead
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, private Security $security)
-    {
+    public function __construct(
+        FactoryInterface $menuFactory,
+        RouterInterface $router,
+        ?TranslatorInterface $translator,
+        private readonly Security $security
+    ) {
         parent::__construct($menuFactory, $router, $translator);
     }
 

@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ErrorPageController extends AbstractController implements ContentCompositionInterface
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 

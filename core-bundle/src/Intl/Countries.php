@@ -24,18 +24,18 @@ class Countries
     /**
      * @var array<string>
      */
-    private array $countries;
+    private readonly array $countries;
 
     /**
      * @param TranslatorInterface&TranslatorBagInterface $translator
      */
     public function __construct(
-        private TranslatorInterface $translator,
-        private RequestStack $requestStack,
-        private ContaoFramework $contaoFramework,
+        private readonly TranslatorInterface $translator,
+        private readonly RequestStack $requestStack,
+        private readonly ContaoFramework $contaoFramework,
         array $defaultCountries,
         array $configCountries,
-        private string $defaultLocale
+        private readonly string $defaultLocale
     ) {
         $this->countries = $this->filterCountries($defaultCountries, $configCountries);
     }

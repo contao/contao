@@ -19,7 +19,7 @@ use Symfony\Component\Yaml\Yaml;
 class ParameterDumper
 {
     private string $configFile;
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
     private array $parameters = ['parameters' => []];
 
     public function __construct(string $projectDir, Filesystem $filesystem = null)

@@ -17,18 +17,18 @@ final class RouteConfig
     /**
      * @var array<string>
      */
-    private array $methods;
+    private readonly array $methods;
 
     /**
      * @param string|array<string> $methods
      */
     public function __construct(
-        private bool|string|null $path = null,
-        private ?string $pathRegex = null,
-        private ?string $urlSuffix = null,
-        private array $requirements = [],
-        private array $options = [],
-        private array $defaults = [],
+        private readonly bool|string|null $path = null,
+        private readonly ?string $pathRegex = null,
+        private readonly ?string $urlSuffix = null,
+        private readonly array $requirements = [],
+        private readonly array $options = [],
+        private readonly array $defaults = [],
         array|string $methods = []
     ) {
         $this->methods = \is_array($methods) ? $methods : [$methods];

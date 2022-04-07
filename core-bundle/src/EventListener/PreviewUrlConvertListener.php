@@ -27,8 +27,11 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  */
 class PreviewUrlConvertListener
 {
-    public function __construct(private ContaoFramework $framework, private PageRegistry $pageRegistry, private HttpKernelInterface $httpKernel)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly PageRegistry $pageRegistry,
+        private readonly HttpKernelInterface $httpKernel
+    ) {
     }
 
     public function __invoke(PreviewUrlConvertEvent $event): void

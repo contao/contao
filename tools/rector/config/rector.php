@@ -35,7 +35,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '*/src/Entity/*',
         ],
         ChangeSwitchToMatchRector::class,
-        ReadOnlyPropertyRector::class,
+        ReadOnlyPropertyRector::class => [
+            'core-bundle/src/DependencyInjection/Filesystem/FilesystemConfiguration.php',
+            'core-bundle/src/Security/Exception/LockedException.php',
+            'core-bundle/src/Security/Authentication/Token/FrontendPreviewToken.php',
+        ],
     ]);
 
     $services = $containerConfigurator->services();

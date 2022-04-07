@@ -21,7 +21,7 @@ use Symfony\Component\Filesystem\Path;
  */
 class InitializeApplicationListener
 {
-    public function __construct(private string $projectDir)
+    public function __construct(private readonly string $projectDir)
     {
     }
 

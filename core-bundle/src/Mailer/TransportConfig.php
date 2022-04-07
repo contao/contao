@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Mailer;
 
 final class TransportConfig
 {
-    public function __construct(private string $name, private ?string $from = null)
+    public function __construct(private readonly string $name, private readonly ?string $from = null)
     {
     }
 

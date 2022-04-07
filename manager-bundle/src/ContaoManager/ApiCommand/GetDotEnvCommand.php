@@ -28,7 +28,7 @@ class GetDotEnvCommand extends Command
     protected static $defaultName = 'dot-env:get';
     protected static $defaultDescription = 'Reads a parameter from the .env file.';
 
-    private string $projectDir;
+    private readonly string $projectDir;
 
     public function __construct(Application $application)
     {

@@ -22,7 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class Version447Update extends AbstractMigration
 {
-    public function __construct(private Connection $connection, private TranslatorInterface $translator)
+    public function __construct(private readonly Connection $connection, private readonly TranslatorInterface $translator)
     {
     }
 

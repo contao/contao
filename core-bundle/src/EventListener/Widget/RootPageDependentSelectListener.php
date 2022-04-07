@@ -22,8 +22,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectListener
 {
-    public function __construct(private Connection $connection, private TranslatorInterface $translator, private ContaoCsrfTokenManager $csrfTokenManager)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly TranslatorInterface $translator,
+        private readonly ContaoCsrfTokenManager $csrfTokenManager
+    ) {
     }
 
     /**

@@ -25,7 +25,7 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
  */
 class RememberMeRepository extends ServiceEntityRepository
 {
-    private Connection $connection;
+    private readonly Connection $connection;
 
     public function __construct(ManagerRegistry $registry)
     {

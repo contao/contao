@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Migration;
 
 final class MigrationResult
 {
-    public function __construct(private bool $successful, private string $message)
+    public function __construct(private readonly bool $successful, private readonly string $message)
     {
     }
 

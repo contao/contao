@@ -41,11 +41,11 @@ class ImageResult
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(
-        private ContainerInterface $locator,
-        private string $projectDir,
-        private string|ImageInterface $filePathOrImageInterface,
-        private array|int|PictureConfiguration|string|null $sizeConfiguration = null,
-        private ?ResizeOptions $resizeOptions = null
+        private readonly ContainerInterface $locator,
+        private readonly string $projectDir,
+        private readonly string|ImageInterface $filePathOrImageInterface,
+        private readonly array|int|PictureConfiguration|string|null $sizeConfiguration = null,
+        private readonly ?ResizeOptions $resizeOptions = null
     ) {
     }
 

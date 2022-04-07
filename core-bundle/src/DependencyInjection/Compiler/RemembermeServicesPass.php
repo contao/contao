@@ -24,7 +24,7 @@ class RemembermeServicesPass implements CompilerPassInterface
     final public const OVERRIDE_PREFIX = 'security.authentication.rememberme.services.simplehash';
     final public const TEMPLATE_ID = 'contao.security.expiring_token_based_remember_me_services';
 
-    public function __construct(private string $firewallName)
+    public function __construct(private readonly string $firewallName)
     {
     }
 

@@ -33,9 +33,9 @@ class InstallTool
      */
     public function __construct(
         private Connection $connection,
-        private string $projectDir,
-        private LoggerInterface $logger,
-        private MigrationCollection $migrations
+        private readonly string $projectDir,
+        private readonly LoggerInterface $logger,
+        private readonly MigrationCollection $migrations
     ) {
     }
 

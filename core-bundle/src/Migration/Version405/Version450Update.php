@@ -21,7 +21,7 @@ use Doctrine\DBAL\Connection;
  */
 class Version450Update extends AbstractMigration
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 

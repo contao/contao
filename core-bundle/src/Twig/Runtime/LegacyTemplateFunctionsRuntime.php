@@ -29,8 +29,11 @@ final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(private RequestStack $requestStack, private ContaoFramework $framework, private ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly ContaoFramework $framework,
+        private readonly ScopeMatcher $scopeMatcher
+    ) {
     }
 
     /**

@@ -21,7 +21,7 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(private InsertTagParser $insertTagParser)
+    public function __construct(private readonly InsertTagParser $insertTagParser)
     {
     }
 

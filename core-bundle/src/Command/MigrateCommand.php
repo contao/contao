@@ -39,14 +39,14 @@ class MigrateCommand extends Command
     private ?SymfonyStyle $io = null;
 
     public function __construct(
-        private MigrationCollection $migrations,
-        private FileLocator $fileLocator,
-        private string $projectDir,
-        private ContaoFramework $framework,
-        private BackupManager $backupManager,
-        private SchemaProvider $schemaProvider,
-        private MysqlInnodbRowSizeCalculator $rowSizeCalculator,
-        private ?Installer $installer = null
+        private readonly MigrationCollection $migrations,
+        private readonly FileLocator $fileLocator,
+        private readonly string $projectDir,
+        private readonly ContaoFramework $framework,
+        private readonly BackupManager $backupManager,
+        private readonly SchemaProvider $schemaProvider,
+        private readonly MysqlInnodbRowSizeCalculator $rowSizeCalculator,
+        private readonly ?Installer $installer = null
     ) {
         parent::__construct();
     }

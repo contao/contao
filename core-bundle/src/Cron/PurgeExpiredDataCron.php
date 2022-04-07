@@ -20,7 +20,7 @@ use Doctrine\DBAL\Types\Types;
 
 class PurgeExpiredDataCron
 {
-    public function __construct(private ContaoFramework $framework, private Connection $connection)
+    public function __construct(private readonly ContaoFramework $framework, private readonly Connection $connection)
     {
     }
 

@@ -17,7 +17,7 @@ class MigrationCollection
     /**
      * @param iterable<MigrationInterface> $migrations
      */
-    public function __construct(private iterable $migrations)
+    public function __construct(private readonly iterable $migrations)
     {
     }
 

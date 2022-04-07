@@ -28,7 +28,7 @@ class SetDotEnvCommand extends Command
     protected static $defaultName = 'dot-env:set';
     protected static $defaultDescription = 'Writes a parameter to the .env file.';
 
-    private string $projectDir;
+    private readonly string $projectDir;
 
     public function __construct(Application $application)
     {

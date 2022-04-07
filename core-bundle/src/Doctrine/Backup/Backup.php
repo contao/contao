@@ -17,8 +17,8 @@ class Backup implements \Stringable
     final public const DATETIME_FORMAT = 'YmdHis';
     final public const VALID_BACKUP_NAME_REGEX = '@^[^/]*__(\d{4}\d{2}\d{2}\d{2}\d{2}\d{2})\.sql(\.gz)?$@';
 
-    private string $filename;
-    private \DateTimeInterface $createdAt;
+    private readonly string $filename;
+    private readonly \DateTimeInterface $createdAt;
     private int $size = 0;
 
     /**

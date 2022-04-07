@@ -41,12 +41,12 @@ use Twig\Error\Error;
 class PrettyErrorScreenListener
 {
     public function __construct(
-        private bool $prettyErrorScreens,
-        private Environment $twig,
-        private ContaoFramework $framework,
-        private Security $security,
-        private PageRegistry $pageRegistry,
-        private HttpKernelInterface $httpKernel
+        private readonly bool $prettyErrorScreens,
+        private readonly Environment $twig,
+        private readonly ContaoFramework $framework,
+        private readonly Security $security,
+        private readonly PageRegistry $pageRegistry,
+        private readonly HttpKernelInterface $httpKernel
     ) {
     }
 

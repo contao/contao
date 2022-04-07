@@ -33,10 +33,10 @@ class DebugContaoTwigCommand extends Command
     protected static $defaultDescription = 'Displays the Contao template hierarchy.';
 
     public function __construct(
-        private TemplateHierarchyInterface $hierarchy,
-        private ContaoFilesystemLoaderWarmer $cacheWarmer,
-        private ThemeNamespace $themeNamespace,
-        private string $projectDir
+        private readonly TemplateHierarchyInterface $hierarchy,
+        private readonly ContaoFilesystemLoaderWarmer $cacheWarmer,
+        private readonly ThemeNamespace $themeNamespace,
+        private readonly string $projectDir
     ) {
         parent::__construct();
     }

@@ -32,7 +32,7 @@ class FilesyncCommand extends Command
     protected static $defaultName = 'contao:filesync';
     protected static $defaultDescription = 'Synchronizes the registered DBAFS with the virtual filesystem.';
 
-    public function __construct(private DbafsManager $dbafsManager)
+    public function __construct(private readonly DbafsManager $dbafsManager)
     {
         parent::__construct();
     }

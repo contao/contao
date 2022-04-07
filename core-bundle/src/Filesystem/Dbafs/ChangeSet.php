@@ -44,10 +44,10 @@ class ChangeSet
      * @internal
      */
     public function __construct(
-        private array $itemsToCreate,
-        private array $itemsToUpdate,
-        private array $itemsToDelete,
-        private array $lastModifiedUpdates = []
+        private readonly array $itemsToCreate,
+        private readonly array $itemsToUpdate,
+        private readonly array $itemsToDelete,
+        private readonly array $lastModifiedUpdates = []
     ) {
     }
 

@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Security;
  */
 class PageAccessListener
 {
-    public function __construct(private ContaoFramework $framework, private Security $security)
+    public function __construct(private readonly ContaoFramework $framework, private readonly Security $security)
     {
     }
 

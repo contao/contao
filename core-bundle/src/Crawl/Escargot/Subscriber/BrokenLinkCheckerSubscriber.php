@@ -38,7 +38,7 @@ class BrokenLinkCheckerSubscriber implements EscargotSubscriberInterface, Escarg
 
     private array $stats = ['ok' => 0, 'error' => 0];
 
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 

@@ -28,10 +28,10 @@ class FrontendPreviewAuthenticator
      * @internal Do not inherit from this class; decorate the "contao.security.frontend_preview_authenticator" service instead
      */
     public function __construct(
-        private Security $security,
-        private SessionInterface $session,
-        private UserProviderInterface $userProvider,
-        private ?LoggerInterface $logger = null
+        private readonly Security $security,
+        private readonly SessionInterface $session,
+        private readonly UserProviderInterface $userProvider,
+        private readonly ?LoggerInterface $logger = null
     ) {
     }
 

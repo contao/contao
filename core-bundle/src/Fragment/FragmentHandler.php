@@ -28,11 +28,11 @@ class FragmentHandler extends BaseFragmentHandler
      * @internal Do not inherit from this class; decorate the "contao.fragment.handler" service instead
      */
     public function __construct(
-        private ContainerInterface $renderers,
-        private BaseFragmentHandler $fragmentHandler,
+        private readonly ContainerInterface $renderers,
+        private readonly BaseFragmentHandler $fragmentHandler,
         RequestStack $requestStack,
-        private FragmentRegistryInterface $fragmentRegistry,
-        private ContainerInterface $preHandlers,
+        private readonly FragmentRegistryInterface $fragmentRegistry,
+        private readonly ContainerInterface $preHandlers,
         bool $debug = false
     ) {
         parent::__construct($requestStack, [], $debug);

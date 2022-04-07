@@ -45,18 +45,18 @@ class ResizeImagesCommand extends Command
     protected static $defaultName = 'contao:resize-images';
     protected static $defaultDescription = 'Resizes deferred images that have not been processed yet.';
 
-    private ?DeferredResizerInterface $resizer;
-    private Filesystem $filesystem;
-    private int $terminalWidth;
+    private readonly ?DeferredResizerInterface $resizer;
+    private readonly Filesystem $filesystem;
+    private readonly int $terminalWidth;
     private ?SymfonyStyle $io = null;
     private ?ConsoleSectionOutput $tableOutput = null;
     private ?Table $table = null;
 
     public function __construct(
-        private ImageFactoryInterface $imageFactory,
+        private readonly ImageFactoryInterface $imageFactory,
         ResizerInterface $resizer,
-        private string $targetDir,
-        private DeferredImageStorageInterface $storage,
+        private readonly string $targetDir,
+        private readonly DeferredImageStorageInterface $storage,
         Filesystem $filesystem = null
     ) {
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;

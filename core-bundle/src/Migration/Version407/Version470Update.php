@@ -24,10 +24,10 @@ use Symfony\Component\Filesystem\Path;
 class Version470Update extends AbstractMigration
 {
     public function __construct(
-        private Connection $connection,
-        private Filesystem $filesystem,
-        private string $uploadPath,
-        private string $projectDir
+        private readonly Connection $connection,
+        private readonly Filesystem $filesystem,
+        private readonly string $uploadPath,
+        private readonly string $projectDir
     ) {
     }
 

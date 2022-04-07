@@ -27,7 +27,7 @@ class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.logout_success_handler" service instead
      */
-    public function __construct(HttpUtils $httpUtils, private ScopeMatcher $scopeMatcher)
+    public function __construct(HttpUtils $httpUtils, private readonly ScopeMatcher $scopeMatcher)
     {
         parent::__construct($httpUtils);
     }

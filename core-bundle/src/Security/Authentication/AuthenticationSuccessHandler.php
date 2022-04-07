@@ -42,10 +42,10 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
      */
     public function __construct(
-        private ContaoFramework $framework,
-        private TrustedDeviceManagerInterface $trustedDeviceManager,
-        private FirewallMap $firewallMap,
-        private ?LoggerInterface $logger = null
+        private readonly ContaoFramework $framework,
+        private readonly TrustedDeviceManagerInterface $trustedDeviceManager,
+        private readonly FirewallMap $firewallMap,
+        private readonly ?LoggerInterface $logger = null
     ) {
     }
 

@@ -20,7 +20,7 @@ class FilesystemItemIterator implements \IteratorAggregate
     /**
      * @param iterable<FilesystemItem> $listing
      */
-    public function __construct(private iterable $listing)
+    public function __construct(private readonly iterable $listing)
     {
     }
 

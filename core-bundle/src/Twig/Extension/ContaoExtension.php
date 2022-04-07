@@ -43,7 +43,7 @@ final class ContaoExtension extends AbstractExtension
 {
     private array $contaoEscaperFilterRules = [];
 
-    public function __construct(private Environment $environment, private TemplateHierarchyInterface $hierarchy)
+    public function __construct(private readonly Environment $environment, private readonly TemplateHierarchyInterface $hierarchy)
     {
         $contaoEscaper = new ContaoEscaper();
 

@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DcaGenerator implements GeneratorInterface
 {
-    public function __construct(private FileManager $fileManager, private string $projectDir)
+    public function __construct(private readonly FileManager $fileManager, private readonly string $projectDir)
     {
     }
 

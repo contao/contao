@@ -31,7 +31,7 @@ class FilesystemConfiguration
 {
     private AdapterDefinitionFactory $adapterDefinitionFactory;
 
-    public function __construct(private ContainerBuilder $container)
+    public function __construct(private readonly ContainerBuilder $container)
     {
         $this->adapterDefinitionFactory = new AdapterDefinitionFactory();
     }

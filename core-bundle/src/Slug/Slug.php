@@ -22,7 +22,7 @@ class Slug
     /**
      * @internal Do not inherit from this class; decorate the "contao.slug" service instead
      */
-    public function __construct(private SlugGeneratorInterface $slugGenerator, private ContaoFramework $framework)
+    public function __construct(private readonly SlugGeneratorInterface $slugGenerator, private readonly ContaoFramework $framework)
     {
     }
 

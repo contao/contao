@@ -25,13 +25,13 @@ class TemplateOptionsListener
     /**
      * @var Adapter<Controller>
      */
-    private Adapter $controller;
+    private readonly Adapter $controller;
 
     public function __construct(
         ContaoFramework $framework,
-        private RequestStack $requestStack,
-        private string $templatePrefix,
-        private ?string $proxyClass = null
+        private readonly RequestStack $requestStack,
+        private readonly string $templatePrefix,
+        private readonly ?string $proxyClass = null
     ) {
         $controller = $framework->getAdapter(Controller::class);
 

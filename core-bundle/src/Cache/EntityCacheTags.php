@@ -35,9 +35,9 @@ class EntityCacheTags
     private array $classMetadata = [];
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private ?ResponseTagger $responseTagger = null,
-        private ?CacheInvalidator $cacheInvalidator = null
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ?ResponseTagger $responseTagger = null,
+        private readonly ?CacheInvalidator $cacheInvalidator = null
     ) {
     }
 

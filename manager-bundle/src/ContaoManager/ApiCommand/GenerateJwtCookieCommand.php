@@ -27,7 +27,7 @@ class GenerateJwtCookieCommand extends Command
     protected static $defaultName = 'jwt-cookie:generate';
     protected static $defaultDescription = 'Generates a JWT cookie for the preview entry point.';
 
-    private JwtManager $jwtManager;
+    private readonly JwtManager $jwtManager;
 
     public function __construct(Application $application, JwtManager $jwtManager = null)
     {

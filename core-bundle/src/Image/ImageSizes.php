@@ -31,10 +31,10 @@ class ImageSizes implements ResetInterface
      * @internal Do not inherit from this class; decorate the "contao.image.sizes" service instead
      */
     public function __construct(
-        private Connection $connection,
-        private EventDispatcherInterface $eventDispatcher,
-        private ContaoFramework $framework,
-        private TranslatorInterface $translator
+        private readonly Connection $connection,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ContaoFramework $framework,
+        private readonly TranslatorInterface $translator
     ) {
     }
 

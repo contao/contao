@@ -25,7 +25,7 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.picker.builder" service instead
      */
-    public function __construct(private FactoryInterface $menuFactory, private RouterInterface $router)
+    public function __construct(private readonly FactoryInterface $menuFactory, private readonly RouterInterface $router)
     {
     }
 

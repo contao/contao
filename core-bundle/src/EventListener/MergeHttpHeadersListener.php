@@ -25,7 +25,7 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class MergeHttpHeadersListener implements ResetInterface
 {
-    private HeaderStorageInterface $headerStorage;
+    private readonly HeaderStorageInterface $headerStorage;
     private array $headers = [];
 
     private array $multiHeaders = [
@@ -36,7 +36,7 @@ class MergeHttpHeadersListener implements ResetInterface
         'cache-control',
     ];
 
-    public function __construct(private ContaoFramework $framework, HeaderStorageInterface $headerStorage = null)
+    public function __construct(private readonly ContaoFramework $framework, HeaderStorageInterface $headerStorage = null)
     {
         $this->headerStorage = $headerStorage ?: new NativeHeaderStorage();
     }

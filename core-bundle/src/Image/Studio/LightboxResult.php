@@ -29,11 +29,11 @@ class LightboxResult
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(
-        private ContainerInterface $locator,
+        private readonly ContainerInterface $locator,
         string|ImageInterface|null $filePathOrImage,
-        private ?string $url,
+        private readonly ?string $url,
         array|PictureConfiguration|int|string|null $sizeConfiguration = null,
-        private ?string $groupIdentifier = null,
+        private readonly ?string $groupIdentifier = null,
         ResizeOptions $resizeOptions = null
     ) {
         if (1 !== \count(array_filter([$filePathOrImage, $url]))) {

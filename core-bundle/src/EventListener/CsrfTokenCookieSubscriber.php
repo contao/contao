@@ -29,8 +29,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private ContaoCsrfTokenManager $tokenManager, private MemoryTokenStorage $tokenStorage, private string $cookiePrefix = 'csrf_')
-    {
+    public function __construct(
+        private readonly ContaoCsrfTokenManager $tokenManager,
+        private readonly MemoryTokenStorage $tokenStorage,
+        private readonly string $cookiePrefix = 'csrf_'
+    ) {
     }
 
     /**

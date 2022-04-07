@@ -29,7 +29,7 @@ class JwtManager
 {
     final public const COOKIE_NAME = 'contao_settings';
 
-    private Configuration $config;
+    private readonly Configuration $config;
 
     public function __construct(string $projectDir, Filesystem $filesystem = null, Configuration $config = null)
     {

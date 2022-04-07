@@ -21,8 +21,8 @@ use Symfony\Component\Yaml\Yaml;
  */
 class ManagerConfig
 {
-    private string $configFile;
-    private Filesystem $filesystem;
+    private readonly string $configFile;
+    private readonly Filesystem $filesystem;
     private ?array $config = null;
 
     public function __construct(string $projectDir, Filesystem $filesystem = null)

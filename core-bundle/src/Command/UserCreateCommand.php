@@ -39,12 +39,12 @@ class UserCreateCommand extends Command
     protected static $defaultName = 'contao:user:create';
     protected static $defaultDescription = 'Create a new Contao back end user.';
 
-    private array $locales;
+    private readonly array $locales;
 
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private PasswordHasherFactoryInterface $passwordHasherFactory,
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly PasswordHasherFactoryInterface $passwordHasherFactory,
         Locales $locales
     ) {
         $this->locales = $locales->getEnabledLocaleIds();

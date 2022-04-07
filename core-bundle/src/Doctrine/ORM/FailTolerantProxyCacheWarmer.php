@@ -18,7 +18,7 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
 {
-    public function __construct(private CacheWarmerInterface $inner, private Connection $connection)
+    public function __construct(private readonly CacheWarmerInterface $inner, private readonly Connection $connection)
     {
     }
 

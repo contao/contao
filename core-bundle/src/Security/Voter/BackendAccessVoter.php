@@ -34,7 +34,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
     private array $pagePermissionsCache = [];
 
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 

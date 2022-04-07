@@ -49,7 +49,7 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
     ];
     private array $removeFromDenyList = [];
 
-    public function __construct(private array $allowList = [])
+    public function __construct(private readonly array $allowList = [])
     {
     }
 

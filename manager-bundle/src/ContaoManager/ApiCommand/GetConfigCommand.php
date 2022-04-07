@@ -26,7 +26,7 @@ class GetConfigCommand extends Command
     protected static $defaultName = 'config:get';
     protected static $defaultDescription = 'Gets the Contao Manager configuration as JSON string.';
 
-    private ManagerConfig $managerConfig;
+    private readonly ManagerConfig $managerConfig;
 
     public function __construct(Application $application)
     {

@@ -32,8 +32,11 @@ class Cron
      * @param \Closure():CronJobRepository      $repository
      * @param \Closure():EntityManagerInterface $entityManager
      */
-    public function __construct(private \Closure $repository, private \Closure $entityManager, private ?LoggerInterface $logger = null)
-    {
+    public function __construct(
+        private readonly \Closure $repository,
+        private readonly \Closure $entityManager,
+        private readonly ?LoggerInterface $logger = null
+    ) {
     }
 
     public function addCronJob(CronJob $cronjob): void

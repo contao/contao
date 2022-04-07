@@ -38,7 +38,7 @@ use Symfony\Component\Filesystem\Path;
  */
 class FigureBuilder
 {
-    private Filesystem $filesystem;
+    private readonly Filesystem $filesystem;
     private ?InvalidResourceException $lastException = null;
 
     /**
@@ -127,10 +127,10 @@ class FigureBuilder
      * @param array<string> $validExtensions
      */
     public function __construct(
-        private ContainerInterface $locator,
-        private string $projectDir,
-        private string $uploadPath,
-        private array $validExtensions
+        private readonly ContainerInterface $locator,
+        private readonly string $projectDir,
+        private readonly string $uploadPath,
+        private readonly array $validExtensions
     ) {
         $this->filesystem = new Filesystem();
     }

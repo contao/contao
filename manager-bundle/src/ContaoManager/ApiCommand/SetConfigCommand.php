@@ -27,7 +27,7 @@ class SetConfigCommand extends Command
     protected static $defaultName = 'config:set';
     protected static $defaultDescription = 'Sets the Contao Manager configuration from a JSON string.';
 
-    private ManagerConfig $managerConfig;
+    private readonly ManagerConfig $managerConfig;
 
     public function __construct(Application $application)
     {

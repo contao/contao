@@ -33,12 +33,12 @@ class TokenChecker
      * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
      */
     public function __construct(
-        private RequestStack $requestStack,
-        private FirewallMapInterface $firewallMap,
-        private TokenStorageInterface $tokenStorage,
-        private SessionInterface $session,
-        private AuthenticationTrustResolverInterface $trustResolver,
-        private VoterInterface $roleVoter
+        private readonly RequestStack $requestStack,
+        private readonly FirewallMapInterface $firewallMap,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly SessionInterface $session,
+        private readonly AuthenticationTrustResolverInterface $trustResolver,
+        private readonly VoterInterface $roleVoter
     ) {
     }
 

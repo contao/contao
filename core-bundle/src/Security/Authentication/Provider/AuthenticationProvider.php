@@ -45,15 +45,15 @@ class AuthenticationProvider extends DaoAuthenticationProvider
      */
     public function __construct(
         UserProviderInterface $userProvider,
-        private UserCheckerInterface $userChecker,
-        private string $providerKey,
+        private readonly UserCheckerInterface $userChecker,
+        private readonly string $providerKey,
         PasswordHasherFactoryInterface $passwordHasherFactory,
-        private ContaoFramework $framework,
-        private AuthenticationProviderInterface $twoFactorAuthenticationProvider,
-        private AuthenticationHandlerInterface $twoFactorAuthenticationHandler,
-        private AuthenticationContextFactoryInterface $authenticationContextFactory,
-        private RequestStack $requestStack,
-        private TrustedDeviceManagerInterface $trustedDeviceManager
+        private readonly ContaoFramework $framework,
+        private readonly AuthenticationProviderInterface $twoFactorAuthenticationProvider,
+        private readonly AuthenticationHandlerInterface $twoFactorAuthenticationHandler,
+        private readonly AuthenticationContextFactoryInterface $authenticationContextFactory,
+        private readonly RequestStack $requestStack,
+        private readonly TrustedDeviceManagerInterface $trustedDeviceManager
     ) {
         parent::__construct($userProvider, $userChecker, $providerKey, $passwordHasherFactory, false);
     }

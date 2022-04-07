@@ -28,7 +28,7 @@ class RemoveDotEnvCommand extends Command
     protected static $defaultName = 'dot-env:remove';
     protected static $defaultDescription = 'Removes a parameter from the .env file.';
 
-    private string $projectDir;
+    private readonly string $projectDir;
 
     public function __construct(Application $application)
     {
