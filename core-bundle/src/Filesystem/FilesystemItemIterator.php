@@ -113,7 +113,7 @@ class FilesystemItemIterator implements \IteratorAggregate
                 /** @phpstan-ignore-next-line */
                 $type = \is_object($item) ? \get_class($item) : \gettype($item);
 
-                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', __CLASS__, FilesystemItem::class, $type));
+                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', self::class, FilesystemItem::class, $type));
             }
 
             yield $item;

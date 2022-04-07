@@ -40,7 +40,7 @@ class SymlinksCommand extends Command
 
     private array $rows = [];
     private string $projectDir;
-    private ?string $webDir;
+    private ?string $webDir = null;
     private string $uploadPath;
     private string $logsDir;
     private ResourceFinderInterface $resourceFinder;

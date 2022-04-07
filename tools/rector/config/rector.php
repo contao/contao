@@ -3,8 +3,12 @@
 declare(strict_types=1);
 
 use Rector\Core\Configuration\Option;
+use Rector\Php55\Rector\Class_\ClassConstantToSelfClassRector;
+use Rector\Php73\Rector\FuncCall\ArrayKeyFirstLastRector;
+use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
 use Rector\Php74\Rector\Property\TypedPropertyRector;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
+use Rector\Php80\Rector\Class_\StringableForToStringRector;
 use Rector\Php80\Rector\FunctionLike\UnionTypesRector;
 use Rector\Php80\Rector\Identical\StrEndsWithRector;
 use Rector\Php80\Rector\Identical\StrStartsWithRector;
@@ -31,10 +35,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     ]);
 
     $services = $containerConfigurator->services();
+    $services->set(ArrayKeyFirstLastRector::class);
+    $services->set(ClassConstantToSelfClassRector::class);
     $services->set(FinalizePublicClassConstantRector::class);
     $services->set(IntersectionTypesRector::class);
     $services->set(RemoveUnusedVariableInCatchRector::class);
+    $services->set(RestoreDefaultNullToNullableTypePropertyRector::class);
     $services->set(ReturnNeverTypeRector::class);
+    $services->set(StringableForToStringRector::class);
     $services->set(StrContainsRector::class);
     $services->set(StrEndsWithRector::class);
     $services->set(StrStartsWithRector::class);
