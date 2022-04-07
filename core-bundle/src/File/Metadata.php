@@ -23,12 +23,12 @@ namespace Contao\CoreBundle\File;
  */
 class Metadata
 {
-    public const VALUE_ALT = 'alt';
-    public const VALUE_CAPTION = 'caption';
-    public const VALUE_TITLE = 'title';
-    public const VALUE_URL = 'link';
-    public const VALUE_UUID = 'uuid';
-    public const VALUE_LICENSE = 'license';
+    final public const VALUE_ALT = 'alt';
+    final public const VALUE_CAPTION = 'caption';
+    final public const VALUE_TITLE = 'title';
+    final public const VALUE_URL = 'link';
+    final public const VALUE_UUID = 'uuid';
+    final public const VALUE_LICENSE = 'license';
 
     /**
      * Key-value pairs of metadata.

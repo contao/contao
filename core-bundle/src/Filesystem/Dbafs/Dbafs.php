@@ -36,8 +36,8 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class Dbafs implements DbafsInterface, ResetInterface
 {
-    public const FILE_MARKER_EXCLUDED = '.nosync';
-    public const FILE_MARKER_PUBLIC = '.public';
+    final public const FILE_MARKER_EXCLUDED = '.nosync';
+    final public const FILE_MARKER_PUBLIC = '.public';
 
     private const RESOURCE_FILE = ChangeSet::TYPE_FILE;
     private const RESOURCE_DIRECTORY = ChangeSet::TYPE_DIRECTORY;

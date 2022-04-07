@@ -31,7 +31,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
      * This should be a firewall configuration, but we would have to override
      * the firewall factory for that.
      */
-    public const EXPIRATION = 60;
+    final public const EXPIRATION = 60;
 
     private RememberMeRepository $repository;
     private string $secret;

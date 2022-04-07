@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class JwtManager
 {
-    public const COOKIE_NAME = 'contao_settings';
+    final public const COOKIE_NAME = 'contao_settings';
 
     private Configuration $config;
 

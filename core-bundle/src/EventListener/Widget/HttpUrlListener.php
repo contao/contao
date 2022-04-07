@@ -22,7 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class HttpUrlListener
 {
-    public const RGXP_NAME = 'httpurl';
+    final public const RGXP_NAME = 'httpurl';
 
     private TranslatorInterface $translator;
 
