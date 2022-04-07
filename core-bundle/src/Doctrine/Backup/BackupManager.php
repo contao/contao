@@ -87,7 +87,7 @@ class BackupManager
         foreach ($this->backupsStorage->listContents('', false, VirtualFilesystemInterface::BYPASS_DBAFS)->files() as $file) {
             try {
                 $backup = new Backup($file->getPath());
-            } catch (BackupManagerException $e) {
+            } catch (BackupManagerException) {
                 continue;
             }
 
@@ -155,7 +155,7 @@ class BackupManager
     {
         try {
             $backup->setSize($this->backupsStorage->getFileSize($backup->getFilename()));
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $backup->setSize(0);
         }
     }

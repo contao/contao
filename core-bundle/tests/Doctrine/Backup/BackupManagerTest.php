@@ -219,7 +219,7 @@ class BackupManagerTest extends ContaoTestCase
 
         try {
             $manager->create($config);
-        } catch (BackupManagerException $exception) {
+        } catch (BackupManagerException) {
             // irrelevant for this test
         }
     }

@@ -102,7 +102,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
 
         try {
             parent::addPath($path, $namespace);
-        } catch (LoaderError $error) {
+        } catch (LoaderError) {
             return;
         }
 
@@ -128,7 +128,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
 
         try {
             parent::prependPath($path, $namespace);
-        } catch (LoaderError $error) {
+        } catch (LoaderError) {
             // Ignore
         }
     }
@@ -415,7 +415,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         // TODO: remove try/catch block in Contao 5.0
         try {
             $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
-        } catch (InvalidThemePathException $e) {
+        } catch (InvalidThemePathException) {
             $slug = false;
         }
 

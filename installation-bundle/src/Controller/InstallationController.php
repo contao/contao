@@ -305,7 +305,7 @@ class InstallationController implements ContainerAwareInterface
 
         try {
             $databaseVersion = $connection->getWrappedConnection()->getServerVersion();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable) {
             // Ignore server version detection errors
         }
 

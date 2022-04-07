@@ -157,7 +157,7 @@ class RouteProvider extends AbstractPageRouteProvider
             if (!$page->rootId) {
                 return;
             }
-        } catch (NoRootPageFoundException $e) {
+        } catch (NoRootPageFoundException) {
             return;
         }
 

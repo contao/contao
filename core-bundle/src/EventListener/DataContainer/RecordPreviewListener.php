@@ -61,7 +61,7 @@ class RecordPreviewListener
             ;
 
             $preview = $this->compilePreview($dc, $row);
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             $preview = '';
         }
 

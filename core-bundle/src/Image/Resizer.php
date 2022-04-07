@@ -61,7 +61,7 @@ class Resizer extends DeferredResizer
 
         try {
             $imagine->create(new Box(1, 1))->get($format);
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             return false;
         }
 

@@ -42,7 +42,7 @@ class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
         // prevent a DBAL exception during the automatic version detection
         try {
             $this->connection->getDatabasePlatform();
-        } catch (DoctrineDbalException | \mysqli_sql_exception $e) {
+        } catch (DoctrineDbalException | \mysqli_sql_exception) {
             return [];
         }
 

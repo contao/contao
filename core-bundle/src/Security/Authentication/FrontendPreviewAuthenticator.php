@@ -90,7 +90,7 @@ class FrontendPreviewAuthenticator
             if (!$frontendUser instanceof FrontendUser) {
                 throw new UsernameNotFoundException('User is not a front end user');
             }
-        } catch (UsernameNotFoundException $e) {
+        } catch (UsernameNotFoundException) {
             if (null !== $this->logger) {
                 $this->logger->info(
                     sprintf('Could not find a front end user with the username "%s"', $username),
