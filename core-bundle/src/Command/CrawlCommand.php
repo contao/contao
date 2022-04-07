@@ -94,7 +94,7 @@ class CrawlCommand extends Command
             } else {
                 $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers);
             }
-        } catch (InvalidJobIdException $e) {
+        } catch (InvalidJobIdException) {
             $io->error('Could not find the given job ID.');
 
             return 1;

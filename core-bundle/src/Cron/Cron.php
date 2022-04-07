@@ -57,8 +57,9 @@ class Cron
         /** @var EntityManagerInterface $entityManager */
         $entityManager = ($this->entityManager)();
 
-        /** @var array<CronJob> */
+        /** @var array<CronJob> $cronJobsToBeRun */
         $cronJobsToBeRun = [];
+
         $now = new \DateTimeImmutable();
 
         try {

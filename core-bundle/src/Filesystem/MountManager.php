@@ -69,7 +69,7 @@ class MountManager
         try {
             /** @var FilesystemAdapter $adapter */
             [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             // Tolerate non-existing mount-points
             return false;
         }
@@ -93,7 +93,7 @@ class MountManager
         try {
             /** @var FilesystemAdapter $adapter */
             [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             // Tolerate non-existing mount-points
             return false;
         }

@@ -88,7 +88,7 @@ class InstallTool
             $this->connection->executeQuery('SHOW TABLES');
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception) {
         }
 
         if (null === $name) {
