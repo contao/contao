@@ -30,7 +30,7 @@ class RouteProvider extends AbstractPageRouteProvider
         $pathInfo = rawurldecode($request->getPathInfo());
 
         // The request string must not contain "auto_item" (see #4012)
-        if (false !== strpos($pathInfo, '/auto_item/')) {
+        if (str_contains($pathInfo, '/auto_item/')) {
             return new RouteCollection();
         }
 
@@ -230,8 +230,8 @@ class RouteProvider extends AbstractPageRouteProvider
                 $nameA = array_search($a, $routes, true);
                 $nameB = array_search($b, $routes, true);
 
-                $fallbackA = 0 === substr_compare($nameA, '.fallback', -9);
-                $fallbackB = 0 === substr_compare($nameB, '.fallback', -9);
+                $fallbackA = str_ends_with($nameA, '.fallback');
+                $fallbackB = str_ends_with($nameB, '.fallback');
 
                 if ($fallbackA && !$fallbackB) {
                     return 1;

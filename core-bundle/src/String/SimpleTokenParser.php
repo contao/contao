@@ -70,22 +70,22 @@ class SimpleTokenParser implements LoggerAwareInterface
             $current = $stack[\count($stack) - 1];
             $currentIf = $ifStack[\count($ifStack) - 1];
 
-            if (0 === strncmp($decodedTag, '{if ', 4)) {
+            if (str_starts_with($decodedTag, '{if ')) {
                 $expression = $this->evaluateExpression(substr($decodedTag, 4, -1), $tokens);
                 $stack[] = $current && $expression;
                 $ifStack[] = $expression;
-            } elseif (0 === strncmp($decodedTag, '{elseif ', 8)) {
+            } elseif (str_starts_with($decodedTag, '{elseif ')) {
                 $expression = $this->evaluateExpression(substr($decodedTag, 8, -1), $tokens);
                 array_pop($stack);
                 array_pop($ifStack);
                 $stack[] = !$currentIf && $stack[\count($stack) - 1] && $expression;
                 $ifStack[] = $currentIf || $expression;
-            } elseif (0 === strncmp($decodedTag, '{else}', 6)) {
+            } elseif (str_starts_with($decodedTag, '{else}')) {
                 array_pop($stack);
                 array_pop($ifStack);
                 $stack[] = !$currentIf && $stack[\count($stack) - 1];
                 $ifStack[] = true;
-            } elseif (0 === strncmp($decodedTag, '{endif}', 7)) {
+            } elseif (str_starts_with($decodedTag, '{endif}')) {
                 array_pop($stack);
                 array_pop($ifStack);
             } elseif ($current) {

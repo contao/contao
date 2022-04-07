@@ -83,13 +83,13 @@ class DotenvDumper
 
         $quotes = "'";
 
-        if (false !== strpos($value, "'")) {
+        if (str_contains($value, "'")) {
             $quotes = '"';
         }
 
         $mapper = [$quotes => '\\'.$quotes];
 
-        if ('"' === $quotes && false !== strpos($value, '$')) {
+        if ('"' === $quotes && str_contains($value, '$')) {
             $mapper['$'] = '\$';
         }
 

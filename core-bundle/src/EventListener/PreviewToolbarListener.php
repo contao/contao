@@ -69,7 +69,7 @@ class PreviewToolbarListener
         // Only inject the toolbar into HTML responses
         if (
             'html' !== $request->getRequestFormat()
-            || false === strpos((string) $response->headers->get('Content-Type'), 'text/html')
+            || !str_contains((string) $response->headers->get('Content-Type'), 'text/html')
             || false !== stripos((string) $response->headers->get('Content-Disposition'), 'attachment;')
         ) {
             return;

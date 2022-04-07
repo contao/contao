@@ -145,7 +145,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
 
     private function isContaoDomain(?string $domain): bool
     {
-        return 0 === strncmp($domain ?? '', 'contao_', 7);
+        return str_starts_with($domain ?? '', 'contao_');
     }
 
     private function loadMessage(string $id, string $domain): ?string

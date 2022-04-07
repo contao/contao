@@ -253,14 +253,14 @@ class BackupManager
             }
 
             // Ignore comments
-            if (0 === strpos($line, '--')) {
+            if (str_starts_with($line, '--')) {
                 continue;
             }
 
             $currentQuery .= $line;
 
             // Current query ends
-            if (';' === substr($currentQuery, -1)) {
+            if (str_ends_with($currentQuery, ';')) {
                 $this->executeWrappedQuery($currentQuery);
                 $currentQuery = '';
             }

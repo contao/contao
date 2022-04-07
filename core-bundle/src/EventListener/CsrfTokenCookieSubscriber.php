@@ -189,6 +189,6 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             return false;
         }
 
-        return 0 === strpos($key, $this->cookiePrefix) && preg_match('/^[a-z0-9_-]+$/i', $value);
+        return str_starts_with($key, $this->cookiePrefix) && preg_match('/^[a-z0-9_-]+$/i', $value);
     }
 }

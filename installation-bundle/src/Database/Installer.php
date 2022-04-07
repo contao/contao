@@ -118,24 +118,24 @@ class Installer
 
         foreach ($diff as $sql) {
             switch (true) {
-                case 0 === strncmp($sql, 'CREATE TABLE ', 13):
+                case str_starts_with($sql, 'CREATE TABLE '):
                     $return['CREATE'][md5($sql)] = $sql;
                     $order[] = md5($sql);
                     break;
 
-                case 0 === strncmp($sql, 'DROP TABLE ', 11):
+                case str_starts_with($sql, 'DROP TABLE '):
                     $return['DROP'][md5($sql)] = $sql;
                     $order[] = md5($sql);
                     break;
 
-                case 0 === strncmp($sql, 'CREATE INDEX ', 13):
-                case 0 === strncmp($sql, 'CREATE UNIQUE INDEX ', 20):
-                case 0 === strncmp($sql, 'CREATE FULLTEXT INDEX ', 22):
+                case str_starts_with($sql, 'CREATE INDEX '):
+                case str_starts_with($sql, 'CREATE UNIQUE INDEX '):
+                case str_starts_with($sql, 'CREATE FULLTEXT INDEX '):
                     $return['ALTER_ADD'][md5($sql)] = $sql;
                     $order[] = md5($sql);
                     break;
 
-                case 0 === strncmp($sql, 'DROP INDEX', 10):
+                case str_starts_with($sql, 'DROP INDEX'):
                     $return['ALTER_CHANGE'][md5($sql)] = $sql;
                     $order[] = md5($sql);
                     break;
@@ -150,18 +150,18 @@ class Installer
                         $command = $prefix.' '.$part;
 
                         switch (true) {
-                            case 0 === strncmp($part, 'DROP ', 5):
+                            case str_starts_with($part, 'DROP '):
                                 $return['ALTER_DROP'][md5($command)] = $command;
                                 $order[] = md5($command);
                                 break;
 
-                            case 0 === strncmp($part, 'ADD ', 4):
+                            case str_starts_with($part, 'ADD '):
                                 $return['ALTER_ADD'][md5($command)] = $command;
                                 $order[] = md5($command);
                                 break;
 
-                            case 0 === strncmp($part, 'CHANGE ', 7):
-                            case 0 === strncmp($part, 'RENAME ', 7):
+                            case str_starts_with($part, 'CHANGE '):
+                            case str_starts_with($part, 'RENAME '):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
                                 $order[] = md5($command);
                                 break;
@@ -206,7 +206,7 @@ class Installer
             $alterTables = [];
             $deleteIndexes = false;
 
-            if (0 !== strncmp($tableName, 'tl_', 3)) {
+            if (!str_starts_with($tableName, 'tl_')) {
                 continue;
             }
 

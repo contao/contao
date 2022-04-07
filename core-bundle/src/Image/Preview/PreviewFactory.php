@@ -456,7 +456,7 @@ class PreviewFactory
         $scaleFactor = 1;
 
         foreach (explode(',', $densities) as $density) {
-            if ('w' === substr(trim($density), -1)) {
+            if (str_ends_with(trim($density), 'w')) {
                 $widthDescriptor = max($widthDescriptor, (int) $density);
             } else {
                 $scaleFactor = max($scaleFactor, (float) $density);

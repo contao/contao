@@ -38,7 +38,7 @@ class CombinedFileDumper implements DumperInterface
      */
     public function setHeader(string $header): void
     {
-        if (0 !== strncmp($header, '<?php', 5)) {
+        if (!str_starts_with($header, '<?php')) {
             throw new \InvalidArgumentException('The file header must start with an opening PHP tag.');
         }
 

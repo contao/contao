@@ -259,8 +259,8 @@ class Route404Provider extends AbstractPageRouteProvider
                 $nameA = array_search($a, $routes, true);
                 $nameB = array_search($b, $routes, true);
 
-                $errorA = false !== strpos('.error_404', $nameA, -10);
-                $errorB = false !== strpos('.error_404', $nameB, -10);
+                $errorA = str_ends_with($nameA, '.error_404');
+                $errorB = str_ends_with($nameB, '.error_404');
 
                 if ($errorA && !$errorB) {
                     return 1;
@@ -270,8 +270,8 @@ class Route404Provider extends AbstractPageRouteProvider
                     return -1;
                 }
 
-                $localeA = '.locale' === substr($nameA, -7);
-                $localeB = '.locale' === substr($nameB, -7);
+                $localeA = str_ends_with($nameA, '.locale');
+                $localeB = str_ends_with($nameB, '.locale');
 
                 if ($localeA && !$localeB) {
                     return -1;

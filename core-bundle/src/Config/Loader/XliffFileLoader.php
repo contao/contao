@@ -198,7 +198,7 @@ class XliffFileLoader extends Loader
     {
         $value = str_replace("\n", '\n', $value);
 
-        if (false !== strpos($value, '\n')) {
+        if (str_contains($value, '\n')) {
             return '"'.str_replace(['$', '"'], ['\\$', '\\"'], $value).'"';
         }
 

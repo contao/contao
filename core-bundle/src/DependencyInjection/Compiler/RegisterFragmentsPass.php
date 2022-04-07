@@ -77,7 +77,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
             // element and a front end module), the first pass creates a child definition that
             // inherits all tags from the original. On the next run, the pass would pick up the
             // child definition and try to create duplicate fragments.
-            if (0 === strpos((string) $reference, 'contao.fragment._')) {
+            if (str_starts_with((string) $reference, 'contao.fragment._')) {
                 continue;
             }
 
@@ -194,7 +194,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $className = $definition->getClass();
         $className = ltrim(strrchr($className, '\\'), '\\');
 
-        if ('Controller' === substr($className, -10)) {
+        if (str_ends_with($className, 'Controller')) {
             $className = substr($className, 0, -10);
         }
 

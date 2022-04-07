@@ -37,7 +37,7 @@ class AbstractCandidates implements CandidatesInterface
 
     public function isCandidate($name): bool
     {
-        return 0 === strncmp($name, 'tl_page.', 8);
+        return str_starts_with($name, 'tl_page.');
     }
 
     public function restrictQuery($queryBuilder): void
@@ -104,7 +104,7 @@ class AbstractCandidates implements CandidatesInterface
                 $withoutSuffix = $withoutPrefix;
 
                 if ('' !== $suffix) {
-                    if (0 !== substr_compare($withoutPrefix, $suffix, -\strlen($suffix))) {
+                    if (!str_ends_with($withoutPrefix, $suffix)) {
                         continue;
                     }
 
