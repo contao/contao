@@ -143,12 +143,8 @@ class PageUrlListener
 
     /**
      * @Callback(table="tl_page", target="fields.urlSuffix.save")
-     *
-     * @param mixed $value
-     *
-     * @return mixed
      */
-    public function validateUrlSuffix($value, DataContainer $dc)
+    public function validateUrlSuffix(mixed $value, DataContainer $dc): mixed
     {
         if ('root' !== $dc->activeRecord->type || $dc->activeRecord->urlSuffix === $value) {
             return $value;

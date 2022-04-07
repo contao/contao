@@ -130,10 +130,8 @@ class FilesystemItemIteratorTest extends TestCase
 
     /**
      * @dataProvider provideInvalidItems
-     *
-     * @param mixed $item
      */
-    public function testEnsuresTypeSafetyWhenIterating($item, string $expectedType): void
+    public function testEnsuresTypeSafetyWhenIterating(mixed $item, string $expectedType): void
     {
         $iterator = new FilesystemItemIterator([$item]);
 

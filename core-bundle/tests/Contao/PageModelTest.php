@@ -297,11 +297,9 @@ class PageModelTest extends TestCase
     }
 
     /**
-     * @param bool|string $expectedLayout
-     *
      * @dataProvider layoutInheritanceParentPagesProvider
      */
-    public function testInheritingLayoutFromParentsInLoadDetails(array $parents, $expectedLayout): void
+    public function testInheritingLayoutFromParentsInLoadDetails(array $parents, bool|string $expectedLayout): void
     {
         $page = new PageModel();
         $page->pid = 42;

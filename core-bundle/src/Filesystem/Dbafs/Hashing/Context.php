@@ -20,11 +20,7 @@ final class Context
     private ?string $oldHash;
     private ?int $oldLastModified;
     private ?int $newLastModified;
-
-    /**
-     * @var string|false|null
-     */
-    private $result = false;
+    private bool|string|null $result = false;
 
     /**
      * @internal

@@ -29,12 +29,9 @@ class LightboxResult
     private ?ImageResult $image = null;
 
     /**
-     * @param string|ImageInterface|null                 $filePathOrImage
-     * @param array|PictureConfiguration|int|string|null $sizeConfiguration
-     *
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
-    public function __construct(ContainerInterface $locator, $filePathOrImage, ?string $url, $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null)
+    public function __construct(ContainerInterface $locator, string|ImageInterface|null $filePathOrImage, ?string $url, array|PictureConfiguration|int|string|null $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null)
     {
         if (1 !== \count(array_filter([$filePathOrImage, $url]))) {
             throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an URL.');

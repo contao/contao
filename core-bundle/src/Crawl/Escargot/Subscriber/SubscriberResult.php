@@ -57,20 +57,14 @@ class SubscriberResult
         $this->info = $info;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function addInfo(string $key, $value): self
+    public function addInfo(string $key, mixed $value): self
     {
         $this->info[$key] = $value;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getInfo(string $key)
+    public function getInfo(string $key): mixed
     {
         return $this->info[$key] ?? null;
     }

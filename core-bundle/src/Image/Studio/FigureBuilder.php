@@ -63,10 +63,8 @@ class FigureBuilder
      * User defined size configuration.
      *
      * @phpcsSuppress SlevomatCodingStandard.Classes.UnusedPrivateElements
-     *
-     * @var int|string|array|PictureConfiguration|null
      */
-    private $sizeConfiguration;
+    private array|int|PictureConfiguration|string|null $sizeConfiguration = null;
 
     /**
      * User defined resize options.
@@ -99,17 +97,13 @@ class FigureBuilder
 
     /**
      * User defined lightbox resource or url. This will overwrite the default if set.
-     *
-     * @var string|ImageInterface|null
      */
-    private $lightboxResourceOrUrl;
+    private ImageInterface|string|null $lightboxResourceOrUrl = null;
 
     /**
      * User defined lightbox size configuration. This will overwrite the default if set.
-     *
-     * @var int|string|array|PictureConfiguration|null
      */
-    private $lightboxSizeConfiguration;
+    private array|int|PictureConfiguration|string|null $lightboxSizeConfiguration = null;
 
     /**
      * User defined lightbox resize options.
@@ -251,7 +245,7 @@ class FigureBuilder
      *
      * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
-    public function from($identifier): self
+    public function from(int|string|FilesModel|ImageInterface|null $identifier): self
     {
         if (null === $identifier) {
             $this->lastException = new InvalidResourceException('The defined resource is "null".');
@@ -267,9 +261,7 @@ class FigureBuilder
             return $this->fromImage($identifier);
         }
 
-        $isString = \is_string($identifier);
-
-        if ($isString && $this->getValidatorAdapter()->isUuid($identifier)) {
+        if (\is_string($identifier) && $this->getValidatorAdapter()->isUuid($identifier)) {
             return $this->fromUuid($identifier);
         }
 
@@ -277,13 +269,7 @@ class FigureBuilder
             return $this->fromId((int) $identifier);
         }
 
-        if ($isString) {
-            return $this->fromPath($identifier);
-        }
-
-        $type = \is_object($identifier) ? \get_class($identifier) : \gettype($identifier);
-
-        throw new \TypeError(sprintf('%s(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given', __METHOD__, $type));
+        return $this->fromPath($identifier);
     }
 
     /**
@@ -291,7 +277,7 @@ class FigureBuilder
      *
      * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
-    public function setSize($size): self
+    public function setSize(int|string|array|PictureConfiguration|null $size): self
     {
         $this->sizeConfiguration = $size;
 
@@ -409,10 +395,8 @@ class FigureBuilder
      * automatically determined from the metadata or base resource. For this
      * setting to take effect, make sure you have enabled the creation of a
      * lightbox by calling enableLightbox().
-     *
-     * @param string|ImageInterface|null $resourceOrUrl
      */
-    public function setLightboxResourceOrUrl($resourceOrUrl): self
+    public function setLightboxResourceOrUrl(string|ImageInterface|null $resourceOrUrl): self
     {
         $this->lightboxResourceOrUrl = $resourceOrUrl;
 
@@ -427,7 +411,7 @@ class FigureBuilder
      *
      * @param int|string|array|PictureConfiguration|null $size A picture size configuration or reference
      */
-    public function setLightboxSize($size): self
+    public function setLightboxSize(int|string|array|PictureConfiguration|null $size): self
     {
         $this->lightboxSizeConfiguration = $size;
 

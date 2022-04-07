@@ -30,10 +30,7 @@ class CustomRgxpListener
         $this->translator = $translator;
     }
 
-    /**
-     * @param mixed $input
-     */
-    public function __invoke(string $regexp, $input, Widget $widget): bool
+    public function __invoke(string $regexp, mixed $input, Widget $widget): bool
     {
         if (self::RGXP_NAME !== $regexp) {
             return false;

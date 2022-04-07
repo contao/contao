@@ -59,10 +59,7 @@ class PreviewUrlCreateListener
         $event->setQuery('calendar='.$eventModel->id);
     }
 
-    /**
-     * @return int|string
-     */
-    private function getId(PreviewUrlCreateEvent $event, Request $request)
+    private function getId(PreviewUrlCreateEvent $event, Request $request): int|string
     {
         // Overwrite the ID if the event settings are edited
         if ('tl_calendar_events' === $request->query->get('table') && 'edit' === $request->query->get('act')) {
@@ -72,10 +69,7 @@ class PreviewUrlCreateListener
         return $event->getId();
     }
 
-    /**
-     * @param int|string $id
-     */
-    private function getEventModel($id): ?CalendarEventsModel
+    private function getEventModel(int|string $id): ?CalendarEventsModel
     {
         return $this->framework->getAdapter(CalendarEventsModel::class)->findByPk($id);
     }

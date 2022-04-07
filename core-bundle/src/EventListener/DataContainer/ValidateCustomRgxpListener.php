@@ -27,12 +27,7 @@ class ValidateCustomRgxpListener
         $this->translator = $translator;
     }
 
-    /**
-     * @param mixed $input
-     *
-     * @return mixed
-     */
-    public function __invoke($input)
+    public function __invoke(mixed $input): mixed
     {
         // preg_match() returns false if the regular expression is invalid
         if (false === @preg_match($input, '')) {

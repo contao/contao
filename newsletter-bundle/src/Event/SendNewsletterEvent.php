@@ -101,18 +101,12 @@ class SendNewsletterEvent extends Event
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRecipientValue(string $key)
+    public function getRecipientValue(string $key): mixed
     {
         return $this->recipientData[$key] ?? null;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function setRecipientValue(string $key, $value): self
+    public function setRecipientValue(string $key, mixed $value): self
     {
         $this->recipientData[$key] = $value;
 
@@ -131,18 +125,12 @@ class SendNewsletterEvent extends Event
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNewsletterValue(string $key)
+    public function getNewsletterValue(string $key): mixed
     {
         return $this->newsletterData[$key] ?? null;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function setNewsletterValue(string $key, $value): self
+    public function setNewsletterValue(string $key, mixed $value): self
     {
         $this->newsletterData[$key] = $value;
 

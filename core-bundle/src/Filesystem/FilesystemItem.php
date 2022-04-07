@@ -27,22 +27,22 @@ class FilesystemItem
     /**
      * @var int|(\Closure(self):int|null)|null
      */
-    private $lastModified;
+    private int|\Closure|null $lastModified;
 
     /**
      * @var int|\Closure(self):int|null
      */
-    private $fileSize;
+    private int|\Closure|null $fileSize;
 
     /**
      * @var string|\Closure(self):string|null
      */
-    private $mimeType;
+    private string|\Closure|null $mimeType;
 
     /**
      * @var array<string, mixed>|\Closure(self):array<string, mixed>
      */
-    private $extraMetadata;
+    private array|\Closure $extraMetadata;
 
     /**
      * @param int|(\Closure(self):int|null)|null $lastModified
@@ -89,7 +89,7 @@ class FilesystemItem
     /**
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
      */
-    public function withExtraMetadata($extraMetadata): self
+    public function withExtraMetadata(array|callable $extraMetadata): self
     {
         return new self(
             $this->isFile,
@@ -180,10 +180,8 @@ class FilesystemItem
 
     /**
      * Evaluates closures to retrieve the value.
-     *
-     * @param mixed $property
      */
-    private function resolveIfClosure(&$property): void
+    private function resolveIfClosure(mixed &$property): void
     {
         if ($property instanceof \Closure) {
             $property = $property($this);

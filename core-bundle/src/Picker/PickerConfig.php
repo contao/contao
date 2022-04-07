@@ -17,16 +17,9 @@ class PickerConfig implements \JsonSerializable
     private string $context;
     private array $extras;
     private string $current;
+    private int|string $value;
 
-    /**
-     * @var string|int
-     */
-    private $value;
-
-    /**
-     * @param string|int $value
-     */
-    public function __construct(string $context, array $extras = [], $value = '', string $current = '')
+    public function __construct(string $context, array $extras = [], int|string $value = '', string $current = '')
     {
         $this->context = $context;
         $this->extras = $extras;
@@ -62,26 +55,18 @@ class PickerConfig implements \JsonSerializable
 
     /**
      * Returns an extra value for a given provider or the general extra value.
-     *
-     * @return mixed
      */
-    public function getExtraForProvider(string $name, string $provider)
+    public function getExtraForProvider(string $name, string $provider): mixed
     {
         return $this->extras[$provider][$name] ?? $this->getExtra($name);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getExtra(string $name)
+    public function getExtra(string $name): mixed
     {
         return $this->extras[$name] ?? null;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function setExtra(string $name, $value): void
+    public function setExtra(string $name, mixed $value): void
     {
         $this->extras[$name] = $value;
     }

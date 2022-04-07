@@ -30,7 +30,7 @@ class ControllerResolver implements ControllerResolverInterface
         $this->registry = $registry;
     }
 
-    public function getController(Request $request)
+    public function getController(Request $request): bool|callable|null
     {
         if (
             $request->attributes->has('_controller')

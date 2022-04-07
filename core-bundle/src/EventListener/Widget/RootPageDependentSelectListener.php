@@ -62,11 +62,9 @@ class RootPageDependentSelectListener
     }
 
     /**
-     * @param mixed $value
-     *
      * @Callback(table="tl_module", target="fields.rootPageDependentModules.save")
      */
-    public function saveCallback($value, DataContainer $dataContainer): string
+    public function saveCallback(mixed $value, DataContainer $dataContainer): string
     {
         $values = StringUtil::deserialize($value);
 

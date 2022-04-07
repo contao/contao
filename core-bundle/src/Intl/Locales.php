@@ -27,7 +27,7 @@ class Locales
     /**
      * @var TranslatorInterface&TranslatorBagInterface
      */
-    private $translator;
+    private TranslatorInterface $translator;
 
     /**
      * @var array<string>

@@ -38,7 +38,7 @@ class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
         $this->scopeMatcher = $scopeMatcher;
     }
 
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
             return $this->redirectToBackend($request);

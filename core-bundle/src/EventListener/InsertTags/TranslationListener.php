@@ -28,10 +28,8 @@ class TranslationListener
 
     /**
      * Replaces the "trans" insert tag.
-     *
-     * @return string|false
      */
-    public function onReplaceInsertTags(string $tag)
+    public function onReplaceInsertTags(string $tag): string|false
     {
         $chunks = explode('::', $tag);
 
