@@ -18,11 +18,9 @@ namespace Contao\CoreBundle\Filesystem;
 class FilesystemUtil
 {
     /**
-     * @param mixed $contents
-     *
      * @see \League\Flysystem\Filesystem::assertIsResource()
      */
-    public static function assertIsResource($contents): void
+    public static function assertIsResource(mixed $contents): void
     {
         if (false === \is_resource($contents)) {
             $type = \gettype($contents);

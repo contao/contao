@@ -22,20 +22,15 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteLoader implements RouteLoaderInterface
 {
-    private LoaderInterface $loader;
-    private PluginLoader $pluginLoader;
-    private KernelInterface $kernel;
-    private string $projectDir;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao_manager.routing.route_loader" service instead
      */
-    public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $projectDir)
-    {
-        $this->loader = $loader;
-        $this->pluginLoader = $pluginLoader;
-        $this->kernel = $kernel;
-        $this->projectDir = $projectDir;
+    public function __construct(
+        private LoaderInterface $loader,
+        private PluginLoader $pluginLoader,
+        private KernelInterface $kernel,
+        private string $projectDir
+    ) {
     }
 
     /**

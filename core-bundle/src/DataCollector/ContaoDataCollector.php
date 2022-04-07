@@ -31,11 +31,8 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 {
     use FrameworkAwareTrait;
 
-    private TokenChecker $tokenChecker;
-
-    public function __construct(TokenChecker $tokenChecker)
+    public function __construct(private TokenChecker $tokenChecker)
     {
-        $this->tokenChecker = $tokenChecker;
     }
 
     public function collect(Request $request, Response $response, \Throwable $exception = null): void

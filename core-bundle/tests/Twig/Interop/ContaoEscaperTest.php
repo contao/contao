@@ -31,11 +31,9 @@ class ContaoEscaperTest extends TestCase
     }
 
     /**
-     * @param string|int $input
-     *
      * @dataProvider provideHtmlInput
      */
-    public function testEscapesHtml($input, string $expectedOutput): void
+    public function testEscapesHtml(int|string $input, string $expectedOutput): void
     {
         $this->assertSame($expectedOutput, $this->invokeEscapeHtml($input, null), 'no charset specified');
         $this->assertSame($expectedOutput, $this->invokeEscapeHtml($input, 'UTF-8'), 'UTF-8');
@@ -85,10 +83,7 @@ class ContaoEscaperTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * @return string|false
-     */
-    public function executeReplaceInsertTagsCallback(string $tag, bool $cache)
+    public function executeReplaceInsertTagsCallback(string $tag, bool $cache): string|false
     {
         if ('bar' !== $tag) {
             return false;
@@ -135,18 +130,12 @@ class ContaoEscaperTest extends TestCase
         $this->invokeEscapeHtmlAttr('foo', 'ISO-8859-1');
     }
 
-    /**
-     * @param string|int $input
-     */
-    private function invokeEscapeHtml($input, ?string $charset): string
+    private function invokeEscapeHtml(int|string $input, ?string $charset): string
     {
         return (new ContaoEscaper())->escapeHtml($this->createMock(Environment::class), $input, $charset);
     }
 
-    /**
-     * @param string|int $input
-     */
-    private function invokeEscapeHtmlAttr($input, ?string $charset): string
+    private function invokeEscapeHtmlAttr(int|string $input, ?string $charset): string
     {
         return (new ContaoEscaper())->escapeHtmlAttr($this->createMock(Environment::class), $input, $charset);
     }

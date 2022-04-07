@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class JwtManager
 {
-    public const COOKIE_NAME = 'contao_settings';
+    final public const COOKIE_NAME = 'contao_settings';
 
     private Configuration $config;
 
@@ -55,7 +55,7 @@ class JwtManager
         if ($request->cookies->has(self::COOKIE_NAME)) {
             try {
                 return $this->parseCookie((string) $request->cookies->get(self::COOKIE_NAME));
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // do nothing
             }
         }

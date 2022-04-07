@@ -26,11 +26,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RootPageController extends AbstractController
 {
-    private ?LoggerInterface $logger;
-
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct(private ?LoggerInterface $logger = null)
     {
-        $this->logger = $logger;
     }
 
     public function __invoke(PageModel $pageModel): Response

@@ -22,11 +22,8 @@ use Doctrine\DBAL\Connection;
  */
 class Version430Update extends AbstractMigration
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function getName(): string

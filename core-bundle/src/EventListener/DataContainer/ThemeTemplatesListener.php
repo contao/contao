@@ -23,15 +23,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ThemeTemplatesListener
 {
-    private ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer;
-    private ThemeNamespace $themeNamespace;
-    private TranslatorInterface $translator;
-
-    public function __construct(ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer, ThemeNamespace $themeNamespace, TranslatorInterface $translator)
-    {
-        $this->filesystemLoaderWarmer = $filesystemLoaderWarmer;
-        $this->themeNamespace = $themeNamespace;
-        $this->translator = $translator;
+    public function __construct(
+        private ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer,
+        private ThemeNamespace $themeNamespace,
+        private TranslatorInterface $translator
+    ) {
     }
 
     public function __invoke(string $value): string

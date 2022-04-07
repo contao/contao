@@ -24,13 +24,8 @@ use Doctrine\DBAL\Connection;
  */
 class RecordPreviewListener
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-
-    public function __construct(ContaoFramework $framework, Connection $connection)
+    public function __construct(private ContaoFramework $framework, private Connection $connection)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
     }
 
     /**
@@ -61,7 +56,7 @@ class RecordPreviewListener
             ;
 
             $preview = $this->compilePreview($dc, $row);
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             $preview = '';
         }
 

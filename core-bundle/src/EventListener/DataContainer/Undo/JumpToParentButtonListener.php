@@ -29,15 +29,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class JumpToParentButtonListener
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private TranslatorInterface $translator;
-
-    public function __construct(ContaoFramework $framework, Connection $connection, TranslatorInterface $translator)
+    public function __construct(private ContaoFramework $framework, private Connection $connection, private TranslatorInterface $translator)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->translator = $translator;
     }
 
     public function __invoke(array $row, ?string $href = '', string $label = '', string $title = '', string $icon = '', string $attributes = ''): string

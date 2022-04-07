@@ -20,14 +20,11 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class FigureRendererRuntime implements RuntimeExtensionInterface
 {
-    private FigureRenderer $figureRenderer;
-
     /**
      * @internal
      */
-    public function __construct(FigureRenderer $figureRenderer)
+    public function __construct(private FigureRenderer $figureRenderer)
     {
-        $this->figureRenderer = $figureRenderer;
     }
 
     /**
@@ -43,7 +40,7 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
      * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
      */
-    public function render($from, $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): ?string
+    public function render(FilesModel|ImageInterface|int|string $from, int|string|array|PictureConfiguration|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): ?string
     {
         return $this->figureRenderer->render($from, $size, $configuration, $template);
     }

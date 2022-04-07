@@ -383,7 +383,6 @@ class ContaoFrameworkTest extends TestCase
 
         $ref = new \ReflectionObject($framework);
         $adapterCache = $ref->getProperty('adapterCache');
-        $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
 
         $this->expectException(RedirectResponseException::class);
@@ -423,7 +422,6 @@ class ContaoFrameworkTest extends TestCase
 
         $ref = new \ReflectionObject($framework);
         $adapterCache = $ref->getProperty('adapterCache');
-        $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
 
         $framework->initialize();
@@ -479,7 +477,6 @@ class ContaoFrameworkTest extends TestCase
 
         $ref = new \ReflectionClass($adapter);
         $prop = $ref->getProperty('class');
-        $prop->setAccessible(true);
 
         $this->assertSame(LegacyClass::class, $prop->getValue($adapter));
     }
@@ -546,7 +543,6 @@ class ContaoFrameworkTest extends TestCase
 
         $reflection = new \ReflectionObject($framework);
         $reflectionMethod = $reflection->getMethod('registerHookListeners');
-        $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($framework);
 
         $this->assertArrayHasKey('TL_HOOKS', $GLOBALS);
@@ -669,11 +665,9 @@ class ContaoFrameworkTest extends TestCase
 
         $ref = new \ReflectionObject($framework);
         $adapterCache = $ref->getProperty('adapterCache');
-        $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
 
         $isInitialized = $ref->getProperty('initialized');
-        $isInitialized->setAccessible(true);
         $isInitialized->setValue(false);
 
         return $framework;

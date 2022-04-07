@@ -22,14 +22,11 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancer implements RouteEnhancerInterface
 {
-    private ContaoFramework $framework;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.routing.input_enhancer" service instead
      */
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     public function enhance(array $defaults, Request $request): array

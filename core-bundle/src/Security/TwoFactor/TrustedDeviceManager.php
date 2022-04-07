@@ -25,15 +25,8 @@ use UAParser\Parser;
 
 class TrustedDeviceManager implements TrustedDeviceManagerInterface
 {
-    private RequestStack $requestStack;
-    private TrustedDeviceTokenStorage $trustedTokenStorage;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(RequestStack $requestStack, TrustedDeviceTokenStorage $trustedTokenStorage, EntityManagerInterface $entityManager)
+    public function __construct(private RequestStack $requestStack, private TrustedDeviceTokenStorage $trustedTokenStorage, private EntityManagerInterface $entityManager)
     {
-        $this->requestStack = $requestStack;
-        $this->trustedTokenStorage = $trustedTokenStorage;
-        $this->entityManager = $entityManager;
     }
 
     public function addTrustedDevice($user, string $firewallName): void
@@ -89,7 +82,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     /**
      * @return Collection<int, TrustedDevice>
      */
-    public function getTrustedDevices(User $user)
+    public function getTrustedDevices(User $user): Collection
     {
         return $this->entityManager
             ->createQueryBuilder()
@@ -97,7 +90,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->from(TrustedDevice::class, 'td')
             ->andWhere('td.userClass = :userClass')
             ->andWhere('td.userId = :userId')
-            ->setParameter('userClass', \get_class($user))
+            ->setParameter('userClass', $user::class)
             ->setParameter('userId', (int) $user->id)
             ->getQuery()
             ->execute()

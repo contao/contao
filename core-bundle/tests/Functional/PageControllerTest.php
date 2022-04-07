@@ -24,11 +24,9 @@ class PageControllerTest extends FunctionalTestCase
     private static ?array $lastImport = null;
 
     /**
-     * @param string|false|null $path
-     *
      * @dataProvider getPageController
      */
-    public function testResolvesPageController(array $fixtures, string $request, $path, array $requirements, array $defaults): void
+    public function testResolvesPageController(array $fixtures, string $request, string|false|null $path, array $requirements, array $defaults): void
     {
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = 'example.com';
@@ -45,7 +43,7 @@ class PageControllerTest extends FunctionalTestCase
 
         $pathRegex = null;
 
-        if (\is_string($path) && 0 === strncmp($path, '/', 1)) {
+        if (\is_string($path) && str_starts_with($path, '/')) {
             $compiledRoute = (new Route($path, $defaults, $requirements))->compile();
             $pathRegex = $compiledRoute->getRegex();
         }

@@ -54,7 +54,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
 
         try {
             $this->write($record);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return false;
         }
 

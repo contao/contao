@@ -38,7 +38,7 @@ final class ResponseContext
 
     public function add(object $service): self
     {
-        $this->registerService(\get_class($service), $service);
+        $this->registerService($service::class, $service);
 
         return $this;
     }
@@ -100,7 +100,7 @@ final class ResponseContext
     /**
      * @param \Closure|object $objectOrFactory
      */
-    private function registerService(string $serviceId, $objectOrFactory): void
+    private function registerService(string $serviceId, object $objectOrFactory): void
     {
         $this->services[$serviceId] = $objectOrFactory;
         $this->current[$serviceId] = $serviceId;

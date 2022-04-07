@@ -21,11 +21,8 @@ use Doctrine\DBAL\Schema\Table;
  */
 class MysqlInnodbRowSizeCalculator
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function getMysqlRowSize(Table $table): int
@@ -39,7 +36,7 @@ class MysqlInnodbRowSizeCalculator
             if ($column->toArray()['charset'] ?? null) {
                 $charset = $column->toArray()['charset'];
             } elseif ($column->toArray()['collation'] ?? null) {
-                $charset = explode('_', $column->toArray()['collation'])[0];
+                $charset = explode('_', (string) $column->toArray()['collation'])[0];
             }
 
             $size += $this->getMysqlColumnSizeBits($column, $charset);
@@ -67,7 +64,7 @@ class MysqlInnodbRowSizeCalculator
             if ($column->toArray()['charset'] ?? null) {
                 $charset = $column->toArray()['charset'];
             } elseif ($column->toArray()['collation'] ?? null) {
-                $charset = explode('_', $column->toArray()['collation'])[0];
+                $charset = explode('_', (string) $column->toArray()['collation'])[0];
             }
 
             $size += $this->getInnodbColumnSizeBits($column, $charset, $rowFormat);

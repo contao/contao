@@ -28,20 +28,15 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class InstallTool
 {
-    private Connection $connection;
-    private string $projectDir;
-    private LoggerInterface $logger;
-    private MigrationCollection $migrations;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao_installation.install_tool" service instead
      */
-    public function __construct(Connection $connection, string $projectDir, LoggerInterface $logger, MigrationCollection $migrations)
-    {
-        $this->connection = $connection;
-        $this->projectDir = $projectDir;
-        $this->logger = $logger;
-        $this->migrations = $migrations;
+    public function __construct(
+        private Connection $connection,
+        private string $projectDir,
+        private LoggerInterface $logger,
+        private MigrationCollection $migrations
+    ) {
     }
 
     public function isLocked(): bool
@@ -165,7 +160,7 @@ class InstallTool
      */
     public function hasConfigurationError(array &$context): bool
     {
-        [$version] = explode('-', $this->connection->fetchOne('SELECT @@version'));
+        [$version] = explode('-', (string) $this->connection->fetchOne('SELECT @@version'));
 
         // The database version is too old
         if (version_compare($version, '5.1.0', '<')) {
@@ -212,7 +207,7 @@ class InstallTool
         }
 
         // Check if utf8mb4 can be used if the user has configured it
-        if (isset($options['engine'], $options['collate']) && 0 === strncmp($options['collate'], 'utf8mb4', 7)) {
+        if (isset($options['engine'], $options['collate']) && str_starts_with($options['collate'], 'utf8mb4')) {
             if ('innodb' !== strtolower($options['engine'])) {
                 $context['errorCode'] = 4;
                 $context['engine'] = $options['engine'];
@@ -317,7 +312,7 @@ class InstallTool
             $tables = $this->connection->createSchemaManager()->listTableNames();
 
             foreach ($tables as $table) {
-                if (0 === strncmp($table, 'tl_', 3)) {
+                if (str_starts_with($table, 'tl_')) {
                     $this->connection->executeStatement('TRUNCATE TABLE '.$this->connection->quoteIdentifier($table));
                 }
             }
@@ -336,7 +331,7 @@ class InstallTool
             if ($this->connection->fetchOne("SELECT COUNT(*) FROM tl_user WHERE `admin` = '1'") > 0) {
                 return true;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // ignore
         }
 
@@ -387,10 +382,7 @@ class InstallTool
         ]);
     }
 
-    /**
-     * @return mixed|null
-     */
-    public function getConfig(string $key)
+    public function getConfig(string $key): mixed
     {
         return Config::get($key);
     }

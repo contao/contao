@@ -73,8 +73,8 @@ class DataContainerCallbackPass implements CompilerPassInterface
         }
 
         if (
-            '_callback' !== substr($attributes['target'], -9)
-            && false === strpos($attributes['target'], '.panel_callback.')
+            !str_ends_with($attributes['target'], '_callback')
+            && !str_contains((string) $attributes['target'], '.panel_callback.')
             && !\in_array(substr($attributes['target'], -7), ['.wizard', '.xlabel'], true)
         ) {
             $attributes['target'] .= '_callback';
@@ -109,10 +109,10 @@ class DataContainerCallbackPass implements CompilerPassInterface
             return (string) $attributes['method'];
         }
 
-        $keys = explode('.', $attributes['target']);
+        $keys = explode('.', (string) $attributes['target']);
         $callback = end($keys);
 
-        if (0 === strncmp($callback, 'on', 2)) {
+        if (str_starts_with($callback, 'on')) {
             $callback = substr($callback, 2);
         }
 

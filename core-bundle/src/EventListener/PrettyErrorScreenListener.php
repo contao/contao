@@ -40,21 +40,14 @@ use Twig\Error\Error;
  */
 class PrettyErrorScreenListener
 {
-    private bool $prettyErrorScreens;
-    private Environment $twig;
-    private ContaoFramework $framework;
-    private Security $security;
-    private PageRegistry $pageRegistry;
-    private HttpKernelInterface $httpKernel;
-
-    public function __construct(bool $prettyErrorScreens, Environment $twig, ContaoFramework $framework, Security $security, PageRegistry $pageRegistry, HttpKernelInterface $httpKernel)
-    {
-        $this->prettyErrorScreens = $prettyErrorScreens;
-        $this->twig = $twig;
-        $this->framework = $framework;
-        $this->security = $security;
-        $this->pageRegistry = $pageRegistry;
-        $this->httpKernel = $httpKernel;
+    public function __construct(
+        private bool $prettyErrorScreens,
+        private Environment $twig,
+        private ContaoFramework $framework,
+        private Security $security,
+        private PageRegistry $pageRegistry,
+        private HttpKernelInterface $httpKernel
+    ) {
     }
 
     /**
@@ -85,7 +78,7 @@ class PrettyErrorScreenListener
 
         try {
             $isBackendUser = $this->security->isGranted('ROLE_USER');
-        } catch (AuthenticationCredentialsNotFoundException $e) {
+        } catch (AuthenticationCredentialsNotFoundException) {
             $isBackendUser = false;
         }
 
@@ -208,7 +201,7 @@ class PrettyErrorScreenListener
 
         try {
             $event->setResponse(new Response($this->twig->render($view, $parameters), $statusCode));
-        } catch (Error $e) {
+        } catch (Error) {
             $event->setResponse(new Response($this->twig->render('@ContaoCore/Error/error.html.twig'), 500));
         }
     }
@@ -223,7 +216,7 @@ class PrettyErrorScreenListener
 
         try {
             $isBackendUser = $this->security->isGranted('ROLE_USER');
-        } catch (AuthenticationCredentialsNotFoundException $e) {
+        } catch (AuthenticationCredentialsNotFoundException) {
             $isBackendUser = false;
         }
 

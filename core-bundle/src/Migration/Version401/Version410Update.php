@@ -22,13 +22,8 @@ use Doctrine\DBAL\Connection;
  */
 class Version410Update extends AbstractMigration
 {
-    private Connection $connection;
-    private ContaoFramework $framework;
-
-    public function __construct(Connection $connection, ContaoFramework $framework)
+    public function __construct(private Connection $connection, private ContaoFramework $framework)
     {
-        $this->connection = $connection;
-        $this->framework = $framework;
     }
 
     public function getName(): string

@@ -359,7 +359,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
     private function assertRememberMeCookie(Cookie $cookie, ?string $series, string $value): void
     {
-        $parts = array_map('base64_decode', explode('-', $cookie->getValue()));
+        $parts = array_map('base64_decode', explode('-', (string) $cookie->getValue()));
 
         $this->assertSame($value, $parts[1]);
 

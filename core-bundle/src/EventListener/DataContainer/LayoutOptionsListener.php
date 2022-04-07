@@ -22,12 +22,10 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class LayoutOptionsListener implements ResetInterface
 {
-    private Connection $connection;
     private ?array $options = null;
 
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function __invoke(): array

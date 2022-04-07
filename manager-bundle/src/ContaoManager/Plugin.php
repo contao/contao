@@ -221,7 +221,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         switch ($extensionName) {
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
-                $extensionConfigs = $this->addDefaultMailer($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
 
                 if (!isset($_SERVER['APP_SECRET'])) {
                     $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
@@ -440,7 +440,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
-    private function addDefaultMailer(array $extensionConfigs, ContainerBuilder $container): array
+    private function addDefaultMailer(array $extensionConfigs): array
     {
         foreach ($extensionConfigs as $config) {
             if (isset($config['mailer']) && (isset($config['mailer']['transports']) || isset($config['mailer']['dsn']))) {

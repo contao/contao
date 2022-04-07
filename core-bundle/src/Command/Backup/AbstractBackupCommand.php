@@ -24,12 +24,8 @@ use Symfony\Component\Console\Input\InputOption;
  */
 abstract class AbstractBackupCommand extends Command
 {
-    protected BackupManager $backupManager;
-
-    public function __construct(BackupManager $backupManager)
+    public function __construct(protected BackupManager $backupManager)
     {
-        $this->backupManager = $backupManager;
-
         parent::__construct();
     }
 
@@ -56,7 +52,7 @@ abstract class AbstractBackupCommand extends Command
         }
 
         if ($tablesToIgnore = $input->getOption('ignore-tables')) {
-            $config = $config->withTablesToIgnore(explode(',', $tablesToIgnore));
+            $config = $config->withTablesToIgnore(explode(',', (string) $tablesToIgnore));
         }
 
         return $config;

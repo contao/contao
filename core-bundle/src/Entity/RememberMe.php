@@ -53,7 +53,7 @@ class RememberMe
 
     public function __construct(UserInterface $user, string $series)
     {
-        $this->class = \get_class($user);
+        $this->class = $user::class;
         $this->series = $series;
         $this->value = random_bytes(64);
         $this->username = $user->getUserIdentifier();

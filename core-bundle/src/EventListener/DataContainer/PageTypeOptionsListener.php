@@ -27,15 +27,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class PageTypeOptionsListener
 {
-    private PageRegistry $pageRegistry;
-    private Security $security;
-    private ?EventDispatcherInterface $eventDispatcher;
-
-    public function __construct(PageRegistry $pageRegistry, Security $security, EventDispatcherInterface $eventDispatcher = null)
+    public function __construct(private PageRegistry $pageRegistry, private Security $security, private ?EventDispatcherInterface $eventDispatcher = null)
     {
-        $this->pageRegistry = $pageRegistry;
-        $this->security = $security;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function __invoke(DataContainer $dc): array

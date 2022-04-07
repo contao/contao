@@ -12,38 +12,30 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Monolog;
 
-class ContaoContext
+class ContaoContext implements \Stringable
 {
-    public const ERROR = 'ERROR';
-    public const ACCESS = 'ACCESS';
-    public const GENERAL = 'GENERAL';
-    public const FILES = 'FILES';
-    public const CRON = 'CRON';
-    public const FORMS = 'FORMS';
-    public const EMAIL = 'EMAIL';
-    public const CONFIGURATION = 'CONFIGURATION';
-    public const NEWSLETTER = 'NEWSLETTER';
-    public const REPOSITORY = 'REPOSITORY';
+    final public const ERROR = 'ERROR';
+    final public const ACCESS = 'ACCESS';
+    final public const GENERAL = 'GENERAL';
+    final public const FILES = 'FILES';
+    final public const CRON = 'CRON';
+    final public const FORMS = 'FORMS';
+    final public const EMAIL = 'EMAIL';
+    final public const CONFIGURATION = 'CONFIGURATION';
+    final public const NEWSLETTER = 'NEWSLETTER';
+    final public const REPOSITORY = 'REPOSITORY';
 
-    private string $func;
-    private ?string $action;
-    private ?string $username;
-    private ?string $ip;
-    private ?string $browser;
-    private ?string $source;
-
-    public function __construct(string $func, string $action = null, string $username = null, string $ip = null, string $browser = null, string $source = null)
-    {
+    public function __construct(
+        private string $func,
+        private ?string $action = null,
+        private ?string $username = null,
+        private ?string $ip = null,
+        private ?string $browser = null,
+        private ?string $source = null
+    ) {
         if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
         }
-
-        $this->func = $func;
-        $this->action = $action;
-        $this->username = $username;
-        $this->ip = $ip;
-        $this->browser = $browser;
-        $this->source = $source;
     }
 
     /**
