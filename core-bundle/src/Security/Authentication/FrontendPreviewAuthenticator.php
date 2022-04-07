@@ -24,20 +24,15 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticator
 {
-    private Security $security;
-    private SessionInterface $session;
-    private UserProviderInterface $userProvider;
-    private ?LoggerInterface $logger;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.frontend_preview_authenticator" service instead
      */
-    public function __construct(Security $security, SessionInterface $session, UserProviderInterface $userProvider, LoggerInterface $logger = null)
-    {
-        $this->security = $security;
-        $this->session = $session;
-        $this->userProvider = $userProvider;
-        $this->logger = $logger;
+    public function __construct(
+        private Security $security,
+        private SessionInterface $session,
+        private UserProviderInterface $userProvider,
+        private ?LoggerInterface $logger = null
+    ) {
     }
 
     public function authenticateFrontendUser(string $username, bool $showUnpublished): bool

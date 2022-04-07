@@ -16,14 +16,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class PreviewUrlCreateEvent extends Event
 {
-    private string $key;
-    private int|string $id;
     private ?string $query = null;
 
-    public function __construct(string $key, int|string $id)
+    public function __construct(private string $key, private int|string $id)
     {
-        $this->key = $key;
-        $this->id = $id;
     }
 
     public function getId(): int|string

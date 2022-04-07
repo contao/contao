@@ -20,14 +20,11 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class FigureRendererRuntime implements RuntimeExtensionInterface
 {
-    private FigureRenderer $figureRenderer;
-
     /**
      * @internal
      */
-    public function __construct(FigureRenderer $figureRenderer)
+    public function __construct(private FigureRenderer $figureRenderer)
     {
-        $this->figureRenderer = $figureRenderer;
     }
 
     /**

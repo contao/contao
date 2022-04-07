@@ -30,28 +30,6 @@ use Contao\Template;
  */
 class Figure
 {
-    private ImageResult $image;
-
-    /**
-     * @var Metadata|(\Closure(self):Metadata|null)|null
-     */
-    private Metadata|\Closure|null $metadata;
-
-    /**
-     * @var array<string, string|null>|(\Closure(self):array<string, string|null>)|null
-     */
-    private array|\Closure|null $linkAttributes;
-
-    /**
-     * @var LightboxResult|(\Closure(self):LightboxResult|null)|null
-     */
-    private LightboxResult|\Closure|null $lightbox;
-
-    /**
-     * @var array<string, mixed>|(\Closure(self):array<string, mixed>)|null
-     */
-    private array|\Closure|null $options;
-
     /**
      * Creates a figure container.
      *
@@ -63,13 +41,13 @@ class Figure
      * @param LightboxResult|(\Closure(self):LightboxResult|null)|null                    $lightbox       Lightbox
      * @param array<string, mixed>|(\Closure(self):array<string, mixed>)|null             $options        Template options
      */
-    public function __construct(ImageResult $image, $metadata = null, $linkAttributes = null, $lightbox = null, $options = null)
-    {
-        $this->image = $image;
-        $this->metadata = $metadata;
-        $this->linkAttributes = $linkAttributes;
-        $this->lightbox = $lightbox;
-        $this->options = $options;
+    public function __construct(
+        private ImageResult $image,
+        private Metadata|\Closure|null $metadata = null,
+        private array|\Closure|null $linkAttributes = null,
+        private LightboxResult|\Closure|null $lightbox = null,
+        private array|\Closure|null $options = null
+    ) {
     }
 
     /**

@@ -32,29 +32,6 @@ class ChangeSet
     final public const TYPE_DIRECTORY = 1;
 
     /**
-     * @var array<array<string, string|int>>
-     * @phpstan-var array<CreateItemDefinition>
-     */
-    private array $itemsToCreate;
-
-    /**
-     * @var array<string, array<string, string>>
-     * @phpstan-var array<string, UpdateItemDefinition>
-     */
-    private array $itemsToUpdate;
-
-    /**
-     * @var array<string, int>
-     * @phpstan-var array<string, self::TYPE_*>
-     */
-    private array $itemsToDelete;
-
-    /**
-     * @var array<string, int|null>
-     */
-    private array $lastModifiedUpdates;
-
-    /**
      * @param array<array<string, string|int>>         $itemsToCreate
      * @param array<string, array<string, string|int>> $itemsToUpdate
      * @param array<string, int>                       $itemsToDelete
@@ -66,12 +43,12 @@ class ChangeSet
      *
      * @internal
      */
-    public function __construct(array $itemsToCreate, array $itemsToUpdate, array $itemsToDelete, array $lastModifiedUpdates = [])
-    {
-        $this->itemsToCreate = $itemsToCreate;
-        $this->itemsToUpdate = $itemsToUpdate;
-        $this->itemsToDelete = $itemsToDelete;
-        $this->lastModifiedUpdates = $lastModifiedUpdates;
+    public function __construct(
+        private array $itemsToCreate,
+        private array $itemsToUpdate,
+        private array $itemsToDelete,
+        private array $lastModifiedUpdates = []
+    ) {
     }
 
     /**

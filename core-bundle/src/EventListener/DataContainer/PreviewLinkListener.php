@@ -34,25 +34,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PreviewLinkListener
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private Security $security;
-    private RequestStack $requestStack;
-    private TranslatorInterface $translator;
-    private UrlGeneratorInterface $urlGenerator;
-    private UriSigner $uriSigner;
-    private string $previewScript;
-
-    public function __construct(ContaoFramework $framework, Connection $connection, Security $security, RequestStack $requestStack, TranslatorInterface $translator, UrlGeneratorInterface $urlGenerator, UriSigner $uriSigner, string $previewScript = '')
-    {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->security = $security;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
-        $this->urlGenerator = $urlGenerator;
-        $this->uriSigner = $uriSigner;
-        $this->previewScript = $previewScript;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Connection $connection,
+        private Security $security,
+        private RequestStack $requestStack,
+        private TranslatorInterface $translator,
+        private UrlGeneratorInterface $urlGenerator,
+        private UriSigner $uriSigner,
+        private string $previewScript = ''
+    ) {
     }
 
     /**

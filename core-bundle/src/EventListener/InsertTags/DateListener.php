@@ -60,13 +60,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class DateListener
 {
-    private ContaoFramework $framework;
-    private RequestStack $requestStack;
-
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack)
+    public function __construct(private ContaoFramework $framework, private RequestStack $requestStack)
     {
-        $this->framework = $framework;
-        $this->requestStack = $requestStack;
     }
 
     public function __invoke(string $insertTag): bool|string

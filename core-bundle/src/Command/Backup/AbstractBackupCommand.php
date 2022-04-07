@@ -24,12 +24,8 @@ use Symfony\Component\Console\Input\InputOption;
  */
 abstract class AbstractBackupCommand extends Command
 {
-    protected BackupManager $backupManager;
-
-    public function __construct(BackupManager $backupManager)
+    public function __construct(protected BackupManager $backupManager)
     {
-        $this->backupManager = $backupManager;
-
         parent::__construct();
     }
 

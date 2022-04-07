@@ -24,11 +24,8 @@ use Doctrine\DBAL\Connection;
  */
 class ResetCustomTemplateListener
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**

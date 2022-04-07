@@ -24,22 +24,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizes implements ResetInterface
 {
-    private Connection $connection;
-    private EventDispatcherInterface $eventDispatcher;
-    private ContaoFramework $framework;
-    private TranslatorInterface $translator;
     private array $predefinedSizes = [];
     private ?array $options = null;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.sizes" service instead
      */
-    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, TranslatorInterface $translator)
-    {
-        $this->connection = $connection;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->framework = $framework;
-        $this->translator = $translator;
+    public function __construct(
+        private Connection $connection,
+        private EventDispatcherInterface $eventDispatcher,
+        private ContaoFramework $framework,
+        private TranslatorInterface $translator
+    ) {
     }
 
     /**

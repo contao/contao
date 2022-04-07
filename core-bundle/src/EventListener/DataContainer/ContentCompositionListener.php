@@ -33,13 +33,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListener
 {
-    private ContaoFramework $framework;
-    private Security $security;
-    private PageRegistry $pageRegistry;
-    private TranslatorInterface $translator;
-    private Connection $connection;
-    private RequestStack $requestStack;
-
     /**
      * @var Adapter<Image>
      */
@@ -50,14 +43,14 @@ class ContentCompositionListener
      */
     private Adapter $backend;
 
-    public function __construct(ContaoFramework $framework, Security $security, PageRegistry $pageRegistry, TranslatorInterface $translator, Connection $connection, RequestStack $requestStack)
-    {
-        $this->framework = $framework;
-        $this->security = $security;
-        $this->pageRegistry = $pageRegistry;
-        $this->translator = $translator;
-        $this->connection = $connection;
-        $this->requestStack = $requestStack;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Security $security,
+        private PageRegistry $pageRegistry,
+        private TranslatorInterface $translator,
+        private Connection $connection,
+        private RequestStack $requestStack
+    ) {
         $this->image = $this->framework->getAdapter(Image::class);
         $this->backend = $this->framework->getAdapter(Backend::class);
     }

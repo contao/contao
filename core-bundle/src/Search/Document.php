@@ -21,9 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Document
 {
-    private UriInterface $uri;
-    private int $statusCode;
-    private string $body;
     private ?Crawler $crawler = null;
     private ?array $jsonLds = null;
 
@@ -31,16 +28,15 @@ class Document
      * The key is the header name in lowercase letters and the value is again
      * an array of header values.
      *
-     * @var array<string,array>
+     * @param array<string,array> $headers
      */
-    private array $headers;
-
-    public function __construct(UriInterface $uri, int $statusCode, array $headers = [], string $body = '')
-    {
-        $this->uri = $uri;
-        $this->statusCode = $statusCode;
+    public function __construct(
+        private UriInterface $uri,
+        private int $statusCode,
+        private array $headers,
+        private string $body = ''
+    ) {
         $this->headers = array_change_key_case($headers);
-        $this->body = $body;
     }
 
     public function getUri(): UriInterface

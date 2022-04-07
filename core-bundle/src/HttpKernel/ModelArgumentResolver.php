@@ -22,16 +22,11 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 class ModelArgumentResolver implements ArgumentValueResolverInterface
 {
-    private ContaoFramework $framework;
-    private ScopeMatcher $scopeMatcher;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.model_argument_resolver" service instead
      */
-    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher)
+    public function __construct(private ContaoFramework $framework, private ScopeMatcher $scopeMatcher)
     {
-        $this->framework = $framework;
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function supports(Request $request, ArgumentMetadata $argument): bool

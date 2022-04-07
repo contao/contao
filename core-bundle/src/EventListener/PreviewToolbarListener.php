@@ -33,19 +33,13 @@ use Twig\Environment as TwigEnvironment;
  */
 class PreviewToolbarListener
 {
-    private ScopeMatcher $scopeMatcher;
-    private TokenChecker $tokenChecker;
-    private TwigEnvironment $twig;
-    private RouterInterface $router;
-    private string $previewScript;
-
-    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, TwigEnvironment $twig, RouterInterface $router, string $previewScript = '')
-    {
-        $this->scopeMatcher = $scopeMatcher;
-        $this->tokenChecker = $tokenChecker;
-        $this->twig = $twig;
-        $this->router = $router;
-        $this->previewScript = $previewScript;
+    public function __construct(
+        private ScopeMatcher $scopeMatcher,
+        private TokenChecker $tokenChecker,
+        private TwigEnvironment $twig,
+        private RouterInterface $router,
+        private string $previewScript = ''
+    ) {
     }
 
     public function __invoke(ResponseEvent $event): void

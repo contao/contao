@@ -16,15 +16,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class InstallToolUser
 {
-    private Session $session;
     private int $timeout = 300;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_installation.install_tool_user" service instead
      */
-    public function __construct(Session $session)
+    public function __construct(private Session $session)
     {
-        $this->session = $session;
     }
 
     public function isAuthenticated(): bool

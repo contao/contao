@@ -29,25 +29,18 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    private ContaoFramework $framework;
-    private SessionInterface $session;
-    private ?LoggerInterface $logger;
-
     /**
-     * @var class-string<User>
+     * @param class-string<User> $userClass
      */
-    private string $userClass;
-
-    public function __construct(ContaoFramework $framework, SessionInterface $session, string $userClass, LoggerInterface $logger = null)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private SessionInterface $session,
+        private string $userClass,
+        private ?LoggerInterface $logger = null
+    ) {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
             throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));
         }
-
-        $this->framework = $framework;
-        $this->session = $session;
-        $this->userClass = $userClass;
-        $this->logger = $logger;
     }
 
     /**

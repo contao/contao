@@ -36,27 +36,18 @@ class MigrateCommand extends Command
     protected static $defaultName = 'contao:migrate';
     protected static $defaultDescription = 'Executes migrations and updates the database schema.';
 
-    private MigrationCollection $migrations;
-    private FileLocator $fileLocator;
-    private string $projectDir;
-    private ContaoFramework $framework;
-    private BackupManager $backupManager;
-    private SchemaProvider $schemaProvider;
-    private MysqlInnodbRowSizeCalculator $rowSizeCalculator;
-    private ?Installer $installer;
     private ?SymfonyStyle $io = null;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Installer $installer = null)
-    {
-        $this->migrations = $migrations;
-        $this->fileLocator = $fileLocator;
-        $this->projectDir = $projectDir;
-        $this->framework = $framework;
-        $this->backupManager = $backupManager;
-        $this->schemaProvider = $schemaProvider;
-        $this->rowSizeCalculator = $rowSizeCalculator;
-        $this->installer = $installer;
-
+    public function __construct(
+        private MigrationCollection $migrations,
+        private FileLocator $fileLocator,
+        private string $projectDir,
+        private ContaoFramework $framework,
+        private BackupManager $backupManager,
+        private SchemaProvider $schemaProvider,
+        private MysqlInnodbRowSizeCalculator $rowSizeCalculator,
+        private ?Installer $installer = null
+    ) {
         parent::__construct();
     }
 

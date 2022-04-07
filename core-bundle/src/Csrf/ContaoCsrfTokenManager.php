@@ -22,21 +22,19 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
 {
-    private RequestStack $requestStack;
-    private string $csrfCookiePrefix;
-    private ?string $defaultTokenName;
-
     /**
      * @var array<int, string>
      */
     private array $usedTokenValues = [];
 
-    public function __construct(RequestStack $requestStack, string $csrfCookiePrefix, TokenGeneratorInterface $generator = null, TokenStorageInterface $storage = null, string|RequestStack|callable|null $namespace = null, string $defaultTokenName = null)
-    {
-        $this->requestStack = $requestStack;
-        $this->csrfCookiePrefix = $csrfCookiePrefix;
-        $this->defaultTokenName = $defaultTokenName;
-
+    public function __construct(
+        private RequestStack $requestStack,
+        private string $csrfCookiePrefix,
+        TokenGeneratorInterface $generator = null,
+        TokenStorageInterface $storage = null,
+        string|RequestStack|callable|null $namespace = null,
+        private ?string $defaultTokenName = null
+    ) {
         parent::__construct($generator, $storage, $namespace);
     }
 

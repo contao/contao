@@ -19,16 +19,11 @@ use Contao\StringUtil;
 
 class Slug
 {
-    private SlugGeneratorInterface $slugGenerator;
-    private ContaoFramework $framework;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.slug" service instead
      */
-    public function __construct(SlugGeneratorInterface $slugGenerator, ContaoFramework $framework)
+    public function __construct(private SlugGeneratorInterface $slugGenerator, private ContaoFramework $framework)
     {
-        $this->slugGenerator = $slugGenerator;
-        $this->framework = $framework;
     }
 
     /**

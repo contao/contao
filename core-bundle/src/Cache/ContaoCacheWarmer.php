@@ -31,25 +31,20 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
-    private Filesystem $filesystem;
-    private ResourceFinderInterface $finder;
-    private FileLocator $locator;
-    private string $projectDir;
-    private Connection $connection;
-    private ContaoFramework $framework;
     private array $locales;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.warmer" service instead
      */
-    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $projectDir, Connection $connection, ContaoFramework $framework, Locales $locales)
-    {
-        $this->filesystem = $filesystem;
-        $this->finder = $finder;
-        $this->locator = $locator;
-        $this->projectDir = $projectDir;
-        $this->connection = $connection;
-        $this->framework = $framework;
+    public function __construct(
+        private Filesystem $filesystem,
+        private ResourceFinderInterface $finder,
+        private FileLocator $locator,
+        private string $projectDir,
+        private Connection $connection,
+        private ContaoFramework $framework,
+        Locales $locales
+    ) {
         $this->locales = $locales->getEnabledLocaleIds();
     }
 

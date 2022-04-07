@@ -20,11 +20,8 @@ use Doctrine\DBAL\Connection;
  */
 class FilterPageTypeListener
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function __invoke(FilterPageTypeEvent $event): void

@@ -25,17 +25,12 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
  */
 class CommandSchedulerListener
 {
-    private Cron $cron;
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private string $fragmentPath;
-
-    public function __construct(Cron $cron, ContaoFramework $framework, Connection $connection, string $fragmentPath = '_fragment')
-    {
-        $this->cron = $cron;
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->fragmentPath = $fragmentPath;
+    public function __construct(
+        private Cron $cron,
+        private ContaoFramework $framework,
+        private Connection $connection,
+        private string $fragmentPath = '_fragment'
+    ) {
     }
 
     /**

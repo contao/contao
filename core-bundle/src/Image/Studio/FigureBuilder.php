@@ -38,16 +38,8 @@ use Symfony\Component\Filesystem\Path;
  */
 class FigureBuilder
 {
-    private ContainerInterface $locator;
-    private string $projectDir;
-    private string $uploadPath;
     private Filesystem $filesystem;
     private ?InvalidResourceException $lastException = null;
-
-    /**
-     * @var array<string>
-     */
-    private array $validExtensions;
 
     /**
      * The resource's absolute file path.
@@ -131,14 +123,15 @@ class FigureBuilder
 
     /**
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
+     *
+     * @param array<string> $validExtensions
      */
-    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
-    {
-        $this->locator = $locator;
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->validExtensions = $validExtensions;
-
+    public function __construct(
+        private ContainerInterface $locator,
+        private string $projectDir,
+        private string $uploadPath,
+        private array $validExtensions
+    ) {
         $this->filesystem = new Filesystem();
     }
 

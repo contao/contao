@@ -24,13 +24,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class ImageSizeOptionsListener
 {
-    private Security $security;
-    private ImageSizes $imageSizes;
-
-    public function __construct(Security $security, ImageSizes $imageSizes)
+    public function __construct(private Security $security, private ImageSizes $imageSizes)
     {
-        $this->security = $security;
-        $this->imageSizes = $imageSizes;
     }
 
     public function __invoke(): array
