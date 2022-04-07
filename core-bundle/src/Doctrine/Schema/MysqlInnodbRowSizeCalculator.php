@@ -39,7 +39,7 @@ class MysqlInnodbRowSizeCalculator
             if ($column->toArray()['charset'] ?? null) {
                 $charset = $column->toArray()['charset'];
             } elseif ($column->toArray()['collation'] ?? null) {
-                $charset = explode('_', $column->toArray()['collation'])[0];
+                $charset = explode('_', (string) $column->toArray()['collation'])[0];
             }
 
             $size += $this->getMysqlColumnSizeBits($column, $charset);
@@ -67,7 +67,7 @@ class MysqlInnodbRowSizeCalculator
             if ($column->toArray()['charset'] ?? null) {
                 $charset = $column->toArray()['charset'];
             } elseif ($column->toArray()['collation'] ?? null) {
-                $charset = explode('_', $column->toArray()['collation'])[0];
+                $charset = explode('_', (string) $column->toArray()['collation'])[0];
             }
 
             $size += $this->getInnodbColumnSizeBits($column, $charset, $rowFormat);

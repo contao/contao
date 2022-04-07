@@ -45,7 +45,7 @@ class DataContainerCallbackListener
         }
 
         foreach ($this->callbacks[$table] as $target => $callbacks) {
-            $keys = explode('.', $target);
+            $keys = explode('.', (string) $target);
             $dcaRef = &$this->getDcaReference($table, $keys);
 
             if ((isset($keys[2]) && 'panel_callback' === $keys[2]) || \in_array(end($keys), self::SINGLETONS, true)) {

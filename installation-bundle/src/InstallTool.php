@@ -165,7 +165,7 @@ class InstallTool
      */
     public function hasConfigurationError(array &$context): bool
     {
-        [$version] = explode('-', $this->connection->fetchOne('SELECT @@version'));
+        [$version] = explode('-', (string) $this->connection->fetchOne('SELECT @@version'));
 
         // The database version is too old
         if (version_compare($version, '5.1.0', '<')) {

@@ -142,7 +142,7 @@ class Installer
 
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
                     $prefix = $matches[1];
-                    $sql = substr($sql, \strlen($prefix));
+                    $sql = substr($sql, \strlen((string) $prefix));
                     $parts = array_reverse(array_map('trim', explode(',', $sql)));
 
                     for ($i = 0, $count = \count($parts); $i < $count; ++$i) {

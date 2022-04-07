@@ -63,7 +63,7 @@ class SearchIndexListener
         $response = $event->getResponse();
 
         // Do not index if the X-Robots-Tag header contains "noindex"
-        if (str_contains($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
+        if (str_contains((string) $response->headers->get('X-Robots-Tag', ''), 'noindex')) {
             return;
         }
 
@@ -73,7 +73,7 @@ class SearchIndexListener
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
             // Do not index if the meta robots tag contains "noindex"
-            if (str_contains($robots, 'noindex')) {
+            if (str_contains((string) $robots, 'noindex')) {
                 return;
             }
         } catch (\Exception) {

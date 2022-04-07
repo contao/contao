@@ -223,7 +223,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         self::loadEnv($projectDir, 'jwt');
 
         if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? null) {
-            Request::setTrustedHosts(explode(',', $trustedHosts));
+            Request::setTrustedHosts(explode(',', (string) $trustedHosts));
         }
 
         if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? null) {
@@ -234,7 +234,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                 $trustedHeaderSet |= Request::HEADER_X_FORWARDED_HOST;
             }
 
-            Request::setTrustedProxies(explode(',', $trustedProxies), $trustedHeaderSet);
+            Request::setTrustedProxies(explode(',', (string) $trustedProxies), $trustedHeaderSet);
         }
 
         Request::enableHttpMethodParameterOverride();

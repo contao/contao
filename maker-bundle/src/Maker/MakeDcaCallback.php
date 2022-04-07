@@ -97,8 +97,8 @@ class MakeDcaCallback extends AbstractMaker
         $definition = $targets[$target];
         $elementDetails = $generator->createClassNameDetails($name, 'EventListener\DataContainer\\');
 
-        if (str_contains($target, '{')) {
-            $chunks = explode('.', $target);
+        if (str_contains((string) $target, '{')) {
+            $chunks = explode('.', (string) $target);
 
             foreach ($chunks as $chunk) {
                 if ('{' === $chunk[0]) {
@@ -157,8 +157,8 @@ class MakeDcaCallback extends AbstractMaker
 
         $target = $io->askQuestion($question);
 
-        if (str_contains($target, '{')) {
-            $chunks = explode('.', $target);
+        if (str_contains((string) $target, '{')) {
+            $chunks = explode('.', (string) $target);
 
             foreach ($chunks as $chunk) {
                 if ('{' !== $chunk[0]) {

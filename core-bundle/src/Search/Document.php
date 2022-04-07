@@ -73,7 +73,7 @@ class Document
         foreach ($this->getHeaders() as $key => $values) {
             if ('link' === $key) {
                 foreach ($values as $value) {
-                    if (preg_match('@<(https?://(.+))>;\s*rel="canonical"@', $value, $matches)) {
+                    if (preg_match('@<(https?://(.+))>;\s*rel="canonical"@', (string) $value, $matches)) {
                         return new Uri($matches[1]);
                     }
                 }
@@ -203,14 +203,14 @@ class Document
 
         if (\is_array($data['@context'])) {
             foreach ($data['@context'] as $prefix => $context) {
-                if (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', \strlen($prefix) + 1)) {
-                    $data['@type'] = $context.substr($data['@type'], \strlen($prefix) + 1);
+                if (isset($data['@type']) && 0 === strncmp($data['@type'], $prefix.':', \strlen((string) $prefix) + 1)) {
+                    $data['@type'] = $context.substr($data['@type'], \strlen((string) $prefix) + 1);
                 }
 
                 foreach ($data as $key => $value) {
-                    if (0 === strncmp($prefix.':', $key, \strlen($prefix) + 1)) {
+                    if (0 === strncmp($prefix.':', $key, \strlen((string) $prefix) + 1)) {
                         unset($data[$key]);
-                        $data[$context.substr($key, \strlen($prefix) + 1)] = $value;
+                        $data[$context.substr($key, \strlen((string) $prefix) + 1)] = $value;
                     }
                 }
             }
@@ -232,14 +232,14 @@ class Document
                     $newData[$key] = $value;
 
                     if (str_starts_with($value, $context)) {
-                        $newData[$key] = substr($value, \strlen($context));
+                        $newData[$key] = substr($value, \strlen((string) $context));
                         $found = true;
                         break;
                     }
                 }
 
-                if (0 === strncmp($context, $key, \strlen($context))) {
-                    $newData[substr($key, \strlen($context))] = $value;
+                if (0 === strncmp($context, $key, \strlen((string) $context))) {
+                    $newData[substr($key, \strlen((string) $context))] = $value;
                     $found = true;
                     break;
                 }

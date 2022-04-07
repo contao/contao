@@ -56,7 +56,7 @@ abstract class AbstractBackupCommand extends Command
         }
 
         if ($tablesToIgnore = $input->getOption('ignore-tables')) {
-            $config = $config->withTablesToIgnore(explode(',', $tablesToIgnore));
+            $config = $config->withTablesToIgnore(explode(',', (string) $tablesToIgnore));
         }
 
         return $config;

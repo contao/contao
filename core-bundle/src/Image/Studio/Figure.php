@@ -182,7 +182,7 @@ class Figure
         if (
             !empty($this->linkAttributes['href'])
             && !\array_key_exists('rel', $this->linkAttributes)
-            && preg_match('#^https?://#', $this->linkAttributes['href'])
+            && preg_match('#^https?://#', (string) $this->linkAttributes['href'])
         ) {
             $this->linkAttributes['rel'] = 'noreferrer noopener';
         }

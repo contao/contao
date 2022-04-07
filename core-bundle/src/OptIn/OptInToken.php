@@ -77,7 +77,7 @@ class OptInToken implements OptInTokenInterface
                     $model->confirmedOn > 0
                     || $model->invalidatedThrough
                     || $model->token === $this->getIdentifier()
-                    || 0 !== strncmp($model->token, $prefix.'-', \strlen($prefix) + 1)
+                    || 0 !== strncmp($model->token, $prefix.'-', \strlen((string) $prefix) + 1)
                 ) {
                     continue;
                 }

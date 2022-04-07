@@ -112,7 +112,7 @@ class DebugPagesCommand extends Command
         $length = array_reduce(
             array_keys($values),
             static function ($carry, $item): int {
-                $length = \strlen($item);
+                $length = \strlen((string) $item);
 
                 return max($carry, $length);
             },
