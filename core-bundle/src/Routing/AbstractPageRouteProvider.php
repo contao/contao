@@ -89,7 +89,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $ids = [];
 
         foreach ($names as $name) {
-            if (0 !== strncmp($name, 'tl_page.', 8)) {
+            if (!str_starts_with($name, 'tl_page.')) {
                 continue;
             }
 
@@ -185,7 +185,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $pathB = $b instanceof PageRoute && $b->getUrlSuffix() ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
 
         // Prioritize the default behaviour when "requireItem" is enabled
-        if ($pathA === $pathB && '{!parameters}' === substr($pathA, -13)) {
+        if ($pathA === $pathB && str_ends_with($pathA, '{!parameters}')) {
             $paramA = $a->getRequirement('parameters');
             $paramB = $b->getRequirement('parameters');
 

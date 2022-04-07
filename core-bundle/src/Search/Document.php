@@ -231,7 +231,7 @@ class Document
                 if ('@type' === $key) {
                     $newData[$key] = $value;
 
-                    if (0 === strncmp($value, $context, \strlen($context))) {
+                    if (str_starts_with($value, $context)) {
                         $newData[$key] = substr($value, \strlen($context));
                         $found = true;
                         break;

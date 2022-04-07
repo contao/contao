@@ -66,7 +66,7 @@ class DebugContaoTwigCommand extends Command
         if (null !== ($prefix = $input->getArgument('filter'))) {
             $chains = array_filter(
                 $chains,
-                static fn (string $identifier) => 0 === strpos($identifier, $prefix),
+                static fn (string $identifier) => str_starts_with($identifier, $prefix),
                 ARRAY_FILTER_USE_KEY
             );
         }

@@ -43,7 +43,7 @@ class PageControllerTest extends FunctionalTestCase
 
         $pathRegex = null;
 
-        if (\is_string($path) && 0 === strncmp($path, '/', 1)) {
+        if (\is_string($path) && str_starts_with($path, '/')) {
             $compiledRoute = (new Route($path, $defaults, $requirements))->compile();
             $pathRegex = $compiledRoute->getRegex();
         }

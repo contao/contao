@@ -277,10 +277,10 @@ class DcaSchemaProvider
             $lengths[] = isset($cm[3]) ? (int) $cm[3] : $this->getIndexLength($table, $cm[1]);
         }
 
-        if (false !== strpos($matches[1], 'unique')) {
+        if (str_contains($matches[1], 'unique')) {
             $table->addUniqueIndex($columns, $matches[2]);
         } else {
-            if (false !== strpos($matches[1], 'fulltext')) {
+            if (str_contains($matches[1], 'fulltext')) {
                 $flags[] = 'fulltext';
             }
 
@@ -327,7 +327,7 @@ class DcaSchemaProvider
         }
 
         $defaultLength = $this->getDefaultIndexLength($table);
-        $bytes = 0 === strncmp($collation, 'utf8mb4', 7) ? 4 : 3;
+        $bytes = str_starts_with($collation, 'utf8mb4') ? 4 : 3;
         $indexLength = (int) floor($defaultLength / $bytes);
 
         // Return if the field is shorter than the index length

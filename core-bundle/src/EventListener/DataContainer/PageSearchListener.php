@@ -65,7 +65,7 @@ class PageSearchListener
      */
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($value === $dc->activeRecord->robots || 0 !== strncmp($value, 'noindex', 7)) {
+        if ($value === $dc->activeRecord->robots || !str_starts_with($value, 'noindex')) {
             return $value;
         }
 
