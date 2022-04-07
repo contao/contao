@@ -33,12 +33,8 @@ class ResetCustomTemplateListener
 
     /**
      * Resets the custom template if the element type changes.
-     *
-     * @param mixed $varValue
-     *
-     * @return mixed
      */
-    public function __invoke($varValue, DataContainer $dc)
+    public function __invoke(mixed $varValue, DataContainer $dc): mixed
     {
         if ($dc->activeRecord->type === $varValue) {
             return $varValue;

@@ -287,11 +287,9 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @param mixed $string
-     *
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString($string, string $toEncoding, string $expected, string $fromEncoding = null): void
+    public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string $fromEncoding = null): void
     {
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
@@ -395,13 +393,11 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @param array|object $value
-     *
      * @group legacy
      *
      * @dataProvider invalidEncodingsProvider
      */
-    public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues($value): void
+    public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues(array|object $value): void
     {
         $this->expectDeprecation('Since contao/core-bundle 4.9: Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.');
 

@@ -125,8 +125,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to set the install tool password.
-     *
-     * @return Response|RedirectResponse
      */
     private function setPassword(): Response
     {
@@ -159,8 +157,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to log in.
-     *
-     * @return Response|RedirectResponse
      */
     private function login(): Response
     {
@@ -258,8 +254,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to set up the database connection.
-     *
-     * @return Response|RedirectResponse
      */
     private function setUpDatabaseConnection(): Response
     {
@@ -580,10 +574,7 @@ class InstallationController implements ContainerAwareInterface
         return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
     }
 
-    /**
-     * @return string|bool|null
-     */
-    private function getContainerParameter(string $name)
+    private function getContainerParameter(string $name): string|bool|null
     {
         if ($this->container->hasParameter($name)) {
             return $this->container->getParameter($name);

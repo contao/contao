@@ -20,7 +20,7 @@ class AvailableTransports
     /**
      * @var array<TransportConfig>
      */
-    private $transports = [];
+    private array $transports = [];
 
     private ?TranslatorInterface $translator;
 

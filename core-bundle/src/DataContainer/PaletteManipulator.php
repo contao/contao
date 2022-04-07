@@ -75,10 +75,8 @@ class PaletteManipulator
 
     /**
      * If no legend is given, the field is removed everywhere.
-     *
-     * @param string|array $name
      */
-    public function removeField($name, string $legend = null): self
+    public function removeField(array|string $name, string $legend = null): self
     {
         $this->removes[] = [
             'fields' => (array) $name,
@@ -356,10 +354,8 @@ class PaletteManipulator
 
     /**
      * Having the same field in multiple legends is not supported by Contao, so we don't handle that case.
-     *
-     * @return string|false
      */
-    private function findLegendForField(array $config, string $field)
+    private function findLegendForField(array $config, string $field): int|string|false
     {
         foreach ($config as $legend => $group) {
             if (\in_array($field, $group['fields'], true)) {

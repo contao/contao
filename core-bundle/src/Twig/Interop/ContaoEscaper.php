@@ -31,11 +31,9 @@ final class ContaoEscaper
      * This implementation is a clone of Twig's html escape strategy but calls
      * htmlspecialchars with the double_encode parameter set to false.
      *
-     * @param mixed $string
-     *
      * @see twig_escape_filter
      */
-    public function escapeHtml(Environment $environment, $string, ?string $charset): string
+    public function escapeHtml(Environment $environment, mixed $string, ?string $charset): string
     {
         if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
             throw new RuntimeError(sprintf('The "contao_html" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
@@ -53,11 +51,9 @@ final class ContaoEscaper
      * This implementation is a clone of Twig's html_attr escape strategy but
      * replaces insert tags and decodes entities beforehand.
      *
-     * @param mixed $string
-     *
      * @see twig_escape_filter
      */
-    public function escapeHtmlAttr(Environment $environment, $string, ?string $charset): string
+    public function escapeHtmlAttr(Environment $environment, mixed $string, ?string $charset): string
     {
         if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
             throw new RuntimeError(sprintf('The "contao_html_attr" escape filter does not support the %s charset, use UTF-8 instead.', $charset));

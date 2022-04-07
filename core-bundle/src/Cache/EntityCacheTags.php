@@ -123,11 +123,9 @@ class EntityCacheTags
      *   getTagsFor(PageModel::class); // ['contao.db.tl_page']
      *   getTagsFor([$objPage, null, 'foo']); // ['contao.db.tl_page.42', 'foo']
      *
-     * @param array|Collection|ModelCollection|string|object|null $target
-     *
      * @return array<int, string>
      */
-    public function getTagsFor($target): array
+    public function getTagsFor(array|string|object|null $target): array
     {
         if (!$target) {
             return [];
@@ -219,10 +217,8 @@ class EntityCacheTags
      * Derives cache tags and adds them to the response.
      *
      * See getTagsFor() method for the allowed parameters.
-     *
-     * @param array|Collection|ModelCollection|string|object|null $target
      */
-    public function tagWith($target): void
+    public function tagWith(array|string|object|null $target): void
     {
         if (null === $this->responseTagger) {
             return;
@@ -283,10 +279,8 @@ class EntityCacheTags
      * Derives cache tags and invalidates them.
      *
      * See getTagsFor() method for the allowed parameters.
-     *
-     * @param array|Collection|ModelCollection|string|object|null $target
      */
-    public function invalidateTagsFor($target): void
+    public function invalidateTagsFor(array|string|object|null $target): void
     {
         if (null === $this->cacheInvalidator) {
             return;
@@ -320,10 +314,7 @@ class EntityCacheTags
         return 1 === preg_match('/^(?:[a-z_\x80-\xff][a-z0-9_\x80-\xff]*\\\\?)+(?<!\\\\)$/i', $target);
     }
 
-    /**
-     * @param object|string $classStringOrObject
-     */
-    private function isModel($classStringOrObject): bool
+    private function isModel(object|string $classStringOrObject): bool
     {
         return is_subclass_of($classStringOrObject, Model::class);
     }

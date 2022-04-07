@@ -105,10 +105,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
         return '{{event_url::%s}}';
     }
 
-    /**
-     * @param int|string $id
-     */
-    private function getCalendarId($id): ?int
+    private function getCalendarId(int|string $id): ?int
     {
         $eventAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
 

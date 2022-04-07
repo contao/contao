@@ -59,10 +59,7 @@ class PreviewUrlCreateListener
         $event->setQuery('news='.$newsModel->id);
     }
 
-    /**
-     * @return int|string
-     */
-    private function getId(PreviewUrlCreateEvent $event, Request $request)
+    private function getId(PreviewUrlCreateEvent $event, Request $request): int|string
     {
         // Overwrite the ID if the news settings are edited
         if ('tl_news' === $request->query->get('table') && 'edit' === $request->query->get('act')) {
@@ -72,10 +69,7 @@ class PreviewUrlCreateListener
         return $event->getId();
     }
 
-    /**
-     * @param int|string $id
-     */
-    private function getNewsModel($id): ?NewsModel
+    private function getNewsModel(int|string $id): ?NewsModel
     {
         return $this->framework->getAdapter(NewsModel::class)->findByPk($id);
     }

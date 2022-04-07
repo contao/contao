@@ -1729,11 +1729,9 @@ class PageUrlListenerTest extends TestCase
     }
 
     /**
-     * @param PageRoute|int|null $route
-     *
-     * @return MockObject|RouterInterface
+     * @return RouterInterface&MockObject
      */
-    private function mockRouter($route = null)
+    private function mockRouter(PageRoute|int|null $route = null): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
 

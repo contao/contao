@@ -41,20 +41,12 @@ class Studio
         return new FigureBuilder($this->locator, $this->projectDir, $this->uploadPath, $this->validExtensions);
     }
 
-    /**
-     * @param string|ImageInterface                      $filePathOrImage
-     * @param array|PictureConfiguration|int|string|null $sizeConfiguration
-     */
-    public function createImage($filePathOrImage, $sizeConfiguration, ResizeOptions $resizeOptions = null): ImageResult
+    public function createImage(ImageInterface|string $filePathOrImage, array|PictureConfiguration|int|string|null $sizeConfiguration, ResizeOptions $resizeOptions = null): ImageResult
     {
         return new ImageResult($this->locator, $this->projectDir, $filePathOrImage, $sizeConfiguration, $resizeOptions);
     }
 
-    /**
-     * @param string|ImageInterface|null                 $filePathOrImage
-     * @param array|PictureConfiguration|int|string|null $sizeConfiguration
-     */
-    public function createLightboxImage($filePathOrImage, string $url = null, $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null): LightboxResult
+    public function createLightboxImage(string|ImageInterface|null $filePathOrImage, string $url = null, array|PictureConfiguration|int|string|null $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null): LightboxResult
     {
         return new LightboxResult($this->locator, $filePathOrImage, $url, $sizeConfiguration, $groupIdentifier, $resizeOptions);
     }

@@ -69,10 +69,7 @@ class DateListener
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * @return string|bool
-     */
-    public function __invoke(string $insertTag)
+    public function __invoke(string $insertTag): bool|string
     {
         $tag = explode('::', $insertTag);
 
@@ -87,10 +84,7 @@ class DateListener
         return false;
     }
 
-    /**
-     * @return string|bool
-     */
-    private function replaceFormatDate(array $tag)
+    private function replaceFormatDate(array $tag): bool|string
     {
         if (empty($tag[1])) {
             return false;
@@ -107,10 +101,7 @@ class DateListener
         return $date->parse($this->getDateFormat($tag[2] ?? 'datim'), $timestamp);
     }
 
-    /**
-     * @return string|bool
-     */
-    private function replaceConvertDate(array $tag)
+    private function replaceConvertDate(array $tag): bool|string
     {
         if (4 !== \count($tag)) {
             return false;

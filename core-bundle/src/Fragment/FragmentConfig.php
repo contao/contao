@@ -67,18 +67,12 @@ class FragmentConfig
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOption(string $name)
+    public function getOption(string $name): mixed
     {
         return $this->options[$name] ?? null;
     }
 
-    /**
-     * @param mixed $option
-     */
-    public function setOption(string $name, $option): self
+    public function setOption(string $name, mixed $option): self
     {
         $this->options[$name] = $option;
 

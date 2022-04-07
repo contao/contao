@@ -23,7 +23,7 @@ final class RouteConfig
     /**
      * @var string|bool|null;
      */
-    private $path;
+    private bool|string|null $path;
 
     /**
      * @var array<string>
@@ -31,10 +31,9 @@ final class RouteConfig
     private array $methods;
 
     /**
-     * @param string|bool|null     $path
      * @param string|array<string> $methods
      */
-    public function __construct($path = null, string $pathRegex = null, string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], $methods = [])
+    public function __construct(string|bool|null $path = null, string $pathRegex = null, string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], array|string $methods = [])
     {
         $this->path = $path;
         $this->pathRegex = $pathRegex;
@@ -45,10 +44,7 @@ final class RouteConfig
         $this->methods = \is_array($methods) ? $methods : [$methods];
     }
 
-    /**
-     * @return string|bool|null
-     */
-    public function getPath()
+    public function getPath(): bool|string|null
     {
         return $this->path;
     }

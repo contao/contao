@@ -387,10 +387,7 @@ class InstallTool
         ]);
     }
 
-    /**
-     * @return mixed|null
-     */
-    public function getConfig(string $key)
+    public function getConfig(string $key): mixed
     {
         return Config::get($key);
     }

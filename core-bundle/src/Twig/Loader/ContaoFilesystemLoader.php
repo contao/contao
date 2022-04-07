@@ -50,6 +50,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     private CacheItemPoolInterface $cachePool;
     private TemplateLocator $templateLocator;
     private ThemeNamespace $themeNamespace;
+    private string|false|null $currentThemeSlug = null;
 
     /**
      * @var array<string,string>
@@ -60,11 +61,6 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * @var array<string,array<string,string>>|null
      */
     private ?array $inheritanceChains = null;
-
-    /**
-     * @var string|false|null
-     */
-    private $currentThemeSlug;
 
     public function __construct(CacheItemPoolInterface $cachePool, TemplateLocator $templateLocator, ThemeNamespace $themeNamespace, string $rootPath = null)
     {
@@ -409,10 +405,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
 
     /**
      * Returns and stores the current theme slug or false if not applicable.
-     *
-     * @return string|false
      */
-    private function getThemeSlug()
+    private function getThemeSlug(): string|false
     {
         if (null === ($page = $GLOBALS['objPage'] ?? null) || null === ($path = $page->templateGroup)) {
             return $this->currentThemeSlug = false;
