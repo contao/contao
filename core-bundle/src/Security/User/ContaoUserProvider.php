@@ -122,12 +122,10 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             return;
         }
 
-        if (null !== $this->logger) {
-            $this->logger->info(
-                sprintf('User "%s" has been logged out automatically due to inactivity', $user->username),
-                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
-            );
-        }
+        $this->logger?->info(
+            sprintf('User "%s" has been logged out automatically due to inactivity', $user->username),
+            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
+        );
 
         throw new UsernameNotFoundException(sprintf('User "%s" has been logged out automatically due to inactivity.', $user->username));
     }

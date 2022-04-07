@@ -86,12 +86,10 @@ class LogoutSuccessListener
                 return;
             }
 
-            if (null !== $this->logger) {
-                $this->logger->info(
-                    sprintf('User "%s" has logged out', $user->username),
-                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
-                );
-            }
+            $this->logger?->info(
+                sprintf('User "%s" has logged out', $user->username),
+                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
+            );
 
             $this->triggerPostLogoutHook($user);
         }

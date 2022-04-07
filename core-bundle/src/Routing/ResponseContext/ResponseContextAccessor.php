@@ -35,10 +35,7 @@ class ResponseContextAccessor
     public function setResponseContext(?ResponseContext $responseContext): self
     {
         $request = $this->requestStack->getCurrentRequest();
-
-        if (null !== $request) {
-            $request->attributes->set(ResponseContext::REQUEST_ATTRIBUTE_NAME, $responseContext);
-        }
+        $request?->attributes->set(ResponseContext::REQUEST_ATTRIBUTE_NAME, $responseContext);
 
         return $this;
     }

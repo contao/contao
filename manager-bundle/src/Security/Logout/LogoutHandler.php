@@ -29,8 +29,6 @@ class LogoutHandler implements LogoutHandlerInterface
 
     public function logout(Request $request, Response $response, TokenInterface $token): void
     {
-        if (null !== $this->jwtManager) {
-            $this->jwtManager->clearResponseCookie($response);
-        }
+        $this->jwtManager?->clearResponseCookie($response);
     }
 }
