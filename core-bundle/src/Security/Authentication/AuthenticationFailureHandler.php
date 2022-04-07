@@ -38,7 +38,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         if (null !== $this->logger) {
-            $this->logException($request, $exception);
+            $this->logException($exception);
         }
 
         $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
@@ -46,7 +46,7 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
         return new RedirectResponse($request->getUri());
     }
 
-    private function logException(Request $request, AuthenticationException $exception): void
+    private function logException(AuthenticationException $exception): void
     {
         $username = 'anon.';
 

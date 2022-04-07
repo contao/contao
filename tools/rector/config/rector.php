@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Rector\CodingStyle\Rector\FuncCall\CountArrayToEmptyArrayComparisonRector;
 use Rector\Core\Configuration\Option;
+use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\Php55\Rector\Class_\ClassConstantToSelfClassRector;
 use Rector\Php73\Rector\FuncCall\ArrayKeyFirstLastRector;
 use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
@@ -47,6 +48,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(FinalizePublicClassConstantRector::class);
     $services->set(IntersectionTypesRector::class);
     $services->set(NullToStrictStringFuncCallArgRector::class);
+    $services->set(RemoveUnusedPrivateMethodParameterRector::class);
     $services->set(RemoveUnusedVariableInCatchRector::class);
     $services->set(RestoreDefaultNullToNullableTypePropertyRector::class);
     $services->set(ReturnNeverTypeRector::class);
