@@ -652,7 +652,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $intervals) {
                                 try {
                                     RetentionPolicy::validateAndSortIntervals($intervals);
-                                } catch (\Exception $e) {
+                                } catch (\Exception) {
                                     return true;
                                 }
 

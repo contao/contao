@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Rector\Core\Configuration\Option;
 use Rector\Php74\Rector\Property\TypedPropertyRector;
+use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
 use Rector\Php80\Rector\FunctionLike\UnionTypesRector;
 use Rector\Php81\Rector\FunctionLike\IntersectionTypesRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\ReturnNeverTypeRector;
@@ -27,6 +28,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services = $containerConfigurator->services();
     $services->set(IntersectionTypesRector::class);
+    $services->set(RemoveUnusedVariableInCatchRector::class);
     $services->set(ReturnNeverTypeRector::class);
     $services->set(TypedPropertyRector::class);
     $services->set(UnionTypesRector::class);

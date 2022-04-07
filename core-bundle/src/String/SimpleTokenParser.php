@@ -153,7 +153,7 @@ class SimpleTokenParser implements LoggerAwareInterface
                 $tokens[] = $tokenStream->current;
                 $tokenStream->next();
             }
-        } catch (SyntaxError $e) {
+        } catch (SyntaxError) {
             // We cannot identify the variables if tokenizing fails
             return [];
         }

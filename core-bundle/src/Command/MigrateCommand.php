@@ -282,7 +282,7 @@ class MigrateCommand extends Command
     {
         try {
             $files = $this->fileLocator->locate('config/runonce.php', null, false);
-        } catch (FileLocatorFileNotFoundException $e) {
+        } catch (FileLocatorFileNotFoundException) {
             return [];
         }
 

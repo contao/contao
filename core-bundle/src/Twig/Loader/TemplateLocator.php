@@ -68,7 +68,7 @@ class TemplateLocator
             // framework here because this function will be called when the
             // container is built (see #3567)
             $themePaths = $this->connection->fetchFirstColumn('SELECT templates FROM tl_theme');
-        } catch (DriverException $e) {
+        } catch (DriverException) {
             return [];
         }
 

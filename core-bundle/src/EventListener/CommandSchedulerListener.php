@@ -70,7 +70,7 @@ class CommandSchedulerListener
         try {
             return $this->connection->isConnected()
                 && $this->connection->createSchemaManager()->tablesExist(['tl_cron_job']);
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
     }

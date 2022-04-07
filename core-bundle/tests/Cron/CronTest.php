@@ -144,7 +144,7 @@ class CronTest extends TestCase
         try {
             $cron->run(Cron::SCOPE_CLI);
             $cron->run(Cron::SCOPE_WEB);
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             $this->fail();
         }
 

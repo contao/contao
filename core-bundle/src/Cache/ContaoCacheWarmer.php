@@ -144,7 +144,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                         Path::join('languages', $language, "$name.php"),
                         ['type' => $language]
                     );
-                } catch (\OutOfBoundsException $e) {
+                } catch (\OutOfBoundsException) {
                     continue;
                 }
             }
@@ -209,7 +209,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         try {
             $this->connection->executeQuery('SELECT COUNT(*) FROM tl_page');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return false;
         }
 
@@ -223,7 +223,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         try {
             return $this->locator->locate(Path::join('config', $name), null, false);
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             return [];
         }
     }
@@ -235,7 +235,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         try {
             return $this->finder->findIn('dca')->files()->name('*.php');
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             return [];
         }
     }
@@ -251,7 +251,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 ->files()
                 ->name('/\.(php|xlf)$/')
             ;
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             return [];
         }
     }
@@ -263,7 +263,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         try {
             return $this->finder->findIn('templates')->name('*.html5');
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             return [];
         }
     }
