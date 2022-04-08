@@ -26,28 +26,28 @@ class TrustedDevice
     #[Id]
     #[Column(type: 'integer')]
     #[GeneratedValue(strategy: 'AUTO')]
-    protected ?int $id = null;
+    protected int|null $id = null;
 
     #[Column(type: 'datetime')]
     protected \DateTimeInterface $created;
 
     #[Column(type: 'string', nullable: true)]
-    protected ?string $userClass = null;
+    protected string|null $userClass = null;
 
     #[Column(type: 'integer', nullable: true)]
-    protected ?int $userId = null;
+    protected int|null $userId = null;
 
     #[Column(name: 'user_agent', type: 'text', nullable: true)]
-    protected ?string $userAgent = null;
+    protected string|null $userAgent = null;
 
     #[Column(name: 'ua_family', type: 'string', nullable: true)]
-    protected ?string $uaFamily = null;
+    protected string|null $uaFamily = null;
 
     #[Column(name: 'os_family', type: 'string', nullable: true)]
-    protected ?string $osFamily = null;
+    protected string|null $osFamily = null;
 
     #[Column(name: 'device_family', type: 'string', nullable: true)]
-    protected ?string $deviceFamily = null;
+    protected string|null $deviceFamily = null;
 
     public function __construct(User $user)
     {
@@ -85,38 +85,38 @@ class TrustedDevice
         return $this->userId;
     }
 
-    public function setUserAgent(?string $userAgent): self
+    public function setUserAgent(string|null $userAgent): self
     {
         $this->userAgent = $userAgent;
 
         return $this;
     }
 
-    public function getUaFamily(): ?string
+    public function getUaFamily(): string|null
     {
         return $this->uaFamily;
     }
 
-    public function setUaFamily(?string $uaFamily): self
+    public function setUaFamily(string|null $uaFamily): self
     {
         $this->uaFamily = $uaFamily;
 
         return $this;
     }
 
-    public function getOsFamily(): ?string
+    public function getOsFamily(): string|null
     {
         return $this->osFamily;
     }
 
-    public function setOsFamily(?string $osFamily): self
+    public function setOsFamily(string|null $osFamily): self
     {
         $this->osFamily = $osFamily;
 
         return $this;
     }
 
-    public function getDeviceFamily(): ?string
+    public function getDeviceFamily(): string|null
     {
         if ('Other' === $this->deviceFamily) {
             return '-';
@@ -125,7 +125,7 @@ class TrustedDevice
         return $this->deviceFamily;
     }
 
-    public function setDeviceFamily(?string $deviceFamily): self
+    public function setDeviceFamily(string|null $deviceFamily): self
     {
         $this->deviceFamily = $deviceFamily;
 

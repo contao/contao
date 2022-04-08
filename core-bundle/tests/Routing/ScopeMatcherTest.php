@@ -34,7 +34,7 @@ class ScopeMatcherTest extends TestCase
     /**
      * @dataProvider mainRequestProvider
      */
-    public function testRecognizesTheContaoScopes(?string $scope, int $requestType, bool $isMain, bool $isFrontend, bool $isBackend): void
+    public function testRecognizesTheContaoScopes(string|null $scope, int $requestType, bool $isMain, bool $isFrontend, bool $isBackend): void
     {
         $request = new Request();
         $request->attributes->set('_scope', $scope);

@@ -25,7 +25,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
     public function __construct(
         FactoryInterface $menuFactory,
         RouterInterface $router,
-        ?TranslatorInterface $translator,
+        TranslatorInterface|null $translator,
         private Security $security
     ) {
         parent::__construct($menuFactory, $router, $translator);
@@ -70,7 +70,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, mixed $value): string|int
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string
     {
         return sprintf($this->getInsertTag($config), $value);
     }

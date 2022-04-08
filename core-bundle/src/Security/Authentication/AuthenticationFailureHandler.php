@@ -25,7 +25,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
 
 class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterface
 {
-    public function __construct(private ?LoggerInterface $logger = null)
+    public function __construct(private LoggerInterface|null $logger = null)
     {
     }
 

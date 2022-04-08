@@ -30,12 +30,12 @@ class ImageResult
     /**
      * Cached picture.
      */
-    private ?PictureInterface $picture = null;
+    private PictureInterface|null $picture = null;
 
     /**
      * Cached image dimensions.
      */
-    private ?ImageDimensions $originalDimensions = null;
+    private ImageDimensions|null $originalDimensions = null;
 
     /**
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
@@ -43,9 +43,9 @@ class ImageResult
     public function __construct(
         private ContainerInterface $locator,
         private string $projectDir,
-        private string|ImageInterface $filePathOrImageInterface,
-        private array|int|PictureConfiguration|string|null $sizeConfiguration = null,
-        private ?ResizeOptions $resizeOptions = null
+        private ImageInterface|string $filePathOrImageInterface,
+        private PictureConfiguration|array|int|string|null $sizeConfiguration = null,
+        private ResizeOptions|null $resizeOptions = null
     ) {
     }
 

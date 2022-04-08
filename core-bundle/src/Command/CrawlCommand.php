@@ -47,7 +47,7 @@ class CrawlCommand extends Command
     protected static $defaultName = 'contao:crawl';
     protected static $defaultDescription = 'Crawls the Contao root pages with the desired subscribers.';
 
-    private ?Escargot $escargot = null;
+    private Escargot|null $escargot = null;
 
     public function __construct(private Factory $escargotFactory, private Filesystem $filesystem)
     {
@@ -189,7 +189,7 @@ class CrawlCommand extends Command
         return new class($progressBar) implements SubscriberInterface, EscargotAwareInterface, FinishedCrawlingSubscriberInterface {
             use EscargotAwareTrait;
 
-            public function __construct(private ?ProgressBar $progressBar)
+            public function __construct(private ProgressBar|null $progressBar)
             {
             }
 

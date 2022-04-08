@@ -121,7 +121,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $this->parent->addFallbackCatalogue($catalogue);
     }
 
-    public function getFallbackCatalogue(): ?MessageCatalogueInterface
+    public function getFallbackCatalogue(): MessageCatalogueInterface|null
     {
         return $this->parent->getFallbackCatalogue();
     }
@@ -136,12 +136,12 @@ final class MessageCatalogue implements MessageCatalogueInterface
         $this->parent->addResource($resource);
     }
 
-    private function isContaoDomain(?string $domain): bool
+    private function isContaoDomain(string|null $domain): bool
     {
         return str_starts_with($domain ?? '', 'contao_');
     }
 
-    private function loadMessage(string $id, string $domain): ?string
+    private function loadMessage(string $id, string $domain): string|null
     {
         $this->framework->initialize();
 
@@ -154,7 +154,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
     /**
      * Returns the labels from $GLOBALS['TL_LANG'] based on a message ID like "MSC.view".
      */
-    private function getFromGlobals(string $id): ?string
+    private function getFromGlobals(string $id): string|null
     {
         // Split the ID into chunks allowing escaped dots (\.) and backslashes (\\)
         preg_match_all('/(?:\\\\[\\\\.]|[^.])++/', $id, $matches);

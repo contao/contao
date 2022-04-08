@@ -21,7 +21,7 @@ final class ResponseContext
 
     private array $services = [];
     private array $current = [];
-    private ?PartialResponseHeaderBag $headerBag = null;
+    private PartialResponseHeaderBag|null $headerBag = null;
 
     public function dispatchEvent(AbstractResponseContextEvent $event): void
     {

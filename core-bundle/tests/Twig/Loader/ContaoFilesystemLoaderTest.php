@@ -552,7 +552,7 @@ class ContaoFilesystemLoaderTest extends TestCase
     /**
      * @dataProvider provideThemeSlugs
      */
-    public function testGetInheritanceChains(?string $themeSlug, array $expectedChains): void
+    public function testGetInheritanceChains(string|null $themeSlug, array $expectedChains): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 

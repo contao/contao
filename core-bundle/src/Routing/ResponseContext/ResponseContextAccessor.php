@@ -21,7 +21,7 @@ class ResponseContextAccessor
     {
     }
 
-    public function getResponseContext(): ?ResponseContext
+    public function getResponseContext(): ResponseContext|null
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -32,7 +32,7 @@ class ResponseContextAccessor
         return $request->attributes->get(ResponseContext::REQUEST_ATTRIBUTE_NAME);
     }
 
-    public function setResponseContext(?ResponseContext $responseContext): self
+    public function setResponseContext(ResponseContext|null $responseContext): self
     {
         $request = $this->requestStack->getCurrentRequest();
         $request?->attributes->set(ResponseContext::REQUEST_ATTRIBUTE_NAME, $responseContext);

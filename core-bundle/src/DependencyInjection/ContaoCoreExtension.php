@@ -418,7 +418,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->removeDefinition('contao.image.fallback_preview_provider');
     }
 
-    private function getComposerPublicDir(string $projectDir): ?string
+    private function getComposerPublicDir(string $projectDir): string|null
     {
         $fs = new Filesystem();
 

@@ -23,7 +23,7 @@ class AbstractPageRouteProviderTest extends TestCase
     /**
      * @dataProvider compareRoutesProvider
      */
-    public function testCompareRoutes(Route $a, Route $b, ?array $languages, int $expected): void
+    public function testCompareRoutes(Route $a, Route $b, array|null $languages, int $expected): void
     {
         $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);
         $class = new \ReflectionClass($instance);

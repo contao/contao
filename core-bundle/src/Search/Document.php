@@ -21,8 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Document
 {
-    private ?Crawler $crawler = null;
-    private ?array $jsonLds = null;
+    private Crawler|null $crawler = null;
+    private array|null $jsonLds = null;
 
     /**
      * The key is the header name in lowercase letters and the value is again
@@ -64,7 +64,7 @@ class Document
         return $this->crawler ??= new Crawler($this->body);
     }
 
-    public function extractCanonicalUri(): ?UriInterface
+    public function extractCanonicalUri(): UriInterface|null
     {
         foreach ($this->getHeaders() as $key => $values) {
             if ('link' === $key) {

@@ -176,7 +176,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $layout->template;
     }
 
-    private function getLayout(): ?LayoutModel
+    private function getLayout(): LayoutModel|null
     {
         if (!isset($GLOBALS['objPage'])) {
             return null;

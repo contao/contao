@@ -25,7 +25,7 @@ trait ModelMetadataTrait
     /**
      * Get the default metadata or null if not applicable.
      */
-    public function getOverwriteMetadata(): ?Metadata
+    public function getOverwriteMetadata(): Metadata|null
     {
         // Ignore if "overwriteMeta" is not set
         if (!$this->overwriteMeta) {

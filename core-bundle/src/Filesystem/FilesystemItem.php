@@ -30,10 +30,10 @@ class FilesystemItem implements \Stringable
     public function __construct(
         private bool $isFile,
         private string $path,
-        private int|\Closure|null $lastModified = null,
-        private int|\Closure|null $fileSize = null,
-        private string|\Closure|null $mimeType = null,
-        private array|\Closure $extraMetadata = []
+        private \Closure|int|null $lastModified = null,
+        private \Closure|int|null $fileSize = null,
+        private \Closure|string|null $mimeType = null,
+        private \Closure|array $extraMetadata = []
     ) {
     }
 
@@ -117,7 +117,7 @@ class FilesystemItem implements \Stringable
         return $this->path;
     }
 
-    public function getLastModified(): ?int
+    public function getLastModified(): int|null
     {
         $this->resolveIfClosure($this->lastModified);
 

@@ -193,7 +193,7 @@ class LintServiceIdsCommand extends Command
         return 0;
     }
 
-    private function getServiceIdFromClass(string $class): ?string
+    private function getServiceIdFromClass(string $class): string|null
     {
         $chunks = explode('\\', strtolower(Container::underscore($class)));
 

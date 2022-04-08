@@ -21,13 +21,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
-    private ?TokenStorageInterface $tokenStorage = null;
+    private TokenStorageInterface|null $tokenStorage = null;
 
-    public function __construct(private FactoryInterface $menuFactory, private RouterInterface $router, private ?TranslatorInterface $translator = null)
+    public function __construct(private FactoryInterface $menuFactory, private RouterInterface $router, private TranslatorInterface|null $translator = null)
     {
     }
 
-    public function getUrl(PickerConfig $config): ?string
+    public function getUrl(PickerConfig $config): string|null
     {
         return $this->generateUrl($config, false);
     }
@@ -111,7 +111,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * Generates the URL for the picker.
      */
-    private function generateUrl(PickerConfig $config, bool $ignoreValue): ?string
+    private function generateUrl(PickerConfig $config, bool $ignoreValue): string|null
     {
         $params = array_merge(
             $this->getRouteParameters($ignoreValue ? null : $config),

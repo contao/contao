@@ -78,7 +78,7 @@ class ArrayUtil
 	 * @param  boolean      $blnByKey   If true the keys of the $arrItems are used
 	 * @return array
 	 */
-	public static function sortByOrderField(array $arrItems, $strOrder, ?string $strIdField = 'uuid', bool $blnByKey = false): array
+	public static function sortByOrderField(array $arrItems, $strOrder, string|null $strIdField = 'uuid', bool $blnByKey = false): array
 	{
 		// Remove all values
 		$arrOrder = array_map(static function () {}, array_flip(StringUtil::deserialize($strOrder, true)));

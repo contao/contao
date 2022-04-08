@@ -31,7 +31,7 @@ class TemplateOptionsListener
         ContaoFramework $framework,
         private RequestStack $requestStack,
         private string $templatePrefix,
-        private ?string $proxyClass = null
+        private string|null $proxyClass = null
     ) {
         $controller = $framework->getAdapter(Controller::class);
 
@@ -62,7 +62,7 @@ class TemplateOptionsListener
     /**
      * Uses the reflection API to return the default template from a legacy class.
      */
-    private function getLegacyDefaultTemplate(DataContainer $dc): ?string
+    private function getLegacyDefaultTemplate(DataContainer $dc): string|null
     {
         if (null === $this->proxyClass || !method_exists($this->proxyClass, 'findClass')) {
             return null;

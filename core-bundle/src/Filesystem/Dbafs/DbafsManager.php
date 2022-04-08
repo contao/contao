@@ -104,7 +104,7 @@ class DbafsManager
      * Returns the last modified time or null if no DBAFS exists for the given
      * $path that supports the attribute and contains a matching record.
      */
-    public function getLastModified(string $path): ?int
+    public function getLastModified(string $path): int|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
@@ -124,7 +124,7 @@ class DbafsManager
      * Returns the file size or null if no DBAFS exists for the given $path
      * that supports the attribute and contains a matching record.
      */
-    public function getFileSize(string $path): ?int
+    public function getFileSize(string $path): int|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
@@ -144,7 +144,7 @@ class DbafsManager
      * Returns the mime type or null if no DBAFS exists for the given $path
      * that supports the attribute and contains a matching record.
      */
-    public function getMimeType(string $path): ?string
+    public function getMimeType(string $path): string|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
@@ -276,7 +276,7 @@ class DbafsManager
         return $changeSet;
     }
 
-    private function getRecord(string $path): ?FilesystemItem
+    private function getRecord(string $path): FilesystemItem|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 

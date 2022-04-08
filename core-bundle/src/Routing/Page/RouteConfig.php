@@ -24,8 +24,8 @@ final class RouteConfig
      */
     public function __construct(
         private bool|string|null $path = null,
-        private ?string $pathRegex = null,
-        private ?string $urlSuffix = null,
+        private string|null $pathRegex = null,
+        private string|null $urlSuffix = null,
         private array $requirements = [],
         private array $options = [],
         private array $defaults = [],
@@ -39,12 +39,12 @@ final class RouteConfig
         return $this->path;
     }
 
-    public function getPathRegex(): ?string
+    public function getPathRegex(): string|null
     {
         return $this->pathRegex;
     }
 
-    public function getUrlSuffix(): ?string
+    public function getUrlSuffix(): string|null
     {
         return $this->urlSuffix;
     }

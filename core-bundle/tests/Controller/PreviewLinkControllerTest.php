@@ -82,7 +82,7 @@ class PreviewLinkControllerTest extends TestCase
     /**
      * @return FrontendPreviewAuthenticator&MockObject
      */
-    private function mockAuthenticator(?bool $showUnpublished): FrontendPreviewAuthenticator
+    private function mockAuthenticator(bool|null $showUnpublished): FrontendPreviewAuthenticator
     {
         $authenticator = $this->createMock(FrontendPreviewAuthenticator::class);
         $authenticator

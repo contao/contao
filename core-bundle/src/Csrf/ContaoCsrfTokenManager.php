@@ -32,8 +32,8 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
         private string $csrfCookiePrefix,
         TokenGeneratorInterface $generator = null,
         TokenStorageInterface $storage = null,
-        string|RequestStack|callable|null $namespace = null,
-        private ?string $defaultTokenName = null
+        RequestStack|callable|string|null $namespace = null,
+        private string|null $defaultTokenName = null
     ) {
         parent::__construct($generator, $storage, $namespace);
     }

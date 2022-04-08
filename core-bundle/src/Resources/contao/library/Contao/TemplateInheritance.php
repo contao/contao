@@ -347,7 +347,7 @@ trait TemplateInheritance
 	/**
 	 * Render a Twig template if one exists
 	 */
-	protected function renderTwigSurrogateIfExists(): ?string
+	protected function renderTwigSurrogateIfExists(): string|null
 	{
 		$container = System::getContainer();
 

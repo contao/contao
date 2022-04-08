@@ -57,7 +57,7 @@ class OptIn implements OptInInterface
         return new OptInToken($optIn, $this->framework);
     }
 
-    public function find(string $identifier): ?OptInTokenInterface
+    public function find(string $identifier): OptInTokenInterface|null
     {
         $adapter = $this->framework->getAdapter(OptInModel::class);
 

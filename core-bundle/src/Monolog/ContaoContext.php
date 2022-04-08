@@ -27,11 +27,11 @@ class ContaoContext implements \Stringable
 
     public function __construct(
         private string $func,
-        private ?string $action = null,
-        private ?string $username = null,
-        private ?string $ip = null,
-        private ?string $browser = null,
-        private ?string $source = null
+        private string|null $action = null,
+        private string|null $username = null,
+        private string|null $ip = null,
+        private string|null $browser = null,
+        private string|null $source = null
     ) {
         if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');
@@ -56,7 +56,7 @@ class ContaoContext implements \Stringable
         return $this->func;
     }
 
-    public function getAction(): ?string
+    public function getAction(): string|null
     {
         return $this->action;
     }
@@ -66,7 +66,7 @@ class ContaoContext implements \Stringable
         $this->action = $action;
     }
 
-    public function getUsername(): ?string
+    public function getUsername(): string|null
     {
         return $this->username;
     }
@@ -76,17 +76,17 @@ class ContaoContext implements \Stringable
         $this->username = $username;
     }
 
-    public function getIp(): ?string
+    public function getIp(): string|null
     {
         return $this->ip;
     }
 
-    public function setIp(?string $ip): void
+    public function setIp(string|null $ip): void
     {
         $this->ip = (string) $ip;
     }
 
-    public function getBrowser(): ?string
+    public function getBrowser(): string|null
     {
         return $this->browser;
     }
@@ -96,7 +96,7 @@ class ContaoContext implements \Stringable
         $this->browser = $browser;
     }
 
-    public function getSource(): ?string
+    public function getSource(): string|null
     {
         return $this->source;
     }

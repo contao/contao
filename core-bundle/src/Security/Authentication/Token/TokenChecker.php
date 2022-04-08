@@ -65,7 +65,7 @@ class TokenChecker
     /**
      * Gets the front end username from the session.
      */
-    public function getFrontendUsername(): ?string
+    public function getFrontendUsername(): string|null
     {
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
@@ -79,7 +79,7 @@ class TokenChecker
     /**
      * Gets the back end username from the session.
      */
-    public function getBackendUsername(): ?string
+    public function getBackendUsername(): string|null
     {
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
@@ -106,7 +106,7 @@ class TokenChecker
         return $token instanceof FrontendPreviewToken && $token->showUnpublished();
     }
 
-    private function getToken(string $context): ?TokenInterface
+    private function getToken(string $context): TokenInterface|null
     {
         $token = $this->getTokenFromStorage($context);
 
@@ -125,7 +125,7 @@ class TokenChecker
         return $token;
     }
 
-    private function getTokenFromStorage(string $context): ?TokenInterface
+    private function getTokenFromStorage(string $context): TokenInterface|null
     {
         $request = $this->requestStack->getMainRequest();
 
@@ -142,7 +142,7 @@ class TokenChecker
         return $this->tokenStorage->getToken();
     }
 
-    private function getTokenFromSession(string $sessionKey): ?TokenInterface
+    private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
         if (!$this->session->isStarted()) {
             $request = $this->requestStack->getMainRequest();

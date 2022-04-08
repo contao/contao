@@ -204,7 +204,7 @@ class FilesystemConfiguration
     /**
      * @return array{0: string, 1: string}|null
      */
-    private function getVirtualFilesystem(string $name): ?array
+    private function getVirtualFilesystem(string $name): array|null
     {
         foreach ($this->container->findTaggedServiceIds('contao.virtual_filesystem') as $id => $tags) {
             foreach ($tags as $tag) {

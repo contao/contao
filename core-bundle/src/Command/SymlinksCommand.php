@@ -39,7 +39,7 @@ class SymlinksCommand extends Command
     protected static $defaultDescription = 'Symlinks the public resources into the public directory.';
 
     private array $rows = [];
-    private ?string $webDir = null;
+    private string|null $webDir = null;
     private int $statusCode = 0;
 
     public function __construct(

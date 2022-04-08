@@ -27,7 +27,7 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     use ContainerAwareTrait;
 
     private string $dbalServiceName = 'doctrine.dbal.default_connection';
-    private ?Statement $statement = null;
+    private Statement|null $statement = null;
 
     public function getDbalServiceName(): string
     {

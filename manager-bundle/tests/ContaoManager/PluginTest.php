@@ -336,7 +336,7 @@ class PluginTest extends ContaoTestCase
     /**
      * @dataProvider getDatabaseParameters
      */
-    public function testSetsTheDatabaseUrl(?string $user, ?string $password, ?string $name, string $expected): void
+    public function testSetsTheDatabaseUrl(string|null $user, string|null $password, string|null $name, string $expected): void
     {
         $container = $this->getContainer();
         $container->setParameter('database_user', $user);
@@ -715,7 +715,7 @@ class PluginTest extends ContaoTestCase
     /**
      * @dataProvider getMailerParameters
      */
-    public function testSetsTheMailerDsn(string $transport, ?string $host, ?string $user, ?string $password, ?int $port, ?string $encryption, string $expected): void
+    public function testSetsTheMailerDsn(string $transport, string|null $host, string|null $user, string|null $password, int|null $port, string|null $encryption, string $expected): void
     {
         $container = $this->getContainer();
         $container->setParameter('mailer_transport', $transport);

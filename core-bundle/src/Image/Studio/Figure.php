@@ -43,10 +43,10 @@ class Figure
      */
     public function __construct(
         private ImageResult $image,
-        private Metadata|\Closure|null $metadata = null,
-        private array|\Closure|null $linkAttributes = null,
-        private LightboxResult|\Closure|null $lightbox = null,
-        private array|\Closure|null $options = null
+        private \Closure|Metadata|null $metadata = null,
+        private \Closure|array|null $linkAttributes = null,
+        private \Closure|LightboxResult|null $lightbox = null,
+        private \Closure|array|null $options = null
     ) {
     }
 
@@ -207,7 +207,7 @@ class Figure
      * @param string|null       $floating            Set/determine values for the "float_class" and "addBefore" keys
      * @param bool              $includeFullMetadata Make all metadata available in the first dimension of the returned data set (key-value pairs)
      */
-    public function getLegacyTemplateData(string|array|null $margin = null, string $floating = null, bool $includeFullMetadata = true): array
+    public function getLegacyTemplateData(array|string|null $margin = null, string $floating = null, bool $includeFullMetadata = true): array
     {
         // Create a key-value list of the metadata and apply some renaming and
         // formatting transformations to fit the legacy templates.
@@ -347,7 +347,7 @@ class Figure
      * @param string|null       $floating            Set/determine values for the template's "float_class" and "addBefore" properties
      * @param bool              $includeFullMetadata Make all metadata entries directly available in the template
      */
-    public function applyLegacyTemplateData(object $template, string|array $margin = null, string $floating = null, bool $includeFullMetadata = true): void
+    public function applyLegacyTemplateData(object $template, array|string $margin = null, string $floating = null, bool $includeFullMetadata = true): void
     {
         $new = $this->getLegacyTemplateData($margin, $floating, $includeFullMetadata);
         $existing = $template instanceof Template ? $template->getData() : get_object_vars($template);

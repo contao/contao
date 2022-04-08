@@ -197,7 +197,7 @@ class PreviewLinkListener
     /**
      * @Callback(table="tl_preview_link", target="list.operations.share.button")
      */
-    public function shareOperation(array $row, ?string $href, ?string $label, ?string $title, string $icon): string
+    public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
     {
         if ($row['expiresAt'] < time()) {
             return Image::getHtml(str_replace('.svg', '_.svg', $icon), $label);

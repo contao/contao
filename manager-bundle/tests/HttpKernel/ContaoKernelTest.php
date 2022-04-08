@@ -37,7 +37,7 @@ class ContaoKernelTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
-    private string|array|false $shellVerbosityBackup;
+    private array|string|false $shellVerbosityBackup;
 
     protected function setUp(): void
     {
