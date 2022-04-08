@@ -190,35 +190,50 @@ final class ContaoCorePermissions
     /**
      * Prefix for all DCA related permission attributes.
      */
-    public const DCA_PREFIX = 'contao_dca.';
+    public const DC_PREFIX = 'contao_dc.';
 
     /**
-     * Create DCA permission.
+     * Prefix for global_operations.
      */
-    public const DCA_CREATE = self::DCA_PREFIX.'create';
+    public const DC_GLOBAL_OPERATION_PREFIX = self::DC_PREFIX.'global_operation.';
 
     /**
-     * Edit DCA permission.
+     * Prefix for operations.
      */
-    public const DCA_EDIT = self::DCA_PREFIX.'edit';
+    public const DC_OPERATION_PREFIX = self::DC_PREFIX.'operation.';
 
     /**
-     * Delete DCA permission.
+     * Prefix for buttons.
      */
-    public const DCA_DELETE = self::DCA_PREFIX.'delete';
+    public const DC_BUTTON_PREFIX = self::DC_PREFIX.'button.';
 
     /**
-     * View DCA permission.
+     * Create DC permission.
      */
-    public const DCA_VIEW = self::DCA_PREFIX.'view';
+    public const DC_CREATE = self::DC_GLOBAL_OPERATION_PREFIX.'create';
 
     /**
-     * Copy DCA permission.
+     * Edit DC permission.
      */
-    public const DCA_COPY = self::DCA_PREFIX.'copy';
+    public const DC_EDIT = self::DC_OPERATION_PREFIX.'edit';
 
     /**
-     * Move DCA permission.
+     * Delete DC permission.
      */
-    public const DCA_MOVE = self::DCA_PREFIX.'move';
+    public const DC_DELETE = self::DC_OPERATION_PREFIX.'delete';
+
+    /**
+     * View DC permission.
+     */
+    public const DC_VIEW = self::DC_OPERATION_PREFIX.'view';
+
+    /**
+     * Copy DC permission.
+     */
+    public const DC_COPY = self::DC_OPERATION_PREFIX.'copy';
+
+    /**
+     * Move DC permission.
+     */
+    public const DC_MOVE = self::DC_OPERATION_PREFIX.'move';
 }
