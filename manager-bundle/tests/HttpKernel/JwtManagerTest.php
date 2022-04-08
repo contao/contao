@@ -150,7 +150,7 @@ class JwtManagerTest extends ContaoTestCase
         $jwtManager->clearResponseCookie($response);
     }
 
-    private function getCookieValueFromResponse(Response $response): ?string
+    private function getCookieValueFromResponse(Response $response): string|null
     {
         foreach ($response->headers->getCookies() as $cookie) {
             if (JwtManager::COOKIE_NAME === $cookie->getName()) {

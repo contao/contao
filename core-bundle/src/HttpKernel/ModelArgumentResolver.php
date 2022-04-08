@@ -53,7 +53,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
         yield $this->fetchModel($request, $argument);
     }
 
-    private function fetchModel(Request $request, ArgumentMetadata $argument): ?Model
+    private function fetchModel(Request $request, ArgumentMetadata $argument): Model|null
     {
         $name = $this->getArgumentName($request, $argument);
 
@@ -88,7 +88,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
     /**
      * Returns the argument name from the model class.
      */
-    private function getArgumentName(Request $request, ArgumentMetadata $argument): ?string
+    private function getArgumentName(Request $request, ArgumentMetadata $argument): string|null
     {
         if ($request->attributes->has($argument->getName())) {
             return $argument->getName();

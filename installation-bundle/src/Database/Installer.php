@@ -19,7 +19,7 @@ use Doctrine\DBAL\Schema\Schema;
 
 class Installer
 {
-    private ?array $commands = null;
+    private array|null $commands = null;
     private array $commandOrder;
 
     /**

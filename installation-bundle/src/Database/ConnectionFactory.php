@@ -21,7 +21,7 @@ class ConnectionFactory
     /**
      * Returns the database connection object.
      */
-    public static function create(array $parameters): ?Connection
+    public static function create(array $parameters): Connection|null
     {
         $params = [
             'driver' => 'pdo_mysql',

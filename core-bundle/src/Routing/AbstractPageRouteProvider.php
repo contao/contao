@@ -227,7 +227,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         return array_flip($result);
     }
 
-    private function getLocalePriority(array $locales, array $notIn, array $languagePriority): ?int
+    private function getLocalePriority(array $locales, array $notIn, array $languagePriority): int|null
     {
         foreach (array_reverse($locales) as $locale) {
             if (isset($languagePriority[$locale]) && !\in_array($locale, $notIn, true)) {

@@ -25,7 +25,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     public function __construct(
         FactoryInterface $menuFactory,
         RouterInterface $router,
-        ?TranslatorInterface $translator,
+        TranslatorInterface|null $translator,
         private Security $security
     ) {
         parent::__construct($menuFactory, $router, $translator);
@@ -91,7 +91,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, mixed $value): string|int
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string
     {
         if ('page' === $config->getContext()) {
             return (int) $value;

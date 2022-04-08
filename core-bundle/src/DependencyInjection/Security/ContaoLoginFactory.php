@@ -27,7 +27,7 @@ class ContaoLoginFactory extends AbstractFactory
         $this->defaultFailureHandlerOptions = [];
     }
 
-    public function create(ContainerBuilder $container, string $id, array $config, string $userProviderId, ?string $defaultEntryPointId): array
+    public function create(ContainerBuilder $container, string $id, array $config, string $userProviderId, string|null $defaultEntryPointId): array
     {
         $ids = parent::create($container, $id, $config, $userProviderId, $defaultEntryPointId);
 
@@ -81,7 +81,7 @@ class ContaoLoginFactory extends AbstractFactory
         return 'contao.security.login_authentication_listener';
     }
 
-    protected function createEntryPoint(ContainerBuilder $container, string $id, array $config, ?string $defaultEntryPointId): string
+    protected function createEntryPoint(ContainerBuilder $container, string $id, array $config, string|null $defaultEntryPointId): string
     {
         return 'contao.security.authentication_entry_point';
     }

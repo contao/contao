@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Route;
 
 class PageControllerTest extends FunctionalTestCase
 {
-    private static ?array $lastImport = null;
+    private static array|null $lastImport = null;
 
     /**
      * @dataProvider getPageController

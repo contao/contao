@@ -38,12 +38,12 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class ContaoKernel extends Kernel implements HttpCacheProvider
 {
-    protected static ?string $projectDir = null;
-    private ?PluginLoader $pluginLoader = null;
-    private ?BundleLoader $bundleLoader = null;
-    private ?JwtManager $jwtManager = null;
-    private ?ManagerConfig $managerConfig = null;
-    private ?ContaoCache $httpCache = null;
+    protected static string|null $projectDir = null;
+    private PluginLoader|null $pluginLoader = null;
+    private BundleLoader|null $bundleLoader = null;
+    private JwtManager|null $jwtManager = null;
+    private ManagerConfig|null $managerConfig = null;
+    private ContaoCache|null $httpCache = null;
 
     public function shutdown(): void
     {
@@ -132,7 +132,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         $this->bundleLoader = $bundleLoader;
     }
 
-    public function getJwtManager(): ?JwtManager
+    public function getJwtManager(): JwtManager|null
     {
         return $this->jwtManager;
     }
@@ -308,7 +308,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
     }
 
-    private function getConfigFile(string $file): ?string
+    private function getConfigFile(string $file): string|null
     {
         $projectDir = $this->getProjectDir();
 

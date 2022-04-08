@@ -23,7 +23,7 @@ class ManagerConfig
 {
     private string $configFile;
     private Filesystem $filesystem;
-    private ?array $config = null;
+    private array|null $config = null;
 
     public function __construct(string $projectDir, Filesystem $filesystem = null)
     {

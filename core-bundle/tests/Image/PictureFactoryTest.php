@@ -614,7 +614,7 @@ class PictureFactoryTest extends TestCase
     /**
      * @dataProvider getResizeOptionsScenarios
      */
-    public function testCreatesAPictureWithResizeOptions(?ResizeOptions $resizeOptions, PictureConfiguration|string|null $size, bool $expected): void
+    public function testCreatesAPictureWithResizeOptions(ResizeOptions|null $resizeOptions, PictureConfiguration|string|null $size, bool $expected): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
         $imageMock = $this->createMock(ImageInterface::class);

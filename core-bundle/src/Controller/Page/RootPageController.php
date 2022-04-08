@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RootPageController extends AbstractController
 {
-    public function __construct(private ?LoggerInterface $logger = null)
+    public function __construct(private LoggerInterface|null $logger = null)
     {
     }
 

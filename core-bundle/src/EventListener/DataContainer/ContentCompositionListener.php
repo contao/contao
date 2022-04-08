@@ -58,7 +58,7 @@ class ContentCompositionListener
     /**
      * @Callback(table="tl_page", target="list.operations.articles.button")
      */
-    public function renderPageArticlesOperation(array $row, ?string $href, string $label, string $title, ?string $icon): string
+    public function renderPageArticlesOperation(array $row, string|null $href, string $label, string $title, string|null $icon): string
     {
         if ((null === $href && null === $icon) || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')) {
             return '';
@@ -213,7 +213,7 @@ class ContentCompositionListener
         return null !== $this->getArticleColumnInLayout($pageModel);
     }
 
-    private function getArticleColumnInLayout(PageModel $pageModel): ?string
+    private function getArticleColumnInLayout(PageModel $pageModel): string|null
     {
         $pageModel->loadDetails();
 

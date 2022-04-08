@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Framework;
 
 trait FrameworkAwareTrait
 {
-    protected ?ContaoFramework $framework = null;
+    protected ContaoFramework|null $framework = null;
 
     public function setFramework(ContaoFramework $framework = null): void
     {

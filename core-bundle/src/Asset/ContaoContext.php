@@ -70,7 +70,7 @@ class ContaoContext implements ContextInterface
         return '';
     }
 
-    private function getPageModel(): ?PageModel
+    private function getPageModel(): PageModel|null
     {
         $request = $this->requestStack->getMainRequest();
 
@@ -84,7 +84,7 @@ class ContaoContext implements ContextInterface
     /**
      * Returns a field value from the page model.
      */
-    private function getFieldValue(?PageModel $page): string
+    private function getFieldValue(PageModel|null $page): string
     {
         if (null === $page) {
             return '';

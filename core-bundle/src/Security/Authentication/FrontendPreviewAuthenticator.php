@@ -31,7 +31,7 @@ class FrontendPreviewAuthenticator
         private Security $security,
         private SessionInterface $session,
         private UserProviderInterface $userProvider,
-        private ?LoggerInterface $logger = null
+        private LoggerInterface|null $logger = null
     ) {
     }
 
@@ -76,7 +76,7 @@ class FrontendPreviewAuthenticator
     /**
      * Loads the front end user and checks its group access permissions.
      */
-    private function loadFrontendUser(string $username): ?FrontendUser
+    private function loadFrontendUser(string $username): FrontendUser|null
     {
         try {
             $frontendUser = $this->userProvider->loadUserByIdentifier($username);

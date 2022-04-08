@@ -36,7 +36,7 @@ class MigrateCommand extends Command
     protected static $defaultName = 'contao:migrate';
     protected static $defaultDescription = 'Executes migrations and updates the database schema.';
 
-    private ?SymfonyStyle $io = null;
+    private SymfonyStyle|null $io = null;
 
     public function __construct(
         private MigrationCollection $migrations,
@@ -46,7 +46,7 @@ class MigrateCommand extends Command
         private BackupManager $backupManager,
         private SchemaProvider $schemaProvider,
         private MysqlInnodbRowSizeCalculator $rowSizeCalculator,
-        private ?Installer $installer = null
+        private Installer|null $installer = null
     ) {
         parent::__construct();
     }

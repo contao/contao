@@ -25,7 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ImageSizes implements ResetInterface
 {
     private array $predefinedSizes = [];
-    private ?array $options = null;
+    private array|null $options = null;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.sizes" service instead

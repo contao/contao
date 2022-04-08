@@ -85,7 +85,7 @@ class DebugContaoTwigCommand extends Command
         return 0;
     }
 
-    private function getThemeSlug(InputInterface $input): ?string
+    private function getThemeSlug(InputInterface $input): string|null
     {
         if (null === ($pathOrSlug = $input->getOption('theme'))) {
             return null;

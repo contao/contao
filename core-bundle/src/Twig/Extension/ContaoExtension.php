@@ -219,7 +219,7 @@ final class ContaoExtension extends AbstractExtension
                 return $this->inherit();
             }
 
-            protected function renderTwigSurrogateIfExists(): ?string
+            protected function renderTwigSurrogateIfExists(): string|null
             {
                 return null;
             }

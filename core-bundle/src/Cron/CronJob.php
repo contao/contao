@@ -16,7 +16,7 @@ class CronJob
 {
     private string $name;
 
-    public function __construct(private object $service, private string $interval, private ?string $method = null)
+    public function __construct(private object $service, private string $interval, private string|null $method = null)
     {
         $this->name = $service::class;
 

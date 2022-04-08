@@ -67,7 +67,7 @@ class RequestTokenListener
         throw new InvalidRequestTokenException('Invalid CSRF token. Please reload the page and try again.');
     }
 
-    private function getTokenFromRequest(Request $request): ?string
+    private function getTokenFromRequest(Request $request): string|null
     {
         if ($request->request->has('REQUEST_TOKEN')) {
             return (string) $request->request->get('REQUEST_TOKEN');

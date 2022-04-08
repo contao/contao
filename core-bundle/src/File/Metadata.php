@@ -34,7 +34,7 @@ class Metadata
      * @param array<string, mixed>      $values          Key-value pairs of metadata
      * @param array<string, array>|null $schemaOrgJsonLd JSON-LD data where the key matches the schema.org type
      */
-    public function __construct(private array $values, private ?array $schemaOrgJsonLd = null)
+    public function __construct(private array $values, private array|null $schemaOrgJsonLd = null)
     {
     }
 
@@ -84,7 +84,7 @@ class Metadata
     /**
      * Returns a UUID reference in ASCII format or null if not set.
      */
-    public function getUuid(): ?string
+    public function getUuid(): string|null
     {
         return $this->values[self::VALUE_UUID] ?? null;
     }

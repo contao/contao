@@ -23,17 +23,17 @@ use Psr\Container\ContainerInterface;
 
 class LightboxResult
 {
-    private ?ImageResult $image = null;
+    private ImageResult|null $image = null;
 
     /**
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(
         private ContainerInterface $locator,
-        string|ImageInterface|null $filePathOrImage,
-        private ?string $url,
-        array|PictureConfiguration|int|string|null $sizeConfiguration = null,
-        private ?string $groupIdentifier = null,
+        ImageInterface|string|null $filePathOrImage,
+        private string|null $url,
+        PictureConfiguration|array|int|string|null $sizeConfiguration = null,
+        private string|null $groupIdentifier = null,
         ResizeOptions $resizeOptions = null
     ) {
         if (1 !== \count(array_filter([$filePathOrImage, $url]))) {
@@ -94,7 +94,7 @@ class LightboxResult
      * Will return null if there is no lightbox size configuration or if not
      * in a request context.
      */
-    private function getDefaultLightboxSizeConfiguration(): ?array
+    private function getDefaultLightboxSizeConfiguration(): array|null
     {
         $page = $GLOBALS['objPage'] ?? null;
 

@@ -45,7 +45,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     private static bool $initialized = false;
     private static string $nonce = '';
 
-    private ?Request $request = null;
+    private Request|null $request = null;
     private bool $isFrontend = false;
     private array $adapterCache = [];
     private array $hookListeners = [];
@@ -185,7 +185,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         \define('TL_PATH', $this->getPath());
     }
 
-    private function getMode(): ?string
+    private function getMode(): string|null
     {
         if (true === $this->isFrontend) {
             return 'FE';
@@ -206,7 +206,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         return null;
     }
 
-    private function getRefererId(): ?string
+    private function getRefererId(): string|null
     {
         if (null === $this->request) {
             return null;
@@ -215,7 +215,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         return $this->request->attributes->get('_contao_referer_id', '');
     }
 
-    private function getRoute(): ?string
+    private function getRoute(): string|null
     {
         if (null === $this->request) {
             return null;
@@ -224,7 +224,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         return substr($this->request->getBaseUrl().$this->request->getPathInfo(), \strlen($this->request->getBasePath().'/'));
     }
 
-    private function getPath(): ?string
+    private function getPath(): string|null
     {
         if (null === $this->request) {
             return null;
@@ -362,7 +362,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         }
     }
 
-    private function getSession(): ?SessionInterface
+    private function getSession(): SessionInterface|null
     {
         if (null === $this->request || !$this->request->hasSession()) {
             return null;

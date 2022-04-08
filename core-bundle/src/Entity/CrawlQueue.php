@@ -41,7 +41,7 @@ class CrawlQueue
     public string $uriHash;
 
     #[Column(name: 'found_on', type: 'text', nullable: true)]
-    public ?string $foundOn = null;
+    public string|null $foundOn = null;
 
     #[Column(type: 'smallint')]
     public int $level;
@@ -50,5 +50,5 @@ class CrawlQueue
     public bool $processed;
 
     #[Column(type: 'text', nullable: true)]
-    public ?string $tags = null;
+    public string|null $tags = null;
 }

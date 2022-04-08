@@ -37,10 +37,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
     use PriorityTaggedServiceTrait;
 
     public function __construct(
-        private ?string $tag,
-        private ?string $globalsKey = null,
-        private ?string $proxyClass = null,
-        private ?string $templateOptionsListener = null
+        private string|null $tag,
+        private string|null $globalsKey = null,
+        private string|null $proxyClass = null,
+        private string|null $templateOptionsListener = null
     ) {
     }
 

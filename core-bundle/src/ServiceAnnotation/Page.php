@@ -25,9 +25,9 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  */
 final class Page implements ServiceTagInterface
 {
-    private ?string $type = null;
+    private string|null $type = null;
     private bool $contentComposition = true;
-    private ?string $urlSuffix = null;
+    private string|null $urlSuffix = null;
     private array $requirements = [];
     private array $options = [];
     private array $defaults = [];
@@ -106,7 +106,7 @@ final class Page implements ServiceTagInterface
         $this->contentComposition = $contentComposition;
     }
 
-    public function setPath(string|bool|null $path): void
+    public function setPath(bool|string|null $path): void
     {
         $this->path = $path;
     }
@@ -116,7 +116,7 @@ final class Page implements ServiceTagInterface
         return $this->path;
     }
 
-    public function getUrlSuffix(): ?string
+    public function getUrlSuffix(): string|null
     {
         return $this->urlSuffix;
     }

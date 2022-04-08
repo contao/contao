@@ -38,7 +38,7 @@ class LogoutSuccessListener
         private ScopeMatcher $scopeMatcher,
         private ContaoFramework $framework,
         private Security $security,
-        private ?LoggerInterface $logger
+        private LoggerInterface|null $logger
     ) {
     }
 

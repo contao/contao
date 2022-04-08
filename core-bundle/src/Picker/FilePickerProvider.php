@@ -73,7 +73,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->getLinkDcaAttributes($config);
     }
 
-    public function convertDcaValue(PickerConfig $config, mixed $value): string|int
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string
     {
         if ('file' === $config->getContext()) {
             return $value;

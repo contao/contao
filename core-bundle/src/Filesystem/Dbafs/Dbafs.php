@@ -97,7 +97,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->useLastModified = $enable;
     }
 
-    public function getPathFromUuid(Uuid $uuid): ?string
+    public function getPathFromUuid(Uuid $uuid): string|null
     {
         $uuidBytes = $uuid->toBinary();
 
@@ -108,7 +108,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         return $this->pathByUuid[$uuidBytes];
     }
 
-    public function getPathFromId(int $id): ?string
+    public function getPathFromId(int $id): string|null
     {
         if (!\array_key_exists($id, $this->pathById)) {
             $this->loadRecordById($id);
@@ -117,7 +117,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         return $this->pathById[$id];
     }
 
-    public function getRecord(string $path): ?FilesystemItem
+    public function getRecord(string $path): FilesystemItem|null
     {
         if (!\array_key_exists($path, $this->records)) {
             $this->loadRecordByPath($path);

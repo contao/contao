@@ -30,8 +30,8 @@ class BackendMenuListener
         private RequestStack $requestStack,
         private TranslatorInterface $translator,
         private bool $debug,
-        private ?string $managerPath,
-        private ?JwtManager $jwtManager
+        private string|null $managerPath,
+        private JwtManager|null $jwtManager
     ) {
     }
 

@@ -31,11 +31,11 @@ class LogoutHandler implements LogoutHandlerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.logout_handler" service instead
      */
-    public function __construct(private ContaoFramework $framework, private ?LoggerInterface $logger = null)
+    public function __construct(private ContaoFramework $framework, private LoggerInterface|null $logger = null)
     {
     }
 
-    public function logout(Request $request, ?Response $response, TokenInterface $token): void
+    public function logout(Request $request, Response|null $response, TokenInterface $token): void
     {
         trigger_deprecation('contao/core-bundle', '4.13', 'Using the LogoutHandler has been deprecated an will no longer work in Contao 5. Use the Symfony\Component\Security\Http\Event\LogoutEvent instead.');
     }

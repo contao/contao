@@ -80,7 +80,7 @@ class InstallTool
         $this->connection = $connection;
     }
 
-    public function canConnectToDatabase(?string $name): bool
+    public function canConnectToDatabase(string|null $name): bool
     {
         // Return if there is a working database connection already
         try {

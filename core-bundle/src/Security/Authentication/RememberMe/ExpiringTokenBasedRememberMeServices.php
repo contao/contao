@@ -140,7 +140,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     /**
      * @param array<RememberMe> $rows
      */
-    private function findValidToken(array $rows, string $cookieValue): ?RememberMe
+    private function findValidToken(array $rows, string $cookieValue): RememberMe|null
     {
         $lastException = null;
 

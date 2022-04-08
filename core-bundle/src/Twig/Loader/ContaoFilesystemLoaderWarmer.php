@@ -30,7 +30,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         private string $projectDir,
         private string $cacheDir,
         private string $environment,
-        private ?Filesystem $filesystem = null
+        private Filesystem|null $filesystem = null
     ) {
     }
 

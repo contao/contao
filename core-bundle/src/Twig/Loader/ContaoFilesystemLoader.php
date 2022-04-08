@@ -57,7 +57,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     /**
      * @var array<string,array<string,string>>|null
      */
-    private ?array $inheritanceChains = null;
+    private array|null $inheritanceChains = null;
 
     public function __construct(
         private CacheItemPoolInterface $cachePool,
@@ -382,7 +382,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * Returns the template name of a theme specific variant of the given name
      * or null if not applicable.
      */
-    private function getThemeTemplateName(string $name): ?string
+    private function getThemeTemplateName(string $name): string|null
     {
         $parts = ContaoTwigUtil::parseContaoName($name);
 

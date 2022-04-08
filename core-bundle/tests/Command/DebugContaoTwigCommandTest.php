@@ -151,7 +151,7 @@ class DebugContaoTwigCommandTest extends TestCase
     /**
      * @dataProvider provideThemeOptions
      */
-    public function testIncludesThemeTemplates(array $input, ?string $expectedThemeSlug): void
+    public function testIncludesThemeTemplates(array $input, string|null $expectedThemeSlug): void
     {
         $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $hierarchy

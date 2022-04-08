@@ -36,8 +36,8 @@ class EntityCacheTags
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ?ResponseTagger $responseTagger = null,
-        private ?CacheInvalidator $cacheInvalidator = null
+        private ResponseTagger|null $responseTagger = null,
+        private CacheInvalidator|null $cacheInvalidator = null
     ) {
     }
 
@@ -121,7 +121,7 @@ class EntityCacheTags
      *
      * @return array<int, string>
      */
-    public function getTagsFor(array|string|object|null $target): array
+    public function getTagsFor(array|object|string|null $target): array
     {
         if (!$target) {
             return [];
@@ -214,7 +214,7 @@ class EntityCacheTags
      *
      * See getTagsFor() method for the allowed parameters.
      */
-    public function tagWith(array|string|object|null $target): void
+    public function tagWith(array|object|string|null $target): void
     {
         if (null === $this->responseTagger) {
             return;
@@ -276,7 +276,7 @@ class EntityCacheTags
      *
      * See getTagsFor() method for the allowed parameters.
      */
-    public function invalidateTagsFor(array|string|object|null $target): void
+    public function invalidateTagsFor(array|object|string|null $target): void
     {
         if (null === $this->cacheInvalidator) {
             return;
@@ -292,7 +292,7 @@ class EntityCacheTags
      *
      * @return ?ClassMetadata<T>
      */
-    private function getClassMetadata(string $className): ?ClassMetadata
+    private function getClassMetadata(string $className): ClassMetadata|null
     {
         $getMetadata = function (string $className) {
             try {
