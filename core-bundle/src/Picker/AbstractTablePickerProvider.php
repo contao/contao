@@ -137,7 +137,8 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->initialize();
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
-        return is_a(DataContainer::getDriverForTable($table), $this->getDataContainer(), true)
+        return ($this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
+                || is_a(DataContainer::getDriverForTable($table), $this->getDataContainer(), true))
             && 0 !== \count($this->getModulesForTable($table));
     }
 
@@ -273,7 +274,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     }
 
     /**
-     * Returns the DataContainer name supported by this picker (e.g. "Table" for DC_Table).
+     * Returns the DataContainer fully qualified class name (FQCN) supported by this picker (e.g. "Contao\DC_Table" for DC_Table).
      */
     abstract protected function getDataContainer(): string;
 }
