@@ -155,7 +155,7 @@ abstract class Hybrid extends Frontend
 
 		$arrHeadline = StringUtil::deserialize($objElement->headline);
 		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] ?? '' : $arrHeadline;
-		$this->hl = \is_array($arrHeadline) && isset($arrHeadline['unit']) ? $arrHeadline['unit'] : 'h1';
+		$this->hl = $arrHeadline['unit'] ?? 'h1';
 		$this->strColumn = $strColumn;
 	}
 
