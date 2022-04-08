@@ -413,7 +413,7 @@ class Newsletter extends Backend
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
-		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html))
+		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html ?? ''))
 			->setHtmlAllowed(!$objNewsletter->sendText)
 			->setNewsletterData($objNewsletter->row())
 			->setRecipientData($arrRecipient);
