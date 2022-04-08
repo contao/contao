@@ -48,6 +48,11 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertSame('tablePicker', $provider->getName());
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Since contao/core-bundle 4.9: The usage of a non fully qualified class name as DataContainer name has been deprecated %s.
+     */
     public function testSupportsLegacyContext(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Table';
@@ -75,6 +80,11 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertFalse($provider->supportsContext('foobar'));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation Since contao/core-bundle 4.9: The usage of a non fully qualified class name as DataContainer name has been deprecated %s.
+     */
     public function testDoesNotSupportContextWithoutDataContainer(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Foobar';
