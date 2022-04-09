@@ -39,6 +39,8 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
 
+    public const TAG_SKIP = 'skip-search-index';
+
     /**
      * @var IndexerInterface
      */
@@ -67,6 +69,16 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function shouldRequest(CrawlUri $crawlUri): string
     {
+        if ($crawlUri->hasTag(self::TAG_SKIP)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Did not request because it was marked to be skipped using the data-skip-search-index attribute.'
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
         // Respect robots.txt info and nofollow meta data
         if (!Util::isAllowedToFollow($crawlUri, $this->escargot)) {
             $this->logWithCrawlUri(

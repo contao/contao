@@ -124,6 +124,13 @@ class SearchIndexSubscriberTest extends TestCase
             'Did not index because it was not part of the base URI collection.',
         ];
 
+        yield 'Test skips URIs that were marked to be skipped by the data attribue' => [
+            (new CrawlUri(new Uri('https://contao.org/foobar'), 0))->addTag(SearchIndexSubscriber::TAG_SKIP),
+            SubscriberInterface::DECISION_NEGATIVE,
+            LogLevel::DEBUG,
+            'Did not request because it was marked to be skipped using the data-skip-search-index attribute.',
+        ];
+
         yield 'Test requests if everything is okay' => [
             (new CrawlUri(new Uri('https://contao.org/foobar'), 0)),
             SubscriberInterface::DECISION_POSITIVE,
