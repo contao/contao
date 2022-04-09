@@ -80,10 +80,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
     protected function createTemplate(Model $model, string|null $fallbackTemplateName = null): FragmentTemplate
     {
         $templateName = $this->getTemplateName($model, $fallbackTemplateName);
-
-        if ($isLegacyTemplate = $this->isLegacyTemplate($templateName)) {
-            trigger_deprecation('contao/core-bundle', '5.0', 'Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
-        }
+        $isLegacyTemplate = $this->isLegacyTemplate($templateName);
 
         // Allow calling render() without a view
         $this->view = !$isLegacyTemplate ? "@Contao/$templateName.html.twig" : null;
