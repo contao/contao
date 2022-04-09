@@ -81,8 +81,8 @@ class DcaExtractorTest extends TestCase
 
     public function testDoesCreateTableWithSqlConfigWithoutDriver(): void
     {
-        $extractor = DcaExtractor::getInstance('tl_test_without_sql_config_without_driver');
-        $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_without_sql_config_without_driver']));
+        $extractor = DcaExtractor::getInstance('tl_test_with_sql_config_without_driver');
+        $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_sql_config_without_driver']));
         $this->assertTrue($extractor->isDbTable());
         $this->assertSame($extractor->getKeys(), ['id' => 'primary']);
         $this->assertSame($extractor->getFields(), ['id' => 'int(10) unsigned NOT NULL auto_increment']);

@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['TL_DCA']['tl_test_without_sql_config_without_driver'] = [
+$GLOBALS['TL_DCA']['tl_test_with_sql_config_without_driver'] = [
     'config' => [
         'sql' => [
             'keys' => [
