@@ -73,7 +73,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Did not request because it was marked to be skipped using the data-skip-search-index attribute.'
+                'Do not request because it was marked to be skipped using the data-skip-search-index attribute.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;

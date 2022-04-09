@@ -128,7 +128,7 @@ class SearchIndexSubscriberTest extends TestCase
             (new CrawlUri(new Uri('https://contao.org/foobar'), 0))->addTag(SearchIndexSubscriber::TAG_SKIP),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
-            'Did not request because it was marked to be skipped using the data-skip-search-index attribute.',
+            'Do not request because it was marked to be skipped using the data-skip-search-index attribute.',
         ];
 
         yield 'Test requests if everything is okay' => [
