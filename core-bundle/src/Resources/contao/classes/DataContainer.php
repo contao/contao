@@ -1430,7 +1430,7 @@ abstract class DataContainer extends Backend
 	 */
 	public static function getDriverForTable(string $table): string
 	{
-		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
+		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? '';
 
 		if (false === strpos($dataContainer, '\\'))
 		{
