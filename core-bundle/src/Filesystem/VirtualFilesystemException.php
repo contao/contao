@@ -17,25 +17,21 @@ namespace Contao\CoreBundle\Filesystem;
  */
 class VirtualFilesystemException extends \RuntimeException
 {
-    public const UNABLE_TO_CHECK_IF_FILE_EXISTS = 0;
-    public const UNABLE_TO_CHECK_IF_DIRECTORY_EXISTS = 1;
-    public const UNABLE_TO_READ = 2;
-    public const UNABLE_TO_WRITE = 3;
-    public const UNABLE_TO_DELETE = 4;
-    public const UNABLE_TO_DELETE_DIRECTORY = 5;
-    public const UNABLE_TO_CREATE_DIRECTORY = 6;
-    public const UNABLE_TO_COPY = 7;
-    public const UNABLE_TO_MOVE = 8;
-    public const UNABLE_TO_LIST_CONTENTS = 9;
-    public const UNABLE_TO_RETRIEVE_METADATA = 10;
-    public const ENCOUNTERED_INVALID_PATH = 11;
+    final public const UNABLE_TO_CHECK_IF_FILE_EXISTS = 0;
+    final public const UNABLE_TO_CHECK_IF_DIRECTORY_EXISTS = 1;
+    final public const UNABLE_TO_READ = 2;
+    final public const UNABLE_TO_WRITE = 3;
+    final public const UNABLE_TO_DELETE = 4;
+    final public const UNABLE_TO_DELETE_DIRECTORY = 5;
+    final public const UNABLE_TO_CREATE_DIRECTORY = 6;
+    final public const UNABLE_TO_COPY = 7;
+    final public const UNABLE_TO_MOVE = 8;
+    final public const UNABLE_TO_LIST_CONTENTS = 9;
+    final public const UNABLE_TO_RETRIEVE_METADATA = 10;
+    final public const ENCOUNTERED_INVALID_PATH = 11;
 
-    private string $path;
-
-    private function __construct(string $path, string $message, int $code, \Throwable|null $previous = null)
+    private function __construct(private string $path, string $message, int $code, \Throwable|null $previous = null)
     {
-        $this->path = $path;
-
         parent::__construct($message, $code, $previous);
     }
 

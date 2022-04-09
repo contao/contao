@@ -20,11 +20,9 @@ use PHPUnit\Framework\TestCase;
 class ValidatorTest extends TestCase
 {
     /**
-     * @param int|bool $expected
-     *
      * @dataProvider emailProvider
      */
-    public function testValidatesEmailAddresses(string $email, $expected): void
+    public function testValidatesEmailAddresses(string $email, bool|int $expected): void
     {
         $this->assertSame(
             $expected,

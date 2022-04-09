@@ -17,14 +17,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ResponseContextAccessor
 {
-    private RequestStack $requestStack;
-
-    public function __construct(RequestStack $requestStack)
+    public function __construct(private RequestStack $requestStack)
     {
-        $this->requestStack = $requestStack;
     }
 
-    public function getResponseContext(): ?ResponseContext
+    public function getResponseContext(): ResponseContext|null
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -35,13 +32,10 @@ class ResponseContextAccessor
         return $request->attributes->get(ResponseContext::REQUEST_ATTRIBUTE_NAME);
     }
 
-    public function setResponseContext(?ResponseContext $responseContext): self
+    public function setResponseContext(ResponseContext|null $responseContext): self
     {
         $request = $this->requestStack->getCurrentRequest();
-
-        if (null !== $request) {
-            $request->attributes->set(ResponseContext::REQUEST_ATTRIBUTE_NAME, $responseContext);
-        }
+        $request?->attributes->set(ResponseContext::REQUEST_ATTRIBUTE_NAME, $responseContext);
 
         return $this;
     }

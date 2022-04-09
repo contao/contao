@@ -956,10 +956,7 @@ class VirtualFilesystemTest extends TestCase
         iterator_to_array($filesystem->listContents('', true));
     }
 
-    /**
-     * @param mixed $value
-     */
-    private function doTestGetMetadata(string $property, $value, int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
+    private function doTestGetMetadata(string $property, mixed $value, int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
         $method = sprintf('get%s', ucfirst($property));
 
@@ -1001,10 +998,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($value, $filesystem->$method('path2', $accessFlags));
     }
 
-    /**
-     * @param mixed $return
-     */
-    private function mockMountManagerWithCall(string $method, array $additionalArguments = [], $return = null): MountManager
+    private function mockMountManagerWithCall(string $method, array $additionalArguments = [], mixed $return = null): MountManager
     {
         $mountManager = $this->createMock(MountManager::class);
 

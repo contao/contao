@@ -29,25 +29,18 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    private ContaoFramework $framework;
-    private SessionInterface $session;
-    private ?LoggerInterface $logger;
-
     /**
-     * @var class-string<User>
+     * @param class-string<User> $userClass
      */
-    private string $userClass;
-
-    public function __construct(ContaoFramework $framework, SessionInterface $session, string $userClass, LoggerInterface $logger = null)
-    {
+    public function __construct(
+        private ContaoFramework $framework,
+        private SessionInterface $session,
+        private string $userClass,
+        private LoggerInterface|null $logger = null
+    ) {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
             throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));
         }
-
-        $this->framework = $framework;
-        $this->session = $session;
-        $this->userClass = $userClass;
-        $this->logger = $logger;
     }
 
     /**
@@ -78,10 +71,10 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $identifier));
     }
 
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): User
     {
         if (!is_a($user, $this->userClass)) {
-            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', $user::class));
         }
 
         $user = $this->loadUserByIdentifier($user->getUserIdentifier());
@@ -106,7 +99,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     public function upgradePassword(UserInterface $user, string $newHashedPassword): void
     {
         if (!is_a($user, $this->userClass)) {
-            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', $user::class));
         }
 
         $user->password = $newHashedPassword;
@@ -129,12 +122,10 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             return;
         }
 
-        if (null !== $this->logger) {
-            $this->logger->info(
-                sprintf('User "%s" has been logged out automatically due to inactivity', $user->username),
-                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
-            );
-        }
+        $this->logger?->info(
+            sprintf('User "%s" has been logged out automatically due to inactivity', $user->username),
+            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
+        );
 
         throw new UsernameNotFoundException(sprintf('User "%s" has been logged out automatically due to inactivity.', $user->username));
     }

@@ -385,7 +385,7 @@ class PageRegistryTest extends TestCase
             ->expects($this->once())
             ->method('fetchAllAssociative')
             ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
-            ->willReturn([compact('urlPrefix', 'urlSuffix')])
+            ->willReturn([['urlPrefix' => $urlPrefix, 'urlSuffix' => $urlSuffix]])
         ;
 
         return $connection;

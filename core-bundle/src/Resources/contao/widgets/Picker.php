@@ -36,23 +36,6 @@ class Picker extends Widget
 	{
 		$this->import(Database::class, 'Database');
 		parent::__construct($arrAttributes);
-
-		// Prepare the order field
-		if ($this->orderField)
-		{
-			trigger_deprecation('contao/core-bundle', '4.10', 'Using "orderField" for the picker has been deprecated and will no longer work in Contao 5.0. Use "isSortable" instead.');
-
-			$this->strOrderId = $this->orderField . str_replace($this->strField, '', $this->strId);
-			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
-
-			// Retrieve the order value
-			$objRow = $this->Database->prepare("SELECT " . Database::quoteIdentifier($this->orderField) . " FROM " . $this->strTable . " WHERE id=?")
-									 ->limit(1)
-									 ->execute($this->activeRecord->id);
-
-			$tmp = StringUtil::deserialize($objRow->{$this->orderField});
-			$this->{$this->orderField} = (!empty($tmp) && \is_array($tmp)) ? array_filter($tmp) : array();
-		}
 	}
 
 	/**
@@ -67,26 +50,6 @@ class Picker extends Widget
 		if ($this->hasErrors())
 		{
 			return '';
-		}
-
-		// Store the order value
-		if ($this->orderField)
-		{
-			$arrNew = array();
-
-			if ($order = Input::post($this->strOrderName))
-			{
-				$arrNew = explode(',', $order);
-			}
-
-			// Only proceed if the value has changed
-			if ($arrNew !== $this->{$this->orderField})
-			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=?, " . Database::quoteIdentifier($this->orderField) . "=? WHERE id=?")
-							   ->execute(time(), serialize($arrNew), $this->activeRecord->id);
-
-				$this->objDca->createNewVersion = true; // see #6285
-			}
 		}
 
 		// Return the value as usual
@@ -119,13 +82,11 @@ class Picker extends Widget
 	{
 		$strRelatedTable = $this->getRelatedTable();
 		$strContext = $this->context ?: 'dc.' . $strRelatedTable;
-		$blnHasOrder = $this->orderField && \is_array($this->{$this->orderField});
-		$arrValues = $this->generateValues($blnHasOrder);
+		$arrValues = $this->generateValues();
 		$arrSet = array_keys($arrValues);
 
-		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . '>' . ($blnHasOrder ? '
-  <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . implode(',', $this->{$this->orderField}) . '">' : '') . '
-  <div class="selector_container">' . ((($blnHasOrder || $this->isSortable) && \count($arrValues) > 1) ? '
+		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . '>' . '
+  <div class="selector_container">' . (($this->isSortable && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '');
 
 		if (($GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['showColumns'] ?? null) && !empty($arrValues))
@@ -135,7 +96,7 @@ class Picker extends Widget
 			$showFields = $GLOBALS['TL_DCA'][$strRelatedTable]['list']['label']['fields'];
 
 			$return .= '
-<table class="tl_listing showColumns' . ($blnHasOrder || $this->isSortable ? ' sortable' : '') . '">
+<table class="tl_listing showColumns' . ($this->isSortable ? ' sortable' : '') . '">
 <thead>
   <tr>';
 
@@ -179,7 +140,7 @@ class Picker extends Widget
 		else
 		{
 			$return .= '
-    <ul id="sort_' . $this->strId . '" class="' . ($blnHasOrder || $this->isSortable ? 'sortable' : '') . '">';
+    <ul id="sort_' . $this->strId . '" class="' . ($this->isSortable ? 'sortable' : '') . '">';
 
 			foreach ($arrValues as $k=>$v)
 			{
@@ -221,8 +182,8 @@ class Picker extends Widget
           }
         });
       });
-    </script>' . ($blnHasOrder || $this->isSortable ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . ($blnHasOrder ? $this->strOrderId : $this->strId) . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>' . ($this->isSortable ? '
+    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strId . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';
@@ -230,7 +191,7 @@ class Picker extends Widget
 		return $return;
 	}
 
-	protected function generateValues($blnHasOrder): array
+	protected function generateValues(): array
 	{
 		$strRelatedTable = $this->getRelatedTable();
 
@@ -260,12 +221,6 @@ class Picker extends Widget
 
 					$arrValues[$objRows->id] = $this->renderLabel($objRows->row(), $dc);
 				}
-			}
-
-			// Apply a custom sort order
-			if ($blnHasOrder)
-			{
-				$arrValues = ArrayUtil::sortByOrderField($arrValues, $this->{$this->orderField}, null, true);
 			}
 		}
 

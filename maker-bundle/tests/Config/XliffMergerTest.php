@@ -69,7 +69,6 @@ class XliffMergerTest extends TestCase
     {
         $class = new \ReflectionClass(XliffMerger::class);
         $method = $class->getMethod('getImportNodes');
-        $method->setAccessible(true);
 
         $document = new \DOMDocument();
         $document->load(__DIR__.'/../Fixtures/translations/test-get-import-nodes/empty.xlf');
@@ -85,7 +84,6 @@ class XliffMergerTest extends TestCase
     {
         $class = new \ReflectionClass(XliffMerger::class);
         $method = $class->getMethod('getImportNodes');
-        $method->setAccessible(true);
 
         $document = new \DOMDocument();
         $document->load(__DIR__.'/../Fixtures/translations/test-get-import-nodes/single-element.xlf');
@@ -102,7 +100,6 @@ class XliffMergerTest extends TestCase
     {
         $class = new \ReflectionClass(XliffMerger::class);
         $method = $class->getMethod('getImportNodes');
-        $method->setAccessible(true);
 
         $document = new \DOMDocument();
         $document->load(__DIR__.'/../Fixtures/translations/test-get-import-nodes/multiple-elements.xlf');

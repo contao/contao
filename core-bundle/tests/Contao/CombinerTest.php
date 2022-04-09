@@ -112,7 +112,6 @@ class CombinerTest extends TestCase
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
-        $method->setAccessible(true);
 
         $css = <<<'EOF'
             test1 { background: url(foo.bar) }
@@ -136,7 +135,6 @@ class CombinerTest extends TestCase
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
-        $method->setAccessible(true);
 
         $css = <<<'EOF'
             test1 { background: url(foo.bar) }
@@ -182,7 +180,6 @@ class CombinerTest extends TestCase
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
-        $method->setAccessible(true);
 
         $css = <<<'EOF'
             test1 { background: url('data:image/svg+xml;utf8,<svg id="foo"></svg>') }
@@ -199,7 +196,6 @@ class CombinerTest extends TestCase
     {
         $class = new \ReflectionClass(Combiner::class);
         $method = $class->getMethod('fixPaths');
-        $method->setAccessible(true);
 
         $css = <<<'EOF'
             test1 { background: url('/path/to/file.jpg') }

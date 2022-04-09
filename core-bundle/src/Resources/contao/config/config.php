@@ -517,9 +517,6 @@ $GLOBALS['TL_HOOKS'] = array
 	)
 );
 
-// Register the auto_item keywords
-$GLOBALS['TL_AUTO_ITEM'] = array('items', 'events');
-
 // Wrapper elements
 $GLOBALS['TL_WRAPPERS'] = array
 (

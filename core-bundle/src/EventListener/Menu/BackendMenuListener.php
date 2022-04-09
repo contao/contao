@@ -27,19 +27,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendMenuListener
 {
-    private Security $security;
-    private RouterInterface $router;
-    private RequestStack $requestStack;
-    private TranslatorInterface $translator;
-    private ContaoFramework $framework;
-
-    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, ContaoFramework $framework)
-    {
-        $this->security = $security;
-        $this->router = $router;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
-        $this->framework = $framework;
+    public function __construct(
+        private Security $security,
+        private RouterInterface $router,
+        private RequestStack $requestStack,
+        private TranslatorInterface $translator,
+        private ContaoFramework $framework
+    ) {
     }
 
     public function __invoke(MenuEvent $event): void
@@ -81,7 +75,7 @@ class BackendMenuListener
                     ->setExtra('translation_domain', false)
                 ;
 
-                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', $categoryData['class'])) {
+                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', (string) $categoryData['class'])) {
                     $categoryNode->setAttribute('class', 'collapsed');
                 }
 
@@ -219,7 +213,7 @@ class BackendMenuListener
 
         // Remove the default CSS classes and keep potentially existing custom ones (see #1357)
         if (isset($attributes['class'])) {
-            $classes = array_flip(array_filter(explode(' ', $attributes['class'])));
+            $classes = array_flip(array_filter(explode(' ', (string) $attributes['class'])));
             unset($classes['node-expanded'], $classes['node-collapsed'], $classes['trail']);
         }
 

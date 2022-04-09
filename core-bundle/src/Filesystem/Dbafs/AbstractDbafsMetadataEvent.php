@@ -20,27 +20,11 @@ use Symfony\Component\Uid\Uuid;
 class AbstractDbafsMetadataEvent
 {
     /**
-     * @var array<string, mixed>
-     */
-    protected array $row;
-
-    /**
-     * @var array<string, mixed>
-     */
-    protected array $extraMetadata;
-
-    private string $table;
-
-    /**
      * @param array<string, mixed> $row
      * @param array<string, mixed> $extraMetadata
      */
-    public function __construct(string $table, array $row, array $extraMetadata = [])
+    public function __construct(private string $table, protected array $row, protected array $extraMetadata = [])
     {
-        $this->table = $table;
-        $this->row = $row;
-        $this->extraMetadata = $extraMetadata;
-
         foreach (['path', 'uuid'] as $mandatoryKey) {
             if (null === ($value = $row[$mandatoryKey] ?? null)) {
                 throw new \InvalidArgumentException(sprintf('Row must contain key "%s".', $mandatoryKey));

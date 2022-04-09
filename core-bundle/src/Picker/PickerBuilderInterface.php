@@ -17,12 +17,12 @@ interface PickerBuilderInterface
     /**
      * Returns a picker or null if the context is not supported.
      */
-    public function create(PickerConfig $config): ?PickerInterface;
+    public function create(PickerConfig $config): PickerInterface|null;
 
     /**
      * Returns a picker object from encoded URL data.
      */
-    public function createFromData(string $data): ?PickerInterface;
+    public function createFromData(string $data): PickerInterface|null;
 
     /**
      * Returns whether the given context is supported.

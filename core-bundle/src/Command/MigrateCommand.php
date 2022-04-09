@@ -36,27 +36,18 @@ class MigrateCommand extends Command
     protected static $defaultName = 'contao:migrate';
     protected static $defaultDescription = 'Executes migrations and updates the database schema.';
 
-    private MigrationCollection $migrations;
-    private FileLocator $fileLocator;
-    private string $projectDir;
-    private ContaoFramework $framework;
-    private BackupManager $backupManager;
-    private SchemaProvider $schemaProvider;
-    private MysqlInnodbRowSizeCalculator $rowSizeCalculator;
-    private ?Installer $installer;
-    private ?SymfonyStyle $io = null;
+    private SymfonyStyle|null $io = null;
 
-    public function __construct(MigrationCollection $migrations, FileLocator $fileLocator, string $projectDir, ContaoFramework $framework, BackupManager $backupManager, SchemaProvider $schemaProvider, MysqlInnodbRowSizeCalculator $rowSizeCalculator, Installer $installer = null)
-    {
-        $this->migrations = $migrations;
-        $this->fileLocator = $fileLocator;
-        $this->projectDir = $projectDir;
-        $this->framework = $framework;
-        $this->backupManager = $backupManager;
-        $this->schemaProvider = $schemaProvider;
-        $this->rowSizeCalculator = $rowSizeCalculator;
-        $this->installer = $installer;
-
+    public function __construct(
+        private MigrationCollection $migrations,
+        private FileLocator $fileLocator,
+        private string $projectDir,
+        private ContaoFramework $framework,
+        private BackupManager $backupManager,
+        private SchemaProvider $schemaProvider,
+        private MysqlInnodbRowSizeCalculator $rowSizeCalculator,
+        private Installer|null $installer = null
+    ) {
         parent::__construct();
     }
 
@@ -282,7 +273,7 @@ class MigrateCommand extends Command
     {
         try {
             $files = $this->fileLocator->locate('config/runonce.php', null, false);
-        } catch (FileLocatorFileNotFoundException $e) {
+        } catch (FileLocatorFileNotFoundException) {
             return [];
         }
 
@@ -438,8 +429,8 @@ class MigrateCommand extends Command
         if (!$withDrops) {
             foreach ($commands as $hash => $command) {
                 if (
-                    preg_match('/^ALTER TABLE [^ ]+ DROP /', $command)
-                    || (0 === strncmp($command, 'DROP ', 5) && 0 !== strncmp($command, 'DROP INDEX', 10))
+                    preg_match('/^ALTER TABLE [^ ]+ DROP /', (string) $command)
+                    || (str_starts_with($command, 'DROP ') && !str_starts_with($command, 'DROP INDEX'))
                 ) {
                     unset($commands[$hash]);
                 }
@@ -484,6 +475,10 @@ class MigrateCommand extends Command
     private function compileTableWarnings(Table $table): array
     {
         $warnings = [];
+
+        if ($table->hasOption('engine') && 'innodb' !== strtolower($table->getOption('engine'))) {
+            return $warnings;
+        }
 
         $mysqlSize = $this->rowSizeCalculator->getMysqlRowSize($table);
         $mysqlLimit = $this->rowSizeCalculator->getMysqlRowSizeLimit();

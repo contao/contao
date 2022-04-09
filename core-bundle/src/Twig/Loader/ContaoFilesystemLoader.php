@@ -47,9 +47,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     private const CACHE_KEY_PATHS = 'contao.twig.loader_paths';
     private const CACHE_KEY_HIERARCHY = 'contao.twig.template_hierarchy';
 
-    private CacheItemPoolInterface $cachePool;
-    private TemplateLocator $templateLocator;
-    private ThemeNamespace $themeNamespace;
+    private string|false|null $currentThemeSlug = null;
 
     /**
      * @var array<string,string>
@@ -59,20 +57,15 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     /**
      * @var array<string,array<string,string>>|null
      */
-    private ?array $inheritanceChains = null;
+    private array|null $inheritanceChains = null;
 
-    /**
-     * @var string|false|null
-     */
-    private $currentThemeSlug;
-
-    public function __construct(CacheItemPoolInterface $cachePool, TemplateLocator $templateLocator, ThemeNamespace $themeNamespace, string $rootPath = null)
-    {
+    public function __construct(
+        private CacheItemPoolInterface $cachePool,
+        private TemplateLocator $templateLocator,
+        private ThemeNamespace $themeNamespace,
+        string $rootPath = null
+    ) {
         parent::__construct([], $rootPath);
-
-        $this->cachePool = $cachePool;
-        $this->templateLocator = $templateLocator;
-        $this->themeNamespace = $themeNamespace;
 
         // Restore paths from cache
         $pathsItem = $cachePool->getItem(self::CACHE_KEY_PATHS);
@@ -106,7 +99,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
 
         try {
             parent::addPath($path, $namespace);
-        } catch (LoaderError $error) {
+        } catch (LoaderError) {
             return;
         }
 
@@ -132,7 +125,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
 
         try {
             parent::prependPath($path, $namespace);
-        } catch (LoaderError $error) {
+        } catch (LoaderError) {
             // Ignore
         }
     }
@@ -210,7 +203,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         if (
             1 === preg_match(
                 '/\$this\s*->\s*extend\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
-                file_get_contents($source->getPath()),
+                (string) file_get_contents($source->getPath()),
                 $match
             )
             && '@Contao/'.$match[1].'.html5' !== $name
@@ -220,7 +213,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
 
         preg_match_all(
             '/\$this\s*->\s*block\s*\(\s*[\'"]([a-z0-9_-]+)[\'"]\s*\)/i',
-            file_get_contents($source->getPath()),
+            (string) file_get_contents($source->getPath()),
             $matches
         );
 
@@ -389,7 +382,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * Returns the template name of a theme specific variant of the given name
      * or null if not applicable.
      */
-    private function getThemeTemplateName(string $name): ?string
+    private function getThemeTemplateName(string $name): string|null
     {
         $parts = ContaoTwigUtil::parseContaoName($name);
 
@@ -409,10 +402,8 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
 
     /**
      * Returns and stores the current theme slug or false if not applicable.
-     *
-     * @return string|false
      */
-    private function getThemeSlug()
+    private function getThemeSlug(): string|false
     {
         if (null === ($page = $GLOBALS['objPage'] ?? null) || null === ($path = $page->templateGroup)) {
             return $this->currentThemeSlug = false;
@@ -421,7 +412,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         // TODO: remove try/catch block in Contao 5.0
         try {
             $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
-        } catch (InvalidThemePathException $e) {
+        } catch (InvalidThemePathException) {
             $slug = false;
         }
 

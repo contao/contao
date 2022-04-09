@@ -31,20 +31,20 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
      * This should be a firewall configuration, but we would have to override
      * the firewall factory for that.
      */
-    public const EXPIRATION = 60;
-
-    private RememberMeRepository $repository;
-    private string $secret;
+    final public const EXPIRATION = 60;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.expiring_token_based_remember_me_services" service instead
      */
-    public function __construct(RememberMeRepository $repository, iterable $userProviders, string $secret, string $providerKey, array $options = [], LoggerInterface $logger = null)
-    {
+    public function __construct(
+        private RememberMeRepository $repository,
+        iterable $userProviders,
+        private string $secret,
+        string $providerKey,
+        array $options = [],
+        LoggerInterface $logger = null
+    ) {
         parent::__construct($userProviders, $secret, $providerKey, $options, $logger);
-
-        $this->repository = $repository;
-        $this->secret = $secret;
     }
 
     protected function cancelCookie(Request $request): void
@@ -140,7 +140,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     /**
      * @param array<RememberMe> $rows
      */
-    private function findValidToken(array $rows, string $cookieValue): ?RememberMe
+    private function findValidToken(array $rows, string $cookieValue): RememberMe|null
     {
         $lastException = null;
 

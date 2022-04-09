@@ -29,10 +29,7 @@ use Symfony\Component\Process\Process;
 
 class ConfigureFilesystemPassTest extends TestCase
 {
-    /**
-     * @var string|false
-     */
-    private $cwdBackup = false;
+    private string|false $cwdBackup = false;
 
     protected function setUp(): void
     {
@@ -173,7 +170,7 @@ class ConfigureFilesystemPassTest extends TestCase
             $isDirectory = !str_ends_with($target, '.txt');
             $command = sprintf('mklink%s "${:link}" "${:target}"', $isDirectory ? ' /d' : '');
 
-            Process::fromShellCommandline($command, $cwd)->mustRun(null, compact('link', 'target'));
+            Process::fromShellCommandline($command, $cwd)->mustRun(null, ['link' => $link, 'target' => $target]);
         } else {
             chdir($cwd);
 

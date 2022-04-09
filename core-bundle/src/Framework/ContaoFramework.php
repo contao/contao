@@ -17,7 +17,6 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
-use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Environment;
 use Contao\Input;
@@ -46,25 +45,19 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     private static bool $initialized = false;
     private static string $nonce = '';
 
-    private RequestStack $requestStack;
-    private ScopeMatcher $scopeMatcher;
-    private TokenChecker $tokenChecker;
-    private UrlGeneratorInterface $urlGenerator;
-    private string $projectDir;
-    private int $errorLevel;
-    private ?Request $request = null;
+    private Request|null $request = null;
     private bool $isFrontend = false;
     private array $adapterCache = [];
     private array $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, UrlGeneratorInterface $urlGenerator, string $projectDir, int $errorLevel)
-    {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
-        $this->tokenChecker = $tokenChecker;
-        $this->urlGenerator = $urlGenerator;
-        $this->projectDir = $projectDir;
-        $this->errorLevel = $errorLevel;
+    public function __construct(
+        private RequestStack $requestStack,
+        private ScopeMatcher $scopeMatcher,
+        private TokenChecker $tokenChecker,
+        private UrlGeneratorInterface $urlGenerator,
+        private string $projectDir,
+        private int $errorLevel
+    ) {
     }
 
     public function reset(): void
@@ -192,7 +185,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         \define('TL_PATH', $this->getPath());
     }
 
-    private function getMode(): ?string
+    private function getMode(): string|null
     {
         if (true === $this->isFrontend) {
             return 'FE';
@@ -213,7 +206,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         return null;
     }
 
-    private function getRefererId(): ?string
+    private function getRefererId(): string|null
     {
         if (null === $this->request) {
             return null;
@@ -222,7 +215,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         return $this->request->attributes->get('_contao_referer_id', '');
     }
 
-    private function getRoute(): ?string
+    private function getRoute(): string|null
     {
         if (null === $this->request) {
             return null;
@@ -231,7 +224,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         return substr($this->request->getBaseUrl().$this->request->getPathInfo(), \strlen($this->request->getBasePath().'/'));
     }
 
-    private function getPath(): ?string
+    private function getPath(): string|null
     {
         if (null === $this->request) {
             return null;
@@ -256,7 +249,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         // Preload the configuration (see #5872)
         $config->preload();
 
-        $this->initializeLegacySessionAccess();
         $this->setDefaultLanguage();
 
         // Fully load the configuration
@@ -294,23 +286,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
             if (!class_exists($class, false)) {
                 require_once __DIR__.'/../Resources/contao/library/Contao/'.$class.'.php';
             }
-        }
-    }
-
-    /**
-     * Initializes session access for $_SESSION['FE_DATA'] and $_SESSION['BE_DATA'].
-     */
-    private function initializeLegacySessionAccess(): void
-    {
-        if (!$session = $this->getSession()) {
-            return;
-        }
-
-        if (!$session->isStarted()) {
-            $_SESSION = new LazySessionAccess($session, $this->request && $this->request->hasPreviousSession());
-        } else {
-            $_SESSION['BE_DATA'] = $session->getBag('contao_backend');
-            $_SESSION['FE_DATA'] = $session->getBag('contao_frontend');
         }
     }
 
@@ -387,7 +362,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         }
     }
 
-    private function getSession(): ?SessionInterface
+    private function getSession(): SessionInterface|null
     {
         if (null === $this->request || !$this->request->hasSession()) {
             return null;

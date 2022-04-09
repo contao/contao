@@ -25,21 +25,14 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CoreResponseContextFactory
 {
-    private ResponseContextAccessor $responseContextAccessor;
-    private EventDispatcherInterface $eventDispatcher;
-    private TokenChecker $tokenChecker;
-    private HtmlDecoder $htmlDecoder;
-    private RequestStack $requestStack;
-    private InsertTagParser $insertTagParser;
-
-    public function __construct(ResponseContextAccessor $responseContextAccessor, EventDispatcherInterface $eventDispatcher, TokenChecker $tokenChecker, HtmlDecoder $htmlDecoder, RequestStack $requestStack, InsertTagParser $insertTagParser)
-    {
-        $this->responseContextAccessor = $responseContextAccessor;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->tokenChecker = $tokenChecker;
-        $this->htmlDecoder = $htmlDecoder;
-        $this->requestStack = $requestStack;
-        $this->insertTagParser = $insertTagParser;
+    public function __construct(
+        private ResponseContextAccessor $responseContextAccessor,
+        private EventDispatcherInterface $eventDispatcher,
+        private TokenChecker $tokenChecker,
+        private HtmlDecoder $htmlDecoder,
+        private RequestStack $requestStack,
+        private InsertTagParser $insertTagParser
+    ) {
     }
 
     public function createResponseContext(): ResponseContext

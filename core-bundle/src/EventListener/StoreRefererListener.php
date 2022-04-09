@@ -23,13 +23,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class StoreRefererListener
 {
-    private Security $security;
-    private ScopeMatcher $scopeMatcher;
-
-    public function __construct(Security $security, ScopeMatcher $scopeMatcher)
+    public function __construct(private Security $security, private ScopeMatcher $scopeMatcher)
     {
-        $this->security = $security;
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**
@@ -75,7 +70,7 @@ class StoreRefererListener
 
         // Move current to last if the referer is in both the URL and the session
         if ('' !== $ref && isset($referers[$ref])) {
-            $referers[$refererId] = array_merge($referers[$ref], $referers[$refererId]);
+            $referers[$refererId] = [...$referers[$ref], ...$referers[$refererId]];
             $referers[$refererId]['last'] = $referers[$ref]['current'];
         }
 

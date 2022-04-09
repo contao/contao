@@ -94,7 +94,7 @@ services:
         class: Contao\CoreBundle\Command\ResizeImagesCommand
         arguments:
             - '@contao.image.factory'
-            - '@contao.image.legacy_resizer'
+            - '@contao.image.resizer'
             - '%contao.image.target_dir%'
             - '@contao.image.deferred_image_storage'
             - '@?filesystem'
