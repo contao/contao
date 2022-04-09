@@ -242,6 +242,18 @@ class StringUtil
 	}
 
 	/**
+	 * Convert basic entities
+	 *
+	 * @param string|array $strBuffer The string with the entities to be replaced
+	 *
+	 * @return string|array The string with the tags in square brackets
+	 */
+	public static function convertBasicEntities($strBuffer)
+	{
+		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]'), $strBuffer);
+	}
+
+	/**
 	 * Restore basic entities
 	 *
 	 * @param string|array $strBuffer The string with the tags to be replaced

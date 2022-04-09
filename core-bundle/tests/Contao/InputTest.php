@@ -18,6 +18,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\Widget;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -75,6 +76,8 @@ class InputTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider encodeInputProvider
      */
     public function testGetAndPostEncoded(string $source, string $expected, string|null $expectedEncoded = null): void
@@ -88,40 +91,50 @@ class InputTest extends TestCase
 
         $this->assertSame($expected, Input::get('key', true));
         $this->assertSame($expected, Input::post('key', true));
-        $this->assertSame($expected, Input::postHtml('key', true));
         $this->assertSame($expected, Input::cookie('key', true));
 
         $this->assertSame($expectedEncoded, Input::get('key', false));
         $this->assertSame($expectedEncoded, Input::post('key', false));
-        $this->assertSame($expectedEncoded, Input::postHtml('key', false));
         $this->assertSame($expectedEncoded, Input::cookie('key', false));
 
         $this->assertSame($source, Input::postUnsafeRaw('key'));
+
+        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
+        $this->assertSame($expected, Input::postHtml('key', true));
+        $this->assertSame($expectedEncoded, Input::postHtml('key', false));
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider encodeInputProvider
      */
     public function testBackendRoundtrip(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= $expected;
 
+        $specialchars = (new \ReflectionClass(Widget::class))->getMethod('specialcharsValue')->invoke(...);
+
         // html_entity_decode simulates the browser here
         $_POST = [
-            'decoded' => html_entity_decode(StringUtil::specialchars($expected, false, true)),
-            'encoded' => html_entity_decode(StringUtil::specialchars($expectedEncoded, false, true)),
+            'decoded' => html_entity_decode($specialchars(null, $expected)),
+            'encoded' => html_entity_decode($specialchars(null, $expectedEncoded)),
         ];
 
         Config::set('allowedTags', '');
         Config::set('allowedAttributes', '');
 
         $this->assertSame($expected, Input::post('decoded', true));
-        $this->assertSame($expected, Input::postHtml('decoded', true));
-
         $this->assertSame($expectedEncoded, Input::post('encoded', false));
+
+        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
+        $this->assertSame($expected, Input::postHtml('decoded', true));
         $this->assertSame($expectedEncoded, Input::postHtml('encoded', false));
     }
 
+    /**
+     * @group legacy
+     */
     public function testEncodesInsertTags(): void
     {
         $source = '{{ foo }}';
@@ -146,11 +159,13 @@ class InputTest extends TestCase
 
         $this->assertSame($encoded, Input::get('key', false));
         $this->assertSame($encoded, Input::post('key', false));
-        $this->assertSame($encoded, Input::postHtml('key', false));
         $this->assertSame($encoded, Input::cookie('key', false));
 
         $this->assertSame($encoded, Input::postRaw('key'));
         $this->assertSame($source, Input::postUnsafeRaw('key'));
+
+        $this->expectDeprecation('%spostHtml() with $blnDecodeEntities set to false has been deprecated%s');
+        $this->assertSame($encoded, Input::postHtml('key', false));
     }
 
     public function encodeInputProvider(): \Generator
@@ -179,7 +194,7 @@ class InputTest extends TestCase
 
         yield [
             '[&amp;],&amp;,[&lt;],&lt;,[&gt;],&gt;,[&nbsp;],&nbsp;,[&shy;],&shy;',
-            '[&],[&],[lt],[lt],[gt],[gt],[nbsp],[nbsp],[-],[-]',
+            '[&amp;],&amp;,[&lt;],&lt;,[&gt;],&gt;,[&nbsp;],&nbsp;,[&shy;],&shy;',
         ];
 
         yield [
@@ -571,10 +586,14 @@ class InputTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider stripTagsNoTagsAllowedProvider
      */
     public function testStripTagsNoTagsAllowed(string $source, string $expected): void
     {
+        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
+
         $this->assertSame($expected, Input::stripTags($source));
     }
 
@@ -606,6 +625,9 @@ class InputTest extends TestCase
         $this->assertSame($html, Input::stripTags($html, '<span>', serialize([['key' => '*', 'value' => '*']])));
     }
 
+    /**
+     * @group legacy
+     */
     public function testStripTagsNoAttributesAllowed(): void
     {
         $html = '<dIv class=gets-normalized bar-foo-something = \'keep\'><spAN class=gets-normalized bar-foo-something = \'keep\'>foo</SPan></DiV><notallowed></notallowed>';
@@ -615,11 +637,18 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([[]])));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([])));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize(null)));
+
+        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', ''));
     }
 
+    /**
+     * @group legacy
+     */
     public function testStripTagsScriptAllowed(): void
     {
+        $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
+
         $this->assertSame(
             '<script>alert(foo > bar);</script>foo &#62; bar',
             Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>', '')
