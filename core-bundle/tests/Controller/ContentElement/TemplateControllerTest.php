@@ -18,7 +18,6 @@ use Contao\CoreBundle\Controller\ContentElement\TemplateController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -26,15 +25,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TemplateControllerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
-    /**
-     * @group legacy
-     */
     public function testWithDataInput(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
-
         $data = [
             ['key' => 'Key 1', 'value' => 'Value 1'],
             ['key' => 'Key 1', 'value' => 'Value 1'],
@@ -51,13 +43,8 @@ class TemplateControllerTest extends TestCase
         $controller(new Request(), $contentModel, 'main');
     }
 
-    /**
-     * @group legacy
-     */
     public function testWithoutDataInput(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
-
         $container = $this->mockContainer([], 'ce_template');
 
         $contentModel = $this->mockClassWithProperties(ContentModel::class);
@@ -69,13 +56,8 @@ class TemplateControllerTest extends TestCase
         $controller(new Request(), $contentModel, 'main');
     }
 
-    /**
-     * @group legacy
-     */
     public function testWithCustomTemplate(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.0: Creating fragments with legacy templates is deprecated and will not work anymore in Contao 6.');
-
         $data = [
             ['key' => 'Key 1', 'value' => 'Value 1'],
             ['key' => 'Key 1', 'value' => 'Value 1'],
