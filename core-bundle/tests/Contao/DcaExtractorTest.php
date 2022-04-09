@@ -14,11 +14,15 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DC_File;
+use Contao\DC_Folder;
 use Contao\DC_Table;
 use Contao\DcaExtractor;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class DcaExtractorTest extends TestCase
@@ -33,102 +37,81 @@ class DcaExtractorTest extends TestCase
             ->willReturn([])
         ;
 
-        $projectDir = $this->getFixturesDir();
+        $tempDir = $this->getTempDir();
+        $fixturesDir = $this->getFixturesDir();
 
-        $finder = new ResourceFinder($projectDir.'/vendor/contao/test-bundle/Resources/contao');
+        $finder = new ResourceFinder(Path::join($fixturesDir, 'vendor/contao/test-bundle/Resources/contao'));
+        $locator = new FileLocator(Path::join($fixturesDir, 'vendor/contao/test-bundle/Resources/contao'));
 
         $container = new ContainerBuilder();
         $container->setParameter('kernel.debug', false);
-        $container->setParameter('kernel.project_dir', $projectDir);
-        $container->setParameter('kernel.cache_dir', Path::join($projectDir, 'var/cache'));
+        $container->setParameter('kernel.project_dir', $tempDir);
+        $container->setParameter('kernel.cache_dir', Path::join($tempDir, 'var/cache'));
         $container->set('database_connection', $connection);
         $container->set('contao.resource_finder', $finder);
+        $container->set('contao.resource_locator', $locator);
 
         System::setContainer($container);
-
-        $GLOBALS['TL_DCA']['tl_nosqlconfig'] = [
-            'config' => [
-                'dataContainer' => DC_Table::class,
-            ],
-            'fields' => [
-                'id' => [
-                    'sql' => 'int(10) unsigned NOT NULL auto_increment',
-                ],
-                'tstamp' => [
-                    'sql' => 'int(10) unsigned NOT NULL default 0',
-                ],
-            ],
-        ];
-
-        $GLOBALS['TL_DCA']['tl_withsqlconfig'] = [
-            'config' => [
-                'dataContainer' => DC_Table::class,
-                'sql' => [
-                    'keys' => [
-                        'id' => 'primary',
-                    ],
-                ],
-            ],
-            'fields' => [
-                'id' => [
-                    'sql' => 'int(10) unsigned NOT NULL auto_increment',
-                ],
-                'tstamp' => [
-                    'sql' => 'int(10) unsigned NOT NULL default 0',
-                ],
-            ],
-        ];
-
-        $GLOBALS['TL_DCA']['tl_withsqlconfig_nodriver'] = [
-            'config' => [
-                'sql' => [
-                    'keys' => [
-                        'id' => 'primary',
-                    ],
-                ],
-            ],
-            'fields' => [
-                'id' => [
-                    'sql' => 'int(10) unsigned NOT NULL auto_increment',
-                ],
-                'tstamp' => [
-                    'sql' => 'int(10) unsigned NOT NULL default 0',
-                ],
-            ],
-        ];
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        unset($GLOBALS['TL_DCA']);
-    }
-
-    public function testDoesNotCreateTableWithoutSqlConfig(): void
-    {
-        $extractor = DcaExtractor::getInstance('tl_nosqlconfig');
-        $this->assertSame($extractor->getKeys(), []);
-        $this->assertSame($extractor->getFields(), []);
+        
+        (new Filesystem())->remove($this->getTempDir());
     }
 
     public function testDoesCreateTableWithSqlConfig(): void
     {
-        $extractor = DcaExtractor::getInstance('tl_withsqlconfig');
+        $extractor = DcaExtractor::getInstance('tl_test_with_sql_config');
+        $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_sql_config']));
+        $this->assertTrue($extractor->isDbTable());
         $this->assertSame($extractor->getKeys(), ['id' => 'primary']);
-        $this->assertSame($extractor->getFields(), [
-            'id' => 'int(10) unsigned NOT NULL auto_increment',
-            'tstamp' => 'int(10) unsigned NOT NULL default 0',
-        ]);
+        $this->assertSame($extractor->getFields(), ['id' => 'int(10) unsigned NOT NULL auto_increment']);
+    }
+
+    public function testDoesNotCreateTableWithoutSqlConfig(): void
+    {
+        $extractor = DcaExtractor::getInstance('tl_test_without_sql_config');
+        $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_without_sql_config']));
+        $this->assertFalse($extractor->isDbTable());
+        $this->assertSame($extractor->getKeys(), []);
+        $this->assertSame($extractor->getFields(), []);
     }
 
     public function testDoesCreateTableWithSqlConfigWithoutDriver(): void
     {
-        $extractor = DcaExtractor::getInstance('tl_withsqlconfig_nodriver');
+        $extractor = DcaExtractor::getInstance('tl_test_without_sql_config_without_driver');
+        $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_without_sql_config_without_driver']));
+        $this->assertTrue($extractor->isDbTable());
         $this->assertSame($extractor->getKeys(), ['id' => 'primary']);
-        $this->assertSame($extractor->getFields(), [
-            'id' => 'int(10) unsigned NOT NULL auto_increment',
-            'tstamp' => 'int(10) unsigned NOT NULL default 0',
-        ]);
+        $this->assertSame($extractor->getFields(), ['id' => 'int(10) unsigned NOT NULL auto_increment']);
+    }
+
+    public function testDoesNotCreateTableWithFileDriver(): void
+    {
+        $extractor = DcaExtractor::getInstance('tl_test_with_file_driver');
+        $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_file_driver']));
+        $this->assertFalse($extractor->isDbTable());
+        $this->assertSame($extractor->getKeys(), []);
+        $this->assertSame($extractor->getFields(), []);
+    }
+
+    public function testDoesCreateTableWithDatabaseAssistedFolderDriver(): void
+    {
+        $extractor = DcaExtractor::getInstance('tl_test_with_database_assisted_folder_driver');
+        $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_database_assisted_folder_driver']));
+        $this->assertTrue($extractor->isDbTable());
+        $this->assertSame($extractor->getKeys(), ['id' => 'primary']);
+        $this->assertSame($extractor->getFields(), ['id' => 'int(10) unsigned NOT NULL auto_increment']);
+    }
+
+    public function testDoesNotCreateTableWithNonDatabaseAssistedFolderDriver(): void
+    {
+        $extractor = DcaExtractor::getInstance('tl_test_with_non_database_assisted_folder_driver');
+        $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_non_database_assisted_folder_driver']));
+        $this->assertFalse($extractor->isDbTable());
+        $this->assertSame($extractor->getKeys(), []);
+        $this->assertSame($extractor->getFields(), []);
     }
 }
