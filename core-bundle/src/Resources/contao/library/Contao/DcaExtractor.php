@@ -517,8 +517,8 @@ class DcaExtractor extends Controller
 			}
 		}
 
-		// Return if there are no fields
-		if (empty($fields))
+		// Not a database table or no field information
+		if (empty($sql) || empty($fields))
 		{
 			return;
 		}
