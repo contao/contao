@@ -51,8 +51,11 @@ class DcaExtractorTest extends TestCase
                 'dataContainer' => DC_Table::class,
             ],
             'fields' => [
-                'foobar' => [
-                    'sql' => ['type' => 'string', 'length' => 255, 'default' => ''],
+                'id' => [
+                    'sql' => 'int(10) unsigned NOT NULL auto_increment',
+                ],
+                'tstamp' => [
+                    'sql' => 'int(10) unsigned NOT NULL default 0',
                 ],
             ],
         ];
