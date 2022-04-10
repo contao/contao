@@ -537,29 +537,31 @@ class News extends Frontend
 	 * Creates a sub request for the given URI.
 	 */
 	private function createSubRequest(string $uri, Request $request): Request
-    {
-        $cookies = $request->cookies->all();
-        $server = $request->server->all();
+	{
+		$cookies = $request->cookies->all();
+		$server = $request->server->all();
 
-        unset($server['HTTP_IF_MODIFIED_SINCE']);
-        unset($server['HTTP_IF_NONE_MATCH']);
+		unset($server['HTTP_IF_MODIFIED_SINCE'], $server['HTTP_IF_NONE_MATCH']);
 
-        $subRequest = Request::create($uri, 'get', [], $cookies, [], $server);
+		$subRequest = Request::create($uri, 'get', array(), $cookies, array(), $server);
 
-		if (null !== ($session = $request->getSession())) {
+		if (null !== ($session = $request->getSession()))
+		{
 			$subRequest->setSession($session);
 		}
 
-        if ($request->get('_format')) {
-            $subRequest->attributes->set('_format', $request->get('_format'));
-        }
+		if ($request->get('_format'))
+		{
+			$subRequest->attributes->set('_format', $request->get('_format'));
+		}
 
-        if ($request->getDefaultLocale() !== $request->getLocale()) {
-            $subRequest->setLocale($request->getLocale());
-        }
+		if ($request->getDefaultLocale() !== $request->getLocale())
+		{
+			$subRequest->setLocale($request->getLocale());
+		}
 
-        return $subRequest;
-    }
+		return $subRequest;
+	}
 }
 
 class_alias(News::class, 'News');
