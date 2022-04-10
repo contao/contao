@@ -282,7 +282,7 @@ class StringUtilTest extends TestCase
         yield ['I <3 Contao'];
         yield ['Remove unexpected <span>HTML tags'];
         yield ['Keep non-HTML <tags> intact'];
-        yield ['Basic [&] entities [nbsp]', "Basic & entities \u{A0}"];
+        yield ['Basic &amp; entities &nbsp;', "Basic & entities \u{A0}"];
         yield ["Cont\xE4o invalid UTF-8", "Cont\u{FFFD}o invalid UTF-8"];
     }
 

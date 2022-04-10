@@ -307,7 +307,6 @@ class Comments extends Frontend
 
 			// Do not parse any tags in the comment
 			$strComment = StringUtil::specialchars(trim($arrWidgets['comment']->value));
-			$strComment = str_replace(array('&amp;', '&lt;', '&gt;'), array('[&]', '[lt]', '[gt]'), $strComment);
 
 			// Remove multiple line feeds
 			$strComment = preg_replace('@\n\n+@', "\n\n", $strComment);
@@ -375,7 +374,6 @@ class Comments extends Frontend
 			// Convert the comment to plain text
 			$strComment = strip_tags($strComment);
 			$strComment = StringUtil::decodeEntities($strComment);
-			$strComment = str_replace(array('[&]', '[lt]', '[gt]'), array('&', '<', '>'), $strComment);
 
 			// Add the comment details
 			$objEmail->text = sprintf(
