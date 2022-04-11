@@ -62,11 +62,17 @@ class InputTest extends TestCase
     }
 
     /**
+     * @group legacy
+     *
      * @dataProvider encodeInputProvider
      */
     public function testCleansTheGlobalArrays(string $source, string $expected): void
     {
         $_GET = $_POST = $_COOKIE = [$source => 1];
+
+        if ($source !== $expected) {
+            $this->expectDeprecation('%scleanKey()" has been deprecated%s');
+        }
 
         Input::initialize();
 

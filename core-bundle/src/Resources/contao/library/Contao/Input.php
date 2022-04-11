@@ -460,7 +460,14 @@ class Input
 			return $return;
 		}
 
-		return static::encodeInput($varValue, InputEncodingMode::encodeLessThanSign, false);
+		$encoded = static::encodeInput($varValue, InputEncodingMode::encodeLessThanSign, false);
+
+		if ((\is_array($varValue) ? $varValue : (string) $varValue) !== $encoded)
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Relying on input keys being encoded in "%s::cleanKey()" has been deprecated and will no longer work in Contao 6.0.', __CLASS__);
+		}
+
+		return $encoded;
 	}
 
 	/**
