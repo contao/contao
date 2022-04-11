@@ -27,7 +27,7 @@ class Version470Update extends AbstractMigration
         private Connection $connection,
         private Filesystem $filesystem,
         private string $uploadPath,
-        private string $projectDir
+        private string $projectDir,
     ) {
     }
 

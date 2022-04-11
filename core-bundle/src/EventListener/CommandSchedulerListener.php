@@ -29,7 +29,7 @@ class CommandSchedulerListener
         private Cron $cron,
         private ContaoFramework $framework,
         private Connection $connection,
-        private string $fragmentPath = '_fragment'
+        private string $fragmentPath = '_fragment',
     ) {
     }
 

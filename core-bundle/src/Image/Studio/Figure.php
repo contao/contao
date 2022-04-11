@@ -46,7 +46,7 @@ class Figure
         private \Closure|Metadata|null $metadata = null,
         private \Closure|array|null $linkAttributes = null,
         private \Closure|LightboxResult|null $lightbox = null,
-        private \Closure|array|null $options = null
+        private \Closure|array|null $options = null,
     ) {
     }
 

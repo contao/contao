@@ -36,7 +36,7 @@ class DebugContaoTwigCommand extends Command
         private TemplateHierarchyInterface $hierarchy,
         private ContaoFilesystemLoaderWarmer $cacheWarmer,
         private ThemeNamespace $themeNamespace,
-        private string $projectDir
+        private string $projectDir,
     ) {
         parent::__construct();
     }

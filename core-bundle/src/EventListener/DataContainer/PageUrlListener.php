@@ -42,7 +42,7 @@ class PageUrlListener
         private Connection $connection,
         private PageRegistry $pageRegistry,
         private UrlGeneratorInterface $urlGenerator,
-        private FinalMatcherInterface $routeMatcher
+        private FinalMatcherInterface $routeMatcher,
     ) {
     }
 

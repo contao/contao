@@ -35,7 +35,7 @@ class BackendPreviewController
         private string $previewScript,
         private FrontendPreviewAuthenticator $previewAuthenticator,
         private EventDispatcherInterface $dispatcher,
-        private AuthorizationCheckerInterface $authorizationChecker
+        private AuthorizationCheckerInterface $authorizationChecker,
     ) {
     }
 

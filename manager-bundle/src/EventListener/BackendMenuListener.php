@@ -31,7 +31,7 @@ class BackendMenuListener
         private TranslatorInterface $translator,
         private bool $debug,
         private string|null $managerPath,
-        private JwtManager|null $jwtManager
+        private JwtManager|null $jwtManager,
     ) {
     }
 

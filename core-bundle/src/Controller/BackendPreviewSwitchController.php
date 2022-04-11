@@ -49,7 +49,7 @@ class BackendPreviewSwitchController
         private RouterInterface $router,
         private ContaoCsrfTokenManager $tokenManager,
         private array $backendAttributes = [],
-        private string $backendBadgeTitle = ''
+        private string $backendBadgeTitle = '',
     ) {
     }
 

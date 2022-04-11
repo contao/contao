@@ -31,7 +31,7 @@ class TemplateOptionsListener
         ContaoFramework $framework,
         private RequestStack $requestStack,
         private string $templatePrefix,
-        private string|null $proxyClass = null
+        private string|null $proxyClass = null,
     ) {
         $controller = $framework->getAdapter(Controller::class);
 

@@ -26,7 +26,7 @@ class ThemeTemplatesListener
     public function __construct(
         private ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer,
         private ThemeNamespace $themeNamespace,
-        private TranslatorInterface $translator
+        private TranslatorInterface $translator,
     ) {
     }
 

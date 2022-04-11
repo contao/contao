@@ -47,7 +47,7 @@ class SymlinksCommand extends Command
         private string $uploadPath,
         private string $logsDir,
         private ResourceFinderInterface $resourceFinder,
-        private EventDispatcherInterface $eventDispatcher
+        private EventDispatcherInterface $eventDispatcher,
     ) {
         parent::__construct();
     }

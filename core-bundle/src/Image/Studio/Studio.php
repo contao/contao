@@ -26,7 +26,7 @@ class Studio
         private ContainerInterface $locator,
         private string $projectDir,
         private string $uploadPath,
-        private array $validExtensions
+        private array $validExtensions,
     ) {
     }
 
