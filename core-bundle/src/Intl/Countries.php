@@ -35,7 +35,7 @@ class Countries
         private ContaoFramework $contaoFramework,
         array $defaultCountries,
         array $configCountries,
-        private string $defaultLocale
+        private string $defaultLocale,
     ) {
         $this->countries = $this->filterCountries($defaultCountries, $configCountries);
     }

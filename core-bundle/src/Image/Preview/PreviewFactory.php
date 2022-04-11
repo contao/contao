@@ -48,7 +48,7 @@ class PreviewFactory
         private string $cacheDir,
         private array $validImageExtensions,
         private int $defaultSize,
-        private int $maxSize
+        private int $maxSize,
     ) {
     }
 

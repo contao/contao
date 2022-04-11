@@ -36,7 +36,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         private ContaoFramework $framework,
         private SessionInterface $session,
         private string $userClass,
-        private LoggerInterface|null $logger = null
+        private LoggerInterface|null $logger = null,
     ) {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
             throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));

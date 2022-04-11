@@ -63,7 +63,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
         private CacheItemPoolInterface $cachePool,
         private TemplateLocator $templateLocator,
         private ThemeNamespace $themeNamespace,
-        string $rootPath = null
+        string $rootPath = null,
     ) {
         parent::__construct([], $rootPath);
 

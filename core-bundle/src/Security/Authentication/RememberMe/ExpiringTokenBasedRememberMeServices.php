@@ -42,7 +42,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         private string $secret,
         string $providerKey,
         array $options = [],
-        LoggerInterface $logger = null
+        LoggerInterface $logger = null,
     ) {
         parent::__construct($userProviders, $secret, $providerKey, $options, $logger);
     }

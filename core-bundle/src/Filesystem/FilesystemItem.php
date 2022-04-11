@@ -33,7 +33,7 @@ class FilesystemItem implements \Stringable
         private \Closure|int|null $lastModified = null,
         private \Closure|int|null $fileSize = null,
         private \Closure|string|null $mimeType = null,
-        private \Closure|array $extraMetadata = []
+        private \Closure|array $extraMetadata = [],
     ) {
     }
 

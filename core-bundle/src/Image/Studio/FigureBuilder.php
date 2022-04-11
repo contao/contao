@@ -130,7 +130,7 @@ class FigureBuilder
         private ContainerInterface $locator,
         private string $projectDir,
         private string $uploadPath,
-        private array $validExtensions
+        private array $validExtensions,
     ) {
         $this->filesystem = new Filesystem();
     }

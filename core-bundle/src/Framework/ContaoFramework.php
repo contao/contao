@@ -56,7 +56,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         private TokenChecker $tokenChecker,
         private UrlGeneratorInterface $urlGenerator,
         private string $projectDir,
-        private int $errorLevel
+        private int $errorLevel,
     ) {
     }
 

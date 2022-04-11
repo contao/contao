@@ -35,7 +35,7 @@ class TwoFactorFrontendListener
         private ContaoFramework $framework,
         private ScopeMatcher $scopeMatcher,
         private TokenStorageInterface $tokenStorage,
-        private array $supportedTokens
+        private array $supportedTokens,
     ) {
     }
 

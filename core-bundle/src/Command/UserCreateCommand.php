@@ -45,7 +45,7 @@ class UserCreateCommand extends Command
         private ContaoFramework $framework,
         private Connection $connection,
         private PasswordHasherFactoryInterface $passwordHasherFactory,
-        Locales $locales
+        Locales $locales,
     ) {
         $this->locales = $locales->getEnabledLocaleIds();
 

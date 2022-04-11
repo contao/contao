@@ -33,7 +33,7 @@ class FragmentHandler extends BaseFragmentHandler
         RequestStack $requestStack,
         private FragmentRegistryInterface $fragmentRegistry,
         private ContainerInterface $preHandlers,
-        bool $debug = false
+        bool $debug = false,
     ) {
         parent::__construct($requestStack, [], $debug);
     }

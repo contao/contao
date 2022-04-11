@@ -30,7 +30,7 @@ class BackupManager
         private DumperInterface $dumper,
         private VirtualFilesystemInterface $backupsStorage,
         private array $tablesToIgnore,
-        private RetentionPolicyInterface $retentionPolicy
+        private RetentionPolicyInterface $retentionPolicy,
     ) {
     }
 

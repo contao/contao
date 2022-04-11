@@ -30,7 +30,7 @@ class RequestTokenListener
         private ScopeMatcher $scopeMatcher,
         private ContaoCsrfTokenManager $csrfTokenManager,
         private string $csrfTokenName,
-        private string $csrfCookiePrefix = 'csrf_'
+        private string $csrfCookiePrefix = 'csrf_',
     ) {
     }
 

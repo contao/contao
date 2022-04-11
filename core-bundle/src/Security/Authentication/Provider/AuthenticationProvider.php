@@ -53,7 +53,7 @@ class AuthenticationProvider extends DaoAuthenticationProvider
         private AuthenticationHandlerInterface $twoFactorAuthenticationHandler,
         private AuthenticationContextFactoryInterface $authenticationContextFactory,
         private RequestStack $requestStack,
-        private TrustedDeviceManagerInterface $trustedDeviceManager
+        private TrustedDeviceManagerInterface $trustedDeviceManager,
     ) {
         parent::__construct($userProvider, $userChecker, $providerKey, $passwordHasherFactory, false);
     }

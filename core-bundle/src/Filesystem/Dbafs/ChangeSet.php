@@ -47,7 +47,7 @@ class ChangeSet
         private array $itemsToCreate,
         private array $itemsToUpdate,
         private array $itemsToDelete,
-        private array $lastModifiedUpdates = []
+        private array $lastModifiedUpdates = [],
     ) {
     }
 

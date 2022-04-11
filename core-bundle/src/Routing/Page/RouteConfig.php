@@ -29,7 +29,7 @@ final class RouteConfig
         private array $requirements = [],
         private array $options = [],
         private array $defaults = [],
-        array|string $methods = []
+        array|string $methods = [],
     ) {
         $this->methods = \is_array($methods) ? $methods : [$methods];
     }

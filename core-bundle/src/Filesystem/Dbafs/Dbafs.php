@@ -73,7 +73,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         private Connection $connection,
         private EventDispatcherInterface $eventDispatcher,
         private VirtualFilesystemInterface $filesystem,
-        private string $table
+        private string $table,
     ) {
     }
 

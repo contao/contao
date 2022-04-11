@@ -45,7 +45,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         private ContaoFramework $framework,
         private TrustedDeviceManagerInterface $trustedDeviceManager,
         private FirewallMap $firewallMap,
-        private LoggerInterface|null $logger = null
+        private LoggerInterface|null $logger = null,
     ) {
     }
 

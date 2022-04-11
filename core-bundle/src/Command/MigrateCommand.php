@@ -46,7 +46,7 @@ class MigrateCommand extends Command
         private BackupManager $backupManager,
         private SchemaProvider $schemaProvider,
         private MysqlInnodbRowSizeCalculator $rowSizeCalculator,
-        private Installer|null $installer = null
+        private Installer|null $installer = null,
     ) {
         parent::__construct();
     }
