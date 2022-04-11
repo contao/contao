@@ -38,7 +38,7 @@ class TokenChecker
         private TokenStorageInterface $tokenStorage,
         private SessionInterface $session,
         private AuthenticationTrustResolverInterface $trustResolver,
-        private VoterInterface $roleVoter
+        private VoterInterface $roleVoter,
     ) {
     }
 

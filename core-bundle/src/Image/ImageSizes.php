@@ -34,7 +34,7 @@ class ImageSizes implements ResetInterface
         private Connection $connection,
         private EventDispatcherInterface $eventDispatcher,
         private ContaoFramework $framework,
-        private TranslatorInterface $translator
+        private TranslatorInterface $translator,
     ) {
     }
 

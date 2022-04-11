@@ -38,7 +38,7 @@ class TemplateLocator
         private array $bundles,
         private array $bundlesMetadata,
         private ThemeNamespace $themeNamespace,
-        private Connection $connection
+        private Connection $connection,
     ) {
         $this->filesystem = new Filesystem();
     }

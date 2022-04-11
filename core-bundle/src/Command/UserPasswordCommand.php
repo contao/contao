@@ -41,7 +41,7 @@ class UserPasswordCommand extends Command
     public function __construct(
         private ContaoFramework $framework,
         private Connection $connection,
-        private PasswordHasherFactoryInterface $passwordHasherFactory
+        private PasswordHasherFactoryInterface $passwordHasherFactory,
     ) {
         parent::__construct();
     }

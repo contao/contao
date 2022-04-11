@@ -34,7 +34,7 @@ class Document
         private UriInterface $uri,
         private int $statusCode,
         private array $headers,
-        private string $body = ''
+        private string $body = '',
     ) {
         $this->headers = array_change_key_case($headers);
     }

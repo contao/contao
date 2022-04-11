@@ -32,7 +32,7 @@ class BackendPreviewListener
         private RouterInterface $router,
         private RequestStack $requestStack,
         private TranslatorInterface $translator,
-        private EventDispatcherInterface $eventDispatcher
+        private EventDispatcherInterface $eventDispatcher,
     ) {
     }
 

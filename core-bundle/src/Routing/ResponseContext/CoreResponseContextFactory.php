@@ -31,7 +31,7 @@ class CoreResponseContextFactory
         private TokenChecker $tokenChecker,
         private HtmlDecoder $htmlDecoder,
         private RequestStack $requestStack,
-        private InsertTagParser $insertTagParser
+        private InsertTagParser $insertTagParser,
     ) {
     }
 

@@ -57,7 +57,7 @@ class ResizeImagesCommand extends Command
         ResizerInterface $resizer,
         private string $targetDir,
         private DeferredImageStorageInterface $storage,
-        Filesystem $filesystem = null
+        Filesystem $filesystem = null,
     ) {
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;
         $this->filesystem = $filesystem ?? new Filesystem();

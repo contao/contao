@@ -42,7 +42,7 @@ class BackendCsvImportController
         private Connection $connection,
         private RequestStack $requestStack,
         private TranslatorInterface $translator,
-        private string $projectDir
+        private string $projectDir,
     ) {
     }
 

@@ -39,7 +39,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         private MountManager $mountManager,
         private DbafsManager $dbafsManager,
         private string $prefix = '',
-        private bool $readonly = false
+        private bool $readonly = false,
     ) {
     }
 

@@ -31,7 +31,7 @@ class ContaoContext implements \Stringable
         private string|null $username = null,
         private string|null $ip = null,
         private string|null $browser = null,
-        private string|null $source = null
+        private string|null $source = null,
     ) {
         if ('' === $func) {
             throw new \InvalidArgumentException('The function name in the Contao context must not be empty');

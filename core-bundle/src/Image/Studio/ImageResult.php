@@ -45,7 +45,7 @@ class ImageResult
         private string $projectDir,
         private ImageInterface|string $filePathOrImageInterface,
         private PictureConfiguration|array|int|string|null $sizeConfiguration = null,
-        private ResizeOptions|null $resizeOptions = null
+        private ResizeOptions|null $resizeOptions = null,
     ) {
     }
 

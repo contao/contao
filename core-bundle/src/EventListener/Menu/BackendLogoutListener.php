@@ -29,7 +29,7 @@ class BackendLogoutListener
         private Security $security,
         private RouterInterface $router,
         private BaseLogoutUrlGenerator $urlGenerator,
-        private TranslatorInterface $translator
+        private TranslatorInterface $translator,
     ) {
     }
 

@@ -35,7 +35,7 @@ class InstallTool
         private Connection $connection,
         private string $projectDir,
         private LoggerInterface $logger,
-        private MigrationCollection $migrations
+        private MigrationCollection $migrations,
     ) {
     }
 
