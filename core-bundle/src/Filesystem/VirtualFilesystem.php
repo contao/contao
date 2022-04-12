@@ -175,7 +175,6 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                 fn () => $this->getFileSize($relativePath, $accessFlags),
                 fn () => $this->getMimeType($relativePath, $accessFlags),
                 fn () => $this->getExtraMetadata($relativePath, $accessFlags),
-                fn () => $this->mountManager->getPublicUri($path),
             );
         }
 
@@ -321,11 +320,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
             /** @var FilesystemItem $item */
             foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
                 $path = $item->getPath();
-
-                $item = $item
-                    ->withPath(Path::makeRelative($path, $this->prefix))
-                    ->withPublicUri(fn () => $this->mountManager->getPublicUri($path))
-                ;
+                $item = $item->withPath(Path::makeRelative($path, $this->prefix));
 
                 if (!$item->isFile()) {
                     yield $item;

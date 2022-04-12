@@ -45,18 +45,12 @@ class FilesystemItem
     private $extraMetadata;
 
     /**
-     * @var string|(\Closure(self):string|null)|null
-     */
-    private $publicUri;
-
-    /**
      * @param int|(\Closure(self):int|null)|null $lastModified
      * @param int|\Closure(self):int|null $fileSize
      * @param string|\Closure(self):string|null $mimeType
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
-     * @param string|(\Closure(self):string|null)|null $publicUri
      */
-    public function __construct(bool $isFile, string $path, $lastModified = null, $fileSize = null, $mimeType = null, $extraMetadata = [], $publicUri = null)
+    public function __construct(bool $isFile, string $path, $lastModified = null, $fileSize = null, $mimeType = null, $extraMetadata = [])
     {
         $this->isFile = $isFile;
         $this->path = $path;
@@ -64,12 +58,6 @@ class FilesystemItem
         $this->fileSize = $fileSize;
         $this->mimeType = $mimeType;
         $this->extraMetadata = $extraMetadata;
-
-        // todo: We should probably implement this as a callback instead of a
-        //       parameter, because it will never be known in advance; would
-        //       also allow to pass the options. If options are serializable,
-        //       results could still be cached here.
-        $this->publicUri = $publicUri;
     }
 
     public function __toString(): string
@@ -110,7 +98,6 @@ class FilesystemItem
             $this->fileSize,
             $this->mimeType,
             $extraMetadata,
-            $this->publicUri,
         );
     }
 
@@ -128,7 +115,6 @@ class FilesystemItem
             $this->fileSize ?? $fileSize,
             $this->mimeType ?? $mimeType,
             $this->extraMetadata,
-            $this->publicUri,
         );
     }
 
@@ -141,23 +127,6 @@ class FilesystemItem
             $this->fileSize,
             $this->mimeType,
             $this->extraMetadata,
-            $this->publicUri,
-        );
-    }
-
-    /**
-     * @param string|(\Closure(self):string|null)|null $publicUri
-     */
-    public function withPublicUri($publicUri): self
-    {
-        return new self(
-            $this->isFile,
-            $this->path,
-            $this->lastModified,
-            $this->fileSize,
-            $this->mimeType,
-            $this->extraMetadata,
-            $publicUri,
         );
     }
 
@@ -200,14 +169,6 @@ class FilesystemItem
         $this->resolveIfClosure($this->extraMetadata);
 
         return $this->extraMetadata;
-    }
-
-    public function getPublicUri(): ?string
-    {
-        $this->assertIsFile(__FUNCTION__);
-        $this->resolveIfClosure($this->publicUri);
-
-        return $this->publicUri;
     }
 
     private function assertIsFile(string $method): void
