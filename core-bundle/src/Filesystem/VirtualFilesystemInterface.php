@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem;
 
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -184,5 +186,5 @@ interface VirtualFilesystemInterface
      *
      * @throws UnableToResolveUuidException
      */
-    public function generatePublicUri($location, PublicFileUriOptions $options = null): ?string;
+    public function generatePublicUri($location, Options $options = null): ?UriInterface;
 }

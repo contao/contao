@@ -194,7 +194,16 @@ services:
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
         arguments:
-            - '@event_dispatcher'
+            - !tagged_iterator contao.public_file_uri_provider
+
+    contao.filesystem.symlinked_local_files_provider:
+        class: Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider
+        arguments:
+            - '@contao.filesystem.adapter.files'
+            - '%contao.upload_path%'
+            - '@request_stack'
+        tags:
+            - { name: contao.public_file_uri_provider }
 
     contao.filesystem.virtual_factory:
         class: Contao\CoreBundle\Filesystem\VirtualFilesystemFactory

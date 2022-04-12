@@ -10,9 +10,9 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Filesystem;
+namespace Contao\CoreBundle\Filesystem\PublicUri;
 
-final class PublicFileUriOptions
+final class Options
 {
     // For future options (e.g. lifetime for S3 signed URLs)
 }

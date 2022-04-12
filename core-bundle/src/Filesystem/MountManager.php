@@ -12,12 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
+use Contao\CoreBundle\Filesystem\PublicUri\Options;
+use Contao\CoreBundle\Filesystem\PublicUri\PublicUriProviderInterface;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemReader;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
 
 /**
@@ -32,16 +33,19 @@ use Symfony\Component\Filesystem\Path;
  */
 class MountManager
 {
-    private EventDispatcherInterface $eventDispatcher;
+    private iterable $publicUriProviders;
 
     /**
      * @var array<string, FilesystemAdapter>
      */
     private array $mounts = [];
 
-    public function __construct(EventDispatcherInterface $eventDispatcher = null)
+    /**
+     * @param iterable<int,PublicUriProviderInterface> $publicUriProviders
+     */
+    public function __construct(iterable $publicUriProviders = [])
     {
-        $this->eventDispatcher = $eventDispatcher ?? new EventDispatcher();
+        $this->publicUriProviders = $publicUriProviders;
     }
 
     public function mount(FilesystemAdapter $adapter, string $path = ''): self
@@ -380,15 +384,19 @@ class MountManager
         }
     }
 
-    public function generatePublicUri(string $path, PublicFileUriOptions $options = null): ?string
+    public function generatePublicUri(string $path, Options $options = null): ?UriInterface
     {
         /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
+        $options ??= new Options();
 
-        $event = new PublicFileUriEvent($adapter, $adapterPath, $options ?? new PublicFileUriOptions());
-        $this->eventDispatcher->dispatch($event);
+        foreach ($this->publicUriProviders as $provider) {
+            if (null !== ($uri = $provider->getUri($adapter, $adapterPath, $options))) {
+                return $uri;
+            }
+        }
 
-        return $event->getPublicPath();
+        return null;
     }
 
     private function getAdapterAndPath(string $path): array
