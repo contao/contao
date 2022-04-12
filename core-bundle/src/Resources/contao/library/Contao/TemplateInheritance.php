@@ -142,7 +142,8 @@ trait TemplateInheritance
 		}
 
 		// Replace insert tags
-		if ($this instanceof FrontendTemplate) {
+		if ($this instanceof FrontendTemplate)
+		{
 			$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
 		}
 
