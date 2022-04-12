@@ -142,7 +142,9 @@ trait TemplateInheritance
 		}
 
 		// Replace insert tags
-		$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
+		if ($this instanceof FrontendTemplate) {
+			$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
+		}
 
 		// Add start and end markers in debug mode
 		if ($blnDebug)
