@@ -61,23 +61,16 @@ class Input
 		$_COOKIE = static::cleanKeyInternal($_COOKIE);
 	}
 
-	public static function encodeInput(array|string $value, InputEncodingMode $mode, bool $encodeInsertTags = true): array|string
+	public static function encodeInput(string $value, InputEncodingMode $mode, bool $encodeInsertTags = true): string
 	{
-		if (\is_array($value))
-		{
-			foreach ($value as $k=>$v)
-			{
-				$value[$k] = static::encodeInput($v, $mode, $encodeInsertTags);
-			}
-
-			return $value;
-		}
-
-		// Ensure UTF-8 string with normalized newlines
+		// Ensure UTF-8 string
 		$subBefore = mb_substitute_character();
 		mb_substitute_character(0xFFFD);
-		$value = preg_replace('(\r\n?)', "\n", mb_convert_encoding($value, 'UTF-8', 'UTF-8'));
+		$value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
 		mb_substitute_character($subBefore);
+
+		// Normalize newlines
+		$value = preg_replace('(\r\n?)', "\n", $value);
 
 		// Replace null bytes with U+FFFD Replacement Character
 		$value = str_replace("\0", "\u{FFFD}", $value);
@@ -105,6 +98,19 @@ class Input
 	}
 
 	/**
+	 * @param array|string $values
+	 */
+	public static function encodeInputRecursive($values, InputEncodingMode $mode, bool $encodeInsertTags = true): array|string
+	{
+		if (!\is_array($values))
+		{
+			return static::encodeInput((string) $values, $mode, $encodeInsertTags);
+		}
+
+		return array_map(static fn ($value) => static::encodeInputRecursive($value, $mode, $encodeInsertTags), $values);
+	}
+
+	/**
 	 * Return a $_GET variable
 	 *
 	 * @param string  $strKey            The variable name
@@ -126,7 +132,7 @@ class Input
 		{
 			$varValue = $_GET[$strKey];
 
-			$varValue = static::encodeInput($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll);
+			$varValue = static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll);
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
 		}
@@ -161,7 +167,7 @@ class Input
 				return null;
 			}
 
-			$varValue = static::encodeInput($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll, !\defined('TL_MODE') || TL_MODE != 'BE');
+			$varValue = static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll, !\defined('TL_MODE') || TL_MODE != 'BE');
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
 		}
@@ -195,7 +201,7 @@ class Input
 				return null;
 			}
 
-			$varValue = static::encodeInput($varValue, $blnDecodeEntities ? InputEncodingMode::sanitizeHtml : InputEncodingMode::encodeAll, !\defined('TL_MODE') || TL_MODE != 'BE', true);
+			$varValue = static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::sanitizeHtml : InputEncodingMode::encodeAll, !\defined('TL_MODE') || TL_MODE != 'BE', true);
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
 		}
@@ -223,7 +229,7 @@ class Input
 				return null;
 			}
 
-			$varValue = static::encodeInput($varValue, InputEncodingMode::encodeNone, !\defined('TL_MODE') || TL_MODE != 'BE');
+			$varValue = static::encodeInputRecursive($varValue, InputEncodingMode::encodeNone, !\defined('TL_MODE') || TL_MODE != 'BE');
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
 		}
@@ -278,7 +284,7 @@ class Input
 		{
 			$varValue = $_COOKIE[$strKey];
 
-			$varValue = static::encodeInput($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll);
+			$varValue = static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll);
 
 			static::$arrCache[$strCacheKey][$strKey] = $varValue;
 		}
@@ -460,7 +466,7 @@ class Input
 			return $return;
 		}
 
-		$encoded = static::encodeInput($varValue, InputEncodingMode::encodeLessThanSign, false);
+		$encoded = static::encodeInput((string) $varValue, InputEncodingMode::encodeLessThanSign, false);
 
 		if ((\is_array($varValue) ? $varValue : (string) $varValue) !== $encoded)
 		{
