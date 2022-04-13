@@ -16,6 +16,7 @@ use Contao\Config;
 use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
+use Contao\InputEncodingMode;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Widget;
@@ -89,6 +90,9 @@ class InputTest extends TestCase
     public function testGetAndPostEncoded(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= $expected;
+
+        $this->assertSame($expected, Input::encodeInput($source, InputEncodingMode::encodeLessThanSign));
+        $this->assertSame($expectedEncoded, Input::encodeInput($source, InputEncodingMode::encodeAll));
 
         $_GET = $_POST = $_COOKIE = ['key' => $source];
 
@@ -295,6 +299,58 @@ class InputTest extends TestCase
             "B-Win \n Dow Jones, Apple \n T-Mobile",
             "B-Win \n Dow Jones, Apple \n T-Mobile",
         ];
+    }
+
+    /**
+     * @dataProvider encodeNoneModeProvider
+     */
+    public function testEncodeNoneMode(string $source, string $expected, string|null $expectedEncoded = null): void
+    {
+        $expectedEncoded ??= $expected;
+
+        $this->assertSame($expected, Input::encodeInput($source, InputEncodingMode::encodeNone, false));
+        $this->assertSame($expectedEncoded, Input::encodeInput($source, InputEncodingMode::encodeNone, true));
+        $this->assertSame($expected.$expected, Input::encodeInput($source.$source, InputEncodingMode::encodeNone, false));
+        $this->assertSame($expectedEncoded.$expectedEncoded, Input::encodeInput($source.$source, InputEncodingMode::encodeNone, true));
+
+        $_POST = ['key' => $source];
+
+        $this->assertSame($expectedEncoded, Input::postRaw('key'));
+    }
+
+    public function encodeNoneModeProvider(): \Generator
+    {
+        yield ['', ''];
+        yield ['foo', 'foo'];
+        yield ['\X \0 \X', '\X &#92;0 \X'];
+        yield ["a\rb\r\nc\n\rd\ne", "a\nb\nc\n\nd\ne"];
+        yield ['{}', '{}'];
+        yield ['{{}}', '{{}}', '&#123;&#123;&#125;&#125;'];
+        yield ['{{{}}}', '{{{}}}', '&#123;&#123;{&#125;&#125;}'];
+        yield ['{{{{}}}}', '{{{{}}}}', '&#123;&#123;&#123;&#123;&#125;&#125;&#125;&#125;'];
+        yield ["\0", "\u{FFFD}"];
+        yield ["\x80", "\u{FFFD}"];
+        yield ["\xFF", "\u{FFFD}"];
+        yield ["\xC2\x7F", "\u{FFFD}\x7F"];
+        yield ["\xC2\x80", "\xC2\x80"];
+        yield ["\xDF\xBF", "\xDF\xBF"];
+        yield ["\xE0\xA0\x7F", "\u{FFFD}\x7F"];
+        yield ["\xE0\xA0\x80", "\xE0\xA0\x80"];
+        yield ["\xEF\xBF\xBF", "\xEF\xBF\xBF"];
+        yield ["\xF0\x90\x80\x7F", "\u{FFFD}\x7F"];
+        yield ["\xF0\x90\x80\x80", "\xF0\x90\x80\x80"];
+        yield ["\xF4\x8F\xBF\xBF", "\xF4\x8F\xBF\xBF"];
+        yield ["\xFA\x80\x80\x80\x80", "\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}"];
+        yield ["\xFB\xBF\xBF\xBF\xBF", "\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}"];
+        yield ["\xFD\x80\x80\x80\x80\x80", "\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}"];
+        yield ["\xFD\xBF\xBF\xBF\xBF\xBF", "\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}"];
+
+        /** @see https://github.com/php/php-src/issues/8360 */
+        if (\PHP_VERSION_ID >= 80106) {
+            yield ["\xDF\xC0", "\u{FFFD}\u{FFFD}"];
+            yield ["\xEF\xBF\xC0", "\u{FFFD}\u{FFFD}"];
+            yield ["\xF4\x8F\xBF\xC0", "\u{FFFD}\u{FFFD}"];
+        }
     }
 
     /**

@@ -64,10 +64,13 @@ class Input
 	public static function encodeInput(string $value, InputEncodingMode $mode, bool $encodeInsertTags = true): string
 	{
 		// Ensure UTF-8 string
-		$subBefore = mb_substitute_character();
-		mb_substitute_character(0xFFFD);
-		$value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
-		mb_substitute_character($subBefore);
+		if (1 !== preg_match('//u', $value))
+		{
+			$subBefore = mb_substitute_character();
+			mb_substitute_character(0xFFFD);
+			$value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
+			mb_substitute_character($subBefore);
+		}
 
 		// Normalize newlines
 		$value = preg_replace('(\r\n?)', "\n", $value);
