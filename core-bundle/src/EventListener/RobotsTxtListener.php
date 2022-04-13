@@ -60,6 +60,7 @@ class RobotsTxtListener
         foreach ($records as $record) {
             $directiveList = $record->getDirectiveList();
             $directiveList->add(new Directive('Disallow', '/contao/'));
+            $directiveList->add(new Directive('Disallow', '/_contao/'));
         }
 
         /** @var PageModel $pageModel */
