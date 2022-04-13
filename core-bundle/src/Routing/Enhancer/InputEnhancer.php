@@ -69,8 +69,10 @@ class InputEnhancer implements RouteEnhancerInterface
             }
 
             $inputKeys[] = $fragments[$i];
-            $input->setGet($fragments[$i], $fragments[$i + 1], true);
+            $input->setGet($fragments[$i], $fragments[$i + 1]);
         }
+
+        $input->setUnusedRouteParameters($inputKeys);
 
         return $defaults;
     }

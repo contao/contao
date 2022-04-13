@@ -39,8 +39,7 @@ class PaginationTest extends TestCase
         unset($GLOBALS['TL_LANG']);
         $_GET = [];
 
-        Input::resetCache();
-        Input::resetUnusedGet();
+        Input::setUnusedRouteParameters([]);
 
         $this->resetStaticProperties([System::class]);
 

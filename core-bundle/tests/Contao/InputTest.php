@@ -739,11 +739,9 @@ class InputTest extends TestCase
         System::getContainer()->set('contao.string.simple_token_parser', $simpleTokenParser);
 
         // Input encode the source
-        Input::resetCache();
         $_POST = ['html' => $source];
         $html = Input::postHtml('html', true);
         $_POST = [];
-        Input::resetCache();
 
         $this->assertSame($expected, $simpleTokenParser->parse($html, $tokens));
 

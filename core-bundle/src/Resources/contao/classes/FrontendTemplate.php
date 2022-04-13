@@ -27,7 +27,7 @@ class FrontendTemplate extends Template
 	use FrontendTemplateTrait;
 
 	/**
-	 * Unused $_GET check
+	 * Unused route parameters check
 	 * @var boolean
 	 */
 	protected $blnCheckRequest = false;
@@ -57,7 +57,7 @@ class FrontendTemplate extends Template
 	/**
 	 * Send the response to the client
 	 *
-	 * @param bool $blnCheckRequest If true, check for unused $_GET parameters
+	 * @param bool $blnCheckRequest If true, check for unused route parameters
 	 *
 	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
 	 *             Use FrontendTemplate::getResponse() instead.
@@ -72,7 +72,7 @@ class FrontendTemplate extends Template
 	/**
 	 * Return a response object
 	 *
-	 * @param bool $blnCheckRequest      If true, check for unused $_GET parameters
+	 * @param bool $blnCheckRequest      If true, check for unused route parameters
 	 * @param bool $blnForceCacheHeaders
 	 *
 	 * @return Response The response object
@@ -94,7 +94,7 @@ class FrontendTemplate extends Template
 	/**
 	 * Compile the template
 	 *
-	 * @throws UnusedArgumentsException If there are unused $_GET parameters
+	 * @throws UnusedArgumentsException If there are unused route parameters
 	 *
 	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
@@ -126,10 +126,10 @@ class FrontendTemplate extends Template
 			}
 		}
 
-		// Check whether all $_GET parameters have been used (see #4277)
-		if ($this->blnCheckRequest && Input::hasUnusedGet())
+		// Check whether all route parameters have been used (see #4277)
+		if ($this->blnCheckRequest && Input::getUnusedRouteParameters())
 		{
-			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
+			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedRouteParameters()));
 		}
 
 		/** @var PageModel|null $objPage */

@@ -1070,7 +1070,6 @@ class InsertTags extends Controller
 					}
 
 					$arrGet = $_GET;
-					Input::resetCache();
 					$strFile = $elements[1];
 
 					// Take arguments and add them to the $_GET array
@@ -1112,7 +1111,6 @@ class InsertTags extends Controller
 					}
 
 					$_GET = $arrGet;
-					Input::resetCache();
 					break;
 
 				// HOOK: pass unknown tags to callback functions

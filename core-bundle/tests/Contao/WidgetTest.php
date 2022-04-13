@@ -59,7 +59,6 @@ class WidgetTest extends TestCase
 
         $_GET = [];
         $_POST = [$input => $value];
-        Input::resetCache();
         Input::initialize();
 
         $this->assertSame($expected, $method->invoke($widget, $key));

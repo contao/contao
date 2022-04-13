@@ -72,8 +72,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         Controller::resetControllerCache();
         Environment::reset();
-        Input::resetCache();
-        Input::resetUnusedGet();
+        Input::setUnusedRouteParameters([]);
         InsertTags::reset();
         PageModel::reset();
         Registry::getInstance()->reset();
