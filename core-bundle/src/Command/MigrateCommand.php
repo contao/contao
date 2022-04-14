@@ -137,19 +137,15 @@ class MigrateCommand extends Command
             return $this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash) ? 0 : 1;
         }
 
-        if (null !== $specifiedHash) {
-            throw new InvalidOptionException('Use --migrations-only or --schema-only together with --hash');
-        }
-
-        if (!$this->executeMigrations($dryRun, $asJson, null)) {
+        if (!$this->executeMigrations($dryRun, $asJson, $specifiedHash)) {
             return 1;
         }
 
-        if (!$this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), null)) {
+        if (!$this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash)) {
             return 1;
         }
 
-        if (!$dryRun && !$this->executeMigrations($dryRun, $asJson, null)) {
+        if (!$dryRun && null === $specifiedHash && !$this->executeMigrations($dryRun, $asJson, null)) {
             return 1;
         }
 
@@ -160,7 +156,7 @@ class MigrateCommand extends Command
         return 0;
     }
 
-    private function executeMigrations(bool $dryRun, bool $asJson, string $specifiedHash = null): bool
+    private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
     {
         while (true) {
             $first = true;
@@ -265,8 +261,13 @@ class MigrateCommand extends Command
                 $this->io->success('Executed '.$count.' migrations.');
             }
 
-            // Do not run the update recursive if a hash was specified
             if (null !== $specifiedHash) {
+                // Do not run the schema update after migrations got executed
+                // if a hash was specified, because that hash could never match
+                // both, migrations and schema updates
+                $dryRun = true;
+
+                // Do not run the update recursive if a hash was specified
                 break;
             }
         }
@@ -331,10 +332,6 @@ class MigrateCommand extends Command
                 ]);
             }
 
-            if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
-                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
-            }
-
             if (!$hasNewCommands) {
                 return true;
             }
@@ -346,6 +343,10 @@ class MigrateCommand extends Command
 
             if ($dryRun) {
                 return true;
+            }
+
+            if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
+                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
             }
 
             $options = $withDeletesOption
