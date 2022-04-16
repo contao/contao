@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Safely read the user input
@@ -31,9 +33,29 @@ class Input
 {
 	/**
 	 * Unused route parameters (/key/value/key2/value2)
-	 * @var array
 	 */
-	private static $arrUnusedRouteParameters = array();
+	private static array $arrUnusedRouteParameters = array();
+
+	/**
+	 * Parameters set via setGet() are stored by request
+	 *
+	 * @var \WeakMap<Request,array<string,array|string>>
+	 */
+	private static \WeakMap $setGet;
+
+	/**
+	 * Parameters set via setPost() are stored by request
+	 *
+	 * @var \WeakMap<Request,array<string,array|string>>
+	 */
+	private static \WeakMap $setPost;
+
+	/**
+	 * Parameters set via setCookie() are stored by request
+	 *
+	 * @var \WeakMap<Request,array<string,array|string>>
+	 */
+	private static \WeakMap $setCookie;
 
 	/**
 	 * Clean the global GPC arrays
@@ -118,7 +140,9 @@ class Input
 	 */
 	public static function get($strKey, $blnDecodeEntities=false)
 	{
-		if (!isset($_GET[$strKey]))
+		$varValue = static::findGet($strKey);
+
+		if ($varValue === null)
 		{
 			return null;
 		}
@@ -133,13 +157,33 @@ class Input
 			unset(self::$arrUnusedRouteParameters[$strKey]);
 		}
 
-		$varValue = $_GET[$strKey];
-
 		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll);
 	}
 
 	public static function getKeys(): array
 	{
+		if ($request = static::getRequest())
+		{
+			$keys = $request->query->keys();
+
+			if (isset(static::$setGet) && static::$setGet->offsetExists($request))
+			{
+				foreach (static::$setGet->offsetGet($request) as $key => $value)
+				{
+					if ($value === null)
+					{
+						$keys = array_diff($keys, array($key));
+					}
+					else
+					{
+						$keys[] = $key;
+					}
+				}
+			}
+
+			return array_values($keys);
+		}
+
 		return array_keys($_GET ?? array());
 	}
 
@@ -167,7 +211,7 @@ class Input
 
 	public static function postKeys(): array
 	{
-		return array_keys($_POST ?? array());
+		return static::getRequest()?->request->keys() ?? array_keys($_POST ?? array());
 	}
 
 	/**
@@ -236,12 +280,12 @@ class Input
 	 */
 	public static function cookie($strKey, $blnDecodeEntities=false)
 	{
-		if (!isset($_COOKIE[$strKey]))
+		$varValue = static::findCookie($strKey);
+
+		if ($varValue === null)
 		{
 			return null;
 		}
-
-		$varValue = $_COOKIE[$strKey];
 
 		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll);
 	}
@@ -258,6 +302,14 @@ class Input
 		$strKey = str_replace(array(' ', '.', '['), '_', $strKey);
 
 		$strKey = static::cleanKeyInternal($strKey);
+
+		if ($request = static::getRequest())
+		{
+			static::$setGet ??= new \WeakMap();
+			$arrGet = static::$setGet->offsetExists($request) ? static::$setGet->offsetGet($request) : array();
+			$arrGet[$strKey] = $varValue;
+			static::$setGet->offsetSet($request, $arrGet);
+		}
 
 		if ($varValue === null)
 		{
@@ -283,7 +335,18 @@ class Input
 	 */
 	public static function setPost($strKey, $varValue)
 	{
+		// Convert special characters (see #7829)
+		$strKey = str_replace(array(' ', '.', '['), '_', $strKey);
+
 		$strKey = static::cleanKeyInternal($strKey);
+
+		if ($request = static::getRequest())
+		{
+			static::$setPost ??= new \WeakMap();
+			$arrPost = static::$setPost->offsetExists($request) ? static::$setPost->offsetPost($request) : array();
+			$arrPost[$strKey] = $varValue;
+			static::$setPost->offsetSet($request, $arrPost);
+		}
 
 		if ($varValue === null)
 		{
@@ -303,7 +366,17 @@ class Input
 	 */
 	public static function setCookie($strKey, $varValue)
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
 		$strKey = static::cleanKeyInternal($strKey);
+
+		if ($request = static::getRequest())
+		{
+			static::$setCookie ??= new \WeakMap();
+			$arrCookie = static::$setCookie->offsetExists($request) ? static::$setCookie->offsetPost($request) : array();
+			$arrCookie[$strKey] = $varValue;
+			static::$setCookie->offsetSet($request, $arrCookie);
+		}
 
 		if ($varValue === null)
 		{
@@ -984,8 +1057,79 @@ class Input
 	 *
 	 * @return mixed The variable value
 	 */
+	public static function findGet($strKey)
+	{
+		if ($request = static::getRequest())
+		{
+			$arrGet = (isset(static::$setGet) && static::$setGet->offsetExists($request)) ? static::$setGet->offsetGet($request) : array();
+
+			if (\array_key_exists($strKey, $arrGet))
+			{
+				return $arrGet[$strKey];
+			}
+
+			return $request->query->get($strKey);
+		}
+
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
+
+		return $_GET[$strKey] ?? null;
+	}
+
+	/**
+	 * Fallback to the session form data if there is no post data
+	 *
+	 * @param string $strKey The variable name
+	 *
+	 * @return mixed The variable value
+	 */
 	public static function findPost($strKey)
 	{
+		if ($request = static::getRequest())
+		{
+			$arrPost = (isset(static::$setPost) && static::$setPost->offsetExists($request)) ? static::$setPost->offsetGet($request) : array();
+
+			if (\array_key_exists($strKey, $arrPost))
+			{
+				return $arrPost[$strKey];
+			}
+
+			return $request->request->get($strKey);
+		}
+
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
+
 		return $_POST[$strKey] ?? null;
+	}
+
+	/**
+	 * Fallback to the session form data if there is no post data
+	 *
+	 * @param string $strKey The variable name
+	 *
+	 * @return mixed The variable value
+	 */
+	public static function findCookie($strKey)
+	{
+		if ($request = static::getRequest())
+		{
+			$arrCookie = (isset(static::$setCookie) && static::$setCookie->offsetExists($request)) ? static::$setCookie->offsetGet($request) : array();
+
+			if (\array_key_exists($strKey, $arrCookie))
+			{
+				return $arrCookie[$strKey];
+			}
+
+			return $request->cookies->get($strKey);
+		}
+
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_COOKIE with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
+
+		return $_COOKIE[$strKey] ?? null;
+	}
+
+	private static function getRequest(): Request|null
+	{
+		return System::getContainer()?->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getMainRequest();
 	}
 }

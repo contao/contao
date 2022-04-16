@@ -23,6 +23,8 @@ use Contao\Widget;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class InputTest extends TestCase
 {
@@ -94,10 +96,26 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::encodeInput($source, InputEncodingMode::encodeLessThanSign));
         $this->assertSame($expectedEncoded, Input::encodeInput($source, InputEncodingMode::encodeAll));
 
-        $_GET = $_POST = $_COOKIE = ['key' => $source];
-
         Config::set('allowedTags', '');
         Config::set('allowedAttributes', '');
+
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(['key' => $source], ['key' => $source], [], ['key' => $source]));
+
+        $this->assertSame($expected, Input::get('key', true));
+        $this->assertSame($expected, Input::post('key', true));
+        $this->assertSame($expected, Input::cookie('key', true));
+
+        $this->assertSame($expectedEncoded, Input::get('key', false));
+        $this->assertSame($expectedEncoded, Input::post('key', false));
+        $this->assertSame($expectedEncoded, Input::cookie('key', false));
+
+        $this->assertSame($source, Input::postUnsafeRaw('key'));
+
+        $stack->pop();
+        $_GET = $_POST = $_COOKIE = ['key' => $source];
+
+        $this->expectDeprecation('%sGetting data from $_%s has been deprecated%s');
 
         $this->assertSame($expected, Input::get('key', true));
         $this->assertSame($expected, Input::post('key', true));
@@ -303,6 +321,8 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider encodeNoneModeProvider
+     *
+     * @group legacy
      */
     public function testEncodeNoneMode(string $source, string $expected, string|null $expectedEncoded = null): void
     {
@@ -313,7 +333,15 @@ class InputTest extends TestCase
         $this->assertSame($expected.$expected, Input::encodeInput($source.$source, InputEncodingMode::encodeNone, false));
         $this->assertSame($expectedEncoded.$expectedEncoded, Input::encodeInput($source.$source, InputEncodingMode::encodeNone, true));
 
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request([], ['key' => $source]));
+
+        $this->assertSame($expectedEncoded, Input::postRaw('key'));
+
+        $stack->pop();
         $_POST = ['key' => $source];
+
+        $this->expectDeprecation('%sGetting data from $_POST%shas been deprecated%s');
 
         $this->assertSame($expectedEncoded, Input::postRaw('key'));
     }
@@ -355,17 +383,28 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider stripTagsProvider
+     *
+     * @group legacy
      */
     public function testStripTags(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $expected);
 
-        $_POST = ['key' => $source];
-
         $allowedTags = Config::get('allowedTags');
         $allowedAttributes = Config::get('allowedAttributes');
 
         $this->assertSame($expected, Input::stripTags($source, $allowedTags, $allowedAttributes));
+
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request([], ['key' => $source]));
+
+        $this->assertSame($expectedEncoded, Input::postHtml('key', true));
+
+        $stack->pop();
+        $_POST = ['key' => $source];
+
+        $this->expectDeprecation('%sGetting data from $_POST%shas been deprecated%s');
+
         $this->assertSame($expectedEncoded, Input::postHtml('key', true));
     }
 

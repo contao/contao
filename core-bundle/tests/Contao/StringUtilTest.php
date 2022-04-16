@@ -22,6 +22,7 @@ use Contao\System;
 use Psr\Log\NullLogger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class StringUtilTest extends TestCase
@@ -265,9 +266,10 @@ class StringUtilTest extends TestCase
      */
     public function testRevertInputEncoding(string $source, string $expected = null): void
     {
-        Input::setGet('value', $source);
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(['value' => $source]));
+
         $inputEncoded = Input::get('value');
-        Input::setGet('value', null);
 
         // Test input encoding round trip
         $this->assertSame($expected ?? $source, StringUtil::revertInputEncoding($inputEncoded));
