@@ -138,6 +138,11 @@ class Input
 		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll);
 	}
 
+	public static function getKeys(): array
+	{
+		return array_keys($_GET ?? array());
+	}
+
 	/**
 	 * Return a $_POST variable
 	 *
@@ -158,6 +163,11 @@ class Input
 		$varValue = static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll, !\defined('TL_MODE') || TL_MODE != 'BE');
 
 		return $varValue;
+	}
+
+	public static function postKeys(): array
+	{
+		return array_keys($_POST ?? array());
 	}
 
 	/**

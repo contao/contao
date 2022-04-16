@@ -2564,7 +2564,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$blnIsError = ($_POST && !Input::post('all_fields'));
+			$blnIsError = (Input::postKeys() && !Input::post('all_fields'));
 
 			// Return the select menu
 			$return .= '
@@ -2985,7 +2985,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$blnIsError = ($_POST && !Input::post('all_fields'));
+			$blnIsError = (Input::postKeys() && !Input::post('all_fields'));
 
 			// Return the select menu
 			$return .= '

@@ -863,7 +863,7 @@ class Newsletter extends Backend
 				$strEmail = Input::post('email', true);
 
 				// E-mail address has changed
-				if (!empty($_POST) && $strEmail && $strEmail != $objUser->email)
+				if (Input::postKeys() && $strEmail && $strEmail != $objUser->email)
 				{
 					$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=?")
 											   ->execute($strEmail);
@@ -905,7 +905,7 @@ class Newsletter extends Backend
 				}
 
 				// Check activation status
-				elseif (!empty($_POST) && Input::post('disable') != $objUser->disable)
+				elseif (Input::postKeys() && Input::post('disable') != $objUser->disable)
 				{
 					$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
 								   ->execute((Input::post('disable') ? '' : 1), $objUser->email);

@@ -826,7 +826,7 @@ abstract class DataContainer extends Backend
 		$arrKeys = array();
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
-		foreach (array_keys($_GET) as $strKey)
+		foreach (Input::getKeys() as $strKey)
 		{
 			if (!\in_array($strKey, $arrUnset))
 			{
