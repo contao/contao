@@ -148,7 +148,7 @@ class ModuleBreadcrumb extends Module
 		}
 
 		// Active article
-		if (isset($_GET['articles']))
+		if (Input::get('articles') !== null)
 		{
 			$items[] = array
 			(

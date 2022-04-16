@@ -62,7 +62,7 @@ class FrontendIndex extends Frontend
 		}
 
 		// Trigger the 404 page if an item is required but not given (see #8361)
-		if ($objPage->requireItem && !isset($_GET['auto_item']))
+		if ($objPage->requireItem && Input::get('auto_item') === null)
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
@@ -104,7 +104,7 @@ class FrontendIndex extends Frontend
 		}
 
 		// Check whether the language matches the root page language
-		if (isset($_GET['language']) && $objPage->urlPrefix && Input::get('language') != LocaleUtil::formatAsLanguageTag($objPage->rootLanguage))
+		if (Input::get('language') !== null && $objPage->urlPrefix && Input::get('language') != LocaleUtil::formatAsLanguageTag($objPage->rootLanguage))
 		{
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}

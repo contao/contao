@@ -113,7 +113,7 @@ class Newsletter extends Backend
 			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('request'));
 
 			// Preview
-			if (isset($_GET['preview']))
+			if (Input::get('preview') !== null)
 			{
 				// Check the e-mail address
 				if (!Validator::isEmail(Input::get('recipient', true)))

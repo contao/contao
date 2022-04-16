@@ -59,13 +59,13 @@ class ModuleNewsArchive extends ModuleNews
 		}
 
 		// Show the news reader if an item has been selected
-		if ($this->news_readerModule > 0 && isset($_GET['auto_item']))
+		if ($this->news_readerModule > 0 && Input::get('auto_item') !== null)
 		{
 			return $this->getFrontendModule($this->news_readerModule, $this->strColumn);
 		}
 
 		// Hide the module if no period has been selected
-		if ($this->news_jumpToCurrent == 'hide_module' && !isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']))
+		if ($this->news_jumpToCurrent == 'hide_module' && Input::get('year') === null && Input::get('month') === null && Input::get('day') === null)
 		{
 			return '';
 		}
@@ -98,7 +98,7 @@ class ModuleNewsArchive extends ModuleNews
 		$intDay = Input::get('day');
 
 		// Jump to the current period
-		if (!isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']) && $this->news_jumpToCurrent != 'all_items')
+		if (Input::get('year') === null && Input::get('month') === null && Input::get('day') === null && $this->news_jumpToCurrent != 'all_items')
 		{
 			switch ($this->news_format)
 			{

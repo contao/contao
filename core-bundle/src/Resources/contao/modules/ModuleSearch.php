@@ -57,11 +57,11 @@ class ModuleSearch extends Module
 	protected function compile()
 	{
 		// Trigger the search module from a custom form
-		if (!isset($_GET['keywords']) && Input::post('FORM_SUBMIT') == 'tl_search')
+		if (Input::get('keywords') === null && Input::post('FORM_SUBMIT') == 'tl_search')
 		{
-			$_GET['keywords'] = Input::post('keywords');
-			$_GET['query_type'] = Input::post('query_type');
-			$_GET['per_page'] = Input::post('per_page');
+			Input::setGet('keywords', Input::post('keywords'));
+			Input::setGet('query_type', Input::post('query_type'));
+			Input::setGet('per_page', Input::post('per_page'));
 		}
 
 		$blnFuzzy = $this->fuzzy;

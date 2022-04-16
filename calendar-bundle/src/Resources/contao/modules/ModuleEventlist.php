@@ -70,7 +70,7 @@ class ModuleEventlist extends Events
 		}
 
 		// Show the event reader if an item has been selected
-		if ($this->cal_readerModule > 0 && isset($_GET['auto_item']))
+		if ($this->cal_readerModule > 0 && Input::get('auto_item') !== null)
 		{
 			return $this->getFrontendModule($this->cal_readerModule, $this->strColumn);
 		}
@@ -112,7 +112,7 @@ class ModuleEventlist extends Events
 		}
 
 		// Jump to the current period
-		if (!isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']))
+		if (Input::get('year') === null && Input::get('month') === null && Input::get('day') === null)
 		{
 			switch ($this->cal_format)
 			{
