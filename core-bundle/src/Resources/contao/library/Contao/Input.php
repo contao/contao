@@ -1130,6 +1130,6 @@ class Input
 
 	private static function getRequest(): Request|null
 	{
-		return System::getContainer()?->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getMainRequest();
+		return System::getContainer()?->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getCurrentRequest();
 	}
 }
