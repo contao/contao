@@ -13,16 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Voter;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\Voter\DataContainer\DefaultDcVoter;
+use Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class DefaultDcVoterTest extends TestCase
+class DefaultDataContainerVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $voter = new DefaultDcVoter();
+        $voter = new DefaultDataContainerVoter();
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,

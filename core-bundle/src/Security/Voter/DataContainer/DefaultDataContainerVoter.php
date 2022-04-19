@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
  * permissions. That's why this voter is implemented with a very low priority, so it allows everything
  * in the back end as the last voter in case no other voter decided to deny access before.
  */
-class DefaultDcVoter implements CacheableVoterInterface
+class DefaultDataContainerVoter implements CacheableVoterInterface
 {
     public function supportsAttribute(string $attribute): bool
     {
