@@ -20,7 +20,7 @@ class RoutingTest extends FunctionalTestCase
 {
     use ExpectDeprecationTrait;
 
-    private static ?array $lastImport = null;
+    private static array|null $lastImport = null;
 
     protected function setUp(): void
     {

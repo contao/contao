@@ -490,7 +490,7 @@ class FileTree extends Widget
 		return Image::getHtml($image, '', 'class="' . $strClass . '" title="' . StringUtil::specialchars($strInfo) . '"');
 	}
 
-	private function getFilePreviewPath(string $path): ?string
+	private function getFilePreviewPath(string $path): string|null
 	{
 		if (!$this->showFilePreview)
 		{

@@ -29,31 +29,22 @@ use Symfony\Component\Filesystem\Path;
 
 class ImageFactory implements ImageFactoryInterface
 {
-    private ResizerInterface $resizer;
-    private ImagineInterface $imagine;
-    private ImagineInterface $imagineSvg;
-    private ContaoFramework $framework;
-    private Filesystem $filesystem;
-    private bool $bypassCache;
-    private array $imagineOptions;
-    private array $validExtensions;
-    private string $uploadDir;
     private array $predefinedSizes = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.factory" service instead
      */
-    public function __construct(ResizerInterface $resizer, ImagineInterface $imagine, ImagineInterface $imagineSvg, Filesystem $filesystem, ContaoFramework $framework, bool $bypassCache, array $imagineOptions, array $validExtensions, string $uploadDir)
-    {
-        $this->resizer = $resizer;
-        $this->imagine = $imagine;
-        $this->imagineSvg = $imagineSvg;
-        $this->filesystem = $filesystem;
-        $this->framework = $framework;
-        $this->bypassCache = $bypassCache;
-        $this->imagineOptions = $imagineOptions;
-        $this->validExtensions = $validExtensions;
-        $this->uploadDir = $uploadDir;
+    public function __construct(
+        private ResizerInterface $resizer,
+        private ImagineInterface $imagine,
+        private ImagineInterface $imagineSvg,
+        private Filesystem $filesystem,
+        private ContaoFramework $framework,
+        private bool $bypassCache,
+        private array $imagineOptions,
+        private array $validExtensions,
+        private string $uploadDir,
+    ) {
     }
 
     /**
@@ -64,7 +55,7 @@ class ImageFactory implements ImageFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    public function create($path, int|array|string|ResizeConfiguration|null $size = null, $options = null): ImageInterface
+    public function create($path, ResizeConfiguration|array|int|string|null $size = null, $options = null): ImageInterface
     {
         if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
             throw new \InvalidArgumentException('Options must be of type null, string or '.ResizeOptions::class);
@@ -179,7 +170,7 @@ class ImageFactory implements ImageFactoryInterface
      *
      * @return array<(ResizeConfiguration|ImportantPart|ResizeOptions|null)>
      */
-    private function createConfig(int|array|null $size, ImageInterface $image): array
+    private function createConfig(array|int|null $size, ImageInterface $image): array
     {
         if (!\is_array($size)) {
             $size = [0, 0, $size];
@@ -256,7 +247,7 @@ class ImageFactory implements ImageFactoryInterface
     /**
      * Fetches the important part from the database.
      */
-    private function createImportantPart(ImageInterface $image): ?ImportantPart
+    private function createImportantPart(ImageInterface $image): ImportantPart|null
     {
         if (!Path::isBasePath($this->uploadDir, $image->getPath())) {
             return null;

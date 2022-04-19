@@ -39,16 +39,14 @@ class UserCreateCommand extends Command
     protected static $defaultName = 'contao:user:create';
     protected static $defaultDescription = 'Create a new Contao back end user.';
 
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private PasswordHasherFactoryInterface $passwordHasherFactory;
     private array $locales;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, PasswordHasherFactoryInterface $passwordHasherFactory, Locales $locales)
-    {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->passwordHasherFactory = $passwordHasherFactory;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Connection $connection,
+        private PasswordHasherFactoryInterface $passwordHasherFactory,
+        Locales $locales,
+    ) {
         $this->locales = $locales->getEnabledLocaleIds();
 
         parent::__construct();
@@ -148,7 +146,7 @@ class UserCreateCommand extends Command
             $input->setOption('admin', 'yes' === $answer);
         }
 
-        if (false === $input->getOption('admin') && ($options = $this->getGroups()) && [] !== $options) {
+        if (false === $input->getOption('admin') && ($options = $this->getGroups()) && 0 !== \count($options)) {
             $answer = $this->askMultipleChoice(
                 'Assign which groups to the user (select multiple comma-separated)?',
                 $options,

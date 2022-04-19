@@ -130,7 +130,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         return Container::underscore($className);
     }
 
-    private function findBundlePath(array $meta, string $name): ?string
+    private function findBundlePath(array $meta, string $name): string|null
     {
         if (is_dir($path = Path::join($meta[$name]['path'], 'Resources/public'))) {
             return $path;

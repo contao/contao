@@ -15,16 +15,10 @@ namespace Contao\CoreBundle\Migration;
 class MigrationCollection
 {
     /**
-     * @var iterable<MigrationInterface>
-     */
-    private iterable $migrations;
-
-    /**
      * @param iterable<MigrationInterface> $migrations
      */
-    public function __construct(iterable $migrations)
+    public function __construct(private iterable $migrations)
     {
-        $this->migrations = $migrations;
     }
 
     /**

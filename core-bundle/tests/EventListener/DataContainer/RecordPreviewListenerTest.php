@@ -34,7 +34,7 @@ class RecordPreviewListenerTest extends TestCase
     /**
      * @dataProvider loadDataContainer
      */
-    public function testRegistersDeleteCallbackOnDeletableDataContainers(string $table, string $dataContainer, string $driver, bool $notDeletable, ?array $expected): void
+    public function testRegistersDeleteCallbackOnDeletableDataContainers(string $table, string $dataContainer, string $driver, bool $notDeletable, array|null $expected): void
     {
         $GLOBALS['TL_DCA'][$table]['config']['notDeletable'] = $notDeletable;
         $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] = $dataContainer;

@@ -28,20 +28,15 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class InstallTool
 {
-    private Connection $connection;
-    private string $projectDir;
-    private LoggerInterface $logger;
-    private MigrationCollection $migrations;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao_installation.install_tool" service instead
      */
-    public function __construct(Connection $connection, string $projectDir, LoggerInterface $logger, MigrationCollection $migrations)
-    {
-        $this->connection = $connection;
-        $this->projectDir = $projectDir;
-        $this->logger = $logger;
-        $this->migrations = $migrations;
+    public function __construct(
+        private Connection $connection,
+        private string $projectDir,
+        private LoggerInterface $logger,
+        private MigrationCollection $migrations,
+    ) {
     }
 
     public function isLocked(): bool
@@ -85,7 +80,7 @@ class InstallTool
         $this->connection = $connection;
     }
 
-    public function canConnectToDatabase(?string $name): bool
+    public function canConnectToDatabase(string|null $name): bool
     {
         // Return if there is a working database connection already
         try {
@@ -93,7 +88,7 @@ class InstallTool
             $this->connection->executeQuery('SHOW TABLES');
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception) {
         }
 
         if (null === $name) {

@@ -43,7 +43,7 @@ class RememberMe
     protected \DateTimeInterface $lastUsed;
 
     #[Column(type: 'datetime', nullable: true)]
-    protected ?\DateTimeInterface $expires = null;
+    protected \DateTimeInterface|null $expires = null;
 
     #[Column(type: 'string', length: 100, nullable: false)]
     protected string $class;
@@ -83,7 +83,7 @@ class RememberMe
         return $this->lastUsed;
     }
 
-    public function getExpires(): ?\DateTimeInterface
+    public function getExpires(): \DateTimeInterface|null
     {
         return $this->expires;
     }

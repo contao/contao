@@ -27,7 +27,7 @@ class LightboxResultTest extends TestCase
     /**
      * @dataProvider provideInvalidConfigurations
      */
-    public function testCanOnlyBeConstructedWithEitherAResourceOrAnUrl(ImageInterface|string|null $resource, ?string $url): void
+    public function testCanOnlyBeConstructedWithEitherAResourceOrAnUrl(ImageInterface|string|null $resource, string|null $url): void
     {
         $locator = $this->createMock(ContainerInterface::class);
 

@@ -42,14 +42,11 @@ class DebugPluginsCommand extends Command
     protected static $defaultName = 'debug:plugins';
     protected static $defaultDescription = 'Displays the Contao Manager plugin configurations.';
 
-    private ContaoKernel $kernel;
-    private ?SymfonyStyle $io = null;
+    private SymfonyStyle|null $io = null;
 
-    public function __construct(ContaoKernel $kernel)
+    public function __construct(private ContaoKernel $kernel)
     {
         parent::__construct();
-
-        $this->kernel = $kernel;
     }
 
     protected function configure(): void
@@ -210,7 +207,7 @@ class DebugPluginsCommand extends Command
         return 0;
     }
 
-    private function findPlugin(string $name): ?array
+    private function findPlugin(string $name): array|null
     {
         $plugins = $this->kernel->getPluginLoader()->getInstances();
 

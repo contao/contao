@@ -21,16 +21,12 @@ final class ChunkedText implements \IteratorAggregate, \Stringable
     public const TYPE_RAW = 1;
 
     /**
-     * @var array<int, string>
-     */
-    private array $chunks;
-
-    /**
+     * @param array<string> $chunks
+     *
      * @internal
      */
-    public function __construct(array $chunks)
+    public function __construct(private array $chunks)
     {
-        $this->chunks = $chunks;
     }
 
     public function __toString(): string

@@ -141,7 +141,7 @@ class PreviewFactoryTest extends TestCase
     /**
      * @dataProvider getImageSizes
      */
-    public function testGetPreviewSizeFromImageSize(int|string|array|ResizeConfiguration|PictureConfiguration|null $size, int $expectedSize, string $defaultDensities = ''): void
+    public function testGetPreviewSizeFromImageSize(PictureConfiguration|ResizeConfiguration|array|int|string|null $size, int $expectedSize, string $defaultDensities = ''): void
     {
         $imageSizeModel = (new \ReflectionClass(ImageSizeModel::class))->newInstanceWithoutConstructor();
         $imageSizeModel->setRow([

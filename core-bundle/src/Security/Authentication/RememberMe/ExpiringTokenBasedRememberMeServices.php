@@ -33,18 +33,18 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
      */
     final public const EXPIRATION = 60;
 
-    private RememberMeRepository $repository;
-    private string $secret;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.expiring_token_based_remember_me_services" service instead
      */
-    public function __construct(RememberMeRepository $repository, iterable $userProviders, string $secret, string $providerKey, array $options = [], LoggerInterface $logger = null)
-    {
+    public function __construct(
+        private RememberMeRepository $repository,
+        iterable $userProviders,
+        private string $secret,
+        string $providerKey,
+        array $options = [],
+        LoggerInterface $logger = null,
+    ) {
         parent::__construct($userProviders, $secret, $providerKey, $options, $logger);
-
-        $this->repository = $repository;
-        $this->secret = $secret;
     }
 
     protected function cancelCookie(Request $request): void
@@ -75,7 +75,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
             $this->repository->deleteExpired((int) $this->options['lifetime'], self::EXPIRATION);
             $rows = $this->repository->findBySeries($this->encodeSeries($series));
 
-            if ([] === $rows) {
+            if (0 === \count($rows)) {
                 throw new TokenNotFoundException('No token found');
             }
 
@@ -140,7 +140,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     /**
      * @param array<RememberMe> $rows
      */
-    private function findValidToken(array $rows, string $cookieValue): ?RememberMe
+    private function findValidToken(array $rows, string $cookieValue): RememberMe|null
     {
         $lastException = null;
 

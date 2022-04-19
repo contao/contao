@@ -22,11 +22,8 @@ class AvailableTransports
      */
     private array $transports = [];
 
-    private ?TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator = null)
+    public function __construct(private TranslatorInterface|null $translator = null)
     {
-        $this->translator = $translator;
     }
 
     public function addTransport(TransportConfig $transportConfig): void
@@ -70,7 +67,7 @@ class AvailableTransports
     /**
      * Returns a specific transport configuration by the transport name.
      */
-    public function getTransport(string $name): ?TransportConfig
+    public function getTransport(string $name): TransportConfig|null
     {
         return $this->transports[$name] ?? null;
     }

@@ -110,7 +110,7 @@ class ModuleTest extends TestCase
             {
             }
 
-            public function execute(): ?array
+            public function execute(): array|null
             {
                 return self::getPublishedSubpagesByPid(1);
             }

@@ -121,7 +121,7 @@ class PreviewLinkListenerTest extends TestCase
             ],
         ];
 
-        $input = $this->mockInputAdapter(compact('url', 'showUnpublished'));
+        $input = $this->mockInputAdapter(['url' => $url, 'showUnpublished' => $showUnpublished]);
 
         $listener = new PreviewLinkListener(
             $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),

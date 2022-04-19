@@ -28,16 +28,12 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
 {
     use FrameworkAwareTrait;
 
-    private Security $security;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao_calendar.picker.event_provider" service instead
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, Security $security)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface|null $translator, private Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);
-
-        $this->security = $security;
     }
 
     public function getName(): string
@@ -105,7 +101,7 @@ class EventPickerProvider extends AbstractInsertTagPickerProvider implements Dca
         return '{{event_url::%s}}';
     }
 
-    private function getCalendarId(int|string $id): ?int
+    private function getCalendarId(int|string $id): int|null
     {
         $eventAdapter = $this->framework->getAdapter(CalendarEventsModel::class);
 

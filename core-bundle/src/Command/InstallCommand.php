@@ -30,19 +30,12 @@ class InstallCommand extends Command
     protected static $defaultName = 'contao:install';
     protected static $defaultDescription = 'Installs the required Contao directories.';
 
-    private ?Filesystem $fs = null;
+    private Filesystem|null $fs = null;
     private array $rows = [];
-    private string $projectDir;
-    private string $uploadPath;
-    private string $imageDir;
-    private ?string $webDir = null;
+    private string|null $webDir = null;
 
-    public function __construct(string $projectDir, string $uploadPath, string $imageDir)
+    public function __construct(private string $projectDir, private string $uploadPath, private string $imageDir)
     {
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->imageDir = $imageDir;
-
         parent::__construct();
     }
 

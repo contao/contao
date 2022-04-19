@@ -51,7 +51,7 @@ class ContaoLoginAuthenticationListener extends AbstractAuthenticationListener
             && preg_match('/^tl_login(_[0-9]+)?$/', (string) $request->request->get('FORM_SUBMIT'));
     }
 
-    protected function attemptAuthentication(Request $request): ?TokenInterface
+    protected function attemptAuthentication(Request $request): TokenInterface|null
     {
         $currentToken = $this->tokenStorage->getToken();
 

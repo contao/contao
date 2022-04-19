@@ -16,19 +16,13 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SendNewsletterEvent extends Event
 {
-    private string $recipientAddress;
-    private string $text;
-    private string $html;
     private bool $skipSending = false;
     private bool $htmlAllowed = true;
     private array $recipientData = [];
     private array $newsletterData = [];
 
-    public function __construct(string $recipientAddress, string $text, string $html = '')
+    public function __construct(private string $recipientAddress, private string $text, private string $html = '')
     {
-        $this->recipientAddress = $recipientAddress;
-        $this->text = $text;
-        $this->html = $html;
     }
 
     public function getRecipientAddress(): string

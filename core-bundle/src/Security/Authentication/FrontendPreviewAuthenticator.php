@@ -24,20 +24,15 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticator
 {
-    private Security $security;
-    private SessionInterface $session;
-    private UserProviderInterface $userProvider;
-    private ?LoggerInterface $logger;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.frontend_preview_authenticator" service instead
      */
-    public function __construct(Security $security, SessionInterface $session, UserProviderInterface $userProvider, LoggerInterface $logger = null)
-    {
-        $this->security = $security;
-        $this->session = $session;
-        $this->userProvider = $userProvider;
-        $this->logger = $logger;
+    public function __construct(
+        private Security $security,
+        private SessionInterface $session,
+        private UserProviderInterface $userProvider,
+        private LoggerInterface|null $logger = null,
+    ) {
     }
 
     public function authenticateFrontendUser(string $username, bool $showUnpublished): bool
@@ -81,7 +76,7 @@ class FrontendPreviewAuthenticator
     /**
      * Loads the front end user and checks its group access permissions.
      */
-    private function loadFrontendUser(string $username): ?FrontendUser
+    private function loadFrontendUser(string $username): FrontendUser|null
     {
         try {
             $frontendUser = $this->userProvider->loadUserByIdentifier($username);
@@ -91,12 +86,10 @@ class FrontendPreviewAuthenticator
                 throw new UsernameNotFoundException('User is not a front end user');
             }
         } catch (UsernameNotFoundException) {
-            if (null !== $this->logger) {
-                $this->logger->info(
-                    sprintf('Could not find a front end user with the username "%s"', $username),
-                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, '')]
-                );
-            }
+            $this->logger?->info(
+                sprintf('Could not find a front end user with the username "%s"', $username),
+                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, '')]
+            );
 
             return null;
         }

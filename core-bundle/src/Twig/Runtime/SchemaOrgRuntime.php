@@ -19,14 +19,11 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class SchemaOrgRuntime implements RuntimeExtensionInterface
 {
-    private ResponseContextAccessor $responseContextAccessor;
-
     /**
      * @internal
      */
-    public function __construct(ResponseContextAccessor $responseContextAccessor)
+    public function __construct(private ResponseContextAccessor $responseContextAccessor)
     {
-        $this->responseContextAccessor = $responseContextAccessor;
     }
 
     /**

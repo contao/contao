@@ -29,20 +29,16 @@ use FOS\HttpCache\ResponseTagger;
  */
 class EntityCacheTags
 {
-    private EntityManagerInterface $entityManager;
-    private ?ResponseTagger $responseTagger;
-    private ?CacheInvalidator $cacheInvalidator;
-
     /**
      * @var array<string, ClassMetadata<object>>
      */
     private array $classMetadata = [];
 
-    public function __construct(EntityManagerInterface $entityManager, ResponseTagger $responseTagger = null, CacheInvalidator $cacheInvalidator = null)
-    {
-        $this->entityManager = $entityManager;
-        $this->responseTagger = $responseTagger;
-        $this->cacheInvalidator = $cacheInvalidator;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private ResponseTagger|null $responseTagger = null,
+        private CacheInvalidator|null $cacheInvalidator = null,
+    ) {
     }
 
     /**
@@ -125,7 +121,7 @@ class EntityCacheTags
      *
      * @return array<int, string>
      */
-    public function getTagsFor(array|string|object|null $target): array
+    public function getTagsFor(array|object|string|null $target): array
     {
         if (!$target) {
             return [];
@@ -218,7 +214,7 @@ class EntityCacheTags
      *
      * See getTagsFor() method for the allowed parameters.
      */
-    public function tagWith(array|string|object|null $target): void
+    public function tagWith(array|object|string|null $target): void
     {
         if (null === $this->responseTagger) {
             return;
@@ -280,7 +276,7 @@ class EntityCacheTags
      *
      * See getTagsFor() method for the allowed parameters.
      */
-    public function invalidateTagsFor(array|string|object|null $target): void
+    public function invalidateTagsFor(array|object|string|null $target): void
     {
         if (null === $this->cacheInvalidator) {
             return;
@@ -296,7 +292,7 @@ class EntityCacheTags
      *
      * @return ?ClassMetadata<T>
      */
-    private function getClassMetadata(string $className): ?ClassMetadata
+    private function getClassMetadata(string $className): ClassMetadata|null
     {
         $getMetadata = function (string $className) {
             try {

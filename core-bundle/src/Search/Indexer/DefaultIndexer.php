@@ -19,18 +19,11 @@ use Doctrine\DBAL\Connection;
 
 class DefaultIndexer implements IndexerInterface
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private bool $indexProtected;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.search.default_indexer" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
+    public function __construct(private ContaoFramework $framework, private Connection $connection, private bool $indexProtected = false)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->indexProtected = $indexProtected;
     }
 
     public function index(Document $document): void
@@ -138,7 +131,7 @@ class DefaultIndexer implements IndexerInterface
     {
         $jsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
 
-        if ([] === $jsonLds) {
+        if (0 === \count($jsonLds)) {
             $this->throwBecause('No JSON-LD found.');
         }
 

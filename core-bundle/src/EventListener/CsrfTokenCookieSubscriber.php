@@ -29,15 +29,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class CsrfTokenCookieSubscriber implements EventSubscriberInterface
 {
-    private ContaoCsrfTokenManager $tokenManager;
-    private MemoryTokenStorage $tokenStorage;
-    private string $cookiePrefix;
-
-    public function __construct(ContaoCsrfTokenManager $tokenManager, MemoryTokenStorage $tokenStorage, string $cookiePrefix = 'csrf_')
+    public function __construct(private ContaoCsrfTokenManager $tokenManager, private MemoryTokenStorage $tokenStorage, private string $cookiePrefix = 'csrf_')
     {
-        $this->tokenManager = $tokenManager;
-        $this->tokenStorage = $tokenStorage;
-        $this->cookiePrefix = $cookiePrefix;
     }
 
     /**
@@ -91,7 +84,7 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             }
         }
 
-        if ([] !== $response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY)) {
+        if (\count($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY))) {
             return true;
         }
 

@@ -17,13 +17,11 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DotenvDumper
 {
-    private string $dotenvFile;
     private Filesystem $filesystem;
     private array $parameters = [];
 
-    public function __construct(string $dotenvFile, Filesystem $filesystem = null)
+    public function __construct(private string $dotenvFile, Filesystem $filesystem = null)
     {
-        $this->dotenvFile = $dotenvFile;
         $this->filesystem = $filesystem ?: new Filesystem();
 
         if (!file_exists($dotenvFile)) {
@@ -35,7 +33,7 @@ class DotenvDumper
 
         $parameters = $dotenv->parse(file_get_contents($dotenvFile));
 
-        if ([] !== $parameters) {
+        if (0 !== \count($parameters)) {
             $this->parameters = array_merge($this->parameters, $parameters);
         }
     }
@@ -60,7 +58,7 @@ class DotenvDumper
     public function dump(): void
     {
         // Remove the .env file if there are no parameters
-        if ([] === $this->parameters) {
+        if (0 === \count($this->parameters)) {
             $this->filesystem->remove($this->dotenvFile);
 
             return;

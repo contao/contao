@@ -23,14 +23,10 @@ use Twig\Environment;
 
 class FigureRenderer
 {
-    private Studio $studio;
-    private Environment $twig;
     private PropertyAccessor $propertyAccessor;
 
-    public function __construct(Studio $studio, Environment $twig)
+    public function __construct(private Studio $studio, private Environment $twig)
     {
-        $this->studio = $studio;
-        $this->twig = $twig;
         $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
     }
 
@@ -48,7 +44,7 @@ class FigureRenderer
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
      * @param string                                     $template      A Contao or Twig template
      */
-    public function render(FilesModel|ImageInterface|int|string $from, int|string|array|PictureConfiguration|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): ?string
+    public function render(FilesModel|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string|null
     {
         $configuration['from'] = $from;
         $configuration['size'] = $size;
@@ -67,7 +63,7 @@ class FigureRenderer
         return $this->renderTemplate($figure, $template);
     }
 
-    private function buildFigure(array $configuration): ?Figure
+    private function buildFigure(array $configuration): Figure|null
     {
         $figureBuilder = $this->studio->createFigureBuilder();
 

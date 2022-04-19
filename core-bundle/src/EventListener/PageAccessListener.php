@@ -26,13 +26,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class PageAccessListener
 {
-    private ContaoFramework $framework;
-    private Security $security;
-
-    public function __construct(ContaoFramework $framework, Security $security)
+    public function __construct(private ContaoFramework $framework, private Security $security)
     {
-        $this->security = $security;
-        $this->framework = $framework;
     }
 
     /**
@@ -67,7 +62,7 @@ class PageAccessListener
         }
     }
 
-    private function getPageModel(Request $request): ?PageModel
+    private function getPageModel(Request $request): PageModel|null
     {
         if (!$request->attributes->has('pageModel')) {
             return null;

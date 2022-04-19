@@ -24,18 +24,6 @@ class Cron
     final public const SCOPE_CLI = 'cli';
 
     /**
-     * @var \Closure():CronJobRepository
-     */
-    private \Closure $repository;
-
-    /**
-     * @var \Closure():EntityManagerInterface
-     */
-    private \Closure $entityManager;
-
-    private ?LoggerInterface $logger;
-
-    /**
      * @var array<CronJob>
      */
     private array $cronJobs = [];
@@ -44,11 +32,8 @@ class Cron
      * @param \Closure():CronJobRepository      $repository
      * @param \Closure():EntityManagerInterface $entityManager
      */
-    public function __construct(\Closure $repository, \Closure $entityManager, LoggerInterface $logger = null)
+    public function __construct(private \Closure $repository, private \Closure $entityManager, private LoggerInterface|null $logger = null)
     {
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
     }
 
     public function addCronJob(CronJob $cronjob): void
@@ -72,8 +57,9 @@ class Cron
         /** @var EntityManagerInterface $entityManager */
         $entityManager = ($this->entityManager)();
 
-        /** @var array<CronJob> */
+        /** @var array<CronJob> $cronJobsToBeRun */
         $cronJobsToBeRun = [];
+
         $now = new \DateTimeImmutable();
 
         try {
@@ -119,9 +105,7 @@ class Cron
 
         // Execute all crons to be run
         foreach ($cronJobsToBeRun as $cron) {
-            if (null !== $this->logger) {
-                $this->logger->debug(sprintf('Executing cron job "%s"', $cron->getName()));
-            }
+            $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
             $cron($scope);
         }

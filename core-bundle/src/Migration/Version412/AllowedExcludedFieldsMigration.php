@@ -22,11 +22,8 @@ use Doctrine\DBAL\Connection;
  */
 class AllowedExcludedFieldsMigration extends AbstractMigration
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function shouldRun(): bool
@@ -58,7 +55,7 @@ class AllowedExcludedFieldsMigration extends AbstractMigration
                 alexf NOT LIKE '%tl_files::%'
         ");
 
-        if ([] === $groups) {
+        if (0 === \count($groups)) {
             return false;
         }
 

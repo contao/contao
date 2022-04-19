@@ -95,11 +95,11 @@ class DataContainerCallbackListener
             ...array_filter($callbacks, static fn ($priority) => $priority < 0, ARRAY_FILTER_USE_KEY)
         );
 
-        if ([] !== $preCallbacks) {
+        if (\count($preCallbacks)) {
             array_unshift($dcaRef, ...$preCallbacks);
         }
 
-        if ([] !== $postCallbacks) {
+        if (\count($postCallbacks)) {
             array_push($dcaRef, ...$postCallbacks);
         }
     }

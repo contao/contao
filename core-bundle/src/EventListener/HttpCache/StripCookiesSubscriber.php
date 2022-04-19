@@ -71,12 +71,10 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         'CookieConsent',
     ];
 
-    private array $allowList;
     private array $removeFromDenyList = [];
 
-    public function __construct(array $allowList = [])
+    public function __construct(private array $allowList = [])
     {
-        $this->allowList = $allowList;
     }
 
     public function getAllowList(): array
@@ -100,7 +98,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         }
 
         // Use a custom allow list if present, otherwise use the default deny list
-        if ([] !== $this->allowList) {
+        if (0 !== \count($this->allowList)) {
             $this->filterCookies($request, $this->allowList);
         } else {
             $this->filterCookies($request, $this->removeFromDenyList, self::DENY_LIST);

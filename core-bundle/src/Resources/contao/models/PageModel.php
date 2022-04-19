@@ -323,8 +323,8 @@ class PageModel extends Model
 	 */
 	protected $blnDetailsLoaded = false;
 
-	private static ?array $prefixes = null;
-	private static ?array $suffixes = null;
+	private static array|null $prefixes = null;
+	private static array|null $suffixes = null;
 
 	public function __set($strKey, $varValue)
 	{
@@ -1376,7 +1376,7 @@ class PageModel extends Model
 		return $alias;
 	}
 
-	private static function regexArray(array $data): ?string
+	private static function regexArray(array $data): string|null
 	{
 		$data = array_filter(array_unique($data));
 

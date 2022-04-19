@@ -111,7 +111,7 @@ class DebugContaoTwigCommandTest extends TestCase
                   baz          @D/baz.html5             /path/baz.html5
                  ------------ ------------------------ ----------------------
 
-                OUTPUT
+                OUTPUT,
         ];
 
         yield 'filter by full word' => [
@@ -127,7 +127,7 @@ class DebugContaoTwigCommandTest extends TestCase
                                @B/foo.html5             /path2/foo.html5
                  ------------ ------------------------ ----------------------
 
-                OUTPUT
+                OUTPUT,
         ];
 
         yield 'filter by prefix' => [
@@ -144,14 +144,14 @@ class DebugContaoTwigCommandTest extends TestCase
                   baz          @D/baz.html5             /path/baz.html5
                  ------------ ------------------------ ---------------------
 
-                OUTPUT
+                OUTPUT,
         ];
     }
 
     /**
      * @dataProvider provideThemeOptions
      */
-    public function testIncludesThemeTemplates(array $input, ?string $expectedThemeSlug): void
+    public function testIncludesThemeTemplates(array $input, string|null $expectedThemeSlug): void
     {
         $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
         $hierarchy

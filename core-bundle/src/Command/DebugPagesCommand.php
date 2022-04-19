@@ -28,9 +28,6 @@ class DebugPagesCommand extends Command
     protected static $defaultName = 'debug:pages';
     protected static $defaultDescription = 'Displays the page controller configuration.';
 
-    private ContaoFramework $framework;
-    private PageRegistry $pageRegistry;
-
     /**
      * @var array<RouteConfig>
      */
@@ -46,12 +43,9 @@ class DebugPagesCommand extends Command
      */
     private array $contentComposition = [];
 
-    public function __construct(ContaoFramework $framework, PageRegistry $pageRegistry)
+    public function __construct(private ContaoFramework $framework, private PageRegistry $pageRegistry)
     {
         parent::__construct();
-
-        $this->framework = $framework;
-        $this->pageRegistry = $pageRegistry;
     }
 
     public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): void

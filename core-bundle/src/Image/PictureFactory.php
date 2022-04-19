@@ -41,24 +41,19 @@ class PictureFactory implements PictureFactoryInterface
     ];
 
     private array $imageSizeItemsCache = [];
-    private PictureGeneratorInterface $pictureGenerator;
-    private ImageFactoryInterface $imageFactory;
-    private ContaoFramework $framework;
-    private bool $bypassCache;
-    private array $imagineOptions;
     private string $defaultDensities = '';
     private array $predefinedSizes = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.picture_factory" service instead
      */
-    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions)
-    {
-        $this->pictureGenerator = $pictureGenerator;
-        $this->imageFactory = $imageFactory;
-        $this->framework = $framework;
-        $this->bypassCache = $bypassCache;
-        $this->imagineOptions = $imagineOptions;
+    public function __construct(
+        private PictureGeneratorInterface $pictureGenerator,
+        private ImageFactoryInterface $imageFactory,
+        private ContaoFramework $framework,
+        private bool $bypassCache,
+        private array $imagineOptions,
+    ) {
     }
 
     public function setDefaultDensities(string $densities): static
@@ -76,7 +71,7 @@ class PictureFactory implements PictureFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    public function create(string|ImageInterface $path, int|string|array|PictureConfiguration|null $size = null, ResizeOptions $options = null): PictureInterface
+    public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $options = null): PictureInterface
     {
         $attributes = [];
 
@@ -143,7 +138,7 @@ class PictureFactory implements PictureFactoryInterface
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
                 $imageSizes = $imageSizeModel->findByPk($size[2]);
 
-                $config->setSize($this->createConfigItem(null !== $imageSizes ? $imageSizes->row() : null));
+                $config->setSize($this->createConfigItem($imageSizes?->row()));
 
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
@@ -329,7 +324,7 @@ class PictureFactory implements PictureFactoryInterface
      */
     private function hasSingleAspectRatio(PictureInterface $picture): bool
     {
-        if ([] === $picture->getSources()) {
+        if (0 === \count($picture->getSources())) {
             return true;
         }
 

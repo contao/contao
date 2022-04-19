@@ -25,19 +25,13 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     private const PREFIX = 'dc.';
     private const PREFIX_LENGTH = 3;
 
-    private ContaoFramework $framework;
-    private FactoryInterface $menuFactory;
-    private RouterInterface $router;
-    private TranslatorInterface $translator;
-    private Connection $connection;
-
-    public function __construct(ContaoFramework $framework, FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, Connection $connection)
-    {
-        $this->framework = $framework;
-        $this->menuFactory = $menuFactory;
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->connection = $connection;
+    public function __construct(
+        private ContaoFramework $framework,
+        private FactoryInterface $menuFactory,
+        private RouterInterface $router,
+        private TranslatorInterface $translator,
+        private Connection $connection,
+    ) {
     }
 
     public function getUrl(PickerConfig $config): string
@@ -45,7 +39,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $table = $this->getTableFromContext($config->getContext());
         $modules = $this->getModulesForTable($table);
 
-        if ([] === $modules) {
+        if (0 === \count($modules)) {
             throw new \RuntimeException(sprintf('Table "%s" is not in any back end module (context: %s)', $table, $config->getContext()));
         }
 
@@ -119,7 +113,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
         return isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer'])
             && $this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
-            && [] !== $this->getModulesForTable($table);
+            && 0 !== \count($this->getModulesForTable($table));
     }
 
     public function supportsValue(PickerConfig $config): bool
@@ -160,7 +154,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, mixed $value): string|int
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string
     {
         return (int) $value;
     }

@@ -36,7 +36,7 @@ class SearchIndexerPass implements CompilerPassInterface
             static fn (Reference $reference): bool => self::DELEGATING_SERVICE_ID !== (string) $reference
         );
 
-        if (!$container->hasDefinition(self::DELEGATING_SERVICE_ID) || [] === $indexers) {
+        if (!$container->hasDefinition(self::DELEGATING_SERVICE_ID) || 0 === \count($indexers)) {
             // Remove delegating indexer
             $container->removeDefinition(self::DELEGATING_SERVICE_ID);
 

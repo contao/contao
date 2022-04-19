@@ -26,18 +26,11 @@ use Twig\Extension\RuntimeExtensionInterface;
  */
 final class LegacyTemplateFunctionsRuntime implements RuntimeExtensionInterface
 {
-    private RequestStack $requestStack;
-    private ContaoFramework $framework;
-    private ScopeMatcher $scopeMatcher;
-
     /**
      * @internal
      */
-    public function __construct(RequestStack $requestStack, ContaoFramework $framework, ScopeMatcher $scopeMatcher)
+    public function __construct(private RequestStack $requestStack, private ContaoFramework $framework, private ScopeMatcher $scopeMatcher)
     {
-        $this->requestStack = $requestStack;
-        $this->framework = $framework;
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**

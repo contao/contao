@@ -25,15 +25,8 @@ use Symfony\Component\Routing\Route;
 
 abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
-    protected ContaoFramework $framework;
-    protected CandidatesInterface $candidates;
-    protected PageRegistry $pageRegistry;
-
-    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
+    public function __construct(protected ContaoFramework $framework, protected CandidatesInterface $candidates, protected PageRegistry $pageRegistry)
     {
-        $this->framework = $framework;
-        $this->candidates = $candidates;
-        $this->pageRegistry = $pageRegistry;
     }
 
     /**
@@ -234,7 +227,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         return array_flip($result);
     }
 
-    private function getLocalePriority(array $locales, array $notIn, array $languagePriority): ?int
+    private function getLocalePriority(array $locales, array $notIn, array $languagePriority): int|null
     {
         foreach (array_reverse($locales) as $locale) {
             if (isset($languagePriority[$locale]) && !\in_array($locale, $notIn, true)) {

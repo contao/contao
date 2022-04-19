@@ -32,12 +32,10 @@ class BackendAccessVoter extends Voter implements ResetInterface
         'can_delete_articles' => 6,
     ];
 
-    private ContaoFramework $framework;
     private array $pagePermissionsCache = [];
 
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     public function reset(): void
@@ -136,7 +134,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             $permission[] = 'u'.$flag;
         }
 
-        return [] !== array_intersect($permission, $chmod);
+        return \count(array_intersect($permission, $chmod)) > 0;
     }
 
     /**
