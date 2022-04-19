@@ -121,7 +121,6 @@ use Contao\System;
 use Contao\TableWizard;
 use Contao\TextArea;
 use Contao\TextField;
-use Contao\TextStore;
 use Contao\Theme;
 use Contao\ThemeModel;
 use Contao\TimePeriod;
@@ -333,7 +332,6 @@ $GLOBALS['BE_FFL'] = array
 (
 	'text'                    => TextField::class,
 	'password'                => Password::class,
-	'textStore'               => TextStore::class,
 	'textarea'                => TextArea::class,
 	'select'                  => SelectMenu::class,
 	'checkbox'                => CheckBox::class,

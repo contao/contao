@@ -2,7 +2,11 @@
 
 ## Version 4.* to 5.0
 
-## Removed global functions
+## Input type "textStore"
+
+The `textStore` input type was removed. Use `password` instead.
+
+## Global functions
 
 The following global functions have been removed:
 
@@ -47,8 +51,8 @@ The following global functions have been removed:
 - `utf8_str_split()`
 - `nl2br_callback()`
 
-Most of them have alternatives in either `StringUtil`, `ArrayUtil` or may have PHP native alternatives such as the `mb_*`
-functions. For advanced UTF-8 handling, use `symfony/string`.
+Most of them have alternatives in either `StringUtil`, `ArrayUtil` or may have PHP native alternatives such as
+the `mb_*` functions. For advanced UTF-8 handling, use `symfony/string`.
 
 ## eval->orderField in PageTree and Picker widgets
 
