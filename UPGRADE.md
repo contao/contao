@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+## Removed inputType textStore
+
+The `textStore` input type was removed. Use `password` instead.
+
 ## eval->orderField in PageTree and Picker widgets
 
 Support for a separate database `orderField` column has been removed. Use `isSortable` instead which
