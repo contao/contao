@@ -121,6 +121,9 @@ class ModulePersonalData extends Module
 		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
 		$objVersions->initialize();
 
+		$arrSubmitted = array();
+		$arrFiles = array();
+
 		// Build the form
 		foreach ($this->editable as $field)
 		{
@@ -203,9 +206,6 @@ class ModulePersonalData extends Module
 
 				$objWidget->rowClassConfirm = 'row_' . ++$row . ((($row % 2) == 0) ? ' even' : ' odd');
 			}
-
-			$arrSubmitted = array();
-			$arrFiles = array();
 
 			// Validate the form data
 			if (Input::post('FORM_SUBMIT') == $strFormId)
