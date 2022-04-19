@@ -267,7 +267,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
     private function includeHelpers(): void
     {
-        require __DIR__.'/../Resources/contao/helper/functions.php';
         require __DIR__.'/../Resources/contao/config/constants.php';
     }
 
