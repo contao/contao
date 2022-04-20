@@ -125,9 +125,9 @@ abstract class System
 	 *
 	 * @param string $strKey The property name
 	 *
-	 * @return mixed|null The property value or null
+	 * @return mixed The property value or null
 	 */
-	public function __get($strKey)
+	public function __get(string $strKey): mixed
 	{
 		if (!isset($this->arrObjects[$strKey]))
 		{

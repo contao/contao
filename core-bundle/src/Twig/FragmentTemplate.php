@@ -41,29 +41,17 @@ final class FragmentTemplate extends Template
         // Do not call parent constructor
     }
 
-    /**
-     * @param string $key
-     * @param mixed  $value
-     */
-    public function __set(/* string */ $key, $value): void
+    public function __set(string $key, mixed $value): void
     {
         $this->set($key, $value);
     }
 
-    /**
-     * @param string $key
-     *
-     * @return mixed
-     */
-    public function __get(/* string */ $key)
+    public function __get(string $key): mixed
     {
         return $this->get($key);
     }
 
-    /**
-     * @param string $key
-     */
-    public function __isset(/* string */ $key): bool
+    public function __isset(string $key): bool
     {
         return $this->has($key);
     }
@@ -73,18 +61,12 @@ final class FragmentTemplate extends Template
         self::throwOnAccess();
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function set(string $key, $value): void
+    public function set(string $key, mixed $value): void
     {
         $this->context[$key] = $value;
     }
 
-    /**
-     * @return mixed
-     */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         return $this->context[$key] ?? throw new \RuntimeException(sprintf('Key "%s" does not exist.', $key));
     }
@@ -97,7 +79,7 @@ final class FragmentTemplate extends Template
     /**
      * @param array<string, mixed> $data
      */
-    public function setData(/* array */ $data): void
+    public function setData(array $data): void
     {
         $this->context = $data;
     }
@@ -110,10 +92,7 @@ final class FragmentTemplate extends Template
         return $this->context;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName(/* string */ $name): void
+    public function setName(string $name): void
     {
         $this->templateName = $name;
     }

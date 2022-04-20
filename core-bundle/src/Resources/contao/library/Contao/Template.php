@@ -132,7 +132,7 @@ abstract class Template extends Controller
 	 * @param string $strKey   The property name
 	 * @param mixed  $varValue The property value
 	 */
-	public function __set($strKey, $varValue)
+	public function __set(string $strKey, mixed $varValue): void
 	{
 		$this->arrData[$strKey] = $varValue;
 	}
@@ -144,7 +144,7 @@ abstract class Template extends Controller
 	 *
 	 * @return mixed The property value
 	 */
-	public function __get($strKey)
+	public function __get(string $strKey): mixed
 	{
 		if (isset($this->arrData[$strKey]))
 		{
@@ -186,7 +186,7 @@ abstract class Template extends Controller
 	 *
 	 * @return boolean True if the property is set
 	 */
-	public function __isset($strKey)
+	public function __isset(string $strKey): bool
 	{
 		return isset($this->arrData[$strKey]);
 	}
@@ -196,7 +196,7 @@ abstract class Template extends Controller
 	 *
 	 * @param array $arrData The data array
 	 */
-	public function setData($arrData)
+	public function setData(array $arrData): void
 	{
 		$this->arrData = $arrData;
 	}
@@ -206,7 +206,7 @@ abstract class Template extends Controller
 	 *
 	 * @return array The data array
 	 */
-	public function getData()
+	public function getData(): array
 	{
 		return $this->arrData;
 	}
@@ -216,7 +216,7 @@ abstract class Template extends Controller
 	 *
 	 * @param string $strTemplate The template name
 	 */
-	public function setName($strTemplate)
+	public function setName(string $strTemplate): void
 	{
 		$this->strTemplate = $strTemplate;
 	}
@@ -226,7 +226,7 @@ abstract class Template extends Controller
 	 *
 	 * @return string The template name
 	 */
-	public function getName()
+	public function getName(): string
 	{
 		return $this->strTemplate;
 	}
