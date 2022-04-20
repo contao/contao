@@ -37,7 +37,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
     /**
      * @dataProvider requiresAuthenticationProvider
      */
-    public function testRequiresAuthentication(bool $isPost, ?string $formSubmit, bool $requiresAuthentication): void
+    public function testRequiresAuthentication(bool $isPost, string|null $formSubmit, bool $requiresAuthentication): void
     {
         $request = $this->mockRequest($isPost);
 
@@ -210,7 +210,7 @@ class ContaoLoginAuthenticationListenerTest extends TestCase
     /**
      * @return AuthenticationManagerInterface&MockObject
      */
-    private function mockAuthenticationManager(?string $username, string $password = null): AuthenticationManagerInterface
+    private function mockAuthenticationManager(string|null $username, string $password = null): AuthenticationManagerInterface
     {
         $authenticationManager = $this->createMock(AuthenticationManagerInterface::class);
         $authenticationManager

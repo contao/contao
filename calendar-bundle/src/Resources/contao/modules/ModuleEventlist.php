@@ -25,8 +25,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property int    $cal_readerModule
  * @property bool   $cal_hideRunning
  * @property string $cal_featured
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventlist extends Events
 {
@@ -72,7 +70,7 @@ class ModuleEventlist extends Events
 		}
 
 		// Show the event reader if an item has been selected
-		if ($this->cal_readerModule > 0  && (isset($_GET['events']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->cal_readerModule > 0 && isset($_GET['auto_item']))
 		{
 			return $this->getFrontendModule($this->cal_readerModule, $this->strColumn);
 		}

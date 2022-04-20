@@ -15,8 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the template inheritance logic
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 trait TemplateInheritance
 {
@@ -141,6 +139,12 @@ trait TemplateInheritance
 		if ($blnDebug === null)
 		{
 			$blnDebug = System::getContainer()->getParameter('kernel.debug');
+		}
+
+		// Replace insert tags
+		if ($this instanceof FrontendTemplate)
+		{
+			$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
 		}
 
 		// Add start and end markers in debug mode
@@ -349,7 +353,7 @@ trait TemplateInheritance
 	/**
 	 * Render a Twig template if one exists
 	 */
-	protected function renderTwigSurrogateIfExists(): ?string
+	protected function renderTwigSurrogateIfExists(): string|null
 	{
 		$container = System::getContainer();
 

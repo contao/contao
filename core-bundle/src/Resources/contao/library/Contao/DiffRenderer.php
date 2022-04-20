@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Renders an inline diff view using definition list markup
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DiffRenderer extends \Diff_Renderer_Html_Array
 {

@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class JwtManager
 {
-    public const COOKIE_NAME = 'contao_settings';
+    final public const COOKIE_NAME = 'contao_settings';
 
     private Configuration $config;
 
@@ -50,12 +50,12 @@ class JwtManager
         $this->config->setValidationConstraints(new SignedWith($this->config->signer(), $this->config->signingKey()));
     }
 
-    public function parseRequest(Request $request): ?array
+    public function parseRequest(Request $request): array|null
     {
         if ($request->cookies->has(self::COOKIE_NAME)) {
             try {
                 return $this->parseCookie((string) $request->cookies->get(self::COOKIE_NAME));
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // do nothing
             }
         }
@@ -109,7 +109,7 @@ class JwtManager
         return Cookie::create(self::COOKIE_NAME, $token->toString());
     }
 
-    public function parseCookie(string $data): ?array
+    public function parseCookie(string $data): array|null
     {
         $token = $this->config->parser()->parse($data);
 

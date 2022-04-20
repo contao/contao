@@ -16,8 +16,6 @@ use Contao\Model\Collection;
 /**
  * Content element "mediaelement".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @todo Rename to ContentPlayer in Contao 5.0
  */
 class ContentMedia extends ContentElement

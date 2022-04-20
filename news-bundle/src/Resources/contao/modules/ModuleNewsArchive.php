@@ -20,8 +20,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property string $news_format
  * @property string $news_order
  * @property int    $news_readerModule
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsArchive extends ModuleNews
 {
@@ -61,7 +59,7 @@ class ModuleNewsArchive extends ModuleNews
 		}
 
 		// Show the news reader if an item has been selected
-		if ($this->news_readerModule > 0 && (isset($_GET['items']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->news_readerModule > 0 && isset($_GET['auto_item']))
 		{
 			return $this->getFrontendModule($this->news_readerModule, $this->strColumn);
 		}

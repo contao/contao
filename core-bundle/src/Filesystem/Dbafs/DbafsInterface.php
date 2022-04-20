@@ -28,14 +28,14 @@ interface DbafsInterface
     /**
      * Resolves a UUID to a path, returns null if it does not exist.
      */
-    public function getPathFromUuid(Uuid $uuid): ?string;
+    public function getPathFromUuid(Uuid $uuid): string|null;
 
     /**
      * Returns a record or null if none was found.
      *
      * The given $path must be relative to the DBAFS root.
      */
-    public function getRecord(string $path): ?FilesystemItem;
+    public function getRecord(string $path): FilesystemItem|null;
 
     /**
      * Returns an iterator over all records inside $path.

@@ -36,13 +36,13 @@ class Comment
      * @ORM\ManyToOne(targetEntity=Author::class, inversedBy="comments")
      * @ORM\JoinColumn(name="author", nullable=true)
      */
-    private ?Author $author = null;
+    private Author|null $author = null;
 
     /**
      * @ORM\ManyToOne(targetEntity=BlogPost::class, inversedBy="comments")
      * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
      */
-    private ?BlogPost $blogPost;
+    private BlogPost|null $blogPost = null;
 
     public function getId(): int
     {
@@ -80,12 +80,12 @@ class Comment
         return $this;
     }
 
-    public function getBlogPost(): ?BlogPost
+    public function getBlogPost(): BlogPost|null
     {
         return $this->blogPost;
     }
 
-    public function setBlogPost(?BlogPost $blogPost): self
+    public function setBlogPost(BlogPost|null $blogPost): self
     {
         $this->blogPost = $blogPost;
 

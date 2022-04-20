@@ -149,7 +149,7 @@ class Route404Provider extends AbstractPageRouteProvider
             if (!$page->rootId) {
                 return;
             }
-        } catch (NoRootPageFoundException $e) {
+        } catch (NoRootPageFoundException) {
             return;
         }
 
@@ -206,7 +206,7 @@ class Route404Provider extends AbstractPageRouteProvider
         return $routes;
     }
 
-    private function addLocaleRedirectRoute(PageRoute $route, ?Request $request, array &$routes): void
+    private function addLocaleRedirectRoute(PageRoute $route, Request|null $request, array &$routes): void
     {
         $length = \strlen($route->getUrlPrefix());
 
@@ -256,10 +256,11 @@ class Route404Provider extends AbstractPageRouteProvider
         uasort(
             $routes,
             function (Route $a, Route $b) use ($languages, $routes) {
-                $errorA = false !== strpos('.error_404', array_search($a, $routes, true));
-                $errorB = false !== strpos('.error_404', array_search($a, $routes, true), -7);
-                $localeA = '.locale' === substr(array_search($a, $routes, true), -7);
-                $localeB = '.locale' === substr(array_search($b, $routes, true), -7);
+                $nameA = array_search($a, $routes, true);
+                $nameB = array_search($b, $routes, true);
+
+                $errorA = str_ends_with($nameA, '.error_404');
+                $errorB = str_ends_with($nameB, '.error_404');
 
                 if ($errorA && !$errorB) {
                     return 1;
@@ -268,6 +269,9 @@ class Route404Provider extends AbstractPageRouteProvider
                 if ($errorB && !$errorA) {
                     return -1;
                 }
+
+                $localeA = str_ends_with($nameA, '.locale');
+                $localeB = str_ends_with($nameB, '.locale');
 
                 if ($localeA && !$localeB) {
                     return -1;

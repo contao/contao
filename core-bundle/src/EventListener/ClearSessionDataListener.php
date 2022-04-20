@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
+use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Security\Core\Security;
@@ -43,41 +43,22 @@ class ClearSessionDataListener
 
         if ($event->getResponse()->isSuccessful()) {
             $this->clearLoginData($request->getSession());
+            $this->clearAutoExpiringSessionAttributes($request->getSession());
         }
-
-        $this->clearLegacyAttributeBags('FE_DATA');
-        $this->clearLegacyAttributeBags('BE_DATA');
-        $this->clearLegacyFormData();
-    }
-
-    private function clearLegacyAttributeBags(string $key): void
-    {
-        if (!isset($_SESSION[$key])) {
-            return;
-        }
-
-        if (($bag = $_SESSION[$key]) instanceof AttributeBag && !$bag->count()) {
-            unset($_SESSION[$key]);
-        }
-    }
-
-    private function clearLegacyFormData(): void
-    {
-        if (isset($_SESSION['FORM_DATA']['SUBMITTED_AT'])) {
-            $waitingTime = max(30, (int) ini_get('max_execution_time')) * 2;
-
-            // Leave the data available for $waitingTime seconds (for redirect confirmation pages)
-            if ($_SESSION['FORM_DATA']['SUBMITTED_AT'] + $waitingTime > time()) {
-                return;
-            }
-        }
-
-        unset($_SESSION['FORM_DATA'], $_SESSION['FILES']);
     }
 
     private function clearLoginData(SessionInterface $session): void
     {
         $session->remove(Security::AUTHENTICATION_ERROR);
         $session->remove(Security::LAST_USERNAME);
+    }
+
+    private function clearAutoExpiringSessionAttributes(SessionInterface $session): void
+    {
+        foreach ($session->all() as $k => $v) {
+            if ($v instanceof AutoExpiringAttribute && $v->isExpired()) {
+                $session->remove($k);
+            }
+        }
     }
 }

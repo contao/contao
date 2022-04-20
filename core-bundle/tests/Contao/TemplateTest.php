@@ -81,7 +81,7 @@ class TemplateTest extends TestCase
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Ignore
         }
 
@@ -114,7 +114,7 @@ class TemplateTest extends TestCase
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Ignore
         }
 
@@ -175,7 +175,7 @@ class TemplateTest extends TestCase
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Ignore
         }
 
@@ -214,7 +214,7 @@ class TemplateTest extends TestCase
         try {
             $template->parse();
             $this->fail('Parse should throw an exception');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // Ignore
         }
 
@@ -387,15 +387,10 @@ class TemplateTest extends TestCase
         $page->minifyMarkup = false;
 
         $GLOBALS['objPage'] = $page;
-        $GLOBALS['TL_KEYWORDS'] = '';
 
         $template = new class($buffer) extends FrontendTemplate {
-            private ?string $testBuffer;
-
-            public function __construct(string $testBuffer)
+            public function __construct(private string|null $testBuffer)
             {
-                $this->testBuffer = $testBuffer;
-
                 parent::__construct();
             }
 
@@ -419,7 +414,7 @@ class TemplateTest extends TestCase
 
         $this->assertSame($expectedOutput, $template->testCompile());
 
-        unset($GLOBALS['objPage'],$GLOBALS['TL_KEYWORDS']);
+        unset($GLOBALS['objPage']);
     }
 
     public function provideBuffer(): \Generator

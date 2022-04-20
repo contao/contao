@@ -28,15 +28,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PreviewLinkController
 {
-    private FrontendPreviewAuthenticator $previewAuthenticator;
-    private UriSigner $uriSigner;
-    private Connection $connection;
-
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, UriSigner $uriSigner, Connection $connection)
+    public function __construct(private FrontendPreviewAuthenticator $previewAuthenticator, private UriSigner $uriSigner, private Connection $connection)
     {
-        $this->previewAuthenticator = $previewAuthenticator;
-        $this->uriSigner = $uriSigner;
-        $this->connection = $connection;
     }
 
     /**

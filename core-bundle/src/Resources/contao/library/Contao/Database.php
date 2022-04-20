@@ -29,8 +29,6 @@ use Doctrine\DBAL\Exception\DriverException;
  *     $res  = $stmt->execute(4);
  *
  * @property string $error The last error message
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Database
 {
@@ -474,8 +472,6 @@ class Database
 	/**
 	 * Return the IDs of all child records of a particular record (see #2475)
 	 *
-	 * @author Andreas Schempp
-	 *
 	 * @param mixed   $arrParentIds An array of parent IDs
 	 * @param string  $strTable     The table name
 	 * @param boolean $blnSorting   True if the table has a sorting field
@@ -695,7 +691,7 @@ class Database
 
 		if ($strQuoteCharacter === null)
 		{
-			$strQuoteCharacter = System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter();
+			$strQuoteCharacter = System::getContainer()->get('database_connection')->getDatabasePlatform()->getIdentifierQuoteCharacter() ?? '"';
 		}
 
 		// The identifier is quoted already

@@ -16,8 +16,6 @@ use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
 
 /**
  * Front end content element "download".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentDownload extends ContentElement
 {

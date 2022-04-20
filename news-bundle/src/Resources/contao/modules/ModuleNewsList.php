@@ -19,8 +19,6 @@ use Contao\Model\Collection;
  * @property array  $news_archives
  * @property string $news_featured
  * @property string $news_order
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsList extends ModuleNews
 {
@@ -60,7 +58,7 @@ class ModuleNewsList extends ModuleNews
 		}
 
 		// Show the news reader if an item has been selected
-		if ($this->news_readerModule > 0 && (isset($_GET['items']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->news_readerModule > 0 && isset($_GET['auto_item']))
 		{
 			return $this->getFrontendModule($this->news_readerModule, $this->strColumn);
 		}

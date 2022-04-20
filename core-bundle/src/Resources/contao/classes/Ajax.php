@@ -20,8 +20,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Provide methods to handle Ajax requests.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Ajax extends Backend
 {
@@ -222,7 +220,7 @@ class Ajax extends Backend
 				// Load the value
 				if (Input::get('act') != 'overrideAll')
 				{
-					if (($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null) == 'File')
+					if (is_a($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null, DC_File::class, true))
 					{
 						$varValue = Config::get($strField);
 					}
@@ -322,22 +320,6 @@ class Ajax extends Backend
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
 
-			// Feature/unfeature an element
-			case 'toggleFeatured':
-				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=toggleFeatured) has been deprecated and will no longer work in Contao 5.0. Use the toggle operation instead.');
-
-				if (class_exists($dc->table, false))
-				{
-					$dca = new $dc->table();
-
-					if (method_exists($dca, 'toggleFeatured'))
-					{
-						$dca->toggleFeatured(Input::post('id'), Input::post('state') == 1, $dc);
-					}
-				}
-
-				throw new NoContentResponseException();
-
 			// Toggle subpalettes
 			case 'toggleSubpalette':
 				$this->import(BackendUser::class, 'User');
@@ -355,7 +337,13 @@ class Ajax extends Backend
 					if (Input::get('act') == 'editAll')
 					{
 						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
+
+						$objVersions = new Versions($dc->table, $this->strAjaxId);
+						$objVersions->initialize();
+
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
+
+						$objVersions->create();
 
 						if (Input::post('load'))
 						{
@@ -364,7 +352,12 @@ class Ajax extends Backend
 					}
 					else
 					{
+						$objVersions = new Versions($dc->table, $dc->id);
+						$objVersions->initialize();
+
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
+
+						$objVersions->create();
 
 						if (Input::post('load'))
 						{

@@ -21,11 +21,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class PageUseSslDefaultListener
 {
-    private RequestStack $requestStack;
-
-    public function __construct(RequestStack $requestStack)
+    public function __construct(private RequestStack $requestStack)
     {
-        $this->requestStack = $requestStack;
     }
 
     public function __invoke(DataContainer $dc): void

@@ -69,7 +69,7 @@ class MountManager
         try {
             /** @var FilesystemAdapter $adapter */
             [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             // Tolerate non-existing mount-points
             return false;
         }
@@ -93,26 +93,13 @@ class MountManager
         try {
             /** @var FilesystemAdapter $adapter */
             [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             // Tolerate non-existing mount-points
             return false;
         }
 
         try {
-            if (method_exists($adapter, 'directoryExists')) {
-                return $adapter->directoryExists($adapterPath);
-            }
-
-            // Flysystem version 2 has no support for directoryExists(), so as
-            // a workaround, we list the contents of the parent directory and
-            // check if the requested path is returned as a directory.
-            foreach ($adapter->listContents(Path::getDirectory($path), false) as $sibling) {
-                if ($sibling->path() === $path) {
-                    return $sibling->isDir();
-                }
-            }
-
-            return false;
+            return $adapter->directoryExists($adapterPath);
         } catch (FilesystemException $e) {
             throw VirtualFilesystemException::unableToCheckIfDirectoryExists($path, $e);
         }
@@ -251,7 +238,7 @@ class MountManager
             $visibility = $options['visibility'] ?? $adapterFrom->visibility($adapterPathFrom)->visibility();
 
             $stream = $adapterFrom->readStream($adapterPathFrom);
-            $adapterTo->writeStream($adapterPathTo, $stream, new Config(compact('visibility')));
+            $adapterTo->writeStream($adapterPathTo, $stream, new Config(['visibility' => $visibility]));
         } catch (FilesystemException $e) {
             throw VirtualFilesystemException::unableToCopy($pathFrom, $pathTo, $e);
         }
@@ -278,7 +265,7 @@ class MountManager
             $visibility = $options['visibility'] ?? $adapterFrom->visibility($adapterPathFrom)->visibility();
 
             $stream = $adapterFrom->readStream($adapterPathFrom);
-            $adapterTo->writeStream($adapterPathTo, $stream, new Config(compact('visibility')));
+            $adapterTo->writeStream($adapterPathTo, $stream, new Config(['visibility' => $visibility]));
 
             $adapterFrom->delete($adapterPathFrom);
         } catch (FilesystemException $e) {

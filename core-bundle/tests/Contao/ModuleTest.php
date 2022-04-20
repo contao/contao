@@ -110,7 +110,7 @@ class ModuleTest extends TestCase
             {
             }
 
-            public function execute(): ?array
+            public function execute(): array|null
             {
                 return self::getPublishedSubpagesByPid(1);
             }
@@ -142,7 +142,6 @@ class ModuleTest extends TestCase
     private function mockDatabase(Database $database): void
     {
         $property = (new \ReflectionClass($database))->getProperty('arrInstances');
-        $property->setAccessible(true);
         $property->setValue([md5(implode('', [])) => $database]);
 
         $this->assertSame($database, Database::getInstance());

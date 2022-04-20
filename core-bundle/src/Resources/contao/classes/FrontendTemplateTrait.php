@@ -12,14 +12,11 @@ namespace Contao;
 
 /**
  * @property integer $id
- * @property string  $keywords
  * @property string  $content
  * @property array   $sections
  * @property array   $positions
  * @property array   $matches
  * @method   string  getTemplate(string $strTemplate)
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  *
  * @internal
  */

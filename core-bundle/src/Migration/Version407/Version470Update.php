@@ -23,17 +23,12 @@ use Symfony\Component\Filesystem\Path;
  */
 class Version470Update extends AbstractMigration
 {
-    private Connection $connection;
-    private Filesystem $filesystem;
-    private string $uploadPath;
-    private string $projectDir;
-
-    public function __construct(Connection $connection, Filesystem $filesystem, string $uploadPath, string $projectDir)
-    {
-        $this->connection = $connection;
-        $this->filesystem = $filesystem;
-        $this->uploadPath = $uploadPath;
-        $this->projectDir = $projectDir;
+    public function __construct(
+        private Connection $connection,
+        private Filesystem $filesystem,
+        private string $uploadPath,
+        private string $projectDir,
+    ) {
     }
 
     public function getName(): string
@@ -75,7 +70,7 @@ class Version470Update extends AbstractMigration
 
         // Add a .nosync file in every excluded folder
         if (!empty($GLOBALS['TL_CONFIG']['fileSyncExclude'])) {
-            $folders = array_map('trim', explode(',', $GLOBALS['TL_CONFIG']['fileSyncExclude']));
+            $folders = array_map('trim', explode(',', (string) $GLOBALS['TL_CONFIG']['fileSyncExclude']));
 
             foreach ($folders as $folder) {
                 if (is_dir($path = Path::join($this->projectDir, $this->uploadPath, $folder))) {

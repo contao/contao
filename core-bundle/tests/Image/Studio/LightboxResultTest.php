@@ -25,11 +25,9 @@ use Psr\Container\ContainerInterface;
 class LightboxResultTest extends TestCase
 {
     /**
-     * @param ImageInterface|string|null $resource
-     *
      * @dataProvider provideInvalidConfigurations
      */
-    public function testCanOnlyBeConstructedWithEitherAResourceOrAnUrl($resource, ?string $url): void
+    public function testCanOnlyBeConstructedWithEitherAResourceOrAnUrl(ImageInterface|string|null $resource, string|null $url): void
     {
         $locator = $this->createMock(ContainerInterface::class);
 

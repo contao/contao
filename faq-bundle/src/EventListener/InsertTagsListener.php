@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\EventListener;
 
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
@@ -31,19 +30,14 @@ class InsertTagsListener
         'faq_title',
     ];
 
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     /**
      * Replaces the FAQ insert tags.
-     *
-     * @return string|false
      */
-    public function onReplaceInsertTags(string $tag, bool $useCache, $cacheValue, array $flags)
+    public function onReplaceInsertTags(string $tag, bool $useCache, $cacheValue, array $flags): string|false
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -63,10 +57,7 @@ class InsertTagsListener
         return $this->generateReplacement($faq, $key, $url, \in_array('blank', \array_slice($elements, 2), true));
     }
 
-    /**
-     * @return string|false
-     */
-    private function generateUrl(FaqModel $faq, bool $absolute)
+    private function generateUrl(FaqModel $faq, bool $absolute): string|false
     {
         /** @var PageModel $jumpTo */
         if (
@@ -76,16 +67,12 @@ class InsertTagsListener
             return false;
         }
 
-        $config = $this->framework->getAdapter(Config::class);
-        $params = ($config->get('useAutoItem') ? '/' : '/items/').($faq->alias ?: $faq->id);
+        $params = '/'.($faq->alias ?: $faq->id);
 
         return $absolute ? $jumpTo->getAbsoluteUrl($params) : $jumpTo->getFrontendUrl($params);
     }
 
-    /**
-     * @return string|false
-     */
-    private function generateReplacement(FaqModel $faq, string $key, string $url, bool $blank)
+    private function generateReplacement(FaqModel $faq, string $key, string $url, bool $blank): string|false
     {
         switch ($key) {
             case 'faq':

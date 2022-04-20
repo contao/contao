@@ -23,17 +23,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendRebuildCacheMessageListener
 {
-    public const CACHE_DIRTY_FLAG = 'contao.template_path_cache_dirty';
+    final public const CACHE_DIRTY_FLAG = 'contao.template_path_cache_dirty';
 
-    private ScopeMatcher $scopeMatcher;
-    private CacheItemPoolInterface $cache;
-    private TranslatorInterface $translator;
-
-    public function __construct(ScopeMatcher $scopeMatcher, CacheItemPoolInterface $cache, TranslatorInterface $translator)
+    public function __construct(private ScopeMatcher $scopeMatcher, private CacheItemPoolInterface $cache, private TranslatorInterface $translator)
     {
-        $this->scopeMatcher = $scopeMatcher;
-        $this->cache = $cache;
-        $this->translator = $translator;
     }
 
     public function __invoke(RequestEvent $event): void

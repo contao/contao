@@ -52,8 +52,6 @@ namespace Contao;
  * @property string  $file_dirname              The file dirname
  * @property string  $extra_field               The extra field
  * @property string  $file_comment              The file comment
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ZipReader
 {
@@ -423,7 +421,7 @@ class ZipReader
 		$strMbCharset = null;
 
 		// Set the mbstring encoding to ASCII (see #5842)
-		if (ini_get('mbstring.func_overload') > 0)
+		if (\ini_get('mbstring.func_overload') > 0)
 		{
 			$strMbCharset = mb_internal_encoding();
 

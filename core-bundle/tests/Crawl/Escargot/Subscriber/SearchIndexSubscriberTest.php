@@ -86,7 +86,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class), $this->getTranslator());
         $subscriber->setEscargot($escargot);
-        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
 
         $decision = $subscriber->shouldRequest($crawlUri);
 
@@ -101,13 +101,6 @@ class SearchIndexSubscriberTest extends TestCase
             LogLevel::DEBUG,
             'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.',
             (new CrawlUri(new Uri('https://original.contao.org'), 0, true))->addTag(RobotsSubscriber::TAG_NOFOLLOW),
-        ];
-
-        yield 'Test skips URIs that contained the rel-nofollow tag' => [
-            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(HtmlCrawlerSubscriber::TAG_REL_NOFOLLOW),
-            SubscriberInterface::DECISION_NEGATIVE,
-            LogLevel::DEBUG,
-            'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.',
         ];
 
         yield 'Test skips URIs that were disallowed by the robots.txt content' => [
@@ -173,7 +166,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $subscriber = new SearchIndexSubscriber($this->createMock(IndexerInterface::class), $this->getTranslator());
         $subscriber->setEscargot($escargot);
-        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
 
         $decision = $subscriber->needsContent(
             new CrawlUri(new Uri('https://contao.org'), 0),
@@ -216,7 +209,7 @@ class SearchIndexSubscriberTest extends TestCase
     /**
      * @dataProvider onLastChunkProvider
      */
-    public function testOnLastChunk(?IndexerException $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    public function testOnLastChunk(IndexerException|null $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
         $logger = $this->createMock(LoggerInterface::class);
         $logger
@@ -256,7 +249,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $subscriber = new SearchIndexSubscriber($indexer, $this->getTranslator());
         $subscriber->setEscargot($escargot);
-        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
 
         $subscriber->onLastChunk(
             new CrawlUri(new Uri('https://contao.org'), 0),
@@ -365,7 +358,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $subscriber = new SearchIndexSubscriber($indexer, $this->getTranslator());
         $subscriber->setEscargot($escargot);
-        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
         $subscriber->onTransportException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response);
 
         $previousResult = null;
@@ -433,7 +426,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $subscriber = new SearchIndexSubscriber($indexer, $this->getTranslator());
         $subscriber->setEscargot($escargot);
-        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
         $subscriber->onHttpException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response, $chunk);
 
         $previousResult = null;

@@ -14,12 +14,11 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
  * Provide methods to handle newsletters.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Newsletter extends Backend
 {
@@ -104,7 +103,8 @@ class Newsletter extends Backend
 			$html = $this->convertRelativeUrls($html);
 		}
 
-		$objSession = System::getContainer()->get('session');
+		/** @var Session $objSession */
+		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
 		$token = Input::get('token');
 
 		// Send newsletter
@@ -118,7 +118,7 @@ class Newsletter extends Backend
 				// Check the e-mail address
 				if (!Validator::isEmail(Input::get('recipient', true)))
 				{
-					$_SESSION['TL_PREVIEW_MAIL_ERROR'] = true;
+					$objSession->set('tl_preview_mail_error', true);
 					$this->redirect($referer);
 				}
 
@@ -161,6 +161,8 @@ class Newsletter extends Backend
 
 			echo '<div style="font-family:Verdana,sans-serif;font-size:11px;line-height:16px;margin-bottom:12px">';
 
+			$arrSkippedRecipients = array();
+
 			// Send newsletter
 			if ($objRecipients->numRows > 0)
 			{
@@ -170,8 +172,8 @@ class Newsletter extends Backend
 					$this->Database->prepare("UPDATE tl_newsletter SET sent='1', date=? WHERE id=?")
 								   ->execute(time(), $objNewsletter->id);
 
-					$_SESSION['REJECTED_RECIPIENTS'] = array();
-					$_SESSION['SKIPPED_RECIPIENTS'] = array();
+					$objSession->set('rejected_recipients', array());
+					$objSession->set('skipped_recipients', array());
 				}
 
 				$time = time();
@@ -194,11 +196,13 @@ class Newsletter extends Backend
 					}
 					else
 					{
-						$_SESSION['SKIPPED_RECIPIENTS'][] = $objRecipients->email;
+						$arrSkippedRecipients[] = $objRecipients->email;
 						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
 					}
 				}
 			}
+
+			$objSession->set('skipped_recipients', $arrSkippedRecipients);
 
 			echo '<div style="margin-top:12px">';
 
@@ -208,13 +212,14 @@ class Newsletter extends Backend
 				$objSession->set('tl_newsletter_send', null);
 
 				// Deactivate rejected addresses
-				if (!empty($_SESSION['REJECTED_RECIPIENTS']))
+				if ($objSession->has('rejected_recipients'))
 				{
-					$intRejected = \count($_SESSION['REJECTED_RECIPIENTS']);
+					$intRejected = \count($objSession->get('rejected_recipients', array()));
+
 					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
 					$intTotal -= $intRejected;
 
-					foreach ($_SESSION['REJECTED_RECIPIENTS'] as $strRecipient)
+					foreach ($objSession->get('rejected_recipients', array()) as $strRecipient)
 					{
 						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='' WHERE email=?")
 									   ->execute($strRecipient);
@@ -223,13 +228,14 @@ class Newsletter extends Backend
 					}
 				}
 
-				if ($intSkipped = \count($_SESSION['SKIPPED_RECIPIENTS']))
+				if ($intSkipped = \count($objSession->get('skipped_recipients', array())))
 				{
 					$intTotal -= $intSkipped;
 					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
 				}
 
-				unset($_SESSION['REJECTED_RECIPIENTS'], $_SESSION['SKIPPED_RECIPIENTS']);
+				$objSession->remove('rejected_recipients');
+				$objSession->remove('skipped_recipients');
 
 				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
@@ -310,7 +316,7 @@ class Newsletter extends Backend
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
-  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail($this->User->email) . '" class="tl_text" onfocus="Backend.getScrollOffset()">' . (isset($_SESSION['TL_PREVIEW_MAIL_ERROR']) ? '
+  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail($this->User->email) . '" class="tl_text" onfocus="Backend.getScrollOffset()">' . ($objSession->has('tl_preview_mail_error') ? '
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>
@@ -328,7 +334,7 @@ class Newsletter extends Backend
 
 </form>';
 
-		unset($_SESSION['TL_PREVIEW_MAIL_ERROR']);
+		$objSession->remove('tl_preview_mail_error');
 
 		return $return;
 	}
@@ -431,6 +437,10 @@ class Newsletter extends Backend
 		$objEmail->html = $event->isHtmlAllowed() ? $event->getHtml() : '';
 		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
 
+		/** @var Session $objSession */
+		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
+		$arrRejected = $objSession->get('rejected_recipients', array());
+
 		// Deactivate invalid addresses
 		try
 		{
@@ -438,14 +448,16 @@ class Newsletter extends Backend
 		}
 		catch (RfcComplianceException $e)
 		{
-			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
+			$arrRejected[] = $arrRecipient['email'];
 		}
 
 		// Rejected recipients
 		if ($objEmail->hasFailures())
 		{
-			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
+			$arrRejected[] = $arrRecipient['email'];
 		}
+
+		$objSession->set('rejected_recipients', $arrRejected);
 
 		return true;
 	}
@@ -1060,7 +1072,7 @@ class Newsletter extends Backend
 					}
 
 					// Generate the URL
-					$arrProcessed[$objNewsletter->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
+					$arrProcessed[$objNewsletter->jumpTo] = $objParent->getAbsoluteUrl('/%s');
 				}
 
 				$strUrl = $arrProcessed[$objNewsletter->jumpTo];

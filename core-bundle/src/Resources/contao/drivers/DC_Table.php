@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -27,9 +28,6 @@ use Symfony\Component\String\UnicodeString;
  * @property string  $parentTable
  * @property array   $childTable
  * @property boolean $createNewVersion
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Andreas Schempp <https://github.com/aschempp>
  */
 class DC_Table extends DataContainer implements ListableDataContainerInterface, EditableDataContainerInterface
 {
@@ -339,6 +337,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return '';
 		}
 
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_VIEW, new DataContainerSubject($this->strTable, $this->intId));
+
 		$data = array();
 		$row = $objRow->row();
 
@@ -582,6 +582,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => Input::get('pid'))));
+
 		// Get all default values for the new entry
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
 		{
@@ -684,6 +686,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$this->redirect($this->getReferer());
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_MOVE, new DataContainerSubject($this->strTable, $this->intId));
 
 		// Get the new position
 		$this->getNewPosition('cut', Input::get('pid'), Input::get('mode') == '2');
@@ -795,6 +799,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$this->redirect($this->getReferer());
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($this->strTable, $this->intId));
 
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
@@ -989,6 +995,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					// Exclude the duplicated record itself
 					if ($v == $table && $objCTable->id == $parentId)
+					{
+						continue;
+					}
+
+					try
+					{
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($v, $objCTable->id));
+					}
+					catch (AccessDeniedException)
 					{
 						continue;
 					}
@@ -1375,6 +1390,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect($this->getReferer());
 		}
 
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_DELETE, new DataContainerSubject($this->strTable, $this->intId));
+
 		$delete = array();
 
 		// Do not save records from tl_undo itself
@@ -1559,6 +1576,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				foreach ($objDelete->fetchAllAssoc() as $row)
 				{
+					$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_DELETE, new DataContainerSubject($v, $row['id']));
+
 					$delete[$v][] = $row['id'];
 
 					if (!empty($cctable[$v]))
@@ -1708,6 +1727,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$this->intId = $intId;
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		// Get the current record
 		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
@@ -2599,6 +2620,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->intId = $intId;
 		}
 
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+
 		$this->strField = Input::get('field');
 
 		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true)
@@ -2726,6 +2749,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				foreach ($ids as $id)
 				{
+					try
+					{
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
+					}
+					catch (AccessDeniedException)
+					{
+						continue;
+					}
+
 					$this->intId = $id;
 					$this->procedure = array('id=?');
 					$this->values = array($this->intId);
@@ -3537,17 +3569,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($fld == 'id')
 			{
 				$objRoot = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting" : ""))
-										  ->execute($this->values);
+										  ->execute(...$this->values);
 			}
 			elseif ($blnHasSorting)
 			{
 				$objRoot = $this->Database->prepare("SELECT pid, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort")
-										  ->execute($this->values);
+										  ->execute(...$this->values);
 			}
 			else
 			{
 				$objRoot = $this->Database->prepare("SELECT pid FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid")
-										  ->execute($this->values);
+										  ->execute(...$this->values);
 			}
 
 			if ($objRoot->numRows < 1)
@@ -3903,7 +3935,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
-		$mouseover = (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable) ? ' toggle_select hover-div' : '';
+
+		$mouseover = '';
+
+		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable)
+		{
+			$mouseover = ' toggle_select hover-div';
+		}
+		elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && Input::get('act') == 'paste')
+		{
+			$mouseover = ' hover-div';
+		}
 
 		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
@@ -4009,7 +4051,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				array_unshift($arrValues, $id);
 
 				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . (implode(' AND ', $this->procedure)) . ($blnHasSorting ? " ORDER BY sorting" : ''))
-											->execute($arrValues);
+											->execute(...$arrValues);
 			}
 			else
 			{
@@ -4354,7 +4396,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objOrderByStmt->limit($arrLimit[1], $arrLimit[0]);
 			}
 
-			$objOrderBy = $objOrderByStmt->execute($arrValues);
+			$objOrderBy = $objOrderByStmt->execute(...$arrValues);
 
 			if ($objOrderBy->numRows < 1)
 			{
@@ -4379,6 +4421,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
 			{
+				$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_VIEW, new DataContainerSubject($this->strTable, $row[$i]['id']));
+
 				$this->current[] = $row[$i]['id'];
 				$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
 				$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
@@ -4726,7 +4770,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$objRowStmt->limit($arrLimit[1], $arrLimit[0]);
 		}
 
-		$objRow = $objRowStmt->execute($this->values);
+		$objRow = $objRowStmt->execute(...$this->values);
 
 		// Display buttos
 		$return = Message::generate() . '
@@ -4814,6 +4858,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			foreach ($result as $row)
 			{
+				$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_VIEW, new DataContainerSubject($this->strTable, $row['id']));
+
 				$this->current[] = $row['id'];
 				$label = $this->generateRecordLabel($row, $this->strTable);
 
@@ -5303,7 +5349,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$query .= " WHERE " . implode(' AND ', $arrProcedure);
 			}
 
-			$objTotal = $this->Database->prepare($query)->execute($arrValues);
+			$objTotal = $this->Database->prepare($query)->execute(...$arrValues);
 			$this->total = $objTotal->count;
 			$options_total = 0;
 			$maxResultsPerPage = Config::get('maxResultsPerPage');
@@ -5598,7 +5644,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$objFields = $this->Database->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
-										->execute($arrValues);
+										->execute(...$arrValues);
 
 			// Begin select menu
 			$fields .= '
