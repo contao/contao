@@ -15,7 +15,7 @@
                 <th class="tl_folder_tlist tl_right_nowrap"></th>
             </tr>
             {% for conflict in conflicts %}
-                <tr class="hover-row">
+                <tr class="{{ loop.index % 2 ? 'even' : 'odd' }} hover-row">
                     <td colspan="1" class="tl_file_list">{{ conflict.page.id }}</td>
                     <td colspan="1" class="tl_file_list">{{ conflict.page.title }}</td>
                     <td colspan="1" class="tl_file_list">{{ ('PTY.'~conflict.page.type~'.0')|trans([], 'contao_default') }}</td>

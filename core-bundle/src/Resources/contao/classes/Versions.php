@@ -706,7 +706,6 @@ class Versions extends Controller
 			$arrVersions[] = $arrRow;
 		}
 
-		$intCount = -1;
 		$arrVersions = array_values($arrVersions);
 
 		foreach ($arrVersions as $k=>$v)
@@ -722,14 +721,12 @@ class Versions extends Controller
 			catch (\Exception $e)
 			{
 				// Probably a disabled module
-				--$intCount;
 				unset($arrVersions[$k]);
 			}
 
 			// Skip deleted files (see #8480)
 			if (($v['fromTable'] ?? null) == 'tl_files' && ($arrVersions[$k]['deleted'] ?? null))
 			{
-				--$intCount;
 				unset($arrVersions[$k]);
 			}
 		}

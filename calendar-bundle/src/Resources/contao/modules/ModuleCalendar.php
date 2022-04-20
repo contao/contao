@@ -202,7 +202,7 @@ class ModuleCalendar extends Events
 
 			if ($intCurrentDay == 0 || $intCurrentDay == 6)
 			{
-				$strClass = 'weekend';
+				$strClass = ' weekend';
 			}
 
 			$arrDays[$intCurrentDay] = array
@@ -253,19 +253,17 @@ class ModuleCalendar extends Events
 			$intWeek = floor(++$intColumnCount / 7);
 			$intDay = $i - $intFirstDayOffset;
 			$intCurrentDay = ($i + $this->cal_startDay) % 7;
-
-			$strWeekClass = 'week_' . $intWeek;
 			$strClass = ($intCurrentDay < 2) ? ' weekend' : '';
 
 			// Add timestamp to all cells
-			$arrDays[$strWeekClass][$i]['timestamp'] = strtotime(($intDay - 1) . ' day', $this->Date->monthBegin);
+			$arrDays[$intWeek][$i]['timestamp'] = strtotime(($intDay - 1) . ' day', $this->Date->monthBegin);
 
 			// Empty cell
 			if ($intDay < 1 || $intDay > $intDaysInMonth)
 			{
-				$arrDays[$strWeekClass][$i]['label'] = '&nbsp;';
-				$arrDays[$strWeekClass][$i]['class'] = 'days empty' . $strClass;
-				$arrDays[$strWeekClass][$i]['events'] = array();
+				$arrDays[$intWeek][$i]['label'] = '&nbsp;';
+				$arrDays[$intWeek][$i]['class'] = 'empty' . $strClass;
+				$arrDays[$intWeek][$i]['events'] = array();
 
 				continue;
 			}
@@ -282,9 +280,9 @@ class ModuleCalendar extends Events
 			// Inactive days
 			if (empty($intKey) || !isset($arrAllEvents[$intKey]))
 			{
-				$arrDays[$strWeekClass][$i]['label'] = $intDay;
-				$arrDays[$strWeekClass][$i]['class'] = 'days' . $strClass;
-				$arrDays[$strWeekClass][$i]['events'] = array();
+				$arrDays[$intWeek][$i]['label'] = $intDay;
+				$arrDays[$intWeek][$i]['class'] = trim($strClass);
+				$arrDays[$intWeek][$i]['events'] = array();
 
 				continue;
 			}
@@ -300,11 +298,11 @@ class ModuleCalendar extends Events
 				}
 			}
 
-			$arrDays[$strWeekClass][$i]['label'] = $intDay;
-			$arrDays[$strWeekClass][$i]['class'] = 'days active' . $strClass;
-			$arrDays[$strWeekClass][$i]['href'] = $this->strLink . '?day=' . $intKey;
-			$arrDays[$strWeekClass][$i]['title'] = sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
-			$arrDays[$strWeekClass][$i]['events'] = $arrEvents;
+			$arrDays[$intWeek][$i]['label'] = $intDay;
+			$arrDays[$intWeek][$i]['class'] = 'active' . $strClass;
+			$arrDays[$intWeek][$i]['href'] = $this->strLink . '?day=' . $intKey;
+			$arrDays[$intWeek][$i]['title'] = sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
+			$arrDays[$intWeek][$i]['events'] = $arrEvents;
 		}
 
 		return $arrDays;
