@@ -46,6 +46,7 @@
                 }
             }, 1000)
         })
+
         el.addEventListener('mouseleave', function () {
             if (!useContent && text && !el.hasAttribute('title')) {
                 el.setAttribute('title', text);
@@ -64,8 +65,9 @@
             }
         })
 
-        // Hide tooltip when clicking a button (usually an operation icon in a wizard widget)
         const action = el.closest('button, a');
+
+        // Hide tooltip when clicking a button (usually an operation icon in a wizard widget)
         if (action) {
             action.addEventListener('click', function () {
                 clearTimeout(timer);
@@ -109,6 +111,7 @@
     }
 
     setup(document);
+
     new MutationObserver(function (mutationsList) {
         for(const mutation of mutationsList) {
             if (mutation.type === 'childList') {
