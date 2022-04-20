@@ -229,14 +229,6 @@ class ModuleCustomnav extends Module
 			}
 		}
 
-		// Add classes first and last if there are items
-		if (!empty($items))
-		{
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$last = \count($items) - 1;
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
-		}
-
 		$objTemplate->items = $items;
 
 		$this->Template->request = Environment::get('indexFreeRequest');

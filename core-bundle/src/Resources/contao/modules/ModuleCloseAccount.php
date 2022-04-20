@@ -68,8 +68,6 @@ class ModuleCloseAccount extends Module
 		$arrField['eval']['hideInput'] = true;
 
 		$objWidget = new FormTextField(FormTextField::getAttributesFromDca($arrField, $arrField['name']));
-		$objWidget->rowClass = 'row_0 row_first even';
-
 		$strFormId = 'tl_close_account_' . $this->id;
 
 		// Validate widget
@@ -142,7 +140,6 @@ class ModuleCloseAccount extends Module
 
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['closeAccount']);
-		$this->Template->rowLast = 'row_1 row_last odd';
 		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }

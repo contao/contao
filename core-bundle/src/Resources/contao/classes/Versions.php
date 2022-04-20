@@ -709,11 +709,8 @@ class Versions extends Controller
 		$intCount = -1;
 		$arrVersions = array_values($arrVersions);
 
-		// Add the "even" and "odd" classes
 		foreach ($arrVersions as $k=>$v)
 		{
-			$arrVersions[$k]['class'] = (++$intCount % 2 == 0) ? 'even' : 'odd';
-
 			try
 			{
 				// Mark deleted versions (see #4336)
