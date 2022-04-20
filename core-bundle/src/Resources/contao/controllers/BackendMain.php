@@ -23,13 +23,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class BackendMain extends Backend
 {
 	/**
-	 * @var Template
-	 *
-	 * @todo Remove in Contao 5.0
-	 */
-	protected $Template;
-
-	/**
 	 * Current Ajax object
 	 * @var Ajax
 	 */
