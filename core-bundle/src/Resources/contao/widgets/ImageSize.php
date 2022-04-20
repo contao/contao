@@ -75,7 +75,7 @@ class ImageSize extends Widget
 	{
 		$varInput[2] = preg_replace('/[^a-z0-9_]+/', '', $varInput[2] ?? '');
 
-		if (!is_numeric($varInput[2]))
+		if (!is_numeric($varInput[2]) && strpos($varInput[2], '_') !== 0)
 		{
 			switch ($varInput[2])
 			{
@@ -102,6 +102,10 @@ class ImageSize extends Widget
 
 			$varInput[0] = parent::validator($varInput[0]);
 			$varInput[1] = parent::validator($varInput[1]);
+		}
+		elseif ($this->mandatory)
+		{
+			$this->mandatory = (bool) $varInput[2];
 		}
 
 		$this->import(BackendUser::class, 'User');
