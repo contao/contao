@@ -429,16 +429,11 @@ abstract class Module extends Frontend
 		$row['link'] = $objSubpage->title;
 		$row['href'] = $href;
 		$row['rel'] = '';
-		$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0); // backwards compatibility
+		$row['nofollow'] = false; // backwards compatibility
 		$row['target'] = '';
 		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
 		$arrRel = array();
-
-		if (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0)
-		{
-			$arrRel[] = 'nofollow';
-		}
 
 		// Override the link target
 		if ($objSubpage->type == 'redirect' && $objSubpage->target)

@@ -77,6 +77,7 @@ class RobotsTxtListenerTest extends TestCase
             <<<'EOF'
 user-agent:*
 disallow:/contao/
+disallow:/_contao/
 
 sitemap:https://www.foobar.com/share/sitemap-name.xml
 EOF
@@ -92,6 +93,7 @@ EOF
 user-agent:*
 allow:/
 disallow:/contao/
+disallow:/_contao/
 
 sitemap:https://www.foobar.com/share/sitemap-name.xml
 EOF
@@ -107,9 +109,11 @@ EOF
 user-agent:googlebot
 allow:/
 disallow:/contao/
+disallow:/_contao/
 
 user-agent:*
 disallow:/contao/
+disallow:/_contao/
 
 sitemap:https://www.foobar.com/share/sitemap-name.xml
 EOF
