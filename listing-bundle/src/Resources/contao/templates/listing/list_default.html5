@@ -68,7 +68,7 @@
           <th class="head<?= $col['class'] ?>"><a href="<?= $col['href'] ?>" title="<?= $col['title'] ?>"><?= $col['link'] ?></a></th>
         <?php endforeach; ?>
         <?php if ($this->details): ?>
-          <th class="head col_last">&nbsp;</th>
+          <th class="head">&nbsp;</th>
         <?php endif; ?>
       </tr>
     </thead>
