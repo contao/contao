@@ -67,7 +67,7 @@ class ArrayUtil
 	 */
 	public static function isAssoc($arrArray): bool
 	{
-		return \is_array($arrArray) && array_keys($arrArray) !== range(0, \count($arrArray) - 1);
+		return \is_array($arrArray) && !array_is_list($arrArray);
 	}
 
 	/**
