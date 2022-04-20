@@ -733,13 +733,13 @@ class StringUtil
 	/**
 	 * Convert the character encoding
 	 *
-	 * @param string $str  The input string
+	 * @param mixed $str  The input string
 	 * @param string $to   The target character set
 	 * @param string $from An optional source character set
 	 *
 	 * @return string The converted string
 	 */
-	public static function convertEncoding(string $str, string $to, string|null $from=null): string
+	public static function convertEncoding(mixed $str, string $to, string|null $from=null): string
 	{
 		$str = (string) $str;
 
