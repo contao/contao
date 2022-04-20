@@ -30,9 +30,8 @@ trigger_deprecation('contao/core-bundle', '4.13', 'Using the Cache library is de
  *         return Cache::get('result');
  *     }
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
- * @deprecated Using the Cache library is deprecated and will no longer work in Contao 5.0. Use symfony/cache instead.
+ * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0;
+ *             use your own in-memory cache instead
  */
 class Cache
 {
