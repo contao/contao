@@ -64,7 +64,7 @@ class HtmlDecoderTest extends TestCase
 
         // Test input encoding round trip
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($inputEncoded, true));
-        $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($inputEncoded, false));
+        $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($inputEncoded));
     }
 
     public function getInputEncodedToPlainText(): \Generator

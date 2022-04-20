@@ -498,7 +498,7 @@ abstract class Module extends Frontend
 	 *
 	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
 	 */
-	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
+	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): array|null
 	{
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');

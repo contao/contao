@@ -250,7 +250,7 @@ class TwoFactorFrontendListenerTest extends TestCase
             $this->mockContaoFramework([PageModel::class => $adapter]),
             $this->mockScopeMatcherWithEvent(true, $event),
             $this->mockTokenStorageWithToken($token),
-            [UsernamePasswordToken::class, \get_class($token)]
+            [UsernamePasswordToken::class, $token::class]
         );
 
         $listener($event);

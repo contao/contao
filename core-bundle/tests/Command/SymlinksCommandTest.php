@@ -85,12 +85,10 @@ class SymlinksCommandTest extends TestCase
 
         // Use \ as directory separator in $projectDir
         $projectDir = new \ReflectionProperty(SymlinksCommand::class, 'projectDir');
-        $projectDir->setAccessible(true);
         $projectDir->setValue($command, strtr($this->getTempDir(), '/', '\\'));
 
         // Use / as directory separator in $path
         $method = new \ReflectionMethod(SymlinksCommand::class, 'getRelativePath');
-        $method->setAccessible(true);
         $relativePath = $method->invoke($command, Path::join($this->getTempDir(), 'var/logs'));
 
         // The path should be normalized and shortened

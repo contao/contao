@@ -31,25 +31,20 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class ContaoCacheWarmer implements CacheWarmerInterface
 {
-    private Filesystem $filesystem;
-    private ResourceFinderInterface $finder;
-    private FileLocator $locator;
-    private string $projectDir;
-    private Connection $connection;
-    private ContaoFramework $framework;
     private array $locales;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.cache.warmer" service instead
      */
-    public function __construct(Filesystem $filesystem, ResourceFinderInterface $finder, FileLocator $locator, string $projectDir, Connection $connection, ContaoFramework $framework, Locales $locales)
-    {
-        $this->filesystem = $filesystem;
-        $this->finder = $finder;
-        $this->locator = $locator;
-        $this->projectDir = $projectDir;
-        $this->connection = $connection;
-        $this->framework = $framework;
+    public function __construct(
+        private Filesystem $filesystem,
+        private ResourceFinderInterface $finder,
+        private FileLocator $locator,
+        private string $projectDir,
+        private Connection $connection,
+        private ContaoFramework $framework,
+        Locales $locales,
+    ) {
         $this->locales = $locales->getEnabledLocaleIds();
     }
 
@@ -144,7 +139,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                         Path::join('languages', $language, "$name.php"),
                         ['type' => $language]
                     );
-                } catch (\OutOfBoundsException $e) {
+                } catch (\OutOfBoundsException) {
                     continue;
                 }
             }
@@ -209,7 +204,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     {
         try {
             $this->connection->executeQuery('SELECT COUNT(*) FROM tl_page');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return false;
         }
 
@@ -219,11 +214,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return array<string>|string
      */
-    private function findConfigFiles(string $name)
+    private function findConfigFiles(string $name): array|string
     {
         try {
             return $this->locator->locate(Path::join('config', $name), null, false);
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             return [];
         }
     }
@@ -231,11 +226,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return Finder|array<SplFileInfo>
      */
-    private function findDcaFiles()
+    private function findDcaFiles(): Finder|array
     {
         try {
             return $this->finder->findIn('dca')->files()->name('*.php');
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             return [];
         }
     }
@@ -243,7 +238,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return Finder|array<SplFileInfo>
      */
-    private function findLanguageFiles(string $language)
+    private function findLanguageFiles(string $language): Finder|array
     {
         try {
             return $this->finder
@@ -251,7 +246,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
                 ->files()
                 ->name('/\.(php|xlf)$/')
             ;
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             return [];
         }
     }
@@ -259,11 +254,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     /**
      * @return Finder|array<SplFileInfo>
      */
-    private function findTemplateFiles()
+    private function findTemplateFiles(): Finder|array
     {
         try {
             return $this->finder->findIn('templates')->name('*.html5');
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             return [];
         }
     }

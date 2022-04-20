@@ -24,7 +24,7 @@ class LanguageFilterTest extends TestCase
     /**
      * @dataProvider getRoutesAndLanguages
      */
-    public function testRemovesARouteIfTheAcceptedLanguagesDoNotMatch(string $name, ?PageModel $page, string $acceptLanguage, bool $expectRemoval): void
+    public function testRemovesARouteIfTheAcceptedLanguagesDoNotMatch(string $name, PageModel|null $page, string $acceptLanguage, bool $expectRemoval): void
     {
         $route = $this->createMock(Route::class);
         $route

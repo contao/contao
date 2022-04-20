@@ -39,14 +39,10 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
 
-    private IndexerInterface $indexer;
-    private TranslatorInterface $translator;
     private array $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
 
-    public function __construct(IndexerInterface $indexer, TranslatorInterface $translator)
+    public function __construct(private IndexerInterface $indexer, private TranslatorInterface $translator)
     {
-        $this->indexer = $indexer;
-        $this->translator = $translator;
     }
 
     public function getName(): string

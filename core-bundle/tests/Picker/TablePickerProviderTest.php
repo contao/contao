@@ -605,11 +605,9 @@ class TablePickerProviderTest extends ContaoTestCase
     }
 
     /**
-     * @param array|false $data
-     *
      * @return Connection&MockObject
      */
-    private function mockConnectionForQuery(string $table, int $id, $data, bool $dynamicPtable = false): Connection
+    private function mockConnectionForQuery(string $table, int $id, array|false $data, bool $dynamicPtable = false): Connection
     {
         $expr = $this->createMock(ExpressionBuilder::class);
         $expr

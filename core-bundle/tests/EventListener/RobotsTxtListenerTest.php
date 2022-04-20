@@ -73,7 +73,7 @@ class RobotsTxtListenerTest extends TestCase
                 disallow:/contao/
 
                 sitemap:https://www.foobar.com/sitemap.xml
-                EOF
+                EOF,
         ];
 
         yield 'Tests merging with existing user-agent' => [
@@ -88,7 +88,7 @@ class RobotsTxtListenerTest extends TestCase
                 disallow:/contao/
 
                 sitemap:https://www.foobar.com/sitemap.xml
-                EOF
+                EOF,
         ];
 
         yield 'Tests works with specific user-agent' => [
@@ -106,7 +106,7 @@ class RobotsTxtListenerTest extends TestCase
                 disallow:/contao/
 
                 sitemap:https://www.foobar.com/sitemap.xml
-                EOF
+                EOF,
         ];
     }
 

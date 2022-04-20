@@ -19,19 +19,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class TranslationListener
 {
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     /**
      * Replaces the "trans" insert tag.
-     *
-     * @return string|false
      */
-    public function onReplaceInsertTags(string $tag)
+    public function onReplaceInsertTags(string $tag): string|false
     {
         $chunks = explode('::', $tag);
 

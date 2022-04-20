@@ -45,7 +45,7 @@ class WidgetTest extends TestCase
      *
      * @dataProvider postProvider
      */
-    public function testReadsThePostData(string $key, string $input, $value, string $expected = null): void
+    public function testReadsThePostData(string $key, string $input, array|string $value, string $expected = null): void
     {
         // Prevent "undefined index" errors
         $errorReporting = error_reporting();
@@ -55,7 +55,6 @@ class WidgetTest extends TestCase
 
         $class = new \ReflectionClass(Widget::class);
         $method = $class->getMethod('getPost');
-        $method->setAccessible(true);
 
         $_GET = [];
         $_POST = [$input => $value];

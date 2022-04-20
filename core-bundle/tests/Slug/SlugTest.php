@@ -60,6 +60,6 @@ class SlugTest extends ContaoTestCase
         $this->assertSame('12.3', $slug->generate('12.3'));
         $this->assertSame('text<', $slug->generate('&#116;ext{{insert::tag}}[lt]', 123));
         $this->assertSame('text-2', $slug->generate('text', [], static fn ($alias) => 'text' === $alias));
-        $this->assertSame('text-10', $slug->generate('text', [], static fn ($alias) => \strlen($alias) < 7));
+        $this->assertSame('text-10', $slug->generate('text', [], static fn ($alias) => \strlen((string) $alias) < 7));
     }
 }

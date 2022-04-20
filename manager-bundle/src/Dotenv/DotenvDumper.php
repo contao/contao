@@ -17,13 +17,11 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DotenvDumper
 {
-    private string $dotenvFile;
     private Filesystem $filesystem;
     private array $parameters = [];
 
-    public function __construct(string $dotenvFile, Filesystem $filesystem = null)
+    public function __construct(private string $dotenvFile, Filesystem $filesystem = null)
     {
-        $this->dotenvFile = $dotenvFile;
         $this->filesystem = $filesystem ?: new Filesystem();
 
         if (!file_exists($dotenvFile)) {
@@ -75,10 +73,7 @@ class DotenvDumper
         $this->filesystem->dumpFile($this->dotenvFile, implode("\n", $parameters)."\n");
     }
 
-    /**
-     * @return string|int|bool
-     */
-    private function escape($value)
+    private function escape($value): bool|int|string
     {
         if (!\is_string($value) || !preg_match('/[$ "\']/', $value)) {
             return $value;
@@ -86,13 +81,13 @@ class DotenvDumper
 
         $quotes = "'";
 
-        if (false !== strpos($value, "'")) {
+        if (str_contains($value, "'")) {
             $quotes = '"';
         }
 
         $mapper = [$quotes => '\\'.$quotes];
 
-        if ('"' === $quotes && false !== strpos($value, '$')) {
+        if ('"' === $quotes && str_contains($value, '$')) {
             $mapper['$'] = '\$';
         }
 
