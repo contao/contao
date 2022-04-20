@@ -11,17 +11,15 @@
 namespace Contao;
 
 /**
- * Class FormSelectMenu
+ * Class FormSelect
  *
  * @property integer $mSize
  * @property boolean $mandatory
  * @property boolean $multiple
  * @property array   $options
  * @property boolean $chosen
- *
- * @todo Rename to FormSelect in Contao 5.0
  */
-class FormSelectMenu extends Widget
+class FormSelect extends Widget
 {
 	/**
 	 * Submit user input

@@ -67,7 +67,7 @@ class ModuleCloseAccount extends Module
 		$arrField['name'] = 'password';
 		$arrField['eval']['hideInput'] = true;
 
-		$objWidget = new FormTextField(FormTextField::getAttributesFromDca($arrField, $arrField['name']));
+		$objWidget = new FormText(FormText::getAttributesFromDca($arrField, $arrField['name']));
 		$strFormId = 'tl_close_account_' . $this->id;
 
 		// Validate widget

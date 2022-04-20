@@ -12,10 +12,8 @@ namespace Contao;
 
 /**
  * Front end module "lost password".
- *
- * @todo Rename to ModuleLostPassword in Contao 5.0
  */
-class ModulePassword extends Module
+class ModuleLostPassword extends Module
 {
 	/**
 	 * Template

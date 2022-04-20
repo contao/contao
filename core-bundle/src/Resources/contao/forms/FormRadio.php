@@ -11,13 +11,12 @@
 namespace Contao;
 
 /**
- * Class FormCheckBox
+ * Class FormRadio
  *
- * @property array $options
- *
- * @todo Rename to FormCheckbox in Contao 5.0
+ * @property boolean $mandatory
+ * @property array   $options
  */
-class FormCheckBox extends Widget
+class FormRadio extends Widget
 {
 	/**
 	 * Submit user input
@@ -31,7 +30,7 @@ class FormCheckBox extends Widget
 	 *
 	 * @var string
 	 */
-	protected $strTemplate = 'form_checkbox';
+	protected $strTemplate = 'form_radio';
 
 	/**
 	 * Error message
@@ -45,18 +44,30 @@ class FormCheckBox extends Widget
 	 *
 	 * @var string
 	 */
-	protected $strPrefix = 'widget widget-checkbox';
+	protected $strPrefix = 'widget widget-radio';
 
 	/**
 	 * Add specific attributes
 	 *
-	 * @param string $strKey   The attribute name
+	 * @param string $strKey   The attribute key
 	 * @param mixed  $varValue The attribute value
 	 */
 	public function __set($strKey, $varValue)
 	{
 		switch ($strKey)
 		{
+			case 'mandatory':
+				if ($varValue)
+				{
+					$this->arrAttributes['required'] = 'required';
+				}
+				else
+				{
+					unset($this->arrAttributes['required']);
+				}
+				parent::__set($strKey, $varValue);
+				break;
+
 			case 'options':
 				$this->arrOptions = StringUtil::deserialize($varValue);
 				break;
@@ -78,7 +89,7 @@ class FormCheckBox extends Widget
 	/**
 	 * Return a parameter
 	 *
-	 * @param string $strKey The parameter key
+	 * @param string $strKey The parameter name
 	 *
 	 * @return mixed The parameter value
 	 */
@@ -93,67 +104,18 @@ class FormCheckBox extends Widget
 	}
 
 	/**
-	 * Check the options if the field is mandatory
+	 * Check for a valid option (see #4383)
 	 */
 	public function validate()
 	{
-		$mandatory = $this->mandatory;
-		$options = $this->getPost($this->strName);
+		$varValue = $this->getPost($this->strName);
 
-		// Check if there is at least one value
-		if ($mandatory && \is_array($options))
-		{
-			foreach ($options as $option)
-			{
-				if (\strlen($option))
-				{
-					$this->mandatory = false;
-					break;
-				}
-			}
-		}
-
-		$varInput = $this->validator($options);
-
-		// Check for a valid option (see #4383)
-		if (!empty($varInput) && !$this->isValidOption($varInput))
+		if (!empty($varValue) && !$this->isValidOption($varValue))
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['invalid']);
 		}
 
-		// Add class "error"
-		if ($this->hasErrors())
-		{
-			$this->class = 'error';
-		}
-		else
-		{
-			$this->varValue = $varInput;
-		}
-
-		// Reset the property
-		if ($mandatory)
-		{
-			$this->mandatory = true;
-		}
-	}
-
-	/**
-	 * Return all attributes as string
-	 *
-	 * @param array $arrStrip An optional array with attributes to strip
-	 *
-	 * @return string The attributes string
-	 */
-	public function getAttributes($arrStrip=array())
-	{
-		// The "required" attribute only makes sense for single checkboxes
-		if ($this->mandatory && \count($this->arrOptions) == 1)
-		{
-			$this->arrAttributes['required'] = 'required';
-		}
-
-		return parent::getAttributes($arrStrip);
+		parent::validate();
 	}
 
 	/**
@@ -194,7 +156,7 @@ class FormCheckBox extends Widget
 					array
 					(
 						'type'       => 'option',
-						'name'       => $this->strName . ((\count($this->arrOptions) > 1) ? '[]' : ''),
+						'name'       => $this->strName,
 						'id'         => $this->strId . '_' . $i,
 						'value'      => $arrOption['value'] ?? null,
 						'checked'    => $this->isChecked($arrOption),
@@ -242,8 +204,8 @@ class FormCheckBox extends Widget
 		foreach ($this->arrOptions as $i=>$arrOption)
 		{
 			$strOptions .= sprintf(
-				'<span><input type="checkbox" name="%s" id="opt_%s" class="checkbox" value="%s"%s%s%s <label id="lbl_%s" for="opt_%s">%s</label></span> ',
-				$this->strName . ((\count($this->arrOptions) > 1) ? '[]' : ''),
+				'<span><input type="radio" name="%s" id="opt_%s" class="radio" value="%s"%s%s%s <label id="lbl_%s" for="opt_%s">%s</label></span> ',
+				$this->strName,
 				$this->strId . '_' . $i,
 				$arrOption['value'] ?? null,
 				$this->isChecked($arrOption),
@@ -258,7 +220,7 @@ class FormCheckBox extends Widget
 		if ($this->strLabel)
 		{
 			return sprintf(
-				'<fieldset id="ctrl_%s" class="checkbox_container%s"><legend>%s%s%s</legend>%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
+				'<fieldset id="ctrl_%s" class="radio_container%s"><legend>%s%s%s</legend>%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
 				$this->strId,
 				($this->strClass ? ' ' . $this->strClass : ''),
 				($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
@@ -272,7 +234,7 @@ class FormCheckBox extends Widget
 		}
 
 		return sprintf(
-			'<fieldset id="ctrl_%s" class="checkbox_container%s">%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
+			'<fieldset id="ctrl_%s" class="radio_container%s">%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
 			$this->strError,
