@@ -171,8 +171,6 @@ use Contao\Model\Collection;
  * @method static integer countByStatic($val, array $opt=array())
  * @method static integer countByWidth($val, array $opt=array())
  * @method static integer countByAlign($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class LayoutModel extends Model
 {

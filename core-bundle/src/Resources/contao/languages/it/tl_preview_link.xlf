@@ -91,15 +91,19 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintNew">
         <source>To add a preview link, use the &quot;Share URL&quot; button in the front end preview toolbar.</source>
+        <target>Per aggiungere un link di anteprima, usa il pulsante &quot;Share URL&quot; nella barra degli strumenti di anteprima del front-end.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintSave">
         <source>Please save this record to generate the preview link.</source>
+        <target>Salva questo record per generare il link di anteprima.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
         <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
+        <target>Link di anteprima: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>
+        <target>Questo link di anteprima è scaduto e non può più essere condiviso.</target>
       </trans-unit>
     </body>
   </file>

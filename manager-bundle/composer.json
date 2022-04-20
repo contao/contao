@@ -64,7 +64,7 @@
     },
     "require-dev": {
         "composer/composer": "^2.0",
-        "contao/test-case": "^4.6",
+        "contao/test-case": "self.version",
         "contao/news-bundle": "self.version",
         "phpunit/phpunit": "^9.3",
         "symfony/phpunit-bridge": "^5.4"

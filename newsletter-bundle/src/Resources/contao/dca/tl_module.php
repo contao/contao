@@ -54,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_hideChannels'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_subscribe'] = array
@@ -90,13 +90,11 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 		return Controller::getTemplateGroup('nl_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_module_newsletter extends Backend
 {

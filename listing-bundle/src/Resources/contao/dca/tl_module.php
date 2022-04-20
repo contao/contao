@@ -22,7 +22,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_table'] = array
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_listing', 'getAllTables'),
 	'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_fields'] = array
@@ -30,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_fields'] = array
 	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(255) NOT NULL default ''"
+	'sql'                     => "tinytext NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_where'] = array
@@ -38,7 +38,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_where'] = array
 	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('preserveTags'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(255) NOT NULL default ''"
+	'sql'                     => "tinytext NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_search'] = array
@@ -46,7 +46,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_search'] = array
 	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(255) NOT NULL default ''"
+	'sql'                     => "tinytext NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_sort'] = array
@@ -54,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_sort'] = array
 	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(255) NOT NULL default ''"
+	'sql'                     => "tinytext NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info'] = array
@@ -62,7 +62,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info'] = array
 	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(255) NOT NULL default ''"
+	'sql'                     => "tinytext NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_where'] = array
@@ -70,7 +70,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_where'] = array
 	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('preserveTags'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(255) NOT NULL default ''"
+	'sql'                     => "tinytext NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array
@@ -82,7 +82,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array
 		return Controller::getTemplateGroup('list_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
@@ -94,13 +94,11 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
 		return Controller::getTemplateGroup('info_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_module_listing extends Backend
 {

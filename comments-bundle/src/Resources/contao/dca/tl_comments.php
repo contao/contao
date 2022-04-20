@@ -21,6 +21,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Date;
+use Contao\DC_Table;
 use Contao\Email;
 use Contao\Environment;
 use Contao\Idna;
@@ -35,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'closed'                      => true,
 		'notCopyable'                 => true,
@@ -257,8 +258,6 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_comments extends Backend
 {

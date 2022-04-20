@@ -171,6 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_files.syncResult">
         <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+        <target>&lt;strong&gt;Risultato:&lt;/strong&gt; %s aggiunti | %s modificati | %4$s spostati | %5$s cancellati</target>
       </trans-unit>
       <trans-unit id="tl_files.syncShowUnchanged">
         <source>Show unchanged</source>

@@ -14,6 +14,7 @@ use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
@@ -25,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'ctable'                      => array('tl_form_field'),
@@ -283,8 +284,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_form extends Backend
 {

@@ -27,6 +27,7 @@
         "mysqli_sql_exception",
         "opcache_invalidate",
         "opcache_reset",
+        "xdebug_info",
         "Gmagick",
         "Imagick",
         "Swift_Attachment",
@@ -44,6 +45,7 @@
         "Contao\\NewsletterChannelModel",
         "Michelf\\MarkdownExtra",
         "ProxyManager\\Configuration",
+        "Roave\\BetterReflection\\BetterReflection",
         "Symfony\\Bundle\\MonologBundle\\MonologBundle"
     ]
 }

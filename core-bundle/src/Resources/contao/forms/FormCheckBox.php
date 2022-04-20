@@ -15,8 +15,6 @@ namespace Contao;
  *
  * @property array $options
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @todo Rename to FormCheckbox in Contao 5.0
  */
 class FormCheckBox extends Widget

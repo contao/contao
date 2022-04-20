@@ -333,6 +333,10 @@
         <source>Image cache</source>
         <target>Bildercache</target>
       </trans-unit>
+      <trans-unit id="tl_user.previewLabel">
+        <source>Preview cache</source>
+        <target>Vorschau-Cache</target>
+      </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
         <target>Shared-Cache</target>
@@ -344,6 +348,10 @@
       <trans-unit id="tl_user.htmlPurged">
         <source>The image cache has been purged</source>
         <target>Der Bildercache wurde geleert</target>
+      </trans-unit>
+      <trans-unit id="tl_user.previewPurged">
+        <source>The preview cache has been purged</source>
+        <target>Der Vorschau-Cache wurde geleert</target>
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>

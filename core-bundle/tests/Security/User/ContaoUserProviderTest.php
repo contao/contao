@@ -223,9 +223,6 @@ class ContaoUserProviderTest extends TestCase
         $this->assertSame('newsuperhash', $user->password);
     }
 
-    /**
-     * @psalm-suppress InvalidArgument
-     */
     public function testFailsToUpgradePasswordsOfUnsupportedUsers(): void
     {
         $user = $this->createMock(UserInterface::class);

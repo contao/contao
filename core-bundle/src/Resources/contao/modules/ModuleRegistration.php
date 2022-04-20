@@ -14,8 +14,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 
 /**
  * Front end module "registration".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleRegistration extends Module
 {
