@@ -733,7 +733,7 @@ class StringUtil
 	/**
 	 * Convert the character encoding
 	 *
-	 * @param mixed $str  The input string
+	 * @param mixed  $str  The input string
 	 * @param string $to   The target character set
 	 * @param string $from An optional source character set
 	 *
