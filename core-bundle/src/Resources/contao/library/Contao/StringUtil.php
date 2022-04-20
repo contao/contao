@@ -35,7 +35,7 @@ class StringUtil
 	 *
 	 * @return string The shortened string
 	 */
-	public static function substr($strString, $intNumberOfChars, $strEllipsis=' …')
+	public static function substr(string $strString, int $intNumberOfChars, string $strEllipsis=' …'): string
 	{
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
 		$strString = strip_tags($strString);
@@ -739,7 +739,7 @@ class StringUtil
 	 *
 	 * @return string The converted string
 	 */
-	public static function convertEncoding($str, $to, $from=null)
+	public static function convertEncoding(string $str, string $to, string|null $from=null): string
 	{
 		$str = (string) $str;
 
