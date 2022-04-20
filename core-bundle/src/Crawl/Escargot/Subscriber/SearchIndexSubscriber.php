@@ -39,6 +39,8 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
 
+    public const TAG_SKIP = 'skip-search-index';
+
     private array $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
 
     public function __construct(private IndexerInterface $indexer, private TranslatorInterface $translator)
@@ -52,12 +54,22 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function shouldRequest(CrawlUri $crawlUri): string
     {
-        // Respect robots.txt info and rel="nofollow" attributes
+        if ($crawlUri->hasTag(self::TAG_SKIP)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Do not request because it was marked to be skipped using the data-skip-search-index attribute.'
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
+        // Respect robots.txt info and nofollow meta data
         if (!Util::isAllowedToFollow($crawlUri, $this->escargot)) {
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.'
+                'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;

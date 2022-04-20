@@ -133,7 +133,7 @@
         "symfony/uid": "^5.4",
         "symfony/var-dumper": "^5.4",
         "symfony/yaml": "^5.4",
-        "terminal42/escargot": "^1.2",
+        "terminal42/escargot": "^1.4.1",
         "terminal42/service-annotation-bundle": "^1.1",
         "twig/twig": "^3.0",
         "ua-parser/uap-php": "^3.9",
