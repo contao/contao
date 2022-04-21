@@ -27,9 +27,9 @@ use Contao\ContentHtml;
 use Contao\ContentHyperlink;
 use Contao\ContentImage;
 use Contao\ContentList;
-use Contao\ContentMedia;
 use Contao\ContentModel;
 use Contao\ContentModule;
+use Contao\ContentPlayer;
 use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
 use Contao\ContentTable;
@@ -44,22 +44,22 @@ use Contao\FilesModel;
 use Contao\FileTree;
 use Contao\Form;
 use Contao\FormCaptcha;
-use Contao\FormCheckBox;
+use Contao\FormCheckbox;
 use Contao\FormExplanation;
 use Contao\FormFieldModel;
 use Contao\FormFieldsetStart;
 use Contao\FormFieldsetStop;
-use Contao\FormFileUpload;
+use Contao\FormFile;
 use Contao\FormHidden;
 use Contao\FormHtml;
 use Contao\FormModel;
 use Contao\FormPassword;
-use Contao\FormRadioButton;
+use Contao\FormRadio;
 use Contao\FormRange;
-use Contao\FormSelectMenu;
+use Contao\FormSelect;
 use Contao\FormSubmit;
-use Contao\FormTextArea;
-use Contao\FormTextField;
+use Contao\FormText;
+use Contao\FormTextarea;
 use Contao\ImageSize;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
@@ -81,10 +81,10 @@ use Contao\ModuleCustomnav;
 use Contao\ModuleHtml;
 use Contao\ModuleLogin;
 use Contao\ModuleLogout;
+use Contao\ModuleLostPassword;
 use Contao\ModuleMaintenance;
 use Contao\ModuleModel;
 use Contao\ModuleNavigation;
-use Contao\ModulePassword;
 use Contao\ModulePersonalData;
 use Contao\ModuleQuicklink;
 use Contao\ModuleQuicknav;
@@ -258,7 +258,7 @@ $GLOBALS['FE_MOD'] = array
 		'personalData'   => ModulePersonalData::class,
 		'registration'   => ModuleRegistration::class,
 		'changePassword' => ModuleChangePassword::class,
-		'lostPassword'   => ModulePassword::class,
+		'lostPassword'   => ModuleLostPassword::class,
 		'closeAccount'   => ModuleCloseAccount::class
 	),
 	'application' => array
@@ -307,7 +307,7 @@ $GLOBALS['TL_CTE'] = array
 	(
 		'image'           => ContentImage::class,
 		'gallery'         => ContentGallery::class,
-		'player'          => ContentMedia::class,
+		'player'          => ContentPlayer::class,
 		'youtube'         => ContentYouTube::class,
 		'vimeo'           => ContentVimeo::class
 	),
@@ -364,13 +364,13 @@ $GLOBALS['TL_FFL'] = array
 	'html'          => FormHtml::class,
 	'fieldsetStart' => FormFieldsetStart::class,
 	'fieldsetStop'  => FormFieldsetStop::class,
-	'text'          => FormTextField::class,
+	'text'          => FormText::class,
 	'password'      => FormPassword::class,
-	'textarea'      => FormTextArea::class,
-	'select'        => FormSelectMenu::class,
-	'radio'         => FormRadioButton::class,
-	'checkbox'      => FormCheckBox::class,
-	'upload'        => FormFileUpload::class,
+	'textarea'      => FormTextarea::class,
+	'select'        => FormSelect::class,
+	'radio'         => FormRadio::class,
+	'checkbox'      => FormCheckbox::class,
+	'upload'        => FormFile::class,
 	'range'         => FormRange::class,
 	'hidden'        => FormHidden::class,
 	'captcha'       => FormCaptcha::class,

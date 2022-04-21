@@ -775,21 +775,7 @@ class tl_form_field extends Backend
 
 		$default = 'form_' . $dc->activeRecord->type;
 
-		// Backwards compatibility
-		if ($dc->activeRecord->type == 'text')
-		{
-			$default = 'form_textfield';
-		}
-
-		$arrTemplates = $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_', array(), $default);
-
-		// Backwards compatibility
-		if ($dc->activeRecord->type == 'text')
-		{
-			$arrTemplates += $this->getTemplateGroup('form_textfield_');
-		}
-
-		return $arrTemplates;
+		return $this->getTemplateGroup('form_' . $dc->activeRecord->type . '_', array(), $default);
 	}
 
 	/**

@@ -19,7 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
-use Contao\FormTextField;
+use Contao\FormText;
 use Contao\ModuleArticleList;
 use Contao\System;
 use Contao\TemplateLoader;
@@ -44,7 +44,7 @@ class TemplateLoaderTest extends TestCase
         ];
 
         $GLOBALS['TL_FFL'] = [
-            'text' => FormTextField::class,
+            'text' => FormText::class,
         ];
 
         $GLOBALS['FE_MOD'] = [

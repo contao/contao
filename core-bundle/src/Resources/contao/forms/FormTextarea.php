@@ -11,7 +11,7 @@
 namespace Contao;
 
 /**
- * Class FormTextArea
+ * Class FormTextarea
  *
  * @property string  $value
  * @property integer $maxlength
@@ -20,10 +20,8 @@ namespace Contao;
  * @property string  $size
  * @property integer $rows
  * @property integer $cols
- *
- * @todo Rename to FormTextarea in Contao 5.0
  */
-class FormTextArea extends Widget
+class FormTextarea extends Widget
 {
 	/**
 	 * Submit user input
