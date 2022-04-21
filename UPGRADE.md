@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### Request
+
+The `Contao\Request` library has been removed. Use another library such as `symfony/http-client` instead.
+
 ### Renamed resources
 
 The following resources have been renamed:
