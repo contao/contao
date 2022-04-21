@@ -13,13 +13,13 @@
   </tr>
 </thead>
 <tbody>
-  <?php foreach ($this->weeks as $class => $week): ?>
-    <tr class="<?= $class ?>">
+  <?php foreach ($this->weeks as $week): ?>
+    <tr>
       <?php foreach ($week as $day): ?>
         <?php if (!empty($day['href'])): ?>
-          <td class="<?= $day['class'] ?>"><a href="<?= $day['href'] ?>" title="<?= $day['title'] ?>"><?= $day['label'] ?></a></td>
+          <td<?php if (!empty($day['class'])): ?> class="<?= $day['class'] ?>"<?php endif; ?>><a href="<?= $day['href'] ?>" title="<?= $day['title'] ?>"><?= $day['label'] ?></a></td>
         <?php else: ?>
-          <td class="<?= $day['class'] ?>"><?= $day['label'] ?></td>
+          <td<?php if (!empty($day['class'])): ?> class="<?= $day['class'] ?>"<?php endif; ?>><?= $day['label'] ?></td>
         <?php endif; ?>
       <?php endforeach; ?>
     </tr>

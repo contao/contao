@@ -80,7 +80,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     /**
      * @return Collection<int, TrustedDevice>
      */
-    public function getTrustedDevices(User $user): Collection
+    public function getTrustedDevices(User $user): mixed
     {
         return $this->entityManager
             ->createQueryBuilder()

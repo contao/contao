@@ -274,21 +274,21 @@ class Newsletter extends Backend
 <input type="hidden" name="id" value="' . Input::get('id') . '">
 <input type="hidden" name="token" value="' . $strToken . '">
 <table class="prev_header">
-  <tr class="row_0">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['from'] . '</td>
-    <td class="col_1">' . sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['from'] . '</td>
+    <td>' . sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
   </tr>
-  <tr class="row_1">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['subject'][0] . '</td>
-    <td class="col_1">' . $objNewsletter->subject . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['subject'][0] . '</td>
+    <td>' . $objNewsletter->subject . '</td>
   </tr>
-  <tr class="row_2">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter_channel']['template'][0] . '</td>
-    <td class="col_1">' . ($objNewsletter->template ?: 'mail_default') . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter_channel']['template'][0] . '</td>
+    <td>' . ($objNewsletter->template ?: 'mail_default') . '</td>
   </tr>' . ((!empty($arrAttachments) && \is_array($arrAttachments)) ? '
-  <tr class="row_3">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['attachments'] . '</td>
-    <td class="col_1">' . implode(', ', $arrAttachments) . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['attachments'] . '</td>
+    <td>' . implode(', ', $arrAttachments) . '</td>
   </tr>' : '') . '
 </table>' . (!$objNewsletter->sendText ? '
 <div class="preview_html">

@@ -93,7 +93,6 @@ class ModuleChangePassword extends Module
 		$arrFields['newPassword']['name'] = 'password';
 		$arrFields['newPassword']['label'] = &$GLOBALS['TL_LANG']['MSC']['newPassword'];
 
-		$row = 0;
 		$strFields = '';
 		$doNotSubmit = false;
 		$objMember = MemberModel::findByPk($this->User->id);
@@ -127,17 +126,7 @@ class ModuleChangePassword extends Module
 
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
-
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
-
-			// Increase the row count if it is a password field
-			if ($objWidget instanceof FormPassword)
-			{
-				$objWidget->rowClassConfirm = 'row_' . ++$row . ((($row % 2) == 0) ? ' even' : ' odd');
-			}
-
-			++$row;
 
 			// Store the widget objects
 			$strVar  = 'obj' . ucfirst($strKey);
@@ -217,7 +206,6 @@ class ModuleChangePassword extends Module
 
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
-		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
