@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class LoggerChannelPass implements CompilerPassInterface
 {
-    public const LEGACY_ACTIONS = [
+    final public const LEGACY_ACTIONS = [
         'access',
         'configuration',
         'cron',

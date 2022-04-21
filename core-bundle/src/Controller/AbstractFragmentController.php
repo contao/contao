@@ -47,31 +47,15 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return $services;
     }
 
-    protected function getPageModel(): ?PageModel
+    protected function getPageModel(): PageModel|null
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
 
-        if (null === $request || !$request->attributes->has('pageModel')) {
-            return null;
-        }
-
-        $pageModel = $request->attributes->get('pageModel');
-
-        if ($pageModel instanceof PageModel) {
+        if (null !== $request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
             return $pageModel;
         }
 
-        if (
-            isset($GLOBALS['objPage'])
-            && $GLOBALS['objPage'] instanceof PageModel
-            && (int) $GLOBALS['objPage']->id === (int) $pageModel
-        ) {
-            return $GLOBALS['objPage'];
-        }
-
-        $this->initializeContaoFramework();
-
-        return $this->getContaoAdapter(PageModel::class)->findByPk((int) $pageModel);
+        return null;
     }
 
     /**
@@ -107,14 +91,14 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return $template;
     }
 
-    protected function addHeadlineToTemplate(Template $template, string|array|null $headline): void
+    protected function addHeadlineToTemplate(Template $template, array|string|null $headline): void
     {
         $data = StringUtil::deserialize($headline);
         $template->headline = \is_array($data) ? $data['value'] : $data;
         $template->hl = \is_array($data) ? $data['unit'] : 'h1';
     }
 
-    protected function addCssAttributesToTemplate(Template $template, string $templateName, string|array|null $cssID, array $classes = null): void
+    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array $classes = null): void
     {
         $data = StringUtil::deserialize($cssID, true);
         $template->class = trim($templateName.' '.($data[1] ?? ''));
@@ -148,7 +132,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
         $className = ltrim(strrchr(static::class, '\\'), '\\');
 
-        if ('Controller' === substr($className, -10)) {
+        if (str_ends_with($className, 'Controller')) {
             $className = substr($className, 0, -10);
         }
 

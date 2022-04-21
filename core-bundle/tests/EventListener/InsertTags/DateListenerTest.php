@@ -46,11 +46,9 @@ class DateListenerTest extends TestCase
     }
 
     /**
-     * @param string|false $expected
-     *
      * @dataProvider getConvertedInsertTags
      */
-    public function testReplacedInsertTag(string $insertTag, $expected): void
+    public function testReplacedInsertTag(string $insertTag, string|false $expected): void
     {
         $listener = new DateListener($this->getFramework(), new RequestStack());
 

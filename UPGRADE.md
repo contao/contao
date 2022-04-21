@@ -22,9 +22,79 @@ containing the list item's CSS class and content. Instead it will only be the co
 <?php foreach ($this->items as $item): ?>
   <li><?= $item ?></li>
 <?php endforeach; ?>
-```
 
-## Version 4.* to 4.11
+## Input type "textStore"
+
+The `textStore` input type was removed. Use `password` instead.
+
+## Global functions
+
+The following global functions have been removed:
+
+- `scan()`
+- `specialchars()`
+- `standardize()`
+- `strip_insert_tags()`
+- `deserialize()`
+- `trimsplit()`
+- `ampersand()`
+- `nl2br_html5()`
+- `nl2br_xhtml()`
+- `nl2br_pre()`
+- `basename_natcasecmp()`
+- `basename_natcasercmp()`
+- `natcaseksort()`
+- `length_sort_asc()`
+- `length_sort_desc()`
+- `array_insert()`
+- `array_dupliacte()`
+- `array_move_up()`
+- `array_move_down()`
+- `array_delete()`
+- `array_is_assoc()`
+- `utf8_chr()`
+- `utf8_ord()`
+- `utf8_convert_encoding()`
+- `utf8_decode_entities()`
+- `utf8_chr_callback()`
+- `utf8_hexchr_callback()`
+- `utf8_detect_encoding()`
+- `utf8_romanize()`
+- `utf8_strlen()`
+- `utf8_strpos()`
+- `utf8_strrchr()`
+- `utf8_strrpos()`
+- `utf8_strstr()`
+- `utf8_strtolower()`
+- `utf8_strtoupper()`
+- `utf8_substr()`
+- `utf8_ucfirst()`
+- `utf8_str_split()`
+- `nl2br_callback()`
+
+Most of them have alternatives in either `StringUtil`, `ArrayUtil` or may have PHP native alternatives such as
+the `mb_*` functions. For advanced UTF-8 handling, use `symfony/string`.
+
+## eval->orderField in PageTree and Picker widgets
+
+Support for a separate database `orderField` column has been removed. Use `isSortable` instead which
+stores the order in the same database column.
+
+### Removed {{post::*}} insert tag
+
+The `{{post::*}}` insert tag has been removed. To access submitted form data on forward pages, use the
+new `{{form_session_data::*}}` insert tag instead.
+
+### $_SESSION access no longer mapped to Symfony Session
+
+The use of `$_SESSION` is discouraged because it makes testing and configuring alternative storage
+back ends hard. In Contao 4, access to `$_SESSION` has been transparently mapped to the Symfony session.
+This has been removed. Use `$request->getSession()` directly instead.
+
+### database.sql files
+
+Support for `database.sql` files has been dropped. Use DCA definitions and/or Doctrine DBAL schema
+listeners instead.
 
 ### Simple Token Parser
 
@@ -77,3 +147,8 @@ The back end widgets `pageSelector` and `fileSelector` have been removed. Use th
 ### Public folder
 
 The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
+
+### Figure
+The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
+`Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
+back to an array representation. If you are just using array access, nothing needs to be changed.

@@ -48,18 +48,6 @@ class ModuleNewsletterReader extends Module
 			return $objTemplate->parse();
 		}
 
-		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
-		{
-			Input::setGet('items', Input::get('auto_item'));
-		}
-
-		// Return an empty string if "items" is not set (to combine list and reader on same page)
-		if (!Input::get('items'))
-		{
-			return '';
-		}
-
 		$this->nl_channels = StringUtil::deserialize($this->nl_channels);
 
 		if (empty($this->nl_channels) || !\is_array($this->nl_channels))
@@ -83,7 +71,7 @@ class ModuleNewsletterReader extends Module
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['nl_overview'];
 		}
 
-		$objNewsletter = NewsletterModel::findSentByParentAndIdOrAlias(Input::get('items'), $this->nl_channels);
+		$objNewsletter = NewsletterModel::findSentByParentAndIdOrAlias(Input::get('auto_item'), $this->nl_channels);
 
 		if (null === $objNewsletter)
 		{

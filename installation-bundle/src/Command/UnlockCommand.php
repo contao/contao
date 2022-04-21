@@ -27,12 +27,8 @@ class UnlockCommand extends Command
     protected static $defaultName = 'contao:install:unlock';
     protected static $defaultDescription = 'Unlocks the install tool.';
 
-    private string $lockFile;
-
-    public function __construct(string $lockFile)
+    public function __construct(private string $lockFile)
     {
-        $this->lockFile = $lockFile;
-
         parent::__construct();
     }
 

@@ -108,7 +108,7 @@ class InstallationController implements ContainerAwareInterface
         return $this->render('main.html.twig', $this->context);
     }
 
-    private function initializeApplication(): ?Response
+    private function initializeApplication(): Response|null
     {
         $event = new InitializeApplicationEvent();
 
@@ -125,8 +125,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to set the install tool password.
-     *
-     * @return Response|RedirectResponse
      */
     private function setPassword(): Response
     {
@@ -159,8 +157,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to log in.
-     *
-     * @return Response|RedirectResponse
      */
     private function login(): Response
     {
@@ -258,8 +254,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to set up the database connection.
-     *
-     * @return Response|RedirectResponse
      */
     private function setUpDatabaseConnection(): Response
     {
@@ -288,11 +282,11 @@ class InstallationController implements ContainerAwareInterface
             ],
         ];
 
-        if (false !== strpos($parameters['parameters']['database_name'], '.')) {
-            return $this->render('database.html.twig', array_merge(
-                $parameters,
-                ['database_error' => $this->trans('database_dot_in_dbname')]
-            ));
+        if (str_contains((string) $parameters['parameters']['database_name'], '.')) {
+            return $this->render(
+                'database.html.twig',
+                [...$parameters, ...['database_error' => $this->trans('database_dot_in_dbname')]]
+            );
         }
 
         $connection = ConnectionFactory::create($parameters);
@@ -301,17 +295,17 @@ class InstallationController implements ContainerAwareInterface
         $installTool->setConnection($connection);
 
         if (!$installTool->canConnectToDatabase($parameters['parameters']['database_name'])) {
-            return $this->render('database.html.twig', array_merge(
-                $parameters,
-                ['database_error' => $this->trans('database_could_not_connect')]
-            ));
+            return $this->render(
+                'database.html.twig',
+                [...$parameters, ...['database_error' => $this->trans('database_could_not_connect')]]
+            );
         }
 
         $databaseVersion = null;
 
         try {
             $databaseVersion = $connection->getWrappedConnection()->getServerVersion();
-        } catch (\Throwable $exception) {
+        } catch (\Throwable) {
             // Ignore server version detection errors
         }
 
@@ -339,7 +333,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to adjust the database tables.
      */
-    private function adjustDatabaseTables(): ?RedirectResponse
+    private function adjustDatabaseTables(): RedirectResponse|null
     {
         $this->container->get('contao_installation.install_tool')->handleRunOnce();
 
@@ -371,7 +365,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to import the example website.
      */
-    private function importExampleWebsite(): ?RedirectResponse
+    private function importExampleWebsite(): RedirectResponse|null
     {
         $installTool = $this->container->get('contao_installation.install_tool');
         $templates = $installTool->getTemplates();
@@ -418,7 +412,7 @@ class InstallationController implements ContainerAwareInterface
         return $this->getRedirectResponse();
     }
 
-    private function createAdminUser(): ?RedirectResponse
+    private function createAdminUser(): RedirectResponse|null
     {
         $installTool = $this->container->get('contao_installation.install_tool');
 
@@ -469,7 +463,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         // The username must not contain whitespace characters (see #4006)
-        if (false !== strpos($username, ' ')) {
+        if (str_contains((string) $username, ' ')) {
             $this->context['admin_username_error'] = $this->trans('admin_error_no_space');
 
             return null;
@@ -580,10 +574,7 @@ class InstallationController implements ContainerAwareInterface
         return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
     }
 
-    /**
-     * @return string|bool|null
-     */
-    private function getContainerParameter(string $name)
+    private function getContainerParameter(string $name): bool|string|null
     {
         if ($this->container->hasParameter($name)) {
             return $this->container->getParameter($name);

@@ -35,7 +35,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class TwoFactorController extends AbstractFrontendModuleController
 {
-    protected ?PageModel $pageModel = null;
+    protected PageModel|null $pageModel = null;
 
     public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null, PageModel $pageModel = null): Response
     {
@@ -128,7 +128,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         return new Response($template->parse());
     }
 
-    private function enableTwoFactor(Template $template, Request $request, FrontendUser $user, string $return): ?Response
+    private function enableTwoFactor(Template $template, Request $request, FrontendUser $user, string $return): Response|null
     {
         // Return if 2FA is enabled already
         if ($user->useTwoFactor) {
@@ -169,7 +169,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         return null;
     }
 
-    private function disableTwoFactor(FrontendUser $user): ?Response
+    private function disableTwoFactor(FrontendUser $user): Response|null
     {
         // Return if 2FA is disabled already
         if (!$user->useTwoFactor) {

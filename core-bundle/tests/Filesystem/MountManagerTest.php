@@ -547,10 +547,7 @@ class MountManagerTest extends TestCase
         return $adapter;
     }
 
-    /**
-     * @param mixed $return
-     */
-    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, $return): FilesystemAdapter
+    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, mixed $return): FilesystemAdapter
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
 

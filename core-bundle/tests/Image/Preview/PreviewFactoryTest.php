@@ -140,10 +140,8 @@ class PreviewFactoryTest extends TestCase
 
     /**
      * @dataProvider getImageSizes
-     *
-     * @param int|string|array|ResizeConfiguration|PictureConfiguration|null $size
      */
-    public function testGetPreviewSizeFromImageSize($size, int $expectedSize, string $defaultDensities = ''): void
+    public function testGetPreviewSizeFromImageSize(PictureConfiguration|ResizeConfiguration|array|int|string|null $size, int $expectedSize, string $defaultDensities = ''): void
     {
         $imageSizeModel = (new \ReflectionClass(ImageSizeModel::class))->newInstanceWithoutConstructor();
         $imageSizeModel->setRow([
@@ -339,7 +337,7 @@ class PreviewFactoryTest extends TestCase
 
             public function supports(string $path, string $fileHeader = '', array $options = []): bool
             {
-                return '.pdf' === substr($path, -4) && 0 === strncmp($fileHeader, '%PDF-', 5);
+                return str_ends_with($path, '.pdf') && str_starts_with($fileHeader, '%PDF-');
             }
 
             public function generatePreviews(string $sourcePath, int $size, \Closure $targetPathCallback, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $options = []): \Generator

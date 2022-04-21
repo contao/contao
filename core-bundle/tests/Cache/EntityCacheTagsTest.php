@@ -101,11 +101,9 @@ class EntityCacheTagsTest extends DoctrineTestCase
     }
 
     /**
-     * @param mixed $argument
-     *
      * @dataProvider getArguments
      */
-    public function testGetTags($argument, array $expectedTags): void
+    public function testGetTags(mixed $argument, array $expectedTags): void
     {
         $entityCacheTags = $this->getEntityCacheTags();
 

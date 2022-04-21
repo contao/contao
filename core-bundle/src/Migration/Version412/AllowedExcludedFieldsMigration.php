@@ -22,11 +22,8 @@ use Doctrine\DBAL\Connection;
  */
 class AllowedExcludedFieldsMigration extends AbstractMigration
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function shouldRun(): bool

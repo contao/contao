@@ -120,6 +120,9 @@ class ModulePersonalData extends Module
 		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
 		$objVersions->initialize();
 
+		$arrSubmitted = array();
+		$arrFiles = array();
+
 		// Build the form
 		foreach ($this->editable as $field)
 		{
@@ -261,7 +264,7 @@ class ModulePersonalData extends Module
 				elseif ($objWidget->submitInput())
 				{
 					// Store the form data
-					$_SESSION['FORM_DATA'][$field] = $varValue;
+					$arrSubmitted[$field] = $varValue;
 
 					// Set the correct empty value (see #6284, #6373)
 					if ($varValue === '')
@@ -283,6 +286,7 @@ class ModulePersonalData extends Module
 
 			if ($objWidget instanceof UploadableWidgetInterface)
 			{
+				$arrFiles[$objWidget->name] = $objWidget->value;
 				$hasUpload = true;
 			}
 
@@ -316,7 +320,7 @@ class ModulePersonalData extends Module
 				foreach ($GLOBALS['TL_HOOKS']['updatePersonalData'] as $callback)
 				{
 					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->User, $_SESSION['FORM_DATA'], $this);
+					$this->{$callback[0]}->{$callback[1]}($this->User, $arrSubmitted, $this, $arrFiles);
 				}
 			}
 

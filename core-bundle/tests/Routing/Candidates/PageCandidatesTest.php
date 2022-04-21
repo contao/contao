@@ -482,7 +482,7 @@ class PageCandidatesTest extends TestCase
     /**
      * @return PageRegistry&MockObject
      */
-    private function mockPageRegistry(?array $urlPrefixes, ?array $urlSuffixes): PageRegistry
+    private function mockPageRegistry(array|null $urlPrefixes, array|null $urlSuffixes): PageRegistry
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry

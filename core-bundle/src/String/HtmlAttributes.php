@@ -16,7 +16,7 @@ namespace Contao\CoreBundle\String;
  * @implements \IteratorAggregate<string, string>
  * @implements \ArrayAccess<string, string|int|bool|\Stringable|null>
  */
-class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
+class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
     /**
      * @var array<string, string>
@@ -26,7 +26,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     /**
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public function __construct(iterable|string|self|null $attributes = null)
+    public function __construct(self|iterable|string|null $attributes = null)
     {
         $this->mergeWith($attributes);
     }
@@ -47,8 +47,12 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
      *
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public function mergeWith(iterable|string|self|null $attributes = null): self
+    public function mergeWith(self|iterable|string|null $attributes = null): self
     {
+        if (empty($attributes)) {
+            return $this;
+        }
+
         // Merge values if possible, set them otherwise
         $mergeSet = function (string $name, string|int|bool|\Stringable|null $value): void {
             if ('class' === $name) {
@@ -70,7 +74,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
             return $this;
         }
 
-        foreach ($attributes ?? [] as $name => $value) {
+        foreach ($attributes as $name => $value) {
             $mergeSet($name, $value);
         }
 
@@ -82,7 +86,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
      * property will be unset instead. All values will be coerced to strings,
      * whereby null and true will result in an empty string.
      */
-    public function set(string $name, string|int|bool|\Stringable|null $value): self
+    public function set(string $name, \Stringable|bool|int|string|null $value = true): self
     {
         $name = strtolower($name);
 
@@ -107,7 +111,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
         return $this;
     }
 
-    public function setIfExists(string $name, string|int|bool|\Stringable|null $value): self
+    public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
     {
         if (!empty($value)) {
             $this->set($name, $value);
@@ -130,6 +134,10 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
             array_unique($this->split(($this->attributes['class'] ?? '').' '.implode(' ', $classes)))
         );
 
+        if (empty($this->attributes['class'])) {
+            unset($this->attributes['class']);
+        }
+
         return $this;
     }
 
@@ -142,6 +150,10 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
                 $this->split(implode(' ', $classes))
             )
         );
+
+        if (empty($this->attributes['class'])) {
+            unset($this->attributes['class']);
+        }
 
         return $this;
     }
@@ -194,6 +206,11 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         unset($this->attributes[$offset]);
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->attributes;
     }
 
     /**

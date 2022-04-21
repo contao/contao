@@ -60,7 +60,7 @@ class ModuleFaqList extends Module
 		}
 
 		// Show the FAQ reader if an item has been selected
-		if ($this->faq_readerModule > 0 && (isset($_GET['items']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->faq_readerModule > 0 && isset($_GET['auto_item']))
 		{
 			return $this->getFrontendModule($this->faq_readerModule, $this->strColumn);
 		}
@@ -153,7 +153,7 @@ class ModuleFaqList extends Module
 			if ($jumpTo > 0 && ($objTarget = PageModel::findByPk($jumpTo)) !== null)
 			{
 				/** @var PageModel $objTarget */
-				$this->arrTargets[$jumpTo] = StringUtil::ampersand($objTarget->getFrontendUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+				$this->arrTargets[$jumpTo] = StringUtil::ampersand($objTarget->getFrontendUrl('/%s'));
 			}
 		}
 

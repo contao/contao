@@ -29,24 +29,17 @@ class TokenChecker
     private const FRONTEND_FIREWALL = 'contao_frontend';
     private const BACKEND_FIREWALL = 'contao_backend';
 
-    private RequestStack $requestStack;
-    private FirewallMapInterface $firewallMap;
-    private TokenStorageInterface $tokenStorage;
-    private SessionInterface $session;
-    private AuthenticationTrustResolverInterface $trustResolver;
-    private VoterInterface $roleVoter;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.token_checker" service instead
      */
-    public function __construct(RequestStack $requestStack, FirewallMapInterface $firewallMap, TokenStorageInterface $tokenStorage, SessionInterface $session, AuthenticationTrustResolverInterface $trustResolver, VoterInterface $roleVoter)
-    {
-        $this->requestStack = $requestStack;
-        $this->firewallMap = $firewallMap;
-        $this->tokenStorage = $tokenStorage;
-        $this->session = $session;
-        $this->trustResolver = $trustResolver;
-        $this->roleVoter = $roleVoter;
+    public function __construct(
+        private RequestStack $requestStack,
+        private FirewallMapInterface $firewallMap,
+        private TokenStorageInterface $tokenStorage,
+        private SessionInterface $session,
+        private AuthenticationTrustResolverInterface $trustResolver,
+        private VoterInterface $roleVoter,
+    ) {
     }
 
     /**
@@ -72,7 +65,7 @@ class TokenChecker
     /**
      * Gets the front end username from the session.
      */
-    public function getFrontendUsername(): ?string
+    public function getFrontendUsername(): string|null
     {
         $token = $this->getToken(self::FRONTEND_FIREWALL);
 
@@ -86,7 +79,7 @@ class TokenChecker
     /**
      * Gets the back end username from the session.
      */
-    public function getBackendUsername(): ?string
+    public function getBackendUsername(): string|null
     {
         $token = $this->getToken(self::BACKEND_FIREWALL);
 
@@ -113,7 +106,7 @@ class TokenChecker
         return $token instanceof FrontendPreviewToken && $token->showUnpublished();
     }
 
-    private function getToken(string $context): ?TokenInterface
+    private function getToken(string $context): TokenInterface|null
     {
         $token = $this->getTokenFromStorage($context);
 
@@ -132,7 +125,7 @@ class TokenChecker
         return $token;
     }
 
-    private function getTokenFromStorage(string $context): ?TokenInterface
+    private function getTokenFromStorage(string $context): TokenInterface|null
     {
         $request = $this->requestStack->getMainRequest();
 
@@ -149,7 +142,7 @@ class TokenChecker
         return $this->tokenStorage->getToken();
     }
 
-    private function getTokenFromSession(string $sessionKey): ?TokenInterface
+    private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
         if (!$this->session->isStarted()) {
             $request = $this->requestStack->getMainRequest();

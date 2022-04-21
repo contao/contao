@@ -91,7 +91,7 @@ class ParameterDumper
         $parameters = [];
 
         foreach ($this->parameters['parameters'] as $key => $value) {
-            if (\is_string($value) && 0 === strncmp($value, '@', 1)) {
+            if (\is_string($value) && str_starts_with($value, '@')) {
                 $value = '@'.$value;
             }
 

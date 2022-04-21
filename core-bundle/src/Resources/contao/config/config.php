@@ -105,7 +105,6 @@ use Contao\PageLogout;
 use Contao\PageModel;
 use Contao\PageRedirect;
 use Contao\PageRegular;
-use Contao\PageRoot;
 use Contao\PageTree;
 use Contao\Password;
 use Contao\Picker;
@@ -121,7 +120,6 @@ use Contao\System;
 use Contao\TableWizard;
 use Contao\TextArea;
 use Contao\TextField;
-use Contao\TextStore;
 use Contao\Theme;
 use Contao\ThemeModel;
 use Contao\TimePeriod;
@@ -333,7 +331,6 @@ $GLOBALS['BE_FFL'] = array
 (
 	'text'                    => TextField::class,
 	'password'                => Password::class,
-	'textStore'               => TextStore::class,
 	'textarea'                => TextArea::class,
 	'select'                  => SelectMenu::class,
 	'checkbox'                => CheckBox::class,
@@ -386,7 +383,6 @@ $GLOBALS['TL_PTY'] = array
 	'regular'   => PageRegular::class,
 	'forward'   => PageForward::class,
 	'redirect'  => PageRedirect::class,
-	'root'      => PageRoot::class,
 	'logout'    => PageLogout::class,
 	'error_401' => PageError401::class,
 	'error_403' => PageError403::class,
@@ -516,9 +512,6 @@ $GLOBALS['TL_HOOKS'] = array
 		array(Messages::class, 'languageFallback')
 	)
 );
-
-// Register the auto_item keywords
-$GLOBALS['TL_AUTO_ITEM'] = array('items', 'events');
 
 // Wrapper elements
 $GLOBALS['TL_WRAPPERS'] = array

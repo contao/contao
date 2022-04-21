@@ -144,7 +144,7 @@ class CronTest extends TestCase
         try {
             $cron->run(Cron::SCOPE_CLI);
             $cron->run(Cron::SCOPE_WEB);
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             $this->fail();
         }
 
@@ -155,10 +155,10 @@ class CronTest extends TestCase
     public function testDoesNotInstantiateDependenciesInConstructor(): void
     {
         $cron = new Cron(
-            static function (): void {
+            static function (): never {
                 throw new \LogicException();
             },
-            static function (): void {
+            static function (): never {
                 throw new \LogicException();
             }
         );

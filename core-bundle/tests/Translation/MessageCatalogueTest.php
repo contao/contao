@@ -180,10 +180,8 @@ class MessageCatalogueTest extends TestCase
 
     /**
      * @dataProvider getForwardedDomainMethods
-     *
-     * @param mixed $return
      */
-    public function testForwardsIfDomainIsNotContao(string $method, array $params, array $paramsContaoDomain, $return = null): void
+    public function testForwardsIfDomainIsNotContao(string $method, array $params, array $paramsContaoDomain, mixed $return = null): void
     {
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
         $parentCatalogue
@@ -232,10 +230,8 @@ class MessageCatalogueTest extends TestCase
 
     /**
      * @dataProvider getCompletelyForwardedMethods
-     *
-     * @param mixed $return
      */
-    public function testForwardsCompletelyToParent(string $method, array $params, $return = null): void
+    public function testForwardsCompletelyToParent(string $method, array $params, mixed $return = null): void
     {
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
         $parentCatalogue

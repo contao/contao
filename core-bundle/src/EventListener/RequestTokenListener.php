@@ -26,17 +26,12 @@ use Symfony\Component\Security\Csrf\CsrfToken;
  */
 class RequestTokenListener
 {
-    private ScopeMatcher $scopeMatcher;
-    private ContaoCsrfTokenManager $csrfTokenManager;
-    private string $csrfTokenName;
-    private string $csrfCookiePrefix;
-
-    public function __construct(ScopeMatcher $scopeMatcher, ContaoCsrfTokenManager $csrfTokenManager, string $csrfTokenName, string $csrfCookiePrefix = 'csrf_')
-    {
-        $this->scopeMatcher = $scopeMatcher;
-        $this->csrfTokenManager = $csrfTokenManager;
-        $this->csrfTokenName = $csrfTokenName;
-        $this->csrfCookiePrefix = $csrfCookiePrefix;
+    public function __construct(
+        private ScopeMatcher $scopeMatcher,
+        private ContaoCsrfTokenManager $csrfTokenManager,
+        private string $csrfTokenName,
+        private string $csrfCookiePrefix = 'csrf_',
+    ) {
     }
 
     public function __invoke(RequestEvent $event): void
@@ -72,7 +67,7 @@ class RequestTokenListener
         throw new InvalidRequestTokenException('Invalid CSRF token. Please reload the page and try again.');
     }
 
-    private function getTokenFromRequest(Request $request): ?string
+    private function getTokenFromRequest(Request $request): string|null
     {
         if ($request->request->has('REQUEST_TOKEN')) {
             return (string) $request->request->get('REQUEST_TOKEN');

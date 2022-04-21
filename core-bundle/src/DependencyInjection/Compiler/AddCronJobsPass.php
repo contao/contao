@@ -63,7 +63,7 @@ class AddCronJobsPass implements CompilerPassInterface
         }
     }
 
-    private function getMethod(array $attributes, string $class, string $serviceId): ?string
+    private function getMethod(array $attributes, string $class, string $serviceId): string|null
     {
         $ref = new \ReflectionClass($class);
         $invalid = sprintf('The contao.cronjob definition for service "%s" is invalid. ', $serviceId);

@@ -34,25 +34,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PreviewLinkListener
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private Security $security;
-    private RequestStack $requestStack;
-    private TranslatorInterface $translator;
-    private UrlGeneratorInterface $urlGenerator;
-    private UriSigner $uriSigner;
-    private string $previewScript;
-
-    public function __construct(ContaoFramework $framework, Connection $connection, Security $security, RequestStack $requestStack, TranslatorInterface $translator, UrlGeneratorInterface $urlGenerator, UriSigner $uriSigner, string $previewScript = '')
-    {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->security = $security;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
-        $this->urlGenerator = $urlGenerator;
-        $this->uriSigner = $uriSigner;
-        $this->previewScript = $previewScript;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Connection $connection,
+        private Security $security,
+        private RequestStack $requestStack,
+        private TranslatorInterface $translator,
+        private UrlGeneratorInterface $urlGenerator,
+        private UriSigner $uriSigner,
+        private string $previewScript = '',
+    ) {
     }
 
     /**
@@ -127,7 +118,7 @@ class PreviewLinkListener
 
         if (!$input->get('act')) {
             $message->addInfo($this->translator->trans('tl_preview_link.hintNew', [], 'contao_tl_preview_link'));
-        } elseif ('create' === $input->get('act') && false !== strpos($input->get('url') ?? '', $this->previewScript)) {
+        } elseif ('create' === $input->get('act') && str_contains((string) ($input->get('url') ?? ''), $this->previewScript)) {
             // Only allow creating new records from front end link with preview script in URL
             $GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable'] = false;
         }
@@ -206,7 +197,7 @@ class PreviewLinkListener
     /**
      * @Callback(table="tl_preview_link", target="list.operations.share.button")
      */
-    public function shareOperation(array $row, ?string $href, ?string $label, ?string $title, string $icon): string
+    public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
     {
         if ($row['expiresAt'] < time()) {
             return Image::getHtml(str_replace('.svg', '_.svg', $icon), $label);

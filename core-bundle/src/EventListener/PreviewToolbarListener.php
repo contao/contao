@@ -33,19 +33,13 @@ use Twig\Environment as TwigEnvironment;
  */
 class PreviewToolbarListener
 {
-    private ScopeMatcher $scopeMatcher;
-    private TokenChecker $tokenChecker;
-    private TwigEnvironment $twig;
-    private RouterInterface $router;
-    private string $previewScript;
-
-    public function __construct(ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, TwigEnvironment $twig, RouterInterface $router, string $previewScript = '')
-    {
-        $this->scopeMatcher = $scopeMatcher;
-        $this->tokenChecker = $tokenChecker;
-        $this->twig = $twig;
-        $this->router = $router;
-        $this->previewScript = $previewScript;
+    public function __construct(
+        private ScopeMatcher $scopeMatcher,
+        private TokenChecker $tokenChecker,
+        private TwigEnvironment $twig,
+        private RouterInterface $router,
+        private string $previewScript = '',
+    ) {
     }
 
     public function __invoke(ResponseEvent $event): void
@@ -69,7 +63,7 @@ class PreviewToolbarListener
         // Only inject the toolbar into HTML responses
         if (
             'html' !== $request->getRequestFormat()
-            || false === strpos((string) $response->headers->get('Content-Type'), 'text/html')
+            || !str_contains((string) $response->headers->get('Content-Type'), 'text/html')
             || false !== stripos((string) $response->headers->get('Content-Disposition'), 'attachment;')
         ) {
             return;

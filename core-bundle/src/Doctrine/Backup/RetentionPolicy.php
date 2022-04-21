@@ -14,16 +14,13 @@ namespace Contao\CoreBundle\Doctrine\Backup;
 
 final class RetentionPolicy implements RetentionPolicyInterface
 {
-    private int $keepMax;
-
     /**
      * @var array<string, \DateInterval>
      */
     private array $keepIntervals;
 
-    public function __construct(int $keepMax, array $keepIntervals = [])
+    public function __construct(private int $keepMax, array $keepIntervals = [])
     {
-        $this->keepMax = $keepMax;
         $this->keepIntervals = self::validateAndSortIntervals($keepIntervals);
     }
 
@@ -52,7 +49,7 @@ final class RetentionPolicy implements RetentionPolicyInterface
             }
 
             // Always keep the latest
-            $toKeep = array_merge([$latestBackup], array_filter($assignedPerInterval));
+            $toKeep = [...[$latestBackup], ...array_filter($assignedPerInterval)];
 
             // Ensure sorting again
             usort($toKeep, static fn (Backup $a, Backup $b) => $b->getCreatedAt() <=> $a->getCreatedAt());

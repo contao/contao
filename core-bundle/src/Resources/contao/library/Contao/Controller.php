@@ -1067,7 +1067,7 @@ abstract class Controller extends System
 		}
 
 		$return = array();
-		$arrDir = compact('top', 'right', 'bottom', 'left');
+		$arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
 
 		foreach ($arrDir as $k=>$v)
 		{
@@ -1408,7 +1408,13 @@ abstract class Controller extends System
 		$loader->load($blnNoCache);
 	}
 
-	public static function reset()
+	/**
+	 * Do not name this "reset" because it might result in conflicts with child classes
+	 * @see https://github.com/contao/contao/issues/4257
+	 *
+	 * @internal
+	 */
+	public static function resetControllerCache()
 	{
 		self::$arrQueryCache = array();
 		self::$arrOldBePathCache = array();
