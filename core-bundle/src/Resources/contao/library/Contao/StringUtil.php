@@ -35,7 +35,7 @@ class StringUtil
 	 *
 	 * @return string The shortened string
 	 */
-	public static function substr($strString, $intNumberOfChars, $strEllipsis=' …')
+	public static function substr($strString, $intNumberOfChars, string $strEllipsis=' …'): string
 	{
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
 		$strString = strip_tags($strString);
@@ -67,19 +67,6 @@ class StringUtil
 			}
 
 			break;
-		}
-
-		if ($strEllipsis === false)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "false" as third argument to "Contao\StringUtil::substr()" has been deprecated and will no longer work in Contao 5.0. Pass an empty string instead.');
-			$strEllipsis = '';
-		}
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($strEllipsis === true)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" as third argument to "Contao\StringUtil::substr()" has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.');
-			$strEllipsis = ' …';
 		}
 
 		return implode(' ', $arrWords) . $strEllipsis;
@@ -219,26 +206,17 @@ class StringUtil
 	 *
 	 * @return string The decoded string
 	 */
-	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES, $strCharset=null)
+	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES)
 	{
 		if ((string) $strString === '')
 		{
 			return '';
 		}
 
-		if ($strCharset === null)
-		{
-			$strCharset = 'UTF-8';
-		}
-		else
-		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a charset to StringUtil::decodeEntities() has been deprecated and will no longer work in Contao 5.0. Always use UTF-8 instead.');
-		}
-
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
 		$strString = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $strString);
 
-		return html_entity_decode($strString, $strQuoteStyle, $strCharset);
+		return html_entity_decode($strString, $strQuoteStyle, 'UTF-8');
 	}
 
 	/**
@@ -510,28 +488,6 @@ class StringUtil
 	}
 
 	/**
-	 * Parse simple tokens
-	 *
-	 * @param string $strString    The string to be parsed
-	 * @param array  $arrData      The replacement data
-	 * @param array  $blnAllowHtml Whether HTML should be decoded inside conditions
-	 *
-	 * @return string The converted string
-	 *
-	 * @throws \RuntimeException         If $strString cannot be parsed
-	 * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
-	 *
-	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
-	 *             Use the contao.string.simple_token_parser service instead.
-	 */
-	public static function parseSimpleTokens($strString, $arrData, $blnAllowHtml = true)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.string.simple_token_parser" service instead.');
-
-		return System::getContainer()->get('contao.string.simple_token_parser')->parse($strString, $arrData, $blnAllowHtml);
-	}
-
-	/**
 	 * Convert a UUID string to binary data
 	 *
 	 * @param string $uuid The UUID string
@@ -777,21 +733,14 @@ class StringUtil
 	/**
 	 * Convert the character encoding
 	 *
-	 * @param string $str  The input string
+	 * @param mixed  $str  The input string
 	 * @param string $to   The target character set
 	 * @param string $from An optional source character set
 	 *
 	 * @return string The converted string
 	 */
-	public static function convertEncoding($str, $to, $from=null)
+	public static function convertEncoding(\Stringable|float|int|string|null $str, $to, $from=null): string
 	{
-		if ($str !== null && !\is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
-		{
-			trigger_deprecation('contao/core-bundle', '4.9', 'Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated an will no longer work in Contao 5.0.');
-
-			return '';
-		}
-
 		$str = (string) $str;
 
 		if ('' === $str)
