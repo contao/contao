@@ -6,7 +6,7 @@
  * @license LGPL-3.0-or-later
  */
 (function () {
-    var choicesList = [];
+    let choicesList = [];
 
     function initChoices(node) {
         node.querySelectorAll('select.tl_chosen').forEach(function (select) {
@@ -30,6 +30,7 @@
     }
 
     initChoices(document);
+
     new MutationObserver(function (mutationsList) {
         for(const mutation of mutationsList) {
             if (mutation.type === 'childList') {
