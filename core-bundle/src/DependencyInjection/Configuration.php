@@ -24,11 +24,8 @@ use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    private string $projectDir;
-
-    public function __construct(string $projectDir)
+    public function __construct(private string $projectDir)
     {
-        $this->projectDir = $projectDir;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder
@@ -179,7 +176,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->booleanNode('reject_large_uploads')
-                    ->info('Reject uploaded images exceeding the localconfig.gdMaxImgWidth and localconfig.gdMaxImgHeight dimensions.')
+                    ->info('Reject uploaded images exceeding the localconfig.imageWidth and localconfig.imageHeight dimensions.')
                     ->defaultValue(false)
                 ->end()
                 ->arrayNode('sizes')
@@ -530,7 +527,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('default_http_client_options')
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
-                    ->prototype('scalar')->end()
+                    ->prototype('variable')->end()
                     ->defaultValue([])
                 ->end()
             ->end()
@@ -652,7 +649,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $intervals) {
                                 try {
                                     RetentionPolicy::validateAndSortIntervals($intervals);
-                                } catch (\Exception $e) {
+                                } catch (\Exception) {
                                     return true;
                                 }
 

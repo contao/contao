@@ -29,7 +29,7 @@ use Twig\NodeVisitor\AbstractNodeVisitor;
  */
 final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
 {
-    private ?array $escaperFilterNodes = null;
+    private array|null $escaperFilterNodes = null;
 
     /**
      * We evaluate affected templates on the fly so that rules can be adjusted

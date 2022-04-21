@@ -17,13 +17,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class LanguageResolver
 {
-    private RequestStack $requestStack;
-    private string $translationsDir;
-
-    public function __construct(RequestStack $requestStack, string $translationsDir)
+    public function __construct(private RequestStack $requestStack, private string $translationsDir)
     {
-        $this->requestStack = $requestStack;
-        $this->translationsDir = $translationsDir;
     }
 
     /**
@@ -53,13 +48,13 @@ class LanguageResolver
         // The implementation differs from the original implementation and also works with .jp browsers
         preg_match_all(
             '/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.\d+))?/i',
-            $this->requestStack->getCurrentRequest()->headers->get('accept-language'),
+            (string) $this->requestStack->getCurrentRequest()->headers->get('accept-language'),
             $accepted
         );
 
         // Remove all invalid locales
         foreach ($accepted[1] as $v) {
-            $chunks = explode('-', $v);
+            $chunks = explode('-', (string) $v);
 
             // Language plus dialect, e.g. "en-US" or "fr-FR"
             if (isset($chunks[1])) {

@@ -25,30 +25,21 @@ use Symfony\Component\Finder\Finder;
  */
 class TemplateLocator
 {
-    public const FILE_MARKER_NAMESPACE_ROOT = '.root';
+    final public const FILE_MARKER_NAMESPACE_ROOT = '.root';
 
-    private string $projectDir;
-    private ThemeNamespace $themeNamespace;
-    private Connection $connection;
     private Filesystem $filesystem;
 
     /**
-     * @var array<string,string>
+     * @param array<string, string>                $bundles
+     * @param array<string, array<string, string>> $bundlesMetadata
      */
-    private array $bundles;
-
-    /**
-     * @var array<string, array<string, string>>
-     */
-    private array $bundlesMetadata;
-
-    public function __construct(string $projectDir, array $bundles, array $bundlesMetadata, ThemeNamespace $themeNamespace, Connection $connection)
-    {
-        $this->projectDir = $projectDir;
-        $this->bundles = $bundles;
-        $this->bundlesMetadata = $bundlesMetadata;
-        $this->themeNamespace = $themeNamespace;
-        $this->connection = $connection;
+    public function __construct(
+        private string $projectDir,
+        private array $bundles,
+        private array $bundlesMetadata,
+        private ThemeNamespace $themeNamespace,
+        private Connection $connection,
+    ) {
         $this->filesystem = new Filesystem();
     }
 
@@ -68,7 +59,7 @@ class TemplateLocator
             // framework here because this function will be called when the
             // container is built (see #3567)
             $themePaths = $this->connection->fetchFirstColumn('SELECT templates FROM tl_theme');
-        } catch (DriverException $e) {
+        } catch (DriverException) {
             return [];
         }
 

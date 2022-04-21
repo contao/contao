@@ -18,14 +18,11 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class InsertTagRuntime implements RuntimeExtensionInterface
 {
-    private InsertTagParser $insertTagParser;
-
     /**
      * @internal
      */
-    public function __construct(InsertTagParser $insertTagParser)
+    public function __construct(private InsertTagParser $insertTagParser)
     {
-        $this->insertTagParser = $insertTagParser;
     }
 
     public function renderInsertTag(string $insertTag): string

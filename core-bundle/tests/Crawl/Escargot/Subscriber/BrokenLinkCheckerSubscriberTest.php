@@ -83,7 +83,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $subscriber = new BrokenLinkCheckerSubscriber($this->mockTranslator());
         $subscriber->setEscargot($escargot);
-        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
 
         $decision = $subscriber->shouldRequest($crawlUri);
 
@@ -157,7 +157,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $subscriber = new BrokenLinkCheckerSubscriber($this->mockTranslator());
         $subscriber->setEscargot($escargot);
-        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
 
         $decision = $subscriber->needsContent($crawlUri, $response, $this->createMock(ChunkInterface::class));
 
@@ -269,7 +269,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $subscriber = new BrokenLinkCheckerSubscriber($this->mockTranslator());
         $subscriber->setEscargot($escargot);
-        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
         $subscriber->onTransportException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response);
 
         $previousResult = null;
@@ -331,7 +331,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         $subscriber = new BrokenLinkCheckerSubscriber($this->mockTranslator());
         $subscriber->setEscargot($escargot);
-        $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
+        $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
         $subscriber->onHttpException(new CrawlUri(new Uri('https://contao.org'), 0), $exception, $response, $chunk);
 
         $previousResult = null;

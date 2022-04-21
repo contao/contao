@@ -127,14 +127,10 @@ abstract class Controller extends System
 		$arrMapper['form'][] = 'xml';
 		$arrMapper['form'][] = 'wrapper';
 		$arrMapper['form'][] = 'message';
-		$arrMapper['form'][] = 'textfield'; // TODO: remove in Contao 5.0
 
 		// Add templates that are not directly associated with a module
 		$arrMapper['mod'][] = 'article';
 		$arrMapper['mod'][] = 'message';
-		$arrMapper['mod'][] = 'password'; // TODO: remove in Contao 5.0
-		$arrMapper['mod'][] = 'comment_form'; // TODO: remove in Contao 5.0
-		$arrMapper['mod'][] = 'newsletter'; // TODO: remove in Contao 5.0
 
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
@@ -1067,7 +1063,7 @@ abstract class Controller extends System
 		}
 
 		$return = array();
-		$arrDir = compact('top', 'right', 'bottom', 'left');
+		$arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
 
 		foreach ($arrDir as $k=>$v)
 		{
@@ -1408,7 +1404,13 @@ abstract class Controller extends System
 		$loader->load($blnNoCache);
 	}
 
-	public static function reset()
+	/**
+	 * Do not name this "reset" because it might result in conflicts with child classes
+	 * @see https://github.com/contao/contao/issues/4257
+	 *
+	 * @internal
+	 */
+	public static function resetControllerCache()
 	{
 		self::$arrQueryCache = array();
 		self::$arrOldBePathCache = array();

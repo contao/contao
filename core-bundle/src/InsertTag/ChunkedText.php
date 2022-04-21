@@ -15,22 +15,18 @@ namespace Contao\CoreBundle\InsertTag;
 /**
  * @implements \IteratorAggregate<int, array{0:int, 1:string}>
  */
-final class ChunkedText implements \IteratorAggregate
+final class ChunkedText implements \IteratorAggregate, \Stringable
 {
     public const TYPE_TEXT = 0;
     public const TYPE_RAW = 1;
 
     /**
-     * @var array<int, string>
-     */
-    private $chunks;
-
-    /**
+     * @param array<string> $chunks
+     *
      * @internal
      */
-    public function __construct(array $chunks)
+    public function __construct(private array $chunks)
     {
-        $this->chunks = $chunks;
     }
 
     public function __toString(): string

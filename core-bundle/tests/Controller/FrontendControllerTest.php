@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Exception\LogoutException;
 
 class FrontendControllerTest extends TestCase
 {
-    public function testThrowsALogoutExceptionUponLogout(): void
+    public function testThrowsALogoutExceptionUponLogout(): never
     {
         $controller = new FrontendController();
 

@@ -68,7 +68,7 @@ class PhpFileLoader extends Loader
         $namespaceResolver = new NameResolver();
 
         $nodeStripper = new class() extends NodeVisitorAbstract {
-            public function leaveNode(Node $node)
+            public function leaveNode(Node $node): array|int|null
             {
                 // Drop namespace and use declarations
                 if ($node instanceof Namespace_) {

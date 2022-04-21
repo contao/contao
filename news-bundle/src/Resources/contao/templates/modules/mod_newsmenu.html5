@@ -9,9 +9,9 @@
       <ul class="level_1">
         <?php foreach ($this->items as $year => $month): ?>
           <?php if ($month['isActive']): ?>
-            <li class="active<?php if ($month['class']): ?> <?= $month['class'] ?><?php endif; ?>"><strong class="active"><?= $month['link'] ?><?php if ($this->showQuantity): ?> (<?= $month['quantity'] ?>)<?php endif; ?></strong></li>
+            <li class="active"><strong class="active"><?= $month['link'] ?><?php if ($this->showQuantity): ?> (<?= $month['quantity'] ?>)<?php endif; ?></strong></li>
           <?php else: ?>
-            <li<?php if ($month['class']): ?> class="<?= $month['class'] ?>"<?php endif; ?>><a href="<?= $month['href'] ?>" title="<?= $month['title'] ?>"><?= $month['link'] ?><?php if ($this->showQuantity): ?> (<?= $month['quantity'] ?>)<?php endif; ?></a></li>
+            <li><a href="<?= $month['href'] ?>" title="<?= $month['title'] ?>"><?= $month['link'] ?><?php if ($this->showQuantity): ?> (<?= $month['quantity'] ?>)<?php endif; ?></a></li>
           <?php endif; ?>
         <?php endforeach; ?>
       </ul>
@@ -55,9 +55,9 @@
             <ul class="level_2">
               <?php foreach ($months as $month): ?>
                 <?php if ($month['isActive']): ?>
-                  <li class="active<?php if ($month['class']): ?> <?= $month['class'] ?><?php endif; ?>"><strong class="active"><?= $month['link'] ?><?php if ($this->showQuantity): ?> (<?= $month['quantity'] ?>)<?php endif; ?></strong></li>
+                  <li class="active"><strong class="active"><?= $month['link'] ?><?php if ($this->showQuantity): ?> (<?= $month['quantity'] ?>)<?php endif; ?></strong></li>
                 <?php else: ?>
-                  <li<?php if ($month['class']): ?> class="<?= $month['class'] ?>"<?php endif; ?>><a href="<?= $this->url ?>month=<?= $month['date'] ?>" title="<?= $month['title'] ?>"><?= $month['link'] ?><?php if ($this->showQuantity): ?> (<?= $month['quantity'] ?>)<?php endif; ?></a></li>
+                  <li><a href="<?= $this->url ?>month=<?= $month['date'] ?>" title="<?= $month['title'] ?>"><?= $month['link'] ?><?php if ($this->showQuantity): ?> (<?= $month['quantity'] ?>)<?php endif; ?></a></li>
                 <?php endif; ?>
               <?php endforeach; ?>
             </ul>

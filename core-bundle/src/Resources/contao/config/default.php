@@ -80,8 +80,6 @@ $GLOBALS['TL_CONFIG']['uploadTypes']
 $GLOBALS['TL_CONFIG']['maxFileSize']    = 2048000;
 $GLOBALS['TL_CONFIG']['imageWidth']     = 0;
 $GLOBALS['TL_CONFIG']['imageHeight']    = 0;
-$GLOBALS['TL_CONFIG']['gdMaxImgWidth']  = 3000;
-$GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
 
 // Timeout values
 $GLOBALS['TL_CONFIG']['undoPeriod']     = 2592000;
@@ -118,7 +116,6 @@ $GLOBALS['TL_CONFIG']['exampleWebsite']       = '';
 $GLOBALS['TL_CONFIG']['minPasswordLength']    = 8;
 $GLOBALS['TL_CONFIG']['disableCron']          = false;
 $GLOBALS['TL_CONFIG']['coreOnlyMode']         = false;
-$GLOBALS['TL_CONFIG']['useAutoItem']          = true;
 $GLOBALS['TL_CONFIG']['privacyAnonymizeIp']   = true;
 $GLOBALS['TL_CONFIG']['privacyAnonymizeGA']   = true;
 $GLOBALS['TL_CONFIG']['bypassCache']          = false;

@@ -176,37 +176,6 @@ class ContentCompositionListenerTest extends TestCase
         );
     }
 
-    public function testRendersEmptyArticlesOperationIfPageLayoutIsNotFound(): void
-    {
-        $this->security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('contao_user.modules', 'article')
-            ->willReturn(true)
-        ;
-
-        $page = $this->mockPageWithRow(null);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('foo_.svg')
-            ->willReturn('<img src="foo_.svg">')
-        ;
-
-        $this->backendAdapter
-            ->expects($this->never())
-            ->method('addToUrl')
-        ;
-
-        $this->assertSame(
-            '<img src="foo_.svg"> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
-        );
-    }
-
     public function testRendersEmptyArticlesOperationIfPageLayoutDoesNotHaveArticles(): void
     {
         $this->security
@@ -299,6 +268,39 @@ class ContentCompositionListenerTest extends TestCase
         ;
 
         $page = $this->mockPageWithRow(0);
+
+        $this->expectSupportsContentComposition(true, $page);
+
+        $this->imageAdapter
+            ->expects($this->once())
+            ->method('getHtml')
+            ->with('foo.svg', 'label')
+            ->willReturn('<img src="foo.svg" alt="label">')
+        ;
+
+        $this->backendAdapter
+            ->expects($this->once())
+            ->method('addToUrl')
+            ->with('link&amp;pn=17')
+            ->willReturn('linkWithPn')
+        ;
+
+        $this->assertSame(
+            '<a href="linkWithPn" title="title"><img src="foo.svg" alt="label"></a> ',
+            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg')
+        );
+    }
+
+    public function testRendersArticlesOperationIfPageLayoutIsNotFound(): void
+    {
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with('contao_user.modules', 'article')
+            ->willReturn(true)
+        ;
+
+        $page = $this->mockPageWithRow(null);
 
         $this->expectSupportsContentComposition(true, $page);
 
@@ -1023,11 +1025,9 @@ class ContentCompositionListenerTest extends TestCase
     }
 
     /**
-     * @param int|false|null $moduleId
-     *
      * @return PageModel&MockObject
      */
-    private function mockPageWithRow($moduleId = false): PageModel
+    private function mockPageWithRow(int|false|null $moduleId = false): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page
@@ -1071,11 +1071,9 @@ class ContentCompositionListenerTest extends TestCase
     }
 
     /**
-     * @param int|false|null $moduleId
-     *
      * @return PageModel&MockObject
      */
-    private function MockPageFindByPk($moduleId = false): PageModel
+    private function MockPageFindByPk(int|false|null $moduleId = false): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page

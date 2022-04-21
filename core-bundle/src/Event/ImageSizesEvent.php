@@ -17,13 +17,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ImageSizesEvent extends Event
 {
-    private array $imageSizes;
-    private ?BackendUser $user;
-
-    public function __construct(array $imageSizes, BackendUser $user = null)
+    public function __construct(private array $imageSizes, private BackendUser|null $user = null)
     {
-        $this->imageSizes = $imageSizes;
-        $this->user = $user;
     }
 
     /**

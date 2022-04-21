@@ -105,7 +105,7 @@ class ContaoCoreBundleTest extends TestCase
                         $this->assertEquals(new AddEventAliasesPass($eventAliases), $pass);
                     }
 
-                    $this->assertContains(\get_class($pass), $passes);
+                    $this->assertContains($pass::class, $passes);
 
                     return true;
                 }

@@ -30,11 +30,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SitemapController extends AbstractController
 {
-    private PageRegistry $pageRegistry;
-
-    public function __construct(PageRegistry $pageRegistry)
+    public function __construct(private PageRegistry $pageRegistry)
     {
-        $this->pageRegistry = $pageRegistry;
     }
 
     /**

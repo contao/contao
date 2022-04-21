@@ -261,7 +261,7 @@ class ContaoTableProcessorTest extends TestCase
     /**
      * @dataProvider sourceProvider
      */
-    public function testAddsTheSource(?string $scope, ?string $contextSource, string $expectedSource): void
+    public function testAddsTheSource(string|null $scope, string|null $contextSource, string $expectedSource): void
     {
         $requestStack = new RequestStack();
 

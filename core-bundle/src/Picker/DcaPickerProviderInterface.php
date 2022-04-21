@@ -34,5 +34,5 @@ interface DcaPickerProviderInterface extends PickerProviderInterface
     /**
      * Converts the DCA value for the picker selection.
      */
-    public function convertDcaValue(PickerConfig $config, mixed $value): string|int;
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string;
 }

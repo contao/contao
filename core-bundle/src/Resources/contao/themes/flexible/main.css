@@ -782,6 +782,9 @@ h2.sub_headline {
 	margin:0;
 	list-style:none;
 }
+.two-factor .tl_trusted_devices .tl_listing tr:nth-child(odd) td {
+	background-color:#fafafc;
+}
 
 /* Picker search */
 #search {
@@ -1387,6 +1390,9 @@ ul.sgallery li {
 	white-space:nowrap;
 	text-align:right;
 }
+#tl_versions tr:nth-child(even) td {
+	background-color:#fafafc;
+}
 #tl_versions img.undo {
 	padding-right:2px;
 }
@@ -1568,7 +1574,7 @@ ul.sgallery li {
 	padding:9px;
 	background:#f3f3f5;
 }
-.tl_metawizard li.odd {
+.tl_metawizard li:nth-child(even) {
 	background:#f9f9fb;
 }
 .tl_metawizard label {

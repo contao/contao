@@ -428,7 +428,6 @@ class DbafsTest extends TestCase
         // that isn't part of the API. Normalizing paths is the first isolated
         // step when synchronizing, but we do not want to expose this functionality.
         $method = new \ReflectionMethod($dbafs, 'getNormalizedSearchPaths');
-        $method->setAccessible(true);
 
         [$searchPaths, $parentPaths] = $method->invoke($dbafs, ...$paths);
 
@@ -530,7 +529,7 @@ class DbafsTest extends TestCase
      *
      * @param string|array<int, string> $paths
      */
-    public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, $paths, ChangeSet $expected): void
+    public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, array|string $paths, ChangeSet $expected): void
     {
         /*
          * Demo file structure present in the database:
@@ -1212,7 +1211,7 @@ class DbafsTest extends TestCase
     public function testSupportsLastModifiedWhenEnabled(): void
     {
         $dbafs = $this->getDbafs();
-        $dbafs->useLastModified(true);
+        $dbafs->useLastModified();
 
         $this->assertSame(DbafsInterface::FEATURE_LAST_MODIFIED, $dbafs->getSupportedFeatures());
     }

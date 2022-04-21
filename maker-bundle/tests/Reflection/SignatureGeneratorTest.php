@@ -25,7 +25,7 @@ class SignatureGeneratorTest extends TestCase
      *
      * @dataProvider methodProvider
      */
-    public function testSignatureCreation(string $signature, ?string $returnType, array $parameters): void
+    public function testSignatureCreation(string $signature, string|null $returnType, array $parameters): void
     {
         $generator = new SignatureGenerator();
         $method = new MethodDefinition($returnType, $parameters);
