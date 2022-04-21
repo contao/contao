@@ -576,14 +576,13 @@ a.tl_submit {
 	overflow:hidden;
 	cursor:help;
 }
-.tip-wrap {
-	z-index:99;
-}
 .tip {
+	position: relative;
 	max-width:320px;
 	padding:6px 9px;
 	border-radius:2px;
 	background:#333;
+	z-index:99;
 }
 .tip div {
 	line-height:1.3;
@@ -591,7 +590,8 @@ a.tl_submit {
 .tip div,.tip a {
 	color:#fff;
 }
-.tip-top {
+.tip:before {
+	content: "";
 	height:6px;
 	position:absolute;
 	top:-13px;
