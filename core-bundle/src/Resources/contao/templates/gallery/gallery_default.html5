@@ -3,9 +3,7 @@
   <?php foreach ($this->body as $row): ?>
     <?php foreach ($row as $col): ?>
       <?php if ($col->addImage): ?>
-        <li>
-          <?php $this->insert('image', (array) $col); ?>
-        </li>
+        <li><?php $this->insert('image', (array) $col); ?></li>
       <?php endif; ?>
     <?php endforeach; ?>
   <?php endforeach; ?>

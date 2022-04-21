@@ -117,8 +117,6 @@ class ModuleEventMenu extends ModuleCalendar
 		($this->cal_order == 'ascending') ? ksort($arrData) : krsort($arrData);
 
 		$arrItems = array();
-		$count = 0;
-		$limit = \count($arrData);
 
 		// Prepare navigation
 		foreach ($arrData as $intYear=>$intCount)
@@ -188,9 +186,6 @@ class ModuleEventMenu extends ModuleCalendar
 		// Prepare the navigation
 		foreach ($arrData as $intYear=>$arrMonth)
 		{
-			$count = 0;
-			$limit = \count($arrMonth);
-
 			foreach ($arrMonth as $intMonth=>$intCount)
 			{
 				$intDate = $intYear . $intMonth;

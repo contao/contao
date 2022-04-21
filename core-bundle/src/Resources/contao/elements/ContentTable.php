@@ -47,13 +47,9 @@ class ContentTable extends ContentElement
 		// Table header
 		if ($this->thead)
 		{
-			foreach ($rows[0] as $i=>$v)
+			foreach ($rows[0] as $v)
 			{
-				$arrHeader[] = array
-				(
-					'class' => (($i == 0 && $this->tleft) ? 'unsortable' : ''),
-					'content' => ((string) $v !== '' ? $this->nl2br($v) : '&nbsp;')
-				);
+				$arrHeader[] = (string) $v !== '' ? $this->nl2br($v) : '&nbsp;';
 			}
 
 			array_shift($rows);
@@ -65,12 +61,9 @@ class ContentTable extends ContentElement
 		// Table body
 		for ($j=0; $j<$limit; $j++)
 		{
-			foreach ($rows[$j] as $i=>$v)
+			foreach ($rows[$j] as $v)
 			{
-				$arrBody[$j][] = array
-				(
-					'content' => ((string) $v !== '' ? $this->nl2br($v) : '&nbsp;')
-				);
+				$arrBody[$j][] = (string) $v !== '' ? $this->nl2br($v) : '&nbsp;';
 			}
 		}
 
@@ -79,12 +72,9 @@ class ContentTable extends ContentElement
 		// Table footer
 		if ($this->tfoot)
 		{
-			foreach ($rows[(\count($rows)-1)] as $i=>$v)
+			foreach ($rows[(\count($rows)-1)] as $v)
 			{
-				$arrFooter[] = array
-				(
-					'content' => ((string) $v !== '' ? $this->nl2br($v) : '&nbsp;')
-				);
+				$arrFooter[] = (string) $v !== '' ? $this->nl2br($v) : '&nbsp;';
 			}
 		}
 

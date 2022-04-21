@@ -116,12 +116,7 @@ class ModuleFaqList extends Module
 			$responseTagger->addTags($tags);
 		}
 
-		$arrFaq = array_values(array_filter($arrFaq));
-
-		$cat_count = 0;
-		$cat_limit = \count($arrFaq);
-
-		$this->Template->faq = $arrFaq;
+		$this->Template->faq = array_values(array_filter($arrFaq));
 	}
 
 	/**

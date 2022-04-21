@@ -203,7 +203,6 @@ class ContentGallery extends ContentElement
 			$this->Template->pagination = $objPagination->generate("\n  ");
 		}
 
-		$rowcount = 0;
 		$colwidth = floor(100/$this->perRow);
 		$body = array();
 
@@ -235,13 +234,11 @@ class ContentGallery extends ContentElement
 					$cellData = array('addImage' => false);
 				}
 
-				// Add column width and class
+				// Add column width
 				$cellData['colWidth'] = $colwidth . '%';
 
-				$body[$rowcount][$j] = (object) $cellData;
+				$body[$i][$j] = (object) $cellData;
 			}
-
-			++$rowcount;
 		}
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();

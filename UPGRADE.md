@@ -9,8 +9,8 @@ Use CSS selectors instead.
 
 ### Template changes
 
-The items in the `ce_list` template no longer consist of an associative array
-containing the list item's CSS class and content. Instead it will only be the content.
+The items in the `ce_list` and `ce_table` templates no longer consist of an associative array
+containing the item's CSS class and content. Instead, it will only be the content.
 
 ```php
 <!-- OLD -->
@@ -22,6 +22,7 @@ containing the list item's CSS class and content. Instead it will only be the co
 <?php foreach ($this->items as $item): ?>
   <li><?= $item ?></li>
 <?php endforeach; ?>
+```
 
 ## Input type "textStore"
 

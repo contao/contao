@@ -90,7 +90,6 @@ class Comments extends Frontend
 		// Parse the comments
 		if ($objComments !== null && ($total = $objComments->count()) > 0)
 		{
-			$count = 0;
 			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
 
@@ -124,8 +123,6 @@ class Comments extends Frontend
 
 				$arrComments[] = $objPartial->parse();
 				$tags[] = 'contao.db.tl_comments.' . $objComments->id;
-
-				++$count;
 			}
 
 			// Tag the comments (see #2137)

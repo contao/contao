@@ -284,14 +284,11 @@ class ModuleListing extends Module
 			);
 		}
 
-		$j = 0;
 		$arrRows = $objData->fetchAllAssoc();
 
 		// TBODY
 		for ($i=0, $c=\count($arrRows); $i<$c; $i++)
 		{
-			$j = 0;
-
 			foreach ($arrRows[$i] as $k=>$v)
 			{
 				// Skip the primary key
@@ -373,15 +370,12 @@ class ModuleListing extends Module
 
 		$arrFields = array();
 		$arrRow = $objRecord->row();
-		$limit = \count($arrRow);
-		$count = -1;
 
 		foreach ($arrRow as $k=>$v)
 		{
 			// Never show passwords
 			if (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['inputType'] ?? null) == 'password')
 			{
-				--$limit;
 				continue;
 			}
 

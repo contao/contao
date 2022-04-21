@@ -231,7 +231,6 @@ class ModulePassword extends Module
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, 'password'));
-
 		$objSession = System::getContainer()->get('session');
 
 		// Validate the field

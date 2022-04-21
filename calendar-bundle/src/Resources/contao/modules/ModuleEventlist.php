@@ -265,7 +265,6 @@ class ModuleEventlist extends Events
 		$strMonth = '';
 		$strDate = '';
 		$strEvents = '';
-		$dayCount = 0;
 		$eventCount = 0;
 		$headerCount = 0;
 
@@ -310,8 +309,6 @@ class ModuleEventlist extends Events
 				$headerCount = 0;
 				$objTemplate->header = true;
 				$strDate = $event['firstDate'];
-
-				++$dayCount;
 			}
 
 			// Show the teaser text of redirect events (see #6315)
