@@ -145,7 +145,7 @@ class MigrateCommand extends Command
             return 1;
         }
 
-        if (!$dryRun && !$this->executeMigrations($dryRun, $asJson, $specifiedHash)) {
+        if (!$dryRun && null === $specifiedHash && !$this->executeMigrations($dryRun, $asJson, null)) {
             return 1;
         }
 
@@ -156,7 +156,7 @@ class MigrateCommand extends Command
         return 0;
     }
 
-    private function executeMigrations(bool $dryRun, bool $asJson, string $specifiedHash = null): bool
+    private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
     {
         while (true) {
             $first = true;
@@ -261,8 +261,13 @@ class MigrateCommand extends Command
                 $this->io->success('Executed '.$count.' migrations.');
             }
 
-            // Do not run the update recursive if a hash was specified
             if (null !== $specifiedHash) {
+                // Do not run the schema update after migrations got executed
+                // if a hash was specified, because that hash could never match
+                // both, migrations and schema updates
+                $dryRun = true;
+
+                // Do not run the update recursive if a hash was specified
                 break;
             }
         }
