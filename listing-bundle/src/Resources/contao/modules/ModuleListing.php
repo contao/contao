@@ -280,19 +280,15 @@ class ModuleListing extends Module
 				'link' => $strField,
 				'href' => (StringUtil::ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
 				'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
-				'class' => $class . (($i == 0) ? ' col_first' : '') . ((($i + 1) == \count($arrFields)) ? ' col_last' : '')
+				'class' => $class
 			);
 		}
 
-		$j = 0;
 		$arrRows = $objData->fetchAllAssoc();
 
 		// TBODY
 		for ($i=0, $c=\count($arrRows); $i<$c; $i++)
 		{
-			$j = 0;
-			$class = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i + 1) == \count($arrRows)) ? ' row_last' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
-
 			foreach ($arrRows[$i] as $k=>$v)
 			{
 				// Skip the primary key
@@ -314,11 +310,10 @@ class ModuleListing extends Module
 
 				$value = $this->formatValue($k, $v);
 
-				$arrTd[$class][$k] = array
+				$arrTd[$i][$k] = array
 				(
 					'raw' => $v,
 					'content' => $value ?: '&nbsp;',
-					'class' => 'col_' . $j . (($j++ == 0) ? ' col_first' : '') . ($this->list_info ? '' : (($j >= (\count($arrRows[$i]) - 1)) ? ' col_last' : '')),
 					'id' => $arrRows[$i][$this->strPk],
 					'field' => $k,
 					'url' => $strUrl . $strVarConnector . 'show=' . $arrRows[$i][$this->strPk],
@@ -346,7 +341,6 @@ class ModuleListing extends Module
 		$this->Template->for = $strFor;
 		$this->Template->order_by = $order_by;
 		$this->Template->sort = $sort;
-		$this->Template->col_last = 'col_' . $j;
 		$this->Template->no_results = sprintf($GLOBALS['TL_LANG']['MSC']['sNoResult'], $strFor);
 	}
 
@@ -376,26 +370,20 @@ class ModuleListing extends Module
 
 		$arrFields = array();
 		$arrRow = $objRecord->row();
-		$limit = \count($arrRow);
-		$count = -1;
 
 		foreach ($arrRow as $k=>$v)
 		{
 			// Never show passwords
 			if (($GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['inputType'] ?? null) == 'password')
 			{
-				--$limit;
 				continue;
 			}
-
-			$class = 'row_' . ++$count . (($count == 0) ? ' row_first' : '') . (($count >= ($limit - 1)) ? ' row_last' : '') . ((($count % 2) == 0) ? ' even' : ' odd');
 
 			$arrFields[$k] = array
 			(
 				'raw' => $v,
 				'label' => $GLOBALS['TL_DCA'][$this->list_table]['fields'][$k]['label'][0] ?? $k,
-				'content' => $this->formatValue($k, $v, true),
-				'class' => $class
+				'content' => $this->formatValue($k, $v, true)
 			);
 		}
 

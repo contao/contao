@@ -90,7 +90,6 @@ class Comments extends Frontend
 		// Parse the comments
 		if ($objComments !== null && ($total = $objComments->count()) > 0)
 		{
-			$count = 0;
 			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
 
@@ -104,7 +103,6 @@ class Comments extends Frontend
 
 				$objPartial->datim = Date::parse($objPage->datimFormat, $objComments->date);
 				$objPartial->date = Date::parse($objPage->dateFormat, $objComments->date);
-				$objPartial->class = (($count < 1) ? ' first' : '') . (($count >= ($total - 1)) ? ' last' : '') . (($count % 2 == 0) ? ' even' : ' odd');
 				$objPartial->by = $GLOBALS['TL_LANG']['MSC']['com_by'];
 				$objPartial->id = 'c' . $objComments->id;
 				$objPartial->timestamp = $objComments->date;
@@ -125,8 +123,6 @@ class Comments extends Frontend
 
 				$arrComments[] = $objPartial->parse();
 				$tags[] = 'contao.db.tl_comments.' . $objComments->id;
-
-				++$count;
 			}
 
 			// Tag the comments (see #2137)

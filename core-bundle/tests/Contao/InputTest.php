@@ -17,7 +17,6 @@ use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\InputEncodingMode;
-use Contao\StringUtil;
 use Contao\System;
 use Contao\Widget;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -746,10 +745,6 @@ class InputTest extends TestCase
         Input::resetCache();
 
         $this->assertSame($expected, $simpleTokenParser->parse($html, $tokens));
-
-        $this->expectDeprecation('%sparseSimpleTokens()%shas been deprecated%s');
-
-        $this->assertSame($expected, StringUtil::parseSimpleTokens($html, $tokens));
     }
 
     public function simpleTokensWithHtmlProvider(): \Generator

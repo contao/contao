@@ -174,10 +174,10 @@ class ContentElementControllerTest extends TestCase
         $controller = new TestController();
         $controller->setContainer($this->mockContainerWithFrameworkTemplate('ce_test'));
 
-        $response = $controller(new Request(), $this->mockContentModel(), 'main', ['first', 'last']);
+        $response = $controller(new Request(), $this->mockContentModel(), 'main', ['foo', 'bar']);
         $template = json_decode($response->getContent(), true);
 
-        $this->assertSame('ce_test first last', $template['class']);
+        $this->assertSame('ce_test foo bar', $template['class']);
     }
 
     public function testAddsTheCacheTags(): void
