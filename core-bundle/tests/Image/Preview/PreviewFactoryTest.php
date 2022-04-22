@@ -143,7 +143,7 @@ class PreviewFactoryTest extends TestCase
      */
     public function testGetPreviewSizeFromImageSize(PictureConfiguration|ResizeConfiguration|array|int|string|null $size, int $expectedSize, string $defaultDensities = ''): void
     {
-        $imageSizeModel = (new \ReflectionClass(ImageSizeModel::class))->newInstanceWithoutConstructor();
+        $imageSizeModel = $this->mockClassWithProperties(ImageSizeModel::class);
         $imageSizeModel->setRow([
             'id' => 456,
             'width' => 20,
@@ -151,7 +151,7 @@ class PreviewFactoryTest extends TestCase
             'densities' => '1x, 2x, 120w',
         ]);
 
-        $imageSizeItemModel = (new \ReflectionClass(ImageSizeItemModel::class))->newInstanceWithoutConstructor();
+        $imageSizeItemModel = $this->mockClassWithProperties(ImageSizeItemModel::class);
         $imageSizeItemModel->setRow([
             'pid' => 456,
             'width' => 789,
