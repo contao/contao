@@ -55,21 +55,6 @@ class FrontendTemplate extends Template
 	}
 
 	/**
-	 * Send the response to the client
-	 *
-	 * @param bool $blnCheckRequest If true, check for unused $_GET parameters
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use FrontendTemplate::getResponse() instead.
-	 */
-	public function output($blnCheckRequest=false)
-	{
-		$this->blnCheckRequest = $blnCheckRequest;
-
-		parent::output();
-	}
-
-	/**
 	 * Return a response object
 	 *
 	 * @param bool $blnCheckRequest      If true, check for unused $_GET parameters
