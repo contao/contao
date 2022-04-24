@@ -11,11 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
 use Contao\Database\Updater;
-use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -329,26 +327,6 @@ abstract class System
 	}
 
 	/**
-	 * Add a log entry to the database
-	 *
-	 * @param string $strText     The log message
-	 * @param string $strFunction The function name
-	 * @param string $strCategory The category name
-	 *
-	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
-	 *             Use the logger service with your context or any of the predefined monolog.logger.contao services instead.
-	 */
-	public static function log($strText, $strFunction, $strCategory)
-	{
-		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\System::log()" has been deprecated and will no longer work in Contao 5.0. Use the "logger" service or any of the predefined "monolog.logger.contao" services instead.');
-
-		$level = 'ERROR' === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
-		$logger = static::getContainer()->get('monolog.logger.contao');
-
-		$logger->log($level, $strText, array('contao' => new ContaoContext($strFunction, $strCategory)));
-	}
-
-	/**
 	 * Return the referer URL and optionally encode ampersands
 	 *
 	 * @param boolean $blnEncodeAmpersands If true, ampersands will be encoded
@@ -612,70 +590,6 @@ abstract class System
 		}
 
 		return static::$arrLanguages[$strLanguage];
-	}
-
-	/**
-	 * Return the countries as array
-	 *
-	 * @return array An array of country names
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5;
-	 *             use the Contao\CoreBundle\Intl\Countries service instead
-	 */
-	public static function getCountries()
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the "contao.intl.countries" service instead.', __METHOD__);
-
-		$arrCountries = self::getContainer()->get('contao.intl.countries')->getCountries();
-
-		return array_combine(array_map('strtolower', array_keys($arrCountries)), $arrCountries);
-	}
-
-	/**
-	 * Return the available languages as array
-	 *
-	 * @param boolean $blnInstalledOnly If true, return only installed languages
-	 *
-	 * @return array An array of languages
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5;
-	 *             use the Contao\CoreBundle\Intl\Locales service instead
-	 */
-	public static function getLanguages($blnInstalledOnly=false)
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the "contao.intl.locales" service instead.', __METHOD__);
-
-		if ($blnInstalledOnly)
-		{
-			return self::getContainer()->get('contao.intl.locales')->getEnabledLocales(null, true);
-		}
-
-		return self::getContainer()->get('contao.intl.locales')->getLocales(null, true);
-	}
-
-	/**
-	 * Return the timezones as array
-	 *
-	 * @return array An array of timezones
-	 */
-	public static function getTimeZones()
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the DateTimeZone::listIdentifiers() instead.', __METHOD__);
-
-		$arrReturn = array();
-		$timezones = array();
-
-		require __DIR__ . '/../../config/timezones.php';
-
-		foreach ($timezones as $strGroup=>$arrTimezones)
-		{
-			foreach ($arrTimezones as $strTimezone)
-			{
-				$arrReturn[$strGroup][] = $strTimezone;
-			}
-		}
-
-		return $arrReturn;
 	}
 
 	/**
