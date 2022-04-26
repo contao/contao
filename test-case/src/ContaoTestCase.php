@@ -122,10 +122,12 @@ abstract class ContaoTestCase extends TestCase
             ->willReturnCallback(static fn (string $key): ?Adapter => $adapters[$key] ?? null)
         ;
 
-        $framework
-            ->method('createInstance')
-            ->willReturnCallback(static fn (string $key): mixed => $instances[$key] ?? null)
-        ;
+        if (0 !== \count($instances)) {
+            $framework
+                ->method('createInstance')
+                ->willReturnCallback(static fn (string $key): mixed => $instances[$key] ?? null)
+            ;
+        }
 
         return $framework;
     }
