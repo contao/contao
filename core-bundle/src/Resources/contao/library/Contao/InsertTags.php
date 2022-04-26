@@ -64,24 +64,6 @@ class InsertTags extends Controller
 	}
 
 	/**
-	 * Recursively replace insert tags with their values
-	 *
-	 * @param string  $strBuffer The text with the tags to be replaced
-	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
-	 *
-	 * @return string The text with the replaced tags
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 *             Use the InsertTagParser service instead.
-	 */
-	public function replace($strBuffer, $blnCache=true)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
-
-		return (string) $this->replaceInternal((string) $strBuffer, (bool) $blnCache);
-	}
-
-	/**
 	 * @internal
 	 */
 	public function replaceInternal(string $strBuffer, bool $blnCache): ChunkedText
@@ -117,9 +99,7 @@ class InsertTags extends Controller
 		// Preserve insert tags
 		if (!empty($GLOBALS['TL_CONFIG']['disableInsertTags']) || !$container->getParameter('contao.insert_tags.allowed_tags'))
 		{
-			$return = StringUtil::restoreBasicEntities($strBuffer);
-
-			return new ChunkedText(array($return));
+			return new ChunkedText(array($strBuffer));
 		}
 
 		$strBuffer = $this->encodeHtmlAttributes($strBuffer);
@@ -141,9 +121,7 @@ class InsertTags extends Controller
 
 		if (\count($tags) < 2)
 		{
-			$return = StringUtil::restoreBasicEntities($strBuffer);
-
-			return new ChunkedText(array($return));
+			return new ChunkedText(array($strBuffer));
 		}
 
 		$arrBuffer = array();
@@ -197,7 +175,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'ua' || $elements[0] == 'form_session_data' || ($elements[1] ?? null) == 'back' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -456,30 +434,12 @@ class InsertTags extends Controller
 				case 'link_open':
 				case 'link_url':
 				case 'link_title':
-				case 'link_target':
 				case 'link_name':
 					$strTarget = null;
 					$strClass = '';
 
-					// Back link
-					if ($elements[1] == 'back')
-					{
-						trigger_deprecation('contao/core-bundle', '4.9', 'Using the link::back insert tag has been deprecated and will no longer work in Contao 5.0.');
-
-						$strUrl = 'javascript:history.go(-1)';
-						$strTitle = $GLOBALS['TL_LANG']['MSC']['goBack'] ?? null;
-
-						// No language files if the page is cached
-						if (!$strTitle)
-						{
-							$strTitle = 'Go back';
-						}
-
-						$strName = $strTitle;
-					}
-
 					// External links
-					elseif (strncmp($elements[1], 'http://', 7) === 0 || strncmp($elements[1], 'https://', 8) === 0)
+					if (strncmp($elements[1], 'http://', 7) === 0 || strncmp($elements[1], 'https://', 8) === 0)
 					{
 						$strUrl = StringUtil::specialcharsUrl($elements[1]);
 						$strTitle = $elements[1];
@@ -542,13 +502,13 @@ class InsertTags extends Controller
 
 									if ($objNext instanceof PageModel)
 									{
-										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
 										break;
 									}
 									// no break
 
 								default:
-									$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									$strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
 									break;
 							}
 						}
@@ -581,11 +541,6 @@ class InsertTags extends Controller
 
 						case 'link_title':
 							$arrCache[$strTag] = StringUtil::specialcharsAttribute($strTitle);
-							break;
-
-						case 'link_target':
-							trigger_deprecation('contao/core-bundle', '4.4', 'Using the link_target insert tag has been deprecated and will no longer work in Contao 5.0.');
-							$arrCache[$strTag] = $strTarget ? ' target=_blank rel=noreferrer&#32;noopener' : $strTarget;
 							break;
 
 						case 'link_name':
@@ -639,7 +594,7 @@ class InsertTags extends Controller
 
 					/** @var PageModel $objPid */
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-					$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+					$strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
 					$strTarget = \in_array('blank', \array_slice($elements, 2), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
 
 					// Replace the tag
@@ -702,13 +657,6 @@ class InsertTags extends Controller
 				// Version
 				case 'version':
 					$arrCache[$strTag] = VERSION . '.' . BUILD;
-					break;
-
-				// Request token
-				case 'request_token':
-					trigger_deprecation('contao/core-bundle', '4.13', 'Using the request_token insert tag has been deprecated and will no longer work in Contao 5.0.');
-
-					$arrCache[$strTag] = REQUEST_TOKEN;
 					break;
 
 				// Form session data
@@ -836,23 +784,6 @@ class InsertTags extends Controller
 					}
 					break;
 
-				// User agent
-				case 'ua':
-					trigger_deprecation('contao/core-bundle', '4.13', 'Using the "ua" insert tag has been deprecated and will no longer work in Contao 5.0.');
-
-					$flags[] = 'attr';
-					$ua = Environment::get('agent');
-
-					if (!empty($elements[1]))
-					{
-						$arrCache[$strTag] = $ua->{$elements[1]};
-					}
-					else
-					{
-						$arrCache[$strTag] = '';
-					}
-					break;
-
 				// Abbreviations
 				case 'abbr':
 				case 'acronym':
@@ -912,7 +843,6 @@ class InsertTags extends Controller
 					{
 						$arrChunks = explode('?', urldecode($elements[1]), 2);
 						$strSource = StringUtil::decodeEntities($arrChunks[1]);
-						$strSource = str_replace('[&]', '&', $strSource);
 						$arrParams = explode('&', $strSource);
 
 						foreach ($arrParams as $strParam)
@@ -987,17 +917,6 @@ class InsertTags extends Controller
 					elseif (Validator::isInsecurePath($strFile))
 					{
 						throw new \RuntimeException('Invalid path ' . $strFile);
-					}
-
-					$maxImageWidth = Config::get('maxImageWidth');
-
-					// Check the maximum image width
-					if ($maxImageWidth > 0 && $width > $maxImageWidth)
-					{
-						trigger_deprecation('contao/core-bundle', '4.0', 'Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.');
-
-						$width = $maxImageWidth;
-						$height = null;
 					}
 
 					// Use the alternative text from the image metadata if none is given
@@ -1083,7 +1002,6 @@ class InsertTags extends Controller
 					{
 						$arrChunks = explode('?', urldecode($elements[1]));
 						$strSource = StringUtil::decodeEntities($arrChunks[1]);
-						$strSource = str_replace('[&]', '&', $strSource);
 						$arrParams = explode('&', $strSource);
 
 						foreach ($arrParams as $strParam)
@@ -1178,10 +1096,6 @@ class InsertTags extends Controller
 							$arrCache[$strTag] = StringUtil::specialcharsUrl($arrCache[$strTag]);
 							break;
 
-						case 'nl2br_pre':
-							trigger_deprecation('contao/core-bundle', '4.0', 'Using nl2br_pre() has been deprecated and will no longer work in Contao 5.0.');
-							// no break
-
 						case 'nl2br':
 							$arrCache[$strTag] = preg_replace('/\r?\n/', '<br>', $arrCache[$strTag]);
 							break;
@@ -1226,11 +1140,6 @@ class InsertTags extends Controller
 							$arrCache[$strTag] = implode(', ', $result);
 							break;
 
-						case 'absolute':
-							trigger_deprecation('contao/core-bundle', '4.12', 'The insert tag flag "|absolute" has been deprecated and will no longer work in Contao 5.0. use "::absolute" instead.');
-							// ignore
-							break;
-
 						case 'refresh':
 						case 'uncached':
 							// ignore
@@ -1268,8 +1177,6 @@ class InsertTags extends Controller
 			$arrBuffer[$_rit+1] = (string) ($arrCache[$strTag] ?? '');
 		}
 
-		$arrBuffer = StringUtil::restoreBasicEntities($arrBuffer);
-
 		return new ChunkedText($arrBuffer);
 	}
 
@@ -1278,8 +1185,8 @@ class InsertTags extends Controller
 	 */
 	private function parseUrlWithQueryString(string $url): array
 	{
-		// Restore [&] and &amp;
-		$url = str_replace(array('&#61;', '[&]', '&amp;'), array('=', '&', '&'), $url);
+		// Restore = and &
+		$url = str_replace(array('&#61;', '&amp;'), array('=', '&'), $url);
 
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';
@@ -1463,12 +1370,6 @@ class InsertTags extends Controller
 			if (\in_array(strtolower($matches[1][0]), array('src', 'srcset', 'href', 'action', 'formaction', 'codebase', 'cite', 'background', 'longdesc', 'profile', 'usemap', 'classid', 'data', 'icon', 'manifest', 'poster', 'archive'), true))
 			{
 				$matches[0][0] = preg_replace('/(?:\|(?:url)?attr)?}}/', '|urlattr}}', $matches[0][0]);
-
-				// Backwards compatibility
-				if (trim($matches[0][0]) === 'href="{{link_url::back|urlattr}}"')
-				{
-					$matches[0][0] = str_replace('{{link_url::back|urlattr}}', '{{link_url::back}}', $matches[0][0]);
-				}
 			}
 
 			$attributesResult .= $matches[0][0];

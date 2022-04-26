@@ -74,7 +74,7 @@ class HtmlDecoderTest extends TestCase
         yield ['foo{{email::test@example.com}}bar', 'foobar', true];
         yield ['{{date::...}}', '...'];
         yield ['{{date::...}}', '', true];
-        yield ["&lt;&#62;&\u{A0}[lt][gt][&][nbsp]", "<>&\u{A0}<>&\u{A0}", true];
+        yield ["&lt;&#62;&\u{A0}&lt;&gt;&amp;&nbsp;", "<>&\u{A0}<>&\u{A0}", true];
         yield ['I &lt;3 Contao', 'I <3 Contao'];
         yield ['Remove unexpected <span>HTML tags', 'Remove unexpected HTML tags'];
         yield ['Keep non-HTML &lt;tags&#62; intact', 'Keep non-HTML <tags> intact'];
