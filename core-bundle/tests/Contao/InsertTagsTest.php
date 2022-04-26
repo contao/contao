@@ -236,7 +236,7 @@ class InsertTagsTest extends TestCase
         ];
 
         yield 'wrapped basic entities' => [
-            '{{figure::123?size[]=800[&]size[]=600[&]metadata[alt]=alt[&]enableLightbox=1}}',
+            '{{figure::123?size[]=800&amp;size[]=600&amp;metadata[alt]=alt&amp;enableLightbox=1}}',
             [
                 '123',
                 [800, 600],

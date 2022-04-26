@@ -99,9 +99,7 @@ class InsertTags extends Controller
 		// Preserve insert tags
 		if (!empty($GLOBALS['TL_CONFIG']['disableInsertTags']) || !$container->getParameter('contao.insert_tags.allowed_tags'))
 		{
-			$return = StringUtil::restoreBasicEntities($strBuffer);
-
-			return new ChunkedText(array($return));
+			return new ChunkedText(array($strBuffer));
 		}
 
 		$strBuffer = $this->encodeHtmlAttributes($strBuffer);
@@ -123,9 +121,7 @@ class InsertTags extends Controller
 
 		if (\count($tags) < 2)
 		{
-			$return = StringUtil::restoreBasicEntities($strBuffer);
-
-			return new ChunkedText(array($return));
+			return new ChunkedText(array($strBuffer));
 		}
 
 		$arrBuffer = array();
@@ -847,7 +843,6 @@ class InsertTags extends Controller
 					{
 						$arrChunks = explode('?', urldecode($elements[1]), 2);
 						$strSource = StringUtil::decodeEntities($arrChunks[1]);
-						$strSource = str_replace('[&]', '&', $strSource);
 						$arrParams = explode('&', $strSource);
 
 						foreach ($arrParams as $strParam)
@@ -1007,7 +1002,6 @@ class InsertTags extends Controller
 					{
 						$arrChunks = explode('?', urldecode($elements[1]));
 						$strSource = StringUtil::decodeEntities($arrChunks[1]);
-						$strSource = str_replace('[&]', '&', $strSource);
 						$arrParams = explode('&', $strSource);
 
 						foreach ($arrParams as $strParam)
@@ -1183,8 +1177,6 @@ class InsertTags extends Controller
 			$arrBuffer[$_rit+1] = (string) ($arrCache[$strTag] ?? '');
 		}
 
-		$arrBuffer = StringUtil::restoreBasicEntities($arrBuffer);
-
 		return new ChunkedText($arrBuffer);
 	}
 
@@ -1193,8 +1185,8 @@ class InsertTags extends Controller
 	 */
 	private function parseUrlWithQueryString(string $url): array
 	{
-		// Restore [&] and &amp;
-		$url = str_replace(array('&#61;', '[&]', '&amp;'), array('=', '&', '&'), $url);
+		// Restore = and &
+		$url = str_replace(array('&#61;', '&amp;'), array('=', '&'), $url);
 
 		$base = parse_url($url, PHP_URL_PATH) ?: null;
 		$query = parse_url($url, PHP_URL_QUERY) ?: '';

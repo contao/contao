@@ -98,6 +98,7 @@ use Doctrine\DBAL\Types\Types;
  * @property integer       $storeValues
  * @property boolean       $includeBlankOption
  * @property string        $blankOptionLabel
+ * @property boolean       $basicEntities
  */
 abstract class Widget extends Controller
 {
@@ -367,6 +368,11 @@ abstract class Widget extends Controller
 				if ($this->varValue === '')
 				{
 					return $this->getEmptyStringOrNull();
+				}
+
+				if ($this->basicEntities)
+				{
+					return StringUtil::restoreBasicEntities($this->varValue);
 				}
 
 				return $this->varValue;
@@ -1255,6 +1261,11 @@ abstract class Widget extends Controller
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
 
+		if ($arrData['eval']['basicEntities'] ?? null)
+		{
+			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value']);
+		}
+
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'] ?? null)
 		{
@@ -1521,6 +1532,15 @@ abstract class Widget extends Controller
 		}
 
 		return static::getEmptyValueByFieldType($sql) === null ? null : '';
+	}
+
+	protected static function specialcharsValue($strString): string
+	{
+		return str_replace(
+			array('&amp;#35;', '&amp;#60;', '&amp;#62;', '&amp;#40;', '&amp;#41;', '&amp;#92;', '&amp;#61;', '&amp;#34;', '&amp;#39;'),
+			array('&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;'),
+			StringUtil::specialchars((string) $strString, false, true),
+		);
 	}
 
 	/**

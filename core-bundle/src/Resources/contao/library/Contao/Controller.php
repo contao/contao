@@ -1974,23 +1974,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Restore basic entities
-	 *
-	 * @param string $strBuffer The string with the tags to be replaced
-	 *
-	 * @return string The string with the original entities
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use StringUtil::restoreBasicEntities() instead.
-	 */
-	public static function restoreBasicEntities($strBuffer)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::restoreBasicEntities()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::restoreBasicEntities()" instead.');
-
-		return StringUtil::restoreBasicEntities($strBuffer);
-	}
-
-	/**
 	 * Resize an image and crop it if necessary
 	 *
 	 * @param string  $image  The image path

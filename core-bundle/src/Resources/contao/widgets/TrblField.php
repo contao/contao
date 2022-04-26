@@ -118,7 +118,7 @@ class TrblField extends Widget
 		{
 			$arrUnits[] = sprintf(
 				'<option value="%s"%s>%s</option>',
-				StringUtil::specialchars($arrUnit['value']),
+				self::specialcharsValue($arrUnit['value']),
 				$this->isSelected($arrUnit),
 				$arrUnit['label']
 			);
@@ -141,7 +141,7 @@ class TrblField extends Widget
 				$this->strId . '_' . $strKey,
 				$strKey,
 				($this->strClass ? ' ' . $this->strClass : ''),
-				StringUtil::specialchars(@$this->varValue[$strKey]), // see #4979
+				self::specialcharsValue(@$this->varValue[$strKey]), // see #4979
 				$this->getAttributes()
 			);
 		}
