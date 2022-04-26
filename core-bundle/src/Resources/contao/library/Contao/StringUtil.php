@@ -220,6 +220,18 @@ class StringUtil
 	}
 
 	/**
+	 * Convert basic entities
+	 *
+	 * @param string|array $strBuffer The string with the entities to be replaced
+	 *
+	 * @return string|array The string with the tags in square brackets
+	 */
+	public static function convertBasicEntities($strBuffer)
+	{
+		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]'), $strBuffer);
+	}
+
+	/**
 	 * Restore basic entities
 	 *
 	 * @param string|array $strBuffer The string with the tags to be replaced
@@ -241,7 +253,6 @@ class StringUtil
 	public static function generateAlias($strString)
 	{
 		$strString = static::decodeEntities($strString);
-		$strString = static::restoreBasicEntities($strString);
 		$strString = static::standardize(strip_tags($strString));
 
 		// Remove the prefix if the alias is not numeric (see #707)
@@ -263,7 +274,6 @@ class StringUtil
 	public static function prepareSlug($strSlug)
 	{
 		$strSlug = static::stripInsertTags($strSlug);
-		$strSlug = static::restoreBasicEntities($strSlug);
 		$strSlug = static::decodeEntities($strSlug);
 
 		return $strSlug;
@@ -1048,7 +1058,6 @@ class StringUtil
 	 */
 	public static function revertInputEncoding(string $strValue): string
 	{
-		$strValue = static::restoreBasicEntities($strValue);
 		$strValue = static::decodeEntities($strValue);
 
 		// Ensure valid UTF-8

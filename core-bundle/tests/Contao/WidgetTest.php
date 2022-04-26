@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\System;
+use Contao\TextField;
 use Contao\Widget;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -180,6 +181,12 @@ class WidgetTest extends TestCase
         foreach ($expected as $key => $value) {
             $this->assertSame($value, $attrs[$key]);
         }
+
+        if (isset($parameters[2])) {
+            $widget = (new \ReflectionClass(TextField::class))->newInstanceWithoutConstructor();
+            $widget->addAttributes($attrs);
+            $this->assertSame($parameters[2], $widget->value);
+        }
     }
 
     public function getAttributesFromDca(): \Generator
@@ -231,6 +238,25 @@ class WidgetTest extends TestCase
             [['eval' => ['extensions' => '%contao.image.valid_extensions%']], 'name'],
             [
                 'extensions' => ['jpg', 'gif', 'png'],
+            ],
+        ];
+
+        yield [
+            [[], 'name', '&amp;,&lt;,&gt;,&nbsp;,&shy;'],
+            [
+                'value' => '&amp;,&lt;,&gt;,&nbsp;,&shy;',
+            ],
+        ];
+
+        yield [
+            [
+                ['eval' => ['basicEntities' => true]],
+                'name',
+                '&amp;,&lt;,&gt;,&nbsp;,&shy;',
+            ],
+            [
+                'basicEntities' => true,
+                'value' => '[&],[lt],[gt],[nbsp],[-]',
             ],
         ];
     }

@@ -980,9 +980,7 @@ services:
     contao.twig.legacy_template_functions_runtime:
         class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
         arguments:
-            - '@request_stack'
             - '@contao.framework'
-            - '@contao.routing.scope_matcher'
 
     contao.twig.loader.template_locator:
         class: Contao\CoreBundle\Twig\Loader\TemplateLocator

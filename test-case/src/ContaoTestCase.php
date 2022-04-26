@@ -171,9 +171,16 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return T&MockObject
      */
-    protected function mockClassWithProperties(string $class, array $properties = []): MockObject
+    protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject
     {
-        $mock = $this->createMock($class);
+        $classMethods = get_class_methods($class);
+
+        if (!$except) {
+            $mock = $this->createMock($class);
+        } else {
+            $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
+        }
+
         $mock
             ->method('__get')
             ->willReturnCallback(
@@ -183,7 +190,7 @@ abstract class ContaoTestCase extends TestCase
             )
         ;
 
-        if (\in_array('__set', get_class_methods($class), true)) {
+        if (\in_array('__set', $classMethods, true)) {
             $mock
                 ->method('__set')
                 ->willReturnCallback(
@@ -194,12 +201,34 @@ abstract class ContaoTestCase extends TestCase
             ;
         }
 
-        if (\in_array('__isset', get_class_methods($class), true)) {
+        if (\in_array('__isset', $classMethods, true)) {
             $mock
                 ->method('__isset')
                 ->willReturnCallback(
                     static function (string $key) use (&$properties) {
                         return isset($properties[$key]);
+                    }
+                )
+            ;
+        }
+
+        if (\in_array('row', $classMethods, true)) {
+            $mock
+                ->method('row')
+                ->willReturnCallback(
+                    static function () use (&$properties) {
+                        return $properties;
+                    }
+                )
+            ;
+        }
+
+        if (\in_array('setRow', $classMethods, true)) {
+            $mock
+                ->method('setRow')
+                ->willReturnCallback(
+                    static function (array $data) use (&$properties): void {
+                        $properties = $data;
                     }
                 )
             ;

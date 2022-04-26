@@ -75,7 +75,7 @@ class ListWizard extends Widget
 		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
 			$return .= '
-    <li><input type="text" name="' . $this->strId . '[]" class="tl_text" value="' . StringUtil::specialchars($this->varValue[$i]) . '"' . $this->getAttributes() . '> ';
+    <li><input type="text" name="' . $this->strId . '[]" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]) . '"' . $this->getAttributes() . '> ';
 
 			// Add buttons
 			foreach ($arrButtons as $button)
