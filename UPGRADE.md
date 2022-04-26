@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### Model
+
+The protected `$arrClassNames` property was removed from the `Contao\Model` base class.
+
 ### Request
 
 The `Contao\Request` library has been removed. Use another library such as `symfony/http-client` instead.
