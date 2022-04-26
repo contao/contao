@@ -542,9 +542,7 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FilesModel $filesModel */
-        $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
-
+        $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
@@ -674,9 +672,7 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FilesModel $filesModel */
-        $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
-
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
@@ -755,10 +751,8 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        $getFilesModel = static function (array $metaData, ?string $uuid) use ($relativeFilePath) {
-            /** @var FilesModel $filesModel */
-            $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
-
+        $getFilesModel = function (array $metaData, ?string $uuid) use ($relativeFilePath) {
+            $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
             $filesModel->setRow([
                 'type' => 'file',
                 'path' => $relativeFilePath,

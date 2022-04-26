@@ -43,7 +43,7 @@ class ImageFactory implements ImageFactoryInterface
         private bool $bypassCache,
         private array $imagineOptions,
         private array $validExtensions,
-        private string $uploadDir
+        private string $uploadDir,
     ) {
     }
 

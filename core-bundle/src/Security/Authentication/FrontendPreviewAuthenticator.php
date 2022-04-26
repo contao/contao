@@ -31,7 +31,7 @@ class FrontendPreviewAuthenticator
         private Security $security,
         private SessionInterface $session,
         private UserProviderInterface $userProvider,
-        private LoggerInterface|null $logger = null
+        private LoggerInterface|null $logger = null,
     ) {
     }
 

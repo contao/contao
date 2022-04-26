@@ -145,7 +145,6 @@ class ModuleRssReader extends Module
 		}
 
 		$items = array();
-		$last = min($limit, \count($arrItems)) - 1;
 
 		/** @var \SimplePie_Item[] $arrItems */
 		for ($i=$offset, $c=\count($arrItems); $i<$limit && $i<$c; $i++)
@@ -156,7 +155,6 @@ class ModuleRssReader extends Module
 				'title' => $arrItems[$i]->get_title(),
 				'permalink' => $arrItems[$i]->get_permalink(),
 				'description' => str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $arrItems[$i]->get_description()),
-				'class' => (($i == 0) ? ' first' : '') . (($i == $last) ? ' last' : '') . ((($i % 2) == 0) ? ' even' : ' odd'),
 				'pubdate' => Date::parse($objPage->datimFormat, $arrItems[$i]->get_date('U')),
 				'category' => $arrItems[$i]->get_category(),
 				'object' => $arrItems[$i]

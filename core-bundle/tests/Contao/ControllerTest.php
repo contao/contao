@@ -248,7 +248,7 @@ class ControllerTest extends TestCase
             ],
         ];
 
-        $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->path = '/path/that/should/get/corrected';
 
         yield 'resource from files model' => [

@@ -41,7 +41,7 @@ class Locales
         array $defaultEnabledLocales,
         array $configLocales,
         array $configEnabledLocales,
-        private string $defaultLocale
+        private string $defaultLocale,
     ) {
         $this->locales = $this->filterLocales($defaultLocales, $configLocales);
         $this->enabledLocales = $this->filterLocales($defaultEnabledLocales, $configEnabledLocales, $defaultLocale);

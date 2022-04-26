@@ -41,7 +41,7 @@ class MakeDcaCallback extends AbstractMaker
         private ResourceFinder $resourceFinder,
         private SignatureGenerator $signatureGenerator,
         private ImportExtractor $importExtractor,
-        private PhpCompatUtil $phpCompatUtil
+        private PhpCompatUtil $phpCompatUtil,
     ) {
     }
 

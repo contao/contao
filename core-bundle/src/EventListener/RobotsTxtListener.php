@@ -54,6 +54,7 @@ class RobotsTxtListener
         foreach ($records as $record) {
             $directiveList = $record->getDirectiveList();
             $directiveList->add(new Directive('Disallow', $this->routePrefix.'/'));
+            $directiveList->add(new Directive('Disallow', '/_contao/'));
         }
 
         $pageModel = $this->contaoFramework->getAdapter(PageModel::class);

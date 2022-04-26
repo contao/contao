@@ -42,7 +42,7 @@ class PreviewLinkListener
         private TranslatorInterface $translator,
         private UrlGeneratorInterface $urlGenerator,
         private UriSigner $uriSigner,
-        private string $previewScript = ''
+        private string $previewScript = '',
     ) {
     }
 

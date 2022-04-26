@@ -40,7 +40,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         private string|null $tag,
         private string|null $globalsKey = null,
         private string|null $proxyClass = null,
-        private string|null $templateOptionsListener = null
+        private string|null $templateOptionsListener = null,
     ) {
     }
 

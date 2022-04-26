@@ -43,7 +43,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         private string $projectDir,
         private Connection $connection,
         private ContaoFramework $framework,
-        Locales $locales
+        Locales $locales,
     ) {
         $this->locales = $locales->getEnabledLocaleIds();
     }

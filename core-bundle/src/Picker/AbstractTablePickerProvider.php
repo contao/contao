@@ -30,7 +30,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         private FactoryInterface $menuFactory,
         private RouterInterface $router,
         private TranslatorInterface $translator,
-        private Connection $connection
+        private Connection $connection,
     ) {
     }
 

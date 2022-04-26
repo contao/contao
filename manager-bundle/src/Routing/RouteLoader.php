@@ -29,7 +29,7 @@ class RouteLoader implements RouteLoaderInterface
         private LoaderInterface $loader,
         private PluginLoader $pluginLoader,
         private KernelInterface $kernel,
-        private string $projectDir
+        private string $projectDir,
     ) {
     }
 

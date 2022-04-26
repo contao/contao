@@ -32,7 +32,7 @@ class BackendMenuListener
         private RouterInterface $router,
         private RequestStack $requestStack,
         private TranslatorInterface $translator,
-        private ContaoFramework $framework
+        private ContaoFramework $framework,
     ) {
     }
 

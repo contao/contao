@@ -31,7 +31,7 @@ class PreviewAuthenticationListener
         private TokenChecker $tokenChecker,
         private UrlGeneratorInterface $router,
         private UriSigner $uriSigner,
-        private Security $security
+        private Security $security,
     ) {
     }
 

@@ -35,7 +35,7 @@ class MakeEventListener extends AbstractMaker
         private ClassGenerator $classGenerator,
         private SignatureGenerator $signatureGenerator,
         private ImportExtractor $importExtractor,
-        private PhpCompatUtil $phpCompatUtil
+        private PhpCompatUtil $phpCompatUtil,
     ) {
     }
 

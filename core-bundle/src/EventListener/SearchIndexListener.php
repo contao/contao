@@ -30,7 +30,7 @@ class SearchIndexListener
     public function __construct(
         private IndexerInterface $indexer,
         private string $fragmentPath = '_fragment',
-        private int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE
+        private int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
     ) {
     }
 

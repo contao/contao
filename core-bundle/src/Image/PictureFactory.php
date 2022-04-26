@@ -52,7 +52,7 @@ class PictureFactory implements PictureFactoryInterface
         private ImageFactoryInterface $imageFactory,
         private ContaoFramework $framework,
         private bool $bypassCache,
-        private array $imagineOptions
+        private array $imagineOptions,
     ) {
     }
 

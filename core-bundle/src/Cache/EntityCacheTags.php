@@ -37,7 +37,7 @@ class EntityCacheTags
     public function __construct(
         private EntityManagerInterface $entityManager,
         private ResponseTagger|null $responseTagger = null,
-        private CacheInvalidator|null $cacheInvalidator = null
+        private CacheInvalidator|null $cacheInvalidator = null,
     ) {
     }
 

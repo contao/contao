@@ -46,7 +46,7 @@ class Factory
         private Connection $connection,
         private ContaoFramework $framework,
         private array $additionalUris = [],
-        private array $defaultHttpClientOptions = []
+        private array $defaultHttpClientOptions = [],
     ) {
     }
 

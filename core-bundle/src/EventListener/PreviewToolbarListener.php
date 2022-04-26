@@ -38,7 +38,7 @@ class PreviewToolbarListener
         private TokenChecker $tokenChecker,
         private TwigEnvironment $twig,
         private RouterInterface $router,
-        private string $previewScript = ''
+        private string $previewScript = '',
     ) {
     }
 

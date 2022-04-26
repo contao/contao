@@ -33,7 +33,7 @@ class UserSessionListener
         private Connection $connection,
         private Security $security,
         private ScopeMatcher $scopeMatcher,
-        private EventDispatcherInterface $eventDispatcher
+        private EventDispatcherInterface $eventDispatcher,
     ) {
     }
 

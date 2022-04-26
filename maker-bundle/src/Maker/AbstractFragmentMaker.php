@@ -39,7 +39,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         protected DcaGenerator $dcaGenerator,
         protected LanguageFileGenerator $languageFileGenerator,
         protected PhpCompatUtil $phpCompatUtil,
-        protected string $projectDir
+        protected string $projectDir,
     ) {
     }
 

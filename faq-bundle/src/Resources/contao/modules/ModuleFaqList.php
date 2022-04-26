@@ -116,26 +116,7 @@ class ModuleFaqList extends Module
 			$responseTagger->addTags($tags);
 		}
 
-		$arrFaq = array_values(array_filter($arrFaq));
-
-		$cat_count = 0;
-		$cat_limit = \count($arrFaq);
-
-		// Add classes
-		foreach ($arrFaq as $k=>$v)
-		{
-			$count = 0;
-			$limit = \count($v['items']);
-
-			for ($i=0; $i<$limit; $i++)
-			{
-				$arrFaq[$k]['items'][$i]['class'] = trim(((++$count == 1) ? ' first' : '') . (($count >= $limit) ? ' last' : '') . ((($count % 2) == 0) ? ' odd' : ' even'));
-			}
-
-			$arrFaq[$k]['class'] = trim(((++$cat_count == 1) ? ' first' : '') . (($cat_count >= $cat_limit) ? ' last' : '') . ((($cat_count % 2) == 0) ? ' odd' : ' even'));
-		}
-
-		$this->Template->faq = $arrFaq;
+		$this->Template->faq = array_values(array_filter($arrFaq));
 	}
 
 	/**
