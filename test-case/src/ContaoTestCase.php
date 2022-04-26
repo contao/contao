@@ -171,14 +171,14 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return T&MockObject
      */
-    protected function mockClassWithProperties(string $class, array $properties = [], array $preserve = []): MockObject
+    protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject
     {
         $classMethods = get_class_methods($class);
 
-        if (!$preserve) {
+        if (!$except) {
             $mock = $this->createMock($class);
         } else {
-            $mock = $this->createPartialMock($class, array_diff($classMethods, $preserve));
+            $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
         }
 
         $mock

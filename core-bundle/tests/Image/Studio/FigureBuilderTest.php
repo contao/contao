@@ -542,7 +542,7 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class, preserve: ['getMetadata']);
+        $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
@@ -752,7 +752,7 @@ class FigureBuilderTest extends TestCase
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
         $getFilesModel = function (array $metaData, ?string $uuid) use ($relativeFilePath) {
-            $filesModel = $this->mockClassWithProperties(FilesModel::class, preserve: ['getMetadata']);
+            $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
             $filesModel->setRow([
                 'type' => 'file',
                 'path' => $relativeFilePath,

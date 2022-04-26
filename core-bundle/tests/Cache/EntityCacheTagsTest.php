@@ -93,7 +93,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
     {
         $entityCacheTags = $this->getEntityCacheTags();
 
-        $page = $this->mockClassWithProperties(PageModel::class, preserve: ['getTable']);
+        $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page->id = 5;
 
         $this->assertSame('contao.db.tl_page.5', $entityCacheTags->getTagForModelInstance($page));
@@ -143,10 +143,10 @@ class EntityCacheTagsTest extends DoctrineTestCase
             ->setTags(new ArrayCollection([$tag]))
         ;
 
-        $page1 = $this->mockClassWithProperties(PageModel::class, preserve: ['getTable']);
+        $page1 = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page1->id = 5;
 
-        $page2 = $this->mockClassWithProperties(PageModel::class, preserve: ['getTable']);
+        $page2 = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page2->id = 6;
 
         $modelCollection = new Collection([$page1, $page2], 'tl_page');
@@ -204,7 +204,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
 
         $post = (new BlogPost())->setId(1);
 
-        $page = $this->mockClassWithProperties(PageModel::class, preserve: ['getTable']);
+        $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page->id = 2;
 
         $entityCacheTags = $this->getEntityCacheTags($responseTagger);
@@ -232,7 +232,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
 
         $post = (new BlogPost())->setId(1);
 
-        $page = $this->mockClassWithProperties(PageModel::class, preserve: ['getTable']);
+        $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page->id = 2;
 
         $entityCacheTags = $this->getEntityCacheTags(null, $cacheInvalidator);
