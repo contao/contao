@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig;
 
 use Contao\CoreBundle\Asset\ContaoContext;
-use Contao\FilesModel;
 use Contao\Model;
 use Contao\Template;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -234,14 +233,6 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function replaceInsertTags($strBuffer, $blnCache = true): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
     public static function replaceDynamicScriptTags($strBuffer): never
     {
         self::throwOnAccess();
@@ -274,14 +265,6 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function generateFrontendUrl(array $arrRow, $strParams = null, $strForceLang = null, $blnFixDomain = false): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
     public static function convertRelativeUrls($strContent, $strBase = '', $blnHrefOnly = false): never
     {
         self::throwOnAccess();
@@ -307,14 +290,6 @@ final class FragmentTemplate extends Template
      * @internal
      */
     public static function resetControllerCache(): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
-    public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): never
     {
         self::throwOnAccess();
     }
@@ -362,47 +337,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function restoreBasicEntities($strBuffer): void
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
-    public static function generateImage($src, $alt = '', $attributes = ''): void
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
-    public static function optionSelected($strOption, $varValues): void
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
-    public static function optionChecked($strOption, $varValues): void
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
     public function parse(): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
-    public function output(): void
     {
         self::throwOnAccess();
     }
@@ -419,14 +354,6 @@ final class FragmentTemplate extends Template
      * @internal
      */
     public static function importStatic($strClass, $strKey = null, $blnForce = false): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
-    public static function log($strText, $strFunction, $strCategory): never
     {
         self::throwOnAccess();
     }
@@ -451,30 +378,6 @@ final class FragmentTemplate extends Template
      * @internal
      */
     public static function isInstalledLanguage($strLanguage): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
-    public static function getCountries(): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
-    public static function getLanguages($blnInstalledOnly = false): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
-    public static function getTimeZones(): never
     {
         self::throwOnAccess();
     }
