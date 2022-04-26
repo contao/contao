@@ -137,12 +137,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->initialize();
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
-        if (!class_exists($GLOBALS['TL_DCA'][$table]['config']['dataContainer']) || !class_exists($this->getDataContainer())) {
-            trigger_deprecation('contao/core-bundle', '4.9', 'The usage of a non fully qualified class name as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.');
-        }
-
-        return ($this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
-                || is_a(DataContainer::getDriverForTable($table), $this->getDataContainer(), true))
+        return $this->getDataContainer() === DataContainer::getDriverForTable($table)
             && 0 !== \count($this->getModulesForTable($table));
     }
 

@@ -1434,7 +1434,16 @@ abstract class DataContainer extends Backend
 
 		if (false === strpos($dataContainer, '\\'))
 		{
+			@trigger_error('The usage of a non fully qualified class name as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.', E_USER_DEPRECATED);
+
 			$dataContainer = 'DC_' . $dataContainer;
+
+			if (class_exists($dataContainer))
+			{
+				$ref = new \ReflectionClass($dataContainer);
+
+				return $ref->getName();
+			}
 		}
 
 		return $dataContainer;
