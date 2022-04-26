@@ -11,6 +11,15 @@ services:
             tags:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
+        Contao\CoreBundle\Controller\AbstractFragmentController:
+            tags:
+                - { name: container.service_subscriber, id: contao.twig.filesystem_loader }
+                - { name: container.service_subscriber, id: contao.twig.interop.context_factory }
+
+        Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController:
+            tags:
+                - { name: container.service_subscriber, id: contao.csrf.token_manager }
+
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\BackendController: ~
 

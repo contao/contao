@@ -24,10 +24,22 @@ final class ContextFactory
      */
     public function fromContaoTemplate(Template $template): array
     {
-        $context = $template->getData();
+        $context = $this->fromData($template->getData());
 
+        if (!isset($context['Template'])) {
+            $context['Template'] = $template;
+        }
+
+        return $context;
+    }
+
+    /**
+     * Replaces all occurrences of closures by callable wrappers.
+     */
+    public function fromData(array $data): array
+    {
         array_walk_recursive(
-            $context,
+            $data,
             function (&$value, $key): void {
                 if ($value instanceof \Closure) {
                     $value = $this->getCallableWrapper($value, (string) $key);
@@ -35,11 +47,7 @@ final class ContextFactory
             }
         );
 
-        if (!isset($context['Template'])) {
-            $context['Template'] = $template;
-        }
-
-        return $context;
+        return $data;
     }
 
     /**
