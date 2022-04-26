@@ -44,7 +44,7 @@ final class FragmentTemplate extends Template
      * @param string $key
      * @param mixed  $value
      */
-    public function __set(/* string */ $key, $value): void
+    public function __set($key, $value): void
     {
         $this->set($key, $value);
     }
@@ -54,7 +54,7 @@ final class FragmentTemplate extends Template
      *
      * @return mixed
      */
-    public function __get(/* string */ $key)
+    public function __get($key)
     {
         return $this->get($key);
     }
@@ -62,7 +62,7 @@ final class FragmentTemplate extends Template
     /**
      * @param string $key
      */
-    public function __isset(/* string */ $key): bool
+    public function __isset($key): bool
     {
         return $this->has($key);
     }
@@ -96,7 +96,7 @@ final class FragmentTemplate extends Template
     /**
      * @param array<string, mixed> $data
      */
-    public function setData(/* array */ $data): void
+    public function setData($data): void
     {
         $this->context = $data;
     }
@@ -112,7 +112,7 @@ final class FragmentTemplate extends Template
     /**
      * @param string $name
      */
-    public function setName(/* string */ $name): void
+    public function setName($name): void
     {
         $this->templateName = $name;
     }
