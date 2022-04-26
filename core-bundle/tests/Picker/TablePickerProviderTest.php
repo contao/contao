@@ -51,7 +51,7 @@ class TablePickerProviderTest extends ContaoTestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Since contao/core-bundle 4.9: The usage of a non fully qualified class name as DataContainer name has been deprecated %s.
+     * @expectedDeprecation The usage of a non fully qualified class name as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.
      */
     public function testSupportsLegacyContext(): void
     {
@@ -83,7 +83,7 @@ class TablePickerProviderTest extends ContaoTestCase
     /**
      * @group legacy
      *
-     * @expectedDeprecation Since contao/core-bundle 4.9: The usage of a non fully qualified class name as DataContainer name has been deprecated %s.
+     * @expectedDeprecation The usage of a non fully qualified class name as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.
      */
     public function testDoesNotSupportContextWithoutDataContainer(): void
     {
