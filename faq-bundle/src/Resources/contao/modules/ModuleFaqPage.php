@@ -122,9 +122,15 @@ class ModuleFaqPage extends Module
 				$this->addEnclosuresToTemplate($objTemp, $objFaq->row());
 			}
 
+			$strAuthor = '';
+
 			/** @var UserModel $objAuthor */
-			$objAuthor = $objFaq->getRelated('author');
-			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $objAuthor->name);
+			if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel)
+			{
+				$strAuthor = $objAuthor->name;
+			}
+
+			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
 			/** @var FaqCategoryModel $objPid */
 			$objPid = $objFaq->getRelated('pid');
