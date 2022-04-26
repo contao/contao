@@ -107,7 +107,7 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return ContaoFramework&MockObject
      */
-    protected function mockContaoFramework(array $adapters = []): ContaoFramework
+    protected function mockContaoFramework(array $adapters = [], array $instances = []): ContaoFramework
     {
         $this->addConfigAdapter($adapters);
 
@@ -120,6 +120,11 @@ abstract class ContaoTestCase extends TestCase
         $framework
             ->method('getAdapter')
             ->willReturnCallback(static fn (string $key): ?Adapter => $adapters[$key] ?? null)
+        ;
+
+        $framework
+            ->method('createInstance')
+            ->willReturnCallback(static fn (string $key): mixed => $instances[$key] ?? null)
         ;
 
         return $framework;
