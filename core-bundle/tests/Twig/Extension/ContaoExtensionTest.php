@@ -82,7 +82,6 @@ class ContaoExtensionTest extends TestCase
             'add_schema_org' => [],
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
-            'render_contao_backend_template' => ['html'],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
