@@ -75,7 +75,7 @@ class ImageSize extends Widget
 	{
 		$varInput[2] = preg_replace('/[^a-z0-9_]+/', '', $varInput[2] ?? '');
 
-		if (!is_numeric($varInput[2]))
+		if (!is_numeric($varInput[2]) && strpos($varInput[2], '_') !== 0)
 		{
 			switch ($varInput[2])
 			{
