@@ -2149,10 +2149,8 @@ fieldset.collapsed > legend {
 
 /* TinyMCE */
 .tox-tinymce {
-	margin: 3px 0;
-}
-.tox .tox-menubar,.tox .tox-toolbar__primary,.tox .tox-statusbar {
-	background-color: #f7f7f9 !important;
+	margin:3px 0;
+	border-radius:2px !important;
 }
 
 /* Undo */
