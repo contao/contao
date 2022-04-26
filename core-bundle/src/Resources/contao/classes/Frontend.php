@@ -11,11 +11,9 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to manage front end controllers.
@@ -150,18 +148,13 @@ abstract class Frontend extends Controller
 	 * @param string        $strParams
 	 * @param string        $strForceLang
 	 */
-	protected function jumpToOrReload($intId, $strParams=null, $strForceLang=null)
+	protected function jumpToOrReload($intId, $strParams=null)
 	{
-		if ($strForceLang !== null)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Frontend::jumpToOrReload()" with $strForceLang has been deprecated and will no longer work in Contao 5.0.');
-		}
-
 		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Always redirect if there are additional arguments (see #5734)
-		$blnForceRedirect = ($strParams !== null || $strForceLang !== null);
+		$blnForceRedirect = $strParams !== null;
 
 		if (\is_array($intId))
 		{
@@ -170,45 +163,10 @@ abstract class Frontend extends Controller
 
 		if ($intId > 0 && ($intId != $objPage->id || $blnForceRedirect) && ($objNextPage = PageModel::findPublishedById($intId)) !== null)
 		{
-			$this->redirect($objNextPage->getFrontendUrl($strParams, $strForceLang));
+			$this->redirect($objNextPage->getFrontendUrl($strParams));
 		}
 
 		$this->reload();
-	}
-
-	/**
-	 * Check whether a back end or front end user is logged in
-	 *
-	 * @param string $strCookie
-	 *
-	 * @return boolean
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	protected function getLoginStatus($strCookie)
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\Frontend::getLoginStatus()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		$objTokenChecker = System::getContainer()->get('contao.security.token_checker');
-
-		if ($strCookie == 'BE_USER_AUTH' && $objTokenChecker->hasBackendUser())
-		{
-			// Always return false if we are not in preview mode (show hidden elements)
-			if (TL_MODE == 'FE' && !$objTokenChecker->isPreviewMode())
-			{
-				return false;
-			}
-
-			return true;
-		}
-
-		if ($strCookie == 'FE_USER_AUTH' && $objTokenChecker->hasFrontendUser())
-		{
-			return true;
-		}
-
-		return false;
 	}
 
 	/**
@@ -240,28 +198,6 @@ abstract class Frontend extends Controller
 	}
 
 	/**
-	 * Prepare a text to be used in the meta description tag
-	 *
-	 * @param string $strText
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0;
-	 *             use the Contao\CoreBundle\String\HtmlDecoder service instead
-	 */
-	protected function prepareMetaDescription($strText)
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Frontend::prepareMetaDescription()" has been deprecated and will no longer work Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
-
-		$strText = System::getContainer()->get('contao.insert_tag.parser')->replaceInline((string) $strText);
-		$strText = strip_tags($strText);
-		$strText = str_replace("\n", ' ', $strText);
-		$strText = StringUtil::substr($strText, 320);
-
-		return trim($strText);
-	}
-
-	/**
 	 * Return the cron timeout in seconds
 	 *
 	 * @return integer
@@ -279,52 +215,5 @@ abstract class Frontend extends Controller
 		}
 
 		return 86400; // daily
-	}
-
-	/**
-	 * Index a page if applicable
-	 *
-	 * @param Response $response
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
-	 *             Use the "contao.search.indexer" service instead.
-	 */
-	public static function indexPageIfApplicable(Response $response)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "Contao\Frontend::indexPageIfApplicable()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.search.indexer" service instead.');
-
-		$searchIndexer = System::getContainer()->get('contao.search.indexer');
-
-		// The search indexer is disabled
-		if ($searchIndexer === null)
-		{
-			return;
-		}
-
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request === null)
-		{
-			throw new \RuntimeException('The request stack did not contain a request');
-		}
-
-		$document = Document::createFromRequestResponse($request, $response);
-
-		$searchIndexer->index($document);
-	}
-
-	/**
-	 * Check whether there is a cached version of the page and return a response object
-	 *
-	 * @return Response|null
-	 *
-	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.0.
-	 *             Use proper response caching headers instead.
-	 */
-	public static function getResponseFromCache()
-	{
-		trigger_deprecation('contao/core-bundle', '4.3', 'Using "Contao\Frontend::getResponseFromCache()" has been deprecated and will no longer work in Contao 5.0. Use proper response caching headers instead.');
-
-		return null;
 	}
 }
