@@ -729,8 +729,8 @@ abstract class Model
 	/**
 	 * Find a single record by its primary key
 	 *
-	 * @param mixed $varValue   The property value
-	 * @param array $arrOptions An optional options array
+	 * @param int|string $varValue   The property value
+	 * @param array      $arrOptions An optional options array
 	 *
 	 * @return static The model or null if the result is empty
 	 */
@@ -738,7 +738,7 @@ abstract class Model
 	{
 		if ($varValue === null)
 		{
-			throw new \TypeError('Model::findByPk(): Argument #1 ($varValue) must not be of type null.');
+			throw new \TypeError('Model::findByPk(): Argument #1 ($varValue) must be of type int|string, got null');
 		}
 
 		// Try to load from the registry
@@ -920,6 +920,11 @@ abstract class Model
 		if (\count($arrColumn) == 1 && ($arrColumn[0] === static::getPk() || \in_array($arrColumn[0], static::getUniqueFields())))
 		{
 			$blnModel = true;
+
+			if ($varValue === null && $arrColumn[0] === static::getPk())
+			{
+				throw new \TypeError('Model::findBy(): Argument #2 ($varValue) must be of type int|string when querying for the primary key, got null');
+			}
 		}
 
 		$arrOptions = array_merge
