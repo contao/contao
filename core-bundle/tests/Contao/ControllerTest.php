@@ -55,34 +55,6 @@ class ControllerTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @group legacy
-     */
-    public function testReturnsTheTimeZones(): void
-    {
-        $this->expectDeprecation('%sgetTimeZones%shas been deprecated%s');
-        $this->expectDeprecation('%stimezones.php%s');
-
-        $timeZones = System::getTimeZones();
-
-        $this->assertCount(9, $timeZones['General']);
-        $this->assertCount(51, $timeZones['Africa']);
-        $this->assertCount(140, $timeZones['America']);
-        $this->assertCount(10, $timeZones['Antarctica']);
-        $this->assertCount(83, $timeZones['Asia']);
-        $this->assertCount(11, $timeZones['Atlantic']);
-        $this->assertCount(22, $timeZones['Australia']);
-        $this->assertCount(4, $timeZones['Brazil']);
-        $this->assertCount(9, $timeZones['Canada']);
-        $this->assertCount(2, $timeZones['Chile']);
-        $this->assertCount(53, $timeZones['Europe']);
-        $this->assertCount(11, $timeZones['Indian']);
-        $this->assertCount(4, $timeZones['Brazil']);
-        $this->assertCount(3, $timeZones['Mexico']);
-        $this->assertCount(40, $timeZones['Pacific']);
-        $this->assertCount(13, $timeZones['United States']);
-    }
-
     public function testGeneratesTheMargin(): void
     {
         $margins = [
