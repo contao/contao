@@ -103,10 +103,6 @@ class ImageSize extends Widget
 			$varInput[0] = parent::validator($varInput[0]);
 			$varInput[1] = parent::validator($varInput[1]);
 		}
-		elseif ($this->mandatory)
-		{
-			$this->mandatory = (bool) $varInput[2];
-		}
 
 		$this->import(BackendUser::class, 'User');
 
