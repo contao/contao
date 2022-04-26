@@ -133,7 +133,7 @@
         "symfony/uid": "^5.4",
         "symfony/var-dumper": "^5.4",
         "symfony/yaml": "^5.4",
-        "terminal42/escargot": "^1.2",
+        "terminal42/escargot": "^1.4.1",
         "terminal42/service-annotation-bundle": "^1.1",
         "twig/twig": "^3.0",
         "ua-parser/uap-php": "^3.9",
@@ -174,7 +174,6 @@
         "exclude-from-classmap": [
             "src/Resources/contao/config/",
             "src/Resources/contao/dca/",
-            "src/Resources/contao/helper/functions.php",
             "src/Resources/contao/languages/",
             "src/Resources/contao/templates/",
             "src/Resources/contao/themes/"

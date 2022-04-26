@@ -14,11 +14,9 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 
 /**
- * Content element "mediaelement".
- *
- * @todo Rename to ContentPlayer in Contao 5.0
+ * Content element "player".
  */
-class ContentMedia extends ContentElement
+class ContentPlayer extends ContentElement
 {
 	/**
 	 * Template

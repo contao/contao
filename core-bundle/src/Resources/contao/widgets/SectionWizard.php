@@ -109,7 +109,7 @@ class SectionWizard extends Widget
 		{
 			$return .= '
     <tr>
-      <td><input type="text" name="' . $this->strId . '[' . $i . '][title]" id="' . $this->strId . '_title_' . $i . '" class="tl_text" value="' . self::specialcharsValuself::specialcharsValueself::specialcharsValuee($this->varValue[$i]['title'] ?? '') . '"></td>
+      <td><input type="text" name="' . $this->strId . '[' . $i . '][title]" id="' . $this->strId . '_title_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['title'] ?? '') . '"></td>
       <td><input type="text" name="' . $this->strId . '[' . $i . '][id]" id="' . $this->strId . '_id_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['id'] ?? '') . '"></td>';
 
 			$options = '';

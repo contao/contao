@@ -165,16 +165,11 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
+					$row['nofollow'] = false; // backwards compatibility
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
 					$arrRel = array();
-
-					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
-					{
-						$arrRel[] = 'nofollow';
-					}
 
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
@@ -208,16 +203,11 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
+					$row['nofollow'] = false; // backwards compatibility
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
 					$arrRel = array();
-
-					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
-					{
-						$arrRel[] = 'nofollow';
-					}
 
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
@@ -237,14 +227,6 @@ class ModuleCustomnav extends Module
 					$items[] = $row;
 				}
 			}
-		}
-
-		// Add classes first and last if there are items
-		if (!empty($items))
-		{
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$last = \count($items) - 1;
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
 		}
 
 		$objTemplate->items = $items;

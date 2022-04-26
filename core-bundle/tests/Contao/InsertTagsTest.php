@@ -91,8 +91,6 @@ class InsertTagsTest extends TestCase
 
     /**
      * @dataProvider insertTagsProvider
-     *
-     * @group legacy
      */
     public function testInsertTags(string $source, string $expected): void
     {
@@ -104,12 +102,6 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $output);
 
         $output = (string) $insertTagParser->replaceChunked($source);
-
-        $this->assertSame($expected, $output);
-
-        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
-
-        $output = (new InsertTags())->replace($source, false);
 
         $this->assertSame($expected, $output);
     }
@@ -193,13 +185,6 @@ class InsertTagsTest extends TestCase
 
         $insertTagParser = new InsertTagParser($this->mockContaoFramework());
         $output = $insertTagParser->replaceInline($input);
-
-        $this->assertSame('<figure>foo</figure>', $output);
-        $this->assertSame($expectedArguments, $usedArguments);
-
-        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
-
-        $output = (new InsertTags())->replace($input, false);
 
         $this->assertSame('<figure>foo</figure>', $output);
         $this->assertSame($expectedArguments, $usedArguments);
@@ -308,12 +293,6 @@ class InsertTagsTest extends TestCase
         $output = $insertTagParser->replaceInline($input);
 
         $this->assertSame('', $output);
-
-        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
-
-        $output = (new InsertTags())->replace($input, false);
-
-        $this->assertSame('', $output);
     }
 
     public function provideInvalidFigureInsertTags(): \Generator
@@ -342,7 +321,7 @@ class InsertTagsTest extends TestCase
 
         InsertTags::reset();
 
-        $output = (new InsertTags())->replace($source, false);
+        $output = (string) (new InsertTags())->replaceInternal($source, false);
 
         $this->assertSame($expected, $output);
     }
@@ -413,10 +392,6 @@ class InsertTagsTest extends TestCase
         $output = $insertTagParser->replaceInline($source);
 
         $this->assertSame($expected, $output);
-
-        $this->expectDeprecation('%sInsertTags::replace()%shas been deprecated%s');
-
-        $this->assertSame($expected, $insertTags->replace($source, false));
     }
 
     public function encodeHtmlAttributesProvider(): \Generator
@@ -459,21 +434,6 @@ class InsertTagsTest extends TestCase
         yield 'Quote outside attribute' => [
             '<span title="" {{plain::"}}>',
             '<span title="" &quot;>',
-        ];
-
-        yield 'Link URL back backwards compatibility' => [
-            '<a href="{{link_url::back}}">',
-            '<a href="javascript:history.go(-1)">',
-        ];
-
-        yield 'Trick link URL back' => [
-            '<a href="{{link_url::back}},alert(1)">',
-            '<a href="javascript%3Ahistory.go(-1),alert(1)">',
-        ];
-
-        yield 'Trick link URL back without quotes' => [
-            '<a href={{link_url::back}}>',
-            '<a href=javascript%3Ahistory.go(-1)>',
         ];
 
         yield 'Trick tag detection' => [

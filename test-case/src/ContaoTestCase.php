@@ -76,18 +76,25 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function getContainerWithContaoConfiguration(string $projectDir = ''): ContainerBuilder
     {
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.debug', false);
-        $container->setParameter('kernel.charset', 'UTF-8');
-        $container->setParameter('kernel.default_locale', 'en');
-        $container->setParameter('kernel.cache_dir', $projectDir.'/var/cache');
-        $container->setParameter('kernel.project_dir', $projectDir);
-        $container->setParameter('kernel.root_dir', $projectDir.'/app');
-        $container->setDefinition('request_stack', new Definition(RequestStack::class));
+        static $cachedContainers = [];
 
-        // Load the default configuration
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $container);
+        if (!isset($cachedContainers[$projectDir])) {
+            $cachedContainers[$projectDir] = new ContainerBuilder();
+            $cachedContainers[$projectDir]->setParameter('kernel.debug', false);
+            $cachedContainers[$projectDir]->setParameter('kernel.charset', 'UTF-8');
+            $cachedContainers[$projectDir]->setParameter('kernel.default_locale', 'en');
+            $cachedContainers[$projectDir]->setParameter('kernel.cache_dir', $projectDir.'/var/cache');
+            $cachedContainers[$projectDir]->setParameter('kernel.project_dir', $projectDir);
+            $cachedContainers[$projectDir]->setParameter('kernel.root_dir', $projectDir.'/app');
+            $cachedContainers[$projectDir]->setDefinition('request_stack', new Definition(RequestStack::class));
+
+            // Load the default configuration
+            $extension = new ContaoCoreExtension();
+            $extension->load([], $cachedContainers[$projectDir]);
+        }
+
+        $container = new ContainerBuilder();
+        $container->merge($cachedContainers[$projectDir]);
 
         return $container;
     }
@@ -164,9 +171,16 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return T&MockObject
      */
-    protected function mockClassWithProperties(string $class, array $properties = []): MockObject
+    protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject
     {
-        $mock = $this->createMock($class);
+        $classMethods = get_class_methods($class);
+
+        if (!$except) {
+            $mock = $this->createMock($class);
+        } else {
+            $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
+        }
+
         $mock
             ->method('__get')
             ->willReturnCallback(
@@ -176,7 +190,7 @@ abstract class ContaoTestCase extends TestCase
             )
         ;
 
-        if (\in_array('__set', get_class_methods($class), true)) {
+        if (\in_array('__set', $classMethods, true)) {
             $mock
                 ->method('__set')
                 ->willReturnCallback(
@@ -187,12 +201,34 @@ abstract class ContaoTestCase extends TestCase
             ;
         }
 
-        if (\in_array('__isset', get_class_methods($class), true)) {
+        if (\in_array('__isset', $classMethods, true)) {
             $mock
                 ->method('__isset')
                 ->willReturnCallback(
                     static function (string $key) use (&$properties) {
                         return isset($properties[$key]);
+                    }
+                )
+            ;
+        }
+
+        if (\in_array('row', $classMethods, true)) {
+            $mock
+                ->method('row')
+                ->willReturnCallback(
+                    static function () use (&$properties) {
+                        return $properties;
+                    }
+                )
+            ;
+        }
+
+        if (\in_array('setRow', $classMethods, true)) {
+            $mock
+                ->method('setRow')
+                ->willReturnCallback(
+                    static function (array $data) use (&$properties): void {
+                        $properties = $data;
                     }
                 )
             ;

@@ -95,8 +95,6 @@ use Doctrine\DBAL\Types\Types;
  * @property string        $customRgxp
  * @property string        $errorMsg
  * @property integer       $currentRecord
- * @property integer       $rowClass
- * @property integer       $rowClassConfirm
  * @property integer       $storeValues
  * @property boolean       $includeBlankOption
  * @property string        $blankOptionLabel

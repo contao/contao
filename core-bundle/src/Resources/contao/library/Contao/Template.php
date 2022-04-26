@@ -30,7 +30,7 @@ use Symfony\Component\VarDumper\VarDumper;
  *
  *     $template = new BackendTemplate();
  *     $template->name = 'Leo Feyer';
- *     $template->output();
+ *     $template->getResponse();
  *
  * @property string       $style
  * @property array|string $cssID
@@ -280,23 +280,6 @@ abstract class Template extends Controller
 		}
 
 		return $this->inherit();
-	}
-
-	/**
-	 * Parse the template file and print it to the screen
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Template::getResponse() instead.
-	 */
-	public function output()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::output()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::getResponse()" instead.');
-
-		$this->compile();
-
-		header('Content-Type: ' . $this->strContentType . '; charset=' . System::getContainer()->getParameter('kernel.charset'));
-
-		echo $this->strBuffer;
 	}
 
 	/**

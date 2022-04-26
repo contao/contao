@@ -127,14 +127,10 @@ abstract class Controller extends System
 		$arrMapper['form'][] = 'xml';
 		$arrMapper['form'][] = 'wrapper';
 		$arrMapper['form'][] = 'message';
-		$arrMapper['form'][] = 'textfield'; // TODO: remove in Contao 5.0
 
 		// Add templates that are not directly associated with a module
 		$arrMapper['mod'][] = 'article';
 		$arrMapper['mod'][] = 'message';
-		$arrMapper['mod'][] = 'password'; // TODO: remove in Contao 5.0
-		$arrMapper['mod'][] = 'comment_form'; // TODO: remove in Contao 5.0
-		$arrMapper['mod'][] = 'newsletter'; // TODO: remove in Contao 5.0
 
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');

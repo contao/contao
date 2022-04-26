@@ -207,11 +207,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
     private function getRefererId(): string|null
     {
-        if (null === $this->request) {
-            return null;
-        }
-
-        return $this->request->attributes->get('_contao_referer_id', '');
+        return $this->request?->attributes->get('_contao_referer_id', '');
     }
 
     private function getRoute(): string|null
@@ -225,11 +221,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
     private function getPath(): string|null
     {
-        if (null === $this->request) {
-            return null;
-        }
-
-        return $this->request->getBasePath();
+        return $this->request?->getBasePath();
     }
 
     private function initializeFramework(): void
@@ -266,7 +258,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
     private function includeHelpers(): void
     {
-        require __DIR__.'/../Resources/contao/helper/functions.php';
         require __DIR__.'/../Resources/contao/config/constants.php';
     }
 

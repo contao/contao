@@ -38,6 +38,7 @@
       $objCombiner->add('bundles/contaocore/metawizard.min.js');
       $objCombiner->add('bundles/contaocore/core.min.js');
       $objCombiner->add('bundles/contaocore/limit-height.min.js');
+      $objCombiner->add('bundles/contaocore/tips.min.js');
       $objCombiner->add('system/themes/'.$this->theme.'/hover.min.js');
       echo $objCombiner->getCombinedFile();
     ?>"></script>

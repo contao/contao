@@ -16,7 +16,6 @@ namespace Contao;
  * @property string $name
  * @property string $question
  * @property string $placeholder
- * @property string $rowClass
  */
 class FormCaptcha extends Widget
 {

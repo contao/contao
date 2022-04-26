@@ -86,10 +86,6 @@ class ContaoContext implements ContextInterface
      */
     private function getFieldValue(PageModel|null $page): string
     {
-        if (null === $page) {
-            return '';
-        }
-
-        return (string) $page->{$this->field};
+        return (string) $page?->{$this->field};
     }
 }

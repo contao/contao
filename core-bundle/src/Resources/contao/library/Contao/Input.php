@@ -64,17 +64,17 @@ class Input
 	{
 		if (isset($_GET))
 		{
-			$_GET    = static::cleanKeyInternal($_GET);
+			$_GET = static::cleanKeyInternal($_GET);
 		}
 
 		if (isset($_POST))
 		{
-			$_POST    = static::cleanKeyInternal($_POST);
+			$_POST = static::cleanKeyInternal($_POST);
 		}
 
 		if (isset($_COOKIE))
 		{
-			$_COOKIE    = static::cleanKeyInternal($_COOKIE);
+			$_COOKIE = static::cleanKeyInternal($_COOKIE);
 		}
 	}
 
