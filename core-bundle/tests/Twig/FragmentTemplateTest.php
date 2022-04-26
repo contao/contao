@@ -87,11 +87,10 @@ class FragmentTemplateTest extends TestCase
 
             $args = array_map(
                 function (\ReflectionParameter $parameter) {
-                    if (!($type = $parameter->getType()) instanceof \ReflectionType) {
+                    if (!($type = $parameter->getType()) instanceof \ReflectionNamedType) {
                         return null;
                     }
 
-                    /** @phpstan-ignore-next-line because PHPStan doesn't think getName() exists */
                     return match ($name = $type->getName()) {
                         'bool' => false,
                         'string' => '',
