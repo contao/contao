@@ -111,7 +111,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $template = new FragmentTemplate($templateName, $onGetResponse);
 
         if ($isLegacyTemplate) {
-            $template->setData((array) $model->row());
+            $template->setData($model->row());
         }
 
         return $template;

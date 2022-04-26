@@ -54,7 +54,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->getModuleModel(), 'main');
+        $response = $controller(new Request([], [], ['_scope' => 'frontend']), $this->mockClassWithProperties(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('mod_test', $template['templateName']);
@@ -64,7 +64,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController(['type' => 'foo']);
 
-        $response = $controller(new Request(), $this->getModuleModel(), 'main');
+        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('mod_foo', $template['templateName']);
@@ -74,7 +74,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController(['template' => 'mod_bar']);
 
-        $response = $controller(new Request(), $this->getModuleModel(), 'main');
+        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('mod_bar', $template['templateName']);
@@ -86,7 +86,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $controller = $this->getTestController();
 
-        $model = $this->getModuleModel(['customTpl' => 'mod_bar']);
+        $model = $this->mockClassWithProperties(ModuleModel::class, ['customTpl' => 'mod_bar']);
 
         $response = $controller(new Request(), $model, 'main');
         $template = json_decode($response->getContent(), true);
@@ -98,7 +98,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $response = $controller(new Request(), $this->getModuleModel(), 'main');
+        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'main');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('', $template['cssID']);
@@ -109,7 +109,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $model = $this->getModuleModel(['headline' => serialize(['unit' => 'h6', 'value' => 'foobar'])]);
+        $model = $this->mockClassWithProperties(ModuleModel::class, ['headline' => serialize(['unit' => 'h6', 'value' => 'foobar'])]);
 
         $response = $controller(new Request(), $model, 'main');
         $template = json_decode($response->getContent(), true);
@@ -122,7 +122,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $model = $this->getModuleModel(['cssID' => serialize(['foo', 'bar'])]);
+        $model = $this->mockClassWithProperties(ModuleModel::class, ['cssID' => serialize(['foo', 'bar'])]);
 
         $response = $controller(new Request(), $model, 'main');
         $template = json_decode($response->getContent(), true);
@@ -135,7 +135,7 @@ class FrontendModuleControllerTest extends TestCase
     {
         $controller = $this->getTestController();
 
-        $response = $controller(new Request(), $this->getModuleModel(), 'left');
+        $response = $controller(new Request(), $this->mockClassWithProperties(ModuleModel::class), 'left');
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('left', $template['inColumn']);
@@ -169,7 +169,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $controller = $this->getTestController(['type' => 'html', 'template' => 'frontend_module/html']);
 
-        $model = $this->getModuleModel([
+        $model = $this->mockClassWithProperties(ModuleModel::class, [
             'headline' => serialize(['value' => 'foo', 'unit' => 'h3']),
             'cssID' => serialize(['foo-id', 'foo-class']),
         ]);
@@ -230,7 +230,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $controller = $this->getTestController();
 
-        $model = $this->getModuleModel([
+        $model = $this->mockClassWithProperties(ModuleModel::class, [
             'id' => 42,
             'type' => 'foobar',
             'name' => 'foo',
@@ -250,7 +250,7 @@ class FrontendModuleControllerTest extends TestCase
 
     public function testAddsTheCacheTags(): void
     {
-        $model = $this->getModuleModel();
+        $model = $this->mockClassWithProperties(ModuleModel::class);
         $model->id = 42;
 
         $entityCacheTags = $this->createMock(EntityCacheTags::class);
@@ -288,15 +288,6 @@ class FrontendModuleControllerTest extends TestCase
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
 
         return $this->container;
-    }
-
-    private function getModuleModel(array $data = []): ModuleModel
-    {
-        /** @var ModuleModel $model */
-        $model = (new \ReflectionClass(ModuleModel::class))->newInstanceWithoutConstructor();
-        $model->setRow($data);
-
-        return $model;
     }
 
     private function getTestController(array $fragmentOptions = []): TestController

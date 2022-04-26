@@ -28,7 +28,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
 
         $this->addDefaultDataToTemplate(
             $template,
-            (array) $model->row(),
+            $model->row(),
             $section,
             $classes ?? [],
             $request->attributes->get('templateProperties', []),
