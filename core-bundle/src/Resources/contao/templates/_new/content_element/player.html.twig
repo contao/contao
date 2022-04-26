@@ -1,0 +1,28 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    {% if as_overview %}
+        <ul>
+            {% for file in files_list %}
+                <li>
+                    {# todo: refactor this whole thing / BE images into template (Image::getHtml()), readable file size as function, FilesystemItem #}
+                    <img src="{{ file.icon }}" alt=".{{ file.extension }} Icon" width="18" height="18"
+                         class="mime_icon"> <span>{{ file.fileName }}</span> <span class="size">({{ file.fileSize }})</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% set figure = figure|merge({
+            attributes: attrs(figure.attributes|default).addClass(figure.media.type ~ '_container')
+        }) %}
+        {% embed "@Contao/component/_figure.html.twig" %}
+            {% block media %}
+                <{{ figure.media.type }}{{ figure.media.attributes }}>
+                {% for source_attributes in figure.media.sources %}
+                    <source{{ source_attributes }}>
+                {% endfor %}
+                </{{ figure.media.type }}>
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+{% endblock %}

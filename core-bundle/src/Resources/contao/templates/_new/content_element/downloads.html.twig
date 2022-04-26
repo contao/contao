@@ -1,0 +1,9 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    {% embed "@Contao/component/_sortable_list.html.twig" with {list: downloads} %}
+        {% block list_item %}
+            {% include "@Contao/component/_download.html.twig" with {download: item} %}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

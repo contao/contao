@@ -1,0 +1,19 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    {% if not image %}
+        {% block link %}
+            {{ link_text.before }}
+            {% include "@Contao/component/_link.html.twig" with {attributes: link_attributes, value: link_text.value} %}
+            {{ link_text.after }}
+        {% endblock %}
+    {% else %}
+        {% embed "@Contao/component/_figure.html.twig" with {figure: image, link_text} only %}
+            {% block link %}
+                {{ link_text.before }}
+                {{ parent() }}
+                {{ link_text.after }}
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+{% endblock %}

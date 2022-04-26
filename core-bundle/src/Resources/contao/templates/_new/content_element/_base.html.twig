@@ -1,0 +1,18 @@
+{% if not searchable|default(true) %}<!-- indexer::stop -->{% endif %}
+
+{# Content element block #}
+{% block wrapper %}
+    <{% block wrapper_tag %}div{% endblock %}{% block attributes %}{{ attrs(attributes).addClass(template) }}{% endblock %}>
+        {% block inner %}
+            {% block headline %}
+                {% if headline.text %}
+                    {% include "@Contao/component/_headline.html.twig" %}
+                {% endif %}
+            {% endblock %}
+
+            {% block content %}{% endblock %}
+        {% endblock %}
+    </{{ block('wrapper_tag') }}>
+{% endblock %}
+
+{% if not searchable|default(true) %}<!-- indexer::continue -->{% endif %}

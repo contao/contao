@@ -1,0 +1,52 @@
+{#
+    Base template for a <figure> element. By default this is designed to render
+    a \Contao\CoreBundle\Image\Studio\Figure object for images, but can also
+    be used for any other scenario by setting custom data and overwriting
+    the respective blocks (e.g. for a figure containing <video> tags).
+#}
+
+{# @var \Contao\CoreBundle\Image\Studio\Figure figure #}
+{% set figure_attributes = attrs()
+    .mergeWith(figure.options.attr|default)
+    .mergeWith(figure_attributes|default)
+%}
+<figure{{ figure_attributes }}>
+    {% if not figure.linkHref|default %}
+        {% block media %}
+            {# Picture #}
+            {{ include("@Contao/component/_picture.html.twig") }}
+        {% endblock %}
+    {% else %}
+        {# Picture wrapped with link #}
+        {% block link %}
+            {% set link_attributes = attrs(figure.linkAttributes(true)|default)
+                .setIfExists('title', figure.hasLightbox and figure.hasMetadata ? figure.metadata.title : null)
+                .mergeWith(figure.options.link_attr|default)
+                .mergeWith(link_attributes|default)
+            %}
+            <a{{ link_attributes }}>{{ block('media') }}</a>
+        {% endblock %}
+    {% endif %}
+
+    {# Caption #}
+    {% block caption %}
+        {% if figure.hasMetadata|default(false) and figure.metadata.caption %}
+            {% set caption_attributes = attrs()
+                .mergeWith(figure.options.caption_attr|default)
+                .mergeWith(caption_attributes|default)
+            %}
+            <figcaption{{ caption_attributes }}>
+                {%- block caption_inner -%}
+                    {{- figure.metadata.caption|raw -}}
+                {%- endblock -%}
+            </figcaption>
+        {% endif %}
+    {% endblock %}
+</figure>
+
+{# Add metadata #}
+{% block schema_org %}
+    {% if figure.schemaOrgData|default(false) %}
+        {% do add_schema_org(figure.schemaOrgData) %}
+    {% endif %}
+{% endblock %}

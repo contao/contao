@@ -1,0 +1,11 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    <{% block list_tag %}{{ list_type == 'ordered' ? 'ul' : 'ol' }}{% endblock %}>
+        {% for item in list %}
+            {% block list_item %}
+                <li>{{ item|insert_tag_raw }}</li>
+            {% endblock %}
+        {% endfor %}
+    </{{ block('list_tag') }}>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% trans_default_domain "contao_default" %}
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% set searchable = false %}
+
+{% block content %}
+    {% block link %}
+        {% include "@Contao/component/_link.html.twig" with {
+            attributes: link_attributes.set('data-toplink'),
+            value: link_text|default('MSC.backToTop'|trans())
+        } %}
+    {% endblock %}
+    {% block script %}
+        <script type="application/javascript" defer>
+            {
+                let target = document.currentScript.previousElementSibling;
+                if (!target.hasAttribute('data-toplink')) {
+                    target = target.querySelector('[data-toplink]')
+                }
+
+                target.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.getElementById("{% block anchor %}top{% endblock %}").scrollIntoView({
+                        block: '{% block scroll_align %}start{% endblock %}',
+                        behavior: '{% block scroll_behavior %}smooth{% endblock %}',
+                    });
+                })
+            }
+        </script>
+    {% endblock %}
+{% endblock %}

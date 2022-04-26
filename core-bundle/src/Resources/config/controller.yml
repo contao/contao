@@ -55,13 +55,87 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\ContentElement\CodeController:
+        tags:
+            - { name: contao.content_element, category: texts }
+
+    Contao\CoreBundle\Controller\ContentElement\DownloadsController:
+        arguments:
+            - '@security.helper'
+            - '@contao.filesystem.virtual.files'
+            - '@contao.image.studio'
+            - '@contao.filesystem.file_download_helper'
+            - '@contao.image.preview_factory'
+        tags:
+            - { name: contao.content_element, category: files, type: download }
+            - { name: contao.content_element, category: files, type: downloads }
+
+    Contao\CoreBundle\Controller\ContentElement\ImagesController:
+        arguments:
+            - '@security.helper'
+            - '@contao.filesystem.virtual.files'
+            - '@contao.image.studio'
+        tags:
+            - { name: contao.content_element, category: media, type: image }
+            - { name: contao.content_element, category: media, type: gallery }
+
+    Contao\CoreBundle\Controller\ContentElement\HtmlController:
+        tags:
+            - { name: contao.content_element, category: texts }
+
+    Contao\CoreBundle\Controller\ContentElement\HeadlineController:
+        tags:
+            - { name: contao.content_element, category: texts }
+
+    Contao\CoreBundle\Controller\ContentElement\HyperlinkController:
+        arguments:
+            - '@contao.image.studio'
+            - '@contao.insert_tag.parser'
+        tags:
+            - { name: contao.content_element, category: links }
+
+    Contao\CoreBundle\Controller\ContentElement\ListController:
+        tags:
+            - { name: contao.content_element, category: texts }
+
     Contao\CoreBundle\Controller\ContentElement\MarkdownController:
         tags:
             - { name: contao.content_element, category: texts }
 
+    Contao\CoreBundle\Controller\ContentElement\PlayerController:
+        arguments:
+            - '@contao.assets.assets_context'
+        tags:
+            - { name: contao.content_element, category: media }
+
+    Contao\CoreBundle\Controller\ContentElement\TableController:
+        tags:
+            - { name: contao.content_element, category: texts }
+
+    Contao\CoreBundle\Controller\ContentElement\TeaserController:
+        tags:
+            - { name: contao.content_element, category: includes }
+
     Contao\CoreBundle\Controller\ContentElement\TemplateController:
         tags:
             - { name: contao.content_element, category: includes }
+
+    Contao\CoreBundle\Controller\ContentElement\TextController:
+        arguments:
+            - '@contao.image.studio'
+        tags:
+            - { name: contao.content_element, category: texts }
+
+    Contao\CoreBundle\Controller\ContentElement\ToplinkController:
+        tags:
+            - { name: contao.content_element, category: links }
+
+    Contao\CoreBundle\Controller\ContentElement\VideoController:
+        arguments:
+            - '@contao.image.studio'
+        tags:
+            - { name: contao.content_element, category: media, type: vimeo }
+            - { name: contao.content_element, category: media, type: youtube }
 
     Contao\CoreBundle\Controller\FaviconController:
         arguments:

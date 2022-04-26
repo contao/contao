@@ -1,0 +1,62 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    {% set table_attributes = attrs(table_attributes|default(null)) %}
+    {% if sorting %}
+        {% set table_attributes = table_attributes
+            .set('id', 'table_' ~ data.id)
+            .addClass('sortable')
+            .set('data-sort-default', sorting.index ~ '|' ~ sorting.order )
+        %}
+    {% endif %}
+
+    <table{{ table_attributes }}>
+        {# Caption #}
+        {% if summary %}
+            <caption>{% block caption %}{{ summary|insert_tag_raw }}{% endblock %}</caption>
+        {% endif %}
+
+        {# Header #}
+        {% if header %}
+            <thead>
+            {% block header %}
+                <tr>
+                    {% for col in header %}
+                        <th>{{ col|insert_tag_raw|nl2br }}</th>
+                    {% endfor %}
+                </tr>
+            {% endblock %}
+            </thead>
+        {% endif %}
+
+        {# Footer #}
+        {% if footer %}
+            <tfoot>
+            {% block footer %}
+                <tr>
+                    {% for col in footer %}
+                        <td>{{ col|insert_tag_raw|nl2br }}</td>
+                    {% endfor %}
+                </tr>
+            {% endblock %}
+            </tfoot>
+        {% endif %}
+
+        {# Body #}
+        <tbody>
+        {% block body %}
+            {% for row in rows %}
+                <tr>
+                    {% for col in row %}
+                        {% if loop.first and use_row_headers %}
+                            <th scope="row">{{ col|nl2br|insert_tag_raw }}</th>
+                        {% else %}
+                            <td>{{ col|insert_tag_raw|nl2br }}</td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        {% endblock %}
+        </tbody>
+    </table>
+{% endblock %}

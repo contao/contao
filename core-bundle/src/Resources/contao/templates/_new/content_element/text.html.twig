@@ -1,0 +1,38 @@
+{#
+    Default template for the \Contao\CoreBundle\Controller\ContentElement\TextController fragment controller.
+    ---
+    @var text string The text entered via the rich text editor.
+    @var image \Contao\CoreBundle\Image\Studio\Figure|null  An optional image.
+    @var image_position string|null The selected "floating" property.
+
+    @var type string The content element type.
+    @var template string The effective Contao template name without namespace and extension (e.g. "content_element/text").
+    @var as_overview bool If set to true, this element should be rendered as an overview (e.g. for the back end).
+    @var data mixed[] The raw ContentModel data for this element as an array.
+    @var section bool The name of the current layout section.
+    @var properties mixed[] An array of custom template properties.
+    @var attributes \Contao\CoreBundle\String\HtmlAttributes Attributes for the content element's root HTML element.
+    @var headline string[] Optional text and tag name for the content element's headline.
+#}
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    <div{{ layout_attributes }}>
+        {% block content_inner %}
+            {# RTE text #}
+            {% block text %}
+                <div class="rte">{{ text|insert_tag|raw }}</div>
+            {% endblock %}
+
+            {# Image #}
+            {% block image %}
+                {% if image %}
+                    {% include "@Contao/component/_figure.html.twig" with {
+                        figure: image,
+                        figure_attributes: attrs(figure_attributes|default).addClass('image_container')
+                    } %}
+                {% endif %}
+            {% endblock %}
+        {% endblock %}
+    </div>
+{% endblock %}

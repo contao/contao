@@ -1,0 +1,16 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block headline %}
+    {% include "@Contao/component/_headline.html.twig" with {headline: {unit: 'h1', value: article.title}} %}
+{% endblock %}
+
+{% block content %}
+    {% block teaser %}
+        {{ article.teaser|insert_tag|raw }}
+    {% endblock %}
+
+    {% block link %}
+        {% include "@Contao/component/_read_more_link.html.twig" with {href, value: article.title} %}
+    {% endblock %}
+{% endblock %}
+

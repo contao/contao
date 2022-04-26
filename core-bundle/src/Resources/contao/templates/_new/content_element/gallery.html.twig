@@ -1,0 +1,9 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    {% embed "@Contao/component/_sortable_list.html.twig" with {list: images} %}
+        {% block list_item %}
+            {% include "@Contao/component/_figure.html.twig" with {figure: item} %}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

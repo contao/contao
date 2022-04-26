@@ -17,7 +17,7 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Spatie\SchemaOrg\Graph;
 use Twig\Extension\RuntimeExtensionInterface;
 
-final class SchemaOrgRuntime implements RuntimeExtensionInterface
+final class ResponseContextRuntime implements RuntimeExtensionInterface
 {
     /**
      * @internal
@@ -29,7 +29,7 @@ final class SchemaOrgRuntime implements RuntimeExtensionInterface
     /**
      * Adds schema.org JSON-LD data to the current response context.
      */
-    public function add(array $jsonLd): void
+    public function addJsonLd(array $jsonLd): void
     {
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
@@ -45,5 +45,11 @@ final class SchemaOrgRuntime implements RuntimeExtensionInterface
             ->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
             ->set($type, $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT)
         ;
+    }
+
+    public function addStylesheet(string $file): void
+    {
+        // todo migrate to response context
+        $GLOBALS['TL_CSS'][] = $file;
     }
 }

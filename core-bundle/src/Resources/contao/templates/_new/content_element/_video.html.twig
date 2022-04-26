@@ -1,0 +1,21 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% if aspect_ratio %}
+    {% set attributes = attributes.addClass('aspect--' ~ aspect_ratio) %}
+{% endif %}
+
+{% block content %}
+    {% embed '@Contao/component/_splash_screen.html.twig' %}
+        {% import '@ContaoCore/Image/Studio/_macros.html.twig' as studio %}
+
+        {% block button %}
+            {{ studio.picture(splash_image) }}
+        {% endblock %}
+
+        {% block deferred_content %}
+            {# If you want to customize iframe attributes set a 'iframe_attrs' variable yourself. It will get merged with the default attributes.  #}
+            {% set iframe_attrs = attrs({width, height, src: source.url, allowfullscreen: true}).mergeWith(iframe_attrs|default(null)) %}
+            <iframe {{ iframe_attrs }}></iframe>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

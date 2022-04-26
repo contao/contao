@@ -1,6 +1,8 @@
 {# @var \Contao\CoreBundle\Image\Studio\Figure figure #}
 
 {#
+    Note: The Studio Macros are deprecated since Contao 5.
+
     Studio Macros
     -------------
     This collection of Twig macros is intended to help you render figure/image
@@ -48,6 +50,7 @@
     If a link is defined the picture will be wrapped in an <a> tag.
 #}
 {%- macro figure(figure, options = {}, addSchemaOrg = true) -%}
+    {% deprecated 'The "figure" macro is deprecated, embed "@Contao/component/_figure.html.twig" instead and adjust the blocks.' %}
     {%- set figure_attributes = figure.options.attr|default({})|merge(options.attr|default({})) %}
     {%- set link_attributes = figure.options.link_attr|default({})|merge(options.link_attr|default({})) ~%}
     <figure{{ _self.html_attributes(figure_attributes) }}>
@@ -75,6 +78,7 @@
     This falls back to only creating a single <img> if no sources are present.
 #}
 {% macro picture(figure, options = {}) %}
+    {% deprecated 'The "icture" macro is deprecated, embed "@Contao/component/_figure.html.twig" instead and adjust the blocks.' %}
     {%- set picture_attributes = figure.options.picture_attr|default({})|merge(options.picture_attr|default({})) %}
     {%- set source_attributes = figure.options.source_attr|default({})|merge(options.source_attr|default({})) %}
 
@@ -104,6 +108,7 @@
     Build an <img> from Studio\Figure data.
 #}
 {%- macro img(figure, options = {}) -%}
+    {% deprecated 'The "img" macro is deprecated, embed "@Contao/component/_figure.html.twig" instead and adjust the blocks.' %}
     {% apply spaceless %}
         {% set img_attributes = figure.options.img_attr|default({})|merge(options.img_attr|default({})) %}
 
@@ -131,6 +136,7 @@
     If no metadata is present, nothing will be output.
 #}
 {%- macro caption(figure, options = {}) -%}
+    {% deprecated 'The "caption" macro is deprecated, embed "@Contao/component/_figure.html.twig" instead and adjust the blocks.' %}
     {% apply spaceless %}
         {% if figure.hasMetadata and figure.metadata.caption %}
             {% set caption_attributes = figure.options.caption_attr|default({})|merge(options.caption_attr|default({})) %}
@@ -152,6 +158,7 @@
         { 'foo': 'a', 'bar': 'b', 'foobar': null } --> ' foo="a" bar="b"'
 #}
 {%- macro html_attributes(attributes) -%}
+    {% deprecated 'The "html_attributes" macro is deprecated, use the attrs() function instead.' %}
     {%- for attr, value in attributes|filter(v => v is not null) -%}
         {{ ' ' ~ attr }}{% if value %}="{{ value }}"{% endif %}
     {%- endfor -%}

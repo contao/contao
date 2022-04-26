@@ -1,0 +1,6 @@
+{% trans_default_domain "contao_default" %}
+
+<p class="more">
+    {% set attributes = attrs({href, title: 'MSC.readMore'|trans([value])}).mergeWith(attributes|default(null)) %}
+    {% include '@Contao/component/_link.html.twig' with {attributes, value: 'MSC.more'|trans()} only %}
+</p>

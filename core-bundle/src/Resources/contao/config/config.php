@@ -18,26 +18,10 @@ use Contao\ContentAccordionStart;
 use Contao\ContentAccordionStop;
 use Contao\ContentAlias;
 use Contao\ContentArticle;
-use Contao\ContentCode;
-use Contao\ContentDownload;
-use Contao\ContentDownloads;
-use Contao\ContentGallery;
-use Contao\ContentHeadline;
-use Contao\ContentHtml;
-use Contao\ContentHyperlink;
-use Contao\ContentImage;
-use Contao\ContentList;
 use Contao\ContentModel;
 use Contao\ContentModule;
-use Contao\ContentPlayer;
 use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
-use Contao\ContentTable;
-use Contao\ContentTeaser;
-use Contao\ContentText;
-use Contao\ContentToplink;
-use Contao\ContentVimeo;
-use Contao\ContentYouTube;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\Crawl;
 use Contao\FilesModel;
@@ -278,15 +262,6 @@ $GLOBALS['FE_MOD'] = array
 // Content elements
 $GLOBALS['TL_CTE'] = array
 (
-	'texts' => array
-	(
-		'headline'        => ContentHeadline::class,
-		'text'            => ContentText::class,
-		'html'            => ContentHtml::class,
-		'list'            => ContentList::class,
-		'table'           => ContentTable::class,
-		'code'            => ContentCode::class,
-	),
 	'accordion' => array
 	(
 		'accordionSingle' => ContentAccordion::class,
@@ -298,31 +273,12 @@ $GLOBALS['TL_CTE'] = array
 		'sliderStart'     => ContentSliderStart::class,
 		'sliderStop'      => ContentSliderStop::class
 	),
-	'links' => array
-	(
-		'hyperlink'       => ContentHyperlink::class,
-		'toplink'         => ContentToplink::class
-	),
-	'media' => array
-	(
-		'image'           => ContentImage::class,
-		'gallery'         => ContentGallery::class,
-		'player'          => ContentPlayer::class,
-		'youtube'         => ContentYouTube::class,
-		'vimeo'           => ContentVimeo::class
-	),
-	'files' => array
-	(
-		'download'        => ContentDownload::class,
-		'downloads'       => ContentDownloads::class
-	),
 	'includes' => array
 	(
 		'article'         => ContentArticle::class,
 		'alias'           => ContentAlias::class,
 		'form'            => Form::class,
 		'module'          => ContentModule::class,
-		'teaser'          => ContentTeaser::class
 	)
 );
 

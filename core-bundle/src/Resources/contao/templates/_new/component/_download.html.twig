@@ -1,0 +1,29 @@
+{% trans_default_domain 'contao_default' %}
+
+{% block previews %}
+    {% if show_previews|default(false) %}
+        {% for preview in download.previews %}
+            {% include "@Contao/component/_figure.html.twig" with {figure: preview} %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block link %}
+    {# @var \Contao\CoreBundle\Filesystem\Filesystemdownload file #}
+    {% set file = download.file %}
+
+    {# @var \Contao\CoreBundle\File\Metadata file_metadata #}
+    {% set file_metadata = file.extraMetadata.metadata.getDefault()|default(null) %}
+    {% set title = file_metadata.title|default(download.name) %}
+
+    {% set link_attributes = attrs(link_attributes|default)
+        .set('href', download.href)
+        .set('type', file.mimeType)
+        .set('title','MSC.download'|trans([title]))
+    %}
+    {% embed "@Contao/component/_link.html.twig" with {attributes: link_attributes } %}
+        {% block value %}
+            {{ title }} <span class="size">({{ file.fileSize }})</span>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

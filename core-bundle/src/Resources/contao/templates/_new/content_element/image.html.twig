@@ -1,0 +1,7 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    {% if images %}
+        {% include "@Contao/component/_figure.html.twig" with {figure: images|first} %}
+    {% endif %}
+{% endblock %}

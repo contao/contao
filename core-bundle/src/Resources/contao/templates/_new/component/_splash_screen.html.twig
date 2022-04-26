@@ -1,0 +1,34 @@
+<{% block tag %}figure{% endblock %}>
+    {# Splash screen #}
+    <div data-splash>
+        {% block splash_screen %}
+            <button data-load>{% block button %}{% endblock %}</button>
+        {% endblock %}
+    </div>
+
+    {# Deferred content #}
+    <template data-template>
+        {% block deferred_content %}{% endblock %}
+    </template>
+
+    {# Replace the splash screen with the deferred content once the button was clicked. #}
+    {% block script %}
+        {# todo: should we make it possible to add inline scripts to the response context, so that they will be added once? #}
+        <script type="application/javascript" defer>
+            {
+                const container = document.currentScript.parentElement;
+
+                container.querySelector('[data-load]').addEventListener('click', () => {
+                    container.querySelector('[data-splash]').outerHTML = container.querySelector('[data-template]').innerHTML;
+                    container.classList.add('active');
+                })
+            }
+        </script>
+    {% endblock %}
+
+    {% block caption %}
+        {% if caption|default(false) %}
+            <figcaption>{{ caption }}</figcaption>
+        {% endif %}
+    {% endblock %}
+</{{ block('tag') }}>

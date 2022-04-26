@@ -29,7 +29,7 @@ use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
-use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\ResponseContextRuntime;
 use Contao\FrontendTemplateTrait;
 use Contao\Template;
 use Symfony\Component\Filesystem\Path;
@@ -145,7 +145,11 @@ final class ContaoExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'add_schema_org',
-                [SchemaOrgRuntime::class, 'add']
+                [ResponseContextRuntime::class, 'addJsonLd']
+            ),
+            new TwigFunction(
+                'add_stylesheet',
+                [ResponseContextRuntime::class, 'addStylesheet']
             ),
             new TwigFunction(
                 'contao_sections',

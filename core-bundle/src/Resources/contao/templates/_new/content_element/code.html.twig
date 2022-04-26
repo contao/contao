@@ -1,0 +1,27 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    {% set default_stylesheet = 'vendor/scrivo/highlight_php/styles/foundation.css' %}
+    {% block style %}
+        {% add 'highlight_php_css' to head %}
+            {# Lazy load styles, see https://web.dev/defer-non-critical-css/ #}
+            <link rel="preload" href="{{ default_stylesheet }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+            <noscript>
+                <link rel="stylesheet" href="{{ default_stylesheet }}">
+            </noscript>
+        {% endadd %}
+    {% endblock %}
+    <pre>
+        {%- apply spaceless %}
+            {% if as_overview %}
+                {% block overview %}{{ code }}{% endblock %}
+            {% else %}
+                {% block highlighted %}
+                    {# @var \Highlight\HighlightResult highlighted #}
+                    {% set highlighted = code|highlight(language) %}
+                    <code class="hljs {{ highlighted.language }}">{{ highlighted.value|raw }}</code>
+                {% endblock %}
+            {% endif -%}
+        {% endapply -%}
+    </pre>
+{% endblock %}

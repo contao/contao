@@ -1,0 +1,52 @@
+{# @var \Contao\CoreBundle\Image\Studio\Figure figure #}
+{% if not figure.image.sources %}
+    {# just an <img> tag (no sources) #}
+    {% block image %}
+        {% set img = figure.image.img %}
+        {% set defineProportions = img.width|default(false) and img.height|default(false) %}
+        {% set img_attributes = attrs(img_attributes|default)
+            .set('src', img.src)
+            .set('alt', figure.hasMetadata ? figure.metadata.alt : '')
+            .setIfExists('title', figure.hasMetadata ? (figure.metadata.title ?: null) : null)
+            .setIfExists('srcset', img.srcset is defined and img.srcset != img.src ? img.srcset : null)
+            .setIfExists('sizes', img.sizes|default)
+            .setIfExists('width', defineProportions ? img.width : null)
+            .setIfExists('height', defineProportions ? img.height : null)
+            .setIfExists('loading', img.loading|default)
+            .addClass(img.class|default)
+            .mergeWith(figure.options.img_attr|default)
+        %}
+        <img{{ img_attributes }}>
+    {% endblock %}
+{% else %}
+    {# <picture> tag with <source> and <img> #}
+    {% set picture_attributes = attrs(picture_attributes|default)
+        .mergeWith(figure.options.picture_attr|default)
+    %}
+    <picture{{ picture_attributes }}>
+        {% block sources %}
+            {% for source in figure.image.sources %}
+                {% block source %}
+                    {% set defineProportions = source.width|default(false) and source.height|default(false) %}
+                    {% set source_attributes = attrs(source_attributes|default)
+                        .set('srcset', source.srcset)
+                        .setIfExists('sizes', source.sizes|default)
+                        .setIfExists('media', source.media|default)
+                        .setIfExists('type', source.type|default)
+                        .setIfExists('width', defineProportions ? source.width : null)
+                        .setIfExists('height', defineProportions ? source.height : null)
+                        .mergeWith(figure.options.picture_attr|default)
+                    %}
+                    <source{{ source_attributes }}>
+                {% endblock %}
+            {% endfor %}
+        {% endblock %}
+
+        {{ block('image') }}
+    </picture>
+{% endif %}
+
+{# Add metadata #}
+{% block schema_org %}
+    {% do add_schema_org(figure.schemaOrgData) %}
+{% endblock %}

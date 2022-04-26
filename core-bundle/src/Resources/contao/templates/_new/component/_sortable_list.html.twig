@@ -1,0 +1,23 @@
+{% block list %}
+    <ul{{ attrs(list_attributes|default).setIf('data-randomized-list', sorting|default == 'random') }}>
+        {% for item in list %}
+            <li{{ attrs(item_attributes|default) }}>
+                {% block list_item %}{% endblock %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block script %}
+    {% if sorting|default == 'random' %}
+        {% add 'randomize_list_script' to body %}
+            <script type="application/javascript">
+                document.querySelectorAll('*[data-randomized-list]').forEach(list => {
+                    for (let i = list.children.length; i >= 0; i--) {
+                        list.appendChild(list.children[Math.random() * i | 0]);
+                    }
+                })
+            </script>
+        {% endadd %}
+    {% endif %}
+{% endblock %}
