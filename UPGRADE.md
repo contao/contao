@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### Model
+
+The protected `$arrClassNames` property was removed from the `Contao\Model` base class.
+
 ### Request
 
 The `Contao\Request` library has been removed. Use another library such as `symfony/http-client` instead.
@@ -172,7 +176,3 @@ The public folder is now called `public` by default. It can be renamed in the `c
 The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
 `Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
 back to an array representation. If you are just using array access, nothing needs to be changed.
-
-
-### Model
-The protected `$arrClassNames` property was removed from the `Contao\Model` base class.

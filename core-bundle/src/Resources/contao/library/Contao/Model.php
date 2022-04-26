@@ -1177,12 +1177,12 @@ abstract class Model
 	 */
 	public static function getClassFromTable($strTable)
 	{
-		if (null === ($strClass = $GLOBALS['TL_MODELS'][$strTable] ?? null))
+		if (!isset($GLOBALS['TL_MODELS'][$strTable]))
 		{
 			throw new \RuntimeException(sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
 		}
 
-		return $strClass;
+		return $GLOBALS['TL_MODELS'][$strTable];
 	}
 
 	/**
