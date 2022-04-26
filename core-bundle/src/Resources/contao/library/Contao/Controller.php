@@ -15,15 +15,10 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
-use Contao\Image\PictureConfiguration;
-use Imagine\Image\BoxInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -184,7 +179,7 @@ abstract class Controller extends System
 
 				if (strpos($strTemplate, '-') !== false)
 				{
-					trigger_deprecation('contao/core-bundle', '4.9', 'Using hyphens in the template name "' . $strTemplate . '.html5" has been deprecated and will no longer work in Contao 5.0. Use snake_case instead.');
+					throw new \RuntimeException(sprintf('Using hyphens in the template name "%s" is not allowed, use snake_case instead.', $strTemplate));
 				}
 
 				// Ignore bundle templates, e.g. mod_article and mod_article_list
@@ -801,31 +796,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Replace insert tags with their values
-	 *
-	 * @param string  $strBuffer The text with the tags to be replaced
-	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
-	 *
-	 * @return string The text with the replaced tags
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 *             Use the InsertTagParser service instead.
-	 */
-	public static function replaceInsertTags($strBuffer, $blnCache=true)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
-
-		$parser = System::getContainer()->get('contao.insert_tag.parser');
-
-		if ($blnCache)
-		{
-			return $parser->replace((string) $strBuffer);
-		}
-
-		return $parser->replaceInline((string) $strBuffer);
-	}
-
-	/**
 	 * Replace the dynamic script tags (see #4203)
 	 *
 	 * @param string $strBuffer The string with the tags to be replaced
@@ -1211,93 +1181,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Generate a front end URL
-	 *
-	 * @param array   $arrRow       An array of page parameters
-	 * @param string  $strParams    An optional string of URL parameters
-	 * @param string  $strForceLang Force a certain language
-	 * @param boolean $blnFixDomain Check the domain of the target page and append it if necessary
-	 *
-	 * @return string A URL that can be used in the front end
-	 *
-	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
-	 *             Use PageModel::getFrontendUrl() instead.
-	 */
-	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
-	{
-		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\Controller::generateFrontendUrl()" has been deprecated and will no longer work in Contao 5.0. Use PageModel::getFrontendUrl() instead.');
-
-		$page = new PageModel();
-		$page->preventSaving(false);
-		$page->setRow($arrRow);
-
-		if (!isset($arrRow['rootId']))
-		{
-			$page->loadDetails();
-
-			foreach (array('domain', 'rootLanguage', 'rootUseSSL') as $key)
-			{
-				if (isset($arrRow[$key]))
-				{
-					$page->$key = $arrRow[$key];
-				}
-				else
-				{
-					$arrRow[$key] = $page->$key;
-				}
-			}
-		}
-
-		// Set the language
-		if ($strForceLang !== null)
-		{
-			$strForceLang = LocaleUtil::formatAsLocale($strForceLang);
-
-			$page->language = $strForceLang;
-			$page->rootLanguage = $strForceLang;
-		}
-
-		// Add the domain if it differs from the current one (see #3765 and #6927)
-		if ($blnFixDomain)
-		{
-			$page->domain = $arrRow['domain'];
-			$page->rootUseSSL = (bool) $arrRow['rootUseSSL'];
-		}
-
-		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams));
-
-		// Remove path from absolute URLs
-		if (0 === strncmp($strUrl, '/', 1) && 0 !== strncmp($strUrl, '//', 2))
-		{
-			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
-		}
-
-		// Decode sprintf placeholders
-		if (strpos($strParams, '%') !== false)
-		{
-			$arrMatches = array();
-			preg_match_all('/%([sducoxXbgGeEfF])/', $strParams, $arrMatches);
-
-			foreach (array_unique($arrMatches[1]) as $v)
-			{
-				$strUrl = str_replace('%25' . $v, '%' . $v, $strUrl);
-			}
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && \is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
-			{
-				$strUrl = static::importStatic($callback[0])->{$callback[1]}($arrRow, $strParams, $strUrl);
-			}
-		}
-
-		return $strUrl;
-	}
-
-	/**
 	 * Convert relative URLs in href and src attributes to absolute URLs
 	 *
 	 * @param string  $strContent  The text with the URLs to be converted
@@ -1568,219 +1451,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Add an image to a template
-	 *
-	 * @param object          $template                The template object to add the image to
-	 * @param array           $rowData                 The element or module as array
-	 * @param integer|null    $maxWidth                An optional maximum width of the image
-	 * @param string|null     $lightboxGroupIdentifier An optional lightbox group identifier
-	 * @param FilesModel|null $filesModel              An optional files model
-	 *
-	 * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0;
-	 *             use the Contao\CoreBundle\Image\Studio\FigureBuilder instead.
-	 */
-	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
-	{
-		trigger_deprecation('contao/core-bundle', '4.11', 'Using Controller::addImageToTemplate() is deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Image\Studio\FigureBuilder" class instead.');
-
-		// Helper: Create metadata from the specified row data
-		$createMetadataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
-		{
-			if ($interpretAsContentModel)
-			{
-				// This will be null if "overwriteMeta" is not set
-				return (new ContentModel())->setRow($rowData)->getOverwriteMetadata();
-			}
-
-			// Manually create metadata that always contains certain properties (BC)
-			return new Metadata(array(
-				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
-				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-				Metadata::VALUE_URL => System::getContainer()->get('contao.insert_tag.parser')->replaceInline($rowData['imageUrl'] ?? ''),
-				'linkTitle' => (string) ($rowData['linkTitle'] ?? ''),
-			));
-		};
-
-		// Helper: Create fallback template data with (mostly) empty fields (used if resource acquisition fails)
-		$createFallBackTemplateData = static function () use ($filesModel, $rowData)
-		{
-			$templateData = array(
-				'width' => null,
-				'height' => null,
-				'picture' => array(
-					'img' => array(
-						'src' => '',
-						'srcset' => '',
-					),
-					'sources' => array(),
-					'alt' => '',
-					'title' => '',
-				),
-				'singleSRC' => $rowData['singleSRC'],
-				'src' => '',
-				'linkTitle' => '',
-				'margin' => '',
-				'addImage' => true,
-				'addBefore' => true,
-				'fullsize' => false,
-			);
-
-			if (null !== $filesModel)
-			{
-				// Set empty metadata
-				$templateData = array_replace_recursive(
-					$templateData,
-					array(
-						'alt' => '',
-						'caption' => '',
-						'imageTitle' => '',
-						'imageUrl' => '',
-					)
-				);
-			}
-
-			return $templateData;
-		};
-
-		// Helper: Get size and margins and handle legacy $maxWidth option
-		$getSizeAndMargin = static function () use ($rowData, $maxWidth)
-		{
-			$size = $rowData['size'] ?? null;
-			$margin = StringUtil::deserialize($rowData['imagemargin'] ?? null);
-			$maxWidth = (int) ($maxWidth ?? Config::get('maxImageWidth'));
-
-			if (0 === $maxWidth)
-			{
-				return array($size, $margin);
-			}
-
-			trigger_deprecation('contao/core-bundle', '4.10', 'Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.');
-
-			// Adjust margins if needed
-			if ('px' === ($margin['unit'] ?? null))
-			{
-				$horizontalMargin = (int) ($margin['left'] ?? 0) + (int) ($margin['right'] ?? 0);
-
-				if ($maxWidth - $horizontalMargin < 1)
-				{
-					$margin['left'] = '';
-					$margin['right'] = '';
-				}
-				else
-				{
-					$maxWidth -= $horizontalMargin;
-				}
-			}
-
-			// Normalize size
-			if ($size instanceof PictureConfiguration)
-			{
-				return array($size, $margin);
-			}
-
-			$size = StringUtil::deserialize($size);
-
-			if (is_numeric($size))
-			{
-				$size = array(0, 0, (int) $size);
-			}
-			else
-			{
-				$size = (\is_array($size) ? $size : array()) + array(0, 0, 'crop');
-				$size[0] = (int) $size[0];
-				$size[1] = (int) $size[1];
-			}
-
-			// Adjust image size configuration if it exceeds the max width
-			if ($size[0] > 0 && $size[1] > 0)
-			{
-				list($width, $height) = $size;
-			}
-			else
-			{
-				$container = System::getContainer();
-
-				/** @var BoxInterface $originalSize */
-				$originalSize = $container
-					->get('contao.image.factory')
-					->create($container->getParameter('kernel.project_dir') . '/' . $rowData['singleSRC'])
-					->getDimensions()
-					->getSize();
-
-				$width = $originalSize->getWidth();
-				$height = $originalSize->getHeight();
-			}
-
-			if ($width <= $maxWidth)
-			{
-				return array($size, $margin);
-			}
-
-			$size[0] = $maxWidth;
-			$size[1] = (int) floor($maxWidth * ($height / $width));
-
-			return array($size, $margin);
-		};
-
-		$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
-
-		// Set image resource
-		if (null !== $filesModel)
-		{
-			// Make sure model points to the same resource (BC)
-			$filesModel = clone $filesModel;
-			$filesModel->path = $rowData['singleSRC'];
-
-			// Use source + metadata from files model (if not overwritten)
-			$figureBuilder
-				->fromFilesModel($filesModel)
-				->setMetadata($createMetadataOverwriteFromRowData(true));
-
-			$includeFullMetadata = true;
-		}
-		else
-		{
-			// Always ignore file metadata when building from path (BC)
-			$figureBuilder
-				->fromPath($rowData['singleSRC'], false)
-				->setMetadata($createMetadataOverwriteFromRowData(false));
-
-			$includeFullMetadata = false;
-		}
-
-		// Set size and lightbox configuration
-		list($size, $margin) = $getSizeAndMargin();
-
-		$lightboxSize = StringUtil::deserialize($rowData['lightboxSize'] ?? null) ?: null;
-
-		$figure = $figureBuilder
-			->setSize($size)
-			->setLightboxGroupIdentifier($lightboxGroupIdentifier)
-			->setLightboxSize($lightboxSize)
-			->enableLightbox((bool) ($rowData['fullsize'] ?? false))
-			->buildIfResourceExists();
-
-		if (null === $figure)
-		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
-
-			// Fall back to apply a sparse data set instead of failing (BC)
-			foreach ($createFallBackTemplateData() as $key => $value)
-			{
-				$template->$key = $value;
-			}
-
-			return;
-		}
-
-		// Build result and apply it to the template
-		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?? null, $includeFullMetadata);
-
-		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
-		$template->linkTitle ??= StringUtil::specialchars($rowData['title'] ?? '');
-	}
-
-	/**
 	 * Add enclosures to a template
 	 *
 	 * @param object $objTemplate The template object to add the enclosures to
@@ -1881,14 +1551,6 @@ abstract class Controller extends System
 			}
 		}
 
-		// Order the enclosures
-		if (!empty($arrItem['orderEnclosure']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.10', 'Using "orderEnclosure" has been deprecated and will no longer work in Contao 5.0. Use a file tree with "isSortable" instead.');
-
-			$arrEnclosures = ArrayUtil::sortByOrderField($arrEnclosures, $arrItem['orderEnclosure']);
-		}
-
 		$objTemplate->enclosure = $arrEnclosures;
 	}
 
@@ -1902,22 +1564,8 @@ abstract class Controller extends System
 			return;
 		}
 
-		if (\func_num_args() > 0)
-		{
-			trigger_deprecation('contao/core-bundle', '4.9', 'Using "Contao\Controller::setStaticUrls()" has been deprecated and will no longer work in Contao 5.0. Use the asset contexts instead.');
-
-			if (!isset($GLOBALS['objPage']))
-			{
-				$GLOBALS['objPage'] = func_get_arg(0);
-			}
-		}
-
 		\define('TL_ASSETS_URL', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl());
 		\define('TL_FILES_URL', System::getContainer()->get('contao.assets.files_context')->getStaticUrl());
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		\define('TL_SCRIPT_URL', TL_ASSETS_URL);
-		\define('TL_PLUGINS_URL', TL_ASSETS_URL);
 	}
 
 	/**
@@ -1971,121 +1619,6 @@ abstract class Controller extends System
 	public static function addFilesUrlTo($script)
 	{
 		return static::addStaticUrlTo($script, System::getContainer()->get('contao.assets.files_context'));
-	}
-
-	/**
-	 * Resize an image and crop it if necessary
-	 *
-	 * @param string  $image  The image path
-	 * @param integer $width  The target width
-	 * @param integer $height The target height
-	 * @param string  $mode   An optional resize mode
-	 *
-	 * @return boolean True if the image has been resized correctly
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Image::resize() instead.
-	 */
-	protected function resizeImage($image, $width, $height, $mode='')
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::resizeImage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Image::resize()" instead.');
-
-		return Image::resize($image, $width, $height, $mode);
-	}
-
-	/**
-	 * Resize an image and crop it if necessary
-	 *
-	 * @param string  $image  The image path
-	 * @param integer $width  The target width
-	 * @param integer $height The target height
-	 * @param string  $mode   An optional resize mode
-	 * @param string  $target An optional target to be replaced
-	 * @param boolean $force  Override existing target images
-	 *
-	 * @return string|null The image path or null
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Image::get() instead.
-	 */
-	protected function getImage($image, $width, $height, $mode='', $target=null, $force=false)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getImage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Image::get()" instead.');
-
-		return Image::get($image, $width, $height, $mode, $target, $force);
-	}
-
-	/**
-	 * Generate an image tag and return it as string
-	 *
-	 * @param string $src        The image path
-	 * @param string $alt        An optional alt attribute
-	 * @param string $attributes A string of other attributes
-	 *
-	 * @return string The image HTML tag
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Image::getHtml() instead.
-	 */
-	public static function generateImage($src, $alt='', $attributes='')
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::generateImage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Image::getHtml()" instead.');
-
-		return Image::getHtml($src, $alt, $attributes);
-	}
-
-	/**
-	 * Parse simple tokens that can be used to personalize newsletters
-	 *
-	 * @param string $strBuffer The text with the tokens to be replaced
-	 * @param array  $arrData   The replacement data as array
-	 *
-	 * @return string The text with the replaced tokens
-	 *
-	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0;
-	 *             Use the contao.string.simple_token_parser service instead.
-	 */
-	protected function parseSimpleTokens($strBuffer, $arrData)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\Controller::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.string.simple_token_parser" service instead.');
-
-		return System::getContainer()->get('contao.string.simple_token_parser')->parse($strBuffer, $arrData);
-	}
-
-	/**
-	 * Return a "selected" attribute if the option is selected
-	 *
-	 * @param string $strOption The option to check
-	 * @param mixed  $varValues One or more values to check against
-	 *
-	 * @return string The attribute or an empty string
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Widget::optionSelected() instead.
-	 */
-	public static function optionSelected($strOption, $varValues)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::optionSelected()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Widget::optionSelected()" instead.');
-
-		return Widget::optionSelected($strOption, $varValues);
-	}
-
-	/**
-	 * Return a "checked" attribute if the option is checked
-	 *
-	 * @param string $strOption The option to check
-	 * @param mixed  $varValues One or more values to check against
-	 *
-	 * @return string The attribute or an empty string
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Widget::optionChecked() instead.
-	 */
-	public static function optionChecked($strOption, $varValues)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::optionChecked()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Widget::optionChecked()" instead.');
-
-		return Widget::optionChecked($strOption, $varValues);
 	}
 
 	/**
