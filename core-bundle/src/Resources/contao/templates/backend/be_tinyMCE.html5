@@ -38,7 +38,7 @@ window.tinymce && tinymce.init({
         }
       });
     },
-    file_picker_types: '<?= implode(' ', $this->fileBrowserTypes) ?>',
+    file_picker_types: '<?= $this->fileBrowserTypes ?>',
   <?php $this->endblock(); ?>
 
   <?php $this->block('content_css'); ?>
