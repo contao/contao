@@ -184,6 +184,8 @@ class Input
 			return array_values($keys);
 		}
 
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
+
 		return array_keys($_GET ?? array());
 	}
 
@@ -211,7 +213,31 @@ class Input
 
 	public static function postKeys(): array
 	{
-		return static::getRequest()?->request->keys() ?? array_keys($_POST ?? array());
+		if ($request = static::getRequest())
+		{
+			$keys = $request->request->keys();
+
+			if (isset(static::$setPost) && static::$setPost->offsetExists($request))
+			{
+				foreach (static::$setPost->offsetGet($request) as $key => $value)
+				{
+					if ($value === null)
+					{
+						$keys = array_diff($keys, array($key));
+					}
+					else
+					{
+						$keys[] = $key;
+					}
+				}
+			}
+
+			return array_values($keys);
+		}
+
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
+
+		return array_keys($_POST ?? array());
 	}
 
 	/**
@@ -343,7 +369,7 @@ class Input
 		if ($request = static::getRequest())
 		{
 			static::$setPost ??= new \WeakMap();
-			$arrPost = static::$setPost->offsetExists($request) ? static::$setPost->offsetPost($request) : array();
+			$arrPost = static::$setPost->offsetExists($request) ? static::$setPost->offsetGet($request) : array();
 			$arrPost[$strKey] = $varValue;
 			static::$setPost->offsetSet($request, $arrPost);
 		}
@@ -373,7 +399,7 @@ class Input
 		if ($request = static::getRequest())
 		{
 			static::$setCookie ??= new \WeakMap();
-			$arrCookie = static::$setCookie->offsetExists($request) ? static::$setCookie->offsetPost($request) : array();
+			$arrCookie = static::$setCookie->offsetExists($request) ? static::$setCookie->offsetGet($request) : array();
 			$arrCookie[$strKey] = $varValue;
 			static::$setCookie->offsetSet($request, $arrCookie);
 		}
