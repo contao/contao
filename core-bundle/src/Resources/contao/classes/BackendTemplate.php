@@ -70,11 +70,6 @@ class BackendTemplate extends Template
 	{
 		$this->ua = '';
 
-		if (Config::get('fullscreen'))
-		{
-			$this->ua .= ' fullscreen';
-		}
-
 		$this->addBackendConfig();
 
 		// Style sheets
