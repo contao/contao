@@ -36,7 +36,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body<?php if ($this->ua): ?> class="<?= $this->ua ?>"<?php endif; ?><?= $this->attributes ?>>
+<body<?= $this->attributes ?>>
 
   <?php $this->block('container'); ?>
     <div id="container">

@@ -68,8 +68,6 @@ class BackendTemplate extends Template
 	 */
 	protected function compile()
 	{
-		$this->ua = '';
-
 		$this->addBackendConfig();
 
 		// Style sheets
