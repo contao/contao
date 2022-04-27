@@ -84,7 +84,7 @@ class RootPageDependentSelect extends SelectMenu
 
 				$options[] = sprintf(
 					'<option value="%s"%s>%s</option>',
-					StringUtil::specialchars($option['value']),
+					self::specialcharsValue($option['value']),
 					$this->isSelected($option),
 					$option['label']
 				);

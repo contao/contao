@@ -188,7 +188,7 @@ class ImageSize extends Widget
 			{
 				$arrOptions[] = sprintf(
 					'<option value="%s"%s>%s</option>',
-					StringUtil::specialchars($arrOption['value'] ?? ''),
+					self::specialcharsValue($arrOption['value'] ?? ''),
 					$this->optionSelected($arrOption['value'] ?? null, $this->varValue[2] ?? null),
 					$arrOption['label'] ?? null
 				);
@@ -201,7 +201,7 @@ class ImageSize extends Widget
 				{
 					$arrOptgroups[] = sprintf(
 						'<option value="%s"%s>%s</option>',
-						StringUtil::specialchars($arrOptgroup['value'] ?? ''),
+						self::specialcharsValue($arrOptgroup['value'] ?? ''),
 						$this->optionSelected($arrOptgroup['value'] ?? null, $this->varValue[2] ?? null),
 						$arrOptgroup['label'] ?? null
 					);
@@ -227,7 +227,7 @@ class ImageSize extends Widget
 				$i,
 				$this->strId . '_' . $i,
 				$i,
-				StringUtil::specialchars(@$this->varValue[$i]), // see #4979
+				self::specialcharsValue(@$this->varValue[$i]), // see #4979
 				$this->getAttributes()
 			);
 		}

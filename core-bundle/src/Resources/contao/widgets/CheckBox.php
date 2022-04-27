@@ -251,7 +251,7 @@ class CheckBox extends Widget
 			'<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s%s%s</label>%s',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
-			($this->multiple ? StringUtil::specialchars($arrOption['value']) : 1),
+			($this->multiple ? self::specialcharsValue($arrOption['value']) : 1),
 			$this->isChecked($arrOption),
 			$this->getAttributes(),
 			$this->strId . '_' . $i,
