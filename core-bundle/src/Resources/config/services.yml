@@ -1037,6 +1037,7 @@ services:
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
+    Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
 
     # Backwards compatibility
     contao.cache.clear_internal:

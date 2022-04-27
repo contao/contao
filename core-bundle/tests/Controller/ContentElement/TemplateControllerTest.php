@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\ContentElement\TemplateController;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendTemplate;
 use Symfony\Component\DependencyInjection\Container;
@@ -107,6 +108,7 @@ class TemplateControllerTest extends TestCase
         $container->set('contao.framework', $framework);
         $container->set('request_stack', $this->createMock(RequestStack::class));
         $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.routing.scope_matcher', $this->createMock(ScopeMatcher::class));
 
         return $container;
     }

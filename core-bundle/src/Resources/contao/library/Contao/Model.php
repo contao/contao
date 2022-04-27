@@ -67,12 +67,6 @@ abstract class Model
 	protected static $strPk = 'id';
 
 	/**
-	 * Class name cache
-	 * @var array
-	 */
-	protected static $arrClassNames = array();
-
-	/**
 	 * Data
 	 * @var array
 	 */
@@ -409,12 +403,6 @@ abstract class Model
 	 */
 	public function save()
 	{
-		// Deprecated call
-		if (\func_num_args() > 0)
-		{
-			throw new \InvalidArgumentException('The $blnForceInsert argument has been removed (see system/docs/UPGRADE.md)');
-		}
-
 		// The instance cannot be saved
 		if ($this->blnPreventSaving)
 		{
@@ -741,8 +729,8 @@ abstract class Model
 	/**
 	 * Find a single record by its primary key
 	 *
-	 * @param mixed $varValue   The property value
-	 * @param array $arrOptions An optional options array
+	 * @param int|string $varValue   The property value
+	 * @param array      $arrOptions An optional options array
 	 *
 	 * @return static The model or null if the result is empty
 	 */
@@ -750,9 +738,7 @@ abstract class Model
 	{
 		if ($varValue === null)
 		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Passing "null" as primary key has been deprecated and will no longer work in Contao 5.0.', __CLASS__);
-
-			return null;
+			throw new \TypeError('Model::findByPk(): Argument #1 ($varValue) must be of type int|string, got null');
 		}
 
 		// Try to load from the registry
@@ -937,9 +923,7 @@ abstract class Model
 
 			if ($varValue === null && $arrColumn[0] === static::getPk())
 			{
-				trigger_deprecation('contao/core-bundle', '4.13', 'Passing "null" as primary key has been deprecated and will no longer work in Contao 5.0.', __CLASS__);
-
-				return null;
+				throw new \TypeError('Model::findBy(): Argument #2 ($varValue) must be of type int|string when querying for the primary key, got null');
 			}
 		}
 
@@ -1193,30 +1177,12 @@ abstract class Model
 	 */
 	public static function getClassFromTable($strTable)
 	{
-		if (isset(static::$arrClassNames[$strTable]))
+		if (!isset($GLOBALS['TL_MODELS'][$strTable]))
 		{
-			return static::$arrClassNames[$strTable];
+			throw new \RuntimeException(sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
 		}
 
-		if (isset($GLOBALS['TL_MODELS'][$strTable]))
-		{
-			static::$arrClassNames[$strTable] = $GLOBALS['TL_MODELS'][$strTable]; // see 4796
-
-			return static::$arrClassNames[$strTable];
-		}
-
-		trigger_deprecation('contao/core-bundle', '4.10', sprintf('Not registering table "%s" in $GLOBALS[\'TL_MODELS\'] has been deprecated and will no longer work in Contao 5.0.', $strTable));
-
-		$arrChunks = explode('_', $strTable);
-
-		if ($arrChunks[0] == 'tl')
-		{
-			array_shift($arrChunks);
-		}
-
-		static::$arrClassNames[$strTable] = implode('', array_map('ucfirst', $arrChunks)) . 'Model';
-
-		return static::$arrClassNames[$strTable];
+		return $GLOBALS['TL_MODELS'][$strTable];
 	}
 
 	/**

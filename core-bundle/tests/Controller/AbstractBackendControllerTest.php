@@ -78,7 +78,6 @@ class AbstractBackendControllerTest extends TestCase
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
 
-        $_SERVER['HTTP_USER_AGENT'] = 'Contao/Foo';
         $_SERVER['HTTP_HOST'] = 'localhost';
 
         TemplateLoader::addFile('be_main', '');
@@ -97,7 +96,6 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
-            'ua' => '',
             'badgeTitle' => '',
             'foo' => 'bar',
         ];

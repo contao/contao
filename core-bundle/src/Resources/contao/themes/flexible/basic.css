@@ -197,9 +197,6 @@ p {
 .widget-captcha {
 	display:initial !important;
 }
-.widget .mce-tinymce {
-	margin:3px 0;
-}
 .widget p.info {
 	margin:2px 0;
 	padding:7px;

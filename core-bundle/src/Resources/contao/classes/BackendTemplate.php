@@ -68,8 +68,6 @@ class BackendTemplate extends Template
 	 */
 	protected function compile()
 	{
-		$this->ua = Config::get('fullscreen') ? 'fullscreen' : '';
-
 		$this->addBackendConfig();
 
 		// Style sheets
