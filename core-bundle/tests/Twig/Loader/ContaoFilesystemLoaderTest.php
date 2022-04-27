@@ -19,6 +19,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -604,23 +605,19 @@ class ContaoFilesystemLoaderTest extends TestCase
         ];
     }
 
-    public function testCatchesInvalidThemePathExceptionWhenGeneratingSlug(): void
+    public function testThrowsInvalidThemePathExceptionWhenGeneratingSlug(): void
     {
-        $themeNamespace = $this->createMock(ThemeNamespace::class);
-        $themeNamespace
-            ->method('generateSlug')
-            ->with('my_theme')
-            ->willThrowException(new InvalidThemePathException('my_theme', ['_']))
-        ;
-
         $loader = new ContaoFilesystemLoader(
             new NullAdapter(),
             $this->createMock(TemplateLocator::class),
-            $themeNamespace,
+            new ThemeNamespace(),
             '/'
         );
 
-        $page = new \stdClass();
+        $this->expectException(InvalidThemePathException::class);
+        $this->expectExceptionMessage('The theme path "my_theme" contains one or more invalid characters: "_"');
+
+        $page = $this->mockClassWithProperties(PageModel::class);
         $page->templateGroup = 'templates/my_theme';
 
         $GLOBALS['objPage'] = $page;
