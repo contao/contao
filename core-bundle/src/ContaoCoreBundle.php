@@ -42,6 +42,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
+use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -77,6 +78,7 @@ class ContaoCoreBundle extends Bundle
                 PreviewUrlCreateEvent::class => ContaoCoreEvents::PREVIEW_URL_CREATE,
                 PreviewUrlConvertEvent::class => ContaoCoreEvents::PREVIEW_URL_CONVERT,
                 RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
+                SitemapEvent::class => ContaoCoreEvents::SITEMAP,
                 SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
             ])
         );
