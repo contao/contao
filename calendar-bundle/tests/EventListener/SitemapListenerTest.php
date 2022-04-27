@@ -19,7 +19,6 @@ use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\Database;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 
 class SitemapListenerTest extends ContaoTestCase
@@ -91,11 +90,6 @@ class SitemapListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework($adapters, $instances);
 
         return new SitemapListener($framework);
-    }
-
-    private function createCalendarEvent(array $properties): MockObject
-    {
-        return $this->mockClassWithProperties(CalendarEventsModel::class, $properties);
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent

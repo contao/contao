@@ -29,7 +29,7 @@ class SitemapListener
     {
         $arrRoot = $this->framework->createInstance(Database::class)->getChildRecords($event->getRootPageIds(), 'tl_page');
 
-        // Early return here in the unlikely case there are no pages
+        // Early return here in the unlikely case that there are no pages
         if (empty($arrRoot)) {
             return;
         }
