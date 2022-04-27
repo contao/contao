@@ -335,14 +335,8 @@ class PreviewFactory
      */
     private function convertPreviewsToPictures(iterable $previews, PictureConfiguration|array|int|string|null $size, ResizeOptions $resizeOptions = null): iterable
     {
-        $commonArguments = [$size];
-
-        if (null !== $resizeOptions) {
-            $commonArguments[] = $resizeOptions;
-        }
-
         return array_map(
-            fn ($path) => $this->pictureFactory->create($path, ...$commonArguments),
+            fn ($path) => $this->pictureFactory->create($path, $size, $resizeOptions),
             \is_array($previews) ? $previews : iterator_to_array($previews, false),
         );
     }
