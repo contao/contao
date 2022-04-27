@@ -81,11 +81,14 @@ abstract class AbstractFragmentController extends AbstractController implements 
     {
         $templateName = $this->getTemplateName($model, $fallbackTemplateName);
         $isLegacyTemplate = $this->isLegacyTemplate($templateName);
+        $templateNameToView = static fn (string $name): string => "@Contao/$name.html.twig";
 
         // Allow calling render() without a view
-        $this->view = !$isLegacyTemplate ? "@Contao/$templateName.html.twig" : null;
+        if (!$isLegacyTemplate) {
+            $this->view = $templateNameToView($templateName);
+        }
 
-        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($templateName, $isLegacyTemplate): Response {
+        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($templateNameToView, $templateName, $isLegacyTemplate): Response {
             if ($isLegacyTemplate) {
                 // Render using the legacy framework
                 $legacyTemplate = $this->container->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
@@ -105,7 +108,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
             // Directly render with Twig
             $context = $this->container->get('contao.twig.interop.context_factory')->fromData($template->getData());
 
-            return $this->render($template->getName(), $context, $preBuiltResponse);
+            return $this->render($templateNameToView($template->getName()), $context, $preBuiltResponse);
         };
 
         $template = new FragmentTemplate($templateName, $onGetResponse);
