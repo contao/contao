@@ -51,7 +51,6 @@ class EnvironmentTest extends TestCase
         System::setContainer($container);
 
         require __DIR__.'/../../src/Resources/contao/config/default.php';
-        require __DIR__.'/../../src/Resources/contao/config/agents.php';
     }
 
     protected function tearDown(): void
@@ -157,19 +156,6 @@ class EnvironmentTest extends TestCase
 
     private function runTests(): void
     {
-        $this->expectDeprecation('%sEnvironment::get(\'agent\')%shas been deprecated%s');
-
-        $agent = Environment::get('agent');
-
-        $this->assertSame('mac', $agent->os);
-        $this->assertSame('mac chrome blink ch33', $agent->class);
-        $this->assertSame('chrome', $agent->browser);
-        $this->assertSame('ch', $agent->shorty);
-        $this->assertSame('33', $agent->version);
-        $this->assertSame('blink', $agent->engine);
-        $this->assertSame(['33', '0', '1750', '149'], $agent->versions);
-        $this->assertFalse($agent->mobile);
-
         $this->assertSame('HTTP/1.1', Environment::get('serverProtocol'));
         $this->assertSame($this->projectDir.'/core/index.php', Environment::get('scriptFilename'));
         $this->assertSame('/core/index.php', Environment::get('scriptName'));

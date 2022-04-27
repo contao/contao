@@ -59,10 +59,6 @@ class AbstractBackendControllerTest extends TestCase
      */
     public function testAddsAndMergesBackendContext(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Environment::get(\'agent\')" has been deprecated %s');
-        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Config::get(\'os\')" has been deprecated.');
-        $this->expectDeprecation('Since contao/core-bundle 4.13: Using "Contao\Config::get(\'browser\')" has been deprecated.');
-
         $controller = new class() extends AbstractBackendController {
             public function fooAction(): Response
             {
@@ -86,7 +82,6 @@ class AbstractBackendControllerTest extends TestCase
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
 
-        $_SERVER['HTTP_USER_AGENT'] = 'Contao/Foo';
         $_SERVER['HTTP_HOST'] = 'localhost';
 
         TemplateLoader::addFile('be_main', '');
@@ -105,7 +100,6 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
-            'ua' => 'unknown other ',
             'badgeTitle' => '',
             'foo' => 'bar',
         ];
