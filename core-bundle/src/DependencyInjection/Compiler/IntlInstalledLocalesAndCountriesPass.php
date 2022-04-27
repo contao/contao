@@ -27,17 +27,11 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
         if ($container->has('contao.intl.locales')) {
             $definition = $container->findDefinition('contao.intl.locales');
 
-            // Backwards compatibility for the deprecated contao.locales parameter
-            $enabledLocales = $container->getParameter('contao.locales') ?: $this->getEnabledLocales($container);
+            $enabledLocales = $this->getEnabledLocales($container);
             $locales = array_values(array_unique(array_merge($enabledLocales, \ResourceBundle::getLocales(''))));
 
             $definition->setArgument(3, $locales);
             $definition->setArgument(4, $enabledLocales);
-
-            if (!$container->getParameter('contao.locales')) {
-                // Backwards compatibility for the deprecated contao.locales parameter
-                $container->setParameter('contao.locales', $enabledLocales);
-            }
         }
 
         if ($container->has('contao.intl.countries')) {
@@ -56,11 +50,6 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
         $dirs = [__DIR__.'/../../Resources/contao/languages'];
 
         if (is_dir($path = Path::join($projectDir, 'contao/languages'))) {
-            $dirs[] = $path;
-        }
-
-        // Backwards compatibility
-        if (is_dir($path = Path::join($projectDir, 'app/Resources/contao/languages'))) {
             $dirs[] = $path;
         }
 

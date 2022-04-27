@@ -432,7 +432,6 @@ class ContaoFilesystemLoaderTest extends TestCase
             ],
             'nested-dir/foo' => [Path::join($projectDir, 'contao/templates/other/nested-dir/foo.html.twig') => '@Contao_App/nested-dir/foo.html.twig'],
             'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
-            'baz' => [Path::join($projectDir, 'app/Resources/contao/templates/baz.html.twig') => '@Contao_App/baz.html.twig'],
         ];
 
         // Full hierarchy

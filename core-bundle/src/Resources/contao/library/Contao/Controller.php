@@ -159,12 +159,6 @@ abstract class Controller extends System
 
 		$strGlobPrefix = $strPrefix;
 
-		// Backwards compatibility (see #725)
-		if (substr($strGlobPrefix, -1) == '_')
-		{
-			$strGlobPrefix = substr($strGlobPrefix, 0, -1) . '[_-]';
-		}
-
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$arrCustomized = self::braceGlob($projectDir . '/templates/' . $strGlobPrefix . '*.html5');
 
@@ -1545,8 +1539,7 @@ abstract class Controller extends System
 					'mime'      => $objFile->mime,
 					'meta'      => $arrMeta,
 					'extension' => $objFile->extension,
-					'path'      => $objFile->dirname,
-					'enclosure' => $objFiles->path // backwards compatibility
+					'path'      => $objFile->dirname
 				);
 			}
 		}

@@ -94,10 +94,6 @@ class TemplateLocator
             $add('App', $path);
         }
 
-        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao/templates'))) {
-            $add('App', $path);
-        }
-
         foreach (array_reverse($this->bundles) as $name => $class) {
             if (ContaoModuleBundle::class === $class && is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'templates'))) {
                 $add($name, $path);

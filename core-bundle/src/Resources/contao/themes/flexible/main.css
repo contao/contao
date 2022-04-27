@@ -1852,16 +1852,6 @@ time[title] {
 	float:right;
 }
 
-/* Backwards compatibility */
-#manager {
-	padding:9px 6px 0;
-	border-bottom:1px solid #ddd;
-}
-#manager a {
-	padding:3px 12px 3px 32px;
-	background:url("icons/manager.svg") 12px center no-repeat;
-}
-
 /* Default icon classes */
 .header_icon,.header_clipboard,.header_back,.header_new,.header_rss,.header_edit_all,.header_delete_all,
 .header_new_folder,.header_css_import,.header_theme_import,.header_store,.header_toggle,.header_sync {

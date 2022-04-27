@@ -48,11 +48,6 @@ class ScriptHandler
         $command[0] = Path::join(__DIR__.'/../../bin', $command[0]);
         array_unshift($command, $phpPath);
 
-        // Backwards compatibility with symfony/process <3.3 (see #1964)
-        if (method_exists(Process::class, 'setCommandline')) {
-            $command = implode(' ', array_map('escapeshellarg', $command));
-        }
-
         $process = new Process($command);
         $process->setTimeout(null);
 
