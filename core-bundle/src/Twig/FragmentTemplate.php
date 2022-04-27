@@ -297,7 +297,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function addEnclosuresToTemplate($objTemplate, $arrItem, $strKey = 'enclosure'): void
+    public static function addEnclosuresToTemplate($objTemplate, $arrItem, $strKey = 'enclosure'): never
     {
         self::throwOnAccess();
     }
@@ -305,7 +305,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function setStaticUrls(): void
+    public static function setStaticUrls(): never
     {
         self::throwOnAccess();
     }
@@ -313,7 +313,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function addStaticUrlTo($script, ContaoContext $context = null): void
+    public static function addStaticUrlTo($script, ContaoContext $context = null): never
     {
         self::throwOnAccess();
     }
@@ -321,7 +321,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function addAssetsUrlTo($script): void
+    public static function addAssetsUrlTo($script): never
     {
         self::throwOnAccess();
     }
@@ -329,7 +329,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function addFilesUrlTo($script): void
+    public static function addFilesUrlTo($script): never
     {
         self::throwOnAccess();
     }
