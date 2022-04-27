@@ -26,7 +26,7 @@ final class ContaoTwigUtil
      * If parsing fails - i.e. if the given name does not describe a "Contao"
      * or "Contao_*" namespace - null is returned instead.
      */
-    public static function parseContaoName(string $logicalNameOrNamespace): ?array
+    public static function parseContaoName(string $logicalNameOrNamespace): array|null
     {
         if (1 === preg_match('%^@(Contao(?:_[a-zA-Z0-9_-]+)?)(?:/(.*))?$%', $logicalNameOrNamespace, $matches)) {
             return [$matches[1], $matches[2] ?? null];

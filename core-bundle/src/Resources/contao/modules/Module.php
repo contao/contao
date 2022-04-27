@@ -396,15 +396,6 @@ abstract class Module extends Frontend
 			}
 		}
 
-		// Add classes first and last
-		if (!empty($items))
-		{
-			$last = \count($items) - 1;
-
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
-		}
-
 		$objTemplate->items = $items;
 
 		return !empty($items) ? $objTemplate->parse() : '';
@@ -460,16 +451,11 @@ abstract class Module extends Frontend
 		$row['link'] = $objSubpage->title;
 		$row['href'] = $href;
 		$row['rel'] = '';
-		$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0); // backwards compatibility
+		$row['nofollow'] = false; // backwards compatibility
 		$row['target'] = '';
 		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
 		$arrRel = array();
-
-		if (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0)
-		{
-			$arrRel[] = 'nofollow';
-		}
 
 		// Override the link target
 		if ($objSubpage->type == 'redirect' && $objSubpage->target)
@@ -498,7 +484,7 @@ abstract class Module extends Frontend
 	 *
 	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
 	 */
-	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
+	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): array|null
 	{
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');

@@ -41,15 +41,10 @@ use Twig\TwigFunction;
  */
 final class ContaoExtension extends AbstractExtension
 {
-    private Environment $environment;
-    private TemplateHierarchyInterface $hierarchy;
     private array $contaoEscaperFilterRules = [];
 
-    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
+    public function __construct(private Environment $environment, private TemplateHierarchyInterface $hierarchy)
     {
-        $this->environment = $environment;
-        $this->hierarchy = $hierarchy;
-
         $contaoEscaper = new ContaoEscaper();
 
         /** @var EscaperExtension $escaperExtension */
@@ -152,11 +147,6 @@ final class ContaoExtension extends AbstractExtension
                 [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSection'],
                 ['needs_context' => true, 'is_safe' => ['html']]
             ),
-            new TwigFunction(
-                'render_contao_backend_template',
-                [LegacyTemplateFunctionsRuntime::class, 'renderContaoBackendTemplate'],
-                ['is_safe' => ['html']]
-            ),
         ];
     }
 
@@ -224,7 +214,7 @@ final class ContaoExtension extends AbstractExtension
                 return $this->inherit();
             }
 
-            protected function renderTwigSurrogateIfExists(): ?string
+            protected function renderTwigSurrogateIfExists(): string|null
             {
                 return null;
             }

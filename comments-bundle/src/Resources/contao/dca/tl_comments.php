@@ -10,7 +10,6 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\Cache;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Comments;
 use Contao\CommentsModel;
@@ -388,16 +387,18 @@ class tl_comments extends Backend
 			return true;
 		}
 
+		static $cache = array();
+
 		$strKey = __METHOD__ . '-' . $strSource . '-' . $intParent;
 
 		// Load cached result
-		if (Cache::has($strKey))
+		if (isset($cache[$strKey]))
 		{
-			return Cache::get($strKey);
+			return $cache[$strKey];
 		}
 
 		// Order deny,allow
-		Cache::set($strKey, false);
+		$cache[$strKey] = false;
 		$security = System::getContainer()->get('security.helper');
 
 		switch ($strSource)
@@ -410,7 +411,7 @@ class tl_comments extends Backend
 				// Do not check whether the page is mounted (see #5174)
 				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
 				{
-					Cache::set($strKey, true);
+					$cache[$strKey] = true;
 				}
 				break;
 
@@ -422,7 +423,7 @@ class tl_comments extends Backend
 				// Do not check whether the page is mounted (see #5174)
 				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))
 				{
-					Cache::set($strKey, true);
+					$cache[$strKey] = true;
 				}
 				break;
 
@@ -434,7 +435,7 @@ class tl_comments extends Backend
 				// Do not check the access to the news module (see #5174)
 				if ($objArchive->numRows > 0 && $security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchive->pid))
 				{
-					Cache::set($strKey, true);
+					$cache[$strKey] = true;
 				}
 				break;
 
@@ -446,13 +447,13 @@ class tl_comments extends Backend
 				// Do not check the access to the calendar module (see #5174)
 				if ($objCalendar->numRows > 0 && $security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendar->pid))
 				{
-					Cache::set($strKey, true);
+					$cache[$strKey] = true;
 				}
 				break;
 
 			case 'tl_faq':
 				// Do not check access to the FAQ module (see #5174)
-				Cache::set($strKey, true);
+				$cache[$strKey] = true;
 				break;
 
 			default:
@@ -465,7 +466,7 @@ class tl_comments extends Backend
 
 						if ($this->{$callback[0]}->{$callback[1]}($intParent, $strSource) === true)
 						{
-							Cache::set($strKey, true);
+							$cache[$strKey] = true;
 							break;
 						}
 					}
@@ -473,7 +474,7 @@ class tl_comments extends Backend
 				break;
 		}
 
-		return Cache::get($strKey);
+		return $cache[$strKey];
 	}
 
 	/**

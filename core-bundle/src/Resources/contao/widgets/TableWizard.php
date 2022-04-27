@@ -123,7 +123,7 @@ class TableWizard extends Widget
 			for ($j=0, $d=\count($this->varValue[$i]); $j<$d; $j++)
 			{
 				$return .= '
-      <td class="tcontainer"><textarea name="' . $this->strId . '[' . $i . '][' . $j . ']" class="tl_textarea noresize" rows="' . $this->intRows . '" cols="' . $this->intCols . '"' . $this->getAttributes() . '>' . StringUtil::specialchars($this->varValue[$i][$j] ?? '') . '</textarea></td>';
+      <td class="tcontainer"><textarea name="' . $this->strId . '[' . $i . '][' . $j . ']" class="tl_textarea noresize" rows="' . $this->intRows . '" cols="' . $this->intCols . '"' . $this->getAttributes() . '>' . self::specialcharsValue($this->varValue[$i][$j] ?? '') . '</textarea></td>';
 			}
 
 			$return .= '

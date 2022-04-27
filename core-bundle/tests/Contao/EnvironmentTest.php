@@ -183,7 +183,6 @@ class EnvironmentTest extends TestCase
     {
         $reflection = new \ReflectionClass(Environment::class);
         $property = $reflection->getProperty('strSapi');
-        $property->setAccessible(true);
         $property->setValue($sapi);
     }
 }

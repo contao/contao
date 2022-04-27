@@ -165,7 +165,6 @@ class NewsPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('news', $params['do']);
@@ -185,7 +184,6 @@ class NewsPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('news', $params['do']);
@@ -213,7 +211,6 @@ class NewsPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(NewsPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('news', $params['do']);

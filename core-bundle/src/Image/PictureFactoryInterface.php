@@ -27,5 +27,5 @@ interface PictureFactoryInterface
     /**
      * Creates a Picture object.
      */
-    public function create(string|ImageInterface $path, int|string|array|PictureConfiguration|null $size = null, ResizeOptions $options = null): PictureInterface;
+    public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $options = null): PictureInterface;
 }

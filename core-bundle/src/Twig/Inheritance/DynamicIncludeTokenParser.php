@@ -28,11 +28,8 @@ use Twig\TokenParser\AbstractTokenParser;
  */
 final class DynamicIncludeTokenParser extends AbstractTokenParser
 {
-    private TemplateHierarchyInterface $hierarchy;
-
-    public function __construct(TemplateHierarchyInterface $hierarchy)
+    public function __construct(private TemplateHierarchyInterface $hierarchy)
     {
-        $this->hierarchy = $hierarchy;
     }
 
     public function parse(Token $token): IncludeNode

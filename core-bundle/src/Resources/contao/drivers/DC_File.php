@@ -400,15 +400,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			if (($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea')
 			{
 				$varValue = StringUtil::deserialize($varValue);
-
-				if (!\is_array($varValue))
-				{
-					$varValue = StringUtil::restoreBasicEntities($varValue);
-				}
-				else
-				{
-					$varValue = serialize(array_map('\Contao\StringUtil::restoreBasicEntities', $varValue));
-				}
 			}
 		}
 
@@ -452,7 +443,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			// Add a log entry
 			if (!\is_array($deserialize) && !\is_array(StringUtil::deserialize($prior)))
 			{
-				if (($arrData['inputType'] ?? null) == 'password' || ($arrData['inputType'] ?? null) == 'textStore')
+				if (($arrData['inputType'] ?? null) == 'password')
 				{
 					System::getContainer()->get('monolog.logger.contao.configuration')->info('The global configuration variable "' . $this->strField . '" has been changed');
 				}

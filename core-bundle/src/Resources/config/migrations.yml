@@ -101,6 +101,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_500.basic_entities:
+        class: Contao\CoreBundle\Migration\Version500\BasicEntitiesMigration
+        arguments:
+            - '@database_connection'
+
     # Backwards compatibility
     Contao\CoreBundle\Migration\MigrationCollection:
         alias: contao.migration.collection

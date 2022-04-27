@@ -24,23 +24,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendMenuListener
 {
-    private Security $security;
-    private RouterInterface $router;
-    private RequestStack $requestStack;
-    private TranslatorInterface $translator;
-    private bool $debug;
-    private ?string $managerPath;
-    private ?JwtManager $jwtManager;
-
-    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, bool $debug, ?string $managerPath, ?JwtManager $jwtManager)
-    {
-        $this->security = $security;
-        $this->router = $router;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
-        $this->debug = $debug;
-        $this->managerPath = $managerPath;
-        $this->jwtManager = $jwtManager;
+    public function __construct(
+        private Security $security,
+        private RouterInterface $router,
+        private RequestStack $requestStack,
+        private TranslatorInterface $translator,
+        private bool $debug,
+        private string|null $managerPath,
+        private JwtManager|null $jwtManager,
+    ) {
     }
 
     public function __invoke(MenuEvent $event): void

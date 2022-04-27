@@ -7,10 +7,6 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
-            calls:
-                - [setContainer, ['@Psr\Container\ContainerInterface']]
-
         Symfony\Component\DependencyInjection\ContainerAwareInterface:
             calls:
                 - [setContainer, ['@service_container']]
@@ -20,7 +16,6 @@ services:
         public: true
         arguments:
             - '@request_stack'
-            - '@contao.framework'
             - staticPlugins
             - '%kernel.debug%'
 
@@ -29,7 +24,6 @@ services:
         public: true
         arguments:
             - '@request_stack'
-            - '@contao.framework'
             - staticFiles
             - '%kernel.debug%'
 
@@ -170,6 +164,11 @@ services:
             - '@contao.doctrine.orm.fail_tolerant_proxy_cache_warmer.inner'
             - '@database_connection'
 
+    contao.doctrine.schema.mysql_innodb_row_size_calculator:
+        class: Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator
+        arguments:
+            - '@database_connection'
+
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\SchemaProvider
         arguments:
@@ -248,7 +247,7 @@ services:
         class: Contao\CoreBundle\Image\ImageFactory
         public: true
         arguments:
-            - '@contao.image.legacy_resizer'
+            - '@contao.image.resizer'
             - '@contao.image.imagine'
             - '@contao.image.imagine_svg'
             - '@filesystem'
@@ -257,7 +256,6 @@ services:
             - '%contao.image.imagine_options%'
             - '%contao.image.valid_extensions%'
             - '%kernel.project_dir%/%contao.upload_path%'
-            - '@?logger'
         tags:
             - { name: monolog.logger, channel: contao.error }
 
@@ -286,15 +284,6 @@ services:
         class: Contao\ImagineSvg\Imagine
         public: true
 
-    contao.image.legacy_resizer:
-        class: Contao\CoreBundle\Image\LegacyResizer
-        public: true
-        arguments:
-            - '%contao.image.target_dir%'
-            - '@contao.image.resize_calculator'
-            - '@filesystem'
-            - '@contao.image.deferred_image_storage'
-
     contao.image.picture_factory:
         class: Contao\CoreBundle\Image\PictureFactory
         public: true
@@ -309,7 +298,7 @@ services:
         class: Contao\Image\PictureGenerator
         public: true
         arguments:
-            - '@contao.image.legacy_resizer'
+            - '@contao.image.resizer'
             - '@?contao.image.resize_calculator'
 
     contao.image.preview_factory:
@@ -326,6 +315,15 @@ services:
             - '%contao.image.valid_extensions%'
             - '%contao.image.preview.default_size%'
             - '%contao.image.preview.max_size%'
+
+    contao.image.resizer:
+        class: Contao\CoreBundle\Image\Resizer
+        public: true
+        arguments:
+            - '%contao.image.target_dir%'
+            - '@contao.image.resize_calculator'
+            - '@filesystem'
+            - '@contao.image.deferred_image_storage'
 
     contao.image.resize_calculator:
         class: Contao\Image\ResizeCalculator
@@ -349,7 +347,7 @@ services:
               contao.image.studio: '@contao.image.studio'
               contao.image.picture_factory: '@contao.image.picture_factory'
               contao.image.factory: '@contao.image.factory'
-              contao.image.legacy_resizer: '@contao.image.legacy_resizer'
+              contao.image.resizer: '@contao.image.resizer'
               contao.assets.files_context: '@contao.assets.files_context'
               contao.framework: '@contao.framework'
               event_dispatcher: '@event_dispatcher'
@@ -748,6 +746,11 @@ services:
             - Contao\BackendUser
             - '@?logger'
 
+    contao.security.data_container.default_dca_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDcaVoter
+        tags:
+            - { name: security.voter, priority: -1024 } # Should always come last
+
     contao.security.expiring_token_based_remember_me_services:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
         abstract: true
@@ -977,9 +980,7 @@ services:
     contao.twig.legacy_template_functions_runtime:
         class: Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime
         arguments:
-            - '@request_stack'
             - '@contao.framework'
-            - '@contao.routing.scope_matcher'
 
     contao.twig.loader.template_locator:
         class: Contao\CoreBundle\Twig\Loader\TemplateLocator
@@ -1036,6 +1037,7 @@ services:
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
+    Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
 
     # Backwards compatibility
     contao.cache.clear_internal:
@@ -1077,14 +1079,6 @@ services:
             package: contao/core-bundle
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.sizes" instead.
-
-    contao.image.resizer:
-        alias: contao.image.legacy_resizer
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.legacy_resizer" instead.
 
     contao.opt-in:
         alias: contao.opt_in

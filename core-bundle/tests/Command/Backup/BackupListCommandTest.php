@@ -63,7 +63,7 @@ class BackupListCommandTest extends TestCase
                   2021-10-31 14:12:54   5.73 MiB    test2__20211031141254.sql.gz
                   2021-11-02 14:12:54   2.64 MiB    test3__20211102141254.sql.gz
                  --------------------- ----------- ------------------------------
-                OUTPUT
+                OUTPUT,
         ];
 
         yield 'JSON format' => [

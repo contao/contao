@@ -117,7 +117,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property boolean        $hasMooTools
  * @property string         $template
  * @property string         $templateGroup
- * @property boolean        $useAutoItem
  *
  * @method static PageModel|null findById($id, array $opt=array())
  * @method static PageModel|null findByPk($id, array $opt=array())
@@ -324,8 +323,8 @@ class PageModel extends Model
 	 */
 	protected $blnDetailsLoaded = false;
 
-	private static ?array $prefixes = null;
-	private static ?array $suffixes = null;
+	private static array|null $prefixes = null;
+	private static array|null $suffixes = null;
 
 	public function __set($strKey, $varValue)
 	{
@@ -1059,7 +1058,6 @@ class PageModel extends Model
 			$this->useFolderUrl = $objParentPage->useFolderUrl;
 			$this->mailerTransport = $objParentPage->mailerTransport;
 			$this->enableCanonical = $objParentPage->enableCanonical;
-			$this->useAutoItem = Config::get('useAutoItem');
 			$this->maintenanceMode = $objParentPage->maintenanceMode;
 
 			// Store whether the root page has been published
@@ -1378,7 +1376,7 @@ class PageModel extends Model
 		return $alias;
 	}
 
-	private static function regexArray(array $data): ?string
+	private static function regexArray(array $data): string|null
 	{
 		$data = array_filter(array_unique($data));
 

@@ -74,7 +74,7 @@ class ThemeTest extends TestCase
     /**
      * @dataProvider provideNamespaces
      */
-    public function testMatchThemeNamespace(string $name, ?string $expectedSlug): void
+    public function testMatchThemeNamespace(string $name, string|null $expectedSlug): void
     {
         $this->assertSame($expectedSlug, (new ThemeNamespace())->match($name));
     }

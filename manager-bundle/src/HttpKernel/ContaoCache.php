@@ -95,6 +95,6 @@ class ContaoCache extends HttpCache implements CacheInvalidation
             $key = $oldName;
         }
 
-        return array_filter(explode(',', $_SERVER[$key] ?? ''));
+        return array_filter(explode(',', (string) ($_SERVER[$key] ?? '')));
     }
 }

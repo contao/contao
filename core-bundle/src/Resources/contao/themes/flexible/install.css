@@ -110,15 +110,15 @@ p {
 #sql_table .tl_checkbox {
 	margin-top:5px;
 }
-.tl_col_0 {
-	padding:12px 0 3px;
-	color:#006494;
-}
-.tl_col_1,.tl_col_2 * {
+#sql_table tr td:nth-child(1),#sql_table tr td:nth-child(2) * {
 	vertical-align:top;
 }
-.tl_col_2 {
+#sql_table tr td:nth-child(2) {
 	padding:3px;
+}
+#sql_table tr td[colspan="2"] {
+	padding:12px 0 3px;
+	color:#006494;
 }
 
 /* Errors */

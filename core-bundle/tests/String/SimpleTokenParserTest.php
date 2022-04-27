@@ -301,7 +301,7 @@ class SimpleTokenParserTest extends TestCase
      *
      * @dataProvider parsesSimpleTokensWithShorthandIfProvider
      */
-    public function testParsesSimpleTokensWithShorthandIf($value, bool $match): void
+    public function testParsesSimpleTokensWithShorthandIf(array|bool|int|string|null $value, bool $match): void
     {
         $this->assertSame(
             $match ? 'match' : 'no-match',
@@ -375,11 +375,6 @@ class SimpleTokenParserTest extends TestCase
         yield 'Test single unknown token (array test)' => [
             'foo in [1, 2, 3]',
             'Tried to evaluate unknown simple token(s): "foo".',
-            false,
-        ];
-
-        yield 'Test single unknown token (regex test)' => [
-            'foo matches "/whatever/"', 'Tried to evaluate unknown simple token(s): "foo".',
             false,
         ];
 
