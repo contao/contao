@@ -81,10 +81,12 @@ abstract class AbstractFragmentController extends AbstractController implements 
     {
         $templateName = $this->getTemplateName($model, $fallbackTemplateName);
         $isLegacyTemplate = $this->isLegacyTemplate($templateName);
+        $templateNameToView = static fn (string $name): string => "@Contao/$name.html.twig";
 
         // Allow calling render() without a view
-        $templateNameToView = static fn (string $name): string => "@Contao/$name.html.twig";
-        $this->view = !$isLegacyTemplate ? $templateNameToView($templateName) : null;
+        if (!$isLegacyTemplate) {
+            $this->view = $templateNameToView($templateName);
+        }
 
         $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($templateNameToView, $templateName, $isLegacyTemplate): Response {
             if ($isLegacyTemplate) {

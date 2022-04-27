@@ -12,10 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
-use Contao\CoreBundle\Controller\AbstractFragmentController;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
+use Contao\CoreBundle\Fixtures\Controller\FragmentController;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\Model;
 use Symfony\Component\DependencyInjection\Container;
@@ -30,7 +29,6 @@ class AbstractFragmentControllerTest extends TestCase
         $fragmentController = $this->getFragmentController('foo/bar');
 
         // Create template
-        /** @var FragmentTemplate $template */
         $template = $fragmentController->doCreateTemplate($this->mockClassWithProperties(Model::class));
         $this->assertSame('foo/bar', $template->getName());
         $this->assertEmpty($template->getData());
@@ -63,7 +61,6 @@ class AbstractFragmentControllerTest extends TestCase
         $fragmentController = $this->getFragmentController('original/template', $twig);
 
         // Create and modify template
-        /** @var FragmentTemplate $template */
         $template = $fragmentController->doCreateTemplate($this->mockClassWithProperties(Model::class));
         $template->setName('modified/template');
 
@@ -88,7 +85,6 @@ class AbstractFragmentControllerTest extends TestCase
         $fragmentController = $this->getFragmentController('foo/bar', $twig);
 
         // GGet original response with rendered content via fragment template
-        /** @var FragmentTemplate $template */
         $template = $fragmentController->doCreateTemplate($this->mockClassWithProperties(Model::class));
         $response = $template->getResponse($preBuiltResponse);
 
@@ -127,18 +123,7 @@ class AbstractFragmentControllerTest extends TestCase
         $container->set('contao.twig.interop.context_factory', new ContextFactory());
         $container->set('twig', $twig);
 
-        $fragmentController = new class() extends AbstractFragmentController {
-            public function doCreateTemplate(Model $model): FragmentTemplate
-            {
-                return $this->createTemplate($model);
-            }
-
-            public function doRender(string|null $view = null, array $parameters = [], Response $response = null): Response
-            {
-                return $this->render($view, $parameters, $response);
-            }
-        };
-
+        $fragmentController = new FragmentController();
         $fragmentController->setContainer($container);
         $fragmentController->setFragmentOptions(['template' => $defaultTemplateName]);
 
