@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * This class is a simple container object for template data.
  *
- * @todo Remove the base class in Contao 6
+ * @todo Remove the base class in Contao 6.0
  */
 final class FragmentTemplate extends Template
 {

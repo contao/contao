@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
-use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -409,12 +408,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return $this->currentThemeSlug = false;
         }
 
-        // TODO: remove try/catch block in Contao 5.0
-        try {
-            $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
-        } catch (InvalidThemePathException) {
-            $slug = false;
-        }
+        $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
 
         return $this->currentThemeSlug = $slug;
     }
