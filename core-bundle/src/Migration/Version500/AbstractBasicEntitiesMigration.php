@@ -25,11 +25,8 @@ use Doctrine\DBAL\Connection;
  */
 abstract class AbstractBasicEntitiesMigration extends AbstractMigration
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function shouldRun(): bool
