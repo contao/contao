@@ -282,9 +282,6 @@ var AjaxRequest =
 				});
 
 				AjaxRequest.hideBox();
-
-				// HOOK
-				window.fireEvent('subpalette'); // Backwards compatibility
 				window.fireEvent('ajax_change');
 			}
 		}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'load':1, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
