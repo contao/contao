@@ -78,6 +78,9 @@ class Input
 		}
 	}
 
+	/**
+	 * Encode a string using the input encoding algorithm
+	 */
 	public static function encodeInput(string $value, InputEncodingMode $mode, bool $encodeInsertTags = true): string
 	{
 		// Ensure UTF-8 string
@@ -118,6 +121,8 @@ class Input
 	}
 
 	/**
+	 * Encode a value using the input encoding algorithm
+	 *
 	 * @param array|string $values
 	 */
 	public static function encodeInputRecursive($values, InputEncodingMode $mode, bool $encodeInsertTags = true): array|string
@@ -160,6 +165,11 @@ class Input
 		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll);
 	}
 
+	/**
+	 * Return all keys from $_GET
+	 *
+	 * @return list<string>
+	 */
 	public static function getKeys(): array
 	{
 		if ($request = static::getRequest())
@@ -181,12 +191,12 @@ class Input
 				}
 			}
 
-			return array_values($keys);
+			return array_map(strval(...), array_values($keys));
 		}
 
 		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
 
-		return array_keys($_GET ?? array());
+		return array_map(strval(...), array_keys($_GET ?? array()));
 	}
 
 	/**
@@ -211,33 +221,19 @@ class Input
 		return $varValue;
 	}
 
-	public static function postKeys(): array
+	/**
+	 * Return true if the request is a POST request
+	 */
+	public static function isPost(): bool
 	{
 		if ($request = static::getRequest())
 		{
-			$keys = $request->request->keys();
-
-			if (isset(static::$setPost) && static::$setPost->offsetExists($request))
-			{
-				foreach (static::$setPost->offsetGet($request) as $key => $value)
-				{
-					if ($value === null)
-					{
-						$keys = array_diff($keys, array($key));
-					}
-					else
-					{
-						$keys[] = $key;
-					}
-				}
-			}
-
-			return array_values($keys);
+			return $request->isMethod('POST');
 		}
 
 		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
 
-		return array_keys($_POST ?? array());
+		return !empty($_POST);
 	}
 
 	/**

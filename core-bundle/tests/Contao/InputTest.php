@@ -858,36 +858,32 @@ class InputTest extends TestCase
         $stack->push(new Request());
 
         $this->assertSame([], Input::getKeys());
-        $this->assertSame([], Input::postKeys());
 
         $stack->pop();
-        $stack->push(new Request($data, $data));
+        $stack->push(new Request($data));
         $_POST = $_GET = $data;
 
-        $this->assertSame(['key1', 123], Input::getKeys());
-        $this->assertSame(['key1', 123], Input::postKeys());
+        $this->assertSame(['key1', '123'], Input::getKeys());
 
         Input::setGet('key2', 'value');
         Input::setPost('key2', 'value');
 
-        $this->assertSame(['key1', 123, 'key2'], Input::getKeys());
-        $this->assertSame(['key1', 123, 'key2'], Input::postKeys());
+        $this->assertSame(['key1', '123', 'key2'], Input::getKeys());
         $this->assertSame(['key1', 123, 'key2'], array_keys($_GET));
         $this->assertSame(['key1', 123, 'key2'], array_keys($_POST));
 
         Input::setGet('key1', null);
         Input::setPost('key1', null);
 
-        $this->assertSame([123, 'key2'], Input::getKeys());
-        $this->assertSame([123, 'key2'], Input::postKeys());
+        $this->assertSame(['123', 'key2'], Input::getKeys());
         $this->assertSame([123, 'key2'], array_keys($_GET));
         $this->assertSame([123, 'key2'], array_keys($_POST));
 
         $stack->pop();
-        $stack->push(new Request($data, $data));
+        $stack->push(new Request($data, $data, [], [], [], ['REQUEST_METHOD' => 'POST']));
 
-        $this->assertSame(['key1', 123], Input::getKeys());
-        $this->assertSame(['key1', 123], Input::postKeys());
+        $this->assertSame(['key1', '123'], Input::getKeys());
+        $this->assertTrue(Input::isPost());
         $this->assertSame([123, 'key2'], array_keys($_GET));
         $this->assertSame([123, 'key2'], array_keys($_POST));
 
@@ -897,26 +893,24 @@ class InputTest extends TestCase
         $this->expectDeprecation('%sGetting data from $_%shas been deprecated%s');
 
         $this->assertSame([], Input::getKeys());
-        $this->assertSame([], Input::postKeys());
+        $this->assertFalse(Input::isPost());
 
         $_POST = $_GET = $data;
 
-        $this->assertSame(['key1', 123], Input::getKeys());
-        $this->assertSame(['key1', 123], Input::postKeys());
+        $this->assertSame(['key1', '123'], Input::getKeys());
+        $this->assertTrue(Input::isPost());
 
         Input::setGet('key2', 'value');
         Input::setPost('key2', 'value');
 
-        $this->assertSame(['key1', 123, 'key2'], Input::getKeys());
-        $this->assertSame(['key1', 123, 'key2'], Input::postKeys());
+        $this->assertSame(['key1', '123', 'key2'], Input::getKeys());
         $this->assertSame(['key1', 123, 'key2'], array_keys($_GET));
         $this->assertSame(['key1', 123, 'key2'], array_keys($_POST));
 
         Input::setGet('key1', null);
         Input::setPost('key1', null);
 
-        $this->assertSame([123, 'key2'], Input::getKeys());
-        $this->assertSame([123, 'key2'], Input::postKeys());
+        $this->assertSame(['123', 'key2'], Input::getKeys());
         $this->assertSame([123, 'key2'], array_keys($_GET));
         $this->assertSame([123, 'key2'], array_keys($_POST));
     }
