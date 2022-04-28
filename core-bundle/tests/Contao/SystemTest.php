@@ -355,7 +355,6 @@ class SystemTest extends TestCase
             new Countries(
                 $translator,
                 new RequestStack(),
-                $container->get('contao.framework'),
                 ['DE', 'US', 'FR'],
                 [],
                 'de'
