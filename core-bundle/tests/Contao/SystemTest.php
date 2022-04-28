@@ -341,7 +341,6 @@ class SystemTest extends TestCase
             new Locales(
                 $translator,
                 new RequestStack(),
-                $container->get('contao.framework'),
                 ['de', 'en', 'fr'],
                 ['de', 'en', 'fr'],
                 [],
