@@ -196,7 +196,7 @@ class Environment
 	 */
 	protected static function httpAcceptLanguage(Request $request)
 	{
-		return str_replace('_', '-', $request->getLanguages());
+		return \array_slice(str_replace('_', '-', $request->getLanguages()), 0, 8);
 	}
 
 	/**
