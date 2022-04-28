@@ -2,6 +2,17 @@
 
 ## Version 4.* to 5.0
 
+## UnresolvableDependenciesException
+
+The following classes and interfaces have been removed from the global namespace:
+
+ - `listable`
+ - `editable`
+ - `executable`
+ - `uploadable`
+ - `UnresolvableDependenciesException`
+ - `UnusedArgumentsException`
+
 ### Model
 
 The protected `$arrClassNames` property was removed from the `Contao\Model` base class.

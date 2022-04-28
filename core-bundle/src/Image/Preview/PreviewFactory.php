@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Image\Preview;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
-use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
@@ -336,37 +335,8 @@ class PreviewFactory
      */
     private function convertPreviewsToPictures(iterable $previews, PictureConfiguration|array|int|string|null $size, ResizeOptions $resizeOptions = null): iterable
     {
-        // Unlike the Contao\Image\PictureFactory, the PictureFactoryInterface
-        // does not know about ResizeOptions. We therefore check if the third
-        // argument of the "create" method allows setting them.
-        // TODO: Adjust this in Contao 5 after the interface has been adjusted.
-        $canHandleResizeOptions = static function (PictureFactoryInterface $factory): bool {
-            if ($factory instanceof PictureFactory) {
-                return true;
-            }
-
-            $createParameters = (new \ReflectionClass($factory))
-                ->getMethod('create')
-                ->getParameters()
-            ;
-
-            if (!isset($createParameters[2])) {
-                return false;
-            }
-
-            $type = $createParameters[2]->getType();
-
-            return $type instanceof \ReflectionNamedType && ResizeOptions::class === $type->getName();
-        };
-
-        $commonArguments = [$size];
-
-        if (null !== $resizeOptions && $canHandleResizeOptions($this->pictureFactory)) {
-            $commonArguments[] = $resizeOptions;
-        }
-
         return array_map(
-            fn ($path) => $this->pictureFactory->create($path, ...$commonArguments),
+            fn ($path) => $this->pictureFactory->create($path, $size, $resizeOptions),
             \is_array($previews) ? $previews : iterator_to_array($previews, false),
         );
     }

@@ -2686,12 +2686,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$return .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . md5($currentEncoded) . '" class="tl_tree_checkbox" value="' . $currentEncoded . '">' : $this->generateButtons(array('id'=>$currentEncoded, 'fileNameEncoded'=>$strFolderNameEncoded, 'type'=>'folder'), $this->strTable);
 				}
 
-				// Add upload button if it is missing for backwards compatibility
-				if (!isset($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['upload']) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
-				{
-					$return .= $uploadButton;
-				}
-
 				if ($this->strPickerFieldType)
 				{
 					$return .= $this->getPickerInputField($currentEncoded, $this->blnFilesOnly ? ' disabled' : '');

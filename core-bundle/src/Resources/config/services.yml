@@ -1010,179 +1010,20 @@ services:
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
     Contao\CoreBundle\Image\Preview\PreviewFactory: '@contao.image.preview_factory'
-    Contao\CoreBundle\Image\Studio\Studio:
-        alias: contao.image.studio
-        public: true # backwards compatibility
+    Contao\CoreBundle\Image\Studio\Studio: '@contao.image.studio'
     Contao\CoreBundle\InsertTag\InsertTagParser: '@contao.insert_tag.parser'
-    Contao\CoreBundle\Intl\Countries:
-        alias: contao.intl.countries
-        public: true # backwards compatibility
-    Contao\CoreBundle\Intl\Locales:
-        alias: contao.intl.locales
-        public: true # backwards compatibility
-    Contao\CoreBundle\Mailer\AvailableTransports:
-        alias: contao.mailer.available_transports
-        public: true # backwards compatibility
-    Contao\CoreBundle\OptIn\OptIn:
-        alias: contao.opt_in
-        public: true # backwards compatibility
+    Contao\CoreBundle\Intl\Countries: '@contao.intl.countries'
+    Contao\CoreBundle\Intl\Locales: '@contao.intl.locales'
+    Contao\CoreBundle\Mailer\AvailableTransports: '@contao.mailer.available_transports'
+    Contao\CoreBundle\OptIn\OptIn: '@contao.opt_in'
     Contao\CoreBundle\Picker\PickerBuilderInterface: '@contao.picker.builder'
-    Contao\CoreBundle\Routing\Page\PageRegistry:
-        alias: contao.routing.page_registry
-        public: true # backwards compatibility
+    Contao\CoreBundle\Routing\Page\PageRegistry: '@contao.routing.page_registry'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
     Contao\CoreBundle\Security\TwoFactor\Authenticator: '@contao.security.two_factor.authenticator'
+    Contao\CoreBundle\Security\TwoFactor\BackupCodeManager: '@contao.security.two_factor.backup_code_manager'
     Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager: '@contao.security.two_factor.trusted_device_manager'
     Contao\CoreBundle\Slug\Slug: '@contao.slug'
     Contao\CoreBundle\String\HtmlDecoder: '@contao.string.html_decoder'
     Contao\CoreBundle\String\SimpleTokenParser: '@contao.string.simple_token_parser'
     Contao\CoreBundle\Twig\Interop\ContextFactory: '@contao.twig.interop.context_factory'
-
-    # Backwards compatibility
-    contao.cache.clear_internal:
-        alias: contao.cache.clearer
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.cache.clearer" instead.
-
-    contao.cache.warm_internal:
-        alias: contao.cache.warmer
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.cache.warmer" instead.
-
-    contao.crawl.escargot_factory:
-        alias: contao.crawl.escargot.factory
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.crawl.escargot.factory" instead.
-
-    contao.image.image_factory:
-        alias: contao.image.factory
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.factory" instead.
-
-    contao.image.image_sizes:
-        alias: contao.image.sizes
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.sizes" instead.
-
-    contao.opt-in:
-        alias: contao.opt_in
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.opt_in" instead.
-
-    Contao\CoreBundle\Cron\Cron:
-        alias: contao.cron
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.cron" instead.
-
-    Contao\CoreBundle\Csrf\ContaoCsrfTokenManager:
-        alias: contao.csrf.token_manager
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.csrf.token_manager" instead.
-
-    Contao\CoreBundle\Image\Studio\FigureRenderer:
-        alias: contao.image.studio.figure_renderer
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.studio.figure_renderer" instead.
-
-    Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor:
-        alias: contao.routing.response_context_accessor
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.routing.response_context_accessor" instead.
-
-    Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory:
-        alias: contao.routing.response_context_factory
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.routing.response_context_factory" instead.
-
-    Contao\CoreBundle\Security\TwoFactor\BackupCodeManager:
-        alias: contao.security.two_factor.backup_code_manager
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.security.two_factor.backup_code_manager" instead.
-
-    Contao\CoreBundle\Twig\Extension\ContaoExtension:
-        alias: contao.twig.extension
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.twig.extension" instead.
-
-    Contao\CoreBundle\Twig\Loader\ThemeNamespace:
-        alias: contao.twig.loader.theme_namespace
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.twig.loader.theme_namespace" instead.
-
-    Contao\CoreBundle\Twig\Loader\TemplateLocator:
-        alias: contao.twig.loader.template_locator
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.twig.loader.template_locator" instead.
-
-    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader:
-        alias: contao.twig.filesystem_loader
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.twig.filesystem_loader" instead.
-
-    Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer:
-        alias: contao.twig.filesystem_loader_warmer
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.twig.filesystem_loader_warmer" instead.
-
-    Contao\CoreBundle\Util\SimpleTokenExpressionLanguage:
-        alias: contao.string.simple_token_expression_language
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.string.simple_token_expression_language" instead.
-
-    Contao\CoreBundle\Util\SimpleTokenParser:
-        alias: contao.string.simple_token_parser
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.string.simple_token_parser" instead.

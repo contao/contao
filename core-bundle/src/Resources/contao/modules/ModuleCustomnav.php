@@ -165,7 +165,6 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = false; // backwards compatibility
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
@@ -203,7 +202,6 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = false; // backwards compatibility
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
