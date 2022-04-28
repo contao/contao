@@ -60,6 +60,7 @@ class RootPageDependentSelectTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $pageAdapter]));
         $container->set('translator', $translator);
+
         $container->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request());
 

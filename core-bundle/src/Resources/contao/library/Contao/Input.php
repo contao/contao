@@ -322,7 +322,6 @@ class Input
 	{
 		// Convert special characters (see #7829)
 		$strKey = str_replace(array(' ', '.', '['), '_', $strKey);
-
 		$strKey = static::cleanKeyInternal($strKey);
 
 		if ($request = static::getRequest())
@@ -359,7 +358,6 @@ class Input
 	{
 		// Convert special characters (see #7829)
 		$strKey = str_replace(array(' ', '.', '['), '_', $strKey);
-
 		$strKey = static::cleanKeyInternal($strKey);
 
 		if ($request = static::getRequest())

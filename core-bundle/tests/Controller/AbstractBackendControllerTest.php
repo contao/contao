@@ -129,11 +129,13 @@ class AbstractBackendControllerTest extends TestCase
                         $this->assertSame($expectedContext, $context);
                     }
 
-                    return [
+                    $map = [
                         '@ContaoCore/Backend/be_menu.html.twig' => '<menu>',
                         '@ContaoCore/Backend/be_header_menu.html.twig' => '<header_menu>',
                         'custom_be.html.twig' => '<custom_be_main>',
-                    ][$template];
+                    ];
+
+                    return $map[$template];
                 }
             )
         ;
