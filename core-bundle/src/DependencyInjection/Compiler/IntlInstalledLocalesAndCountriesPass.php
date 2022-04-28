@@ -35,7 +35,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
         }
 
         if ($container->has('contao.intl.countries')) {
-            $container->findDefinition('contao.intl.countries')->setArgument(3, SymfonyCountries::getCountryCodes());
+            $container->findDefinition('contao.intl.countries')->setArgument(2, SymfonyCountries::getCountryCodes());
         }
     }
 
