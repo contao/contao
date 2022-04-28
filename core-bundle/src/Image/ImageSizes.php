@@ -162,7 +162,7 @@ class ImageSizes implements ResetInterface
         $filteredSizes = [];
 
         foreach ($this->options as $group => $sizes) {
-            if ('custom' === $group) {
+            if ('custom' === $group || 'relative' === $group || 'exact' === $group) {
                 $this->filterResizeModes($sizes, $allowedSizes, $filteredSizes, $group);
             } else {
                 $this->filterImageSizes($sizes, $allowedSizes, $filteredSizes, $group);
