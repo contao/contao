@@ -447,6 +447,8 @@ class ImageFactoryTest extends TestCase
 
     /**
      * @dataProvider getCreateWithLegacyMode
+     *
+     * @group legacy
      */
     public function testCreatesAnImageObjectFromAnImagePathInLegacyMode(string $mode, array $expected): void
     {
@@ -506,6 +508,9 @@ class ImageFactoryTest extends TestCase
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
+
+        $this->expectDeprecation("%slegacy resize mode \"$mode\" has been deprecated%s");
+
         $image = $imageFactory->create($path, [50, 50, $mode]);
         $imageFromSerializedConfig = $imageFactory->create($path, serialize([50, 50, $mode]));
 
