@@ -182,11 +182,6 @@ and will no longer work in Contao 5.0. Use `$this->pages` instead.
 The constants `TL_SCRIPT_URL` and `TL_PLUGINS_URL` have been deprecated in
 Contao 4.0 and will be removed in Contao 5.0. Use `TL_ASSETS_URL` instead.
 
-## UnresolvableDependenciesException
-
-The `UnresolvableDependenciesException` class has been deprecated in Contao 4.0
-and will be removed in Contao 5.0.
-
 ## $this->language in TinyMCE config files
 
 Using `$this->language` in TinyMCE configuration files has been deprecated in
