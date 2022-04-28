@@ -21,6 +21,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class HtmlDecoderTest extends TestCase
 {
@@ -58,9 +60,10 @@ class HtmlDecoderTest extends TestCase
 
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($source, $removeInsertTags));
 
-        Input::setGet('value', $expected);
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(['value' => $expected]));
+
         $inputEncoded = Input::get('value');
-        Input::setGet('value', null);
 
         // Test input encoding round trip
         $this->assertSame($expected, $htmlDecoder->inputEncodedToPlainText($inputEncoded, true));
@@ -91,9 +94,10 @@ class HtmlDecoderTest extends TestCase
 
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($source, $removeInsertTags));
 
-        Input::setPost('value', str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source));
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request([], ['value' => str_replace(['&#123;&#123;', '&#125;&#125;'], ['[{]', '[}]'], $source)]));
+
         $inputXssStripped = str_replace(['&#123;&#123;', '&#125;&#125;'], ['{{', '}}'], Input::postHtml('value', true));
-        Input::setPost('value', null);
 
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($inputXssStripped, $removeInsertTags));
     }

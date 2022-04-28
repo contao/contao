@@ -10,6 +10,9 @@
 
 namespace Contao;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Reads the environment variables
  *
@@ -44,29 +47,30 @@ class Environment
 	/**
 	 * Return an environment variable
 	 *
-	 * @param string $strKey The variable name
+	 * @param string       $strKey  The variable name
+	 * @param Request|null $request The request to get the variable from, defaults to the current request
 	 *
 	 * @return mixed The variable value
 	 */
-	public static function get($strKey)
+	public static function get($strKey, Request|null $request = null)
 	{
+		// Return from cache if it was set via Environment::set()
 		if (isset(static::$arrCache[$strKey]))
 		{
 			return static::$arrCache[$strKey];
 		}
 
+		$request ??= self::getRequest();
+
 		if (\in_array($strKey, get_class_methods(self::class)))
 		{
-			static::$arrCache[$strKey] = static::$strKey();
-		}
-		else
-		{
-			$arrChunks = preg_split('/([A-Z][a-z]*)/', $strKey, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
-			$strServerKey = strtoupper(implode('_', $arrChunks));
-			static::$arrCache[$strKey] = $_SERVER[$strServerKey];
+			return static::$strKey($request);
 		}
 
-		return static::$arrCache[$strKey];
+		$arrChunks = preg_split('/([A-Z][a-z]*)/', $strKey, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
+		$strServerKey = strtoupper(implode('_', $arrChunks));
+
+		return $request->server->get($strServerKey);
 	}
 
 	/**
@@ -93,9 +97,9 @@ class Environment
 	 *
 	 * @return string The absolute path to the script
 	 */
-	protected static function scriptFilename()
+	protected static function scriptFilename(Request $request)
 	{
-		return str_replace('//', '/', strtr((static::$strSapi == 'cgi' || static::$strSapi == 'isapi' || static::$strSapi == 'cgi-fcgi' || static::$strSapi == 'fpm-fcgi') && ($_SERVER['ORIG_PATH_TRANSLATED'] ?? $_SERVER['PATH_TRANSLATED']) ? ($_SERVER['ORIG_PATH_TRANSLATED'] ?? $_SERVER['PATH_TRANSLATED']) : ($_SERVER['ORIG_SCRIPT_FILENAME'] ?? $_SERVER['SCRIPT_FILENAME']), '\\', '/'));
+		return str_replace('//', '/', strtr($request->server->get('SCRIPT_FILENAME'), '\\', '/'));
 	}
 
 	/**
@@ -103,15 +107,8 @@ class Environment
 	 *
 	 * @return string The relative path to the script
 	 */
-	protected static function scriptName()
+	protected static function scriptName($request)
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request === null)
-		{
-			return $_SERVER['ORIG_SCRIPT_NAME'] ?? $_SERVER['SCRIPT_NAME'];
-		}
-
 		return $request->getScriptName();
 	}
 
@@ -133,7 +130,7 @@ class Environment
 	 *
 	 * @return string The document root
 	 */
-	protected static function documentRoot()
+	protected static function documentRoot(Request $request)
 	{
 		$strDocumentRoot = '';
 		$arrUriSegments = array();
@@ -143,7 +140,7 @@ class Environment
 		// Fallback to DOCUMENT_ROOT if SCRIPT_FILENAME and SCRIPT_NAME point to different files
 		if (basename($scriptName) != basename($scriptFilename))
 		{
-			return str_replace('//', '/', strtr(realpath($_SERVER['DOCUMENT_ROOT']), '\\', '/'));
+			return str_replace(array('\\', '//'), '/', realpath($request->server->get('DOCUMENT_ROOT')));
 		}
 
 		if (0 === strncmp($scriptFilename, '/', 1))
@@ -177,14 +174,9 @@ class Environment
 	 *
 	 * @return string The query string
 	 */
-	protected static function queryString()
+	protected static function queryString(Request $request)
 	{
-		if (!isset($_SERVER['QUERY_STRING']))
-		{
-			return '';
-		}
-
-		return static::encodeRequestString($_SERVER['QUERY_STRING']);
+		return static::encodeRequestString($request->getQueryString());
 	}
 
 	/**
@@ -192,27 +184,9 @@ class Environment
 	 *
 	 * @return string The request URI
 	 */
-	protected static function requestUri()
+	protected static function requestUri(Request $request)
 	{
-		if (!empty($_SERVER['REQUEST_URI']))
-		{
-			$arrComponents = parse_url($_SERVER['REQUEST_URI']);
-
-			if ($arrComponents === false)
-			{
-				$strRequest = $_SERVER['REQUEST_URI'];
-			}
-			else
-			{
-				$strRequest = $arrComponents['path'] . (isset($arrComponents['query']) ? '?' . $arrComponents['query'] : '');
-			}
-		}
-		else
-		{
-			$strRequest = '/' . preg_replace('/^\//', '', static::get('scriptName')) . (!empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '');
-		}
-
-		return static::encodeRequestString($strRequest);
+		return static::encodeRequestString($request->getRequestUri());
 	}
 
 	/**
@@ -220,40 +194,9 @@ class Environment
 	 *
 	 * @return array The languages array
 	 */
-	protected static function httpAcceptLanguage()
+	protected static function httpAcceptLanguage(Request $request)
 	{
-		$arrAccepted = array();
-		$arrLanguages = array();
-
-		// The implementation differs from the original implementation and also works with .jp browsers
-		preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $arrAccepted);
-
-		// Remove all invalid locales
-		foreach ($arrAccepted[1] as $v)
-		{
-			$chunks = explode('-', $v);
-
-			// Language plus dialect, e.g. en-US or fr-FR
-			if (isset($chunks[1]))
-			{
-				$locale = $chunks[0] . '-' . strtoupper($chunks[1]);
-
-				if (preg_match('/^[a-z]{2}(-[A-Z]{2})?$/', $locale))
-				{
-					$arrLanguages[] = $locale;
-				}
-			}
-
-			$locale = $chunks[0];
-
-			// Language only, e.g. en or fr (see #29)
-			if (preg_match('/^[a-z]{2}$/', $locale))
-			{
-				$arrLanguages[] = $locale;
-			}
-		}
-
-		return \array_slice(array_unique($arrLanguages), 0, 8);
+		return \array_slice(str_replace('_', '-', $request->getLanguages()), 0, 8);
 	}
 
 	/**
@@ -261,9 +204,9 @@ class Environment
 	 *
 	 * @return array The encoding types array
 	 */
-	protected static function httpAcceptEncoding()
+	protected static function httpAcceptEncoding(Request $request)
 	{
-		return array_values(array_unique(explode(',', strtolower($_SERVER['HTTP_ACCEPT_ENCODING']))));
+		return $request->getEncodings();
 	}
 
 	/**
@@ -271,12 +214,9 @@ class Environment
 	 *
 	 * @return string The user agent string
 	 */
-	protected static function httpUserAgent()
+	protected static function httpUserAgent(Request $request)
 	{
-		$ua = strip_tags($_SERVER['HTTP_USER_AGENT']);
-		$ua = preg_replace('/javascript|vbscri?pt|script|applet|alert|document|write|cookie/i', '', $ua);
-
-		return substr($ua, 0, 255);
+		return substr(strip_tags($request->headers->get('User-Agent')), 0, 255);
 	}
 
 	/**
@@ -284,23 +224,9 @@ class Environment
 	 *
 	 * @return string The host name
 	 */
-	protected static function httpHost()
+	protected static function httpHost(Request $request)
 	{
-		if (!empty($_SERVER['HTTP_HOST']))
-		{
-			$host = $_SERVER['HTTP_HOST'];
-		}
-		else
-		{
-			$host = $_SERVER['SERVER_NAME'] ?? null;
-
-			if (($_SERVER['SERVER_PORT'] ?? 80) != 80)
-			{
-				$host .= ':' . $_SERVER['SERVER_PORT'];
-			}
-		}
-
-		return preg_replace('/[^A-Za-z0-9[\].:_-]/', '', $host);
+		return preg_replace('/[^A-Za-z0-9[\].:_-]/', '', $request->getHttpHost());
 	}
 
 	/**
@@ -308,14 +234,9 @@ class Environment
 	 *
 	 * @return string The name of the X-Forwarded-Host
 	 */
-	protected static function httpXForwardedHost()
+	protected static function httpXForwardedHost(Request $request)
 	{
-		if (!isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-		{
-			return '';
-		}
-
-		return preg_replace('/[^A-Za-z0-9[\].:-]/', '', $_SERVER['HTTP_X_FORWARDED_HOST']);
+		return preg_replace('/[^A-Za-z0-9[\].:-]/', '', $request->headers->get('X-Forwarded-Host', ''));
 	}
 
 	/**
@@ -323,15 +244,8 @@ class Environment
 	 *
 	 * @return boolean True if SSL is enabled
 	 */
-	protected static function ssl()
+	protected static function ssl(Request $request)
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request === null)
-		{
-			return false;
-		}
-
 		return $request->isSecure();
 	}
 
@@ -360,15 +274,8 @@ class Environment
 	 *
 	 * @return string The IP address of the client
 	 */
-	protected static function ip()
+	protected static function ip(Request $request)
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request === null)
-		{
-			return '';
-		}
-
 		return $request->getClientIp();
 	}
 
@@ -377,14 +284,14 @@ class Environment
 	 *
 	 * @return string The IP address of the server
 	 */
-	protected static function server()
+	protected static function server(Request $request)
 	{
-		$strServer = !empty($_SERVER['SERVER_ADDR']) ? $_SERVER['SERVER_ADDR'] : $_SERVER['LOCAL_ADDR'];
+		$strServer = $request->server->get('SERVER_ADDR', $request->server->get('LOCAL_ADDR'));
 
 		// Special workaround for Strato users
 		if (empty($strServer))
 		{
-			$strServer = @gethostbyname($_SERVER['SERVER_NAME']);
+			$strServer = @gethostbyname($request->server->get('SERVER_NAME'));
 		}
 
 		return $strServer;
@@ -395,15 +302,8 @@ class Environment
 	 *
 	 * @return string The relative path to the installation
 	 */
-	protected static function path()
+	protected static function path(Request $request)
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request === null)
-		{
-			return '';
-		}
-
 		return $request->getBasePath();
 	}
 
@@ -479,14 +379,9 @@ class Environment
 	 *
 	 * @return boolean True if it is an Ajax request
 	 */
-	protected static function isAjaxRequest()
+	protected static function isAjaxRequest(Request $request)
 	{
-		if (!isset($_SERVER['HTTP_X_REQUESTED_WITH']))
-		{
-			return false;
-		}
-
-		return $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest';
+		return $request->isXmlHttpRequest();
 	}
 
 	/**
@@ -501,52 +396,15 @@ class Environment
 		return preg_replace_callback('/[^A-Za-z0-9\-_.~&=+,\/?%\[\]]+/', static function ($matches) { return rawurlencode($matches[0]); }, $strRequest);
 	}
 
-	/**
-	 * Prevent direct instantiation (Singleton)
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Environment class is now static.
-	 */
-	protected function __construct()
+	private static function getRequest(): Request
 	{
-	}
+		if ($request = System::getContainer()?->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getCurrentRequest())
+		{
+			return $request;
+		}
 
-	/**
-	 * Prevent cloning of the object (Singleton)
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Environment class is now static.
-	 */
-	final public function __clone()
-	{
-	}
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_SERVER with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
 
-	/**
-	 * Return an environment variable
-	 *
-	 * @param string $strKey The variable name
-	 *
-	 * @return string The variable value
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Environment::get() instead.
-	 */
-	public function __get($strKey)
-	{
-		return static::get($strKey);
-	}
-
-	/**
-	 * Set an environment variable
-	 *
-	 * @param string $strKey   The variable name
-	 * @param mixed  $varValue The variable value
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Environment::set() instead.
-	 */
-	public function __set($strKey, $varValue)
-	{
-		static::set($strKey, $varValue);
+		return new Request(server: $_SERVER);
 	}
 }

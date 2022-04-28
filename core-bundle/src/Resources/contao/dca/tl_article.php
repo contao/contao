@@ -793,7 +793,7 @@ class tl_article extends Backend
 		}
 
 		// Generate the aliases
-		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
+		if (Input::post('alias') !== null && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
 			$objSession = System::getContainer()->get('session');
 			$session = $objSession->all();

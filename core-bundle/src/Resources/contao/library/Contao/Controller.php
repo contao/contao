@@ -481,7 +481,7 @@ abstract class Controller extends System
 		}
 
 		// Print the article as PDF
-		if (isset($_GET['pdf']) && $objRow->printable && Input::get('pdf') == $objRow->id)
+		if (Input::get('pdf') !== null && $objRow->printable && Input::get('pdf') == $objRow->id)
 		{
 			$options = StringUtil::deserialize($objRow->printable);
 

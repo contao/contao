@@ -424,7 +424,7 @@ abstract class Backend extends Controller
 		$this->Template->headline = '<span>' . $this->Template->headline . '</span>';
 
 		// AJAX request
-		if ($_POST && Environment::get('isAjaxRequest'))
+		if (Input::isPost() && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax->executePostActions($dc);
 		}
@@ -457,7 +457,7 @@ abstract class Backend extends Controller
 			$this->Template->main .= $response;
 
 			// Add the name of the parent element
-			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
+			if (Input::get('table') !== null && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
 				$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
 										 ->limit(1)
@@ -835,7 +835,7 @@ abstract class Backend extends Controller
 		$objSession = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['pn']))
+		if (Input::get('pn') !== null)
 		{
 			// Check the path (thanks to Arnaud Buchoux)
 			if (Validator::isInsecurePath(Input::get('pn', true)))
@@ -1028,7 +1028,7 @@ abstract class Backend extends Controller
 		$objSession = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['fn']))
+		if (Input::get('fn') !== null)
 		{
 			// Check the path (thanks to Arnaud Buchoux)
 			if (Validator::isInsecurePath(Input::get('fn', true)))

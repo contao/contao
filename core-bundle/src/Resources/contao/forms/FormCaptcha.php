@@ -116,7 +116,7 @@ class FormCaptcha extends Widget
 	 */
 	public function validate()
 	{
-		if (!isset($_POST[$this->strCaptchaKey]) || (isset($_POST[$this->strCaptchaKey . '_name']) && Input::post($this->strCaptchaKey . '_name')) || !\in_array(Input::post($this->strCaptchaKey . '_hash'), $this->generateHashes((int) Input::post($this->strCaptchaKey)), true))
+		if (Input::post($this->strCaptchaKey) === null || (Input::post($this->strCaptchaKey . '_name') !== null && Input::post($this->strCaptchaKey . '_name')) || !\in_array(Input::post($this->strCaptchaKey . '_hash'), $this->generateHashes((int) Input::post($this->strCaptchaKey)), true))
 		{
 			$this->class = 'error';
 			$this->addError($GLOBALS['TL_LANG']['ERR']['captcha']);

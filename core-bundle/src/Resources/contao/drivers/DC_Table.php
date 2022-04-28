@@ -111,9 +111,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objSession = System::getContainer()->get('session');
 
 		// Check the request token (see #4007)
-		if (isset($_GET['act']))
+		if (Input::get('act') !== null)
 		{
-			if (!isset($_GET['rt']) || !RequestToken::validate(Input::get('rt')))
+			if (Input::get('rt') === null || !RequestToken::validate(Input::get('rt')))
 			{
 				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));
 				$this->redirect('contao/confirm.php');
@@ -123,7 +123,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->intId = Input::get('id');
 
 		// Clear the clipboard
-		if (isset($_GET['clipboard']))
+		if (Input::get('clipboard') !== null)
 		{
 			$objSession->set('CLIPBOARD', array());
 			$this->redirect($this->getReferer());
@@ -150,32 +150,32 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$session['CURRENT']['IDS'] = $ids;
 			$objSession->replace($session);
 
-			if (isset($_POST['edit']))
+			if (Input::post('edit') !== null)
 			{
 				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('request')));
 			}
-			elseif (isset($_POST['delete']))
+			elseif (Input::post('delete') !== null)
 			{
 				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('request')));
 			}
-			elseif (isset($_POST['override']))
+			elseif (Input::post('override') !== null)
 			{
 				$this->redirect(str_replace('act=select', 'act=overrideAll', Environment::get('request')));
 			}
-			elseif (isset($_POST['cut']) || isset($_POST['copy']))
+			elseif (Input::post('cut') !== null || Input::post('copy') !== null)
 			{
 				$arrClipboard = $objSession->get('CLIPBOARD');
 
 				$arrClipboard[$strTable] = array
 				(
 					'id' => $ids,
-					'mode' => (isset($_POST['cut']) ? 'cutAll' : 'copyAll')
+					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll')
 				);
 
 				$objSession->set('CLIPBOARD', $arrClipboard);
 
 				// Support copyAll in the list view (see #7499)
-				if (isset($_POST['copy']) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
+				if (Input::post('copy') !== null && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
 				{
 					$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('request')));
 				}
@@ -682,7 +682,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$cr = array();
 
 		// ID and PID are mandatory (PID can be 0!)
-		if (!$this->intId || !isset($_GET['pid']))
+		if (!$this->intId || Input::get('pid') === null)
 		{
 			$this->redirect($this->getReferer());
 		}
@@ -2075,7 +2075,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Show a warning if the record has been saved by another user (see #8412)
-			if ($intLatestVersion !== null && isset($_POST['VERSION_NUMBER']) && $intLatestVersion > Input::post('VERSION_NUMBER'))
+			if ($intLatestVersion !== null && Input::post('VERSION_NUMBER') !== null && $intLatestVersion > Input::post('VERSION_NUMBER'))
 			{
 				$objTemplate = new BackendTemplate('be_conflict');
 				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
@@ -2096,19 +2096,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->invalidateCacheTags();
 
 			// Redirect
-			if (isset($_POST['saveNclose']))
+			if (Input::post('saveNclose') !== null)
 			{
 				Message::reset();
 
 				$this->redirect($this->getReferer());
 			}
-			elseif (isset($_POST['saveNedit']))
+			elseif (Input::post('saveNedit') !== null)
 			{
 				Message::reset();
 
 				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['edit']['href'] ?? '', false, array('s2e', 'act', 'mode', 'pid')));
 			}
-			elseif (isset($_POST['saveNback']))
+			elseif (Input::post('saveNback') !== null)
 			{
 				Message::reset();
 
@@ -2126,13 +2126,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->redirect($this->getReferer(false, $this->ptable));
 				}
 			}
-			elseif (isset($_POST['saveNcreate']))
+			elseif (Input::post('saveNcreate') !== null)
 			{
 				Message::reset();
 
 				$strUrl = TL_SCRIPT . '?do=' . Input::get('do');
 
-				if (isset($_GET['table']))
+				if (Input::get('table') !== null)
 				{
 					$strUrl .= '&amp;table=' . Input::get('table');
 				}
@@ -2157,13 +2157,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$this->redirect($strUrl . '&amp;rt=' . REQUEST_TOKEN);
 			}
-			elseif (isset($_POST['saveNduplicate']))
+			elseif (Input::post('saveNduplicate') !== null)
 			{
 				Message::reset();
 
 				$strUrl = TL_SCRIPT . '?do=' . Input::get('do');
 
-				if (isset($_GET['table']))
+				if (Input::get('table') !== null)
 				{
 					$strUrl .= '&amp;table=' . Input::get('table');
 				}
@@ -2522,7 +2522,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Reload the page to prevent _POST variables from being sent twice
 			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
 			{
-				if (isset($_POST['saveNclose']))
+				if (Input::post('saveNclose') !== null)
 				{
 					$this->redirect($this->getReferer());
 				}
@@ -2564,7 +2564,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$blnIsError = ($_POST && empty($_POST['all_fields']));
+			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
 
 			// Return the select menu
 			$return .= '
@@ -2943,7 +2943,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Reload the page to prevent _POST variables from being sent twice
 			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
 			{
-				if (isset($_POST['saveNclose']))
+				if (Input::post('saveNclose') !== null)
 				{
 					$this->redirect($this->getReferer());
 				}
@@ -2985,7 +2985,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$blnIsError = ($_POST && empty($_POST['all_fields']));
+			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
 
 			// Return the select menu
 			$return .= '
@@ -3206,7 +3206,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$key = (Input::get('act') == 'editAll') ? $name . '_' . $this->intId : $name;
 
-						if (isset($_POST[$key]))
+						if (Input::post($key) !== null)
 						{
 							$trigger = Input::post($key);
 						}
@@ -5916,7 +5916,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		list($offset, $limit) = explode(',', $this->limit) + array(null, null);
 
 		// Set the limit filter based on the page number
-		if (isset($_GET['lp']))
+		if (Input::get('lp') !== null)
 		{
 			$lp = (int) Input::get('lp') - 1;
 

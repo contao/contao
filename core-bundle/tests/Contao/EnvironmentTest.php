@@ -37,16 +37,10 @@ class EnvironmentTest extends TestCase
         Environment::reset();
         Environment::set('path', '/core');
 
-        $request = new Request();
-        $request->server->set('REMOTE_ADDR', '123.456.789.0');
-        $request->server->set('SCRIPT_NAME', '/core/index.php');
-        $request->server->set('HTTPS', 'on');
-
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
         $container = new ContainerBuilder();
-        $container->set('request_stack', $requestStack);
+        $container->set('request_stack', new RequestStack());
+
+        Request::setTrustedProxies(['127.0.0.1'], Request::HEADER_X_FORWARDED_FOR);
 
         System::setContainer($container);
 
@@ -68,6 +62,7 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('apache');
 
+        $_SERVER = [];
         $_SERVER['SERVER_PORT'] = 80;
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['HTTP_CONNECTION'] = 'keep-alive';
@@ -75,7 +70,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36';
         $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.45.67.89';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
@@ -88,6 +84,14 @@ class EnvironmentTest extends TestCase
         $_SERVER['PHP_SELF'] = '/core/index.php';
 
         $this->runTests();
+
+        System::getContainer()->get('request_stack')->push(new Request(server: $_SERVER));
+
+        $this->runTests();
+
+        $_SERVER = [];
+
+        $this->runTests();
     }
 
     /**
@@ -97,6 +101,7 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('cgi_fcgi');
 
+        $_SERVER = [];
         $_SERVER['SERVER_PORT'] = 80;
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['HTTP_CONNECTION'] = 'close';
@@ -104,7 +109,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36';
         $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.45.67.89';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
@@ -121,6 +127,14 @@ class EnvironmentTest extends TestCase
         $_SERVER['SCRIPT_URL'] = '/core/en/academy.html';
 
         $this->runTests();
+
+        System::getContainer()->get('request_stack')->push(new Request(server: $_SERVER));
+
+        $this->runTests();
+
+        $_SERVER = [];
+
+        $this->runTests();
     }
 
     /**
@@ -130,6 +144,7 @@ class EnvironmentTest extends TestCase
     {
         $this->setSapi('fpm_fcgi');
 
+        $_SERVER = [];
         $_SERVER['SERVER_PORT'] = 80;
         $_SERVER['HTTP_HOST'] = 'localhost';
         $_SERVER['HTTP_CONNECTION'] = 'close';
@@ -137,7 +152,8 @@ class EnvironmentTest extends TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36';
         $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip,deflate,sdch';
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'de-DE,de;q=0.8,en-GB;q=0.6,en;q=0.4';
-        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.456.789.0';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '123.45.67.89';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_NAME'] = 'localhost';
         $_SERVER['SERVER_ADDR'] = '127.0.0.1';
@@ -152,6 +168,14 @@ class EnvironmentTest extends TestCase
         $_SERVER['PATH_INFO'] = '/en/academy.html';
 
         $this->runTests();
+
+        System::getContainer()->get('request_stack')->push(new Request(server: $_SERVER));
+
+        $this->runTests();
+
+        $_SERVER = [];
+
+        $this->runTests();
     }
 
     private function runTests(): void
@@ -161,6 +185,7 @@ class EnvironmentTest extends TestCase
         $this->assertSame('/core/index.php', Environment::get('scriptName'));
         $this->assertSame($this->projectDir, Environment::get('documentRoot'));
         $this->assertSame('/core/en/academy.html?do=test', Environment::get('requestUri'));
+        $this->assertSame('do=test', Environment::get('queryString'));
         $this->assertSame(['de-DE', 'de', 'en-GB', 'en'], Environment::get('httpAcceptLanguage'));
         $this->assertSame(['gzip', 'deflate', 'sdch'], Environment::get('httpAcceptEncoding'));
         $this->assertSame('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.149 Safari/537.36', Environment::get('httpUserAgent'));
@@ -170,7 +195,7 @@ class EnvironmentTest extends TestCase
         $this->assertTrue(Environment::get('ssl'));
         $this->assertSame('https://localhost', Environment::get('url'));
         $this->assertSame('https://localhost/core/en/academy.html?do=test', Environment::get('uri'));
-        $this->assertSame('123.456.789.0', Environment::get('ip'));
+        $this->assertSame('123.45.67.89', Environment::get('ip'));
         $this->assertSame('127.0.0.1', Environment::get('server'));
         $this->assertSame('index.php', Environment::get('script'));
         $this->assertSame('en/academy.html?do=test', Environment::get('request'));

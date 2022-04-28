@@ -1215,7 +1215,7 @@ class tl_content extends Backend
 	 */
 	public function showJsLibraryHint($dc)
 	{
-		if ($_POST || Input::get('act') != 'edit')
+		if (Input::isPost() || Input::get('act') != 'edit')
 		{
 			return;
 		}

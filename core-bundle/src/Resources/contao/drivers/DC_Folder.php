@@ -130,9 +130,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSession = System::getContainer()->get('session');
 
 		// Check the request token (see #4007)
-		if (isset($_GET['act']))
+		if (Input::get('act') !== null)
 		{
-			if (!isset($_GET['rt']) || !RequestToken::validate(Input::get('rt')))
+			if (Input::get('rt') === null || !RequestToken::validate(Input::get('rt')))
 			{
 				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));
 				$this->redirect('contao/confirm.php');
@@ -142,7 +142,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$this->intId = Input::get('id', true);
 
 		// Clear the clipboard
-		if (isset($_GET['clipboard']))
+		if (Input::get('clipboard') !== null)
 		{
 			$objSession->set('CLIPBOARD', array());
 			$this->redirect($this->getReferer());
@@ -178,22 +178,22 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$session['CURRENT']['IDS'] = $ids;
 			$objSession->replace($session);
 
-			if (isset($_POST['edit']))
+			if (Input::post('edit') !== null)
 			{
 				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('request')));
 			}
-			elseif (isset($_POST['delete']))
+			elseif (Input::post('delete') !== null)
 			{
 				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('request')));
 			}
-			elseif (isset($_POST['cut']) || isset($_POST['copy']))
+			elseif (Input::post('cut') !== null || Input::post('copy') !== null)
 			{
 				$arrClipboard = $objSession->get('CLIPBOARD');
 
 				$arrClipboard[$strTable] = array
 				(
 					'id' => $ids,
-					'mode' => (isset($_POST['cut']) ? 'cutAll' : 'copyAll')
+					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll')
 				);
 
 				$objSession->set('CLIPBOARD', $arrClipboard);
@@ -1245,7 +1245,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 
 				// Do not purge the html folder (see #2898)
-				if (isset($_POST['uploadNback']) && !$objUploader->hasResized())
+				if (Input::post('uploadNback') !== null && !$objUploader->hasResized())
 				{
 					Message::reset();
 					$this->redirect($this->getReferer());
@@ -1600,7 +1600,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Redirect
-			if (isset($_POST['saveNclose']))
+			if (Input::post('saveNclose') !== null)
 			{
 				Message::reset();
 				$this->redirect($this->getReferer());
@@ -1889,7 +1889,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Reload the page to prevent _POST variables from being sent twice
 			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
 			{
-				if (isset($_POST['saveNclose']))
+				if (Input::post('saveNclose') !== null)
 				{
 					$this->redirect($this->getReferer());
 				}
@@ -1917,7 +1917,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			$blnIsError = ($_POST && empty($_POST['all_fields']));
+			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
 
 			// Return the select menu
 			$return .= '
@@ -2058,7 +2058,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$this->purgeCache($objFile->path);
 			}
 
-			if (isset($_POST['saveNclose']))
+			if (Input::post('saveNclose') !== null)
 			{
 				$this->redirect($this->getReferer());
 			}

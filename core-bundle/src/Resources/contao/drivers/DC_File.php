@@ -329,7 +329,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			}
 
 			// Reload
-			if (isset($_POST['saveNclose']))
+			if (Input::post('saveNclose') !== null)
 			{
 				Message::reset();
 				$this->redirect($this->getReferer());

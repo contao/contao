@@ -993,8 +993,9 @@ class InsertTags extends Controller
 						}
 					}
 
+					trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6.0. Use the Template content element instead.');
+
 					$arrGet = $_GET;
-					Input::resetCache();
 					$strFile = $elements[1];
 
 					// Take arguments and add them to the $_GET array
@@ -1036,7 +1037,6 @@ class InsertTags extends Controller
 					}
 
 					$_GET = $arrGet;
-					Input::resetCache();
 					break;
 
 				// HOOK: pass unknown tags to callback functions

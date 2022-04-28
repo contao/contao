@@ -55,7 +55,7 @@ class RootPageDependentSelect extends SelectMenu
 
 	protected function isSelected($arrOption): string
 	{
-		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
+		if (empty($this->varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
 		{
 			return ' selected';
 		}

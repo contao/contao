@@ -24,6 +24,7 @@ use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 
 class ControllerTest extends TestCase
@@ -356,11 +357,11 @@ class ControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('router', $router);
-        System::setContainer($container);
 
-        Environment::reset();
-        Environment::set('path', '');
-        Environment::set('base', '');
+        $container->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request());
+
+        System::setContainer($container);
 
         try {
             Controller::redirect($location);
@@ -372,7 +373,6 @@ class ControllerTest extends TestCase
             $this->assertSame($expected, $response->getTargetUrl());
         }
 
-        Environment::reset();
         Controller::resetControllerCache();
     }
 

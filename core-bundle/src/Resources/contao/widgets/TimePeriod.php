@@ -105,7 +105,7 @@ class TimePeriod extends Widget
 	 */
 	protected function isSelected($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
+		if (empty($this->varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
 		{
 			return $this->optionSelected(1, 1);
 		}

@@ -113,7 +113,7 @@ class Newsletter extends Backend
 			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('request'));
 
 			// Preview
-			if (isset($_GET['preview']))
+			if (Input::get('preview') !== null)
 			{
 				// Check the e-mail address
 				if (!Validator::isEmail(Input::get('recipient', true)))
@@ -863,7 +863,7 @@ class Newsletter extends Backend
 				$strEmail = Input::post('email', true);
 
 				// E-mail address has changed
-				if (!empty($_POST) && $strEmail && $strEmail != $objUser->email)
+				if (Input::isPost() && $strEmail && $strEmail != $objUser->email)
 				{
 					$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=?")
 											   ->execute($strEmail);
@@ -905,7 +905,7 @@ class Newsletter extends Backend
 				}
 
 				// Check activation status
-				elseif (!empty($_POST) && Input::post('disable') != $objUser->disable)
+				elseif (Input::isPost() && Input::post('disable') != $objUser->disable)
 				{
 					$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
 								   ->execute((Input::post('disable') ? '' : 1), $objUser->email);

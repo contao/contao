@@ -87,12 +87,14 @@ abstract class Frontend extends Controller
 		/** @var PageModel $objPage */
 		global $objPage;
 
-		$arrGet = $blnIgnoreParams ? array() : $_GET;
+		$arrGet = array();
 
-		// Clean the $_GET values (thanks to thyon)
-		foreach (array_keys($arrGet) as $key)
+		if (!$blnIgnoreParams)
 		{
-			$arrGet[$key] = Input::get($key, true, true);
+			foreach (Input::getKeys() as $key)
+			{
+				$arrGet[$key] = Input::get($key, true, true);
+			}
 		}
 
 		$arrFragments = preg_split('/&(amp;)?/i', $strRequest);

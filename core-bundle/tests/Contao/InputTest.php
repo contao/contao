@@ -22,6 +22,8 @@ use Contao\Widget;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class InputTest extends TestCase
 {
@@ -93,10 +95,26 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::encodeInput($source, InputEncodingMode::encodeLessThanSign));
         $this->assertSame($expectedEncoded, Input::encodeInput($source, InputEncodingMode::encodeAll));
 
-        $_GET = $_POST = $_COOKIE = ['key' => $source];
-
         Config::set('allowedTags', '');
         Config::set('allowedAttributes', '');
+
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(['key' => $source], ['key' => $source], [], ['key' => $source]));
+
+        $this->assertSame($expected, Input::get('key', true));
+        $this->assertSame($expected, Input::post('key', true));
+        $this->assertSame($expected, Input::cookie('key', true));
+
+        $this->assertSame($expectedEncoded, Input::get('key', false));
+        $this->assertSame($expectedEncoded, Input::post('key', false));
+        $this->assertSame($expectedEncoded, Input::cookie('key', false));
+
+        $this->assertSame($source, Input::postUnsafeRaw('key'));
+
+        $stack->pop();
+        $_GET = $_POST = $_COOKIE = ['key' => $source];
+
+        $this->expectDeprecation('%sGetting data from $_%s has been deprecated%s');
 
         $this->assertSame($expected, Input::get('key', true));
         $this->assertSame($expected, Input::post('key', true));
@@ -302,6 +320,8 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider encodeNoneModeProvider
+     *
+     * @group legacy
      */
     public function testEncodeNoneMode(string $source, string $expected, string|null $expectedEncoded = null): void
     {
@@ -312,7 +332,15 @@ class InputTest extends TestCase
         $this->assertSame($expected.$expected, Input::encodeInput($source.$source, InputEncodingMode::encodeNone, false));
         $this->assertSame($expectedEncoded.$expectedEncoded, Input::encodeInput($source.$source, InputEncodingMode::encodeNone, true));
 
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request([], ['key' => $source]));
+
+        $this->assertSame($expectedEncoded, Input::postRaw('key'));
+
+        $stack->pop();
         $_POST = ['key' => $source];
+
+        $this->expectDeprecation('%sGetting data from $_POST%shas been deprecated%s');
 
         $this->assertSame($expectedEncoded, Input::postRaw('key'));
     }
@@ -354,17 +382,28 @@ class InputTest extends TestCase
 
     /**
      * @dataProvider stripTagsProvider
+     *
+     * @group legacy
      */
     public function testStripTags(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $expected);
 
-        $_POST = ['key' => $source];
-
         $allowedTags = Config::get('allowedTags');
         $allowedAttributes = Config::get('allowedAttributes');
 
         $this->assertSame($expected, Input::stripTags($source, $allowedTags, $allowedAttributes));
+
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request([], ['key' => $source]));
+
+        $this->assertSame($expectedEncoded, Input::postHtml('key', true));
+
+        $stack->pop();
+        $_POST = ['key' => $source];
+
+        $this->expectDeprecation('%sGetting data from $_POST%shas been deprecated%s');
+
         $this->assertSame($expectedEncoded, Input::postHtml('key', true));
     }
 
@@ -738,11 +777,9 @@ class InputTest extends TestCase
         System::getContainer()->set('contao.string.simple_token_parser', $simpleTokenParser);
 
         // Input encode the source
-        Input::resetCache();
         $_POST = ['html' => $source];
         $html = Input::postHtml('html', true);
         $_POST = [];
-        Input::resetCache();
 
         $this->assertSame($expected, $simpleTokenParser->parse($html, $tokens));
     }
@@ -808,5 +845,73 @@ class InputTest extends TestCase
             ['foo' => 'bar', 'bar' => 5],
             '<a href="abdeghj"></a>',
         ];
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testPostAndGetKeys(): void
+    {
+        $data = ['key1' => 'string-key', '123' => 'integer-key'];
+
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request());
+
+        $this->assertSame([], Input::getKeys());
+
+        $stack->pop();
+        $stack->push(new Request($data));
+        $_POST = $_GET = $data;
+
+        $this->assertSame(['key1', '123'], Input::getKeys());
+
+        Input::setGet('key2', 'value');
+        Input::setPost('key2', 'value');
+
+        $this->assertSame(['key1', '123', 'key2'], Input::getKeys());
+        $this->assertSame(['key1', 123, 'key2'], array_keys($_GET));
+        $this->assertSame(['key1', 123, 'key2'], array_keys($_POST));
+
+        Input::setGet('key1', null);
+        Input::setPost('key1', null);
+
+        $this->assertSame(['123', 'key2'], Input::getKeys());
+        $this->assertSame([123, 'key2'], array_keys($_GET));
+        $this->assertSame([123, 'key2'], array_keys($_POST));
+
+        $stack->pop();
+        $stack->push(new Request($data, $data, [], [], [], ['REQUEST_METHOD' => 'POST']));
+
+        $this->assertSame(['key1', '123'], Input::getKeys());
+        $this->assertTrue(Input::isPost());
+        $this->assertSame([123, 'key2'], array_keys($_GET));
+        $this->assertSame([123, 'key2'], array_keys($_POST));
+
+        $stack->pop();
+        $_POST = $_GET = [];
+
+        $this->expectDeprecation('%sGetting data from $_%shas been deprecated%s');
+
+        $this->assertSame([], Input::getKeys());
+        $this->assertFalse(Input::isPost());
+
+        $_POST = $_GET = $data;
+
+        $this->assertSame(['key1', '123'], Input::getKeys());
+        $this->assertTrue(Input::isPost());
+
+        Input::setGet('key2', 'value');
+        Input::setPost('key2', 'value');
+
+        $this->assertSame(['key1', '123', 'key2'], Input::getKeys());
+        $this->assertSame(['key1', 123, 'key2'], array_keys($_GET));
+        $this->assertSame(['key1', 123, 'key2'], array_keys($_POST));
+
+        Input::setGet('key1', null);
+        Input::setPost('key1', null);
+
+        $this->assertSame(['123', 'key2'], Input::getKeys());
+        $this->assertSame([123, 'key2'], array_keys($_GET));
+        $this->assertSame([123, 'key2'], array_keys($_POST));
     }
 }

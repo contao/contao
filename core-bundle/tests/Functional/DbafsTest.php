@@ -21,6 +21,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\TestCase\FunctionalTestCase;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use Symfony\Component\HttpFoundation\Request;
 
 class DbafsTest extends FunctionalTestCase
 {
@@ -28,6 +29,7 @@ class DbafsTest extends FunctionalTestCase
     {
         $client = $this->createClient();
         $container = $client->getContainer();
+        $container->get('request_stack')->push(new Request());
 
         static::resetDatabaseSchema();
 

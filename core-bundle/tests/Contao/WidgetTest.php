@@ -18,6 +18,7 @@ use Contao\System;
 use Contao\TextField;
 use Contao\Widget;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class WidgetTest extends TestCase
@@ -57,10 +58,8 @@ class WidgetTest extends TestCase
         $class = new \ReflectionClass(Widget::class);
         $method = $class->getMethod('getPost');
 
-        $_GET = [];
-        $_POST = [$input => $value];
-        Input::resetCache();
-        Input::initialize();
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request([], [$input => $value]));
 
         $this->assertSame($expected, $method->invoke($widget, $key));
 
@@ -137,6 +136,9 @@ class WidgetTest extends TestCase
 
     public function testValidatesThePostData(): void
     {
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request());
+
         $widget = $this
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()

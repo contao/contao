@@ -60,7 +60,7 @@ class ModuleFaqList extends Module
 		}
 
 		// Show the FAQ reader if an item has been selected
-		if ($this->faq_readerModule > 0 && isset($_GET['auto_item']))
+		if ($this->faq_readerModule > 0 && Input::get('auto_item') !== null)
 		{
 			return $this->getFrontendModule($this->faq_readerModule, $this->strColumn);
 		}
