@@ -47,7 +47,6 @@ use Doctrine\DBAL\Types\Types;
  * @property string        $alt                The alternative text
  * @property string        $style              The style attribute
  * @property string        $accesskey          The key to focus the field
- * @property integer       $tabindex           The tabindex of the field
  * @property boolean       $disabled           Adds the disabled attribute
  * @property boolean       $readonly           Adds the readonly attribute
  * @property boolean       $autofocus          Adds the autofocus attribute
@@ -279,14 +278,6 @@ abstract class Widget extends Controller
 			case 'onkeyup':
 			case 'onselect':
 				$this->arrAttributes[$strKey] = $varValue;
-				break;
-
-			case 'tabindex':
-				if ($varValue > 0)
-				{
-					trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
-					$this->arrAttributes['tabindex'] = $varValue;
-				}
 				break;
 
 			case 'disabled':
