@@ -188,8 +188,9 @@ The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now
 `Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
 back to an array representation. If you are just using array access, nothing needs to be changed.
 
-### countries.php and getCountries
+### countries.php, getCountries and $GLOBALS['TL_LANG']['CNT']
 
 The `System::getCountries()` method, the `getCountries` hook and the `config/countries.php` file have been removed.
 Use or decorate the `contao.intl.countries` service instead.
 To add or remove countries you can use the `contao.intl.countries` configuration.
+`$GLOBALS['TL_LANG']['CNT']` can still be used for overwriting translations, but no longer to retrieve country names.
