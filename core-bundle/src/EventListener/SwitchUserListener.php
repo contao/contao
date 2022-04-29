@@ -66,12 +66,15 @@ class SwitchUserListener
             $originalUser = $token->getOriginalToken()->getUser()->getUsername();
         }
 
-        if ($originalUser == $targetUser) {
+        if ($originalUser === $targetUser) {
+
             $this->logger->info(
                 sprintf('User "%s" has quit the impersonation of user "%s"', $originalUser, $sourceUser),
                 ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $originalUser)]
             );
+
         } else {
+
             if (!empty($originalUser)) {
                 $sourceUser = $originalUser;
             }
@@ -80,6 +83,7 @@ class SwitchUserListener
                 sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser),
                 ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $sourceUser)]
             );
+
         }
     }
 }
