@@ -67,10 +67,12 @@ class SwitchUserListener
         }
 
         if ($originalUser === $targetUser) {
+
             $this->logger->info(
                 sprintf('User "%s" has quit the impersonation of user "%s"', $originalUser, $sourceUser),
                 ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $originalUser)]
             );
+
         } else {
 
             if (!empty($originalUser)) {
