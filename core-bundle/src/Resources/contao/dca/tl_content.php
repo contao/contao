@@ -170,7 +170,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	(
 		'id' => array
 		(
-			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
+			'sql'                     => "int(10) unsigned NOT NULL auto_increment",
+			'search'                  => true
 		),
 		'pid' => array
 		(
