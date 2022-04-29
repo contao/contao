@@ -192,15 +192,6 @@ Contao 4.0 and will no longer work in Contao 5.0. Use the static method
 $locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
 ```
 
-## $GLOBALS['TL_LANG']['LNG']
-
-Using the globals `$GLOBALS['TL_LANG']['LNG']` has been deprecated in Contao
-4.12 and will no longer work in Contao 5.0. Use the locales service instead:
-
-```php
-$locales = System::getContainer()->get('contao.intl.locales')->getLocales();
-```
-
 ## Request.Mixed (JavaScript)
 
 Using the old Request.Mixed class instead of Request.Contao has been deprecated

@@ -669,32 +669,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Return the languages for the TinyMCE spellchecker
-	 *
-	 * @return string The TinyMCE spellchecker language string
-	 */
-	protected function getSpellcheckerString()
-	{
-		System::loadLanguageFile('languages');
-
-		$return = array();
-		$langs = Folder::scan(__DIR__ . '/../../languages');
-		array_unshift($langs, $GLOBALS['TL_LANGUAGE']);
-
-		foreach ($langs as $lang)
-		{
-			$lang = substr($lang, 0, 2);
-
-			if (isset($GLOBALS['TL_LANG']['LNG'][$lang]))
-			{
-				$return[$lang] = $GLOBALS['TL_LANG']['LNG'][$lang] . '=' . $lang;
-			}
-		}
-
-		return '+' . implode(',', array_unique($return));
-	}
-
-	/**
 	 * Calculate the page status icon name based on the page parameters
 	 *
 	 * @param PageModel|Result|\stdClass $objPage The page object

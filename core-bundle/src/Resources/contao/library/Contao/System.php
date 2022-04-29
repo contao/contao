@@ -465,21 +465,6 @@ abstract class System
 		// Use a global cache variable to support nested calls
 		static::$arrLanguageFiles[$strName][$strCacheKey] = $strLanguage;
 
-		// Backwards compatibility
-		if ('languages' === $strName)
-		{
-			// Reset previously loaded languages without destroying references
-			foreach (array_keys($GLOBALS['TL_LANG']['LNG'] ?? array()) as $strLocale)
-			{
-				$GLOBALS['TL_LANG']['LNG'][$strLocale] = null;
-			}
-
-			foreach (self::getContainer()->get('contao.intl.locales')->getLocales($strCacheKey) as $strLocale => $strLabel)
-			{
-				$GLOBALS['TL_LANG']['LNG'][$strLocale] = $strLabel;
-			}
-		}
-
 		// Fall back to English
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
 

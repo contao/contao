@@ -383,7 +383,6 @@ services:
         arguments:
             - '@translator'
             - '@request_stack'
-            - '@contao.framework'
             - ~
             - ~
             - '%contao.intl.locales%'

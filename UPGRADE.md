@@ -2,6 +2,15 @@
 
 ## Version 4.* to 5.0
 
+### languages.php, getLanguages and $GLOBALS['TL_LANG']['LNG']
+
+The `System::getLanguages()` method, the `getLanguages` hook and the `config/languages.php` file have been
+removed. Use or decorate the `contao.intl.locales` service instead.
+
+To add or remove countries, you can use the `contao.intl.locales` or `contao.intl.enabled_locales
+configuration. `$GLOBALS['TL_LANG']['LNG']` can still be used for overwriting translations, but no longer to
+retrieve language names.
+
 ### countries.php, getCountries and $GLOBALS['TL_LANG']['CNT']
 
 The `System::getCountries()` method, the `getCountries` hook and the `config/countries.php` file have been

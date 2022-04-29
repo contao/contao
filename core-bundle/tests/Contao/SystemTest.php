@@ -12,19 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
-use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Intl\Countries;
-use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Translation\Translator;
 use Contao\System;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SystemTest extends TestCase
 {
@@ -173,127 +163,5 @@ class SystemTest extends TestCase
             $GLOBALS['TL_LANG']['MSC']['order_test'],
             'Should have been cached, not loaded from the PHP file.'
         );
-    }
-
-    public function testLoadsLanguageTranslations(): void
-    {
-        $tmpDir = $this->getTempDir();
-
-        (new Filesystem())->dumpFile(
-            "$tmpDir/contao/languages/en/languages.php",
-            '<?php '
-            .'$GLOBALS["TL_LANG"]["LNG"]["en"] = "USA";'
-        );
-
-        (new Filesystem())->dumpFile(
-            "$tmpDir/contao/languages/de/languages.php",
-            '<?php '
-            .'$GLOBALS["TL_LANG"]["LNG"]["en"] = "Ami";'
-            .'$GLOBALS["TL_LANG"]["LNG"]["de"] = "Deu";'
-        );
-
-        (new Filesystem())->dumpFile(
-            "$tmpDir/contao/languages/fr/languages.php",
-            '<?php '
-            .'$GLOBALS["TL_LANG"]["LNG"]["en"] = "Amé";'
-            .'$GLOBALS["TL_LANG"]["LNG"]["fr"] = "Fra";'
-        );
-
-        System::setContainer($this->getContainerWithLocalesAndCountries($tmpDir));
-
-        $referenceEn = &$GLOBALS['TL_LANG']['LNG']['en'];
-        $referenceDe = &$GLOBALS['TL_LANG']['LNG']['de'];
-        $referenceFr = &$GLOBALS['TL_LANG']['LNG']['fr'];
-
-        System::loadLanguageFile('languages', 'en');
-
-        $this->assertSame('USA', $GLOBALS['TL_LANG']['LNG']['en']);
-        $this->assertSame('German', $GLOBALS['TL_LANG']['LNG']['de']);
-        $this->assertSame('French', $GLOBALS['TL_LANG']['LNG']['fr']);
-        $this->assertSame('USA', $referenceEn);
-        $this->assertSame('German', $referenceDe);
-        $this->assertSame('French', $referenceFr);
-
-        System::loadLanguageFile('languages', 'de');
-
-        $this->assertSame('Ami', $GLOBALS['TL_LANG']['LNG']['en']);
-        $this->assertSame('Deu', $GLOBALS['TL_LANG']['LNG']['de']);
-        $this->assertSame('Französisch', $GLOBALS['TL_LANG']['LNG']['fr']);
-        $this->assertSame('Ami', $referenceEn);
-        $this->assertSame('Deu', $referenceDe);
-        $this->assertSame('Französisch', $referenceFr);
-
-        System::loadLanguageFile('languages', 'fr');
-
-        $this->assertSame('Amé', $GLOBALS['TL_LANG']['LNG']['en']);
-        $this->assertSame('allemand', $GLOBALS['TL_LANG']['LNG']['de']);
-        $this->assertSame('Fra', $GLOBALS['TL_LANG']['LNG']['fr']);
-        $this->assertSame('Amé', $referenceEn);
-        $this->assertSame('allemand', $referenceDe);
-        $this->assertSame('Fra', $referenceFr);
-
-        System::loadLanguageFile('languages', 'en');
-
-        $this->assertSame('USA', $GLOBALS['TL_LANG']['LNG']['en']);
-        $this->assertSame('German', $GLOBALS['TL_LANG']['LNG']['de']);
-        $this->assertSame('French', $GLOBALS['TL_LANG']['LNG']['fr']);
-        $this->assertSame('USA', $referenceEn);
-        $this->assertSame('German', $referenceDe);
-        $this->assertSame('French', $referenceFr);
-    }
-
-    private function getContainerWithLocalesAndCountries(string $tmpDir): ContainerBuilder
-    {
-        $container = $this->getContainerWithContaoConfiguration($tmpDir);
-        $container->setParameter('contao.resources_paths', ["$tmpDir/contao"]);
-
-        $container->set('contao.framework', $this->mockContaoFramework([
-            System::class => new Adapter(System::class),
-        ]));
-
-        $innerTranslator = new class() implements TranslatorInterface, TranslatorBagInterface {
-            public function getCatalogue($locale = null): MessageCatalogue
-            {
-                return new MessageCatalogue($locale);
-            }
-
-            public function trans($id, array $parameters = [], $domain = null, $locale = null)
-            {
-                return $id;
-            }
-        };
-
-        $translator = new Translator(
-            $innerTranslator,
-            $container->get('contao.framework'),
-            new ResourceFinder(["$tmpDir/contao"])
-        );
-
-        $container->set(
-            'contao.intl.locales',
-            new Locales(
-                $translator,
-                new RequestStack(),
-                $container->get('contao.framework'),
-                ['de', 'en', 'fr'],
-                ['de', 'en', 'fr'],
-                [],
-                [],
-                'de'
-            )
-        );
-
-        $container->set(
-            'contao.intl.countries',
-            new Countries(
-                $translator,
-                new RequestStack(),
-                ['DE', 'US', 'FR'],
-                [],
-                'de'
-            )
-        );
-
-        return $container;
     }
 }
