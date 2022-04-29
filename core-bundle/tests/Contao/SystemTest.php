@@ -12,19 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
-use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Framework\Adapter;
-use Contao\CoreBundle\Intl\Countries;
-use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Translation\Translator;
 use Contao\System;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Translation\MessageCatalogue;
-use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SystemTest extends TestCase
 {
@@ -173,59 +163,5 @@ class SystemTest extends TestCase
             $GLOBALS['TL_LANG']['MSC']['order_test'],
             'Should have been cached, not loaded from the PHP file.'
         );
-    }
-
-    private function getContainerWithLocalesAndCountries(string $tmpDir): ContainerBuilder
-    {
-        $container = $this->getContainerWithContaoConfiguration($tmpDir);
-        $container->setParameter('contao.resources_paths', ["$tmpDir/contao"]);
-
-        $container->set('contao.framework', $this->mockContaoFramework([
-            System::class => new Adapter(System::class),
-        ]));
-
-        $innerTranslator = new class() implements TranslatorInterface, TranslatorBagInterface {
-            public function getCatalogue($locale = null): MessageCatalogue
-            {
-                return new MessageCatalogue($locale);
-            }
-
-            public function trans($id, array $parameters = [], $domain = null, $locale = null)
-            {
-                return $id;
-            }
-        };
-
-        $translator = new Translator(
-            $innerTranslator,
-            $container->get('contao.framework'),
-            new ResourceFinder(["$tmpDir/contao"])
-        );
-
-        $container->set(
-            'contao.intl.locales',
-            new Locales(
-                $translator,
-                new RequestStack(),
-                ['de', 'en', 'fr'],
-                ['de', 'en', 'fr'],
-                [],
-                [],
-                'de'
-            )
-        );
-
-        $container->set(
-            'contao.intl.countries',
-            new Countries(
-                $translator,
-                new RequestStack(),
-                ['DE', 'US', 'FR'],
-                [],
-                'de'
-            )
-        );
-
-        return $container;
     }
 }
