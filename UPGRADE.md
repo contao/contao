@@ -2,6 +2,14 @@
 
 ## Version 4.* to 5.0
 
+### countries.php, getCountries and $GLOBALS['TL_LANG']['CNT']
+
+The `System::getCountries()` method, the `getCountries` hook and the `config/countries.php` file have been
+removed. Use or decorate the `contao.intl.countries` service instead.
+
+To add or remove countries, you can use the `contao.intl.countries` configuration. `$GLOBALS['TL_LANG']['CNT']`
+can still be used for overwriting translations, but no longer to retrieve country names.
+
 ## UnresolvableDependenciesException
 
 The following classes and interfaces have been removed from the global namespace:

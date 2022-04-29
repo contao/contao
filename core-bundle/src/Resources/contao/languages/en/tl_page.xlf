@@ -320,12 +320,6 @@
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page if a member is logged in.</source>
       </trans-unit>
-      <trans-unit id="tl_page.tabindex.0">
-        <source>Tab index</source>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.1">
-        <source>The position of the navigation item in the tabbing order.</source>
-      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
       </trans-unit>

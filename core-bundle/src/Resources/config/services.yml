@@ -334,7 +334,6 @@ services:
         arguments:
             - '@database_connection'
             - '@event_dispatcher'
-            - '@contao.framework'
             - '@contao.translation.translator'
         tags:
             - { name: kernel.reset, method: reset }
@@ -374,7 +373,6 @@ services:
         arguments:
             - '@translator'
             - '@request_stack'
-            - '@contao.framework'
             - ~
             - '%contao.intl.countries%'
             - '%kernel.default_locale%'

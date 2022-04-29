@@ -298,6 +298,7 @@
             "@cs-fixer",
             "@service-linter",
             "@phpstan",
+            "@rector",
             "@require-checker",
             "@monorepo-tools"
         ],
