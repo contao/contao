@@ -60,6 +60,10 @@ window.tinymce && tinymce.init({
     toolbar: 'link unlink | image | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code',
   <?php $this->endblock(); ?>
 
+  <?php $this->block('contextmenu'); ?>
+    contextmenu: false,
+  <?php $this->endblock(); ?>
+
   <?php $this->block('custom'); ?>
   <?php $this->endblock(); ?>
 

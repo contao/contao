@@ -71,6 +71,7 @@ class RobotsTxtListenerTest extends TestCase
             <<<'EOF'
                 user-agent:*
                 disallow:/contao/
+                disallow:/_contao/
 
                 sitemap:https://www.foobar.com/sitemap.xml
                 EOF
@@ -86,6 +87,7 @@ class RobotsTxtListenerTest extends TestCase
                 user-agent:*
                 allow:/
                 disallow:/contao/
+                disallow:/_contao/
 
                 sitemap:https://www.foobar.com/sitemap.xml
                 EOF
@@ -101,9 +103,11 @@ class RobotsTxtListenerTest extends TestCase
                 user-agent:googlebot
                 allow:/
                 disallow:/contao/
+                disallow:/_contao/
 
                 user-agent:*
                 disallow:/contao/
+                disallow:/_contao/
 
                 sitemap:https://www.foobar.com/sitemap.xml
                 EOF
@@ -120,11 +124,12 @@ class RobotsTxtListenerTest extends TestCase
 
         $directiveList = $this->createMock(DirectiveList::class);
         $directiveList
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('add')
-            ->with($this->callback(
-                static fn (Directive $directive) => ((string) $directive) === 'disallow:'.$routePrefix.'/'
-            ))
+            ->withConsecutive(
+                [$this->callback(static fn (Directive $directive) => ((string) $directive) === 'disallow:'.$routePrefix.'/')],
+                ['disallow:/_contao/']
+            )
         ;
 
         $record = $this->createMock(Record::class);

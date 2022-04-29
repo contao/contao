@@ -19,7 +19,7 @@ use Symfony\Component\Filesystem\Path;
  *
  *     $short = StringUtil::substr($str, 32);
  *     $html  = StringUtil::substrHtml($str, 32);
- *     $xhtml = StringUtil::toXhtml($html5);
+ *     $decoded = StringUtil::decodeEntities($str);
  */
 class StringUtil
 {
@@ -484,11 +484,11 @@ class StringUtil
 	 *
 	 * @return string The XHTML string
 	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public static function toXhtml($strString)
 	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'The "StringUtil::toXhtml()" method has been deprecated and will no longer work in Contao 5.0.');
+		trigger_deprecation('contao/core-bundle', '4.9', 'The "StringUtil::toXhtml()" method has been deprecated and will no longer work in Contao 5.0.');
 
 		$arrPregReplace = array
 		(
