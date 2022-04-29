@@ -466,21 +466,6 @@ abstract class System
 		static::$arrLanguageFiles[$strName][$strCacheKey] = $strLanguage;
 
 		// Backwards compatibility
-		if ('languages' === $strName)
-		{
-			// Reset previously loaded languages without destroying references
-			foreach (array_keys($GLOBALS['TL_LANG']['LNG'] ?? array()) as $strLocale)
-			{
-				$GLOBALS['TL_LANG']['LNG'][$strLocale] = null;
-			}
-
-			foreach (self::getContainer()->get('contao.intl.locales')->getLocales($strCacheKey) as $strLocale => $strLabel)
-			{
-				$GLOBALS['TL_LANG']['LNG'][$strLocale] = $strLabel;
-			}
-		}
-
-		// Backwards compatibility
 		if ('countries' === $strName)
 		{
 			// Reset previously loaded countries without destroying references
