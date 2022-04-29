@@ -242,73 +242,6 @@ class SystemTest extends TestCase
         $this->assertSame('French', $referenceFr);
     }
 
-    public function testLoadsCountryTranslations(): void
-    {
-        $tmpDir = $this->getTempDir();
-
-        (new Filesystem())->dumpFile(
-            "$tmpDir/contao/languages/en/countries.php",
-            '<?php '
-            .'$GLOBALS["TL_LANG"]["CNT"]["us"] = "USA";'
-        );
-
-        (new Filesystem())->dumpFile(
-            "$tmpDir/contao/languages/de/countries.php",
-            '<?php '
-            .'$GLOBALS["TL_LANG"]["CNT"]["us"] = "Ami";'
-            .'$GLOBALS["TL_LANG"]["CNT"]["de"] = "Deu";'
-        );
-
-        (new Filesystem())->dumpFile(
-            "$tmpDir/contao/languages/fr/countries.php",
-            '<?php '
-            .'$GLOBALS["TL_LANG"]["CNT"]["us"] = "Amé";'
-            .'$GLOBALS["TL_LANG"]["CNT"]["fr"] = "Fra";'
-        );
-
-        System::setContainer($this->getContainerWithLocalesAndCountries($tmpDir));
-
-        $referenceUs = &$GLOBALS['TL_LANG']['CNT']['us'];
-        $referenceDe = &$GLOBALS['TL_LANG']['CNT']['de'];
-        $referenceFr = &$GLOBALS['TL_LANG']['CNT']['fr'];
-
-        System::loadLanguageFile('countries', 'en');
-
-        $this->assertSame('USA', $GLOBALS['TL_LANG']['CNT']['us']);
-        $this->assertSame('Germany', $GLOBALS['TL_LANG']['CNT']['de']);
-        $this->assertSame('France', $GLOBALS['TL_LANG']['CNT']['fr']);
-        $this->assertSame('USA', $referenceUs);
-        $this->assertSame('Germany', $referenceDe);
-        $this->assertSame('France', $referenceFr);
-
-        System::loadLanguageFile('countries', 'de');
-
-        $this->assertSame('Ami', $GLOBALS['TL_LANG']['CNT']['us']);
-        $this->assertSame('Deu', $GLOBALS['TL_LANG']['CNT']['de']);
-        $this->assertSame('Frankreich', $GLOBALS['TL_LANG']['CNT']['fr']);
-        $this->assertSame('Ami', $referenceUs);
-        $this->assertSame('Deu', $referenceDe);
-        $this->assertSame('Frankreich', $referenceFr);
-
-        System::loadLanguageFile('countries', 'fr');
-
-        $this->assertSame('Amé', $GLOBALS['TL_LANG']['CNT']['us']);
-        $this->assertSame('Allemagne', $GLOBALS['TL_LANG']['CNT']['de']);
-        $this->assertSame('Fra', $GLOBALS['TL_LANG']['CNT']['fr']);
-        $this->assertSame('Amé', $referenceUs);
-        $this->assertSame('Allemagne', $referenceDe);
-        $this->assertSame('Fra', $referenceFr);
-
-        System::loadLanguageFile('countries', 'en');
-
-        $this->assertSame('USA', $GLOBALS['TL_LANG']['CNT']['us']);
-        $this->assertSame('Germany', $GLOBALS['TL_LANG']['CNT']['de']);
-        $this->assertSame('France', $GLOBALS['TL_LANG']['CNT']['fr']);
-        $this->assertSame('USA', $referenceUs);
-        $this->assertSame('Germany', $referenceDe);
-        $this->assertSame('France', $referenceFr);
-    }
-
     private function getContainerWithLocalesAndCountries(string $tmpDir): ContainerBuilder
     {
         $container = $this->getContainerWithContaoConfiguration($tmpDir);
@@ -355,7 +288,6 @@ class SystemTest extends TestCase
             new Countries(
                 $translator,
                 new RequestStack(),
-                $container->get('contao.framework'),
                 ['DE', 'US', 'FR'],
                 [],
                 'de'

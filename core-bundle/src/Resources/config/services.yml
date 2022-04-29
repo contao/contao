@@ -373,7 +373,6 @@ services:
         arguments:
             - '@translator'
             - '@request_stack'
-            - '@contao.framework'
             - ~
             - '%contao.intl.countries%'
             - '%kernel.default_locale%'
