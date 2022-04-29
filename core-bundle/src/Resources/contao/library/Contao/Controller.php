@@ -699,9 +699,13 @@ abstract class Controller extends System
 	 * Return the languages for the TinyMCE spellchecker
 	 *
 	 * @return string The TinyMCE spellchecker language string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	protected function getSpellcheckerString()
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+
 		System::loadLanguageFile('languages');
 
 		$return = array();
