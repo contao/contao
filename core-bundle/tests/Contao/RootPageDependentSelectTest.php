@@ -51,7 +51,7 @@ class RootPageDependentSelectTest extends TestCase
         $translator
             ->expects($this->once())
             ->method('trans')
-            ->with('tl_module.rootPageDependentModulesBlankOptionLabel', [], 'contao_module')
+            ->with('tl_module.rootPageDependentModulesBlankOptionLabel', [], 'contao_tl_module')
             ->willReturn('Choose module for "%s"')
         ;
 
