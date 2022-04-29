@@ -1542,18 +1542,4 @@ abstract class Widget extends Controller
 			StringUtil::specialchars((string) $strString, false, true),
 		);
 	}
-
-	/**
-	 * Generate a submit button
-	 *
-	 * @return string The submit button markup
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	protected function addSubmit()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Widget::addSubmit()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return '';
-	}
 }
