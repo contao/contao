@@ -468,27 +468,6 @@ $GLOBALS['TL_PURGE'] = array
 );
 
 // Backwards compatibility
-// Image crop modes
-$GLOBALS['TL_CROP'] = array
-(
-	'image_sizes' => array
-	(
-		// will be added dynamically
-	),
-	'relative' => array
-	(
-		'proportional', 'box'
-	),
-	'exact' => array
-	(
-		'crop',
-		'left_top',    'center_top',    'right_top',
-		'left_center', 'center_center', 'right_center',
-		'left_bottom', 'center_bottom', 'right_bottom'
-	)
-);
-
-// Backwards compatibility
 // Cron jobs
 $GLOBALS['TL_CRON'] = array
 (
