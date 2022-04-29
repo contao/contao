@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\PublicUri;
 
-final class Options
+interface OptionsInterface
 {
     // For future options (e.g. lifetime for S3 signed URLs)
 }

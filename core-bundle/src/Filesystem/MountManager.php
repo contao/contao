@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
-use Contao\CoreBundle\Filesystem\PublicUri\Options;
+use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
 use Contao\CoreBundle\Filesystem\PublicUri\PublicUriProviderInterface;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemAdapter;
@@ -384,11 +384,10 @@ class MountManager
         }
     }
 
-    public function generatePublicUri(string $path, Options $options = null): ?UriInterface
+    public function generatePublicUri(string $path, OptionsInterface $options = null): ?UriInterface
     {
         /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
-        $options ??= new Options();
 
         foreach ($this->publicUriProviders as $provider) {
             if (null !== ($uri = $provider->getUri($adapter, $adapterPath, $options))) {

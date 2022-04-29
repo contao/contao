@@ -34,7 +34,7 @@ class SymlinkedLocalFilesProvider implements PublicUriProviderInterface
      * Generate public URLs for the symlinked local files, so that they can be
      * provided directly by the web server.
      */
-    public function getUri(FilesystemAdapter $adapter, string $adapterPath, Options $options): ?UriInterface
+    public function getUri(FilesystemAdapter $adapter, string $adapterPath, ?OptionsInterface $options): ?UriInterface
     {
         if ($adapter !== $this->localFilesAdapter) {
             return null;
