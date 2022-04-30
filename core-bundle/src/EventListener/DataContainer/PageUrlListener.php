@@ -86,7 +86,8 @@ class PageUrlListener
 
         // Generate folder URL aliases (see #4933)
         if ($pageModel->useFolderUrl) {
-            $value = $pageModel->folderUrl.$value;
+            // Remove leading index/ from folder url (see #1000)
+            $value = str_replace('index/', '', $pageModel->folderUrl) .$value;
         }
 
         return $value;
