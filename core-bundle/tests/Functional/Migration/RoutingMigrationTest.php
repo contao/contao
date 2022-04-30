@@ -101,7 +101,6 @@ class RoutingMigrationTest extends FunctionalTestCase
     public function testMigratesData(bool $prependLocale, string $urlSuffix, bool $folderUrl): void
     {
         static::bootKernel();
-        static::resetDatabaseSchema();
         static::loadFixtures([__DIR__.'/../../Fixtures/Functional/Migration/routing.yml'], false);
 
         $connection = static::getContainer()->get('database_connection');

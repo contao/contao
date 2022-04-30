@@ -14,8 +14,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 
 /**
  * Front end module "registration".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleRegistration extends Module
 {
@@ -357,7 +355,7 @@ class ModuleRegistration extends Module
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$this->Template->captcha = $arrFields['captcha']['captcha'];
+		$this->Template->captcha = $arrFields['captcha']['captcha'] ?? '';
 	}
 
 	/**

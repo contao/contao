@@ -56,6 +56,11 @@ parameters:
             message: '#Call to method .*::assertSame\(\) with .* will always evaluate to false\.#'
             path: %currentWorkingDirectory%/core-bundle/tests/Contao/SystemTest.php
 
+        -
+            # Ignore unused properties in the deprecated LogoutHandler
+            message: '#Property Contao\\CoreBundle\\Security\\Logout\\LogoutHandler::.* is never read, only written\.#'
+            path: %currentWorkingDirectory%/core-bundle/src/Security/Logout/LogoutHandler.php
+
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 

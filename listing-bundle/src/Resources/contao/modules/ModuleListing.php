@@ -25,8 +25,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property string $list_where
  * @property string $list_search
  * @property string $list_layout
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleListing extends Module
 {
@@ -77,8 +75,8 @@ class ModuleListing extends Module
 
 		$this->strTemplate = $this->list_layout ?: 'list_default';
 
-		$this->list_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_where);
-		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_info_where);
+		$this->list_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline((string) $this->list_where);
+		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline((string) $this->list_info_where);
 
 		return parent::generate();
 	}

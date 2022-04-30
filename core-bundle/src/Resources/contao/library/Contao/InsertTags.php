@@ -26,8 +26,6 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
  *
  *     $it = new InsertTags();
  *     echo $it->replace($text);
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InsertTags extends Controller
 {
@@ -1318,10 +1316,15 @@ class InsertTags extends Controller
 	 */
 	private function encodeHtmlAttributes($html)
 	{
+		if (strpos($html, '{{') === false && strpos($html, '}}') === false)
+		{
+			return $html;
+		}
+
 		// Regular expression to match tags according to https://html.spec.whatwg.org/#tag-open-state
 		$tagRegEx = '('
 			. '<'                         // Tag start
-			. '/?'                        // Optional slash for closing element
+			. '/?+'                       // Optional slash for closing element
 			. '([a-z][^\s/>]*+)'          // Tag name
 			. '(?:'                       // Attribute
 				. '[\s/]*+'               // Optional white space including slash
@@ -1337,12 +1340,12 @@ class InsertTags extends Controller
 				. ')?+'                   // Assignment is optional
 			. ')*+'                       // Attributes may occur zero or more times
 			. '[\s/]*+'                   // Optional white space including slash
-			. '>?'                        // Tag end (optional if EOF)
+			. '>?+'                       // Tag end (optional if EOF)
 			. '|<!--'                     // Or comment
 			. '|<!'                       // Or bogus ! comment
 			. '|<\?'                      // Or bogus ? comment
 			. '|</(?![a-z])'              // Or bogus / comment
-		. ')i';
+		. ')iS';
 
 		$htmlResult = '';
 		$offset = 0;
@@ -1352,7 +1355,7 @@ class InsertTags extends Controller
 			$htmlResult .= substr($html, $offset, $matches[0][1] - $offset);
 
 			// Skip comments
-			if ($matches[0][0] === '<!--' || $matches[0][0] === '<!' || $matches[0][0] === '</' || $matches[0][0] === '<?')
+			if (\in_array($matches[0][0], array('<!--', '<!', '</', '<?'), true))
 			{
 				$commentCloseString = $matches[0][0] === '<!--' ? '-->' : '>';
 				$commentClosePos = strpos($html, $commentCloseString, $offset);
@@ -1365,18 +1368,21 @@ class InsertTags extends Controller
 
 			$tag = $matches[0][0];
 
-			// Encode insert tags
-			$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));
-			$tag = $tagPrefix . $this->fixUnclosedTagsAndUrlAttributes(substr($tag, \strlen($tagPrefix)));
-			$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
-			$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
+			if (strpos($tag, '{{') !== false || strpos($tag, '}}') !== false)
+			{
+				// Encode insert tags
+				$tagPrefix = substr($tag, 0, $matches[1][1] - $matches[0][1] + \strlen($matches[1][0]));
+				$tag = $tagPrefix . $this->fixUnclosedTagsAndUrlAttributes(substr($tag, \strlen($tagPrefix)));
+				$tag = preg_replace('/(?:\|attr)?}}/', '|attr}}', $tag);
+				$tag = str_replace('|urlattr|attr}}', '|urlattr}}', $tag);
+			}
 
 			$offset = $matches[0][1] + \strlen($matches[0][0]);
 			$htmlResult .= $tag;
 
 			// Skip RCDATA and RAWTEXT elements https://html.spec.whatwg.org/#rcdata-state
 			if (
-				\in_array(strtolower($matches[1][0]), array('script', 'title', 'textarea', 'style', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript'))
+				\in_array(strtolower($matches[1][0]), array('script', 'title', 'textarea', 'style', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript'), true)
 				&& preg_match('(</' . preg_quote($matches[1][0]) . '[\s/>])i', $html, $endTagMatches, PREG_OFFSET_CAPTURE, $offset)
 			) {
 				$offset = $endTagMatches[0][1] + \strlen($endTagMatches[0][0]);
@@ -1411,7 +1417,7 @@ class InsertTags extends Controller
 					. '|[^>][^\s>]*+' // Or unquoted value
 				. ')?+'               // Value is optional
 			. ')?+'                   // Assignment is optional
-		. ')i';
+		. ')iS';
 
 		$attributesResult = '';
 		$offset = 0;

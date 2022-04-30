@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "text".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentText extends ContentElement
 {

@@ -651,6 +651,7 @@
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Включите канонические URL-адреса в корневой странице веб-сайта, чтобы включить эту конфигурацию.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

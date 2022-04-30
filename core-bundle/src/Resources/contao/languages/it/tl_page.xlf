@@ -651,6 +651,7 @@
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>Abilita gli URL canonici nella pagina principale del sito web per attivare questa configurazione.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

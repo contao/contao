@@ -16,8 +16,6 @@ use Contao\Model\Registry;
 
 /**
  * Proxy for new front end module fragments, so they are accessible via $GLOBALS['FE_MOD'].
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class ModuleProxy extends Module
 {

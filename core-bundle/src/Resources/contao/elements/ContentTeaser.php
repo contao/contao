@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "teaser".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentTeaser extends ContentElement
 {

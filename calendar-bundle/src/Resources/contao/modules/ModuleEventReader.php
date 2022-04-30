@@ -22,8 +22,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property string   $com_template
  * @property string   $cal_template
  * @property array    $cal_calendar
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventReader extends Events
 {

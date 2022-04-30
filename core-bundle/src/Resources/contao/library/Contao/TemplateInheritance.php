@@ -15,8 +15,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides the template inheritance logic
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 trait TemplateInheritance
 {

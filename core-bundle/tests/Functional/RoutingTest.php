@@ -16,31 +16,12 @@ use Contao\Config;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 
 class RoutingTest extends FunctionalTestCase
 {
     use ExpectDeprecationTrait;
 
     private static ?array $lastImport = null;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        static::bootKernel();
-        System::setContainer(self::$container);
-        static::resetDatabaseSchema();
-        static::ensureKernelShutdown();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        (new Filesystem())->remove(Path::canonicalize(__DIR__.'/../../var'));
-    }
 
     protected function setUp(): void
     {
@@ -333,7 +314,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
             true,
@@ -343,7 +324,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/items/foobar.html',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
             true,
@@ -662,7 +643,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/en/folder/url/home/auto_item/foo.html',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
             true,
@@ -672,7 +653,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/en/folder/url/home/items/foobar.html',
             404,
-            '(404 Not Found)',
+            'Not Found',
             ['language' => 'en'],
             'root-with-folder-urls.local',
             true,
@@ -946,7 +927,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/auto_item/foo',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
             true,
@@ -956,7 +937,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-folder-urls', 'news'],
             '/folder/url/home/items/foobar',
             404,
-            '(404 Not Found)',
+            'Not Found',
             [],
             'root-with-folder-urls.local',
             true,
@@ -1028,7 +1009,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-without-fallback-language'],
             '/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-without-fallback-language.local',
         ];
@@ -1178,7 +1159,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-without-fallback-language'],
             '/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-without-fallback-language.local',
         ];
@@ -1223,7 +1204,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-with-index'],
             '/de/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-with-index.local',
         ];
@@ -1232,7 +1213,7 @@ class RoutingTest extends FunctionalTestCase
             ['theme', 'root-without-fallback-language'],
             '/fr/',
             404,
-            '(404 Not Found)',
+            'Not Found',
             'de,fr',
             'root-without-fallback-language.local',
         ];

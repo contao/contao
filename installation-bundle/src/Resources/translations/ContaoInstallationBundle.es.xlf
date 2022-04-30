@@ -130,8 +130,7 @@
         <target>Actualizar la base de datos</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
-        <source>Please note that the update assistant only handles tables starting with &lt;code&gt;tl_&lt;/code&gt;.</source>
-        <target>Tenga en cuenta que el asistente de actualización sólo reconoce tablas que empiezan por &lt;code&gt; tl _ &lt;/ code&gt;.</target>
+        <source>Here you can update the database schema.</source>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>

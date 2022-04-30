@@ -16,8 +16,6 @@ use Contao\Model\Registry;
 
 /**
  * Proxy for new content element fragments, so they are accessible via $GLOBALS['TL_CTE'].
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class ContentProxy extends ContentElement
 {

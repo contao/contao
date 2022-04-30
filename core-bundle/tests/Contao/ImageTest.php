@@ -994,7 +994,6 @@ class ImageTest extends TestCase
 
     /**
      * @group legacy
-     * @psalm-suppress NullArgument
      */
     public function testDoesNotFactorImagesInTheLegacyMethodIfTheArgumentIsInvalid(): void
     {

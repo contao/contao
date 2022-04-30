@@ -27,8 +27,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * Provide methods to manage back end controllers.
  *
  * @property Ajax $objAjax
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Backend extends Controller
 {

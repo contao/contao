@@ -30,8 +30,6 @@ namespace Contao;
  * @property string  $path     The folder path
  * @property string  $value    Alias of $path
  * @property integer $size     The folder size
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Folder extends System
 {

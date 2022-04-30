@@ -15,8 +15,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "custom navigation".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleCustomnav extends Module
 {
@@ -167,16 +165,11 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
+					$row['nofollow'] = false; // backwards compatibility
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
 					$arrRel = array();
-
-					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
-					{
-						$arrRel[] = 'nofollow';
-					}
 
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
@@ -210,16 +203,11 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
+					$row['nofollow'] = false; // backwards compatibility
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
 					$arrRel = array();
-
-					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
-					{
-						$arrRel[] = 'nofollow';
-					}
 
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)

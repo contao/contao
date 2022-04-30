@@ -29,20 +29,9 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 abstract class ContaoTestCase extends TestCase
 {
-    /**
-     * @var array
-     */
-    private static $tempDirs = [];
-
-    /**
-     * @var array
-     */
-    private static $betterReflectionCache = [];
-
-    /**
-     * @var array
-     */
-    private $backupServerEnvGetPost = [];
+    private static array $tempDirs = [];
+    private static array $betterReflectionCache = [];
+    private array $backupServerEnvGetPost = [];
 
     public static function tearDownAfterClass(): void
     {
@@ -88,19 +77,25 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function getContainerWithContaoConfiguration(string $projectDir = ''): ContainerBuilder
     {
+        static $cachedContainers = [];
+
+        if (!isset($cachedContainers[$projectDir])) {
+            $cachedContainers[$projectDir] = new ContainerBuilder();
+            $cachedContainers[$projectDir]->setParameter('kernel.debug', false);
+            $cachedContainers[$projectDir]->setParameter('kernel.charset', 'UTF-8');
+            $cachedContainers[$projectDir]->setParameter('kernel.default_locale', 'en');
+            $cachedContainers[$projectDir]->setParameter('kernel.cache_dir', $projectDir.'/var/cache');
+            $cachedContainers[$projectDir]->setParameter('kernel.project_dir', $projectDir);
+            $cachedContainers[$projectDir]->setParameter('kernel.root_dir', $projectDir.'/app');
+            $cachedContainers[$projectDir]->setDefinition('request_stack', new Definition(RequestStack::class));
+
+            // Load the default configuration
+            $extension = new ContaoCoreExtension();
+            $extension->load([], $cachedContainers[$projectDir]);
+        }
+
         $container = new ContainerBuilder();
-        $container->setParameter('kernel.debug', false);
-        $container->setParameter('kernel.charset', 'UTF-8');
-        $container->setParameter('kernel.default_locale', 'en');
-        $container->setParameter('kernel.cache_dir', $projectDir.'/var/cache');
-        $container->setParameter('kernel.project_dir', $projectDir);
-        $container->setParameter('kernel.root_dir', $projectDir.'/app');
-
-        $container->setDefinition('request_stack', new Definition(RequestStack::class));
-
-        // Load the default configuration
-        $extension = new ContaoCoreExtension();
-        $extension->load([], $container);
+        $container->merge($cachedContainers[$projectDir]);
 
         return $container;
     }
@@ -125,11 +120,7 @@ abstract class ContaoTestCase extends TestCase
 
         $framework
             ->method('getAdapter')
-            ->willReturnCallback(
-                static function (string $key) use ($adapters): ?Adapter {
-                    return $adapters[$key] ?? null;
-                }
-            )
+            ->willReturnCallback(static fn (string $key): ?Adapter => $adapters[$key] ?? null)
         ;
 
         return $framework;
@@ -163,7 +154,10 @@ abstract class ContaoTestCase extends TestCase
         $adapter = $this->mockAdapter(array_keys($configuration));
 
         foreach ($configuration as $method => $return) {
-            $adapter->method($method)->willReturn($return);
+            $adapter
+                ->method($method)
+                ->willReturn($return)
+            ;
         }
 
         return $adapter;
@@ -364,11 +358,7 @@ abstract class ContaoTestCase extends TestCase
 
         $adapter
             ->method('get')
-            ->willReturnCallback(
-                static function (string $key) {
-                    return $GLOBALS['TL_CONFIG'][$key] ?? null;
-                }
-            )
+            ->willReturnCallback(static fn (string $key) => $GLOBALS['TL_CONFIG'][$key] ?? null)
         ;
 
         $adapters[Config::class] = $adapter;

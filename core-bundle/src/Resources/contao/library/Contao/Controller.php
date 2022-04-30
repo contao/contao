@@ -44,8 +44,6 @@ use Symfony\Component\Finder\Glob;
  *     {
  *         return $this->getArticle(2);
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Controller extends System
 {
@@ -701,9 +699,13 @@ abstract class Controller extends System
 	 * Return the languages for the TinyMCE spellchecker
 	 *
 	 * @return string The TinyMCE spellchecker language string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	protected function getSpellcheckerString()
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+
 		System::loadLanguageFile('languages');
 
 		$return = array();
@@ -2278,8 +2280,6 @@ abstract class Controller extends System
 
 	/**
 	 * Return the IDs of all child records of a particular record (see #2475)
-	 *
-	 * @author Andreas Schempp
 	 *
 	 * @param mixed   $arrParentIds An array of parent IDs
 	 * @param string  $strTable     The table name
