@@ -928,10 +928,12 @@ abstract class Controller extends System
 					if ($options->async)
 					{
 						$objCombinerAsync->add($javascript, $options->mtime);
-					} elseif ($options->defer)
+					}
+					elseif ($options->defer)
 					{
 						$objCombinerDefer->add($javascript, $options->mtime);
-					} else
+					}
+					else
 					{
 						$objCombiner->add($javascript, $options->mtime);
 					}
