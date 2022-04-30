@@ -130,6 +130,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
+        $container->setParameter('contao.routing.override_dns', $config['routing']['override_dns']);
 
         $this->handleSearchConfig($config, $container);
         $this->handleCrawlConfig($config, $container);

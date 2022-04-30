@@ -117,6 +117,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addInsertTagsNode())
                 ->append($this->addBackupNode())
                 ->append($this->addSanitizerNode())
+                ->append($this->addRoutingNode())
             ->end()
         ;
 
@@ -685,6 +686,28 @@ class Configuration implements ConfigurationInterface
                                 return $protocols;
                             }
                         )
+                    ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addRoutingNode(): NodeDefinition
+    {
+        return (new TreeBuilder('routing'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('override_dns')
+                    ->arrayPrototype()
+                        ->children()
+                            ->scalarNode('dns')
+                                ->info('The domain name')
+                            ->end()
+                            ->scalarNode('protocol')
+                                ->info('The domain name')
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end()

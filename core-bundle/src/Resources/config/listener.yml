@@ -332,6 +332,13 @@ services:
         tags:
             - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
 
+    contao.listener.override_dns_listener:
+        class: Contao\CoreBundle\EventListener\OverrideDnsSettingsListener
+        arguments:
+            - '%contao.routing.override_dns%'
+        tags:
+            - { name: contao.hook, hook: loadPageDetails }
+
     contao.listener.page_access:
         class: Contao\CoreBundle\EventListener\PageAccessListener
         arguments:

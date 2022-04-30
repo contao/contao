@@ -659,6 +659,7 @@ services:
             - '@contao.framework'
             - '@contao.routing.page_candidates'
             - '@contao.routing.page_registry'
+            - '%contao.routing.override_dns%'
 
     contao.routing.scope_matcher:
         class: Contao\CoreBundle\Routing\ScopeMatcher

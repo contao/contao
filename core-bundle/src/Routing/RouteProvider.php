@@ -13,9 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\PageModel;
+use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -23,6 +26,15 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteProvider extends AbstractPageRouteProvider
 {
+    private array $overrideDnsConfiguration;
+
+    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry, array $overrideDnsConfiguration)
+    {
+        parent::__construct($framework, $candidates, $pageRegistry);
+
+        $this->overrideDnsConfiguration = $overrideDnsConfiguration;
+    }
+
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $this->framework->initialize(true);
@@ -37,7 +49,8 @@ class RouteProvider extends AbstractPageRouteProvider
         $routes = [];
 
         if ('/' === $pathInfo) {
-            $this->addRoutesForRootPages($this->findRootPages($request->getHttpHost()), $routes);
+            $httpHost = $this->mapHttpHost($request);
+            $this->addRoutesForRootPages($this->findRootPages($httpHost), $routes, $httpHost);
 
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
         }
@@ -128,10 +141,11 @@ class RouteProvider extends AbstractPageRouteProvider
     /**
      * @param array<PageModel> $pages
      */
-    private function addRoutesForRootPages(array $pages, array &$routes): void
+    private function addRoutesForRootPages(array $pages, array &$routes, string $httpHost): void
     {
         foreach ($pages as $page) {
             $route = $this->pageRegistry->getRoute($page);
+            $this->applyDnsOverrides($route, $httpHost);
             $this->addRoutesForRootPage($route, $routes);
         }
     }
@@ -271,5 +285,37 @@ class RouteProvider extends AbstractPageRouteProvider
         }
 
         return $models;
+    }
+
+    private function mapHttpHost(Request $request): string
+    {
+        $httpHost = $request->getHttpHost();
+
+        foreach ($this->overrideDnsConfiguration as $domain => $config) {
+            if (isset($config['dns']) && $config['dns'] === $httpHost) {
+                $httpHost = $domain;
+
+                break;
+            }
+        }
+
+        return $httpHost;
+    }
+
+    private function applyDnsOverrides(PageRoute $route, string $httpHost): void
+    {
+        if (!isset($this->overrideDnsConfiguration[$httpHost])) {
+            return;
+        }
+
+        $config = $this->overrideDnsConfiguration[$httpHost];
+
+        if (isset($config['dns'])) {
+            $route->setHost($config['dns']);
+        }
+
+        if (isset($config['protocol'])) {
+            $route->setSchemes($config['protocol']);
+        }
     }
 }
