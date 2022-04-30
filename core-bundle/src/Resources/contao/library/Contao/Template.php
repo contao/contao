@@ -679,7 +679,7 @@ abstract class Template extends Controller
 			$src .= '?v=' . substr(md5($mtime), 0, 8);
 		}
 
-		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . ($referrerpolicy ? ' referrerpolicy="' . $referrerpolicy . '"' : '') .  ($defer ? ' defer' : '') .'></script>';
+		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . ($referrerpolicy ? ' referrerpolicy="' . $referrerpolicy . '"' : '') .  ($defer ? ' defer' : '') . '></script>';
 	}
 
 	/**
