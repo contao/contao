@@ -81,7 +81,7 @@ class PageUrlListener
         $value = $this->slug->generate(
             $dc->activeRecord->title,
             $dc->activeRecord->id,
-            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
+            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? str_replace('index/', '', $pageModel->folderUrl) : '').$alias, $pageModel)
         );
 
         // Generate folder URL aliases (see #4933)
