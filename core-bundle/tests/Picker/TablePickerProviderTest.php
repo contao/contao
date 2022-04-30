@@ -48,6 +48,21 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertSame('tablePicker', $provider->getName());
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation The usage of a non fully qualified class name as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.
+     */
+    public function testSupportsLegacyContext(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Table';
+        $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
+
+        $provider = $this->createTableProvider($this->mockFrameworkWithDcaLoader('tl_foobar'));
+
+        $this->assertTrue($provider->supportsContext('dc.tl_foobar'));
+    }
+
     public function testSupportsContext(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = DC_Table::class;
@@ -65,6 +80,11 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertFalse($provider->supportsContext('foobar'));
     }
 
+    /**
+     * @group legacy
+     *
+     * @expectedDeprecation The usage of a non fully qualified class name as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.
+     */
     public function testDoesNotSupportContextWithoutDataContainer(): void
     {
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Foobar';

@@ -180,7 +180,7 @@ class Crawl extends Backend implements \executable
 		// Configure with sane defaults for the back end (maybe we should make this configurable one day)
 		$escargot = $escargot
 			->withConcurrency(5)
-			->withMaxDepth(32)
+			->withMaxDepth(10)
 			->withMaxRequests(20)
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 

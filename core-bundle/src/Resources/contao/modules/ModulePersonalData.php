@@ -316,7 +316,7 @@ class ModulePersonalData extends Module
 		}
 
 		// Save the model
-		if ($blnModified)
+		if ($blnModified && !$doNotSubmit)
 		{
 			$objMember->tstamp = time();
 			$objMember->save();

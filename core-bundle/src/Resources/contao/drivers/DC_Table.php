@@ -1915,6 +1915,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 						{
 							if ($ajaxId == $thisId)
 							{
+								if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+								{
+									$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
+								}
+
 								return $arrAjax[$thisId] . '<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">';
 							}
 
