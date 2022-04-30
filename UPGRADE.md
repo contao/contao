@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### getSearchablePages hook
+
+The `getSearchablePages` hook has been removed. Use the `SitemapEvent` instead.
+
 ### languages.php, getLanguages and $GLOBALS['TL_LANG']['LNG']
 
 The `System::getLanguages()` method, the `getLanguages` hook and the `config/languages.php` file have been
