@@ -917,7 +917,7 @@ abstract class Controller extends System
 		{
 			$objCombiner = new Combiner();
 			$objCombinerAsync = new Combiner();
-			$objCombinerDefered = new Combiner();
+			$objCombinerDefer = new Combiner();
 
 			foreach (array_unique($GLOBALS['TL_JAVASCRIPT']) as $javascript)
 			{
@@ -927,15 +927,15 @@ abstract class Controller extends System
 				{
 					if ($options->async) {
 						$objCombinerAsync->add($javascript, $options->mtime);
-					} elseif ($options->defered) {
-						$objCombinerDefered->add($javascript, $options->mtime);
+					} elseif ($options->defer) {
+						$objCombinerDefer->add($javascript, $options->mtime);
 					} else {
 						$objCombiner->add($javascript, $options->mtime);
 					}
 				}
 				else
 				{
-					$strScripts .= Template::generateScriptTag(static::addAssetsUrlTo($javascript), $options->async, $options->mtime);
+					$strScripts .= Template::generateScriptTag(static::addAssetsUrlTo($javascript), $options->async, $options->mtime, null, null, null, $options->defer);
 				}
 			}
 
@@ -976,15 +976,15 @@ abstract class Controller extends System
 				}
 			}
 
-			if ($objCombinerDefered->hasEntries())
+			if ($objCombinerDefer->hasEntries())
 			{
 				if ($blnCombineScripts)
 				{
-					$strScripts = Template::generateScriptTag($objCombinerDefered->getCombinedFile(), true) . $strScripts;
+					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), true) . $strScripts;
 				}
 				else
 				{
-					$arrReversed = array_reverse($objCombinerDefered->getFileUrls());
+					$arrReversed = array_reverse($objCombinerDefer->getFileUrls());
 
 					foreach ($arrReversed as $strUrl)
 					{

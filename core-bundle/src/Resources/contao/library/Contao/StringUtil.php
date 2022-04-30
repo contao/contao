@@ -704,7 +704,7 @@ class StringUtil
 		$options->media  = null;
 		$options->mtime  = null;
 		$options->async  = false;
-		$options->defered = false;
+		$options->defer = false;
 
 		$chunks = explode('|', $url);
 
@@ -728,8 +728,8 @@ class StringUtil
 					$options->async = true;
 					break;
 
-				case 'defered':
-					$options->defered = true;
+				case 'defer':
+					$options->defer = true;
 					break;
 
 				case is_numeric($chunks[$i]):
