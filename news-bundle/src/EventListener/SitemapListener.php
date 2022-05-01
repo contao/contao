@@ -34,7 +34,6 @@ class SitemapListener
     {
         $this->framework->initialize();
 
-        /** @var NewsArchiveModel $newsArchiveModel */
         $newsArchiveModelAdapter = $this->framework->getAdapter(NewsArchiveModel::class);
 
         // Get all news archives
@@ -44,16 +43,9 @@ class SitemapListener
             return;
         }
 
-        /** @var PageModel $pageModelAdapter */
         $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
-
-        /** @var Controller $controllerAdapter */
         $controllerAdapter = $this->framework->getAdapter(Controller::class);
-
-        /** @var NewsModel $newsModelAdapter */
         $newsModelAdapter = $this->framework->getAdapter(NewsModel::class);
-
-        /** @var News $newsAdapter */
         $newsAdapter = $this->framework->getAdapter(News::class);
 
         $rootPageIds = array_map('intval', $sitemapEvent->getRootPageIds());
