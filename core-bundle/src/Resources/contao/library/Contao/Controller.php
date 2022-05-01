@@ -1220,6 +1220,8 @@ abstract class Controller extends System
 
 			if (!isset($arrCache[$key]))
 			{
+				trigger_deprecation('contao/core-bundle', '4.0', 'Using old backend paths has been deprecated in Contao 4.0 and will be removed in Contao 5. Use the backend routes instead.');
+
 				$router = System::getContainer()->get('router');
 				$arrCache[$key] = substr($router->generate($arrMapper[$key]), \strlen(Environment::get('path')) + 1);
 			}

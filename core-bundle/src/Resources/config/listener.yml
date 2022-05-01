@@ -510,6 +510,7 @@ services:
         class: Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener
         arguments:
             - '@database_connection'
+            - '@router'
             - '@translator'
             - '@contao.csrf.token_manager'
 

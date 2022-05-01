@@ -690,6 +690,8 @@ class ControllerTest extends TestCase
 
     /**
      * @dataProvider redirectProvider
+     *
+     * @group legacy
      */
     public function testReplacesOldBePathsInRedirect(string $location, array $routes, string $expected): void
     {
@@ -755,6 +757,9 @@ class ControllerTest extends TestCase
         }
     }
 
+    /**
+     * @group legacy
+     */
     public function testCachesOldBackendPaths(): void
     {
         $router = $this->createMock(RouterInterface::class);
