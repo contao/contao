@@ -28,7 +28,7 @@ return static function(ContainerConfigurator $configurator) use ($container) {
     try {
         $config
             ->load('App\\', $servicesDir.'/*')
-            ->exclude($servicesDir.'/{DependencyInjection,Entity,Tests}')
+            ->exclude($servicesDir.'/{DependencyInjection,Entity,Resources,Tests}')
         ;
 
         // Trigger __destruct handler
