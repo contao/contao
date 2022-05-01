@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+### FormTextarea->value
+
+The value of the `FormTextarea` widget is no longer encoded with `specialchars()`. Encode the value in
+your custom `form_textarea` templates instead.
+
 ### languages.php, getLanguages and $GLOBALS['TL_LANG']['LNG']
 
 The `System::getLanguages()` method, the `getLanguages` hook and the `config/languages.php` file have been
@@ -19,7 +24,7 @@ removed. Use or decorate the `contao.intl.countries` service instead.
 To add or remove countries, you can use the `contao.intl.countries` configuration. `$GLOBALS['TL_LANG']['CNT']`
 can still be used for overwriting translations, but no longer to retrieve country names.
 
-## UnresolvableDependenciesException
+### UnresolvableDependenciesException
 
 The following classes and interfaces have been removed from the global namespace:
 
