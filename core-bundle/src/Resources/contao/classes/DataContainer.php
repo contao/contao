@@ -1430,9 +1430,9 @@ abstract class DataContainer extends Backend
 	 */
 	public static function getDriverForTable(string $table): string
 	{
-		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
+		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? '';
 
-		if (false === strpos($dataContainer, '\\'))
+		if ('' !== $dataContainer && false === strpos($dataContainer, '\\'))
 		{
 			@trigger_error('The usage of a non fully qualified class name as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.', E_USER_DEPRECATED);
 
