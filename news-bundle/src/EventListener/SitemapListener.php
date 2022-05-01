@@ -29,9 +29,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
  */
 class SitemapListener
 {
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
         $this->framework = $framework;
     }
@@ -117,10 +115,7 @@ class SitemapListener
                 }
 
                 // Add URL to the sitemap
-                $loc = $sitemap->createElement('loc', $newsAdapter->generateNewsUrl($article, false, true));
-                $urlEl = $sitemap->createElement('url');
-                $urlEl->appendChild($loc);
-                $urlSet->appendChild($urlEl);
+                $sitemapEvent->addUrlToDefaultUrlSet($newsAdapter->generateNewsUrl($article, false, true));
             }
         }
     }
