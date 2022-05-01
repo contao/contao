@@ -18,45 +18,31 @@ interface PickerProviderInterface
 {
     /**
      * Returns the unique name for this picker.
-     *
-     * @return string
      */
-    public function getName()/*: string*/;
+    public function getName(): string;
 
     /**
      * Returns the URL to the picker based on the current value.
-     *
-     * @return string
      */
-    public function getUrl(PickerConfig $config)/*: string*/;
+    public function getUrl(PickerConfig $config): string|null;
 
     /**
      * Creates the menu item for this picker.
-     *
-     * @return ItemInterface
      */
-    public function createMenuItem(PickerConfig $config)/*: ItemInterface*/;
+    public function createMenuItem(PickerConfig $config): ItemInterface;
 
     /**
      * Returns whether the picker supports the given context.
-     *
-     * @param string $context
-     *
-     * @return bool
      */
-    public function supportsContext(/*string */$context)/*: bool*/;
+    public function supportsContext(string $context): bool;
 
     /**
      * Returns whether the picker supports the given value.
-     *
-     * @return bool
      */
-    public function supportsValue(PickerConfig $config)/*: bool*/;
+    public function supportsValue(PickerConfig $config): bool;
 
     /**
      * Returns whether the picker is currently active.
-     *
-     * @return bool
      */
-    public function isCurrent(PickerConfig $config)/*: bool*/;
+    public function isCurrent(PickerConfig $config): bool;
 }

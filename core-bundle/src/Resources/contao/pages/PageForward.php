@@ -15,22 +15,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provide methods to handle a forward page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/Toflar>
  */
 class PageForward extends Frontend
 {
-	/**
-	 * Redirect to an internal page
-	 *
-	 * @param PageModel $objPage
-	 */
-	public function generate($objPage)
-	{
-		$this->redirect($this->getForwardUrl($objPage), $this->getRedirectStatusCode($objPage));
-	}
-
 	/**
 	 * Return a response object
 	 *
@@ -88,30 +75,27 @@ class PageForward extends Frontend
 		}
 
 		// Add $_GET parameters
-		if (!empty($_GET))
+		foreach (Input::getKeys() as $key)
 		{
-			foreach (array_keys($_GET) as $key)
+			if ($key == 'language')
 			{
-				if ($key == 'language')
-				{
-					continue;
-				}
+				continue;
+			}
 
-				// Ignore the query string parameters (see #5867)
-				if (\in_array($key, $arrQuery))
-				{
-					continue;
-				}
+			// Ignore the query string parameters (see #5867)
+			if (\in_array($key, $arrQuery))
+			{
+				continue;
+			}
 
-				// Ignore the auto_item parameter (see #5886)
-				if ($key == 'auto_item')
-				{
-					$strGet .= '/' . Input::get($key);
-				}
-				else
-				{
-					$strGet .= '/' . $key . '/' . Input::get($key);
-				}
+			// Ignore the auto_item parameter (see #5886)
+			if ($key == 'auto_item')
+			{
+				$strGet .= '/' . Input::get($key);
+			}
+			else
+			{
+				$strGet .= '/' . $key . '/' . Input::get($key);
 			}
 		}
 
@@ -136,5 +120,3 @@ class PageForward extends Frontend
 		return ($objPage->redirect == 'temporary') ? 303 : 301;
 	}
 }
-
-class_alias(PageForward::class, 'PageForward');

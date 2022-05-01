@@ -11,12 +11,11 @@
 namespace Contao;
 
 use Contao\Database\Result;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\String\UnicodeString;
 
 /**
  * Provide methods to handle themes.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Theme extends Backend
 {
@@ -41,6 +40,8 @@ class Theme extends Backend
 	 */
 	public function importTheme()
 	{
+		Config::set('uploadTypes', Config::get('uploadTypes') . ',cto,sql');
+
 		$objUploader = new FileUpload();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_theme_import')
@@ -70,8 +71,8 @@ class Theme extends Backend
 
 					$objFile = new File($strFile);
 
-					// Skip anything but .cto files
-					if ($objFile->extension != 'cto')
+					// Skip anything but .cto and .sql files
+					if ($objFile->extension != 'cto' && $objFile->extension != 'sql')
 					{
 						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 						continue;
@@ -97,8 +98,6 @@ class Theme extends Backend
 			(
 				'tl_files'           => $this->Database->getFieldNames('tl_files'),
 				'tl_theme'           => $this->Database->getFieldNames('tl_theme'),
-				'tl_style_sheet'     => $this->Database->getFieldNames('tl_style_sheet'),
-				'tl_style'           => $this->Database->getFieldNames('tl_style'),
 				'tl_module'          => $this->Database->getFieldNames('tl_module'),
 				'tl_layout'          => $this->Database->getFieldNames('tl_layout'),
 				'tl_image_size'      => $this->Database->getFieldNames('tl_image_size'),
@@ -169,13 +168,23 @@ class Theme extends Backend
 <input type="hidden" name="confirm" value="1">';
 
 		$count = 0;
+		$exampleWebsites = array();
 
 		// Check the theme data
 		foreach ($arrFiles as $strFile)
 		{
+			if ((new File($strFile))->extension === 'sql')
+			{
+				$exampleWebsites[] = basename($strFile);
+
+				continue;
+			}
+
+			++$count;
+
 			$return .= '
 
-<div class="tl_' . (($count++ < 1) ? 't' : '') . 'box theme_import">
+<div class="tl_tbox theme_import">
   <h3>' . basename($strFile) . '</h3>
   <h4>' . $GLOBALS['TL_LANG']['tl_theme']['tables_fields'] . '</h4>';
 
@@ -204,7 +213,7 @@ class Theme extends Backend
 				$table = $tables->item($i)->getAttribute('name');
 
 				// Skip invalid tables
-				if ($table != 'tl_theme' && $table != 'tl_style_sheet' && $table != 'tl_style' && $table != 'tl_module' && $table != 'tl_layout' && $table != 'tl_image_size' && $table != 'tl_image_size_item')
+				if ($table != 'tl_theme' && $table != 'tl_module' && $table != 'tl_layout' && $table != 'tl_image_size' && $table != 'tl_image_size_item')
 				{
 					continue;
 				}
@@ -258,6 +267,11 @@ class Theme extends Backend
 					continue;
 				}
 
+				if (strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
+				{
+					$exampleWebsites[] = substr($objArchive->file_name, 10);
+				}
+
 				if (file_exists($this->strRootDir . '/' . $objArchive->file_name))
 				{
 					$blnTplExists = true;
@@ -284,6 +298,35 @@ class Theme extends Backend
 </div>';
 		}
 
+		if ($exampleWebsites)
+		{
+			$return .= '<br class="clr"><div class="w50 clr widget">
+  <h3><label>' . ($GLOBALS['TL_LANG']['tl_theme']['selectExampleWebsite'][0] ?? '') . '</label></h3>
+  <select name="example_website" class="tl_select" onchange="document.querySelector(\'#ctrl_example_website_import\').style.display = this.value ? \'\' : \'none\'">';
+
+			if ($count)
+			{
+				$return .= '<option value="">-</option>';
+			}
+
+			foreach ($exampleWebsites as $exampleWebsite)
+			{
+				$return .= '<option value="' . htmlspecialchars($exampleWebsite) . '">' . htmlspecialchars($exampleWebsite) . '</option>';
+			}
+
+			$return .= '</select>
+  <p class="tl_help tl_tip" title="">' . ($GLOBALS['TL_LANG']['tl_theme']['selectExampleWebsite'][1] ?? '') . '</p>
+</div><div class="w50 widget"' . ($count ? ' style="display: none"' : '') . ' id="ctrl_example_website_import">
+  <h3><label>' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][0] ?? '') . '</label></h3>
+  <select name="example_website_import" class="tl_select">
+    <option value="full">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['full'] ?? '') . '</option>
+    <option value="data">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['data'] ?? '') . '</option>
+    <option value="data_no_truncate">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['data_no_truncate'] ?? '') . '</option>
+  </select>
+  <p class="tl_help tl_tip" title="">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][1] ?? '') . '</p>
+</div><br class="clr">';
+		}
+
 		// Return the form
 		return $return . '
 
@@ -307,8 +350,17 @@ class Theme extends Backend
 	 */
 	protected function extractThemeFiles($arrFiles, $arrDbFields)
 	{
+		$exampleWebsites = array();
+
 		foreach ($arrFiles as $strZipFile)
 		{
+			if ((new File($strZipFile))->extension === 'sql')
+			{
+				$exampleWebsites[basename($strZipFile)] = $strZipFile;
+
+				continue;
+			}
+
 			$xml = null;
 
 			// Open the archive
@@ -337,6 +389,11 @@ class Theme extends Backend
 				try
 				{
 					File::putContent($this->customizeUploadPath($objArchive->file_name), $objArchive->unzip());
+
+					if (strncmp($objArchive->file_name, 'templates/', 10) === 0 && strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
+					{
+						$exampleWebsites[substr($objArchive->file_name, 10)] = $objArchive->file_name;
+					}
 				}
 				catch (\Exception $e)
 				{
@@ -394,8 +451,6 @@ class Theme extends Backend
 			(
 				'tl_files'           => 'WRITE',
 				'tl_theme'           => 'WRITE',
-				'tl_style_sheet'     => 'WRITE',
-				'tl_style'           => 'WRITE',
 				'tl_module'          => 'WRITE',
 				'tl_layout'          => 'WRITE',
 				'tl_image_size'      => 'WRITE',
@@ -413,8 +468,6 @@ class Theme extends Backend
 			// Get the current auto_increment values
 			$tl_files = $this->Database->getNextId('tl_files');
 			$tl_theme = $this->Database->getNextId('tl_theme');
-			$tl_style_sheet = $this->Database->getNextId('tl_style_sheet');
-			$tl_style = $this->Database->getNextId('tl_style');
 			$tl_module = $this->Database->getNextId('tl_module');
 			$tl_layout = $this->Database->getNextId('tl_layout');
 			$tl_image_size = $this->Database->getNextId('tl_image_size');
@@ -493,11 +546,7 @@ class Theme extends Backend
 						// Increment the parent IDs
 						elseif ($name == 'pid')
 						{
-							if ($table == 'tl_style')
-							{
-								$value = $arrMapper['tl_style_sheet'][$value];
-							}
-							elseif ($table == 'tl_image_size_item')
+							if ($table == 'tl_image_size_item')
 							{
 								$value = $arrMapper['tl_image_size'][$value];
 							}
@@ -511,22 +560,6 @@ class Theme extends Backend
 						elseif ($name == 'fallback')
 						{
 							$value = '';
-						}
-
-						// Adjust the style sheet IDs of the page layout
-						elseif ($table == 'tl_layout' && $name == 'stylesheet')
-						{
-							$stylesheets = StringUtil::deserialize($value);
-
-							if (\is_array($stylesheets))
-							{
-								foreach (array_keys($stylesheets) as $key)
-								{
-									$stylesheets[$key] = $arrMapper['tl_style_sheet'][$stylesheets[$key]];
-								}
-
-								$value = serialize($stylesheets);
-							}
 						}
 
 						// Adjust the module IDs of the page layout
@@ -548,8 +581,8 @@ class Theme extends Backend
 							}
 						}
 
-						// Adjust duplicate theme and style sheet names
-						elseif (($table == 'tl_theme' || $table == 'tl_style_sheet') && $name == 'name')
+						// Adjust duplicate theme names
+						elseif ($table == 'tl_theme' && $name == 'name')
 						{
 							$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM " . $table . " WHERE name=?")
 													   ->execute($value);
@@ -557,12 +590,12 @@ class Theme extends Backend
 							if ($objCount->count > 0)
 							{
 								$value = preg_replace('/[ -][0-9]+$/', '', $value);
-								$value .= (($table == 'tl_style_sheet') ? '-' : ' ') . ${$table};
+								$value .= ' ' . ${$table};
 							}
 						}
 
-						// Adjust the file paths in style sheets and tl_files
-						elseif (($table == 'tl_style_sheet' || $table == 'tl_style' || ($table == 'tl_files' && $name == 'path')) && strpos($value, 'files') !== false)
+						// Adjust the file paths in tl_files
+						elseif ($table == 'tl_files' && $name == 'path' && strpos($value, 'files') !== false)
 						{
 							$tmp = StringUtil::deserialize($value);
 
@@ -666,10 +699,6 @@ class Theme extends Backend
 			// Unlock the tables
 			$this->Database->unlockTables();
 
-			// Update the style sheets
-			$this->import(StyleSheets::class, 'StyleSheets');
-			$this->StyleSheets->updateStyleSheets();
-
 			// Notify the user
 			Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_theme']['theme_imported'], basename($strZipFile)));
 
@@ -684,7 +713,7 @@ class Theme extends Backend
 				}
 			}
 
-			unset($tl_files, $tl_theme, $tl_style_sheet, $tl_style, $tl_module, $tl_layout, $tl_image_size, $tl_image_size_item);
+			unset($tl_files, $tl_theme, $tl_module, $tl_layout, $tl_image_size, $tl_image_size_item);
 		}
 
 		$objSession = System::getContainer()->get('session');
@@ -693,7 +722,53 @@ class Theme extends Backend
 		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSymlinks();
 
+		if (($exampleWebsite = Input::post('example_website')) && isset($exampleWebsites[$exampleWebsite]))
+		{
+			$importType = Input::post('example_website_import');
+			$this->importExampleWebsite($exampleWebsites[$exampleWebsite], $importType === 'data_no_truncate', $importType !== 'full');
+		}
+
 		$this->redirect(str_replace('&key=importTheme', '', Environment::get('request')));
+	}
+
+	private function importExampleWebsite(string $exampleWebsite, bool $preserveData, bool $insertOnly): void
+	{
+		$connection = System::getContainer()->get('database_connection');
+		$userRow = $connection->fetchAssociative('SELECT * FROM tl_user WHERE id = ?', array((int) BackendUser::getInstance()->id));
+
+		if (!$preserveData && $insertOnly)
+		{
+			$tables = $connection->createSchemaManager()->listTableNames();
+
+			foreach ($tables as $table)
+			{
+				if (0 === strncmp($table, 'tl_', 3))
+				{
+					$connection->executeStatement('TRUNCATE TABLE ' . $connection->quoteIdentifier($table));
+				}
+			}
+		}
+
+		$data = file(Path::join(System::getContainer()->getParameter('kernel.project_dir'), $exampleWebsite));
+
+		try
+		{
+			foreach ($insertOnly ? preg_grep('/^INSERT /', $data) : $data as $query)
+			{
+				$connection->executeStatement($query);
+			}
+		}
+		finally
+		{
+			// Restore backend user
+			if ((int) $connection->fetchOne('SELECT COUNT(*) FROM tl_user') < 1)
+			{
+				$connection->insert(
+					'tl_user',
+					array_combine(array_map($connection->quoteIdentifier(...), array_keys($userRow)), $userRow),
+				);
+			}
+		}
 	}
 
 	/**
@@ -729,7 +804,6 @@ class Theme extends Backend
 
 		// Add the tables
 		$this->addTableTlTheme($xml, $tables, $objTheme);
-		$this->addTableTlStyleSheet($xml, $tables, $objTheme);
 		$this->addTableTlImageSize($xml, $tables, $objTheme);
 		$this->addTableTlModule($xml, $tables, $objTheme);
 		$this->addTableTlLayout($xml, $tables, $objTheme);
@@ -787,66 +861,6 @@ class Theme extends Backend
 
 		// Add the row
 		$this->addDataRow($xml, $table, $objTheme->row(), $arrOrder);
-	}
-
-	/**
-	 * Add the table tl_style_sheet
-	 *
-	 * @param \DOMDocument         $xml
-	 * @param \DOMNode|\DOMElement $tables
-	 * @param Result               $objTheme
-	 */
-	protected function addTableTlStyleSheet(\DOMDocument $xml, \DOMNode $tables, Result $objTheme)
-	{
-		// Add the table
-		$table = $xml->createElement('table');
-		$table->setAttribute('name', 'tl_style_sheet');
-		$table = $tables->appendChild($table);
-
-		// Load the DCA
-		$this->loadDataContainer('tl_style_sheet');
-
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_style_sheet');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
-		// Get all style sheets
-		$objStyleSheet = $this->Database->prepare("SELECT * FROM tl_style_sheet WHERE pid=? ORDER BY name")
-										->execute($objTheme->id);
-
-		// Add the rows
-		while ($objStyleSheet->next())
-		{
-			$this->addDataRow($xml, $table, $objStyleSheet->row(), $arrOrder);
-		}
-
-		$objStyleSheet->reset();
-
-		// Add the child table
-		$table = $xml->createElement('table');
-		$table->setAttribute('name', 'tl_style');
-		$table = $tables->appendChild($table);
-
-		// Load the DCA
-		$this->loadDataContainer('tl_style');
-
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_style');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
-		// Add the child rows
-		while ($objStyleSheet->next())
-		{
-			// Get all format definitions
-			$objStyle = $this->Database->prepare("SELECT * FROM tl_style WHERE pid=? ORDER BY sorting")
-									   ->execute($objStyleSheet->id);
-
-			// Add the rows
-			while ($objStyle->next())
-			{
-				$this->addDataRow($xml, $table, $objStyle->row(), $arrOrder);
-			}
-		}
 	}
 
 	/**
@@ -1056,10 +1070,6 @@ class Theme extends Backend
 					}
 				}
 			}
-			elseif ($t == 'tl_style' && ($k == 'bgimage' || $k == 'liststyleimage'))
-			{
-				$v = $this->standardizeUploadPath($v);
-			}
 
 			$value = $xml->createTextNode($v);
 			$field->appendChild($value);
@@ -1225,5 +1235,3 @@ class Theme extends Backend
 		return preg_replace('@^' . preg_quote(System::getContainer()->getParameter('contao.upload_path'), '@') . '/@', 'files/', $strPath);
 	}
 }
-
-class_alias(Theme::class, 'Theme');

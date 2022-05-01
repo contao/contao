@@ -73,20 +73,20 @@ class ContaoExtensionTest extends TestCase
 
     public function testAddsTheFunctions(): void
     {
-        $functions = $this->getContaoExtension()->getFunctions();
-
-        $this->assertCount(8, $functions);
-
         $expectedFunctions = [
             'include' => ['all'],
+            'attrs' => [],
             'contao_figure' => ['html'],
             'picture_config' => [],
             'insert_tag' => [],
             'add_schema_org' => [],
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
-            'render_contao_backend_template' => ['html'],
         ];
+
+        $functions = $this->getContaoExtension()->getFunctions();
+
+        $this->assertCount(\count($expectedFunctions), $functions);
 
         $node = $this->createMock(Node::class);
 

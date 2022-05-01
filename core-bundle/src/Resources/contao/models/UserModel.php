@@ -22,7 +22,6 @@ use Contao\Model\Collection;
  * @property string            $email
  * @property string            $language
  * @property string            $backendTheme
- * @property string|boolean    $fullscreen
  * @property string            $uploader
  * @property string|boolean    $showHelp
  * @property string|boolean    $thumbnails
@@ -194,8 +193,6 @@ use Contao\Model\Collection;
  * @method static integer countByLocked($val, array $opt=array())
  * @method static integer countByBackupCodes($val, array $opt=array())
  * @method static integer countByTrustedTokenVersion($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class UserModel extends Model
 {
@@ -205,5 +202,3 @@ class UserModel extends Model
 	 */
 	protected static $strTable = 'tl_user';
 }
-
-class_alias(UserModel::class, 'UserModel');

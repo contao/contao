@@ -14,8 +14,6 @@ use Contao\Model\Collection;
 
 /**
  * Provide methods regarding FAQs.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaq extends Frontend
 {
@@ -93,7 +91,7 @@ class ModuleFaq extends Frontend
 					}
 
 					// Generate the URL
-					$arrProcessed[$objFaq->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
+					$arrProcessed[$objFaq->jumpTo] = $objParent->getAbsoluteUrl('/%s');
 				}
 
 				$strUrl = $arrProcessed[$objFaq->jumpTo];
@@ -150,5 +148,3 @@ class ModuleFaq extends Frontend
 		return $jsonLd;
 	}
 }
-
-class_alias(ModuleFaq::class, 'ModuleFaq');

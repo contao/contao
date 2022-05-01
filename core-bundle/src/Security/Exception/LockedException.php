@@ -16,13 +16,9 @@ use Symfony\Component\Security\Core\Exception\LockedException as BaseLockedExcep
 
 class LockedException extends BaseLockedException
 {
-    private int $lockedSeconds;
-
-    public function __construct(int $lockedSeconds, string $message = '', int $code = 0, \Throwable $previous = null)
+    public function __construct(private int $lockedSeconds, string $message = '', int $code = 0, \Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
-
-        $this->lockedSeconds = $lockedSeconds;
     }
 
     public function __serialize(): array

@@ -17,11 +17,11 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\MemberGroupModel;
 use Contao\Message;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -30,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
 		'ptable'                      => 'tl_article',
 		'dynamicPtable'               => true,
@@ -47,7 +47,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid,ptable,invisible,start,stop' => 'index'
+				'pid,ptable,invisible,start,stop' => 'index',
+				'type' => 'index',
 			)
 		)
 	),
@@ -176,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'ptable' => array
 		(
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'sorting' => array
 		(
@@ -194,7 +195,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options_callback'        => array('tl_content', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text')
+			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
 		),
 		'headline' => array
 		(
@@ -219,27 +220,27 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'showPreview' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class' => 'clr'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'inline' => array(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'overwriteMeta' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'singleSRC' => array
 		(
@@ -275,7 +276,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(128) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'imagemargin' => array
 		(
@@ -283,7 +284,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'trbl',
 			'options'                 => array('px', '%', 'em', 'rem'),
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
+			'sql'                     => "varchar(128) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'imageUrl' => array
 		(
@@ -291,14 +292,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(2048) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'fullsize' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'caption' => array
 		(
@@ -315,7 +316,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('above', 'left', 'right', 'below'),
 			'eval'                    => array('cols'=>4, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => "varchar(32) NOT NULL default 'above'"
+			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default 'above'"
 		),
 		'html' => array
 		(
@@ -333,7 +334,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('ordered', 'unordered'),
 			'eval'                    => array('tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'listitems' => array
 		(
@@ -370,28 +371,28 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'tfoot' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'tleft' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'sortable' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'sortIndex' => array
 		(
@@ -407,7 +408,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('ascending', 'descending'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default 'ascending'"
+			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default 'ascending'"
 		),
 		'mooHeadline' => array
 		(
@@ -437,7 +438,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'options'                 => array('Apache', 'Bash', 'C#', 'C++', 'CSS', 'Diff', 'HTML', 'HTTP', 'Ini', 'JSON', 'Java', 'JavaScript', 'Markdown', 'Nginx', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'SCSS', 'SQL', 'YAML', 'XML'),
 			'eval'                    => array('includeBlankOption'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'markdownSource' => array
 		(
@@ -446,7 +447,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('sourceText', 'sourceFile'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['markdownSource'],
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(12) NOT NULL default 'sourceText'"
+			'sql'                     => "varchar(12) COLLATE ascii_bin NOT NULL default 'sourceText'"
 		),
 		'code' => array
 		(
@@ -468,7 +469,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(2048) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'target' => array
 		(
@@ -476,7 +477,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'overwriteLink' => array
 		(
@@ -484,7 +485,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'titleText' => array
 		(
@@ -522,7 +523,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'multiSRC' => array
 		(
@@ -545,7 +546,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'perRow' => array
 		(
@@ -577,14 +578,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('custom', 'name_asc', 'name_desc', 'date_asc', 'date_desc', 'random'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content'],
 			'eval'                    => array('tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
+			'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'metaIgnore' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'galleryTpl' => array
 		(
@@ -595,14 +596,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				return Controller::getTemplateGroup('gallery_');
 			},
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'customTpl' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'playerSRC' => array
 		(
@@ -621,7 +622,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				array('tl_content', 'extractYouTubeId')
 			),
-			'sql'                     => "varchar(16) NOT NULL default ''"
+			'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'vimeo' => array
 		(
@@ -633,7 +634,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			(
 				array('tl_content', 'extractVimeoId')
 			),
-			'sql'                     => "varchar(16) NOT NULL default ''"
+			'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'posterSRC' => array
 		(
@@ -647,7 +648,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('multiple'=>true, 'size'=>2, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'playerOptions' => array
 		(
@@ -686,14 +687,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('16:9', '16:10', '21:9', '4:3', '3:2'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_aspect'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(8) NOT NULL default ''"
+			'sql'                     => "varchar(8) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'splashImage' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'playerPreload' => array
 		(
@@ -702,7 +703,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'options'                 => array('auto', 'metadata', 'none'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_content']['player_preload'],
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(8) NOT NULL default ''"
+			'sql'                     => "varchar(8) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'playerColor' => array
 		(
@@ -710,7 +711,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(64) NOT NULL default ''"
+			'sql'                     => "varchar(6) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'youtubeOptions' => array
 		(
@@ -760,7 +761,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'data' => array
 		(
@@ -832,7 +833,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'groups' => array
 		(
@@ -850,7 +851,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'cssID' => array
 		(
@@ -865,21 +866,21 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'start' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => "varchar(10) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'stop' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-			'sql'                     => "varchar(10) NOT NULL default ''"
+			'sql'                     => "varchar(10) COLLATE ascii_bin NOT NULL default ''"
 		)
 	)
 );
@@ -893,7 +894,7 @@ if (Input::get('do') == 'article')
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_content extends Backend
 {
@@ -1105,7 +1106,7 @@ class tl_content extends Backend
 	{
 		if (Input::get('act') == 'delete')
 		{
-			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias' AND cteAlias=?")
+			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE type='alias' AND cteAlias=? AND (ptable='tl_article' OR ptable='')")
 									 ->execute(Input::get('id'));
 
 			if ($objCes->cnt > 0)
@@ -1116,7 +1117,7 @@ class tl_content extends Backend
 
 		if (Input::get('act') == 'deleteAll')
 		{
-			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND type='alias'")
+			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND (ptable='tl_article' OR ptable='')")
 									 ->execute();
 
 			$objSession = System::getContainer()->get('session');
@@ -1214,7 +1215,7 @@ class tl_content extends Backend
 	 */
 	public function showJsLibraryHint($dc)
 	{
-		if ($_POST || Input::get('act') != 'edit')
+		if (Input::isPost() || Input::get('act') != 'edit')
 		{
 			return;
 		}
@@ -1280,7 +1281,7 @@ class tl_content extends Backend
 
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
-				$type = $GLOBALS['TL_LANG']['CTE'][$group] . ' (' . $type . ')';
+				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
 			}
 		}
 
@@ -1289,7 +1290,7 @@ class tl_content extends Backend
 		{
 			if (($group = $this->getContentElementGroup($arrRow['type'])) !== null)
 			{
-				$type = $GLOBALS['TL_LANG']['CTE'][$group] . ' (' . $type . ')';
+				$type = ($GLOBALS['TL_LANG']['CTE'][$group] ?? $group) . ' (' . $type . ')';
 			}
 		}
 
@@ -1344,85 +1345,6 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Return the edit article alias wizard
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function editArticleAlias(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::editArticleAlias()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if ($dc->value < 1)
-		{
-			return '';
-		}
-
-		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-
-		return ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
-	}
-
-	/**
-	 * Get all articles and return them as array (article alias)
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function getArticleAlias(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::getArticleAlias()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$arrPids = array();
-		$arrAlias = array();
-
-		if (!$this->User->isAdmin)
-		{
-			foreach ($this->User->pagemounts as $id)
-			{
-				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
-			}
-
-			if (!empty($arrPids))
-			{
-				$arrPids = array_merge(...$arrPids);
-			}
-			else
-			{
-				return $arrAlias;
-			}
-
-			$objAlias = $this->Database->prepare("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") AND a.id!=(SELECT pid FROM tl_content WHERE id=?) ORDER BY parent, a.sorting")
-									   ->execute($dc->id);
-		}
-		else
-		{
-			$objAlias = $this->Database->prepare("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.id!=(SELECT pid FROM tl_content WHERE id=?) ORDER BY parent, a.sorting")
-									   ->execute($dc->id);
-		}
-
-		if ($objAlias->numRows)
-		{
-			System::loadLanguageFile('tl_article');
-
-			while ($objAlias->next())
-			{
-				$key = $objAlias->parent . ' (ID ' . $objAlias->pid . ')';
-				$arrAlias[$key][$objAlias->id] = $objAlias->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objAlias->inColumn] ?: $objAlias->inColumn) . ', ID ' . $objAlias->id . ')';
-			}
-		}
-
-		return $arrAlias;
-	}
-
-	/**
 	 * Throw an exception if the current article is selected (circular reference)
 	 *
 	 * @param mixed         $varValue
@@ -1438,101 +1360,6 @@ class tl_content extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Return the edit alias wizard
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function editAlias(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::editAlias()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if ($dc->value < 1)
-		{
-			return '';
-		}
-
-		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
-
-		return ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;act=edit&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
-	}
-
-	/**
-	 * Get all content elements and return them as array (content element alias)
-	 *
-	 * @return array
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function getAlias()
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::getAlias()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$arrPids = array();
-		$arrAlias = array();
-
-		if (!$this->User->isAdmin)
-		{
-			foreach ($this->User->pagemounts as $id)
-			{
-				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
-			}
-
-			if (!empty($arrPids))
-			{
-				$arrPids = array_merge(...$arrPids);
-			}
-			else
-			{
-				return $arrAlias;
-			}
-
-			$objAlias = $this->Database->prepare("SELECT c.id, c.pid, c.type, (CASE c.type WHEN 'module' THEN m.name WHEN 'form' THEN f.title WHEN 'table' THEN c.summary ELSE c.headline END) AS headline, c.text, a.title FROM tl_content c LEFT JOIN tl_article a ON a.id=c.pid LEFT JOIN tl_module m ON m.id=c.module LEFT JOIN tl_form f on f.id=c.form WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") AND (c.ptable='tl_article' OR c.ptable='') AND c.id!=? ORDER BY a.title, c.sorting")
-									   ->execute(Input::get('id'));
-		}
-		else
-		{
-			$objAlias = $this->Database->prepare("SELECT c.id, c.pid, c.type, (CASE c.type WHEN 'module' THEN m.name WHEN 'form' THEN f.title WHEN 'table' THEN c.summary ELSE c.headline END) AS headline, c.text, a.title FROM tl_content c LEFT JOIN tl_article a ON a.id=c.pid LEFT JOIN tl_module m ON m.id=c.module LEFT JOIN tl_form f on f.id=c.form WHERE (c.ptable='tl_article' OR c.ptable='') AND c.id!=? ORDER BY a.title, c.sorting")
-									   ->execute(Input::get('id'));
-		}
-
-		while ($objAlias->next())
-		{
-			$arrHeadline = StringUtil::deserialize($objAlias->headline, true);
-
-			if (isset($arrHeadline['value']))
-			{
-				$headline = StringUtil::substr($arrHeadline['value'], 32);
-			}
-			else
-			{
-				$headline = StringUtil::substr(preg_replace('/[\n\r\t]+/', ' ', $arrHeadline[0]), 32);
-			}
-
-			$text = StringUtil::substr(strip_tags(preg_replace('/[\n\r\t]+/', ' ', $objAlias->text)), 32);
-			$strText = $GLOBALS['TL_LANG']['CTE'][$objAlias->type][0] . ' (';
-
-			if ($headline)
-			{
-				$strText .= $headline . ', ';
-			}
-			elseif ($text)
-			{
-				$strText .= $text . ', ';
-			}
-
-			$key = $objAlias->title . ' (ID ' . $objAlias->pid . ')';
-			$arrAlias[$key][$objAlias->id] = $strText . 'ID ' . $objAlias->id . ')';
-		}
-
-		return $arrAlias;
 	}
 
 	/**
@@ -1637,111 +1464,6 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Return the edit article teaser wizard
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function editArticle(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::editArticle()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if ($dc->value < 1)
-		{
-			return '';
-		}
-
-		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editarticle'], $dc->value);
-
-		return ' <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $dc->value . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('alias.svg', $title) . '</a>';
-	}
-
-	/**
-	 * Get all articles and return them as array (article teaser)
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
-	 */
-	public function getArticles(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using "tl_content::getArticles()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$arrPids = array();
-		$arrArticle = array();
-		$arrRoot = array();
-		$intPid = $dc->activeRecord->pid ?? null;
-
-		if (Input::get('act') == 'overrideAll')
-		{
-			$intPid = Input::get('id');
-		}
-
-		// Limit pages to the website root
-		$objArticle = $this->Database->prepare("SELECT pid FROM tl_article WHERE id=?")
-									 ->limit(1)
-									 ->execute($intPid);
-
-		if ($objArticle->numRows)
-		{
-			$objPage = PageModel::findWithDetails($objArticle->pid);
-			$arrRoot = $this->Database->getChildRecords($objPage->rootId, 'tl_page');
-			array_unshift($arrRoot, $objPage->rootId);
-		}
-
-		unset($objArticle);
-
-		// Limit pages to the user's pagemounts
-		if ($this->User->isAdmin)
-		{
-			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid" . (!empty($arrRoot) ? " WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrRoot))) . ")" : "") . " ORDER BY parent, a.sorting");
-		}
-		else
-		{
-			foreach ($this->User->pagemounts as $id)
-			{
-				if (!in_array($id, $arrRoot))
-				{
-					continue;
-				}
-
-				$arrPids[] = array($id);
-				$arrPids[] = $this->Database->getChildRecords($id, 'tl_page');
-			}
-
-			if (!empty($arrPids))
-			{
-				$arrPids = array_merge(...$arrPids);
-			}
-			else
-			{
-				return $arrArticle;
-			}
-
-			$objArticle = $this->Database->execute("SELECT a.id, a.pid, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
-		}
-
-		// Edit the result
-		if ($objArticle->numRows)
-		{
-			System::loadLanguageFile('tl_article');
-
-			while ($objArticle->next())
-			{
-				$key = $objArticle->parent . ' (ID ' . $objArticle->pid . ')';
-				$arrArticle[$key][$objArticle->id] = $objArticle->title . ' (' . ($GLOBALS['TL_LANG']['COLS'][$objArticle->inColumn] ?: $objArticle->inColumn) . ', ID ' . $objArticle->id . ')';
-			}
-		}
-
-		return $arrArticle;
-	}
-
-	/**
 	 * Dynamically set the ace syntax
 	 *
 	 * @param mixed         $varValue
@@ -1821,23 +1543,6 @@ class tl_content extends Backend
 	}
 
 	/**
-	 * Return the link picker wizard
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.
-	 *             Set the "dcaPicker" eval attribute instead.
-	 */
-	public function pagePicker(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.4', 'Using "tl_content::pagePicker()" has been deprecated and will no longer work in Contao 5.0. Set the "dcaPicker" eval attribute instead.');
-
-		return Backend::getDcaPickerWizard(true, $dc->table, $dc->field, $dc->inputName);
-	}
-
-	/**
 	 * Disable the button if the element type is not allowed
 	 *
 	 * @param array  $row
@@ -1874,7 +1579,7 @@ class tl_content extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		$objElement = $this->Database->prepare("SELECT id FROM tl_content WHERE cteAlias=? AND type='alias'")
+		$objElement = $this->Database->prepare("SELECT id FROM tl_content WHERE type='alias' AND cteAlias=?")
 									 ->limit(1)
 									 ->execute($row['id']);
 

@@ -28,8 +28,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property string  $fop
  * @property array   $alexf
  * @property array   $imageSizes
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendUser extends User
 {
@@ -421,7 +419,6 @@ class BackendUser extends User
 		Config::set('useCE', $this->useCE);
 		Config::set('thumbnails', $this->thumbnails);
 		Config::set('backendTheme', $this->backendTheme);
-		Config::set('fullscreen', $this->fullscreen);
 
 		// Inherit permissions
 		$always = array('alexf');
@@ -532,7 +529,6 @@ class BackendUser extends User
 				$arrModules[$strGroupName]['label'] = ($label = \is_array($GLOBALS['TL_LANG']['MOD'][$strGroupName] ?? null) ? ($GLOBALS['TL_LANG']['MOD'][$strGroupName][0] ?? null) : ($GLOBALS['TL_LANG']['MOD'][$strGroupName] ?? null)) ? $label : $strGroupName;
 				$arrModules[$strGroupName]['href'] = $router->generate('contao_backend', array('do'=>Input::get('do'), 'mtg'=>$strGroupName, 'ref'=>$strRefererId));
 				$arrModules[$strGroupName]['ajaxUrl'] = $router->generate('contao_backend');
-				$arrModules[$strGroupName]['icon'] = 'modPlus.gif'; // backwards compatibility with e.g. EasyThemes
 
 				foreach ($arrGroupModules as $strModuleName=>$arrModuleConfig)
 				{
@@ -673,5 +669,3 @@ class BackendUser extends User
 		return parent::isEqualTo($user);
 	}
 }
-
-class_alias(BackendUser::class, 'BackendUser');

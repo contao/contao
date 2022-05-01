@@ -16,9 +16,6 @@ namespace Contao;
  * @property array   $options
  * @property array   $unknownOption
  * @property boolean $multiple
- *
- * @author John Brand <http://www.thyon.com>
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class CheckBoxWizard extends Widget
 {
@@ -192,7 +189,7 @@ class CheckBoxWizard extends Widget
 			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> %s<label for="opt_%s">%s</label></span>',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
-			($this->multiple ? StringUtil::specialchars($arrOption['value'] ?? '') : 1),
+			($this->multiple ? self::specialcharsValue($arrOption['value'] ?? '') : 1),
 			(((\is_array($this->varValue) && \in_array($arrOption['value'] ?? null, $this->varValue)) || $this->varValue == ($arrOption['value'] ?? null)) ? ' checked="checked"' : ''),
 			$this->getAttributes(),
 			$strButtons,
@@ -201,5 +198,3 @@ class CheckBoxWizard extends Widget
 		);
 	}
 }
-
-class_alias(CheckBoxWizard::class, 'CheckBoxWizard');

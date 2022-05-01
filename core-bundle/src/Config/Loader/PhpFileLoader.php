@@ -68,7 +68,7 @@ class PhpFileLoader extends Loader
         $namespaceResolver = new NameResolver();
 
         $nodeStripper = new class() extends NodeVisitorAbstract {
-            public function leaveNode(Node $node)
+            public function leaveNode(Node $node): array|int|null
             {
                 // Drop namespace and use declarations
                 if ($node instanceof Namespace_) {
@@ -79,7 +79,7 @@ class PhpFileLoader extends Loader
                     return NodeTraverser::REMOVE_NODE;
                 }
 
-                // Drop 'strict_types' definition
+                // Drop the "strict_types" definition
                 if ($node instanceof Declare_) {
                     foreach ($node->declares as $key => $declare) {
                         if ('strict_types' === $declare->key->name) {

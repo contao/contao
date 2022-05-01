@@ -30,7 +30,7 @@ use Symfony\Component\VarDumper\VarDumper;
  *
  *     $template = new BackendTemplate();
  *     $template->name = 'Leo Feyer';
- *     $template->output();
+ *     $template->getResponse();
  *
  * @property string       $style
  * @property array|string $cssID
@@ -63,7 +63,8 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property array        $trustedDevices
  * @property string       $currentDevice
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0;
+ *             use Twig templates instead
  */
 abstract class Template extends Controller
 {
@@ -252,19 +253,6 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Print all template variables to the screen using print_r
-	 *
-	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.
-	 *             Use Template::dumpTemplateVars() instead.
-	 */
-	public function showTemplateVars()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::showTemplateVars()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::dumpTemplateVars()" instead.');
-
-		$this->dumpTemplateVars();
-	}
-
-	/**
 	 * Print all template variables to the screen using the Symfony VarDumper component
 	 */
 	public function dumpTemplateVars()
@@ -295,23 +283,6 @@ abstract class Template extends Controller
 		}
 
 		return $this->inherit();
-	}
-
-	/**
-	 * Parse the template file and print it to the screen
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Template::getResponse() instead.
-	 */
-	public function output()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::output()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::getResponse()" instead.');
-
-		$this->compile();
-
-		header('Content-Type: ' . $this->strContentType . '; charset=' . System::getContainer()->getParameter('kernel.charset'));
-
-		echo $this->strBuffer;
 	}
 
 	/**
@@ -512,16 +483,6 @@ abstract class Template extends Controller
 		{
 			$this->strBuffer = $this->parse();
 		}
-	}
-
-	/**
-	 * Return the debug bar string
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	protected function getDebugBar()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::getDebugBar()" has been deprecated and will no longer work in Contao 5.0.');
 	}
 
 	/**
@@ -745,33 +706,4 @@ abstract class Template extends Controller
 	{
 		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . StringUtil::specialchars($title) . '">';
 	}
-
-	/**
-	 * Flush the output buffers
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	public function flushAllData()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::flushAllData()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if (\function_exists('fastcgi_finish_request'))
-		{
-			fastcgi_finish_request();
-		}
-		elseif (\PHP_SAPI !== 'cli')
-		{
-			$status = ob_get_status(true);
-			$level = \count($status);
-
-			while ($level-- > 0 && (!empty($status[$level]['del']) || (isset($status[$level]['flags']) && ($status[$level]['flags'] & PHP_OUTPUT_HANDLER_REMOVABLE) && ($status[$level]['flags'] & PHP_OUTPUT_HANDLER_FLUSHABLE))))
-			{
-				ob_end_flush();
-			}
-
-			flush();
-		}
-	}
 }
-
-class_alias(Template::class, 'Template');

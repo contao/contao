@@ -30,14 +30,11 @@ class InstallWebDirCommand extends Command
     protected static $defaultName = 'contao:install-web-dir';
     protected static $defaultDescription = 'Installs the files in the public directory.';
 
-    private ?Filesystem $fs = null;
-    private ?SymfonyStyle $io = null;
-    private string $projectDir;
+    private Filesystem|null $fs = null;
+    private SymfonyStyle|null $io = null;
 
-    public function __construct(string $projectDir)
+    public function __construct(private string $projectDir)
     {
-        $this->projectDir = $projectDir;
-
         parent::__construct();
     }
 
@@ -51,16 +48,7 @@ class InstallWebDirCommand extends Command
         $this->fs = new Filesystem();
         $this->io = new SymfonyStyle($input, $output);
 
-        $webDir = $input->getArgument('target');
-
-        if (null === $webDir) {
-            if ($this->fs->exists($this->projectDir.'/web')) {
-                $webDir = 'web'; // backwards compatibility
-            } else {
-                $webDir = 'public';
-            }
-        }
-
+        $webDir = $input->getArgument('target') ?? 'public';
         $path = Path::join($this->projectDir, $webDir);
 
         $this->addHtaccess($path);
@@ -80,7 +68,7 @@ class InstallWebDirCommand extends Command
 
         if (!$this->fs->exists($targetPath)) {
             $this->fs->copy($sourcePath, $targetPath, true);
-            $this->io->writeln('Added the <comment>public/.htaccess</comment> file.');
+            $this->io->writeln("Added the <comment>$webDir/.htaccess</comment> file.");
 
             return;
         }
@@ -88,12 +76,12 @@ class InstallWebDirCommand extends Command
         $existingContent = file_get_contents($targetPath);
 
         // Return if there already is a rewrite rule
-        if (preg_match('/^\s*RewriteRule\s/im', $existingContent)) {
+        if (preg_match('/^\s*RewriteRule\s/im', (string) $existingContent)) {
             return;
         }
 
         $this->fs->dumpFile($targetPath, $existingContent."\n\n".file_get_contents($sourcePath));
-        $this->io->writeln('Updated the <comment>public/.htaccess</comment> file.');
+        $this->io->writeln("Updated the <comment>$webDir/.htaccess</comment> file.");
     }
 
     /**
@@ -106,7 +94,7 @@ class InstallWebDirCommand extends Command
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
             $this->fs->copy($file->getPathname(), Path::join($webDir, $file->getRelativePathname()), true);
-            $this->io->writeln(sprintf('Added the <comment>public/%s</comment> file.', $file->getFilename()));
+            $this->io->writeln(sprintf('Added the <comment>%s/%s</comment> file.', $webDir, $file->getFilename()));
         }
     }
 
@@ -118,7 +106,7 @@ class InstallWebDirCommand extends Command
         foreach (['app_dev.php', 'install.php'] as $file) {
             if ($this->fs->exists($path = Path::join($webDir, $file))) {
                 $this->fs->remove($path);
-                $this->io->writeln("Deleted the <comment>public/$file</comment> file.");
+                $this->io->writeln("Deleted the <comment>$webDir/$file</comment> file.");
             }
         }
     }

@@ -15,8 +15,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "custom navigation".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleCustomnav extends Module
 {
@@ -167,16 +165,10 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
 					$arrRel = array();
-
-					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
-					{
-						$arrRel[] = 'nofollow';
-					}
 
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
@@ -210,16 +202,10 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
 					$arrRel = array();
-
-					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
-					{
-						$arrRel[] = 'nofollow';
-					}
 
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
@@ -241,14 +227,6 @@ class ModuleCustomnav extends Module
 			}
 		}
 
-		// Add classes first and last if there are items
-		if (!empty($items))
-		{
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$last = \count($items) - 1;
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
-		}
-
 		$objTemplate->items = $items;
 
 		$this->Template->request = Environment::get('indexFreeRequest');
@@ -257,5 +235,3 @@ class ModuleCustomnav extends Module
 		$this->Template->items = !empty($items) ? $objTemplate->parse() : '';
 	}
 }
-
-class_alias(ModuleCustomnav::class, 'ModuleCustomnav');

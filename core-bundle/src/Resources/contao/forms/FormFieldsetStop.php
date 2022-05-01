@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Class FormFieldsetSTop
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FormFieldsetStop extends Widget
 {
@@ -62,5 +60,3 @@ class FormFieldsetStop extends Widget
 		return '</fieldset>';
 	}
 }
-
-class_alias(FormFieldsetStop::class, 'FormFieldsetStop');

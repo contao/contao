@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\DataContainer;
+use Contao\DC_Folder;
 use Contao\DiffRenderer;
 use Contao\Environment;
 use Contao\File;
@@ -35,7 +36,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Folder',
+		'dataContainer'               => DC_Folder::class,
 		'uploadPath'                  => 'templates',
 		'editableFileTypes'           => 'html5,twig',
 		'closed'                      => true,
@@ -151,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_templates extends Backend
 {
@@ -176,7 +177,7 @@ class tl_templates extends Backend
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['fn']))
+		if (Input::get('fn') !== null)
 		{
 			// Check the path (thanks to Arnaud Buchoux)
 			if (Validator::isInsecurePath(Input::get('fn', true)))

@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provides array manipulation methods
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ArrayUtil
 {
@@ -69,7 +67,7 @@ class ArrayUtil
 	 */
 	public static function isAssoc($arrArray): bool
 	{
-		return \is_array($arrArray) && array_keys($arrArray) !== range(0, \count($arrArray) - 1);
+		return \is_array($arrArray) && !array_is_list($arrArray);
 	}
 
 	/**
@@ -80,7 +78,7 @@ class ArrayUtil
 	 * @param  boolean      $blnByKey   If true the keys of the $arrItems are used
 	 * @return array
 	 */
-	public static function sortByOrderField(array $arrItems, $strOrder, ?string $strIdField = 'uuid', bool $blnByKey = false): array
+	public static function sortByOrderField(array $arrItems, $strOrder, string|null $strIdField = 'uuid', bool $blnByKey = false): array
 	{
 		// Remove all values
 		$arrOrder = array_map(static function () {}, array_flip(StringUtil::deserialize($strOrder, true)));

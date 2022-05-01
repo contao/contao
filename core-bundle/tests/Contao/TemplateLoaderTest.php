@@ -19,7 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
-use Contao\FormTextField;
+use Contao\FormText;
 use Contao\ModuleArticleList;
 use Contao\System;
 use Contao\TemplateLoader;
@@ -44,7 +44,7 @@ class TemplateLoaderTest extends TestCase
         ];
 
         $GLOBALS['TL_FFL'] = [
-            'text' => FormTextField::class,
+            'text' => FormText::class,
         ];
 
         $GLOBALS['FE_MOD'] = [
@@ -236,36 +236,18 @@ class TemplateLoaderTest extends TestCase
         unset($GLOBALS['CTLG']);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testSupportsHyphensInCustomTemplateNames(): void
+    public function testThrowsIfThereAreHyphensInCustomTemplateNames(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Using hyphens in the template name "mod_article-custom.html5" has been deprecated %s.');
-
         (new Filesystem())->touch([
             Path::join($this->getTempDir(), '/templates/mod_article-custom.html5'),
-            Path::join($this->getTempDir(), '/templates/mod_article_custom.html5'),
         ]);
 
         TemplateLoader::addFile('mod_article', 'core-bundle/src/Resources/contao/templates/modules');
 
-        $this->assertSame(
-            [
-                'mod_article' => 'mod_article',
-                'mod_article-custom' => 'mod_article-custom (global)',
-                'mod_article_custom' => 'mod_article_custom (global)',
-            ],
-            Controller::getTemplateGroup('mod_article')
-        );
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Using hyphens in the template name "mod_article-custom" is not allowed, use snake_case instead.');
 
-        $this->assertSame(
-            [
-                'mod_article-custom' => 'mod_article-custom (global)',
-                'mod_article_custom' => 'mod_article_custom (global)',
-            ],
-            Controller::getTemplateGroup('mod_article_')
-        );
+        Controller::getTemplateGroup('mod_article');
     }
 
     /**

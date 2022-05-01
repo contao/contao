@@ -68,21 +68,21 @@
           <th class="head<?= $col['class'] ?>"><a href="<?= $col['href'] ?>" title="<?= $col['title'] ?>"><?= $col['link'] ?></a></th>
         <?php endforeach; ?>
         <?php if ($this->details): ?>
-          <th class="head col_last">&nbsp;</th>
+          <th class="head">&nbsp;</th>
         <?php endif; ?>
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($this->tbody as $class => $row): ?>
-        <tr class="<?= $class ?>">
+      <?php foreach ($this->tbody as $row): ?>
+        <tr>
           <?php foreach ($row as $col): ?>
-            <td class="body <?= $col['class'] ?>"><?= $col['content'] ?></td>
+            <td class="body"><?= $col['content'] ?></td>
           <?php endforeach; ?>
           <?php if ($this->details && isset($col)): ?>
             <?php if ($col['details']): ?>
-              <td class="body <?= $this->col_last ?> col_last"><a href="<?= $col['url'] ?>"><?= Contao\Image::getHtml('assets/contao/images/info.svg') ?></a></td>
+              <td class="body"><a href="<?= $col['url'] ?>"><?= Contao\Image::getHtml('assets/contao/images/info.svg') ?></a></td>
             <?php else: ?>
-              <td class="body <?= $this->col_last ?> col_last">&nbsp;</td>
+              <td class="body">&nbsp;</td>
             <?php endif; ?>
           <?php endif; ?>
         </tr>

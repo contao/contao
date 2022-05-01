@@ -21,8 +21,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
-use Contao\CoreBundle\Session\LazySessionAccess;
-use Contao\CoreBundle\Session\MockNativeSessionStorage;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\Input;
@@ -31,10 +29,11 @@ use Contao\PageModel;
 use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
@@ -244,7 +243,7 @@ class ContaoFrameworkTest extends TestCase
         $feBag = new ArrayAttributeBag();
         $feBag->setName('contao_frontend');
 
-        $session = new Session(new MockNativeSessionStorage());
+        $session = new Session(new MockArraySessionStorage());
         $session->registerBag($beBag);
         $session->registerBag($feBag);
 
@@ -288,8 +287,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue(FE_USER_LOGGED_IN);
         $this->assertSame('', TL_PATH);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
-        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
-        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
     }
 
     /**
@@ -339,11 +336,7 @@ class ContaoFrameworkTest extends TestCase
         $errorReporting = error_reporting();
         error_reporting(E_ALL ^ E_USER_NOTICE);
 
-        $this->assertNotSame(
-            $errorReporting,
-            error_reporting(),
-            'Test is invalid, error level has not changed.'
-        );
+        $this->assertNotSame($errorReporting, error_reporting(), 'Test is invalid, error level has not changed.');
 
         $framework->initialize();
 
@@ -358,6 +351,14 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testRedirectsToTheInstallToolIfTheInstallationIsIncomplete(): void
     {
+        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_install', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('/contao/install')
+        ;
+
         $request = Request::create('/contao/login');
         $request->attributes->set('_route', 'dummy');
 
@@ -368,10 +369,9 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
-            new Filesystem(),
+            $urlGenerator,
             $this->getTempDir(),
-            error_reporting(),
-            false
+            error_reporting()
         );
 
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -383,7 +383,6 @@ class ContaoFrameworkTest extends TestCase
 
         $ref = new \ReflectionObject($framework);
         $adapterCache = $ref->getProperty('adapterCache');
-        $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
 
         $this->expectException(RedirectResponseException::class);
@@ -409,10 +408,9 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $this->mockScopeMatcher(),
             $this->createMock(TokenChecker::class),
-            new Filesystem(),
+            $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
-            error_reporting(),
-            false
+            error_reporting()
         );
 
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -424,7 +422,6 @@ class ContaoFrameworkTest extends TestCase
 
         $ref = new \ReflectionObject($framework);
         $adapterCache = $ref->getProperty('adapterCache');
-        $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
 
         $framework->initialize();
@@ -449,41 +446,6 @@ class ContaoFrameworkTest extends TestCase
         $this->expectException('LogicException');
 
         $framework->initialize();
-    }
-
-    /**
-     * @group legacy
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
-    public function testRegistersTheLazySessionAccessObject(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.5: Using "$_SESSION" has been deprecated %s.');
-
-        $beBag = new ArrayAttributeBag();
-        $beBag->setName('contao_backend');
-
-        $feBag = new ArrayAttributeBag();
-        $feBag->setName('contao_frontend');
-
-        $session = new Session(new MockNativeSessionStorage());
-        $session->registerBag($beBag);
-        $session->registerBag($feBag);
-
-        $request = Request::create('/index.html');
-        $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_scope', 'frontend');
-        $request->setSession($session);
-
-        $framework = $this->getFramework($request);
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize();
-
-        /** @phpstan-ignore-next-line */
-        $this->assertInstanceOf(LazySessionAccess::class, $_SESSION);
-        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['BE_DATA']);
-        $this->assertInstanceOf(ArrayAttributeBag::class, $_SESSION['FE_DATA']);
     }
 
     public function testCreatesAnObjectInstance(): void
@@ -515,7 +477,6 @@ class ContaoFrameworkTest extends TestCase
 
         $ref = new \ReflectionClass($adapter);
         $prop = $ref->getProperty('class');
-        $prop->setAccessible(true);
 
         $this->assertSame(LegacyClass::class, $prop->getValue($adapter));
     }
@@ -582,7 +543,6 @@ class ContaoFrameworkTest extends TestCase
 
         $reflection = new \ReflectionObject($framework);
         $reflectionMethod = $reflection->getMethod('registerHookListeners');
-        $reflectionMethod->setAccessible(true);
         $reflectionMethod->invoke($framework);
 
         $this->assertArrayHasKey('TL_HOOKS', $GLOBALS);
@@ -671,13 +631,13 @@ class ContaoFrameworkTest extends TestCase
         $registry->register($model);
 
         $this->assertSame('bar', Environment::get('scriptFilename'));
-        $this->assertNotEmpty(Input::getUnusedGet());
+        $this->assertNotEmpty(Input::getUnusedRouteParameters());
         $this->assertCount(1, $registry);
 
         $framework->reset();
 
         $this->assertNotSame('bar', Environment::get('scriptFilename'));
-        $this->assertEmpty(Input::getUnusedGet());
+        $this->assertEmpty(Input::getUnusedRouteParameters());
         $this->assertCount(0, $registry);
     }
 
@@ -693,10 +653,9 @@ class ContaoFrameworkTest extends TestCase
             $requestStack,
             $scopeMatcher ?? $this->mockScopeMatcher(),
             $tokenChecker ?? $this->createMock(TokenChecker::class),
-            new Filesystem(),
+            $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
-            error_reporting(),
-            false
+            error_reporting()
         );
 
         $adapters = [
@@ -706,11 +665,9 @@ class ContaoFrameworkTest extends TestCase
 
         $ref = new \ReflectionObject($framework);
         $adapterCache = $ref->getProperty('adapterCache');
-        $adapterCache->setAccessible(true);
         $adapterCache->setValue($framework, $adapters);
 
         $isInitialized = $ref->getProperty('initialized');
-        $isInitialized->setAccessible(true);
         $isInitialized->setValue(false);
 
         return $framework;

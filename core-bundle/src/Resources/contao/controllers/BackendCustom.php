@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Back end custom controller.
- *
- * @author Jim Schmid <https://github.com/sheeep>
  */
 class BackendCustom extends BackendMain
 {
@@ -52,7 +50,7 @@ class BackendCustom extends BackendMain
 		$this->Template->version = $GLOBALS['TL_LANG']['MSC']['version'] . ' ' . ContaoCoreBundle::getVersion();
 
 		// Ajax request
-		if ($_POST && Environment::get('isAjaxRequest'))
+		if (Input::isPost() && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax = new Ajax(Input::post('action'));
 			$this->objAjax->executePreActions();
@@ -61,5 +59,3 @@ class BackendCustom extends BackendMain
 		return $this->output();
 	}
 }
-
-class_alias(BackendCustom::class, 'BackendCustom');

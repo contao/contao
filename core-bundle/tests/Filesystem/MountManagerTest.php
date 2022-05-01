@@ -448,9 +448,9 @@ class MountManagerTest extends TestCase
             [
                 'file1 (file)',
                 'files (dir)',
-                // Note: 'files/media' must not be reported as a directory
+                // Note: "files/media" must not be reported as a directory
                 // here, because it is virtual and implicit (i.e. only the
-                // explicitly mounted 'files/media/extra' is included).
+                // explicitly mounted "files/media/extra" is included).
                 'files/media/extra (dir)',
                 'files/media/extra/cat.avif (file)',
                 'files/media/extra/videos (dir)',
@@ -536,26 +536,6 @@ class MountManagerTest extends TestCase
         $this->assertFalse($manager->directoryExists(''));
     }
 
-    public function testDirectoryExistsFallback(): void
-    {
-        if (method_exists(FilesystemAdapter::class, 'directoryExists')) {
-            $this->markTestSkipped('The fallback is only in place for Flysystem v2.');
-        }
-
-        $config = new Config();
-
-        $rootAdapter = new InMemoryFilesystemAdapter();
-        $rootAdapter->write('a', '', $config);
-        $rootAdapter->createDirectory('b', $config);
-        $rootAdapter->write('c', '', $config);
-
-        $manager = new MountManager($rootAdapter);
-
-        $this->assertFalse($manager->directoryExists('a'));
-        $this->assertTrue($manager->directoryExists('b'));
-        $this->assertFalse($manager->directoryExists('c'));
-    }
-
     private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
@@ -567,10 +547,7 @@ class MountManagerTest extends TestCase
         return $adapter;
     }
 
-    /**
-     * @param mixed $return
-     */
-    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, $return): FilesystemAdapter
+    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, mixed $return): FilesystemAdapter
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
 

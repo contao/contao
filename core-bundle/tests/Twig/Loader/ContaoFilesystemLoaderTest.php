@@ -19,6 +19,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -68,7 +69,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader = $this->getContaoFilesystemLoader();
 
         $this->expectException(LoaderError::class);
-        $this->expectExceptionMessage("Tried to register an invalid Contao namespace 'Foo'.");
+        $this->expectExceptionMessage('Tried to register an invalid Contao namespace "Foo".');
 
         $loader->addPath('foo/path', 'Foo');
     }
@@ -78,7 +79,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader = $this->getContaoFilesystemLoader();
 
         $this->expectException(LoaderError::class);
-        $this->expectExceptionMessage("Tried to register an invalid Contao namespace 'Foo'.");
+        $this->expectExceptionMessage('Tried to register an invalid Contao namespace "Foo".');
 
         $loader->prependPath('foo/path', 'Foo');
     }
@@ -143,11 +144,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $cacheAdapter = new ArrayAdapter();
 
         $loader1 = $this->getContaoFilesystemLoader($cacheAdapter, $locator);
-        $loader1->addPath(
-            Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1'),
-            'Contao_App',
-            true
-        );
+        $loader1->addPath(Path::canonicalize(__DIR__.'/../../Fixtures/Twig/paths/1'), 'Contao_App', true);
 
         $chains = $loader1->getInheritanceChains();
 
@@ -426,15 +423,15 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $expectedChains = [
             'text' => [
-                $themePath = Path::join($projectDir, '/templates/my/theme/text.html.twig') => '@Contao_Theme_my_theme/text.html.twig',
-                $globalPath = Path::join($projectDir, '/templates/text.html.twig') => '@Contao_Global/text.html.twig',
-                $appPath = Path::join($projectDir, '/contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
-                $barPath = Path::join($projectDir, '/vendor-bundles/BarBundle/contao/templates/text.html.twig') => '@Contao_BarBundle/text.html.twig',
-                $fooPath = Path::join($projectDir, '/vendor-bundles/FooBundle/templates/any/text.html.twig') => '@Contao_FooBundle/text.html.twig',
-                $corePath = Path::join($projectDir, '/vendor-bundles/CoreBundle/Resources/contao/templates/text.html.twig') => '@Contao_CoreBundle/text.html.twig',
+                $themePath = Path::join($projectDir, 'templates/my/theme/text.html.twig') => '@Contao_Theme_my_theme/text.html.twig',
+                $globalPath = Path::join($projectDir, 'templates/text.html.twig') => '@Contao_Global/text.html.twig',
+                $appPath = Path::join($projectDir, 'contao/templates/some/random/text.html.twig') => '@Contao_App/text.html.twig',
+                $barPath = Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates/text.html.twig') => '@Contao_BarBundle/text.html.twig',
+                $fooPath = Path::join($projectDir, 'vendor-bundles/FooBundle/templates/any/text.html.twig') => '@Contao_FooBundle/text.html.twig',
+                $corePath = Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates/text.html.twig') => '@Contao_CoreBundle/text.html.twig',
             ],
-            'bar' => [Path::join($projectDir, '/src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
-            'baz' => [Path::join($projectDir, '/app/Resources/contao/templates/baz.html.twig') => '@Contao_App/baz.html.twig'],
+            'nested-dir/foo' => [Path::join($projectDir, 'contao/templates/other/nested-dir/foo.html.twig') => '@Contao_App/nested-dir/foo.html.twig'],
+            'bar' => [Path::join($projectDir, 'src/Resources/contao/templates/bar.html.twig') => '@Contao_App/bar.html.twig'],
         ];
 
         // Full hierarchy
@@ -555,7 +552,7 @@ class ContaoFilesystemLoaderTest extends TestCase
     /**
      * @dataProvider provideThemeSlugs
      */
-    public function testGetInheritanceChains(?string $themeSlug, array $expectedChains): void
+    public function testGetInheritanceChains(string|null $themeSlug, array $expectedChains): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
@@ -607,23 +604,19 @@ class ContaoFilesystemLoaderTest extends TestCase
         ];
     }
 
-    public function testCatchesInvalidThemePathExceptionWhenGeneratingSlug(): void
+    public function testThrowsInvalidThemePathExceptionWhenGeneratingSlug(): void
     {
-        $themeNamespace = $this->createMock(ThemeNamespace::class);
-        $themeNamespace
-            ->method('generateSlug')
-            ->with('my_theme')
-            ->willThrowException(new InvalidThemePathException('my_theme', ['_']))
-        ;
-
         $loader = new ContaoFilesystemLoader(
             new NullAdapter(),
             $this->createMock(TemplateLocator::class),
-            $themeNamespace,
+            new ThemeNamespace(),
             '/'
         );
 
-        $page = new \stdClass();
+        $this->expectException(InvalidThemePathException::class);
+        $this->expectExceptionMessage('The theme path "my_theme" contains one or more invalid characters: "_"');
+
+        $page = $this->mockClassWithProperties(PageModel::class);
         $page->templateGroup = 'templates/my_theme';
 
         $GLOBALS['objPage'] = $page;

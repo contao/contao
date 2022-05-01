@@ -81,8 +81,6 @@ use Symfony\Component\Filesystem\Path;
  * @method static integer countByImportantPartWidth($val, array $opt=array())
  * @method static integer countByImportantPartHeight($val, array $opt=array())
  * @method static integer countByMeta($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FilesModel extends Model
 {
@@ -423,7 +421,7 @@ class FilesModel extends Model
 	 *
 	 * Returns the metadata of the first matching locale or null if none was found.
 	 */
-	public function getMetadata(string ...$locales): ?Metadata
+	public function getMetadata(string ...$locales): Metadata|null
 	{
 		$dataCollection = StringUtil::deserialize($this->meta, true);
 
@@ -450,5 +448,3 @@ class FilesModel extends Model
 		return null;
 	}
 }
-
-class_alias(FilesModel::class, 'FilesModel');

@@ -63,8 +63,6 @@ use Symfony\Component\String\UnicodeString;
  * @property boolean  $isCmykImage   True if the file is a CMYK image
  * @property resource $handle        The file handle (returned by fopen())
  * @property string   $title         The file title
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class File extends System
 {
@@ -591,7 +589,7 @@ class File extends System
 
 				if ($image instanceof DeferredImageInterface)
 				{
-					System::getContainer()->get('contao.image.legacy_resizer')->resizeDeferredImage($image);
+					System::getContainer()->get('contao.image.resizer')->resizeDeferredImage($image);
 
 					return true;
 				}
@@ -927,5 +925,3 @@ class File extends System
 		return $return;
 	}
 }
-
-class_alias(File::class, 'File');

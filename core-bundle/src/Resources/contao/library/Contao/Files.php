@@ -28,8 +28,6 @@ use Symfony\Component\Filesystem\Filesystem;
  *     $files->fclose();
  *
  *     $files->rrdir('test');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Files
 {
@@ -342,5 +340,3 @@ class Files
 		}
 	}
 }
-
-class_alias(Files::class, 'Files');

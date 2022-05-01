@@ -84,7 +84,6 @@ class CommandSchedulerListenerTest extends TestCase
         $request = $ref->newInstance();
 
         $pathInfo = $ref->getProperty('pathInfo');
-        $pathInfo->setAccessible(true);
         $pathInfo->setValue($request, '/contao/install');
 
         $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
@@ -113,7 +112,6 @@ class CommandSchedulerListenerTest extends TestCase
         $request = $ref->newInstance();
 
         $pathInfo = $ref->getProperty('pathInfo');
-        $pathInfo->setAccessible(true);
         $pathInfo->setValue($request, '/foo/_fragment/bar');
 
         $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());

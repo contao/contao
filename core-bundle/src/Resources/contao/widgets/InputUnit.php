@@ -17,8 +17,6 @@ namespace Contao;
  * @property boolean $mandatory
  * @property string  $placeholder
  * @property array   $options
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class InputUnit extends Widget
 {
@@ -112,7 +110,7 @@ class InputUnit extends Widget
 	 */
 	protected function isSelected($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
+		if (empty($this->varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
 		{
 			return $this->optionSelected(1, 1);
 		}
@@ -138,7 +136,7 @@ class InputUnit extends Widget
 		{
 			$arrUnits[] = sprintf(
 				'<option value="%s"%s>%s</option>',
-				StringUtil::specialchars($arrUnit['value']),
+				self::specialcharsValue($arrUnit['value']),
 				$this->isSelected($arrUnit),
 				$arrUnit['label']
 			);
@@ -154,7 +152,7 @@ class InputUnit extends Widget
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
-			StringUtil::specialchars($this->varValue['value']),
+			self::specialcharsValue($this->varValue['value']),
 			$this->getAttributes(),
 			$this->strName,
 			$this->getAttribute('disabled'),
@@ -163,5 +161,3 @@ class InputUnit extends Widget
 		);
 	}
 }
-
-class_alias(InputUnit::class, 'InputUnit');

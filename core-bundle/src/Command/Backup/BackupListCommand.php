@@ -23,7 +23,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BackupListCommand extends AbstractBackupCommand
 {
     protected static $defaultName = 'contao:backup:list';
-    protected static $defaultDescription = 'Lists the existing backups.';
+    protected static $defaultDescription = 'Lists the existing database backups.';
 
     public static function getFormattedTimeZoneOffset(\DateTimeZone $timeZone): string
     {
@@ -61,8 +61,7 @@ class BackupListCommand extends AbstractBackupCommand
         $formatted = [];
 
         foreach ($backups as $backup) {
-            // TODO: Change this to \DateTime::createFromInterface($backup->getCreatedAt()) as soon as we require PHP >=8.0
-            $localeDateTime = new \DateTime('@'.$backup->getCreatedAt()->getTimestamp(), $backup->getCreatedAt()->getTimezone());
+            $localeDateTime = \DateTime::createFromInterface($backup->getCreatedAt());
             $localeDateTime->setTimezone($timeZone);
 
             $formatted[] = [

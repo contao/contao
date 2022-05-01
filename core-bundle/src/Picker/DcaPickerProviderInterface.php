@@ -21,24 +21,18 @@ interface DcaPickerProviderInterface extends PickerProviderInterface
 {
     /**
      * Returns the DCA table for this provider.
-     *
-     * @return string
      */
-    public function getDcaTable(/* PickerConfig $config */)/*: string*/;
+    public function getDcaTable(PickerConfig $config = null): string;
 
     /**
      * Returns the attributes for the DataContainer.
      *
      * @return array<string,mixed>
      */
-    public function getDcaAttributes(PickerConfig $config)/*: array*/;
+    public function getDcaAttributes(PickerConfig $config): array;
 
     /**
      * Converts the DCA value for the picker selection.
-     *
-     * @param mixed $value
-     *
-     * @return string|int
      */
-    public function convertDcaValue(PickerConfig $config, $value);
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string;
 }

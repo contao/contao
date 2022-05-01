@@ -15,16 +15,10 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\AjaxRedirectResponseException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
-use Contao\Image\PictureConfiguration;
-use Contao\Model\Collection;
-use Imagine\Image\BoxInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\Glob;
 
@@ -44,8 +38,6 @@ use Symfony\Component\Finder\Glob;
  *     {
  *         return $this->getArticle(2);
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Controller extends System
 {
@@ -60,6 +52,11 @@ abstract class Controller extends System
 	 * @var array
 	 */
 	protected static $arrQueryCache = array();
+
+	/**
+	 * @var array
+	 */
+	private static $arrOldBePathCache = array();
 
 	/**
 	 * Find a particular template file and return its path
@@ -125,14 +122,10 @@ abstract class Controller extends System
 		$arrMapper['form'][] = 'xml';
 		$arrMapper['form'][] = 'wrapper';
 		$arrMapper['form'][] = 'message';
-		$arrMapper['form'][] = 'textfield'; // TODO: remove in Contao 5.0
 
 		// Add templates that are not directly associated with a module
 		$arrMapper['mod'][] = 'article';
 		$arrMapper['mod'][] = 'message';
-		$arrMapper['mod'][] = 'password'; // TODO: remove in Contao 5.0
-		$arrMapper['mod'][] = 'comment_form'; // TODO: remove in Contao 5.0
-		$arrMapper['mod'][] = 'newsletter'; // TODO: remove in Contao 5.0
 
 		/** @var TemplateHierarchyInterface $templateHierarchy */
 		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
@@ -166,12 +159,6 @@ abstract class Controller extends System
 
 		$strGlobPrefix = $strPrefix;
 
-		// Backwards compatibility (see #725)
-		if (substr($strGlobPrefix, -1) == '_')
-		{
-			$strGlobPrefix = substr($strGlobPrefix, 0, -1) . '[_-]';
-		}
-
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 		$arrCustomized = self::braceGlob($projectDir . '/templates/' . $strGlobPrefix . '*.html5');
 
@@ -186,7 +173,7 @@ abstract class Controller extends System
 
 				if (strpos($strTemplate, '-') !== false)
 				{
-					trigger_deprecation('contao/core-bundle', '4.9', 'Using hyphens in the template name "' . $strTemplate . '.html5" has been deprecated and will no longer work in Contao 5.0. Use snake_case instead.');
+					throw new \RuntimeException(sprintf('Using hyphens in the template name "%s" is not allowed, use snake_case instead.', $strTemplate));
 				}
 
 				// Ignore bundle templates, e.g. mod_article and mod_article_list
@@ -494,25 +481,14 @@ abstract class Controller extends System
 		}
 
 		// Print the article as PDF
-		if (isset($_GET['pdf']) && Input::get('pdf') == $objRow->id)
+		if (Input::get('pdf') !== null && $objRow->printable && Input::get('pdf') == $objRow->id)
 		{
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			if ($objRow->printable == 1)
-			{
-				trigger_deprecation('contao/core-bundle', '4.0', 'Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.');
+			$options = StringUtil::deserialize($objRow->printable);
 
+			if (\is_array($options) && \in_array('pdf', $options))
+			{
 				$objArticle = new ModuleArticle($objRow);
 				$objArticle->generatePdf();
-			}
-			elseif ($objRow->printable)
-			{
-				$options = StringUtil::deserialize($objRow->printable);
-
-				if (\is_array($options) && \in_array('pdf', $options))
-				{
-					$objArticle = new ModuleArticle($objRow);
-					$objArticle->generatePdf();
-				}
 			}
 		}
 
@@ -693,32 +669,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Return the languages for the TinyMCE spellchecker
-	 *
-	 * @return string The TinyMCE spellchecker language string
-	 */
-	protected function getSpellcheckerString()
-	{
-		System::loadLanguageFile('languages');
-
-		$return = array();
-		$langs = Folder::scan(__DIR__ . '/../../languages');
-		array_unshift($langs, $GLOBALS['TL_LANGUAGE']);
-
-		foreach ($langs as $lang)
-		{
-			$lang = substr($lang, 0, 2);
-
-			if (isset($GLOBALS['TL_LANG']['LNG'][$lang]))
-			{
-				$return[$lang] = $GLOBALS['TL_LANG']['LNG'][$lang] . '=' . $lang;
-			}
-		}
-
-		return '+' . implode(',', array_unique($return));
-	}
-
-	/**
 	 * Calculate the page status icon name based on the page parameters
 	 *
 	 * @param PageModel|Result|\stdClass $objPage The page object
@@ -811,31 +761,6 @@ abstract class Controller extends System
 		}
 
 		return $blnReturn;
-	}
-
-	/**
-	 * Replace insert tags with their values
-	 *
-	 * @param string  $strBuffer The text with the tags to be replaced
-	 * @param boolean $blnCache  If false, non-cacheable tags will be replaced
-	 *
-	 * @return string The text with the replaced tags
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 *             Use the InsertTagParser service instead.
-	 */
-	public static function replaceInsertTags($strBuffer, $blnCache=true)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
-
-		$parser = System::getContainer()->get('contao.insert_tag.parser');
-
-		if ($blnCache)
-		{
-			return $parser->replace((string) $strBuffer);
-		}
-
-		return $parser->replaceInline((string) $strBuffer);
 	}
 
 	/**
@@ -1076,7 +1001,7 @@ abstract class Controller extends System
 		}
 
 		$return = array();
-		$arrDir = compact('top', 'right', 'bottom', 'left');
+		$arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
 
 		foreach ($arrDir as $k=>$v)
 		{
@@ -1192,119 +1117,35 @@ abstract class Controller extends System
 	 */
 	protected static function replaceOldBePaths($strContext)
 	{
-		$router = System::getContainer()->get('router');
-
-		$generate = static function ($route) use ($router)
-		{
-			return substr($router->generate($route), \strlen(Environment::get('path')) + 1);
-		};
+		$arrCache = &self::$arrOldBePathCache;
 
 		$arrMapper = array
 		(
-			'contao/confirm.php'   => $generate('contao_backend_confirm'),
-			'contao/file.php'      => $generate('contao_backend_file'),
-			'contao/help.php'      => $generate('contao_backend_help'),
-			'contao/index.php'     => $generate('contao_backend_login'),
-			'contao/main.php'      => $generate('contao_backend'),
-			'contao/page.php'      => $generate('contao_backend_page'),
-			'contao/password.php'  => $generate('contao_backend_password'),
-			'contao/popup.php'     => $generate('contao_backend_popup'),
-			'contao/preview.php'   => $generate('contao_backend_preview'),
+			'contao/confirm.php'   => 'contao_backend_confirm',
+			'contao/help.php'      => 'contao_backend_help',
+			'contao/index.php'     => 'contao_backend_login',
+			'contao/main.php'      => 'contao_backend',
+			'contao/password.php'  => 'contao_backend_password',
+			'contao/popup.php'     => 'contao_backend_popup',
+			'contao/preview.php'   => 'contao_backend_preview',
 		);
 
-		return str_replace(array_keys($arrMapper), $arrMapper, $strContext);
-	}
-
-	/**
-	 * Generate a front end URL
-	 *
-	 * @param array   $arrRow       An array of page parameters
-	 * @param string  $strParams    An optional string of URL parameters
-	 * @param string  $strForceLang Force a certain language
-	 * @param boolean $blnFixDomain Check the domain of the target page and append it if necessary
-	 *
-	 * @return string A URL that can be used in the front end
-	 *
-	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.0.
-	 *             Use PageModel::getFrontendUrl() instead.
-	 */
-	public static function generateFrontendUrl(array $arrRow, $strParams=null, $strForceLang=null, $blnFixDomain=false)
-	{
-		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\Controller::generateFrontendUrl()" has been deprecated and will no longer work in Contao 5.0. Use PageModel::getFrontendUrl() instead.');
-
-		$page = new PageModel();
-		$page->preventSaving(false);
-		$page->setRow($arrRow);
-
-		if (!isset($arrRow['rootId']))
+		$replace = static function ($matches) use ($arrMapper, &$arrCache)
 		{
-			$page->loadDetails();
+			$key = $matches[0];
 
-			foreach (array('domain', 'rootLanguage', 'rootUseSSL') as $key)
+			if (!isset($arrCache[$key]))
 			{
-				if (isset($arrRow[$key]))
-				{
-					$page->$key = $arrRow[$key];
-				}
-				else
-				{
-					$arrRow[$key] = $page->$key;
-				}
+				$router = System::getContainer()->get('router');
+				$arrCache[$key] = substr($router->generate($arrMapper[$key]), \strlen(Environment::get('path')) + 1);
 			}
-		}
 
-		// Set the language
-		if ($strForceLang !== null)
-		{
-			$strForceLang = LocaleUtil::formatAsLocale($strForceLang);
+			return $arrCache[$key];
+		};
 
-			$page->language = $strForceLang;
-			$page->rootLanguage = $strForceLang;
+		$regex = '(' . implode('|', array_map('preg_quote', array_keys($arrMapper))) . ')';
 
-			if (System::getContainer()->getParameter('contao.legacy_routing'))
-			{
-				$page->urlPrefix = System::getContainer()->getParameter('contao.prepend_locale') ? $strForceLang : '';
-			}
-		}
-
-		// Add the domain if it differs from the current one (see #3765 and #6927)
-		if ($blnFixDomain)
-		{
-			$page->domain = $arrRow['domain'];
-			$page->rootUseSSL = (bool) $arrRow['rootUseSSL'];
-		}
-
-		$objRouter = System::getContainer()->get('router');
-		$strUrl = $objRouter->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => $strParams));
-
-		// Remove path from absolute URLs
-		if (0 === strncmp($strUrl, '/', 1) && 0 !== strncmp($strUrl, '//', 2))
-		{
-			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
-		}
-
-		// Decode sprintf placeholders
-		if (strpos($strParams, '%') !== false)
-		{
-			$arrMatches = array();
-			preg_match_all('/%([sducoxXbgGeEfF])/', $strParams, $arrMatches);
-
-			foreach (array_unique($arrMatches[1]) as $v)
-			{
-				$strUrl = str_replace('%25' . $v, '%' . $v, $strUrl);
-			}
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && \is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
-			{
-				$strUrl = static::importStatic($callback[0])->{$callback[1]}($arrRow, $strParams, $strUrl);
-			}
-		}
-
-		return $strUrl;
+		return preg_replace_callback($regex, $replace, $strContext);
 	}
 
 	/**
@@ -1412,6 +1253,18 @@ abstract class Controller extends System
 	{
 		$loader = new DcaLoader($strTable);
 		$loader->load($blnNoCache);
+	}
+
+	/**
+	 * Do not name this "reset" because it might result in conflicts with child classes
+	 * @see https://github.com/contao/contao/issues/4257
+	 *
+	 * @internal
+	 */
+	public static function resetControllerCache()
+	{
+		self::$arrQueryCache = array();
+		self::$arrOldBePathCache = array();
 	}
 
 	/**
@@ -1566,219 +1419,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Add an image to a template
-	 *
-	 * @param object          $template                The template object to add the image to
-	 * @param array           $rowData                 The element or module as array
-	 * @param integer|null    $maxWidth                An optional maximum width of the image
-	 * @param string|null     $lightboxGroupIdentifier An optional lightbox group identifier
-	 * @param FilesModel|null $filesModel              An optional files model
-	 *
-	 * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0;
-	 *             use the Contao\CoreBundle\Image\Studio\FigureBuilder instead.
-	 */
-	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
-	{
-		trigger_deprecation('contao/core-bundle', '4.11', 'Using Controller::addImageToTemplate() is deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Image\Studio\FigureBuilder" class instead.');
-
-		// Helper: Create metadata from the specified row data
-		$createMetadataOverwriteFromRowData = static function (bool $interpretAsContentModel) use ($rowData)
-		{
-			if ($interpretAsContentModel)
-			{
-				// This will be null if "overwriteMeta" is not set
-				return (new ContentModel())->setRow($rowData)->getOverwriteMetadata();
-			}
-
-			// Manually create metadata that always contains certain properties (BC)
-			return new Metadata(array(
-				Metadata::VALUE_ALT => $rowData['alt'] ?? '',
-				Metadata::VALUE_TITLE => $rowData['imageTitle'] ?? '',
-				Metadata::VALUE_URL => System::getContainer()->get('contao.insert_tag.parser')->replaceInline($rowData['imageUrl'] ?? ''),
-				'linkTitle' => (string) ($rowData['linkTitle'] ?? ''),
-			));
-		};
-
-		// Helper: Create fallback template data with (mostly) empty fields (used if resource acquisition fails)
-		$createFallBackTemplateData = static function () use ($filesModel, $rowData)
-		{
-			$templateData = array(
-				'width' => null,
-				'height' => null,
-				'picture' => array(
-					'img' => array(
-						'src' => '',
-						'srcset' => '',
-					),
-					'sources' => array(),
-					'alt' => '',
-					'title' => '',
-				),
-				'singleSRC' => $rowData['singleSRC'],
-				'src' => '',
-				'linkTitle' => '',
-				'margin' => '',
-				'addImage' => true,
-				'addBefore' => true,
-				'fullsize' => false,
-			);
-
-			if (null !== $filesModel)
-			{
-				// Set empty metadata
-				$templateData = array_replace_recursive(
-					$templateData,
-					array(
-						'alt' => '',
-						'caption' => '',
-						'imageTitle' => '',
-						'imageUrl' => '',
-					)
-				);
-			}
-
-			return $templateData;
-		};
-
-		// Helper: Get size and margins and handle legacy $maxWidth option
-		$getSizeAndMargin = static function () use ($rowData, $maxWidth)
-		{
-			$size = $rowData['size'] ?? null;
-			$margin = StringUtil::deserialize($rowData['imagemargin'] ?? null);
-			$maxWidth = (int) ($maxWidth ?? Config::get('maxImageWidth'));
-
-			if (0 === $maxWidth)
-			{
-				return array($size, $margin);
-			}
-
-			trigger_deprecation('contao/core-bundle', '4.10', 'Using a maximum front end width has been deprecated and will no longer work in Contao 5.0. Remove the "maxImageWidth" configuration and use responsive images instead.');
-
-			// Adjust margins if needed
-			if ('px' === ($margin['unit'] ?? null))
-			{
-				$horizontalMargin = (int) ($margin['left'] ?? 0) + (int) ($margin['right'] ?? 0);
-
-				if ($maxWidth - $horizontalMargin < 1)
-				{
-					$margin['left'] = '';
-					$margin['right'] = '';
-				}
-				else
-				{
-					$maxWidth -= $horizontalMargin;
-				}
-			}
-
-			// Normalize size
-			if ($size instanceof PictureConfiguration)
-			{
-				return array($size, $margin);
-			}
-
-			$size = StringUtil::deserialize($size);
-
-			if (is_numeric($size))
-			{
-				$size = array(0, 0, (int) $size);
-			}
-			else
-			{
-				$size = (\is_array($size) ? $size : array()) + array(0, 0, 'crop');
-				$size[0] = (int) $size[0];
-				$size[1] = (int) $size[1];
-			}
-
-			// Adjust image size configuration if it exceeds the max width
-			if ($size[0] > 0 && $size[1] > 0)
-			{
-				list($width, $height) = $size;
-			}
-			else
-			{
-				$container = System::getContainer();
-
-				/** @var BoxInterface $originalSize */
-				$originalSize = $container
-					->get('contao.image.factory')
-					->create($container->getParameter('kernel.project_dir') . '/' . $rowData['singleSRC'])
-					->getDimensions()
-					->getSize();
-
-				$width = $originalSize->getWidth();
-				$height = $originalSize->getHeight();
-			}
-
-			if ($width <= $maxWidth)
-			{
-				return array($size, $margin);
-			}
-
-			$size[0] = $maxWidth;
-			$size[1] = (int) floor($maxWidth * ($height / $width));
-
-			return array($size, $margin);
-		};
-
-		$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
-
-		// Set image resource
-		if (null !== $filesModel)
-		{
-			// Make sure model points to the same resource (BC)
-			$filesModel = clone $filesModel;
-			$filesModel->path = $rowData['singleSRC'];
-
-			// Use source + metadata from files model (if not overwritten)
-			$figureBuilder
-				->fromFilesModel($filesModel)
-				->setMetadata($createMetadataOverwriteFromRowData(true));
-
-			$includeFullMetadata = true;
-		}
-		else
-		{
-			// Always ignore file metadata when building from path (BC)
-			$figureBuilder
-				->fromPath($rowData['singleSRC'], false)
-				->setMetadata($createMetadataOverwriteFromRowData(false));
-
-			$includeFullMetadata = false;
-		}
-
-		// Set size and lightbox configuration
-		list($size, $margin) = $getSizeAndMargin();
-
-		$lightboxSize = StringUtil::deserialize($rowData['lightboxSize'] ?? null) ?: null;
-
-		$figure = $figureBuilder
-			->setSize($size)
-			->setLightboxGroupIdentifier($lightboxGroupIdentifier)
-			->setLightboxSize($lightboxSize)
-			->enableLightbox((bool) ($rowData['fullsize'] ?? false))
-			->buildIfResourceExists();
-
-		if (null === $figure)
-		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
-
-			// Fall back to apply a sparse data set instead of failing (BC)
-			foreach ($createFallBackTemplateData() as $key => $value)
-			{
-				$template->$key = $value;
-			}
-
-			return;
-		}
-
-		// Build result and apply it to the template
-		$figure->applyLegacyTemplateData($template, $margin, $rowData['floating'] ?? null, $includeFullMetadata);
-
-		// Fall back to manually specified link title or empty string if not set (backwards compatibility)
-		$template->linkTitle ??= StringUtil::specialchars($rowData['title'] ?? '');
-	}
-
-	/**
 	 * Add enclosures to a template
 	 *
 	 * @param object $objTemplate The template object to add the enclosures to
@@ -1873,18 +1513,9 @@ abstract class Controller extends System
 					'mime'      => $objFile->mime,
 					'meta'      => $arrMeta,
 					'extension' => $objFile->extension,
-					'path'      => $objFile->dirname,
-					'enclosure' => $objFiles->path // backwards compatibility
+					'path'      => $objFile->dirname
 				);
 			}
-		}
-
-		// Order the enclosures
-		if (!empty($arrItem['orderEnclosure']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.10', 'Using "orderEnclosure" has been deprecated and will no longer work in Contao 5.0. Use a file tree with "isSortable" instead.');
-
-			$arrEnclosures = ArrayUtil::sortByOrderField($arrEnclosures, $arrItem['orderEnclosure']);
 		}
 
 		$objTemplate->enclosure = $arrEnclosures;
@@ -1900,22 +1531,8 @@ abstract class Controller extends System
 			return;
 		}
 
-		if (\func_num_args() > 0)
-		{
-			trigger_deprecation('contao/core-bundle', '4.9', 'Using "Contao\Controller::setStaticUrls()" has been deprecated and will no longer work in Contao 5.0. Use the asset contexts instead.');
-
-			if (!isset($GLOBALS['objPage']))
-			{
-				$GLOBALS['objPage'] = func_get_arg(0);
-			}
-		}
-
 		\define('TL_ASSETS_URL', System::getContainer()->get('contao.assets.assets_context')->getStaticUrl());
 		\define('TL_FILES_URL', System::getContainer()->get('contao.assets.files_context')->getStaticUrl());
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		\define('TL_SCRIPT_URL', TL_ASSETS_URL);
-		\define('TL_PLUGINS_URL', TL_ASSETS_URL);
 	}
 
 	/**
@@ -1972,460 +1589,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Return the current theme as string
-	 *
-	 * @return string The name of the theme
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Backend::getTheme() instead.
-	 */
-	public static function getTheme()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getTheme()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Backend::getTheme()" instead.');
-
-		return Backend::getTheme();
-	}
-
-	/**
-	 * Return the back end themes as array
-	 *
-	 * @return array An array of available back end themes
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Backend::getThemes() instead.
-	 */
-	public static function getBackendThemes()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getBackendThemes()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Backend::getThemes()" instead.');
-
-		return Backend::getThemes();
-	}
-
-	/**
-	 * Get the details of a page including inherited parameters
-	 *
-	 * @param mixed $intId A page ID or a Model object
-	 *
-	 * @return PageModel The page model or null
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use PageModel::findWithDetails() or PageModel->loadDetails() instead.
-	 */
-	public static function getPageDetails($intId)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getPageDetails()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\PageModel::findWithDetails()" or "Contao\PageModel->loadDetails()" instead.');
-
-		if ($intId instanceof PageModel)
-		{
-			return $intId->loadDetails();
-		}
-
-		if ($intId instanceof Collection)
-		{
-			/** @var PageModel $objPage */
-			$objPage = $intId->current();
-
-			return $objPage->loadDetails();
-		}
-
-		if (\is_object($intId))
-		{
-			$strKey = __METHOD__ . '-' . $intId->id;
-
-			// Try to load from cache
-			if (Cache::has($strKey))
-			{
-				return Cache::get($strKey);
-			}
-
-			// Create a model from the database result
-			$objPage = new PageModel();
-			$objPage->setRow($intId->row());
-			$objPage->loadDetails();
-
-			Cache::set($strKey, $objPage);
-
-			return $objPage;
-		}
-
-		// Invalid ID
-		if ($intId < 1 || !\strlen($intId))
-		{
-			return null;
-		}
-
-		$strKey = __METHOD__ . '-' . $intId;
-
-		// Try to load from cache
-		if (Cache::has($strKey))
-		{
-			return Cache::get($strKey);
-		}
-
-		$objPage = PageModel::findWithDetails($intId);
-
-		Cache::set($strKey, $objPage);
-
-		return $objPage;
-	}
-
-	/**
-	 * Remove old XML files from the share directory
-	 *
-	 * @param boolean $blnReturn If true, only return the finds and don't delete
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Automator::purgeXmlFiles() instead.
-	 */
-	protected function removeOldFeeds($blnReturn=false)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::removeOldFeeds()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Automator::purgeXmlFiles()" instead.');
-
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->purgeXmlFiles($blnReturn);
-	}
-
-	/**
-	 * Return true if a class exists (tries to autoload the class)
-	 *
-	 * @param string $strClass The class name
-	 *
-	 * @return boolean True if the class exists
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use the PHP function class_exists() instead.
-	 */
-	protected function classFileExists($strClass)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::classFileExists()" has been deprecated and will no longer work in Contao 5.0. Use the PHP function "class_exists()" instead.');
-
-		return class_exists($strClass);
-	}
-
-	/**
-	 * Restore basic entities
-	 *
-	 * @param string $strBuffer The string with the tags to be replaced
-	 *
-	 * @return string The string with the original entities
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use StringUtil::restoreBasicEntities() instead.
-	 */
-	public static function restoreBasicEntities($strBuffer)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::restoreBasicEntities()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\StringUtil::restoreBasicEntities()" instead.');
-
-		return StringUtil::restoreBasicEntities($strBuffer);
-	}
-
-	/**
-	 * Resize an image and crop it if necessary
-	 *
-	 * @param string  $image  The image path
-	 * @param integer $width  The target width
-	 * @param integer $height The target height
-	 * @param string  $mode   An optional resize mode
-	 *
-	 * @return boolean True if the image has been resized correctly
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Image::resize() instead.
-	 */
-	protected function resizeImage($image, $width, $height, $mode='')
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::resizeImage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Image::resize()" instead.');
-
-		return Image::resize($image, $width, $height, $mode);
-	}
-
-	/**
-	 * Resize an image and crop it if necessary
-	 *
-	 * @param string  $image  The image path
-	 * @param integer $width  The target width
-	 * @param integer $height The target height
-	 * @param string  $mode   An optional resize mode
-	 * @param string  $target An optional target to be replaced
-	 * @param boolean $force  Override existing target images
-	 *
-	 * @return string|null The image path or null
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Image::get() instead.
-	 */
-	protected function getImage($image, $width, $height, $mode='', $target=null, $force=false)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getImage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Image::get()" instead.');
-
-		return Image::get($image, $width, $height, $mode, $target, $force);
-	}
-
-	/**
-	 * Generate an image tag and return it as string
-	 *
-	 * @param string $src        The image path
-	 * @param string $alt        An optional alt attribute
-	 * @param string $attributes A string of other attributes
-	 *
-	 * @return string The image HTML tag
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Image::getHtml() instead.
-	 */
-	public static function generateImage($src, $alt='', $attributes='')
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::generateImage()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Image::getHtml()" instead.');
-
-		return Image::getHtml($src, $alt, $attributes);
-	}
-
-	/**
-	 * Return the date picker string (see #3218)
-	 *
-	 * @return boolean
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Specify "datepicker"=>true in your DCA file instead.
-	 */
-	protected function getDatePickerString()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getDatePickerString()" has been deprecated and will no longer work in Contao 5.0. Specify "\'datepicker\' => true" in your DCA file instead.');
-
-		return true;
-	}
-
-	/**
-	 * Return the installed back end languages as array
-	 *
-	 * @return array An array of available back end languages
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use the Contao\CoreBundle\Intl\Locales service instead.
-	 */
-	protected function getBackendLanguages()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getBackendLanguages()" has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Intl\Locales service instead.');
-
-		return $this->getLanguages(true);
-	}
-
-	/**
-	 * Parse simple tokens that can be used to personalize newsletters
-	 *
-	 * @param string $strBuffer The text with the tokens to be replaced
-	 * @param array  $arrData   The replacement data as array
-	 *
-	 * @return string The text with the replaced tokens
-	 *
-	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.0;
-	 *             Use the contao.string.simple_token_parser service instead.
-	 */
-	protected function parseSimpleTokens($strBuffer, $arrData)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\Controller::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.string.simple_token_parser" service instead.');
-
-		return System::getContainer()->get('contao.string.simple_token_parser')->parse($strBuffer, $arrData);
-	}
-
-	/**
-	 * Convert a DCA file configuration to be used with widgets
-	 *
-	 * @param array  $arrData  The field configuration array
-	 * @param string $strName  The field name in the form
-	 * @param mixed  $varValue The field value
-	 * @param string $strField The field name in the database
-	 * @param string $strTable The table name
-	 *
-	 * @return array An array that can be passed to a widget
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Widget::getAttributesFromDca() instead.
-	 */
-	protected function prepareForWidget($arrData, $strName, $varValue=null, $strField='', $strTable='')
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::prepareForWidget()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Widget::getAttributesFromDca()" instead.');
-
-		return Widget::getAttributesFromDca($arrData, $strName, $varValue, $strField, $strTable);
-	}
-
-	/**
-	 * Return the IDs of all child records of a particular record (see #2475)
-	 *
-	 * @author Andreas Schempp
-	 *
-	 * @param mixed   $arrParentIds An array of parent IDs
-	 * @param string  $strTable     The table name
-	 * @param boolean $blnSorting   True if the table has a sorting field
-	 * @param array   $arrReturn    The array to be returned
-	 * @param string  $strWhere     Additional WHERE condition
-	 *
-	 * @return array An array of child record IDs
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Database::getChildRecords() instead.
-	 */
-	protected function getChildRecords($arrParentIds, $strTable, $blnSorting=false, $arrReturn=array(), $strWhere='')
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getChildRecords()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Database::getChildRecords()" instead.');
-
-		return $this->Database->getChildRecords($arrParentIds, $strTable, $blnSorting, $arrReturn, $strWhere);
-	}
-
-	/**
-	 * Return the IDs of all parent records of a particular record
-	 *
-	 * @param integer $intId    The ID of the record
-	 * @param string  $strTable The table name
-	 *
-	 * @return array An array of parent record IDs
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Database::getParentRecords() instead.
-	 */
-	protected function getParentRecords($intId, $strTable)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getParentRecords()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Database::getParentRecords()" instead.');
-
-		return $this->Database->getParentRecords($intId, $strTable);
-	}
-
-	/**
-	 * Print an article as PDF and stream it to the browser
-	 *
-	 * @param ModuleModel $objArticle An article object
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use ModuleArticle->generatePdf() instead.
-	 */
-	protected function printArticleAsPdf($objArticle)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::printArticleAsPdf()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\ModuleArticle->generatePdf()" instead.');
-
-		$objArticle = new ModuleArticle($objArticle);
-		$objArticle->generatePdf();
-	}
-
-	/**
-	 * Return all page sections as array
-	 *
-	 * @return array An array of active page sections
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             See https://github.com/contao/core/issues/4693.
-	 */
-	public static function getPageSections()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::getPageSections()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return array('header', 'left', 'right', 'main', 'footer');
-	}
-
-	/**
-	 * Return a "selected" attribute if the option is selected
-	 *
-	 * @param string $strOption The option to check
-	 * @param mixed  $varValues One or more values to check against
-	 *
-	 * @return string The attribute or an empty string
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Widget::optionSelected() instead.
-	 */
-	public static function optionSelected($strOption, $varValues)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::optionSelected()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Widget::optionSelected()" instead.');
-
-		return Widget::optionSelected($strOption, $varValues);
-	}
-
-	/**
-	 * Return a "checked" attribute if the option is checked
-	 *
-	 * @param string $strOption The option to check
-	 * @param mixed  $varValues One or more values to check against
-	 *
-	 * @return string The attribute or an empty string
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Widget::optionChecked() instead.
-	 */
-	public static function optionChecked($strOption, $varValues)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::optionChecked()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Widget::optionChecked()" instead.');
-
-		return Widget::optionChecked($strOption, $varValues);
-	}
-
-	/**
-	 * Find a content element in the TL_CTE array and return the class name
-	 *
-	 * @param string $strName The content element name
-	 *
-	 * @return string The class name
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use ContentElement::findClass() instead.
-	 */
-	public static function findContentElement($strName)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::findContentElement()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\ContentElement::findClass()" instead.');
-
-		return ContentElement::findClass($strName);
-	}
-
-	/**
-	 * Find a front end module in the FE_MOD array and return the class name
-	 *
-	 * @param string $strName The front end module name
-	 *
-	 * @return string The class name
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Module::findClass() instead.
-	 */
-	public static function findFrontendModule($strName)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using Contao\Controller::findFrontendModule() has been deprecated and will no longer work in Contao 5.0. Use Contao\Module::findClass() instead.');
-
-		return Module::findClass($strName);
-	}
-
-	/**
-	 * Create an initial version of a record
-	 *
-	 * @param string  $strTable The table name
-	 * @param integer $intId    The ID of the element to be versioned
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Versions->initialize() instead.
-	 */
-	protected function createInitialVersion($strTable, $intId)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::createInitialVersion()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Versions->initialize()" instead.');
-
-		$objVersions = new Versions($strTable, $intId);
-		$objVersions->initialize();
-	}
-
-	/**
-	 * Create a new version of a record
-	 *
-	 * @param string  $strTable The table name
-	 * @param integer $intId    The ID of the element to be versioned
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Versions->create() instead.
-	 */
-	protected function createNewVersion($strTable, $intId)
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Controller::createNewVersion()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Versions->create()" instead.');
-
-		$objVersions = new Versions($strTable, $intId);
-		$objVersions->create();
-	}
-
-	/**
 	 * Return the files matching a GLOB pattern
 	 *
 	 * @param string $pattern
@@ -2464,5 +1627,3 @@ abstract class Controller extends System
 		return array_keys($files);
 	}
 }
-
-class_alias(Controller::class, 'Controller');

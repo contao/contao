@@ -36,22 +36,16 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class Dbafs implements DbafsInterface, ResetInterface
 {
-    public const FILE_MARKER_EXCLUDED = '.nosync';
-    public const FILE_MARKER_PUBLIC = '.public';
+    final public const FILE_MARKER_EXCLUDED = '.nosync';
+    final public const FILE_MARKER_PUBLIC = '.public';
 
     private const RESOURCE_FILE = ChangeSet::TYPE_FILE;
     private const RESOURCE_DIRECTORY = ChangeSet::TYPE_DIRECTORY;
     private const RESOURCE_DOES_NOT_EXIST = -1;
     private const PATH_SUFFIX_SHALLOW_DIRECTORY = '//';
 
-    private VirtualFilesystemInterface $filesystem;
-    private HashGeneratorInterface $hashGenerator;
-    private Connection $connection;
-    private EventDispatcherInterface $eventDispatcher;
-
-    private string $table;
     private string $dbPathPrefix = '';
-    private int $maxFileSize = 2147483648; // 2 GiB
+    private int $maxFileSize = 2147483647; // 2 GiB - 1 byte (see #4208)
     private int $bulkInsertSize = 100;
     private bool $useLastModified = true;
 
@@ -74,13 +68,13 @@ class Dbafs implements DbafsInterface, ResetInterface
     /**
      * @internal Use the "contao.filesystem.dbafs_factory" service to create new instances.
      */
-    public function __construct(HashGeneratorInterface $hashGenerator, Connection $connection, EventDispatcherInterface $eventDispatcher, VirtualFilesystemInterface $filesystem, string $table)
-    {
-        $this->hashGenerator = $hashGenerator;
-        $this->connection = $connection;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->filesystem = $filesystem;
-        $this->table = $table;
+    public function __construct(
+        private HashGeneratorInterface $hashGenerator,
+        private Connection $connection,
+        private EventDispatcherInterface $eventDispatcher,
+        private VirtualFilesystemInterface $filesystem,
+        private string $table,
+    ) {
     }
 
     public function setDatabasePathPrefix(string $prefix): void
@@ -103,7 +97,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->useLastModified = $enable;
     }
 
-    public function getPathFromUuid(Uuid $uuid): ?string
+    public function getPathFromUuid(Uuid $uuid): string|null
     {
         $uuidBytes = $uuid->toBinary();
 
@@ -114,7 +108,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         return $this->pathByUuid[$uuidBytes];
     }
 
-    public function getPathFromId(int $id): ?string
+    public function getPathFromId(int $id): string|null
     {
         if (!\array_key_exists($id, $this->pathById)) {
             $this->loadRecordById($id);
@@ -123,7 +117,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         return $this->pathById[$id];
     }
 
-    public function getRecord(string $path): ?FilesystemItem
+    public function getRecord(string $path): FilesystemItem|null
     {
         if (!\array_key_exists($path, $this->records)) {
             $this->loadRecordByPath($path);
@@ -591,7 +585,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         if (!empty($inserts)) {
             $table = $this->connection->quoteIdentifier($this->table);
-            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // `uuid`, `pid`, …
+            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
             $placeholders = sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
 
             foreach (array_chunk($inserts, $this->bulkInsertSize) as $chunk) {
@@ -653,7 +647,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * This includes all parent directories and - in case of directories - all
      * resources that reside in it.
      *
-     * This method also builds lookup tables for hashes, 'last modified' timestamps
+     * This method also builds lookup tables for hashes, "last modified" timestamps
      * and UUIDs of the entire table.
      *
      * @param array<string> $searchPaths       non-empty list of search paths
@@ -731,7 +725,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 }
 
                 // Ignore dot files
-                if (0 === strpos(basename($path), '.')) {
+                if (str_starts_with(basename($path), '.')) {
                     continue;
                 }
 
@@ -790,7 +784,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 }
 
                 // Analyze parent path
-                $analyzedPaths = array_merge($analyzedPaths, $analyzeDirectory(Path::getDirectory($searchPath)));
+                $analyzedPaths = [...$analyzedPaths, ...$analyzeDirectory(Path::getDirectory($searchPath))];
                 $isDir = $analyzedPaths[$searchPath] ??= false;
             }
 
@@ -816,7 +810,7 @@ class Dbafs implements DbafsInterface, ResetInterface
      * double slash (//) as suffix.
      *
      * If $considerShallowDirectories is set to false, paths that are directly
-     * inside shallow directories (e.g. 'foo/bar' in 'foo') do NOT yield a
+     * inside shallow directories (e.g. "foo/bar" in "foo") do NOT yield a
      * truthy result.
      *
      * @param array<string> $basePaths
@@ -825,7 +819,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         foreach ($basePaths as $basePath) {
             // Any sub path
-            if (0 === mb_strpos($path.'/', $basePath.'/')) {
+            if (str_starts_with($path.'/', $basePath.'/')) {
                 return true;
             }
 
@@ -874,7 +868,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                     throw new \InvalidArgumentException(sprintf('Absolute path "%s" is not allowed when synchronizing.', $path));
                 }
 
-                if (0 === strpos($path, '.')) {
+                if (str_starts_with($path, '.')) {
                     throw new \InvalidArgumentException(sprintf('Dot path "%s" is not allowed when synchronizing.', $path));
                 }
 
@@ -893,7 +887,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $shallowDirectories = [];
         $deepDirectories = [];
 
-        // Normalize '/**' and '/*' suffixes
+        // Normalize "/**" and "/*" suffixes
         $paths = array_map(
             static function (string $path) use (&$shallowDirectories, &$deepDirectories): string {
                 if (preg_match('@^[^*]+/(\*\*?)@', $path, $matches)) {

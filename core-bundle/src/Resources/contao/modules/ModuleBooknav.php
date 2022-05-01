@@ -14,8 +14,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 
 /**
  * Front end module "book navigation".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleBooknav extends Module
 {
@@ -221,5 +219,3 @@ class ModuleBooknav extends Module
 		}
 	}
 }
-
-class_alias(ModuleBooknav::class, 'ModuleBooknav');

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
 use Contao\Input;
@@ -33,7 +34,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ctable'                      => array('tl_article'),
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
@@ -175,12 +176,12 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'__selector__'                => array('type', 'fallback', 'autoforward', 'protected', 'includeLayout', 'includeCache', 'includeChmod', 'enforceTwoFactor'),
 		'default'                     => '{title_legend},title,type',
-		'regular'                     => '{title_legend},title,type;{routing_legend},alias,requireItem,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots,description,serpPreview;{canonical_legend:hide},canonicalLink,canonicalKeepParams;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'forward'                     => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
-		'redirect'                    => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
+		'regular'                     => '{title_legend},title,type;{routing_legend},alias,requireItem,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots,description,serpPreview;{canonical_legend:hide},canonicalLink,canonicalKeepParams;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,noSearch,guests;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
+		'forward'                     => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots;{redirect_legend},jumpTo,redirect;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
+		'redirect'                    => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{meta_legend},pageTitle,robots;{redirect_legend},redirect,url,target;{protected_legend:hide},protected;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide,guests;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
 		'root'                        => '{title_legend},title,type;{routing_legend},alias;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},maintenanceMode;{global_legend:hide},mailerTransport,enableCanonical,adminEmail,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
 		'rootfallback'                => '{title_legend},title,type;{routing_legend},alias;{meta_legend},pageTitle;{url_legend},dns,useSSL,urlPrefix,urlSuffix,validAliasCharacters,useFolderUrl;{language_legend},language,fallback,disableLanguageRedirect;{website_legend:hide},favicon,robotsTxt,maintenanceMode;{global_legend:hide},mailerTransport,enableCanonical,adminEmail,dateFormat,timeFormat,datimFormat,staticFiles,staticPlugins;{protected_legend:hide},protected;{layout_legend},includeLayout;{twoFactor_legend:hide},enforceTwoFactor;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{publish_legend},published,start,stop',
-		'logout'                      => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},tabindex,accesskey;{publish_legend},published,start,stop',
+		'logout'                      => '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{forward_legend},jumpTo,redirectBack;{protected_legend:hide},protected;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass,sitemap,hide;{tabnav_legend:hide},accesskey;{publish_legend},published,start,stop',
 		'error_401'                   => '{title_legend},title,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'error_403'                   => '{title_legend},title,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'error_404'                   => '{title_legend},title,type;{meta_legend},pageTitle,robots,description;{forward_legend},autoforward;{layout_legend:hide},includeLayout;{cache_legend:hide},includeCache;{chmod_legend:hide},includeChmod;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
@@ -710,14 +711,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
-		'tabindex' => array
-		(
-			'exclude'                 => true,
-			'search'                  => true,
-			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
-		),
 		'accesskey' => array
 		(
 			'exclude'                 => true,
@@ -781,7 +774,7 @@ if (Input::get('popup'))
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_page extends Backend
 {
@@ -1063,30 +1056,6 @@ class tl_page extends Backend
 	}
 
 	/**
-	 * Make sure that top-level pages are root pages
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return mixed
-	 *
-	 * @throws Exception
-	 *
-	 * @deprecated
-	 */
-	public function checkRootType($varValue, DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::checkRootType()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if ($varValue != 'root' && $dc->activeRecord->pid == 0)
-		{
-			throw new Exception($GLOBALS['TL_LANG']['ERR']['topLevelRoot']);
-		}
-
-		return $varValue;
-	}
-
-	/**
 	 * Return the SERP URL
 	 *
 	 * @param PageModel $page
@@ -1193,60 +1162,6 @@ class tl_page extends Backend
 		$session = $objSession->get('sitemap_updater');
 		$session[] = PageModel::findWithDetails($dc->activeRecord->id)->rootId;
 		$objSession->set('sitemap_updater', array_unique($session));
-	}
-
-	/**
-	 * Auto-generate a page alias if it has not been set yet
-	 *
-	 * @param mixed         $varValue
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @throws Exception
-	 */
-	public function generateAlias($varValue, DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::generateAlias()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return System::getContainer()
-			->get('contao.listener.data_container.page_url')
-			->generateAlias($varValue, $dc)
-		;
-	}
-
-	/**
-	 * Automatically create an article in the main column of a new page
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @deprecated
-	 */
-	public function generateArticle(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::generateArticle()" has been deprecated and will no longer work in Contao 5.0.');
-
-		System::getContainer()
-			->get('contao.listener.data_container.content_composition')
-			->generateArticleForPage($dc)
-		;
-	}
-
-	/**
-	 * Purge the search index if a page is being deleted
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @deprecated
-	 */
-	public function purgeSearchIndex(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::purgeSearchIndex()" has been deprecated and will no longer work in Contao 5.0.');
-
-		System::getContainer()
-			->get('contao.listener.data_container.page_search')
-			->onDelete($dc)
-		;
 	}
 
 	/**
@@ -1377,22 +1292,6 @@ class tl_page extends Backend
 		}
 
 		return $varValue;
-	}
-
-	/**
-	 * Returns all allowed page types as array
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return array
-	 *
-	 * @deprecated
-	 */
-	public function getPageTypes(DataContainer $dc)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::getPageTypes()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return System::getContainer()->get('contao.listener.data_container.page_type_options')($dc);
 	}
 
 	/**
@@ -1611,29 +1510,6 @@ class tl_page extends Backend
 	}
 
 	/**
-	 * Generate an "edit articles" button and return it as string
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 *
-	 * @return string
-	 *
-	 * @deprecated
-	 */
-	public function editArticles($row, $href, $label, $title, $icon)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_page::editArticles()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return System::getContainer()
-			->get('contao.listener.data_container.content_composition')
-			->renderPageArticlesOperation($row, $href, $label, $title, $icon)
-		;
-	}
-
-	/**
 	 * Automatically generate the folder URL aliases
 	 *
 	 * @param array         $arrButtons
@@ -1649,7 +1525,7 @@ class tl_page extends Backend
 		}
 
 		// Generate the aliases
-		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
+		if (Input::post('alias') !== null && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
 			$objSession = System::getContainer()->get('session');
 			$session = $objSession->all();

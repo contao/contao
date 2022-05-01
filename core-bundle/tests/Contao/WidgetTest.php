@@ -15,8 +15,10 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\System;
+use Contao\TextField;
 use Contao\Widget;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class WidgetTest extends TestCase
@@ -45,7 +47,7 @@ class WidgetTest extends TestCase
      *
      * @dataProvider postProvider
      */
-    public function testReadsThePostData(string $key, string $input, $value, string $expected = null): void
+    public function testReadsThePostData(string $key, string $input, array|string $value, string $expected = null): void
     {
         // Prevent "undefined index" errors
         $errorReporting = error_reporting();
@@ -55,12 +57,9 @@ class WidgetTest extends TestCase
 
         $class = new \ReflectionClass(Widget::class);
         $method = $class->getMethod('getPost');
-        $method->setAccessible(true);
 
-        $_GET = [];
-        $_POST = [$input => $value];
-        Input::resetCache();
-        Input::initialize();
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request([], [$input => $value]));
 
         $this->assertSame($expected, $method->invoke($widget, $key));
 
@@ -137,6 +136,9 @@ class WidgetTest extends TestCase
 
     public function testValidatesThePostData(): void
     {
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request());
+
         $widget = $this
             ->getMockBuilder(Widget::class)
             ->disableOriginalConstructor()
@@ -180,6 +182,12 @@ class WidgetTest extends TestCase
 
         foreach ($expected as $key => $value) {
             $this->assertSame($value, $attrs[$key]);
+        }
+
+        if (isset($parameters[2])) {
+            $widget = (new \ReflectionClass(TextField::class))->newInstanceWithoutConstructor();
+            $widget->addAttributes($attrs);
+            $this->assertSame($parameters[2], $widget->value);
         }
     }
 
@@ -232,6 +240,25 @@ class WidgetTest extends TestCase
             [['eval' => ['extensions' => '%contao.image.valid_extensions%']], 'name'],
             [
                 'extensions' => ['jpg', 'gif', 'png'],
+            ],
+        ];
+
+        yield [
+            [[], 'name', '&amp;,&lt;,&gt;,&nbsp;,&shy;'],
+            [
+                'value' => '&amp;,&lt;,&gt;,&nbsp;,&shy;',
+            ],
+        ];
+
+        yield [
+            [
+                ['eval' => ['basicEntities' => true]],
+                'name',
+                '&amp;,&lt;,&gt;,&nbsp;,&shy;',
+            ],
+            [
+                'basicEntities' => true,
+                'value' => '[&],[lt],[gt],[nbsp],[-]',
             ],
         ];
     }

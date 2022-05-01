@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provide methods to edit the local configuration file.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DC_File extends DataContainer implements EditableDataContainerInterface
 {
@@ -331,7 +329,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			}
 
 			// Reload
-			if (isset($_POST['saveNclose']))
+			if (Input::post('saveNclose') !== null)
 			{
 				Message::reset();
 				$this->redirect($this->getReferer());
@@ -387,7 +385,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				}
 				else
 				{
-					$varValue = serialize(array_map('StringUtil::binToUuid', $varValue));
+					$varValue = serialize(array_map('\Contao\StringUtil::binToUuid', $varValue));
 				}
 			}
 
@@ -402,15 +400,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			if (($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea')
 			{
 				$varValue = StringUtil::deserialize($varValue);
-
-				if (!\is_array($varValue))
-				{
-					$varValue = StringUtil::restoreBasicEntities($varValue);
-				}
-				else
-				{
-					$varValue = serialize(array_map('StringUtil::restoreBasicEntities', $varValue));
-				}
 			}
 		}
 
@@ -454,7 +443,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			// Add a log entry
 			if (!\is_array($deserialize) && !\is_array(StringUtil::deserialize($prior)))
 			{
-				if (($arrData['inputType'] ?? null) == 'password' || ($arrData['inputType'] ?? null) == 'textStore')
+				if (($arrData['inputType'] ?? null) == 'password')
 				{
 					System::getContainer()->get('monolog.logger.contao.configuration')->info('The global configuration variable "' . $this->strField . '" has been changed');
 				}
@@ -560,5 +549,3 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		return $strPalette;
 	}
 }
-
-class_alias(DC_File::class, 'DC_File');

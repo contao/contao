@@ -31,12 +31,8 @@ class UserListCommand extends Command
     protected static $defaultName = 'contao:user:list';
     protected static $defaultDescription = 'Lists Contao back end users.';
 
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
-
         parent::__construct();
     }
 
@@ -61,10 +57,6 @@ class UserListCommand extends Command
         $columns = $input->getOption('column');
 
         switch ($input->getOption('format')) {
-            case 'text':
-                trigger_deprecation('contao/core-bundle', '4.13', 'Using --format=text is deprecated and will be removed in Contao 5. Use --format=txt instead.');
-                // no break
-
             case 'txt':
                 if (!$users || 0 === $users->count()) {
                     $io->note('No accounts found.');
@@ -90,7 +82,7 @@ class UserListCommand extends Command
         return 0;
     }
 
-    private function getUsers(bool $onlyAdmins = false): ?Collection
+    private function getUsers(bool $onlyAdmins = false): Collection|null
     {
         $this->framework->initialize();
 
@@ -133,7 +125,7 @@ class UserListCommand extends Command
         return $rows;
     }
 
-    private function formatJson(?Collection $users, array $columns): array
+    private function formatJson(Collection|null $users, array $columns): array
     {
         if (!$users) {
             return [];

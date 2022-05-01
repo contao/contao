@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
@@ -67,10 +66,6 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('not_writable.html.twig');
         }
 
-        if ($installTool->shouldAcceptLicense()) {
-            return $this->acceptLicense();
-        }
-
         if ('' === $installTool->getConfig('installPassword')) {
             return $this->setPassword();
         }
@@ -112,7 +107,7 @@ class InstallationController implements ContainerAwareInterface
         return $this->render('main.html.twig', $this->context);
     }
 
-    private function initializeApplication(): ?Response
+    private function initializeApplication(): Response|null
     {
         $event = new InitializeApplicationEvent();
 
@@ -128,31 +123,7 @@ class InstallationController implements ContainerAwareInterface
     }
 
     /**
-     * Renders a form to accept the license.
-     *
-     * @return Response|RedirectResponse
-     */
-    private function acceptLicense(): Response
-    {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-
-        if (null === $request) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
-
-        if ('tl_license' !== $request->request->get('FORM_SUBMIT')) {
-            return $this->render('license.html.twig');
-        }
-
-        $this->container->get('contao_installation.install_tool')->persistConfig('licenseAccepted', true);
-
-        return $this->getRedirectResponse();
-    }
-
-    /**
      * Renders a form to set the install tool password.
-     *
-     * @return Response|RedirectResponse
      */
     private function setPassword(): Response
     {
@@ -185,8 +156,6 @@ class InstallationController implements ContainerAwareInterface
 
     /**
      * Renders a form to log in.
-     *
-     * @return Response|RedirectResponse
      */
     private function login(): Response
     {
@@ -248,7 +217,7 @@ class InstallationController implements ContainerAwareInterface
             opcache_reset();
         }
 
-        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !\ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
@@ -277,15 +246,13 @@ class InstallationController implements ContainerAwareInterface
             opcache_reset();
         }
 
-        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !\ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
 
     /**
      * Renders a form to set up the database connection.
-     *
-     * @return Response|RedirectResponse
      */
     private function setUpDatabaseConnection(): Response
     {
@@ -314,21 +281,35 @@ class InstallationController implements ContainerAwareInterface
             ],
         ];
 
-        if (false !== strpos($parameters['parameters']['database_name'], '.')) {
-            return $this->render('database.html.twig', array_merge(
-                $parameters,
-                ['database_error' => $this->trans('database_dot_in_dbname')]
-            ));
+        if (str_contains((string) $parameters['parameters']['database_name'], '.')) {
+            return $this->render(
+                'database.html.twig',
+                [...$parameters, ...['database_error' => $this->trans('database_dot_in_dbname')]]
+            );
         }
 
+        $connection = ConnectionFactory::create($parameters);
+
         $installTool = $this->container->get('contao_installation.install_tool');
-        $installTool->setConnection(ConnectionFactory::create($parameters));
+        $installTool->setConnection($connection);
 
         if (!$installTool->canConnectToDatabase($parameters['parameters']['database_name'])) {
-            return $this->render('database.html.twig', array_merge(
-                $parameters,
-                ['database_error' => $this->trans('database_could_not_connect')]
-            ));
+            return $this->render(
+                'database.html.twig',
+                [...$parameters, ...['database_error' => $this->trans('database_could_not_connect')]]
+            );
+        }
+
+        $databaseVersion = null;
+
+        try {
+            $databaseVersion = $connection->getWrappedConnection()->getServerVersion();
+        } catch (\Throwable) {
+            // Ignore server version detection errors
+        }
+
+        if ($databaseVersion) {
+            $parameters['parameters']['database_version'] = $databaseVersion;
         }
 
         $dumper = new ParameterDumper($this->getContainerParameter('kernel.project_dir'));
@@ -351,7 +332,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to adjust the database tables.
      */
-    private function adjustDatabaseTables(): ?RedirectResponse
+    private function adjustDatabaseTables(): RedirectResponse|null
     {
         $this->container->get('contao_installation.install_tool')->handleRunOnce();
 
@@ -383,7 +364,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to import the example website.
      */
-    private function importExampleWebsite(): ?RedirectResponse
+    private function importExampleWebsite(): RedirectResponse|null
     {
         $installTool = $this->container->get('contao_installation.install_tool');
         $templates = $installTool->getTemplates();
@@ -430,7 +411,7 @@ class InstallationController implements ContainerAwareInterface
         return $this->getRedirectResponse();
     }
 
-    private function createAdminUser(): ?RedirectResponse
+    private function createAdminUser(): RedirectResponse|null
     {
         $installTool = $this->container->get('contao_installation.install_tool');
 
@@ -481,7 +462,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         // The username must not contain whitespace characters (see #4006)
-        if (false !== strpos($username, ' ')) {
+        if (str_contains((string) $username, ' ')) {
             $this->context['admin_username_error'] = $this->trans('admin_error_no_space');
 
             return null;
@@ -511,14 +492,7 @@ class InstallationController implements ContainerAwareInterface
         }
 
         $installTool->persistConfig('adminEmail', $email);
-
-        $installTool->persistAdminUser(
-            $username,
-            $name,
-            $email,
-            $password,
-            $request->getLocale()
-        );
+        $installTool->persistAdminUser($username, $name, $email, $password, $request->getLocale());
 
         return $this->getRedirectResponse();
     }
@@ -569,11 +543,6 @@ class InstallationController implements ContainerAwareInterface
             $context['language'] = $this->container->get('translator')->getLocale();
         }
 
-        // Backwards compatibility
-        if (!isset($context['ua'])) {
-            $context['ua'] = $this->getUserAgentString();
-        }
-
         if (!isset($context['path'])) {
             $request = $this->container->get('request_stack')->getCurrentRequest();
 
@@ -599,24 +568,12 @@ class InstallationController implements ContainerAwareInterface
         return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
     }
 
-    /**
-     * @return string|bool|null
-     */
-    private function getContainerParameter(string $name)
+    private function getContainerParameter(string $name): bool|string|null
     {
         if ($this->container->hasParameter($name)) {
             return $this->container->getParameter($name);
         }
 
         return null;
-    }
-
-    private function getUserAgentString(): string
-    {
-        if (!$this->container->has('contao.framework') || !$this->container->get('contao.framework')->isInitialized()) {
-            return '';
-        }
-
-        return Environment::get('agent')->class;
     }
 }

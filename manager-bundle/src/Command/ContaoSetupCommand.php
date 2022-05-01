@@ -29,16 +29,12 @@ class ContaoSetupCommand extends Command
 
     private string $webDir;
     private string $consolePath;
+    private string|false $phpPath;
 
     /**
      * @var \Closure(array<string>):Process
      */
     private \Closure $createProcessHandler;
-
-    /**
-     * @var string|false
-     */
-    private $phpPath;
 
     /**
      * @param (\Closure(array<string>):Process)|null $createProcessHandler
@@ -67,7 +63,7 @@ class ContaoSetupCommand extends Command
 
         $php = [
             $this->phpPath,
-            '-dmemory_limit='.ini_get('memory_limit'),
+            '-dmemory_limit='.\ini_get('memory_limit'),
         ];
 
         if (OutputInterface::VERBOSITY_DEBUG === $output->getVerbosity()) {

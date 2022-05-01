@@ -76,14 +76,6 @@ services:
         arguments:
             - '@database_connection'
 
-    contao.migration.version_410.routing:
-        class: Contao\CoreBundle\Migration\Version410\RoutingMigration
-        arguments:
-            - '@database_connection'
-            - '@contao.framework'
-            - '%contao.url_suffix%'
-            - '%contao.prepend_locale%'
-
     contao.migration.version_411.merge_webfonts:
         class: Contao\CoreBundle\Migration\Version411\MergeWebfontsMigration
         arguments:
@@ -109,10 +101,7 @@ services:
         arguments:
             - '@database_connection'
 
-    # Backwards compatibility
-    Contao\CoreBundle\Migration\MigrationCollection:
-        alias: contao.migration.collection
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.migration.collection" instead.
+    contao.migration.version_500.basic_entities:
+        class: Contao\CoreBundle\Migration\Version500\BasicEntitiesMigration
+        arguments:
+            - '@database_connection'

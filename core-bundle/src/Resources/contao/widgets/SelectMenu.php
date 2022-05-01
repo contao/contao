@@ -19,8 +19,6 @@ namespace Contao;
  * @property array   $options
  * @property array   $unknownOption
  * @property boolean $chosen
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class SelectMenu extends Widget
 {
@@ -166,7 +164,7 @@ class SelectMenu extends Widget
 			{
 				$arrOptions[] = sprintf(
 					'<option value="%s"%s>%s</option>',
-					StringUtil::specialchars($arrOption['value']),
+					self::specialcharsValue($arrOption['value']),
 					$this->isSelected($arrOption),
 					$arrOption['label'] ?? null
 				);
@@ -179,7 +177,7 @@ class SelectMenu extends Widget
 				{
 					$arrOptgroups[] = sprintf(
 						'<option value="%s"%s>%s</option>',
-						StringUtil::specialchars($arrOptgroup['value'] ?? ''),
+						self::specialcharsValue($arrOptgroup['value'] ?? ''),
 						$this->isSelected($arrOptgroup),
 						$arrOptgroup['label'] ?? null
 					);
@@ -208,5 +206,3 @@ class SelectMenu extends Widget
 		);
 	}
 }
-
-class_alias(SelectMenu::class, 'SelectMenu');

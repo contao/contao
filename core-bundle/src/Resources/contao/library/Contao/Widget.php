@@ -47,7 +47,6 @@ use Doctrine\DBAL\Types\Types;
  * @property string        $alt                The alternative text
  * @property string        $style              The style attribute
  * @property string        $accesskey          The key to focus the field
- * @property integer       $tabindex           The tabindex of the field
  * @property boolean       $disabled           Adds the disabled attribute
  * @property boolean       $readonly           Adds the readonly attribute
  * @property boolean       $autofocus          Adds the autofocus attribute
@@ -95,13 +94,10 @@ use Doctrine\DBAL\Types\Types;
  * @property string        $customRgxp
  * @property string        $errorMsg
  * @property integer       $currentRecord
- * @property integer       $rowClass
- * @property integer       $rowClassConfirm
  * @property integer       $storeValues
  * @property boolean       $includeBlankOption
  * @property string        $blankOptionLabel
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @property boolean       $basicEntities
  */
 abstract class Widget extends Controller
 {
@@ -233,12 +229,6 @@ abstract class Widget extends Controller
 
 			case 'value':
 				$this->varValue = StringUtil::deserialize($varValue);
-
-				// Decrypt the value if it is encrypted
-				if ($this->arrConfiguration['encrypt'] ?? null)
-				{
-					$this->varValue = Encryption::decrypt($this->varValue);
-				}
 				break;
 
 			case 'class':
@@ -288,14 +278,6 @@ abstract class Widget extends Controller
 			case 'onkeyup':
 			case 'onselect':
 				$this->arrAttributes[$strKey] = $varValue;
-				break;
-
-			case 'tabindex':
-				if ($varValue > 0)
-				{
-					trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
-					$this->arrAttributes['tabindex'] = $varValue;
-				}
 				break;
 
 			case 'disabled':
@@ -374,15 +356,14 @@ abstract class Widget extends Controller
 				return $this->strLabel;
 
 			case 'value':
-				// Encrypt the value
-				if (isset($this->arrConfiguration['encrypt']) && $this->arrConfiguration['encrypt'])
-				{
-					return Encryption::encrypt($this->varValue);
-				}
-
 				if ($this->varValue === '')
 				{
 					return $this->getEmptyStringOrNull();
+				}
+
+				if ($this->basicEntities)
+				{
+					return StringUtil::restoreBasicEntities($this->varValue);
 				}
 
 				return $this->varValue;
@@ -706,7 +687,7 @@ abstract class Widget extends Controller
 			return ' ' . $strKey;
 		}
 
-		if ($varValue)
+		if ('' !== (string) $varValue)
 		{
 			return ' ' . $strKey . '="' . StringUtil::specialchars($varValue) . '"';
 		}
@@ -1038,13 +1019,6 @@ abstract class Widget extends Controller
 					}
 					break;
 
-				case 'google+':
-					if (!Validator::isGooglePlusId($varInput))
-					{
-						$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidGoogleId'], $this->strLabel));
-					}
-					break;
-
 				case 'fieldname':
 					if (!Validator::isFieldName($varInput))
 					{
@@ -1122,7 +1096,7 @@ abstract class Widget extends Controller
 	 */
 	protected function isChecked($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
+		if (empty($this->varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
 		{
 			return static::optionChecked(1, 1);
 		}
@@ -1139,7 +1113,7 @@ abstract class Widget extends Controller
 	 */
 	protected function isSelected($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
+		if (empty($this->varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
 		{
 			return static::optionSelected(1, 1);
 		}
@@ -1277,6 +1251,11 @@ abstract class Widget extends Controller
 		$arrAttributes['type'] = $arrData['inputType'] ?? null;
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
+
+		if ($arrData['eval']['basicEntities'] ?? null)
+		{
+			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value']);
+		}
 
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'] ?? null)
@@ -1440,12 +1419,6 @@ abstract class Widget extends Controller
 			}
 		}
 
-		// Warn if someone uses the "encrypt" flag (see #8589)
-		if (isset($arrAttributes['encrypt']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "encrypt" flag' . (!empty($strTable) && !empty($strField) ? ' on ' . $strTable . '.' . $strField : '') . ' has been deprecated and will no longer work in Contao 5.0. Use the load and save callbacks with a third-party library such as OpenSSL or phpseclib instead.');
-		}
-
 		return $arrAttributes;
 	}
 
@@ -1552,19 +1525,12 @@ abstract class Widget extends Controller
 		return static::getEmptyValueByFieldType($sql) === null ? null : '';
 	}
 
-	/**
-	 * Generate a submit button
-	 *
-	 * @return string The submit button markup
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	protected function addSubmit()
+	protected static function specialcharsValue($strString): string
 	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Widget::addSubmit()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return '';
+		return str_replace(
+			array('&amp;#35;', '&amp;#60;', '&amp;#62;', '&amp;#40;', '&amp;#41;', '&amp;#92;', '&amp;#61;', '&amp;#34;', '&amp;#39;'),
+			array('&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;'),
+			StringUtil::specialchars((string) $strString, false, true),
+		);
 	}
 }
-
-class_alias(Widget::class, 'Widget');

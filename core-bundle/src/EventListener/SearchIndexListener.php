@@ -24,18 +24,14 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
  */
 class SearchIndexListener
 {
-    public const FEATURE_INDEX = 0b01;
-    public const FEATURE_DELETE = 0b10;
+    final public const FEATURE_INDEX = 0b01;
+    final public const FEATURE_DELETE = 0b10;
 
-    private IndexerInterface $indexer;
-    private string $fragmentPath;
-    private int $enabledFeatures;
-
-    public function __construct(IndexerInterface $indexer, string $fragmentPath = '_fragment', int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE)
-    {
-        $this->indexer = $indexer;
-        $this->fragmentPath = $fragmentPath;
-        $this->enabledFeatures = $enabledFeatures;
+    public function __construct(
+        private IndexerInterface $indexer,
+        private string $fragmentPath = '_fragment',
+        private int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
+    ) {
     }
 
     /**
@@ -63,7 +59,7 @@ class SearchIndexListener
         $response = $event->getResponse();
 
         // Do not index if the X-Robots-Tag header contains "noindex"
-        if (false !== strpos($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
+        if (str_contains((string) $response->headers->get('X-Robots-Tag', ''), 'noindex')) {
             return;
         }
 
@@ -73,10 +69,10 @@ class SearchIndexListener
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
             // Do not index if the meta robots tag contains "noindex"
-            if (false !== strpos($robots, 'noindex')) {
+            if (str_contains((string) $robots, 'noindex')) {
                 return;
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // No meta robots tag found
         }
 
@@ -97,7 +93,7 @@ class SearchIndexListener
             if (!$success && $this->enabledFeatures & self::FEATURE_DELETE) {
                 $this->indexer->delete($document);
             }
-        } catch (IndexerException $e) {
+        } catch (IndexerException) {
             // ignore
         }
     }

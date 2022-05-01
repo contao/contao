@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to render a pagination menu.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Pagination
 {
@@ -252,14 +250,6 @@ class Pagination
 		$objTemplate->hasNext = $this->hasNext();
 		$objTemplate->hasLast = $this->hasLast();
 
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$objTemplate->items = function () use ($strSeparator)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using "$pagination->items" has been deprecated and will no longer work in Contao 5.0. Use "$pagination->pages" instead.');
-
-			return $this->getItemsAsString($strSeparator);
-		};
-
 		$objTemplate->pages = $this->getItemsAsArray();
 		$objTemplate->total = sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
 
@@ -413,5 +403,3 @@ class Pagination
 		return StringUtil::ampersand($this->strUrl) . $this->strVarConnector . $this->strParameter . '=' . $intPage;
 	}
 }
-
-class_alias(Pagination::class, 'Pagination');

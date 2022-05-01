@@ -21,8 +21,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property Comments $Comments
  * @property string   $com_template
  * @property array    $news_archives
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsReader extends ModuleNews
 {
@@ -55,18 +53,6 @@ class ModuleNewsReader extends ModuleNews
 			return $objTemplate->parse();
 		}
 
-		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
-		{
-			Input::setGet('items', Input::get('auto_item'));
-		}
-
-		// Return an empty string if "items" is not set (to combine list and reader on same page)
-		if (!Input::get('items'))
-		{
-			return '';
-		}
-
 		$this->news_archives = $this->sortOutProtected(StringUtil::deserialize($this->news_archives));
 
 		if (empty($this->news_archives) || !\is_array($this->news_archives))
@@ -89,16 +75,9 @@ class ModuleNewsReader extends ModuleNews
 			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['newsOverview'];
 		}
-		else
-		{
-			trigger_deprecation('contao/news-bundle', '4.13', 'If you do not select an overview page in the news reader module, the "go back" link will no longer be shown in Contao 5.0.');
-
-			$this->Template->referer = 'javascript:history.go(-1)';
-			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
-		}
 
 		// Get the news item
-		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
+		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('auto_item'), $this->news_archives);
 
 		// The news item does not exist (see #33)
 		if ($objArticle === null)
@@ -227,5 +206,3 @@ class ModuleNewsReader extends ModuleNews
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
 	}
 }
-
-class_alias(ModuleNewsReader::class, 'ModuleNewsReader');

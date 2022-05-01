@@ -22,8 +22,6 @@ namespace Contao;
  *     Message::addConfirmation('The data has been stored');
  *     Message::addNew('There are two new messages');
  *     Message::addInfo('You can upload only two files');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Message
 {
@@ -319,5 +317,3 @@ class Message
 		return 'contao.' . $strScope . '.' . strtolower(str_replace('TL_', '', $strType));
 	}
 }
-
-class_alias(Message::class, 'Message');

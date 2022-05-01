@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Provide methods regarding news archives.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class News extends Frontend
 {
@@ -187,7 +185,7 @@ class News extends Frontend
 				// Get the jumpTo URL
 				if (!isset($arrUrls[$jumpTo]))
 				{
-					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
+					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl('/%s');
 				}
 
 				$strUrl = $arrUrls[$jumpTo];
@@ -348,7 +346,7 @@ class News extends Frontend
 			}
 			else
 			{
-				$params = (Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id);
+				$params = '/' . ($objItem->alias ?: $objItem->id);
 
 				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}
@@ -482,5 +480,3 @@ class News extends Frontend
 		return self::$arrPageCache[$intPageId];
 	}
 }
-
-class_alias(News::class, 'News');

@@ -22,8 +22,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property string   $com_template
  * @property string   $cal_template
  * @property array    $cal_calendar
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventReader extends Events
 {
@@ -56,18 +54,6 @@ class ModuleEventReader extends Events
 			return $objTemplate->parse();
 		}
 
-		// Set the item from the auto_item parameter
-		if (!isset($_GET['events']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
-		{
-			Input::setGet('events', Input::get('auto_item'));
-		}
-
-		// Return an empty string if "events" is not set (to combine list and reader on same page)
-		if (!Input::get('events'))
-		{
-			return '';
-		}
-
 		$this->cal_calendar = $this->sortOutProtected(StringUtil::deserialize($this->cal_calendar));
 
 		if (empty($this->cal_calendar) || !\is_array($this->cal_calendar))
@@ -93,16 +79,9 @@ class ModuleEventReader extends Events
 			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['eventOverview'];
 		}
-		else
-		{
-			trigger_deprecation('contao/calendar-bundle', '4.13', 'If you do not select an overview page in the event reader module, the "go back" link will no longer be shown in Contao 5.0.');
-
-			$this->Template->referer = 'javascript:history.go(-1)';
-			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
-		}
 
 		// Get the current event
-		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('events'), $this->cal_calendar);
+		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('auto_item'), $this->cal_calendar);
 
 		// The event does not exist (see #33)
 		if ($objEvent === null)
@@ -538,5 +517,3 @@ class ModuleEventReader extends Events
 		return array($strDate, $strTime);
 	}
 }
-
-class_alias(ModuleEventReader::class, 'ModuleEventReader');

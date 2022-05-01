@@ -15,8 +15,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Share a page via a social network.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FrontendShare extends Frontend
 {
@@ -54,5 +52,3 @@ class FrontendShare extends Frontend
 		throw new BadRequestHttpException(sprintf('Invalid action "%s"', Input::get('p')));
 	}
 }
-
-class_alias(FrontendShare::class, 'FrontendShare');

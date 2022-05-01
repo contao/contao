@@ -19,8 +19,6 @@ use Doctrine\DBAL\Types\Types;
 
 /**
  * Provide methods to handle versioning.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Versions extends Controller
 {
@@ -217,6 +215,8 @@ class Versions extends Controller
 		{
 			$strDescription = $data['subject'];
 		}
+
+		$strDescription = mb_substr($strDescription, 0, System::getContainer()->get('database_connection')->getSchemaManager()->listTableColumns('tl_version')['description']->getLength());
 
 		$intId = $this->Database->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, IFNULL((SELECT MAX(version) FROM (SELECT version FROM tl_version WHERE pid=? AND fromTable=?) v), 0) + 1, ?, ?, ?, ?, ?, 1, ?)")
 								->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
@@ -469,13 +469,6 @@ class Versions extends Controller
 							$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
 						}
 
-						// Decrypt the values
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'] ?? null)
-						{
-							$to[$k] = Encryption::decrypt($to[$k]);
-							$from[$k] = Encryption::decrypt($from[$k]);
-						}
-
 						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null) || \in_array($k, $arrOrderFields))
 						{
 							if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['csv']))
@@ -713,14 +706,10 @@ class Versions extends Controller
 			$arrVersions[] = $arrRow;
 		}
 
-		$intCount = -1;
 		$arrVersions = array_values($arrVersions);
 
-		// Add the "even" and "odd" classes
 		foreach ($arrVersions as $k=>$v)
 		{
-			$arrVersions[$k]['class'] = (++$intCount % 2 == 0) ? 'even' : 'odd';
-
 			try
 			{
 				// Mark deleted versions (see #4336)
@@ -732,14 +721,12 @@ class Versions extends Controller
 			catch (\Exception $e)
 			{
 				// Probably a disabled module
-				--$intCount;
 				unset($arrVersions[$k]);
 			}
 
 			// Skip deleted files (see #8480)
 			if (($v['fromTable'] ?? null) == 'tl_files' && ($arrVersions[$k]['deleted'] ?? null))
 			{
-				--$intCount;
 				unset($arrVersions[$k]);
 			}
 		}
@@ -856,5 +843,3 @@ class Versions extends Controller
 		return trim($buffer);
 	}
 }
-
-class_alias(Versions::class, 'Versions');

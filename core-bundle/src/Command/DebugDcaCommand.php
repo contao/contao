@@ -32,12 +32,8 @@ class DebugDcaCommand extends Command
     protected static $defaultName = 'debug:dca';
     protected static $defaultDescription = 'Dumps the DCA configuration for a table.';
 
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
-
         parent::__construct();
     }
 

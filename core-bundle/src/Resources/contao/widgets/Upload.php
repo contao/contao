@@ -16,8 +16,6 @@ namespace Contao;
  * Provide methods to use the FileUpload class in a back end widget. The widget
  * will only upload the files to the server. Use a submit_callback to process
  * the files or use the class as base for your own upload widget.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Upload extends Widget implements UploadableWidgetInterface
 {
@@ -77,5 +75,3 @@ class Upload extends Widget implements UploadableWidgetInterface
 		return ltrim($this->objUploader->generateMarkup());
 	}
 }
-
-class_alias(Upload::class, 'Upload');

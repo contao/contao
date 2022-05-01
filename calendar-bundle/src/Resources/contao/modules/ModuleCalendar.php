@@ -19,8 +19,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property array  $cal_calendar
  * @property string $cal_ctemplate
  * @property string $cal_featured
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleCalendar extends Events
 {
@@ -202,18 +200,9 @@ class ModuleCalendar extends Events
 			$strClass = '';
 			$intCurrentDay = ($i + $this->cal_startDay) % 7;
 
-			if ($i == 0)
-			{
-				$strClass .= ' col_first';
-			}
-			elseif ($i == 6)
-			{
-				$strClass .= ' col_last';
-			}
-
 			if ($intCurrentDay == 0 || $intCurrentDay == 6)
 			{
-				$strClass .= ' weekend';
+				$strClass = ' weekend';
 			}
 
 			$arrDays[$intCurrentDay] = array
@@ -264,24 +253,17 @@ class ModuleCalendar extends Events
 			$intWeek = floor(++$intColumnCount / 7);
 			$intDay = $i - $intFirstDayOffset;
 			$intCurrentDay = ($i + $this->cal_startDay) % 7;
-
-			$strWeekClass = 'week_' . $intWeek;
-			$strWeekClass .= ($intWeek == 0) ? ' first' : '';
-			$strWeekClass .= ($intWeek == ($intNumberOfRows - 1)) ? ' last' : '';
-
 			$strClass = ($intCurrentDay < 2) ? ' weekend' : '';
-			$strClass .= ($i == 1 || $i == 8 || $i == 15 || $i == 22 || $i == 29 || $i == 36) ? ' col_first' : '';
-			$strClass .= ($i == 7 || $i == 14 || $i == 21 || $i == 28 || $i == 35 || $i == 42) ? ' col_last' : '';
 
 			// Add timestamp to all cells
-			$arrDays[$strWeekClass][$i]['timestamp'] = strtotime(($intDay - 1) . ' day', $this->Date->monthBegin);
+			$arrDays[$intWeek][$i]['timestamp'] = strtotime(($intDay - 1) . ' day', $this->Date->monthBegin);
 
 			// Empty cell
 			if ($intDay < 1 || $intDay > $intDaysInMonth)
 			{
-				$arrDays[$strWeekClass][$i]['label'] = '&nbsp;';
-				$arrDays[$strWeekClass][$i]['class'] = 'days empty' . $strClass;
-				$arrDays[$strWeekClass][$i]['events'] = array();
+				$arrDays[$intWeek][$i]['label'] = '&nbsp;';
+				$arrDays[$intWeek][$i]['class'] = 'empty' . $strClass;
+				$arrDays[$intWeek][$i]['events'] = array();
 
 				continue;
 			}
@@ -298,9 +280,9 @@ class ModuleCalendar extends Events
 			// Inactive days
 			if (empty($intKey) || !isset($arrAllEvents[$intKey]))
 			{
-				$arrDays[$strWeekClass][$i]['label'] = $intDay;
-				$arrDays[$strWeekClass][$i]['class'] = 'days' . $strClass;
-				$arrDays[$strWeekClass][$i]['events'] = array();
+				$arrDays[$intWeek][$i]['label'] = $intDay;
+				$arrDays[$intWeek][$i]['class'] = trim($strClass);
+				$arrDays[$intWeek][$i]['events'] = array();
 
 				continue;
 			}
@@ -316,15 +298,13 @@ class ModuleCalendar extends Events
 				}
 			}
 
-			$arrDays[$strWeekClass][$i]['label'] = $intDay;
-			$arrDays[$strWeekClass][$i]['class'] = 'days active' . $strClass;
-			$arrDays[$strWeekClass][$i]['href'] = $this->strLink . '?day=' . $intKey;
-			$arrDays[$strWeekClass][$i]['title'] = sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
-			$arrDays[$strWeekClass][$i]['events'] = $arrEvents;
+			$arrDays[$intWeek][$i]['label'] = $intDay;
+			$arrDays[$intWeek][$i]['class'] = 'active' . $strClass;
+			$arrDays[$intWeek][$i]['href'] = $this->strLink . '?day=' . $intKey;
+			$arrDays[$intWeek][$i]['title'] = sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
+			$arrDays[$intWeek][$i]['events'] = $arrEvents;
 		}
 
 		return $arrDays;
 	}
 }
-
-class_alias(ModuleCalendar::class, 'ModuleCalendar');

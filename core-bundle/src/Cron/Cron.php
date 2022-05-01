@@ -20,23 +20,20 @@ use Psr\Log\LoggerInterface;
 
 class Cron
 {
-    public const SCOPE_WEB = 'web';
-    public const SCOPE_CLI = 'cli';
-
-    private CronJobRepository $repository;
-    private EntityManagerInterface $entityManager;
-    private ?LoggerInterface $logger;
+    final public const SCOPE_WEB = 'web';
+    final public const SCOPE_CLI = 'cli';
 
     /**
      * @var array<CronJob>
      */
     private array $cronJobs = [];
 
-    public function __construct(CronJobRepository $repository, EntityManagerInterface $entityManager, LoggerInterface $logger = null)
+    /**
+     * @param \Closure():CronJobRepository      $repository
+     * @param \Closure():EntityManagerInterface $entityManager
+     */
+    public function __construct(private \Closure $repository, private \Closure $entityManager, private LoggerInterface|null $logger = null)
     {
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
     }
 
     public function addCronJob(CronJob $cronjob): void
@@ -54,13 +51,20 @@ class Cron
             throw new \InvalidArgumentException('Invalid scope "'.$scope.'"');
         }
 
-        /** @var array<CronJob> */
+        /** @var CronJobRepository $repository */
+        $repository = ($this->repository)();
+
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = ($this->entityManager)();
+
+        /** @var array<CronJob> $cronJobsToBeRun */
         $cronJobsToBeRun = [];
+
         $now = new \DateTimeImmutable();
 
         try {
             // Lock cron table
-            $this->repository->lockTable();
+            $repository->lockTable();
 
             // Go through each cron job
             foreach ($this->cronJobs as $cron) {
@@ -71,13 +75,13 @@ class Cron
                 $lastRunDate = null;
 
                 /** @var CronJobEntity|null $lastRunEntity */
-                $lastRunEntity = $this->repository->findOneByName($name);
+                $lastRunEntity = $repository->findOneByName($name);
 
                 if (null !== $lastRunEntity) {
                     $lastRunDate = $lastRunEntity->getLastRun();
                 } else {
                     $lastRunEntity = new CronJobEntity($name);
-                    $this->entityManager->persist($lastRunEntity);
+                    $entityManager->persist($lastRunEntity);
                 }
 
                 // Check if the cron should be run
@@ -94,16 +98,14 @@ class Cron
                 $cronJobsToBeRun[] = $cron;
             }
 
-            $this->entityManager->flush();
+            $entityManager->flush();
         } finally {
-            $this->repository->unlockTable();
+            $repository->unlockTable();
         }
 
         // Execute all crons to be run
         foreach ($cronJobsToBeRun as $cron) {
-            if (null !== $this->logger) {
-                $this->logger->debug(sprintf('Executing cron job "%s"', $cron->getName()));
-            }
+            $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
             $cron($scope);
         }

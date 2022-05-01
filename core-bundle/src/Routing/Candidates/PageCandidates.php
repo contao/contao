@@ -20,16 +20,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PageCandidates extends AbstractCandidates
 {
-    private Connection $connection;
-    private PageRegistry $pageRegistry;
     private bool $initialized = false;
 
-    public function __construct(Connection $connection, PageRegistry $pageRegistry)
+    public function __construct(private Connection $connection, private PageRegistry $pageRegistry)
     {
         parent::__construct([], []);
-
-        $this->connection = $connection;
-        $this->pageRegistry = $pageRegistry;
     }
 
     public function getCandidates(Request $request): array
@@ -79,6 +74,9 @@ class PageCandidates extends AbstractCandidates
         $paths = [];
 
         foreach ($pathMap as $type => $pathRegex) {
+            // Remove existing named subpatterns
+            $pathRegex = preg_replace('/\?P<[^>]+>/', '', $pathRegex);
+
             $path = '(?P<'.$type.'>'.substr($pathRegex, 2, strrpos($pathRegex, '$') - 2).')';
             $lastParam = strrpos($path, '[^/]++');
 

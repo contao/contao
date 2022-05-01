@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to handle modules of a page layout.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleWizard extends Widget
 {
@@ -188,7 +186,7 @@ class ModuleWizard extends Widget
 			// Add modules
 			foreach ($modules as $v)
 			{
-				$options .= '<option value="' . StringUtil::specialchars($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['name'] . ' [' . $v['type'] . ']</option>';
+				$options .= '<option value="' . self::specialcharsValue($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['name'] . ' [' . $v['type'] . ']</option>';
 			}
 
 			$return .= '
@@ -200,7 +198,7 @@ class ModuleWizard extends Widget
 			// Add columns
 			foreach ($cols as $k=>$v)
 			{
-				$options .= '<option value="' . StringUtil::specialchars($k) . '"' . static::optionSelected($k, $this->varValue[$i]['col'] ?? null) . '>' . $v . '</option>';
+				$options .= '<option value="' . self::specialcharsValue($k) . '"' . static::optionSelected($k, $this->varValue[$i]['col'] ?? null) . '>' . $v . '</option>';
 			}
 
 			$return .= '
@@ -238,5 +236,3 @@ class ModuleWizard extends Widget
   <script>Backend.moduleWizard("ctrl_' . $this->strId . '")</script>';
 	}
 }
-
-class_alias(ModuleWizard::class, 'ModuleWizard');

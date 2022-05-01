@@ -22,9 +22,7 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * Usage:
  *
- *     ClassLoader::addFile('moo_mediabox', 'core/templates');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ *     TemplateLoader::addFile('moo_mediabox', 'core/templates');
  */
 class TemplateLoader
 {
@@ -77,6 +75,8 @@ class TemplateLoader
 	 */
 	public static function getPrefixedFiles($prefix)
 	{
+		$prefix = preg_quote($prefix, '/');
+
 		if (substr($prefix, -1) != '_')
 		{
 			$prefix .= '($|_)';
@@ -198,5 +198,3 @@ class TemplateLoader
 		self::$files = array();
 	}
 }
-
-class_alias(TemplateLoader::class, 'TemplateLoader');

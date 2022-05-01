@@ -14,15 +14,12 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\Database;
 use Contao\DcaExtractor;
-use Contao\SqlFileParser;
 use Contao\System;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Compares the existing database structure with the DCA table settings and
  * calculates the queries needed to update the database.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Installer extends Controller
 {
@@ -32,76 +29,6 @@ class Installer extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-	}
-
-	/**
-	 * Generate an HTML form with queries and return it as string
-	 *
-	 * @return string The form HTML markup
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	public function generateSqlForm()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using the "Contao\Installer::generateSqlForm()" method has been deprecated and will no longer work in Contao 5.0.');
-
-		$count = 0;
-		$return = '';
-		$sql_command = $this->compileCommands();
-
-		if (empty($sql_command))
-		{
-			return '';
-		}
-
-		$_SESSION['sql_commands'] = array();
-
-		$arrOperations = array
-		(
-			'CREATE'        => $GLOBALS['TL_LANG']['tl_install']['CREATE'],
-			'ALTER_ADD'     => $GLOBALS['TL_LANG']['tl_install']['ALTER_ADD'],
-			'ALTER_CHANGE'  => $GLOBALS['TL_LANG']['tl_install']['ALTER_CHANGE'],
-			'ALTER_DROP'    => $GLOBALS['TL_LANG']['tl_install']['ALTER_DROP'],
-			'DROP'          => $GLOBALS['TL_LANG']['tl_install']['DROP']
-		);
-
-		foreach ($arrOperations as $command=>$label)
-		{
-			if (\is_array($sql_command[$command]))
-			{
-				// Headline
-				$return .= '
-    <tr>
-      <td colspan="2" class="tl_col_0">' . $label . '</td>
-    </tr>';
-
-				// Check all
-				$return .= '
-    <tr>
-      <td class="tl_col_1"><input type="checkbox" id="check_all_' . $count . '" class="tl_checkbox" onclick="Backend.toggleCheckboxElements(this, \'' . strtolower($command) . '\')"></td>
-      <td class="tl_col_2"><label for="check_all_' . $count . '" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></td>
-    </tr>';
-
-				// Fields
-				foreach ($sql_command[$command] as $vv)
-				{
-					$key = md5($vv);
-					$_SESSION['sql_commands'][$key] = $vv;
-
-					$return .= '
-    <tr>
-      <td class="tl_col_1"><input type="checkbox" name="sql[]" id="sql_' . $count . '" class="tl_checkbox ' . strtolower($command) . '" value="' . $key . '"' . ((stripos($command, 'DROP') === false) ? ' checked="checked"' : '') . '></td>
-      <td class="tl_col_2"><pre><label for="sql_' . $count++ . '">' . $vv . '</label></pre></td>
-    </tr>';
-				}
-			}
-		}
-
-		return '
-<div id="sql_wrapper">
-  <table id="sql_table">' . $return . '
-  </table>
-</div>';
 	}
 
 	/**
@@ -117,29 +44,6 @@ class Installer extends Controller
 
 		$sql_current = $this->getFromDb();
 		$sql_target = $this->getFromDca();
-		$sql_legacy = $this->getFromFile();
-
-		// Manually merge the legacy definitions (see #4766)
-		if (!empty($sql_legacy))
-		{
-			foreach ($sql_legacy as $table=>$categories)
-			{
-				foreach ($categories as $category=>$fields)
-				{
-					if (\is_array($fields))
-					{
-						foreach ($fields as $name=>$sql)
-						{
-							$sql_target[$table][$category][$name] = $sql;
-						}
-					}
-					else
-					{
-						$sql_target[$table][$category] = $fields;
-					}
-				}
-			}
-		}
 
 		// Create tables
 		foreach (array_diff(array_keys($sql_target), array_keys($sql_current)) as $table)
@@ -306,38 +210,6 @@ class Installer extends Controller
 	}
 
 	/**
-	 * Get the DCA table settings from the database.sql files
-	 *
-	 * @return array An array of DCA table settings
-	 */
-	public function getFromFile()
-	{
-		$return = array();
-
-		/** @var SplFileInfo[] $files */
-		$files = System::getContainer()->get('contao.resource_finder')->findIn('config')->depth(0)->files()->name('database.sql');
-
-		foreach ($files as $file)
-		{
-			$return = array_replace_recursive($return, SqlFileParser::parse($file));
-		}
-
-		ksort($return);
-
-		// HOOK: allow third-party developers to modify the array (see #3281)
-		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromFile']) && \is_array($GLOBALS['TL_HOOKS']['sqlGetFromFile']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromFile'] as $callback)
-			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
-			}
-		}
-
-		return $return;
-	}
-
-	/**
 	 * Get the current database structure
 	 *
 	 * @return array An array of tables and fields
@@ -467,5 +339,3 @@ class Installer extends Controller
 		return $return;
 	}
 }
-
-class_alias(Installer::class, 'Database\Installer');

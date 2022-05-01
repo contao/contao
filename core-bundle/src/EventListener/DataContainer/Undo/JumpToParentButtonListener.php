@@ -29,18 +29,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class JumpToParentButtonListener
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private TranslatorInterface $translator;
-
-    public function __construct(ContaoFramework $framework, Connection $connection, TranslatorInterface $translator)
+    public function __construct(private ContaoFramework $framework, private Connection $connection, private TranslatorInterface $translator)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->translator = $translator;
     }
 
-    public function __invoke(array $row, ?string $href = '', string $label = '', string $title = '', string $icon = '', string $attributes = ''): string
+    public function __invoke(array $row, string|null $href = '', string $label = '', string $title = '', string $icon = '', string $attributes = ''): string
     {
         $table = $row['fromTable'];
         $originalRow = StringUtil::deserialize($row['data'])[$table][0];
@@ -104,7 +97,7 @@ class JumpToParentButtonListener
         return http_build_query($params, '', '&amp;', PHP_QUERY_RFC3986);
     }
 
-    private function getModuleForTable(string $table): ?array
+    private function getModuleForTable(string $table): array|null
     {
         foreach ($GLOBALS['BE_MOD'] as $group) {
             foreach ($group as $name => $config) {
@@ -117,7 +110,7 @@ class JumpToParentButtonListener
         return null;
     }
 
-    private function getParentTableForRow(string $table, array $row): ?array
+    private function getParentTableForRow(string $table, array $row): array|null
     {
         if (true === ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)) {
             return ['table' => $row['ptable'], 'id' => $row['pid']];
