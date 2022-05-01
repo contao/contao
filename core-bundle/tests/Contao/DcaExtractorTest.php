@@ -14,9 +14,6 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\DC_File;
-use Contao\DC_Folder;
-use Contao\DC_Table;
 use Contao\DcaExtractor;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -57,7 +54,7 @@ class DcaExtractorTest extends TestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-        
+
         (new Filesystem())->remove($this->getTempDir());
     }
 
