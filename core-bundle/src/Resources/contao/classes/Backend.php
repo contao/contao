@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
-use Contao\Database\Result;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -735,90 +734,6 @@ abstract class Backend extends Controller
 		}
 
 		return $arrPages;
-	}
-
-	/**
-	 * Add the file meta information to the request
-	 *
-	 * @param string  $strUuid
-	 * @param string  $strPtable
-	 * @param integer $intPid
-	 *
-	 * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.0.
-	 */
-	public static function addFileMetaInformationToRequest($strUuid, $strPtable, $intPid)
-	{
-		trigger_deprecation('contao/core-bundle', '4.4', 'Using "Contao\Backend::addFileMetaInformationToRequest()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$objFile = FilesModel::findByUuid($strUuid);
-
-		if ($objFile === null)
-		{
-			return;
-		}
-
-		$arrMeta = StringUtil::deserialize($objFile->meta);
-
-		if (empty($arrMeta))
-		{
-			return;
-		}
-
-		$objPage = null;
-
-		if ($strPtable == 'tl_article')
-		{
-			$objPage = PageModel::findOneBy(array('tl_page.id=(SELECT pid FROM tl_article WHERE id=?)'), $intPid);
-		}
-		elseif (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && \is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
-		{
-			// HOOK: support custom modules
-			foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
-			{
-				if (($val = System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
-				{
-					$objPage = $val;
-				}
-			}
-
-			if ($objPage instanceof Result && $objPage->numRows < 1)
-			{
-				return;
-			}
-
-			if (\is_object($objPage) && !($objPage instanceof PageModel))
-			{
-				$objPage = PageModel::findByPk($objPage->id);
-			}
-		}
-
-		if ($objPage === null)
-		{
-			return;
-		}
-
-		$objPage->loadDetails();
-
-		// Convert the language to a locale (see #5678)
-		$strLanguage = LocaleUtil::formatAsLocale($objPage->rootLanguage);
-
-		if (isset($arrMeta[$strLanguage]))
-		{
-			if (!empty($arrMeta[$strLanguage]['title']) && !Input::post('title'))
-			{
-				Input::setPost('title', $arrMeta[$strLanguage]['title']);
-			}
-
-			if (!empty($arrMeta[$strLanguage]['alt']) && !Input::post('alt'))
-			{
-				Input::setPost('alt', $arrMeta[$strLanguage]['alt']);
-			}
-
-			if (!empty($arrMeta[$strLanguage]['caption']) && !Input::post('caption'))
-			{
-				Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
-			}
-		}
 	}
 
 	/**

@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+### Backend::addFileMetaInformationToRequest
+
+`Backend::addFileMetaInformationToRequest()` and the corresponding `addFileMetaInformationToRequest` hook
+have been removed. Use the image handling services and the `FileMetadataEvent` instead.
+
 ### FormTextarea->value
 
 The value of the `FormTextarea` widget is no longer encoded with `specialchars()`. Encode the value in
