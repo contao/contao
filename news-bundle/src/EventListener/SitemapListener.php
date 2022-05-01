@@ -13,18 +13,14 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\EventListener;
 
 use Contao\Controller;
-use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\News;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
-use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTag;
 
 /**
- * @ServiceTag("kernel.event_listener", event=ContaoCoreEvents::SITEMAP)
- *
  * @internal
  */
 class SitemapListener
@@ -36,9 +32,6 @@ class SitemapListener
 
     public function __invoke(SitemapEvent $sitemapEvent): void
     {
-        $sitemap = $sitemapEvent->getDocument();
-        $urlSet = $sitemap->firstChild;
-
         $this->framework->initialize();
 
         /** @var NewsArchiveModel $newsArchiveModel */

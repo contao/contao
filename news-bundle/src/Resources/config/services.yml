@@ -40,6 +40,8 @@ services:
         class: Contao\NewsBundle\EventListener\SitemapListener
         arguments:
             - '@contao.framework'
+        tags:
+            - kernel.event_listener
 
     contao_news.picker.news_provider:
         class: Contao\NewsBundle\Picker\NewsPickerProvider
