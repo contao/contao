@@ -15,5 +15,3 @@ $GLOBALS['TL_DCA']['tl_test_with_file_driver'] = [
         ],
     ],
 ];
-
-?>

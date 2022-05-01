@@ -10,5 +10,3 @@ $GLOBALS['TL_DCA']['tl_test_without_sql_config'] = [
         ],
     ],
 ];
-
-?>

@@ -16,5 +16,3 @@ $GLOBALS['TL_DCA']['tl_test_with_non_database_assisted_folder_driver'] = [
         ],
     ],
 ];
-
-?>

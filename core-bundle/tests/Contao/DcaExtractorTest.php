@@ -18,7 +18,6 @@ use Contao\DcaExtractor;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Webmozart\PathUtil\Path;
 
@@ -34,16 +33,11 @@ class DcaExtractorTest extends TestCase
             ->willReturn([])
         ;
 
-        $tempDir = $this->getTempDir();
         $fixturesDir = $this->getFixturesDir();
-
         $finder = new ResourceFinder(Path::join($fixturesDir, 'vendor/contao/test-bundle/Resources/contao'));
         $locator = new FileLocator(Path::join($fixturesDir, 'vendor/contao/test-bundle/Resources/contao'));
 
-        $container = new ContainerBuilder();
-        $container->setParameter('kernel.debug', false);
-        $container->setParameter('kernel.project_dir', $tempDir);
-        $container->setParameter('kernel.cache_dir', Path::join($tempDir, 'var/cache'));
+        $container = $this->getContainerWithContaoConfiguration();
         $container->set('database_connection', $connection);
         $container->set('contao.resource_finder', $finder);
         $container->set('contao.resource_locator', $locator);
@@ -61,6 +55,7 @@ class DcaExtractorTest extends TestCase
     public function testDoesCreateTableWithSqlConfig(): void
     {
         $extractor = DcaExtractor::getInstance('tl_test_with_sql_config');
+
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_sql_config']));
         $this->assertTrue($extractor->isDbTable());
         $this->assertSame($extractor->getKeys(), ['id' => 'primary']);
@@ -70,6 +65,7 @@ class DcaExtractorTest extends TestCase
     public function testDoesNotCreateTableWithoutSqlConfig(): void
     {
         $extractor = DcaExtractor::getInstance('tl_test_without_sql_config');
+
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_without_sql_config']));
         $this->assertFalse($extractor->isDbTable());
         $this->assertSame($extractor->getKeys(), []);
@@ -79,6 +75,7 @@ class DcaExtractorTest extends TestCase
     public function testDoesCreateTableWithSqlConfigWithoutDriver(): void
     {
         $extractor = DcaExtractor::getInstance('tl_test_with_sql_config_without_driver');
+
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_sql_config_without_driver']));
         $this->assertTrue($extractor->isDbTable());
         $this->assertSame($extractor->getKeys(), ['id' => 'primary']);
@@ -88,6 +85,7 @@ class DcaExtractorTest extends TestCase
     public function testDoesNotCreateTableWithFileDriver(): void
     {
         $extractor = DcaExtractor::getInstance('tl_test_with_file_driver');
+
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_file_driver']));
         $this->assertFalse($extractor->isDbTable());
         $this->assertSame($extractor->getKeys(), []);
@@ -97,6 +95,7 @@ class DcaExtractorTest extends TestCase
     public function testDoesCreateTableWithDatabaseAssistedFolderDriver(): void
     {
         $extractor = DcaExtractor::getInstance('tl_test_with_database_assisted_folder_driver');
+
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_database_assisted_folder_driver']));
         $this->assertTrue($extractor->isDbTable());
         $this->assertSame($extractor->getKeys(), ['id' => 'primary']);
@@ -106,6 +105,7 @@ class DcaExtractorTest extends TestCase
     public function testDoesNotCreateTableWithNonDatabaseAssistedFolderDriver(): void
     {
         $extractor = DcaExtractor::getInstance('tl_test_with_non_database_assisted_folder_driver');
+
         $this->assertTrue(isset($GLOBALS['TL_DCA']['tl_test_with_non_database_assisted_folder_driver']));
         $this->assertFalse($extractor->isDbTable());
         $this->assertSame($extractor->getKeys(), []);
