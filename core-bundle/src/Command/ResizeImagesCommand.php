@@ -99,7 +99,7 @@ class ResizeImagesCommand extends Command
         $concurrent = (float) $input->getOption('concurrent');
 
         if (false !== $input->getOption('throttle')) {
-            trigger_deprecation('contao/core-bundle', '4.9', 'Using the throttle option is deprecated and will no longer work in Contao 5.0. Use the concurrent option instead.', E_USER_DEPRECATED);
+            trigger_deprecation('contao/core-bundle', '4.9', 'Using the throttle option is deprecated and will no longer work in Contao 5.0. Use the concurrent option instead.');
             $this->io->warning('Using the throttle option is deprecated, use the concurrent option instead.');
 
             $throttle = (float) $input->getOption('throttle');

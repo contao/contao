@@ -25,11 +25,14 @@ use Doctrine\DBAL\Result;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TablePickerProviderTest extends ContaoTestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -42,6 +45,24 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider = $this->createTableProvider();
 
         $this->assertSame('tablePicker', $provider->getName());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSupportsLegacyContext(): void
+    {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: The usage of a non fully qualified class name as DataContainer name has been deprecated %s.');
+
+        // Load the class to ensure that the global DC_Table alias is set
+        class_exists(DC_Table::class);
+
+        $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Table';
+        $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
+
+        $provider = $this->createTableProvider($this->mockFrameworkWithDcaLoader('tl_foobar'));
+
+        $this->assertTrue($provider->supportsContext('dc.tl_foobar'));
     }
 
     public function testSupportsContext(): void
@@ -61,8 +82,13 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertFalse($provider->supportsContext('foobar'));
     }
 
+    /**
+     * @group legacy
+     */
     public function testDoesNotSupportContextWithoutDataContainer(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.9: The usage of a non fully qualified class name as DataContainer name has been deprecated %s.');
+
         $GLOBALS['TL_DCA']['tl_foobar']['config']['dataContainer'] = 'Foobar';
         $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
 

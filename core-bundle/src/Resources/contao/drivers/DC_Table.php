@@ -1879,6 +1879,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							if ($ajaxId == $thisId)
 							{
+								if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+								{
+									$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
+								}
+
 								return $arrAjax[$thisId] . '<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">';
 							}
 
@@ -4357,13 +4362,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->import($strClass);
 					$options_callback = $this->$strClass->$strMethod($this);
 
-					$_v = $options_callback[$_v];
+					$_v = $options_callback[$_v] ?? '-';
 				}
 				elseif (\is_callable($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback'] ?? null))
 				{
 					$options_callback = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback']($this);
 
-					$_v = $options_callback[$_v];
+					$_v = $options_callback[$_v] ?? '-';
 				}
 
 				// Add the sorting field

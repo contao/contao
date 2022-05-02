@@ -219,6 +219,7 @@ class Calendar extends Frontend
 
 		/** @var RequestStack $requestStack */
 		$requestStack = System::getContainer()->get('request_stack');
+		$currentRequest = $requestStack->getCurrentRequest();
 
 		$origObjPage = $GLOBALS['objPage'] ?? null;
 
@@ -238,7 +239,7 @@ class Calendar extends Frontend
 					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
 
 					// Push a new request to the request stack (#3856)
-					$request = Request::create($event['link']);
+					$request = null !== $currentRequest ? $this->createSubRequest($event['link'], $currentRequest) : Request::create($event['link']);
 					$request->attributes->set('_scope', 'frontend');
 					$requestStack->push($request);
 
@@ -637,6 +638,36 @@ class Calendar extends Frontend
 		}
 
 		return self::$arrPageCache[$intPageId];
+	}
+
+	/**
+	 * Creates a sub request for the given URI.
+	 */
+	private function createSubRequest(string $uri, Request $request): Request
+	{
+		$cookies = $request->cookies->all();
+		$server = $request->server->all();
+
+		unset($server['HTTP_IF_MODIFIED_SINCE'], $server['HTTP_IF_NONE_MATCH']);
+
+		$subRequest = Request::create($uri, 'get', array(), $cookies, array(), $server);
+
+		if (null !== ($session = $request->getSession()))
+		{
+			$subRequest->setSession($session);
+		}
+
+		if ($request->get('_format'))
+		{
+			$subRequest->attributes->set('_format', $request->get('_format'));
+		}
+
+		if ($request->getDefaultLocale() !== $request->getLocale())
+		{
+			$subRequest->setLocale($request->getLocale());
+		}
+
+		return $subRequest;
 	}
 }
 
