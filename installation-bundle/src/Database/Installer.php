@@ -250,7 +250,11 @@ class Installer
                 }
             }
 
-            $collate = $table->getOption('collate');
+            if ($table->hasOption('collation')) {
+                $collate = $table->getOption('collation');
+            } else {
+                $collate = $table->getOption('collate');
+            }
 
             if ($tableOptions['Collation'] !== $collate) {
                 $charset = $table->getOption('charset');
