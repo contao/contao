@@ -299,7 +299,15 @@ class Ajax extends Backend
 					}
 					elseif ($intId > 0 && $this->Database->tableExists($dc->table))
 					{
-						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+						$idField = 'id';
+
+						// ID is file path for DC_Folder
+						if ($dc instanceof DC_Folder)
+						{
+							$idField = 'path';
+						}
+
+						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
 												 ->execute($intId);
 
 						// The record does not exist
