@@ -43,6 +43,15 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         return $this->getResponse($template, $model, $request);
     }
 
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
+
+        return $services;
+    }
+
     protected function getBackendWildcard(ModuleModel $module): Response
     {
         $context = [
