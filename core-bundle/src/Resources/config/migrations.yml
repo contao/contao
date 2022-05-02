@@ -17,6 +17,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+            - '@contao.image.sizes'
 
     contao.migration.version_403.version_430_update:
         class: Contao\CoreBundle\Migration\Version403\Version430Update
