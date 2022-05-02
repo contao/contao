@@ -187,35 +187,6 @@ abstract class Backend extends Controller
 	}
 
 	/**
-	 * Return a list of TinyMCE templates as JSON string
-	 *
-	 * @return string
-	 */
-	public static function getTinyTemplates()
-	{
-		$strDir = System::getContainer()->getParameter('contao.upload_path') . '/tiny_templates';
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		if (!is_dir($projectDir . '/' . $strDir))
-		{
-			return '';
-		}
-
-		$arrFiles = array();
-		$arrTemplates = Folder::scan($projectDir . '/' . $strDir);
-
-		foreach ($arrTemplates as $strFile)
-		{
-			if (strncmp('.', $strFile, 1) !== 0 && is_file($projectDir . '/' . $strDir . '/' . $strFile))
-			{
-				$arrFiles[] = '{ title: "' . $strFile . '", url: "' . $strDir . '/' . $strFile . '" }';
-			}
-		}
-
-		return implode(",\n", $arrFiles) . "\n";
-	}
-
-	/**
 	 * Add the request token to the URL
 	 *
 	 * @param string  $strRequest
