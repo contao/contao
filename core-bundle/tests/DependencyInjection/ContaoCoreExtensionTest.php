@@ -888,7 +888,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $params ??= [
             'contao' => [
-                'encryption_key' => 'foobar',
                 'localconfig' => ['foo' => 'bar'],
             ],
         ];
