@@ -14,10 +14,13 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\Image;
 use Contao\Input;
 use Contao\Message;
+use Contao\StringUtil;
 use Contao\StyleSheets;
 use Contao\System;
+use Contao\Versions;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 $GLOBALS['TL_DCA']['tl_style'] = array
