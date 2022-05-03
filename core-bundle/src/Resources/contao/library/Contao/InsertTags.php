@@ -18,6 +18,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * A static class to replace insert tags
@@ -550,13 +551,27 @@ class InsertTags extends Controller
 
 									if ($objNext instanceof PageModel)
 									{
-										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										try
+										{
+											$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										}
+										catch (ExceptionInterface $e)
+										{
+											System::getContainer()->get('monolog.logger.contao.error')->error('Could not generate URL for page ID ' . $objNext->id);
+										}
 										break;
 									}
 									// no break
 
 								default:
-									$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									try
+									{
+										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									}
+									catch (ExceptionInterface $e)
+									{
+										System::getContainer()->get('monolog.logger.contao.error')->error('Could not generate URL for page ID ' . $objNextPage->id);
+									}
 									break;
 							}
 						}
@@ -647,8 +662,17 @@ class InsertTags extends Controller
 
 					/** @var PageModel $objPid */
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-					$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
 					$strTarget = \in_array('blank', \array_slice($elements, 2), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
+					$strUrl = '';
+
+					try
+					{
+						$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+					}
+					catch (ExceptionInterface $e)
+					{
+						System::getContainer()->get('monolog.logger.contao.error')->error('Could not generate URL for page ID ' . $objPid->id);
+					}
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
