@@ -555,9 +555,9 @@ class InsertTags extends Controller
 										{
 											$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
 										}
-										catch (ExceptionInterface $e)
+										catch (ExceptionInterface $exception)
 										{
-											System::getContainer()->get('monolog.logger.contao.error')->error('Could not generate URL for page ID ' . $objNext->id);
+											System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objNext->id . ': ' . $exception->getMessage());
 										}
 										break;
 									}
@@ -568,9 +568,9 @@ class InsertTags extends Controller
 									{
 										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
 									}
-									catch (ExceptionInterface $e)
+									catch (ExceptionInterface $exception)
 									{
-										System::getContainer()->get('monolog.logger.contao.error')->error('Could not generate URL for page ID ' . $objNextPage->id);
+										System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objNextPage->id . ': ' . $exception->getMessage());
 									}
 									break;
 							}
@@ -669,9 +669,9 @@ class InsertTags extends Controller
 					{
 						$strUrl = \in_array('absolute', \array_slice($elements, 2), true) || \in_array('absolute', $flags, true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
 					}
-					catch (ExceptionInterface $e)
+					catch (ExceptionInterface $exception)
 					{
-						System::getContainer()->get('monolog.logger.contao.error')->error('Could not generate URL for page ID ' . $objPid->id);
+						System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objPid->id . ': ' . $exception->getMessage());
 					}
 
 					// Replace the tag
