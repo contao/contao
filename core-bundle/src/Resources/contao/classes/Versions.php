@@ -788,7 +788,7 @@ class Versions extends Controller
 			}
 		}
 
-		return ltrim($request->getPathInfo(), '/').'?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
+		return ltrim($request->getPathInfo(), '/') . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 	}
 
 	/**
