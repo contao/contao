@@ -45,7 +45,7 @@ class SitemapController extends AbstractController
         $this->initializeContaoFramework();
 
         $pageModel = $this->getContaoAdapter(PageModel::class);
-        $rootPages = $pageModel->findPublishedRootPages(['dns' => $request->server->get('HTTP_HOST')]);
+        $rootPages = $pageModel->findPublishedRootPages(['dns' => $request->getHost()]);
 
         if (null === $rootPages) {
             // We did not find root pages by matching host name, let's fetch those that do not have any domain configured
