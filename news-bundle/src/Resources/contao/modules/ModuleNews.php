@@ -99,7 +99,7 @@ abstract class ModuleNews extends Module
 		if ($objArticle->teaser)
 		{
 			$objTemplate->hasTeaser = true;
-			$objTemplate->teaser = StringUtil::toHtml5($objArticle->teaser);
+			$objTemplate->teaser = $objArticle->teaser;
 			$objTemplate->teaser = StringUtil::encodeEmail($objTemplate->teaser);
 		}
 

@@ -517,9 +517,6 @@ class Calendar extends Frontend
 		$arrEvent['endDate'] = $intEnd;
 		$arrEvent['isRepeated'] = $isRepeated;
 
-		// Clean the RTE output
-		$arrEvent['teaser'] = StringUtil::toHtml5($objEvent->teaser);
-
 		// Reset the enclosures (see #5685)
 		$arrEvent['enclosure'] = array();
 		$arrEvent['media:content'] = array();

@@ -265,8 +265,7 @@ class ModuleEventReader extends Events
 		if ($objEvent->teaser)
 		{
 			$objTemplate->hasTeaser = true;
-			$objTemplate->teaser = StringUtil::toHtml5($objEvent->teaser);
-			$objTemplate->teaser = StringUtil::encodeEmail($objTemplate->teaser);
+			$objTemplate->teaser = StringUtil::encodeEmail($objEvent->teaser);
 		}
 
 		// Display the "read more" button for external/article links
