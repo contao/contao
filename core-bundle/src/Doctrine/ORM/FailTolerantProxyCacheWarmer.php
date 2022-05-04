@@ -37,7 +37,7 @@ class FailTolerantProxyCacheWarmer implements CacheWarmerInterface
 
     public function isOptional(): bool
     {
-        return (bool) $this->inner->isOptional();
+        return $this->inner->isOptional();
     }
 
     public function warmUp($cacheDir): void

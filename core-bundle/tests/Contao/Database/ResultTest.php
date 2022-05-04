@@ -44,7 +44,6 @@ class ResultTest extends TestCase
                 $this->assertNull($result->modifiedKey);
                 $result->modifiedKey = 'value';
                 $this->assertSame(['modifiedKey' => 'value'], $result->row());
-                $this->assertSame(['modifiedKey' => 'value'], $result->row(false));
                 $this->assertSame(['value'], $result->row(true));
                 $this->assertTrue(isset($result->modifiedKey));
                 $this->assertSame('value', $result->modifiedKey);
