@@ -103,6 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_page.robotsTxt.1">
         <source>Here you can enter custom robots.txt content. It may be extended automatically by extensions.</source>
+        <target>Šeit varat ievadīt pielāgotu robots.txt saturu. Tas var tikt automātiski papildināts ar paplašinājumiem.</target>
       </trans-unit>
       <trans-unit id="tl_page.dns.0">
         <source>Domain name</source>
@@ -240,6 +241,7 @@
       </trans-unit>
       <trans-unit id="tl_page.cache.0">
         <source>Shared cache timeout</source>
+        <target>Koplietotās kešatmiņas noildze</target>
       </trans-unit>
       <trans-unit id="tl_page.cache.1">
         <source>The period after which the page should no longer be considered fresh by a shared cache.</source>
@@ -253,9 +255,11 @@
       </trans-unit>
       <trans-unit id="tl_page.clientCache.0">
         <source>Private cache timeout</source>
+        <target>Privātās kešatmiņas noildze</target>
       </trans-unit>
       <trans-unit id="tl_page.clientCache.1">
         <source>The period after which the page should no longer be considered fresh by a private cache.</source>
+        <target>Periods, pēc kura privātā kešatmiņā lapa vairs nav uzskatāma par svaigu.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeChmod.0">
         <source>Assign access rights</source>
@@ -366,6 +370,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja vēlaties novērst lapas parādīšanu vietnē pirms noteikta datuma/laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet šo lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
@@ -373,6 +378,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Ja vēlaties novērst lapas parādīšanu vietnē pēc noteikta datuma/laika, varat to ievadīt šeit. Pretējā gadījumā atstājiet šo lauku tukšu.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -388,6 +394,7 @@
       </trans-unit>
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
+        <target>Lūdzu, izvēlieties lapu, uz kuru dalībnieki tiks novirzīti, lai iestatītu divu faktoru autentifikāciju.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>

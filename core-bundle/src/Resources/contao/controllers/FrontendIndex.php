@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\Model\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -221,7 +222,8 @@ class FrontendIndex extends Frontend
 		{
 			/** @var PageRoot $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['root']();
-			$objHandler->generate($objPage->id);
+
+			throw new ResponseException($objHandler->getResponse($objPage->id));
 		}
 
 		// Set the admin e-mail address

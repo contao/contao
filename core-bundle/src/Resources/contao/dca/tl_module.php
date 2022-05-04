@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ptable'                      => 'tl_theme',
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'name',

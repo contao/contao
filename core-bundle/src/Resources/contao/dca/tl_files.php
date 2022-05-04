@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Folder',
+		'dataContainer'               => Contao\DC_Folder::class,
 		'enableVersioning'            => true,
 		'databaseAssisted'            => true,
 		'onload_callback' => array

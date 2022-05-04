@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.sizes.1">
         <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>Aqui pode definir a largura de disposição pretendida da imagem, o tamanho real deve ser definido através do CSS. Exemplo: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.densities.0">
         <source>Pixel densities/scale factors</source>
@@ -86,9 +87,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.0">
         <source>Enable lazy loading</source>
+        <target>Activar lazy loading</target>
       </trans-unit>
       <trans-unit id="tl_image_size.lazyLoading.1">
         <source>Defer loading the image until it is scrolled into the viewport.</source>
+        <target>Adiar o carregamento da imagem até que esta seja rolada para o viewport.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.tstamp.0">
         <source>Revision date</source>
@@ -108,6 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.loading_legend">
         <source>Loading options</source>
+        <target>Opções de carregamento</target>
       </trans-unit>
       <trans-unit id="tl_image_size.expert_legend">
         <source>Expert settings</source>
@@ -151,9 +155,11 @@
       </trans-unit>
       <trans-unit id="tl_image_size.webp:webp,png">
         <source>WEBP to PNG</source>
+        <target>WEBP para PNG</target>
       </trans-unit>
       <trans-unit id="tl_image_size.webp:webp,jpg">
         <source>WEBP to JPG</source>
+        <target>WEBP para JPG</target>
       </trans-unit>
       <trans-unit id="tl_image_size.new.0">
         <source>New</source>

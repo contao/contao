@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ctable'                      => array('tl_faq'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,

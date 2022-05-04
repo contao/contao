@@ -87,7 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.folderUrl.1">
         <source>Here you can enable folder-style page aliases like &lt;em&gt;docs/install/download.html&lt;/em&gt; instead of &lt;em&gt;docs-install-download.html&lt;/em&gt;.</source>
-        <target>Hier können Sie Ordnerstrukturen in Seitenaliasen aktivieren (z.B. &lt;em&gt;docs/install/download.html&lt;/em&gt; anstatt &lt;em&gt;docs-install-download.html&lt;/em&gt;).</target>
+        <target>Hier können Sie Ordnerstrukturen in Seitenaliasen aktivieren (z. B. &lt;em&gt;docs/install/download.html&lt;/em&gt; anstatt &lt;em&gt;docs-install-download.html&lt;/em&gt;).</target>
       </trans-unit>
       <trans-unit id="tl_settings.allowedTags.0">
         <source>Allowed HTML tags</source>

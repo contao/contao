@@ -15,7 +15,7 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ptable'                      => 'tl_image_size',
 		'enableVersioning'            => true,
 		'onload_callback' => array

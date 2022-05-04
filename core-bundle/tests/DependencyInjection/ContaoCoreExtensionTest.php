@@ -3493,6 +3493,9 @@ class ContaoCoreExtensionTest extends TestCase
                         ],
                         'default_http_client_options' => [
                             'proxy' => 'http://localhost:7080',
+                            'headers' => [
+                                'Foo' => 'Bar',
+                            ],
                         ],
                     ],
                 ],
@@ -3507,7 +3510,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('database_connection'),
                 new Reference('contao.framework'),
                 ['https://example.com'],
-                ['proxy' => 'http://localhost:7080'],
+                ['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']],
             ],
             $definition->getArguments()
         );
