@@ -191,9 +191,13 @@ abstract class Backend extends Controller
 	 * Return a list of TinyMCE templates as JSON string
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
 	 */
 	public static function getTinyTemplates()
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Backend::getTinyTemplates()" has been deprecated and will no longer work in Contao 5.0.');
+
 		$strDir = System::getContainer()->getParameter('contao.upload_path') . '/tiny_templates';
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
