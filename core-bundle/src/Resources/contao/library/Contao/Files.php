@@ -156,9 +156,9 @@ class Files
 	{
 		$this->validate($strFile);
 
-		if ($strMode[0] !== 'r' && \dirname($strFile) && \dirname($strFile) !== '.')
+		if ($strMode[0] != 'r' && ($strPath = \dirname($strFile)) && $strPath != '.')
 		{
-			$this->mkdir(\dirname($strFile));
+			$this->mkdir($strPath);
 		}
 
 		return fopen($this->strRootDir . '/' . $strFile, $strMode);
