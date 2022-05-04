@@ -208,7 +208,7 @@ class MemberModel extends Model
 	 */
 	public static function findUnactivatedByEmail($strEmail, array $arrOptions=array())
 	{
-		if (func_num_args() > 1)
+		if (\func_num_args() > 1)
 		{
 			trigger_deprecation('contao/core-bundle', '4.9', 'Calling MemberModel::findExpiredRegistrations() with 2 arguments has been deprecated and will no longer work in Contao 5.0. Do not pass $arrOptions as the 2nd argument anymore.');
 		}
@@ -245,7 +245,7 @@ class MemberModel extends Model
 	 */
 	public static function findExpiredRegistrations(array $arrOptions=array())
 	{
-		if (func_num_args() > 0)
+		if (\func_num_args() > 0)
 		{
 			trigger_deprecation('contao/core-bundle', '4.9', 'Calling MemberModel::findExpiredRegistrations() with an argument has been deprecated and will no longer work in Contao 5.0. Do not pass $arrOptions as an argument anymore');
 		}
