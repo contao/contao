@@ -109,7 +109,7 @@ services:
         arguments:
             - '@database_connection'
 
-    contao.migration.version_413.text_fields:
+    contao.migration.version_413.rel_lightbox:
         class: Contao\CoreBundle\Migration\Version413\RelLightboxMigration
         arguments:
             - '@database_connection'
