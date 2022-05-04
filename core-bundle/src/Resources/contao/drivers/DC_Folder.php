@@ -495,7 +495,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Build the tree
 		$return = $this->panel() . Message::generate() . '
 <div id="tl_buttons">' . ((Input::get('act') == 'select') ? '
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '') . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_CREATE, $subject)) ? '
+<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '') . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_VIEW_CREATE, $subject)) ? '
 <a href="' . $this->addToUrl($hrfNew) . '" class="' . $clsNew . '" title="' . StringUtil::specialchars($ttlNew) . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $lblNew . '</a>
 <a href="' . $this->addToUrl('&amp;act=paste&amp;mode=move') . '" class="header_new" title="' . StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]) . '" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG'][$this->strTable]['move'][0] . '</a>  ' : '') . ($blnClipboard ? '
 <a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons()) . '
@@ -653,7 +653,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -707,7 +707,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new InternalServerErrorException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_MOVE, new DataContainerSubject($this->strTable, $source));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_MOVE, new DataContainerSubject($this->strTable, $source));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -864,7 +864,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new InternalServerErrorException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -1024,7 +1024,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('File or folder "' . $source . '" is not mounted or cannot be found.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_DELETE, new DataContainerSubject($this->strTable, $source));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_DELETE, new DataContainerSubject($this->strTable, $source));
 
 		// Call the ondelete_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['ondelete_callback'] ?? null))
@@ -1345,7 +1345,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('File or folder "' . $this->intId . '" is not mounted or cannot be found.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$objModel = null;
 		$objVersions = null;
@@ -1675,7 +1675,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				try
 				{
-					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_EDIT, new DataContainerSubject($this->strTable, $id));
+					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $id));
 				}
 				catch (AccessDeniedException)
 				{
@@ -1976,7 +1976,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$objFile = new File($this->intId);
 
