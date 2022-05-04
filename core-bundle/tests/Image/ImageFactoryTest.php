@@ -883,7 +883,8 @@ class ImageFactoryTest extends TestCase
         }
 
         if (null === $uploadDir) {
-            $uploadDir = Path::join($this->getTempDir(), 'images');
+            // Do not use Path::join here (see #4596)
+            $uploadDir = $this->getTempDir().'/images';
         }
 
         return new ImageFactory(

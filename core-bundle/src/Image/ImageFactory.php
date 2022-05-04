@@ -26,6 +26,7 @@ use Contao\ImageSizeModel;
 use Imagine\Image\ImagineInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Webmozart\PathUtil\Path;
 
 class ImageFactory implements ImageFactoryInterface
 {
@@ -301,7 +302,7 @@ class ImageFactory implements ImageFactoryInterface
      */
     private function createImportantPart(ImageInterface $image): ?ImportantPart
     {
-        if (0 !== strncmp($image->getPath(), $this->uploadDir.'/', \strlen($this->uploadDir) + 1)) {
+        if (!Path::isBasePath($this->uploadDir, $image->getPath())) {
             return null;
         }
 
