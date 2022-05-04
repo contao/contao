@@ -57,7 +57,7 @@ class RobotsTxtController
 
         /** @var PageModel|null $rootPage */
         $rootPage = $pageModel->findPublishedFallbackByHostname(
-            $request->server->get('HTTP_HOST'),
+            $request->getHost(),
             ['fallbackToEmpty' => true]
         );
 
