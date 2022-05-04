@@ -92,7 +92,7 @@ class ModuleRegistration extends Module
 		$strFormId = 'tl_registration_' . $this->id;
 
 		// Remove expired registration (#3709)
-		if (Input::post('FORM_SUBMIT') == $strFormId && ($email = Input::post('email')) && null !== ($member = MemberModel::findExpiredRegistrationByEmail($email)))
+		if (Input::post('FORM_SUBMIT') == $strFormId && ($email = Input::post('email')) && ($member = MemberModel::findExpiredRegistrationByEmail($email)))
 		{
 			$member->delete();
 		}
