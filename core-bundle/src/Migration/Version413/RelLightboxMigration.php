@@ -67,13 +67,7 @@ class RelLightboxMigration extends AbstractMigration
             );
 
             foreach ($values as $id => $value) {
-                $value = preg_replace(
-                    '/ rel="lightbox(\[([^\]]+)\])?"/',
-                    ' data-lightbox="$2"',
-                    $value,
-                    -1,
-                    $count
-                );
+                $value = preg_replace('/ rel="lightbox(\[([^\]]+)\])?"/', ' data-lightbox="$2"', $value, -1, $count);
 
                 if ($count) {
                     $this->connection->update($table, [$column => $value], ['id' => (int) $id]);
