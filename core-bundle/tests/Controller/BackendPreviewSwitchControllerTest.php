@@ -20,6 +20,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ForwardCompatibility\DriverStatement;
+use Doctrine\DBAL\Platforms\MySqlPlatform;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -374,6 +375,11 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $connection
             ->method('executeQuery')
             ->willReturn($resultStatement)
+        ;
+
+        $connection
+            ->method('getDatabasePlatform')
+            ->willReturn(new MySqlPlatform())
         ;
 
         return $connection;
