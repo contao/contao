@@ -206,13 +206,8 @@ class MemberModel extends Model
 	 *
 	 * @return static The model or null if there is no member
 	 */
-	public static function findUnactivatedByEmail($strEmail, array $arrOptions=array())
+	public static function findUnactivatedByEmail($strEmail)
 	{
-		if (\func_num_args() > 1)
-		{
-			trigger_deprecation('contao/core-bundle', '4.9', 'Calling MemberModel::findExpiredRegistrations() with 2 arguments has been deprecated and will no longer work in Contao 5.0. Do not pass $arrOptions as the 2nd argument anymore.');
-		}
-
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
@@ -243,13 +238,8 @@ class MemberModel extends Model
 	 *
 	 * @return Collection|MemberModel[]|MemberModel|null A collection of models or null if there are no expired registrations
 	 */
-	public static function findExpiredRegistrations(array $arrOptions=array())
+	public static function findExpiredRegistrations()
 	{
-		if (\func_num_args() > 0)
-		{
-			trigger_deprecation('contao/core-bundle', '4.9', 'Calling MemberModel::findExpiredRegistrations() with an argument has been deprecated and will no longer work in Contao 5.0. Do not pass $arrOptions as an argument anymore');
-		}
-
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
