@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array

@@ -47,7 +47,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.0
+                  php-version: 7.4 # Keep running this with PHP 7, otherwise there will be PHP 8 CS fixes
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   tools: flex
                   coverage: none
@@ -208,6 +208,10 @@ jobs:
                           if ("contao/installation-bundle" !== $data["name"]) {
                               $data["repositories"][1]["type"] = "path";
                               $data["repositories"][1]["url"] = "../installation-bundle";
+                          }
+                          if ("contao/test-case" !== $data["name"]) {
+                              $data["repositories"][2]["type"] = "path";
+                              $data["repositories"][2]["url"] = "../test-case";
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '

@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ctable'                      => array('tl_calendar_events'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,

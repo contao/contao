@@ -15,7 +15,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Folder',
+		'dataContainer'               => Contao\DC_Folder::class,
 		'closed'                      => true,
 		'onload_callback' => array
 		(

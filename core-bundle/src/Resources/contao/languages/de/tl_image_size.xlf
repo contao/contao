@@ -55,7 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.densities.1">
         <source>Here you can define the pixel densities (e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) or width descriptors (e.g. &lt;em&gt;100w, 200w&lt;/em&gt;).</source>
-        <target>Hier können Sie die Pixeldichten (z.B. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) oder die Breitenbeschreibungen (z.B. &lt;em&gt;100w, 200w&lt;/em&gt;) definieren.</target>
+        <target>Hier können Sie die Pixeldichten (z. B. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) oder die Breitenbeschreibungen (z. B. &lt;em&gt;100w, 200w&lt;/em&gt;) definieren.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.cssClass.0">
         <source>CSS classes</source>

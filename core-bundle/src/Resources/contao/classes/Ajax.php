@@ -293,13 +293,21 @@ class Ajax extends Backend
 				// Load the value
 				if (Input::get('act') != 'overrideAll')
 				{
-					if ($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] == 'File')
+					if (is_a($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'], DC_File::class, true))
 					{
 						$varValue = Config::get($strField);
 					}
 					elseif ($intId > 0 && $this->Database->tableExists($dc->table))
 					{
-						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+						$idField = 'id';
+
+						// ID is file path for DC_Folder
+						if ($dc instanceof DC_Folder)
+						{
+							$idField = 'path';
+						}
+
+						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
 												 ->execute($intId);
 
 						// The record does not exist
@@ -417,20 +425,41 @@ class Ajax extends Backend
 					if (Input::get('act') == 'editAll')
 					{
 						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
+
+						$objVersions = new Versions($dc->table, $this->strAjaxId);
+						$objVersions->initialize();
+
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
+
+						$objVersions->create();
 
 						if (Input::post('load'))
 						{
 							throw new ResponseException($this->convertToResponse($dc->editAll($this->strAjaxId, Input::post('id'))));
 						}
+
+						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+						{
+							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
+						}
 					}
 					else
 					{
+						$objVersions = new Versions($dc->table, $dc->id);
+						$objVersions->initialize();
+
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
+
+						$objVersions->create();
 
 						if (Input::post('load'))
 						{
 							throw new ResponseException($this->convertToResponse($dc->edit(false, Input::post('id'))));
+						}
+
+						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+						{
+							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 						}
 					}
 				}

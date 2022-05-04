@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'ptable'                      => 'tl_newsletter_channel',
 		'enableVersioning'            => true,
 		'onload_callback' => array

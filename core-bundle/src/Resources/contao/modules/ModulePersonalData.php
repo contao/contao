@@ -316,16 +316,10 @@ class ModulePersonalData extends Module
 		}
 
 		// Save the model
-		if ($blnModified)
+		if ($blnModified && !$doNotSubmit)
 		{
 			$objMember->tstamp = time();
 			$objMember->save();
-
-			// Create a new version
-			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
-			{
-				$objVersions->create();
-			}
 		}
 
 		$this->Template->hasError = $doNotSubmit;
@@ -358,6 +352,12 @@ class ModulePersonalData extends Module
 						$callback($this->User, $this);
 					}
 				}
+			}
+
+			// Create a new version
+			if ($blnModified && $GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'])
+			{
+				$objVersions->create();
 			}
 
 			// Check whether there is a jumpTo page

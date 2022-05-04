@@ -2,7 +2,7 @@
 
 $GLOBALS['TL_DCA']['tl_test'] = [
     'config' => [
-        'dataContainer' => 'Table',
+        'dataContainer' => Contao\DC_Table::class,
         'sql' => [
             'keys' => [
                 'id' => 'primary',

@@ -31,7 +31,7 @@ class PageError401 extends Frontend
 	 */
 	public function generate($objRootPage=null)
 	{
-		@trigger_error('Using PageError401::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageError401::getResponse() method instead.');
+		@trigger_error('Using PageError401::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageError401::getResponse() method instead.', E_USER_DEPRECATED);
 
 		/** @var PageModel $objPage */
 		global $objPage;
@@ -126,7 +126,7 @@ class PageError401 extends Frontend
 			}
 
 			// Add the referer so the login module can redirect back
-			$url = $objNextPage->getAbsoluteUrl() . '?redirect=' . Environment::get('base') . Environment::get('request');
+			$url = $objNextPage->getAbsoluteUrl() . '?redirect=' . rawurlencode(Environment::get('base') . Environment::get('request'));
 
 			/** @var UriSigner $uriSigner */
 			$uriSigner = System::getContainer()->get('uri_signer');

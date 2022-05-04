@@ -13,7 +13,7 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => Contao\DC_Table::class,
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'ctable'                      => array('tl_form_field'),
