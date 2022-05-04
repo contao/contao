@@ -76,7 +76,7 @@ class FragmentHandler extends BaseFragmentHandler
 
         $renderer = $config->getRenderer();
 
-        if ($this->containsNonScalars($uri->attributes)) {
+        if ('inline' !== $renderer && $this->containsNonScalars($uri->attributes)) {
             $renderer = 'forward';
         }
 
