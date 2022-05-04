@@ -307,14 +307,14 @@
             "@ecs-legacy",
             "@ecs-templates"
         ],
-        "ecs": "@php -dxdebug.mode=off tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --fix --ansi",
-        "ecs-legacy": "@php -dxdebug.mode=off tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --fix --ansi",
-        "ecs-templates": "@php -dxdebug.mode=off tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --fix --ansi",
-        "functional-tests": "@php -dxdebug.mode=off vendor/bin/phpunit --testsuite=functional --colors=always",
-        "monorepo-tools": "@php -dxdebug.mode=off tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
-        "phpstan": "@php -dxdebug.mode=off tools/phpstan/vendor/bin/phpstan analyze --ansi",
-        "require-checker": "@php -dxdebug.mode=off tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json",
-        "service-linter": "@php -dxdebug.mode=off tools/service-linter/bin/lint-service-ids --ansi",
-        "unit-tests": "@php -dxdebug.mode=off vendor/bin/phpunit --colors=always"
+        "ecs": "@php tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --fix --ansi",
+        "ecs-legacy": "@php tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --fix --ansi",
+        "ecs-templates": "@php tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --fix --ansi",
+        "functional-tests": "@php vendor/bin/phpunit --testsuite=functional --colors=always",
+        "monorepo-tools": "@php tools/monorepo/vendor/bin/monorepo-tools composer-json --validate --ansi",
+        "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyze --ansi",
+        "require-checker": "@php tools/require-checker/vendor/bin/composer-require-checker check --config-file=tools/require-checker/config.json composer.json",
+        "service-linter": "@php tools/service-linter/bin/lint-service-ids --ansi",
+        "unit-tests": "@php vendor/bin/phpunit --colors=always"
     }
 }
