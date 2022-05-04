@@ -240,7 +240,7 @@
         <source>Please assign all modules to a column!</source>
       </trans-unit>
       <trans-unit id="ERR.previewSwitchInvalidUsername">
-        <source>Preview settings could not be applied: invalid username "%s".</source>
+        <source>Preview settings could not be applied: Unknown username "%s".</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
