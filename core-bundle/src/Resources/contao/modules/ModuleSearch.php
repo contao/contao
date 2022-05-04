@@ -245,7 +245,7 @@ class ModuleSearch extends Module
 				$objTemplate->unit = $GLOBALS['TL_LANG']['UNITS'][1];
 
 				$arrContext = array();
-				$strText = StringUtil::stripInsertTags($arrResult[$i]['text']);
+				$strText = StringUtil::stripInsertTags(strtok($arrResult[$i]['text'], "\n"));
 				$arrMatches = Search::getMatchVariants(StringUtil::trimsplit(',', $arrResult[$i]['matches']), $strText, $GLOBALS['TL_LANGUAGE']);
 
 				// Get the context
