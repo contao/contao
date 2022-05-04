@@ -208,6 +208,11 @@ class MemberModel extends Model
 	 */
 	public static function findUnactivatedByEmail($strEmail, array $arrOptions=array())
 	{
+		if (func_num_args() > 1)
+		{
+			trigger_deprecation('contao/core-bundle', '4.9', 'Calling MemberModel::findExpiredRegistrations() with 2 arguments has been deprecated and will no longer work in Contao 5.0. Do not pass $arrOptions as the 2nd argument anymore.');
+		}
+
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
@@ -240,6 +245,11 @@ class MemberModel extends Model
 	 */
 	public static function findExpiredRegistrations(array $arrOptions=array())
 	{
+		if (func_num_args() > 0)
+		{
+			trigger_deprecation('contao/core-bundle', '4.9', 'Calling MemberModel::findExpiredRegistrations() with an argument has been deprecated and will no longer work in Contao 5.0. Do not pass $arrOptions as an argument anymore');
+		}
+
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
@@ -252,6 +262,38 @@ class MemberModel extends Model
 		}
 
 		return static::createCollectionFromDbResult($objResult, $t);
+	}
+
+	/**
+	 * Find an expired registration by email address that has not been activated for more than 24 hours
+	 *
+	 * @param string $strEmail The email address to find the expired registration for
+	 *
+	 * @return static The model or null if there is no expired registration
+	 */
+	public static function findExpiredRegistrationByEmail(string $strEmail)
+	{
+		$t = static::$strTable;
+		$objDatabase = Database::getInstance();
+
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable='1' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+							     ->limit(1)
+								 ->execute($strEmail, strtotime('-24 hours'));
+
+		if ($objResult->numRows < 1)
+		{
+			return null;
+		}
+
+		$objRegistry = Registry::getInstance();
+
+		/** @var MemberModel|Model $objMember */
+		if ($objMember = $objRegistry->fetch($t, $objResult->id))
+		{
+			return $objMember;
+		}
+
+		return new static($objResult);
 	}
 }
 
