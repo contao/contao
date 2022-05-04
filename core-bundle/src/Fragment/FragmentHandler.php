@@ -125,7 +125,7 @@ class FragmentHandler extends BaseFragmentHandler
                 return $this->containsNonScalars($value);
             }
 
-            if (!is_scalar($value) && null !== $value) {
+            if (!\is_scalar($value) && null !== $value) {
                 return true;
             }
         }

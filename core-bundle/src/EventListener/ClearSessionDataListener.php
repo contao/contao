@@ -64,7 +64,7 @@ class ClearSessionDataListener
     private function clearLegacyFormData(): void
     {
         if (isset($_SESSION['FORM_DATA']['SUBMITTED_AT'])) {
-            $waitingTime = max(30, (int) ini_get('max_execution_time')) * 2;
+            $waitingTime = max(30, (int) \ini_get('max_execution_time')) * 2;
 
             // Leave the data available for $waitingTime seconds (for redirect confirmation pages)
             if ($_SESSION['FORM_DATA']['SUBMITTED_AT'] + $waitingTime > time()) {
