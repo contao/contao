@@ -344,9 +344,15 @@ class ControllerTest extends TestCase
 
     /**
      * @dataProvider redirectProvider
+     *
+     * @group legacy
      */
     public function testReplacesOldBePathsInRedirect(string $location, array $routes, string $expected): void
     {
+        if (\count($routes)) {
+            $this->expectDeprecation('Since contao/core-bundle 4.0: Using old backend paths has been deprecated %s.');
+        }
+
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->exactly(\count($routes)))
@@ -409,8 +415,13 @@ class ControllerTest extends TestCase
         }
     }
 
+    /**
+     * @group legacy
+     */
     public function testCachesOldBackendPaths(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.0: Using old backend paths has been deprecated %s.');
+
         $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($this->exactly(2))

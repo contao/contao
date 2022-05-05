@@ -18,6 +18,7 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * A static class to replace insert tags
@@ -502,13 +503,27 @@ class InsertTags extends Controller
 
 									if ($objNext instanceof PageModel)
 									{
-										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										try
+										{
+											$strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+										}
+										catch (ExceptionInterface $exception)
+										{
+											System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objNext->id . ': ' . $exception->getMessage());
+										}
 										break;
 									}
 									// no break
 
 								default:
-									$strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									try
+									{
+										$strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+									}
+									catch (ExceptionInterface $exception)
+									{
+										System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objNextPage->id . ': ' . $exception->getMessage());
+									}
 									break;
 							}
 						}
@@ -594,8 +609,17 @@ class InsertTags extends Controller
 
 					/** @var PageModel $objPid */
 					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-					$strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
 					$strTarget = \in_array('blank', \array_slice($elements, 2), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
+					$strUrl = '';
+
+					try
+					{
+						$strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+					}
+					catch (ExceptionInterface $exception)
+					{
+						System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objPid->id . ': ' . $exception->getMessage());
+					}
 
 					// Replace the tag
 					switch (strtolower($elements[0]))
@@ -624,7 +648,7 @@ class InsertTags extends Controller
 
 					if ($objTeaser !== null)
 					{
-						$arrCache[$strTag] = StringUtil::toHtml5($objTeaser->teaser);
+						$arrCache[$strTag] = $objTeaser->teaser;
 					}
 					break;
 

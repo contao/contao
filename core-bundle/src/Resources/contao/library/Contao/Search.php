@@ -161,7 +161,7 @@ class Search
 		$strBody = strip_tags($strBody);
 
 		// Put everything together
-		$arrSet['text'] = $arrData['title'] . ' ' . $arrData['description'] . ' ' . $strBody . ' ' . $arrData['keywords'];
+		$arrSet['text'] = $strBody . ' ' . $arrData['description'] . "\n" . $arrData['title'] . "\n" . $arrData['keywords'];
 		$arrSet['text'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($arrSet['text'])));
 
 		// Calculate the checksum

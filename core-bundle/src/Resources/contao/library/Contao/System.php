@@ -401,7 +401,14 @@ abstract class System
 		// Fallback to the current URL if there is no referer
 		if (!$return)
 		{
-			$return = (\defined('TL_MODE') && TL_MODE == 'BE') ? 'contao/main.php' : Environment::get('url');
+			if (\defined('TL_MODE') && TL_MODE == 'BE')
+			{
+				$return = static::getContainer()->get('router')->generate('contao_backend');
+			}
+			else
+			{
+				$return = Environment::get('url');
+			}
 		}
 
 		// Do not urldecode here!

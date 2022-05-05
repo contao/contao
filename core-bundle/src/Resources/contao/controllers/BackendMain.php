@@ -62,7 +62,7 @@ class BackendMain extends Backend
 		// Password change required
 		if ($this->User->pwChange && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
-			$this->redirect('contao/password.php');
+			$this->redirect($container->get('router')->generate('contao_backend_password'));
 		}
 
 		// Two-factor setup required

@@ -41,7 +41,7 @@ class OptionWizard extends Widget
 			foreach ($options as $key=>$option)
 			{
 				// Unset empty rows
-				if (!$option['label'])
+				if (trim($option['label']) === '')
 				{
 					unset($options[$key]);
 					continue;
