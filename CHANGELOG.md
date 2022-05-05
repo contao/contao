@@ -2,6 +2,35 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.29] (2022-05-05)
+
+**Fixed issues:**
+
+- [#4519] Fix ESI fragments with inline attributes ([aschempp])
+- [#3711] Fix being unable to re-register after token expired ([fritzmg])
+- [#4605] Ignore port in Favicon and RobotsTxt controller ([bezin])
+- [#3887] Make sure the parent directory exists when writing files ([aschempp])
+- [#4596] Fix upload directory check in ImageFactory on Windows ([fritzmg])
+- [#4595] Support more widgets in DC_Folder ([fritzmg])
+- [#4590] Require symfony/deprecation-contracts ([leofeyer])
+- [#4586] Also ignore the Resources folder ([aschempp])
+- [#4588] Backport loop as an option to YouTube videos to 4.9 ([fritzmg])
+- [#4497] Revert the DcaExtractor changes ([fritzmg])
+- [#4500] Fix header fields for blank option ([rabauss])
+- [#4477] Fix undefined value/unit for empty array in headline ([rabauss])
+- [#4463] Sort the selectable templates in install tool ([cliffparnitzky])
+- [#4570] Allow 0 in option wizard as valid input ([bezin])
+- [#4481] Fix AbstractTablePickerProvider ([bytehead])
+- [#4528] Only save personal data if there is no error ([aschempp])
+- [#4195] Set a session for the fake request ([fritzmg])
+- [#4470] Update version number in toggleSubpalette ([ausi])
+- [#4493] Use fixed subject string for List-Unsubscribe header ([aschempp])
+- [#4509] Fix bug with hash comparison in migrate command ([ausi])
+- [#4487] Remove rel="nofollow" for internal pages ([fritzmg])
+- [#4192] Shorten the version description to the length of the DB column ([cliffparnitzky])
+- [#4320] Fix missing hash option for migrate command ([ausi])
+- [#4455] Fix Atom feed generation ([fritzmg])
+
 ## [4.9.28] (2022-03-31)
 
 **Fixed issues:**
@@ -885,6 +914,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.29]: https://github.com/contao/contao/releases/tag/4.9.29
 [4.9.28]: https://github.com/contao/contao/releases/tag/4.9.28
 [4.9.27]: https://github.com/contao/contao/releases/tag/4.9.27
 [4.9.26]: https://github.com/contao/contao/releases/tag/4.9.26
@@ -953,6 +983,30 @@ This project adheres to [Semantic Versioning].
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
 [zonky2]: https://github.com/zonky2
+[#4519]: https://github.com/contao/contao/pull/4519
+[#3711]: https://github.com/contao/contao/pull/3711
+[#4605]: https://github.com/contao/contao/pull/4605
+[#3887]: https://github.com/contao/contao/pull/3887
+[#4596]: https://github.com/contao/contao/pull/4596
+[#4595]: https://github.com/contao/contao/pull/4595
+[#4590]: https://github.com/contao/contao/pull/4590
+[#4586]: https://github.com/contao/contao/pull/4586
+[#4588]: https://github.com/contao/contao/pull/4588
+[#4497]: https://github.com/contao/contao/pull/4497
+[#4500]: https://github.com/contao/contao/pull/4500
+[#4477]: https://github.com/contao/contao/pull/4477
+[#4463]: https://github.com/contao/contao/pull/4463
+[#4570]: https://github.com/contao/contao/pull/4570
+[#4481]: https://github.com/contao/contao/pull/4481
+[#4528]: https://github.com/contao/contao/pull/4528
+[#4195]: https://github.com/contao/contao/pull/4195
+[#4470]: https://github.com/contao/contao/pull/4470
+[#4493]: https://github.com/contao/contao/pull/4493
+[#4509]: https://github.com/contao/contao/pull/4509
+[#4487]: https://github.com/contao/contao/pull/4487
+[#4192]: https://github.com/contao/contao/pull/4192
+[#4320]: https://github.com/contao/contao/pull/4320
+[#4455]: https://github.com/contao/contao/pull/4455
 [#4427]: https://github.com/contao/contao/pull/4427
 [#4424]: https://github.com/contao/contao/pull/4424
 [#4423]: https://github.com/contao/contao/pull/4423

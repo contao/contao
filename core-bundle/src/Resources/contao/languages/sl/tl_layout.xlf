@@ -311,6 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.head.1">
         <source>Here you can add individual tags to the &amp;lt;head&amp;gt; section of the page.</source>
+        <target>Tu lahko vnesete posamezne elemente HTML v glavo, t.j. lt;head&amp;gt;, strani.</target>
       </trans-unit>
       <trans-unit id="tl_layout.addJQuery.0">
         <source>Include jQuery</source>

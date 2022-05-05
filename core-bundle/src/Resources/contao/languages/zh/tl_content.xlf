@@ -818,6 +818,9 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>使用youtube-nocookie.com域名</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>自动播放</target>
