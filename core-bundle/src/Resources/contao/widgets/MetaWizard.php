@@ -85,6 +85,24 @@ class MetaWizard extends Widget
 					$v['link'] = StringUtil::specialcharsUrl($v['link']);
 				}
 
+				foreach ($v as $kk => $vv)
+				{
+					$rgxp = $this->metaFields[$kk]['rgxp'] ?? null;
+
+					if ($rgxp && !preg_match($rgxp, $vv))
+					{
+						$lang = LocaleUtil::formatAsLocale($k);
+						$langTrans = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array($lang))[$lang];
+						$fieldLabel = $GLOBALS['TL_LANG']['MSC']['aw_' . $kk];
+
+						$errorMsg = isset($this->metaFields[$kk]['rgxpErrMsg']) ?
+							sprintf($this->metaFields[$kk]['rgxpErrMsg'], $fieldLabel, $langTrans, $rgxp)
+							: sprintf($GLOBALS['TL_LANG']['tl_files']['metaRgxpError'], $fieldLabel, $langTrans, $rgxp);
+
+						$this->addError($errorMsg);
+					}
+				}
+
 				$varInput[$k] = array_map('trim', $v);
 			}
 			else
