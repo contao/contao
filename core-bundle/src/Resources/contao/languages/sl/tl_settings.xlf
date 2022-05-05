@@ -212,6 +212,7 @@
       </trans-unit>
       <trans-unit id="tl_settings.configuredInApp">
         <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
+        <target>Ta nastavitev je bila nastavljena v konfiguraciji spletnega mesta in je tu ni mogoče spreminjati.</target>
       </trans-unit>
     </body>
   </file>
