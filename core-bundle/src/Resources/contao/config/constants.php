@@ -11,7 +11,7 @@
 // Backwards compatibility
 // Core version
 define('VERSION', '4.13');
-define('BUILD', '2');
+define('BUILD', '3');
 define('LONG_TERM_SUPPORT', false);
 
 // Backwards compatibility

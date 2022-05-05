@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.3] (2022-05-05)
+
+**Security fixes:**
+
+- Prevent XSS via canonical tags in the front end ([CVE-2022-24899])
+
 ## [4.13.2] (2022-03-31)
 
 **Fixed issues:**
@@ -305,6 +311,7 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
 [AlexanderWillner]: https://github.com/AlexanderWillner
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
