@@ -267,7 +267,7 @@ class InstallationController implements ContainerAwareInterface
             opcache_reset();
         }
 
-        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !\ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }
@@ -296,7 +296,7 @@ class InstallationController implements ContainerAwareInterface
             opcache_reset();
         }
 
-        if (\function_exists('apc_clear_cache') && !ini_get('apc.stat')) {
+        if (\function_exists('apc_clear_cache') && !\ini_get('apc.stat')) {
             apc_clear_cache();
         }
     }

@@ -826,6 +826,10 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>youtube-nocookie.comドメインを使用</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+        <target>動画を繰り返し再生</target>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>自動再生</target>

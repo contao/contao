@@ -408,7 +408,7 @@ class StringUtilTest extends TestCase
 
         yield '(<%)' => [
             'This <% var_dump() ?> is a test.',
-            \PHP_VERSION_ID >= 70000 || !\in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
+            \PHP_VERSION_ID >= 70000 || !\in_array(strtolower(\ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
         ];
 
         yield '(<script language="php">)' => [
@@ -449,7 +449,7 @@ class StringUtilTest extends TestCase
 
         yield '(<%)' => [
             ['foo' => 'This <% var_dump() ?> is a test.'],
-            \PHP_VERSION_ID >= 70000 || !\in_array(strtolower(ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
+            \PHP_VERSION_ID >= 70000 || !\in_array(strtolower(\ini_get('asp_tags')), ['1', 'on', 'yes', 'true'], true),
         ];
 
         yield '(<script language="php">)' => [

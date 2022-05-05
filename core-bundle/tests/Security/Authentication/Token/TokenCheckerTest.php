@@ -179,7 +179,7 @@ class TokenCheckerTest extends TestCase
 
         if ($isPreview) {
             $session = $this->mockSessionWithToken($token);
-            $request->attributes->set('_preview', $isPreview);
+            $request->attributes->set('_preview', true);
         } else {
             $session = $this->createMock(SessionInterface::class);
             $session
