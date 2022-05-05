@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -103,12 +104,12 @@ class BackendPreviewSwitchController
      */
     public function __invoke(Request $request): Response
     {
-        if (!$this->security->isGranted('ROLE_USER')) {
-            return new Response('Access Denied', $this->security->isGranted('IS_AUTHENTICATED_FULLY') ? Response::HTTP_FORBIDDEN : Response::HTTP_UNAUTHORIZED);
-        }
-
         if (!$request->isXmlHttpRequest()) {
             return new Response('Bad Request', Response::HTTP_BAD_REQUEST);
+        }
+
+        if (!$this->security->isGranted('ROLE_USER')) {
+            throw new AccessDeniedException();
         }
 
         if ($request->isMethod('GET')) {
@@ -164,7 +165,7 @@ class BackendPreviewSwitchController
             if (!$this->previewAuthenticator->authenticateFrontendUser($frontendUsername, $showUnpublished)) {
                 $message = $this->translator->trans('ERR.previewSwitchInvalidUsername', [$frontendUsername], 'contao_default');
 
-                return new Response($message, Response::HTTP_BAD_REQUEST);
+                return new Response($message, Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } else {
             $this->previewAuthenticator->authenticateFrontendGuest($showUnpublished);
