@@ -57,6 +57,10 @@ class FragmentHandler extends BaseFragmentHandler
 
         $renderer = $config->getRenderer();
 
+        if ('inline' !== $renderer && $this->containsNonScalars($uri->attributes)) {
+            $renderer = 'forward';
+        }
+
         if (!isset($this->initialized[$renderer]) && $this->renderers->has($renderer)) {
             $this->addRenderer($this->renderers->get($renderer));
             $this->initialized[$renderer] = true;
@@ -93,5 +97,20 @@ class FragmentHandler extends BaseFragmentHandler
     private function hasGlobalPageObject(): bool
     {
         return isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel;
+    }
+
+    private function containsNonScalars(array $values): bool
+    {
+        foreach ($values as $value) {
+            if (\is_array($value)) {
+                return $this->containsNonScalars($value);
+            }
+
+            if (!\is_scalar($value) && null !== $value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

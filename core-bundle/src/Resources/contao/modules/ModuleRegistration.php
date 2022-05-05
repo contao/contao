@@ -80,6 +80,14 @@ class ModuleRegistration extends Module
 			}
 		}
 
+		$strFormId = 'tl_registration_' . $this->id;
+
+		// Remove expired registration (#3709)
+		if (Input::post('FORM_SUBMIT') == $strFormId && ($email = Input::post('email')) && ($member = MemberModel::findExpiredRegistrationByEmail($email)))
+		{
+			$member->delete();
+		}
+
 		// Activate account
 		if (strncmp(Input::get('token'), 'reg-', 4) === 0)
 		{
@@ -98,7 +106,6 @@ class ModuleRegistration extends Module
 
 		$objCaptcha = null;
 		$doNotSubmit = false;
-		$strFormId = 'tl_registration_' . $this->id;
 
 		// Predefine the group order (other groups will be appended automatically)
 		$arrGroups = array
