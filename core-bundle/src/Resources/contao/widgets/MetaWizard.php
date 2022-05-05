@@ -32,6 +32,11 @@ class MetaWizard extends Widget
 	protected $strTemplate = 'be_widget';
 
 	/**
+	 * @var array
+	 */
+	private $arrFieldErrors = array();
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey   The property name
@@ -100,6 +105,7 @@ class MetaWizard extends Widget
 							: sprintf($GLOBALS['TL_LANG']['tl_files']['metaRgxpError'], $fieldLabel, $langTrans, $rgxp);
 
 						$this->addError($errorMsg);
+						$this->arrFieldErrors[$lang][$kk] = true;
 					}
 				}
 
@@ -168,7 +174,9 @@ class MetaWizard extends Widget
 				// Take the fields from the DCA (see #4327)
 				foreach ($this->metaFields as $field=>$fieldConfig)
 				{
-					$return .= '<label for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
+					$class = isset($this->arrFieldErrors[$lang][$field]) ? 'class="error" ' : '';
+
+					$return .= '<label ' . $class . 'for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
 
 					if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 					{
