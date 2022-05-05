@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
@@ -188,7 +189,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $response = $controller($request);
 
-        $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
         $this->assertSame('ERR.previewSwitchInvalidUsername', $response->getContent());
     }
 
@@ -243,9 +244,14 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $request = $this->createMock(Request::class);
 
-        $response = $controller($request);
+        $request
+            ->method('isXmlHttpRequest')
+            ->willReturn(true)
+        ;
 
-        $this->assertSame(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
+        $this->expectException(AccessDeniedException::class);
+
+        $response = $controller($request);
     }
 
     public function testExitsAsUnauthorizedUser(): void
@@ -264,9 +270,14 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $request = $this->createMock(Request::class);
 
-        $response = $controller($request);
+        $request
+            ->method('isXmlHttpRequest')
+            ->willReturn(true)
+        ;
 
-        $this->assertSame(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+        $this->expectException(AccessDeniedException::class);
+
+        $response = $controller($request);
     }
 
     /**
