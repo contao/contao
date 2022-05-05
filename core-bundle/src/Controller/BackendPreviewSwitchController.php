@@ -104,12 +104,10 @@ class BackendPreviewSwitchController
      */
     public function __invoke(Request $request): Response
     {
-        if (!$request->isXmlHttpRequest()) {
-            return new Response('Bad Request', Response::HTTP_BAD_REQUEST);
-        }
+        $user = $this->security->getUser();
 
-        if (!$this->security->isGranted('ROLE_USER')) {
-            throw new AccessDeniedException();
+        if (!$user instanceof BackendUser || !$request->isXmlHttpRequest()) {
+            return new Response('Bad Request', Response::HTTP_BAD_REQUEST);
         }
 
         if ($request->isMethod('GET')) {

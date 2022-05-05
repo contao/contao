@@ -249,9 +249,9 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $this->expectException(AccessDeniedException::class);
+        $response = $controller($request);
 
-        $controller($request);
+        $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     public function testExitsAsUnauthorizedUser(): void
@@ -275,9 +275,9 @@ class BackendPreviewSwitchControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $this->expectException(AccessDeniedException::class);
+        $response = $controller($request);
 
-        $controller($request);
+        $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
     /**
