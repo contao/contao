@@ -845,6 +845,9 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>Користи youtube-nocookie.com домен</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Аутоматско покретање</target>

@@ -91,12 +91,15 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintSave">
         <source>Please save this record to generate the preview link.</source>
+        <target>Preden ustvarite povezavo za predogled morate najprej shraniti ta element</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
         <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
+        <target>Povezava za predogled: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>
+        <target>Povezava za predogled ni več veljavna in jeni več mogoče deliti</target>
       </trans-unit>
     </body>
   </file>
