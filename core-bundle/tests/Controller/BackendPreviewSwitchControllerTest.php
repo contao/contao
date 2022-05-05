@@ -251,7 +251,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $this->expectException(AccessDeniedException::class);
 
-        $response = $controller($request);
+        $controller($request);
     }
 
     public function testExitsAsUnauthorizedUser(): void
@@ -277,7 +277,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
 
         $this->expectException(AccessDeniedException::class);
 
-        $response = $controller($request);
+        $controller($request);
     }
 
     /**
