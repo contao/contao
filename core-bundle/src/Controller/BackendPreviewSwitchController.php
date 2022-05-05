@@ -118,7 +118,7 @@ class BackendPreviewSwitchController
         }
 
         if ('datalist_members' === $request->request->get('FORM_SUBMIT')) {
-            $data = $this->getMembersDataList($request);
+            $data = $this->getMembersDataList($user, $request);
 
             return new JsonResponse($data);
         }
@@ -171,7 +171,7 @@ class BackendPreviewSwitchController
         return new Response('', Response::HTTP_NO_CONTENT);
     }
 
-    private function getMembersDataList(Request $request): array
+    private function getMembersDataList(BackendUser $user, Request $request): array
     {
         $andWhereGroups = '';
 
@@ -180,9 +180,6 @@ class BackendPreviewSwitchController
         }
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
-            /** @var BackendUser $user */
-            $user = $this->security->getUser();
-
             $groups = array_map(
                 static function ($groupId): string {
                     return '%"'.(int) $groupId.'"%';
