@@ -275,6 +275,7 @@ abstract class ContaoTestCase extends TestCase
             '_ENV' => $_ENV,
             '_GET' => $_GET,
             '_POST' => $_POST,
+            '_COOKIE' => $_COOKIE,
         ];
     }
 
@@ -284,6 +285,7 @@ abstract class ContaoTestCase extends TestCase
         $_ENV = $this->backupServerEnvGetPost['_ENV'] ?? $_ENV;
         $_GET = $this->backupServerEnvGetPost['_GET'] ?? [];
         $_POST = $this->backupServerEnvGetPost['_POST'] ?? [];
+        $_COOKIE = $this->backupServerEnvGetPost['_COOKIE'] ?? [];
     }
 
     /**

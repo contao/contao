@@ -39,23 +39,23 @@ class Input
 	/**
 	 * Parameters set via setGet() are stored by request
 	 *
-	 * @var \WeakMap<Request,array<string,array|string>>
+	 * @var \WeakMap<Request,array<string,array|string>>|null
 	 */
-	private static \WeakMap $setGet;
+	private static \WeakMap|null $setGet = null;
 
 	/**
 	 * Parameters set via setPost() are stored by request
 	 *
-	 * @var \WeakMap<Request,array<string,array|string>>
+	 * @var \WeakMap<Request,array<string,array|string>>|null
 	 */
-	private static \WeakMap $setPost;
+	private static \WeakMap|null $setPost = null;
 
 	/**
 	 * Parameters set via setCookie() are stored by request
 	 *
-	 * @var \WeakMap<Request,array<string,array|string>>
+	 * @var \WeakMap<Request,array<string,array|string>>|null
 	 */
-	private static \WeakMap $setCookie;
+	private static \WeakMap|null $setCookie = null;
 
 	/**
 	 * Clean the global GPC arrays
