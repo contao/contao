@@ -12,10 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\EventListener;
 
-use Contao\Controller;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\News;
+use Contao\Database;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
@@ -27,81 +26,88 @@ class SitemapListener
 {
     public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
-    public function __invoke(SitemapEvent $sitemapEvent): void
+    public function __invoke(SitemapEvent $event): void
     {
-        $this->framework->initialize();
+        $arrRoot = $this->framework->createInstance(Database::class)->getChildRecords($event->getRootPageIds(), 'tl_page');
 
-        $newsArchiveModelAdapter = $this->framework->getAdapter(NewsArchiveModel::class);
-
-        // Get all news archives
-        $archives = $newsArchiveModelAdapter->findAll();
-
-        if (null === $archives) {
+        // Early return here in the unlikely case that there are no pages
+        if (empty($arrRoot)) {
             return;
         }
 
-        $pageModelAdapter = $this->framework->getAdapter(PageModel::class);
-        $controllerAdapter = $this->framework->getAdapter(Controller::class);
-        $newsModelAdapter = $this->framework->getAdapter(NewsModel::class);
-        $newsAdapter = $this->framework->getAdapter(News::class);
+        $arrPages = [];
+        $arrProcessed = [];
+        $time = time();
 
-        $rootPageIds = array_map('intval', $sitemapEvent->getRootPageIds());
+        // Get all calendars
+        $objArchives = $this->framework->getAdapter(NewsArchiveModel::class)->findByProtected('');
 
-        /** @var NewsArchiveModel $archive */
-        foreach ($archives as $archive) {
-            // Skip archives without a target page
-            if (empty($archive->jumpTo)) {
+        if (null === $objArchives) {
+            return;
+        }
+
+        // Walk through each calendar
+        foreach ($objArchives as $objArchive) {
+            // Skip calendars without target page
+            if (!$objArchive->jumpTo) {
                 continue;
             }
 
-            // Skip archive if protected and not accessible
-            if (!$controllerAdapter->isVisibleElement($archive)) {
+            // Skip calendars outside the root nodes
+            if (!\in_array($objArchive->jumpTo, $arrRoot, true)) {
                 continue;
             }
 
-            $targetPage = $pageModelAdapter->findPublishedById($archive->jumpTo);
+            // Get the URL of the jumpTo page
+            if (!isset($arrProcessed[$objArchive->jumpTo])) {
+                $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objArchive->jumpTo);
 
-            // Skip unpublished pages
-            if (null === $targetPage) {
-                continue;
-            }
-
-            $targetPage->loadDetails();
-
-            // Skip news outside the current page root IDs
-            if (!\in_array((int) $targetPage->rootId, $rootPageIds, true)) {
-                continue;
-            }
-
-            // Skip target page if protected and cannot be accessed
-            if (!$controllerAdapter->isVisibleElement($targetPage)) {
-                continue;
-            }
-
-            // The target page is exempt from the sitemap (see #6418)
-            if ('noindex,nofollow' === $targetPage->robots) {
-                continue;
-            }
-
-            // Get the news items
-            $articles = $newsModelAdapter->findPublishedDefaultByPid((int) $archive->id);
-
-            if (null === $articles) {
-                continue;
-            }
-
-            foreach ($articles as $article) {
-                // The news article is exempt from the sitemap
-                if ('noindex,nofollow' === $article->robots) {
+                // The target page does not exist
+                if (null === $objParent) {
                     continue;
                 }
 
-                // Add URL to the sitemap
-                $sitemapEvent->addUrlToDefaultUrlSet($newsAdapter->generateNewsUrl($article, false, true));
+                // The target page has not been published (see #5520)
+                if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time)) {
+                    continue;
+                }
+
+                // The target page is protected (see #8416)
+                if ($objParent->protected) {
+                    continue;
+                }
+
+                // The target page is exempt from the sitemap (see #6418)
+                if ('noindex,nofollow' === $objParent->robots) {
+                    continue;
+                }
+
+                // Generate the URL
+                $arrProcessed[$objArchive->jumpTo] = $objParent->getAbsoluteUrl('/%s');
             }
+
+            $strUrl = $arrProcessed[$objArchive->jumpTo];
+
+            // Get the items
+            $objArticles = $this->framework->getAdapter(NewsModel::class)->findPublishedDefaultByPid($objArchive->id);
+
+            if (null === $objArticles) {
+                continue;
+            }
+
+            foreach ($objArticles as $objNews) {
+                if ('noindex,nofollow' === $objNews->robots) {
+                    continue;
+                }
+
+                $arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objNews->alias ?: $objNews->id));
+            }
+        }
+
+        foreach ($arrPages as $strUrl) {
+            $event->addUrlToDefaultUrlSet($strUrl);
         }
     }
 }
