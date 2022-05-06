@@ -23,6 +23,11 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class BackendMain extends Backend
 {
 	/**
+	 * @var Template
+	 */
+	protected $Template;
+
+	/**
 	 * Current Ajax object
 	 * @var Ajax
 	 */

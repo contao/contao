@@ -24,6 +24,11 @@ use Symfony\Component\HttpFoundation\Response;
 class PageRegular extends Frontend
 {
 	/**
+	 * @var Template
+	 */
+	public $Template;
+
+	/**
 	 * @var ResponseContext
 	 */
 	protected $responseContext;
