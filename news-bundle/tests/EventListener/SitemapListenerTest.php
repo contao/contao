@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SitemapListenerTest extends ContaoTestCase
 {
-    public function testNothingIsAddedIfNoPublishedCalendar(): void
+    public function testNothingIsAddedIfNoPublishedArchive(): void
     {
         $adapters = [
             NewsArchiveModel::class => $this->mockConfiguredAdapter(['findByProtected' => null]),
@@ -36,7 +36,7 @@ class SitemapListenerTest extends ContaoTestCase
         $this->assertStringNotContainsString('<url><loc>', (string) $sitemapEvent->getDocument()->saveXML());
     }
 
-    public function testCalendarEventIsAdded(): void
+    public function testNewsArticleIsAdded(): void
     {
         $jumpToPage = $this->mockClassWithProperties(PageModel::class, [
             'published' => 1,
