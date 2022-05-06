@@ -635,8 +635,8 @@ class Calendar extends Frontend
 	 */
 	private function createSubRequest(string $uri, Request $request = null): Request
 	{
-		$cookies = null !== $request ? $request->cookies->all() : [];
-		$server = null !== $request ? $request->server->all() : [];
+		$cookies = null !== $request ? $request->cookies->all() : array();
+		$server = null !== $request ? $request->server->all() : array();
 
 		unset($server['HTTP_IF_MODIFIED_SINCE'], $server['HTTP_IF_NONE_MATCH']);
 
