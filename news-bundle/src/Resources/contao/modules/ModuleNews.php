@@ -99,7 +99,7 @@ abstract class ModuleNews extends Module
 		if ($objArticle->teaser)
 		{
 			$objTemplate->hasTeaser = true;
-			$objTemplate->teaser = StringUtil::toHtml5($objArticle->teaser);
+			$objTemplate->teaser = $objArticle->teaser;
 			$objTemplate->teaser = StringUtil::encodeEmail($objTemplate->teaser);
 		}
 
@@ -273,7 +273,7 @@ abstract class ModuleNews extends Module
 
 		foreach ($objArticles as $objArticle)
 		{
-			$arrArticles[] = $this->parseArticle($objArticle, $blnAddArchive, ((++$count == 1) ? ' first' : '') . (($count == $limit) ? ' last' : '') . ((($count % 2) == 0) ? ' odd' : ' even'), $count);
+			$arrArticles[] = $this->parseArticle($objArticle, $blnAddArchive, '', $count);
 		}
 
 		return $arrArticles;

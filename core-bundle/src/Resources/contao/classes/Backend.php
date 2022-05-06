@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
-use Contao\Database\Result;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -185,35 +184,6 @@ abstract class Backend extends Controller
 			default:
 				return 'text';
 		}
-	}
-
-	/**
-	 * Return a list of TinyMCE templates as JSON string
-	 *
-	 * @return string
-	 */
-	public static function getTinyTemplates()
-	{
-		$strDir = System::getContainer()->getParameter('contao.upload_path') . '/tiny_templates';
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
-		if (!is_dir($projectDir . '/' . $strDir))
-		{
-			return '';
-		}
-
-		$arrFiles = array();
-		$arrTemplates = Folder::scan($projectDir . '/' . $strDir);
-
-		foreach ($arrTemplates as $strFile)
-		{
-			if (strncmp('.', $strFile, 1) !== 0 && is_file($projectDir . '/' . $strDir . '/' . $strFile))
-			{
-				$arrFiles[] = '{ title: "' . $strFile . '", url: "' . $strDir . '/' . $strFile . '" }';
-			}
-		}
-
-		return implode(",\n", $arrFiles) . "\n";
 	}
 
 	/**
@@ -424,7 +394,7 @@ abstract class Backend extends Controller
 		$this->Template->headline = '<span>' . $this->Template->headline . '</span>';
 
 		// AJAX request
-		if ($_POST && Environment::get('isAjaxRequest'))
+		if (Input::isPost() && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax->executePostActions($dc);
 		}
@@ -457,7 +427,7 @@ abstract class Backend extends Controller
 			$this->Template->main .= $response;
 
 			// Add the name of the parent element
-			if (isset($_GET['table']) && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
+			if (Input::get('table') !== null && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
 				$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
 										 ->limit(1)
@@ -738,90 +708,6 @@ abstract class Backend extends Controller
 	}
 
 	/**
-	 * Add the file meta information to the request
-	 *
-	 * @param string  $strUuid
-	 * @param string  $strPtable
-	 * @param integer $intPid
-	 *
-	 * @deprecated Deprecated since Contao 4.4, to be removed in Contao 5.0.
-	 */
-	public static function addFileMetaInformationToRequest($strUuid, $strPtable, $intPid)
-	{
-		trigger_deprecation('contao/core-bundle', '4.4', 'Using "Contao\Backend::addFileMetaInformationToRequest()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$objFile = FilesModel::findByUuid($strUuid);
-
-		if ($objFile === null)
-		{
-			return;
-		}
-
-		$arrMeta = StringUtil::deserialize($objFile->meta);
-
-		if (empty($arrMeta))
-		{
-			return;
-		}
-
-		$objPage = null;
-
-		if ($strPtable == 'tl_article')
-		{
-			$objPage = PageModel::findOneBy(array('tl_page.id=(SELECT pid FROM tl_article WHERE id=?)'), $intPid);
-		}
-		elseif (isset($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']) && \is_array($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest']))
-		{
-			// HOOK: support custom modules
-			foreach ($GLOBALS['TL_HOOKS']['addFileMetaInformationToRequest'] as $callback)
-			{
-				if (($val = System::importStatic($callback[0])->{$callback[1]}($strPtable, $intPid)) !== false)
-				{
-					$objPage = $val;
-				}
-			}
-
-			if ($objPage instanceof Result && $objPage->numRows < 1)
-			{
-				return;
-			}
-
-			if (\is_object($objPage) && !($objPage instanceof PageModel))
-			{
-				$objPage = PageModel::findByPk($objPage->id);
-			}
-		}
-
-		if ($objPage === null)
-		{
-			return;
-		}
-
-		$objPage->loadDetails();
-
-		// Convert the language to a locale (see #5678)
-		$strLanguage = LocaleUtil::formatAsLocale($objPage->rootLanguage);
-
-		if (isset($arrMeta[$strLanguage]))
-		{
-			if (!empty($arrMeta[$strLanguage]['title']) && !Input::post('title'))
-			{
-				Input::setPost('title', $arrMeta[$strLanguage]['title']);
-			}
-
-			if (!empty($arrMeta[$strLanguage]['alt']) && !Input::post('alt'))
-			{
-				Input::setPost('alt', $arrMeta[$strLanguage]['alt']);
-			}
-
-			if (!empty($arrMeta[$strLanguage]['caption']) && !Input::post('caption'))
-			{
-				Input::setPost('caption', $arrMeta[$strLanguage]['caption']);
-			}
-		}
-	}
-
-	/**
 	 * Add a breadcrumb menu to the page tree
 	 *
 	 * @param string $strKey
@@ -835,7 +721,7 @@ abstract class Backend extends Controller
 		$objSession = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['pn']))
+		if (Input::get('pn') !== null)
 		{
 			// Check the path (thanks to Arnaud Buchoux)
 			if (Validator::isInsecurePath(Input::get('pn', true)))
@@ -978,7 +864,7 @@ abstract class Backend extends Controller
 		}
 
 		// Return the image
-		return '<a href="contao/preview.php?page=' . $row['id'] . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
+		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['id']))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
 	}
 
 	/**
@@ -1028,7 +914,7 @@ abstract class Backend extends Controller
 		$objSession = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['fn']))
+		if (Input::get('fn') !== null)
 		{
 			// Check the path (thanks to Arnaud Buchoux)
 			if (Validator::isInsecurePath(Input::get('fn', true)))

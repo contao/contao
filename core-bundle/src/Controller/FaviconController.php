@@ -43,7 +43,7 @@ class FaviconController
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
         $rootPage = $pageModel->findPublishedFallbackByHostname(
-            $request->server->get('HTTP_HOST'),
+            $request->getHost(),
             ['fallbackToEmpty' => true]
         );
 

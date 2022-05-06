@@ -329,7 +329,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			}
 
 			// Reload
-			if (isset($_POST['saveNclose']))
+			if (Input::post('saveNclose') !== null)
 			{
 				Message::reset();
 				$this->redirect($this->getReferer());
@@ -400,15 +400,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			if (($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea')
 			{
 				$varValue = StringUtil::deserialize($varValue);
-
-				if (!\is_array($varValue))
-				{
-					$varValue = StringUtil::restoreBasicEntities($varValue);
-				}
-				else
-				{
-					$varValue = serialize(array_map('\Contao\StringUtil::restoreBasicEntities', $varValue));
-				}
 			}
 		}
 

@@ -113,7 +113,7 @@ class Newsletter extends Backend
 			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('request'));
 
 			// Preview
-			if (isset($_GET['preview']))
+			if (Input::get('preview') !== null)
 			{
 				// Check the e-mail address
 				if (!Validator::isEmail(Input::get('recipient', true)))
@@ -274,21 +274,21 @@ class Newsletter extends Backend
 <input type="hidden" name="id" value="' . Input::get('id') . '">
 <input type="hidden" name="token" value="' . $strToken . '">
 <table class="prev_header">
-  <tr class="row_0">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['from'] . '</td>
-    <td class="col_1">' . sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['from'] . '</td>
+    <td>' . sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
   </tr>
-  <tr class="row_1">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['subject'][0] . '</td>
-    <td class="col_1">' . $objNewsletter->subject . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['subject'][0] . '</td>
+    <td>' . $objNewsletter->subject . '</td>
   </tr>
-  <tr class="row_2">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter_channel']['template'][0] . '</td>
-    <td class="col_1">' . ($objNewsletter->template ?: 'mail_default') . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter_channel']['template'][0] . '</td>
+    <td>' . ($objNewsletter->template ?: 'mail_default') . '</td>
   </tr>' . ((!empty($arrAttachments) && \is_array($arrAttachments)) ? '
-  <tr class="row_3">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['attachments'] . '</td>
-    <td class="col_1">' . implode(', ', $arrAttachments) . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['attachments'] . '</td>
+    <td>' . implode(', ', $arrAttachments) . '</td>
   </tr>' : '') . '
 </table>' . (!$objNewsletter->sendText ? '
 <div class="preview_html">
@@ -380,7 +380,7 @@ class Newsletter extends Backend
 		}
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
-		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=' . rawurlencode($GLOBALS['TL_LANG']['MSC']['unsubscribe']) . '>');
+		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe>');
 
 		return $objEmail;
 	}
@@ -421,7 +421,7 @@ class Newsletter extends Backend
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
-		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html))
+		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html ?? ''))
 			->setHtmlAllowed(!$objNewsletter->sendText)
 			->setNewsletterData($objNewsletter->row())
 			->setRecipientData($arrRecipient);
@@ -863,7 +863,7 @@ class Newsletter extends Backend
 				$strEmail = Input::post('email', true);
 
 				// E-mail address has changed
-				if (!empty($_POST) && $strEmail && $strEmail != $objUser->email)
+				if (Input::isPost() && $strEmail && $strEmail != $objUser->email)
 				{
 					$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=?")
 											   ->execute($strEmail);
@@ -905,7 +905,7 @@ class Newsletter extends Backend
 				}
 
 				// Check activation status
-				elseif (!empty($_POST) && Input::post('disable') != $objUser->disable)
+				elseif (Input::isPost() && Input::post('disable') != $objUser->disable)
 				{
 					$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
 								   ->execute((Input::post('disable') ? '' : 1), $objUser->email);

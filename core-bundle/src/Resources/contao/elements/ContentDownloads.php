@@ -69,7 +69,7 @@ class ContentDownloads extends ContentDownload
 		$file = Input::get('file', true);
 
 		// Send the file to the browser (see #4632 and #8375)
-		if ($file && \is_string($file) && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
+		if ($file && \is_string($file) && (Input::get('cid') === null || Input::get('cid') == $this->id))
 		{
 			while ($this->objFiles->next())
 			{
@@ -79,7 +79,7 @@ class ContentDownloads extends ContentDownload
 				}
 			}
 
-			if (isset($_GET['cid']))
+			if (Input::get('cid') !== null)
 			{
 				throw new PageNotFoundException('Invalid file name');
 			}
@@ -155,12 +155,12 @@ class ContentDownloads extends ContentDownload
 				$strHref = Environment::get('request');
 
 				// Remove an existing file parameter (see #5683)
-				if (isset($_GET['file']))
+				if (Input::get('file') !== null)
 				{
 					$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 				}
 
-				if (isset($_GET['cid']))
+				if (Input::get('cid') !== null)
 				{
 					$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
 				}

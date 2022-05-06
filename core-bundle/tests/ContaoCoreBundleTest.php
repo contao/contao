@@ -41,6 +41,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
+use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
@@ -100,6 +101,7 @@ class ContaoCoreBundleTest extends TestCase
                             PreviewUrlConvertEvent::class => ContaoCoreEvents::PREVIEW_URL_CONVERT,
                             RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
                             SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
+                            SitemapEvent::class => ContaoCoreEvents::SITEMAP,
                         ];
 
                         $this->assertEquals(new AddEventAliasesPass($eventAliases), $pass);

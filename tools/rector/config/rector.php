@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\FuncCall\CompactToVariablesRector;
-use Rector\Core\Configuration\Option;
+use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\Php74\Rector\FuncCall\ArraySpreadInsteadOfArrayMergeRector;
 use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
@@ -12,23 +12,21 @@ use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php80\Rector\Switch_\ChangeSwitchToMatchRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Set\ValueObject\SetList;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(SetList::PHP_80);
-    $containerConfigurator->import(SetList::PHP_81);
+return static function (RectorConfig $rectorConfig): void {
+    $rectorConfig->parallel();
 
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PARALLEL, true);
+    $rectorConfig->import(SetList::PHP_80);
+    $rectorConfig->import(SetList::PHP_81);
 
-    $parameters->set(Option::PATHS, [
+    $rectorConfig->paths([
         __DIR__ . '/../../../*-bundle/bin',
         __DIR__ . '/../../../*-bundle/src',
         __DIR__ . '/../../../*-bundle/tests',
         __DIR__ . '/../../../test-case/src',
     ]);
 
-    $parameters->set(Option::SKIP, [
+    $rectorConfig->skip([
         '*/Fixtures/system/*',
         '*/Resources/contao/*',
         ClassPropertyAssignToConstructorPromotionRector::class => [
@@ -38,7 +36,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ReadOnlyPropertyRector::class,
     ]);
 
-    $services = $containerConfigurator->services();
+    $services = $rectorConfig->services();
     $services->set(ArraySpreadInsteadOfArrayMergeRector::class);
     $services->set(CompactToVariablesRector::class);
     $services->set(RemoveUnusedPrivateMethodParameterRector::class);

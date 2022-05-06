@@ -24,10 +24,22 @@ final class ContextFactory
      */
     public function fromContaoTemplate(Template $template): array
     {
-        $context = $template->getData();
+        $context = $this->fromData($template->getData());
 
+        if (!isset($context['Template'])) {
+            $context['Template'] = $template;
+        }
+
+        return $context;
+    }
+
+    /**
+     * Replaces all occurrences of closures by callable wrappers.
+     */
+    public function fromData(array $data): array
+    {
         array_walk_recursive(
-            $context,
+            $data,
             function (&$value, $key): void {
                 if ($value instanceof \Closure) {
                     $value = $this->getCallableWrapper($value, (string) $key);
@@ -35,11 +47,7 @@ final class ContextFactory
             }
         );
 
-        if (!isset($context['Template'])) {
-            $context['Template'] = $template;
-        }
-
-        return $context;
+        return $data;
     }
 
     /**
@@ -94,10 +102,7 @@ final class ContextFactory
     private function getAllMembers(object $object): \Generator
     {
         // See https://externals.io/message/105697#105697
-        // Backwards compatibility with PHP < 7.4
-        $mangledObjectVars = \function_exists('get_mangled_object_vars')
-            ? get_mangled_object_vars($object)
-            : (array) $object;
+        $mangledObjectVars = get_mangled_object_vars($object);
 
         foreach ($mangledObjectVars as $key => $value) {
             if (str_starts_with($key, "\0*\0")) {

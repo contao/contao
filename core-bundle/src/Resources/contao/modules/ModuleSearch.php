@@ -41,7 +41,7 @@ class ModuleSearch extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -56,19 +56,12 @@ class ModuleSearch extends Module
 	 */
 	protected function compile()
 	{
-		// Mark the x and y parameter as used (see #4277)
-		if (isset($_GET['x']))
-		{
-			Input::get('x');
-			Input::get('y');
-		}
-
 		// Trigger the search module from a custom form
-		if (!isset($_GET['keywords']) && Input::post('FORM_SUBMIT') == 'tl_search')
+		if (Input::get('keywords') === null && Input::post('FORM_SUBMIT') == 'tl_search')
 		{
-			$_GET['keywords'] = Input::post('keywords');
-			$_GET['query_type'] = Input::post('query_type');
-			$_GET['per_page'] = Input::post('per_page');
+			Input::setGet('keywords', Input::post('keywords'));
+			Input::setGet('query_type', Input::post('query_type'));
+			Input::setGet('per_page', Input::post('per_page'));
 		}
 
 		$blnFuzzy = $this->fuzzy;
@@ -240,12 +233,11 @@ class ModuleSearch extends Module
 				$objTemplate->link = $arrResult[$i]['title'];
 				$objTemplate->url = StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
 				$objTemplate->title = StringUtil::specialchars(StringUtil::stripInsertTags($arrResult[$i]['title']));
-				$objTemplate->class = ($i == 0 ? 'first ' : '') . ((empty($arrResult[$i+1])) ? 'last ' : '') . (($i % 2 == 0) ? 'even' : 'odd');
 				$objTemplate->relevance = sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
 				$objTemplate->unit = $GLOBALS['TL_LANG']['UNITS'][1];
 
 				$arrContext = array();
-				$strText = StringUtil::stripInsertTags($arrResult[$i]['text']);
+				$strText = StringUtil::stripInsertTags(strtok($arrResult[$i]['text'], "\n"));
 				$arrMatches = Search::getMatchVariants(StringUtil::trimsplit(',', $arrResult[$i]['matches']), $strText, $GLOBALS['TL_LANGUAGE']);
 
 				// Get the context

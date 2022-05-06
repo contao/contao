@@ -102,8 +102,6 @@ class Config
 
 	private static $arrToBeRemoved = array
 	(
-		'os'                    => true,
-		'browser'               => true,
 		'dbCharset'             => true,
 		'dbCollation'           => true,
 		'disableRefererCheck'   => true,
@@ -497,7 +495,6 @@ class Config
 	{
 		// Load the default files
 		include __DIR__ . '/../../config/default.php';
-		include __DIR__ . '/../../config/agents.php';
 		include __DIR__ . '/../../config/mimetypes.php';
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');

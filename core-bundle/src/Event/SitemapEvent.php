@@ -26,6 +26,25 @@ class SitemapEvent extends Event
         return $this->document;
     }
 
+    public function addUrlToDefaultUrlSet(string $url): self
+    {
+        $sitemap = $this->getDocument();
+        $urlSet = $sitemap->getElementsByTagNameNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset')->item(0);
+
+        if (null === $urlSet) {
+            return $this;
+        }
+
+        $loc = $sitemap->createElement('loc', $url);
+        $urlEl = $sitemap->createElement('url');
+        $urlEl->appendChild($loc);
+        $urlSet->appendChild($urlEl);
+
+        $sitemap->appendChild($urlSet);
+
+        return $this;
+    }
+
     public function getRequest(): Request
     {
         return $this->request;

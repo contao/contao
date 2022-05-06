@@ -39,7 +39,7 @@ class ModuleBreadcrumb extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -88,7 +88,6 @@ class ModuleBreadcrumb extends Module
 				'title'    => StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
 				'link'     => $objPages->title,
 				'data'     => (($objFirstPage !== null) ? $objFirstPage->row() : array()),
-				'class'    => ''
 			);
 
 			array_pop($pages);
@@ -143,12 +142,11 @@ class ModuleBreadcrumb extends Module
 				'title'    => StringUtil::specialchars($pages[$i]->pageTitle ?: $pages[$i]->title, true),
 				'link'     => $pages[$i]->title,
 				'data'     => $pages[$i]->row(),
-				'class'    => ''
 			);
 		}
 
 		// Active article
-		if (isset($_GET['articles']))
+		if (Input::get('articles') !== null)
 		{
 			$items[] = array
 			(
@@ -158,7 +156,6 @@ class ModuleBreadcrumb extends Module
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title, true),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
-				'class'    => ''
 			);
 
 			list($strSection, $strArticle) = explode(':', Input::get('articles'));
@@ -186,7 +183,6 @@ class ModuleBreadcrumb extends Module
 					'title'    => StringUtil::specialchars($objArticle->title, true),
 					'link'     => $objArticle->title,
 					'data'     => $objArticle->row(),
-					'class'    => ''
 				);
 			}
 		}
@@ -202,12 +198,8 @@ class ModuleBreadcrumb extends Module
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
-				'class'    => ''
 			);
 		}
-
-		// Mark the first element (see #4833)
-		$items[0]['class'] = 'first';
 
 		// HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['generateBreadcrumb']) && \is_array($GLOBALS['TL_HOOKS']['generateBreadcrumb']))

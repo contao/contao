@@ -147,11 +147,6 @@ final class ContaoExtension extends AbstractExtension
                 [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSection'],
                 ['needs_context' => true, 'is_safe' => ['html']]
             ),
-            new TwigFunction(
-                'render_contao_backend_template',
-                [LegacyTemplateFunctionsRuntime::class, 'renderContaoBackendTemplate'],
-                ['is_safe' => ['html']]
-            ),
         ];
     }
 
