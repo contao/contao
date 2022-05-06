@@ -147,7 +147,7 @@
         <source>A page with the URL "%s" already exists!</source>
       </trans-unit>
       <trans-unit id="ERR.pageUrlNameExists">
-        <source>The URL "%s" already matches page "%s" (ID %s)!</source>
+        <source>This alias leads to a conflict with page "%s" (ID %s)!</source>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>

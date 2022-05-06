@@ -79,7 +79,7 @@ class PageUrlListener
                     $this->aliasExists($value, $pageModel, true);
                 } catch (DuplicateAliasException $exception) {
                     if ($pageModel = $exception->getPageModel()) {
-                        throw new \RuntimeException($this->translator->trans('ERR.pageUrlNameExists', [$exception->getUrl(), $pageModel->title, $pageModel->id], 'contao_default'), $exception->getCode(), $exception);
+                        throw new \RuntimeException($this->translator->trans('ERR.pageUrlNameExists', [$pageModel->title, $pageModel->id], 'contao_default'), $exception->getCode(), $exception);
                     }
 
                     throw new \RuntimeException($this->translator->trans('ERR.pageUrlExists', [$exception->getUrl()], 'contao_default'), $exception->getCode(), $exception);
