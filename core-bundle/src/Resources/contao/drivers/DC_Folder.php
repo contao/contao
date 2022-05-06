@@ -567,8 +567,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$security = System::getContainer()->get('security.helper');
 			$subject = new DataContainerSubject($this->strTable); // List view so we cannot provide an ID
 
-			foreach ($arrButtons as $k => $v) {
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject)) {
+			foreach ($arrButtons as $k => $v)
+			{
+				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
+				{
 					unset($arrButtons[$k]);
 				}
 			}
@@ -1299,8 +1301,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$security = System::getContainer()->get('security.helper');
 		$subject = new DataContainerSubject($this->strTable); // Move view so we CAN provide an ID
 
-		foreach ($arrButtons as $k => $v) {
-			if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject)) {
+		foreach ($arrButtons as $k => $v)
+		{
+			if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
+			{
 				unset($arrButtons[$k]);
 			}
 		}

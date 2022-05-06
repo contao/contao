@@ -1987,8 +1987,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$security = System::getContainer()->get('security.helper');
 		$subject = new DataContainerSubject($this->strTable, $this->intId); // Edit view so we CAN provide an ID
 
-		foreach ($arrButtons as $k => $v) {
-			if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject)) {
+		foreach ($arrButtons as $k => $v)
+		{
+			if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
+			{
 				unset($arrButtons[$k]);
 			}
 		}
@@ -2493,8 +2495,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$security = System::getContainer()->get('security.helper');
 			$subject = new DataContainerSubject($this->strTable); // Edit all mode so we cannot provide an ID
 
-			foreach ($arrButtons as $k => $v) {
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject)) {
+			foreach ($arrButtons as $k => $v)
+			{
+				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
+				{
 					unset($arrButtons[$k]);
 				}
 			}
@@ -2925,8 +2929,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$security = System::getContainer()->get('security.helper');
 			$subject = new DataContainerSubject($this->strTable); // Override all mode so we cannot provide an ID
 
-			foreach ($arrButtons as $k => $v) {
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject)) {
+			foreach ($arrButtons as $k => $v)
+			{
+				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
+				{
 					unset($arrButtons[$k]);
 				}
 			}
@@ -3590,7 +3596,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return = Message::generate() . '
 <div id="tl_buttons">' . ((Input::get('act') == 'select') ? '
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
-<a href="' . System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'] . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '')) . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)) && $security->isGranted(ContaoCorePermissions::DC_VIEW_CREATE, $subject)) ? '
+<a href="' . System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'] . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '')) . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_VIEW_CREATE, $subject)) ? '
 <a href="' . $this->addToUrl('act=paste&amp;mode=create') . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1]) . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . ($blnClipboard ? '
 <a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons()) . '
 </div>';
@@ -3780,8 +3786,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$security = System::getContainer()->get('security.helper');
 			$subject = new DataContainerSubject($this->strTable); // Tree view so we cannot provide an ID
 
-			foreach ($arrButtons as $k => $v) {
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject)) {
+			foreach ($arrButtons as $k => $v)
+			{
+				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
+				{
 					unset($arrButtons[$k]);
 				}
 			}
@@ -4678,8 +4686,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$security = System::getContainer()->get('security.helper');
 			$subject = new DataContainerSubject($this->strTable); // Parent select view so we cannot provide an ID
 
-			foreach ($arrButtons as $k => $v) {
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject)) {
+			foreach ($arrButtons as $k => $v)
+			{
+				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
+				{
 					unset($arrButtons[$k]);
 				}
 			}
@@ -5064,8 +5074,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$security = System::getContainer()->get('security.helper');
 				$subject = new DataContainerSubject($this->strTable); // List select view so we cannot provide an ID
 
-				foreach ($arrButtons as $k => $v) {
-					if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject)) {
+				foreach ($arrButtons as $k => $v)
+				{
+					if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
+					{
 						unset($arrButtons[$k]);
 					}
 				}
