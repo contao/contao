@@ -64,7 +64,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             return SubscriberInterface::DECISION_NEGATIVE;
         }
 
-        // Respect robots.txt info and nofollow meta data
+        // Respect robots.txt info and nofollow metadata
         if (!Util::isAllowedToFollow($crawlUri, $this->escargot)) {
             $this->logWithCrawlUri(
                 $crawlUri,
