@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="tl_module.news_archives.0">
         <source>News archives</source>
-        <target>Архиве вести</target>
+        <target>Категорије вести</target>
       </trans-unit>
       <trans-unit id="tl_module.news_archives.1">
         <source>Please select one or more news archives.</source>
-        <target>Изаберите једну или више архива вести.</target>
+        <target>Изаберите једну или више категорија вести.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_featured.0">
         <source>Featured items</source>
@@ -51,11 +51,11 @@
       </trans-unit>
       <trans-unit id="tl_module.news_format.0">
         <source>Archive format</source>
-        <target>Формат архиве</target>
+        <target>Формат категорије</target>
       </trans-unit>
       <trans-unit id="tl_module.news_format.1">
         <source>Here you can choose the news archive format.</source>
-        <target>Овде можете изабрати формат архиве.</target>
+        <target>Овде можете изабрати формат категорије.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_startDay.0">
         <source>Week start day</source>

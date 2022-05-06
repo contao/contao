@@ -13,10 +13,14 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
+use Contao\Image;
 use Contao\Input;
 use Contao\Message;
+use Contao\StringUtil;
 use Contao\StyleSheets;
 use Contao\System;
+use Contao\Versions;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 $GLOBALS['TL_DCA']['tl_style'] = array
@@ -24,7 +28,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_style_sheet',
 		'enableVersioning'            => true,
 		'onload_callback' => array
@@ -109,9 +113,9 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 			),
 			'toggle' => array
 			(
-				'href'                => 'act=toggle&amp;field=invisible',
 				'icon'                => 'visible.svg',
-				'reverse'             => true,
+				'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s,\'tl_style\')"',
+				'button_callback'     => array('tl_style', 'toggleIcon')
 			),
 			'show' => array
 			(
@@ -348,7 +352,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'bgimage' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'%contao.image.valid_extensions%'), 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>implode(',', System::getContainer()->getParameter('contao.image.valid_extensions'))), 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'bgposition' => array
@@ -523,7 +527,7 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 		'liststyleimage' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>'%contao.image.valid_extensions%'), 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('dcaPicker'=>array('do'=>'files', 'context'=>'file', 'icon'=>'pickfile.svg', 'fieldType'=>'radio', 'filesOnly'=>true, 'extensions'=>implode(',', System::getContainer()->getParameter('contao.image.valid_extensions'))), 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'own' => array
@@ -545,8 +549,6 @@ $GLOBALS['TL_DCA']['tl_style'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_style extends Backend
 {
@@ -673,5 +675,148 @@ class tl_style extends Backend
 		// Update the CSS file
 		$this->import(StyleSheets::class, 'StyleSheets');
 		$this->StyleSheets->updateStyleSheet($data['pid']);
+	}
+
+	/**
+	 * Return the "toggle visibility" button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
+	{
+		if (Input::get('tid'))
+		{
+			$this->toggleVisibility(Input::get('tid'), (Input::get('state') == 1), (func_num_args() <= 12 ? null : func_get_arg(12)));
+			$this->redirect($this->getReferer());
+		}
+
+		$href .= '&amp;tid=' . $row['id'] . '&amp;state=' . $row['invisible'];
+
+		if ($row['invisible'])
+		{
+			$icon = 'invisible.svg';
+		}
+
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label, 'data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+	}
+
+	/**
+	 * Toggle the visibility of a format definition
+	 *
+	 * @param integer       $intId
+	 * @param boolean       $blnVisible
+	 * @param DataContainer $dc
+	 */
+	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	{
+		// Set the ID and action
+		Input::setGet('id', $intId);
+		Input::setGet('act', 'toggle');
+
+		if ($dc)
+		{
+			$dc->id = $intId; // see #8043
+		}
+
+		// Trigger the onload_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onload_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
+
+		$objRow = $this->Database->prepare("SELECT * FROM tl_style WHERE id=?")
+								 ->limit(1)
+								 ->execute($intId);
+
+		if ($objRow->numRows < 1)
+		{
+			throw new AccessDeniedException('Invalid form definition ID ' . $intId . '.');
+		}
+
+		// Set the current record
+		if ($dc)
+		{
+			$dc->activeRecord = $objRow;
+		}
+
+		$objVersions = new Versions('tl_style', $intId);
+		$objVersions->initialize();
+
+		// Reverse the logic (styles have invisible=1)
+		$blnVisible = !$blnVisible;
+
+		// Trigger the save_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_style']['fields']['invisible']['save_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$blnVisible = $this->{$callback[0]}->{$callback[1]}($blnVisible, $dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$blnVisible = $callback($blnVisible, $dc);
+				}
+			}
+		}
+
+		$time = time();
+
+		// Update the database
+		$this->Database->prepare("UPDATE tl_style SET tstamp=$time, invisible='" . ($blnVisible ? '1' : '') . "' WHERE id=?")
+					   ->execute($intId);
+
+		if ($dc)
+		{
+			$dc->activeRecord->tstamp = $time;
+			$dc->activeRecord->invisible = ($blnVisible ? '1' : '');
+		}
+
+		// Trigger the onsubmit_callback
+		if (is_array($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA']['tl_style']['config']['onsubmit_callback'] as $callback)
+			{
+				if (is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($dc);
+				}
+				elseif (is_callable($callback))
+				{
+					$callback($dc);
+				}
+			}
+		}
+
+		$objVersions->create();
+
+		// The onsubmit_callback has triggered scheduleUpdate(), so run updateStyleSheet() now (see #1052)
+		$this->updateStyleSheet();
+
+		if ($dc)
+		{
+			$dc->invalidateCacheTags();
+		}
 	}
 }

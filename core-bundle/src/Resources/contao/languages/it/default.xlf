@@ -373,6 +373,10 @@
         <source>Generates a headline (h1 - h6).</source>
         <target>Genera un'intestazione (h1-h6).</target>
       </trans-unit>
+      <trans-unit id="CTE.miscellaneous">
+        <source>Miscellaneous</source>
+        <target>Varie</target>
+      </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
         <target>Testo</target>
@@ -446,8 +450,16 @@
         <target>Markdown</target>
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
-        <source>Generates HTML code from a markdown text.</source>
+        <source>Generates HTML code from a Markdown text.</source>
         <target>Genera il codice HTML da un testo Markdown.</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.0">
+        <source>Custom template</source>
+        <target>Template personalizzati</target>
+      </trans-unit>
+      <trans-unit id="CTE.template.1">
+        <source>Generates an element to insert a custom template.</source>
+        <target>Genera un elemento per inserire un template personalizzato.</target>
       </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
@@ -781,6 +793,14 @@
         <source>If a visitor requests a non-existent page, a 404 error page will be loaded instead.</source>
         <target>Se un visitatore richiede una pagina inesistente, verrà caricata una pagina di errore 404.</target>
       </trans-unit>
+      <trans-unit id="PTY.error_503.0">
+        <source>503 Service unavailable</source>
+        <target>503 Servizio non disponibile</target>
+      </trans-unit>
+      <trans-unit id="PTY.error_503.1">
+        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <target>Quando una pagina principale è in modalità di manutenzione, viene visualizzata una pagina di errore 503 per tutte le richieste.</target>
+      </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
         <target>Permessi di gestione files</target>
@@ -1112,6 +1132,14 @@
       <trans-unit id="MSC.source.1">
         <source>Please upload the CSV files to be imported.</source>
         <target>Selezionare il file CSV che si vuole importare</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.0">
+        <source>Image size</source>
+        <target>Dimensioni immagine</target>
+      </trans-unit>
+      <trans-unit id="MSC.imgSize.1">
+        <source>Here you can set the image dimensions and the resize mode.</source>
+        <target>Se si inserisce solo la larghezza o l'altezza dell'immagine, essa verrà ridimensionata proporzionalmente. Se si immettono entrambe le misure e l'immagine supera i limiti, quest'ultima verrà tagliata. Se si lasciano vuoti i campi verrà visualizzata con la dimensione originale.</target>
       </trans-unit>
       <trans-unit id="MSC.comma">
         <source>Comma</source>
@@ -1554,8 +1582,8 @@
         <target>Scorciatoie da tastiera del backend</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Ulteriori informazioni su come accelerare il flusso di lavoro utilizzando le &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;scorciatoie da tastiera&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Scopri di più su come velocizzare il tuo flusso di lavoro usando le &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;scelte rapide da tastiera&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1936,10 +1964,6 @@
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
         <target>È disponibile la versione %s di Contao</target>
-      </trans-unit>
-      <trans-unit id="MSC.maintenanceEnabled">
-        <source>The maintenance mode is currently enabled.</source>
-        <target>Modalità manutenzione abilitata.</target>
       </trans-unit>
       <trans-unit id="MSC.wordWrap">
         <source>Word wrap</source>
@@ -2658,8 +2682,8 @@
         <target>Disabilita</target>
       </trans-unit>
       <trans-unit id="MSC.internalCssEditor">
-        <source>The internal CSS editor has been deprecated and will be removed in one of the next Contao versions! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
-        <target>L'editor CSS interno è stato deprecato e verrà rimosso in una delle prossime versioni di Contao! Considera di esportare i fogli di stile esistenti e di aggiungerli nuovamente al layout di pagina come fogli di stile esterni.</target>
+        <source>The internal CSS editor has been deprecated and will be removed in Contao 5.0! Please consider exporting your existing style sheets and re-adding them to the page layout as external style sheets.</source>
+        <target>L'editor CSS interno è stato deprecato e verrà rimosso in Contao 5.0! Considera di esportare i tuoi fogli di stile esistenti e di aggiungerli nuovamente al layout di pagina come fogli di stile esterni.</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
@@ -2720,6 +2744,18 @@
       <trans-unit id="MSC.copyURL">
         <source>Copy URL</source>
         <target>Copiare URL</target>
+      </trans-unit>
+      <trans-unit id="MSC.shareURL">
+        <source>Share URL</source>
+        <target>Condividi URL</target>
+      </trans-unit>
+      <trans-unit id="MSC.parent">
+        <source>Parent</source>
+        <target>Parent</target>
+      </trans-unit>
+      <trans-unit id="MSC.manual">
+        <source>Manual</source>
+        <target>Manuale</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

@@ -177,6 +177,10 @@
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
         <target>%s neveljaven(ih) e-mail naslov(ov) je bil(o) onemogočen(ih).</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.skipped">
+        <source>%s e-mail address(es) has/have been skipped.</source>
+        <target>%se-naslov(ov) je bilo izpuščenih.</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>
         <target>Trenutno ni aktivnih naročnikov na to vrsto e-novic.</target>

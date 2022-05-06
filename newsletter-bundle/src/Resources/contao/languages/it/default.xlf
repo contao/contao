@@ -49,6 +49,10 @@
         <source>Channels</source>
         <target>Canali</target>
       </trans-unit>
+      <trans-unit id="MSC.nl_overview">
+        <source>Back to the newsletter overview</source>
+        <target>Torna alla panoramica della newsletter</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

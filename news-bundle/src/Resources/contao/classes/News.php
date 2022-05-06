@@ -10,10 +10,11 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+
 /**
  * Provide methods regarding news archives.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class News extends Frontend
 {
@@ -147,13 +148,10 @@ class News extends Frontend
 		if ($objArticle !== null)
 		{
 			$arrUrls = array();
-			$request = $container->get('request_stack')->getCurrentRequest();
 
-			if ($request)
-			{
-				$origScope = $request->attributes->get('_scope');
-				$request->attributes->set('_scope', 'frontend');
-			}
+			/** @var RequestStack $requestStack */
+			$requestStack = $container->get('request_stack');
+			$currentRequest = $requestStack->getCurrentRequest();
 
 			$time = time();
 			$origObjPage = $GLOBALS['objPage'] ?? null;
@@ -198,6 +196,11 @@ class News extends Frontend
 				$objItem->link = $this->getLink($objArticle, $strUrl);
 				$objItem->published = $objArticle->date;
 
+				// Push a new request to the request stack (#3856)
+				$request = null !== $currentRequest ? $this->createSubRequest($objItem->link, $currentRequest) : Request::create($objItem->link);
+				$request->attributes->set('_scope', 'frontend');
+				$requestStack->push($request);
+
 				/** @var UserModel $objAuthor */
 				if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
 				{
@@ -226,7 +229,7 @@ class News extends Frontend
 				}
 				else
 				{
-					$strDescription = $objArticle->teaser;
+					$strDescription = $objArticle->teaser ?? '';
 				}
 
 				$strDescription = $container->get('contao.insert_tag.parser')->replaceInline($strDescription);
@@ -263,11 +266,8 @@ class News extends Frontend
 				}
 
 				$objFeed->addItem($objItem);
-			}
 
-			if ($request)
-			{
-				$request->attributes->set('_scope', $origScope);
+				$requestStack->pop();
 			}
 
 			$GLOBALS['objPage'] = $origObjPage;
@@ -579,6 +579,36 @@ class News extends Frontend
 		}
 
 		return self::$arrPageCache[$intPageId];
+	}
+
+	/**
+	 * Creates a sub request for the given URI.
+	 */
+	private function createSubRequest(string $uri, Request $request): Request
+	{
+		$cookies = $request->cookies->all();
+		$server = $request->server->all();
+
+		unset($server['HTTP_IF_MODIFIED_SINCE'], $server['HTTP_IF_NONE_MATCH']);
+
+		$subRequest = Request::create($uri, 'get', array(), $cookies, array(), $server);
+
+		if (null !== ($session = $request->getSession()))
+		{
+			$subRequest->setSession($session);
+		}
+
+		if ($request->get('_format'))
+		{
+			$subRequest->attributes->set('_format', $request->get('_format'));
+		}
+
+		if ($request->getDefaultLocale() !== $request->getLocale())
+		{
+			$subRequest->setLocale($request->getLocale());
+		}
+
+		return $subRequest;
 	}
 }
 

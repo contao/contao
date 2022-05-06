@@ -28,8 +28,6 @@ use Symfony\Component\Filesystem\Filesystem;
  *     $files->fclose();
  *
  *     $files->rrdir('test');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Files
 {
@@ -91,7 +89,7 @@ class Files
 			return true;
 		}
 
-		return mkdir($this->strRootDir . '/' . $strDirectory);
+		return mkdir($this->strRootDir . '/' . $strDirectory, 0777, true);
 	}
 
 	/**
@@ -157,6 +155,11 @@ class Files
 	public function fopen($strFile, $strMode)
 	{
 		$this->validate($strFile);
+
+		if ($strMode[0] != 'r' && ($strPath = \dirname($strFile)) && $strPath != '.')
+		{
+			$this->mkdir($strPath);
+		}
 
 		return fopen($this->strRootDir . '/' . $strFile, $strMode);
 	}

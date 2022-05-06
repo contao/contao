@@ -27,6 +27,13 @@ class MessageCatalogueTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG']);
+
+        parent::tearDown();
+    }
+
     public function testPassesLocaleFromParent(): void
     {
         $catalogue = $this->createCatalogue();
@@ -89,10 +96,7 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('has')
-            ->withConsecutive(
-                ['foo', 'foobar'],
-                ['bar', 'foobar']
-            )
+            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
             ->willReturnOnConsecutiveCalls(true, false)
         ;
 
@@ -123,10 +127,7 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('defines')
-            ->withConsecutive(
-                ['foo', 'foobar'],
-                ['bar', 'foobar']
-            )
+            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
             ->willReturnOnConsecutiveCalls(true, false)
         ;
 
@@ -157,10 +158,7 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('get')
-            ->withConsecutive(
-                ['foo', 'foobar'],
-                ['bar', 'foobar']
-            )
+            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
             ->willReturnOnConsecutiveCalls('Foo', 'bar')
         ;
 

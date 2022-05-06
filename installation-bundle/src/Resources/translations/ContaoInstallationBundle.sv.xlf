@@ -1,5 +1,5 @@
-<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-  <file datatype="plaintext" original="src/Resources/translations/ContaoInstallationBundle.en.xlf" source-language="en" target-language="sv">
+<?xml version="1.0" ?><xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="src/Resources/translations/ContaoInstallationBundle.en.xlf" target-language="sv">
     <body>
       <trans-unit id="1" resname="install_tool">
         <source>Contao install tool</source>
@@ -130,12 +130,10 @@
         <target>Uppdatera databasen</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
-        <source>Please note that the update assistant only handles tables starting with &lt;code&gt;tl_&lt;/code&gt;.</source>
-        <target>Notera att uppdateringsassistenten bara hanterar tabeller med namn som börjar med &lt;code&gt;tl_&lt;/code&gt;.</target>
+        <source>Here you can update the database schema.</source>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
-        <source>The database is up to date.</source>
-        <target>Databasen är uppdaterad.</target>
+        <source>The database is up-to-date.</source>
       </trans-unit>
       <trans-unit id="35" resname="update_save">
         <source>Update database</source>
@@ -174,8 +172,7 @@
         <target>Importera en mall</target>
       </trans-unit>
       <trans-unit id="44" resname="template_import_explain">
-        <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
-        <target>Här kan du importera en &lt;code&gt;.sql&lt;/code&gt;-fil från &lt;code&gt;templates&lt;/code&gt;-mappen. Existerande data kommer att raderas! Om du bara vill importera ett tema så använder du tema-hanteraren i Contao istället.</target>
+        <source>Here you can import a &lt;code&gt;.sql&lt;/code&gt; file from the &lt;code&gt;templates&lt;/code&gt; directory. Any existing data will be deleted! If you only want to import a theme, please use the theme manager in the Contao back end instead.</source>
       </trans-unit>
       <trans-unit id="45" resname="import_exception">
         <source>The import failed! Is the database up to date and is the template file compatible with your Contao version?</source>

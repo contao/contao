@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
+use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
 use Contao\Image\ResizeConfiguration;
 
 /**
@@ -22,11 +24,10 @@ use Contao\Image\ResizeConfiguration;
  * @property boolean $isDownloads
  * @property boolean $files
  * @property boolean $filesOnly
+ * @property boolean $showFilePreview
  * @property string  $path
  * @property string  $extensions
  * @property string  $fieldType
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FileTree extends Widget
 {
@@ -118,7 +119,7 @@ class FileTree extends Widget
 
 			if ($order = Input::post($this->strOrderName))
 			{
-				$arrNew = array_map('StringUtil::uuidToBin', explode(',', $order));
+				$arrNew = array_map('\Contao\StringUtil::uuidToBin', explode(',', $order));
 			}
 
 			// Only proceed if the value has changed
@@ -151,7 +152,7 @@ class FileTree extends Widget
 
 		$arrValue = array_values(array_filter(explode(',', $varInput)));
 
-		return $this->multiple ? array_map('StringUtil::uuidToBin', $arrValue) : StringUtil::uuidToBin($arrValue[0]);
+		return $this->multiple ? array_map('\Contao\StringUtil::uuidToBin', $arrValue) : StringUtil::uuidToBin($arrValue[0]);
 	}
 
 	/**
@@ -264,7 +265,7 @@ class FileTree extends Widget
 							$objFile = new File($objFiles->path);
 							$strInfo = $objFiles->path . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
 
-							if ($objFile->isImage)
+							if ($this->showAsImage($objFile))
 							{
 								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
 							}
@@ -307,7 +308,14 @@ class FileTree extends Widget
 							// Only show allowed download types
 							elseif (\in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
 							{
-								$arrValues[$objSubfiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
+								if ($this->showAsImage($objFile))
+								{
+									$arrValues[$objSubfiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
+								}
+								else
+								{
+									$arrValues[$objSubfiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
+								}
 							}
 						}
 					}
@@ -327,7 +335,14 @@ class FileTree extends Widget
 						// Only show allowed download types
 						elseif (\in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
 						{
-							$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
+							if ($this->showAsImage($objFile))
+							{
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo, 'gimage removable');
+							}
+							else
+							{
+								$arrValues[$objFiles->uuid] = Image::getHtml($objFile->icon) . ' ' . $strInfo;
+							}
 						}
 					}
 				}
@@ -341,8 +356,8 @@ class FileTree extends Widget
 		}
 
 		// Convert the binary UUIDs
-		$strSet = implode(',', array_map('StringUtil::binToUuid', $arrSet));
-		$strOrder = $blnHasOrder ? implode(',', array_map('StringUtil::binToUuid', $this->{$this->orderField})) : '';
+		$strSet = implode(',', array_map('\Contao\StringUtil::binToUuid', $arrSet));
+		$strOrder = $blnHasOrder ? implode(',', array_map('\Contao\StringUtil::binToUuid', $this->{$this->orderField})) : '';
 
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $strSet . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . '>' . ($blnHasOrder ? '
   <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $strOrder . '">' : '') . '
@@ -444,6 +459,11 @@ class FileTree extends Widget
 	 */
 	protected function getPreviewImage(File $objFile, $strInfo, $strClass='gimage')
 	{
+		if ($previewPath = $this->getFilePreviewPath($objFile->path))
+		{
+			$objFile = new File(StringUtil::stripRootDir($previewPath));
+		}
+
 		if ($objFile->viewWidth && $objFile->viewHeight && ($objFile->isSvgImage || ($objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth'))))
 		{
 			// Inline the image if no preview image will be generated (see #636)
@@ -468,6 +488,37 @@ class FileTree extends Widget
 		}
 
 		return Image::getHtml($image, '', 'class="' . $strClass . '" title="' . StringUtil::specialchars($strInfo) . '"');
+	}
+
+	private function getFilePreviewPath(string $path): ?string
+	{
+		if (!$this->showFilePreview)
+		{
+			return null;
+		}
+
+		$container = System::getContainer();
+		$factory = $container->get('contao.image.preview_factory');
+		$sourcePath = $container->getParameter('kernel.project_dir') . '/' . $path;
+
+		try
+		{
+			return $factory->createPreview($sourcePath, 100)->getPath();
+		}
+		catch (UnableToGeneratePreviewException|MissingPreviewProviderException $exception)
+		{
+			return null;
+		}
+	}
+
+	private function showAsImage(File $objFile): bool
+	{
+		if ($objFile->isImage && !$this->isDownloads)
+		{
+			return true;
+		}
+
+		return $this->getFilePreviewPath($objFile->path) !== null;
 	}
 }
 

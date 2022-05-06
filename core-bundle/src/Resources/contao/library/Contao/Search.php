@@ -28,8 +28,6 @@ use Contao\Database\Result;
  *     {
  *         echo $result->url;
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Search
 {
@@ -51,7 +49,6 @@ class Search
 		$objDatabase = Database::getInstance();
 
 		$arrSet['tstamp'] = time();
-		$arrSet['url'] = $arrData['url'];
 		$arrSet['title'] = $arrData['title'];
 		$arrSet['protected'] = $arrData['protected'];
 		$arrSet['filesize'] = $arrData['filesize'] ?? null;
@@ -59,6 +56,9 @@ class Search
 		$arrSet['pid'] = $arrData['pid'];
 		$arrSet['language'] = $arrData['language'];
 		$arrSet['meta'] = json_encode((array) $arrData['meta']);
+
+		// Ensure that the URL only contains ASCII characters (see #4260)
+		$arrSet['url'] = preg_replace_callback('/[\x80-\xFF]+/', static fn ($match) => rawurlencode($match[0]), $arrData['url']);
 
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
@@ -173,7 +173,7 @@ class Search
 		$strBody = strip_tags($strBody);
 
 		// Put everything together
-		$arrSet['text'] = $arrData['title'] . ' ' . $arrData['description'] . ' ' . $strBody . ' ' . $arrData['keywords'];
+		$arrSet['text'] = $strBody . ' ' . $arrData['description'] . "\n" . $arrData['title'] . "\n" . $arrData['keywords'];
 		$arrSet['text'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($arrSet['text'])));
 
 		// Calculate the checksum
@@ -243,7 +243,7 @@ class Search
 		unset($arrSet);
 
 		// Split words
-		$arrWords = self::splitIntoWords(mb_strtolower($strText), $arrData['language']);
+		$arrWords = self::splitIntoWords($strText, $arrData['language']);
 		$arrIndex = array();
 
 		// Index words
@@ -377,17 +377,64 @@ class Search
 		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
 		$iterator->setText($strText);
 
+		// As the search index is shared across all languages, we can not use
+		// locale specific rules here (like de-ASCII or tr-Lower).
+		if (\in_array('Latin-ASCII', \Transliterator::listIDs(), true))
+		{
+			$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
+		}
+		else
+		{
+			$transliterator = \Transliterator::create('Lower');
+		}
+
 		$words = array();
 
 		foreach ($iterator->getPartsIterator() as $part)
 		{
 			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
 			{
-				$words[] = $part;
+				$words[] = $transliterator->transliterate($part);
 			}
 		}
 
 		return $words;
+	}
+
+	/**
+	 * Get different variants of the matched words that are present in the text,
+	 * e.g. with accents or diaeresis.
+	 *
+	 * @return string[]
+	 */
+	public static function getMatchVariants(array $arrMatches, string $strText, string $strLocale): array
+	{
+		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
+		$iterator->setText($strText);
+
+		// As the search index is shared across all languages, we can not use
+		// locale specific rules here (like de-ASCII or tr-Lower).
+		if (\in_array('Latin-ASCII', \Transliterator::listIDs(), true))
+		{
+			$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
+		}
+		else
+		{
+			$transliterator = \Transliterator::create('Lower');
+		}
+
+		$arrMatches = array_map(static fn ($match) => $transliterator->transliterate($match), $arrMatches);
+		$variants = array();
+
+		foreach ($iterator->getPartsIterator() as $part)
+		{
+			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE && !\in_array($part, $variants, true) && \in_array($transliterator->transliterate($part), $arrMatches, true))
+			{
+				$variants[] = $part;
+			}
+		}
+
+		return $variants;
 	}
 
 	/**
@@ -432,7 +479,6 @@ class Search
 	{
 		// Clean the keywords
 		$strKeywords = StringUtil::decodeEntities($strKeywords);
-		$strKeywords = mb_strtolower($strKeywords);
 
 		// Check keyword string
 		if (!\strlen($strKeywords))
@@ -442,7 +488,7 @@ class Search
 
 		// Split keywords
 		$arrChunks = array();
-		preg_match_all('/"[^"]+"|[+-]?[^ ]+\*?/', $strKeywords, $arrChunks);
+		preg_match_all('/"[^"]+"|\S+/', $strKeywords, $arrChunks);
 
 		$arrPhrases = array();
 		$arrPhrasesRegExp = array();
@@ -453,9 +499,32 @@ class Search
 
 		foreach (array_unique($arrChunks[0]) as $strKeyword)
 		{
-			if (substr($strKeyword, -1) == '*' && \strlen($strKeyword) > 1)
+			if (($strKeyword[0] === '*' || substr($strKeyword, -1) === '*') && \strlen($strKeyword) > 1)
 			{
-				$arrWildcards[] = str_replace('*', '%', $strKeyword);
+				$arrWildcardWords = self::splitIntoWords(trim($strKeyword, '*'), $GLOBALS['TL_LANGUAGE']);
+
+				foreach ($arrWildcardWords as $intIndex => $strWord)
+				{
+					if ($intIndex === 0 && $strKeyword[0] === '*')
+					{
+						$strWord = '%' . $strWord;
+					}
+
+					if ($intIndex === \count($arrWildcardWords) - 1 && substr($strKeyword, -1) === '*')
+					{
+						$strWord .= '%';
+					}
+
+					if ($strWord[0] === '%' || substr($strWord, -1) === '%')
+					{
+						$arrWildcards[] = $strWord;
+					}
+					else
+					{
+						$arrKeywords[] = $strWord;
+					}
+				}
+
 				continue;
 			}
 
@@ -489,14 +558,6 @@ class Search
 						{
 							$arrExcluded[] = $strWord;
 						}
-					}
-					break;
-
-				// Wildcards
-				case '*':
-					if (\strlen($strKeyword) > 1)
-					{
-						$arrWildcards[] = str_replace('*', '%', $strKeyword);
 					}
 					break;
 

@@ -32,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Folder',
+		'dataContainer'               => DC_Folder::class,
 		'enableVersioning'            => true,
 		'databaseAssisted'            => true,
 		'uploadPath'                  => $GLOBALS['TL_CONFIG']['uploadPath'] ?? System::getContainer()->getParameter('contao.upload_path'),
@@ -277,8 +277,6 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_files extends Backend
 {
@@ -854,7 +852,7 @@ class tl_files extends Backend
 			return '';
 		}
 
-		return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' onclick="Backend.openModalIframe({\'title\':\'' . str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_popup', array('src' => base64_encode($row['id'])))) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' onclick="Backend.openModalIframe({\'title\':\'' . str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**

@@ -85,6 +85,10 @@
         <source>Events</source>
         <target>Calendario/Eventi</target>
       </trans-unit>
+      <trans-unit id="MSC.eventOverview">
+        <source>Back to the event overview</source>
+        <target>Torna alla panoramica dell'evento</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

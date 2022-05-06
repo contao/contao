@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_template.1">
         <source>Here you can select an event template.</source>
+        <target>Aqui pode seleccionar um modelo de evento.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.0">
         <source>Calendar template</source>
@@ -86,6 +87,7 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_ctemplate.1">
         <source>Here you can select a calendar template.</source>
+        <target>Aqui pode seleccionar um modelo de calendário.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_showQuantity.0">
         <source>Show number of events</source>
@@ -97,9 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.0">
         <source>Featured events</source>
+        <target>Eventos em destaque</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_featured.1">
         <source>Here you can choose how featured events are handled.</source>
+        <target>Aqui pode escolher como são tratados os eventos em destaque.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
@@ -227,12 +231,15 @@
       </trans-unit>
       <trans-unit id="tl_module.events.all_items">
         <source>Show all events</source>
+        <target>Mostrar todos os eventos</target>
       </trans-unit>
       <trans-unit id="tl_module.events.featured">
         <source>Show featured events only</source>
+        <target>Mostrar apenas eventos em destaque</target>
       </trans-unit>
       <trans-unit id="tl_module.events.unfeatured">
         <source>Skip featured events</source>
+        <target>Saltar eventos em destaque</target>
       </trans-unit>
     </body>
   </file>

@@ -100,8 +100,6 @@ use Doctrine\DBAL\Types\Types;
  * @property integer       $storeValues
  * @property boolean       $includeBlankOption
  * @property string        $blankOptionLabel
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Widget extends Controller
 {
@@ -706,7 +704,7 @@ abstract class Widget extends Controller
 			return ' ' . $strKey;
 		}
 
-		if ($varValue)
+		if ('' !== (string) $varValue)
 		{
 			return ' ' . $strKey . '="' . StringUtil::specialchars($varValue) . '"';
 		}

@@ -201,6 +201,22 @@
         <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
         <target>Om du skriver in ett numeriskt värde här kommer fältlängden att begränsas till detta antal tecken. Om du håller på och skapar ett filuppladdningsfält kan du ange maximala filstorleken i Bytes här (1 MB = 1024 kB = 1024000 Bytes).</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.0">
+        <source>Maximum image width</source>
+        <target>Maximal bildbredd</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.1">
+        <source>Here you can enter the maximum width for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Här kan du ange maximal bredd för bilduppladdningar i pixlar. Ange 0 för att använda systemets standard.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.0">
+        <source>Maximum image height</source>
+        <target>Maximal bildhöjd</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.1">
+        <source>Here you can enter the maximum height for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Här kan du ange maximal höjd för bilduppladdningar i pixlar. Ange 0 för att använda systemets standard.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.minval.0">
         <source>Minimum value</source>
         <target>Minsta värde</target>

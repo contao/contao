@@ -27,6 +27,13 @@ use Twig\Source;
 
 class PhpTemplateProxyNodeVisitorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([ContaoFramework::class]);
+
+        parent::tearDown();
+    }
+
     public function testPriority(): void
     {
         $visitor = new PhpTemplateProxyNodeVisitor('ExtensionClass');

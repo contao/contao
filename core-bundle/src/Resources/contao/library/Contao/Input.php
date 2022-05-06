@@ -24,8 +24,6 @@ namespace Contao;
  *         $username = Input::post('username');
  *         $password = Input::post('password');
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Input
 {
@@ -680,7 +678,7 @@ class Input
 	private static function getAttributesFromTag($strAttributes)
 	{
 		// Match every attribute name value pair
-		if (!preg_match_all('@\s+([a-z][a-z0-9:-]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]*))?@i', $strAttributes, $matches, PREG_SET_ORDER))
+		if (!preg_match_all('@\s+([a-z][a-z0-9_:-]*)(?:\s*=\s*("[^"]*"|\'[^\']*\'|[^\s>]*))?@i', $strAttributes, $matches, PREG_SET_ORDER))
 		{
 			return array();
 		}
@@ -983,14 +981,7 @@ class Input
 			return $_POST[$strKey];
 		}
 
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
-
-		// Return if the session has not been started before
-		if ($request === null || !$request->hasPreviousSession())
-		{
-			return null;
-		}
-
+		// Do not check for $request->hasPreviousSession() and early return here (see #3971)
 		if (isset($_SESSION['FORM_DATA'][$strKey]))
 		{
 			return ($strKey == 'FORM_SUBMIT') ? preg_replace('/^auto_/i', '', $_SESSION['FORM_DATA'][$strKey]) : $_SESSION['FORM_DATA'][$strKey];

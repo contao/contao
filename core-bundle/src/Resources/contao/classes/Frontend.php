@@ -23,8 +23,6 @@ use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
 
 /**
  * Provide methods to manage front end controllers.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Frontend extends Controller
 {
@@ -583,7 +581,7 @@ abstract class Frontend extends Controller
 	{
 		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Frontend::prepareMetaDescription()" has been deprecated and will no longer work Contao 5.0. Use the "Contao\CoreBundle\String\HtmlDecoder" service instead.');
 
-		$strText = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strText);
+		$strText = System::getContainer()->get('contao.insert_tag.parser')->replaceInline((string) $strText);
 		$strText = strip_tags($strText);
 		$strText = str_replace("\n", ' ', $strText);
 		$strText = StringUtil::substr($strText, 320);

@@ -18,8 +18,6 @@ use Symfony\Component\Filesystem\Path;
  *
  * Custom settings above or below the `### INSTALL SCRIPT ###` markers will be
  * preserved.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Config
 {
@@ -341,7 +339,7 @@ class Config
 		}
 
 		// Recompile the APC file (thanks to Trenker)
-		if (\function_exists('apc_compile_file') && !ini_get('apc.stat'))
+		if (\function_exists('apc_compile_file') && !\ini_get('apc.stat'))
 		{
 			apc_compile_file($strDestination);
 		}
@@ -429,9 +427,9 @@ class Config
 	 */
 	public static function get($strKey)
 	{
-		if (isset(self::$arrDeprecated[$strKey]) || isset(self::$arrDeprecatedMap[$strKey]))
+		if ($newKey = self::getNewKey($strKey))
 		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
+			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
 		}
 
 		if (isset(self::$arrToBeRemoved[$strKey]))
@@ -450,9 +448,9 @@ class Config
 	 */
 	public static function set($strKey, $varValue)
 	{
-		if (isset(self::$arrDeprecated[$strKey]) || isset(self::$arrDeprecatedMap[$strKey]))
+		if ($newKey = self::getNewKey($strKey))
 		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey]);
+			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
 		}
 
 		if (isset(self::$arrToBeRemoved[$strKey]))
@@ -461,6 +459,20 @@ class Config
 		}
 
 		$GLOBALS['TL_CONFIG'][$strKey] = $varValue;
+	}
+
+	/**
+	 * Return the new key if the existing one is deprecated
+	 *
+	 * @internal
+	 *
+	 * @param string $strKey The short key
+	 *
+	 * @return string|null
+	 */
+	public static function getNewKey($strKey)
+	{
+		return self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey] ?? null;
 	}
 
 	/**

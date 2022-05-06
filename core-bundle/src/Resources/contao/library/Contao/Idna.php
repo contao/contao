@@ -10,9 +10,6 @@
 
 namespace Contao;
 
-use TrueBV\Exception\LabelOutOfBoundsException;
-use TrueBV\Punycode;
-
 /**
  * An idna_encode adapter class
  *
@@ -24,8 +21,6 @@ use TrueBV\Punycode;
  *     echo Idna::encode('bürger.de');
  *     echo Idna::encodeEmail('mit@bürger.de');
  *     echo Idna::encodeUrl('http://www.bürger.de');
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Idna
 {
@@ -38,21 +33,17 @@ class Idna
 	 */
 	public static function encode($strDomain)
 	{
-		if (!$strDomain)
+		if (!$strDomain || !\is_string($strDomain))
 		{
 			return '';
 		}
 
-		$objPunycode = new Punycode();
-
-		try
-		{
-			return $objPunycode->encode($strDomain);
-		}
-		catch (LabelOutOfBoundsException $e)
+		if (($encoded = idn_to_ascii($strDomain)) === false)
 		{
 			return '';
 		}
+
+		return $encoded;
 	}
 
 	/**
@@ -64,21 +55,17 @@ class Idna
 	 */
 	public static function decode($strDomain)
 	{
-		if (!$strDomain)
+		if (!$strDomain || !\is_string($strDomain))
 		{
 			return '';
 		}
 
-		$objPunycode = new Punycode();
-
-		try
-		{
-			return $objPunycode->decode($strDomain);
-		}
-		catch (LabelOutOfBoundsException $e)
+		if (($decoded = idn_to_utf8($strDomain)) === false)
 		{
 			return '';
 		}
+
+		return $decoded;
 	}
 
 	/**
@@ -90,7 +77,7 @@ class Idna
 	 */
 	public static function encodeEmail($strEmail)
 	{
-		if (!$strEmail)
+		if (!$strEmail || !\is_string($strEmail))
 		{
 			return '';
 		}
@@ -135,7 +122,7 @@ class Idna
 	 */
 	public static function decodeEmail($strEmail)
 	{
-		if (!$strEmail)
+		if (!$strEmail || !\is_string($strEmail))
 		{
 			return '';
 		}

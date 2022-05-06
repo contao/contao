@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+trigger_deprecation('contao/core-bundle', '4.13', 'Using the Request class has been deprecated and will no longer work in Contao 5.0. Use an alternative library such as symfony/http-client instead.');
+
 /**
  * Sends HTTP requests and reads the response
  *
@@ -35,8 +37,6 @@ namespace Contao;
  * @property string  $username The auth username
  * @property boolean $redirect The follow redirects status
  * @property integer $rlimit   The maximum number of redirects
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Request
 {

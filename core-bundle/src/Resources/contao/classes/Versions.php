@@ -19,8 +19,6 @@ use Doctrine\DBAL\Types\Types;
 
 /**
  * Provide methods to handle versioning.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Versions extends Controller
 {
@@ -217,6 +215,8 @@ class Versions extends Controller
 		{
 			$strDescription = $data['subject'];
 		}
+
+		$strDescription = mb_substr($strDescription, 0, System::getContainer()->get('database_connection')->getSchemaManager()->listTableColumns('tl_version')['description']->getLength());
 
 		$intId = $this->Database->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, IFNULL((SELECT MAX(version) FROM (SELECT version FROM tl_version WHERE pid=? AND fromTable=?) v), 0) + 1, ?, ?, ?, ?, ?, 1, ?)")
 								->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
@@ -603,7 +603,7 @@ class Versions extends Controller
 	}
 
 	/**
-	 * Render the versions dropdown menu
+	 * Render the versions drop-down menu
 	 *
 	 * @return string
 	 */
@@ -759,32 +759,36 @@ class Versions extends Controller
 			return sprintf($this->strEditUrl, $this->intPid);
 		}
 
-		$strUrl = Environment::get('request');
+		$pairs = array();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		// Save the real edit URL if the visibility is toggled via Ajax
-		if (preg_match('/&(amp;)?state=/', $strUrl))
-		{
-			$strUrl = preg_replace
-			(
-				array('/&(amp;)?id=[^&]+/', '/(&(amp;)?)t(id=[^&]+)/', '/(&(amp;)?)state=[^&]*/'),
-				array('', '$1$3', '$1act=edit'),
-				$strUrl
-			);
-		}
+		parse_str($request->server->get('QUERY_STRING'), $pairs);
 
 		// Adjust the URL of the "personal data" module (see #7987)
-		if (preg_match('/do=login(&|$)/', $strUrl))
+		if (isset($pairs['do']) && $pairs['do'] == 'login')
 		{
-			$this->import(BackendUser::class, 'User');
-
-			$strUrl = preg_replace('/do=login(&|$)/', 'do=user$1', $strUrl);
-			$strUrl .= '&amp;act=edit&amp;id=' . $this->User->id . '&amp;rt=' . REQUEST_TOKEN;
+			$pairs['do'] = 'user';
+			$pairs['id'] = BackendUser::getInstance()->id;
+			$pairs['rt'] = REQUEST_TOKEN;
 		}
 
-		// Correct the URL in "edit|override multiple" mode (see #7745)
-		$strUrl = preg_replace('/act=(edit|override)All/', 'act=edit&id=' . $this->intPid, $strUrl);
+		if (isset($pairs['act']))
+		{
+			// Save the real edit URL if the visibility is toggled via Ajax
+			if ($pairs['act'] == 'toggle')
+			{
+				$pairs['act'] = 'edit';
+			}
 
-		return $strUrl;
+			// Correct the URL in "edit|override multiple" mode (see #7745)
+			if ($pairs['act'] == 'editAll' || $pairs['act'] == 'overrideAll')
+			{
+				$pairs['act'] = 'edit';
+				$pairs['id'] = $this->intPid;
+			}
+		}
+
+		return ltrim($request->getPathInfo(), '/') . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 	}
 
 	/**

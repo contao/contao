@@ -19,9 +19,7 @@ use Symfony\Component\Filesystem\Path;
  *
  *     $short = StringUtil::substr($str, 32);
  *     $html  = StringUtil::substrHtml($str, 32);
- *     $xhtml = StringUtil::toXhtml($html5);
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ *     $decoded = StringUtil::decodeEntities($str);
  */
 class StringUtil
 {
@@ -486,11 +484,11 @@ class StringUtil
 	 *
 	 * @return string The XHTML string
 	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public static function toXhtml($strString)
 	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'The "StringUtil::toXhtml()" method has been deprecated and will no longer work in Contao 5.0.');
+		trigger_deprecation('contao/core-bundle', '4.9', 'The "StringUtil::toXhtml()" method has been deprecated and will no longer work in Contao 5.0.');
 
 		$arrPregReplace = array
 		(
@@ -523,9 +521,13 @@ class StringUtil
 	 * @param string $strString The XHTML string
 	 *
 	 * @return string The HTML5 string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
 	 */
 	public static function toHtml5($strString)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'The "StringUtil::toHtml5()" method has been deprecated and will no longer work in Contao 5.0.');
+
 		$arrPregReplace = array
 		(
 			'/<(br|hr|img)([^>]*) \/>/i'                  => '<$1$2>',             // Close stand-alone tags
@@ -694,7 +696,7 @@ class StringUtil
 
 			if ($file !== null)
 			{
-				$return .= $paths[$i+2] . '="{{file::' . static::binToUuid($file->uuid) . '}}"';
+				$return .= $paths[$i+2] . '="{{file::' . static::binToUuid($file->uuid) . '|urlattr}}"';
 			}
 			else
 			{
@@ -825,7 +827,7 @@ class StringUtil
 	 */
 	public static function convertEncoding($str, $to, $from=null)
 	{
-		if ($str !== null && !is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
+		if ($str !== null && !\is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
 		{
 			trigger_deprecation('contao/core-bundle', '4.9', 'Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated an will no longer work in Contao 5.0.');
 
@@ -941,9 +943,11 @@ class StringUtil
 			. ');?'               // Optional semicolon
 		. ')i';
 
+		$arrAllowedUrlProtocols = System::getContainer()->getParameter('contao.sanitizer.allowed_url_protocols');
+
 		// URL-encode colon to prevent disallowed protocols
 		if (
-			!preg_match('@^(?:https?|ftp|mailto|tel|data):@i', self::decodeEntities($strString))
+			!preg_match('(^(?:' . implode('|', array_map('preg_quote', $arrAllowedUrlProtocols)) . '):)i', self::decodeEntities($strString))
 			&& preg_match($colonRegEx, self::stripInsertTags($strString))
 		) {
 			$strString = preg_replace($colonRegEx, '%3A', $strString);
@@ -966,7 +970,8 @@ class StringUtil
 		do
 		{
 			$strString = preg_replace('/{{[^{}]*}}/', '', $strString, -1, $count);
-		} while ($count > 0);
+		}
+		while ($count > 0);
 
 		return $strString;
 	}

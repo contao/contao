@@ -80,6 +80,7 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.robots.1">
         <source>Here you can overwrite how search engines handle the event.</source>
+        <target>Aqui pode sobrescrever a forma como os motores de busca lidam com o evento.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
@@ -247,9 +248,11 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
+        <target>Evento em destaque</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
+        <target>Mostrar o evento numa lista de eventos em destaque.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
@@ -317,6 +320,7 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.meta_legend">
         <source>Metadata</source>
+        <target>Metadado</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.expert_legend">
         <source>Expert settings</source>
@@ -376,6 +380,7 @@ Deixe em branco para criar um evento sem data/hora de fim definido.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>
+        <target>ID %s do evento de recurso/desencaracterística</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>

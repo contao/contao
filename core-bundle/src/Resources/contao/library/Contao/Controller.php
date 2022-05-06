@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Result;
 use Contao\Image\PictureConfiguration;
@@ -43,20 +44,25 @@ use Symfony\Component\Finder\Glob;
  *     {
  *         return $this->getArticle(2);
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Controller extends System
 {
 	/**
 	 * @var Template
+	 *
+	 * @todo: Add in Contao 5.0
 	 */
-	protected $Template;
+	//protected $Template;
 
 	/**
 	 * @var array
 	 */
 	protected static $arrQueryCache = array();
+
+	/**
+	 * @var array
+	 */
+	private static $arrOldBePathCache = array();
 
 	/**
 	 * Find a particular template file and return its path
@@ -74,10 +80,10 @@ abstract class Controller extends System
 		// Check for a theme folder
 		if (\defined('TL_MODE') && TL_MODE == 'FE')
 		{
-			/** @var PageModel $objPage */
+			/** @var PageModel|null $objPage */
 			global $objPage;
 
-			if ($objPage->templateGroup)
+			if ($objPage->templateGroup ?? null)
 			{
 				if (Validator::isInsecurePath($objPage->templateGroup))
 				{
@@ -131,8 +137,21 @@ abstract class Controller extends System
 		$arrMapper['mod'][] = 'comment_form'; // TODO: remove in Contao 5.0
 		$arrMapper['mod'][] = 'newsletter'; // TODO: remove in Contao 5.0
 
-		// Get the default templates
-		foreach (TemplateLoader::getPrefixedFiles($strPrefix) as $strTemplate)
+		/** @var TemplateHierarchyInterface $templateHierarchy */
+		$templateHierarchy = System::getContainer()->get('contao.twig.filesystem_loader');
+		$identifierPattern = sprintf('/^%s%s/', preg_quote($strPrefix, '/'), substr($strPrefix, -1) !== '_' ? '($|_)' : '');
+
+		$prefixedFiles = array_merge(
+			array_filter(
+				array_keys($templateHierarchy->getInheritanceChains()),
+				static fn (string $identifier): bool => 1 === preg_match($identifierPattern, $identifier),
+			),
+			// Merge with the templates from the TemplateLoader for backwards
+			// compatibility in case someone has added templates manually
+			TemplateLoader::getPrefixedFiles($strPrefix),
+		);
+
+		foreach ($prefixedFiles as $strTemplate)
 		{
 			if ($strTemplate != $strPrefix)
 			{
@@ -216,7 +235,7 @@ abstract class Controller extends System
 			{
 				$objTheme = ThemeModel::findAll(array('order'=>'name'));
 			}
-			catch (\Exception $e)
+			catch (\Throwable $e)
 			{
 				$objTheme = null;
 			}
@@ -680,9 +699,13 @@ abstract class Controller extends System
 	 * Return the languages for the TinyMCE spellchecker
 	 *
 	 * @return string The TinyMCE spellchecker language string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	protected function getSpellcheckerString()
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+
 		System::loadLanguageFile('languages');
 
 		$return = array();
@@ -731,6 +754,12 @@ abstract class Controller extends System
 		if ($objPage->protected && !\in_array($type, array('root', 'error_401', 'error_403', 'error_404', 'error_503')))
 		{
 			$sub += 4;
+		}
+
+		// Change icon if root page is published and in maintenance mode
+		if ($sub == 0 && $objPage->type == 'root' && $objPage->maintenanceMode)
+		{
+			$sub = 2;
 		}
 
 		// Get the image name
@@ -1170,27 +1199,39 @@ abstract class Controller extends System
 	 */
 	protected static function replaceOldBePaths($strContext)
 	{
-		$router = System::getContainer()->get('router');
-
-		$generate = static function ($route) use ($router)
-		{
-			return substr($router->generate($route), \strlen(Environment::get('path')) + 1);
-		};
+		$arrCache = &self::$arrOldBePathCache;
 
 		$arrMapper = array
 		(
-			'contao/confirm.php'   => $generate('contao_backend_confirm'),
-			'contao/file.php'      => $generate('contao_backend_file'),
-			'contao/help.php'      => $generate('contao_backend_help'),
-			'contao/index.php'     => $generate('contao_backend_login'),
-			'contao/main.php'      => $generate('contao_backend'),
-			'contao/page.php'      => $generate('contao_backend_page'),
-			'contao/password.php'  => $generate('contao_backend_password'),
-			'contao/popup.php'     => $generate('contao_backend_popup'),
-			'contao/preview.php'   => $generate('contao_backend_preview'),
+			'contao/confirm.php'   => 'contao_backend_confirm',
+			'contao/file.php'      => 'contao_backend_file',
+			'contao/help.php'      => 'contao_backend_help',
+			'contao/index.php'     => 'contao_backend_login',
+			'contao/main.php'      => 'contao_backend',
+			'contao/page.php'      => 'contao_backend_page',
+			'contao/password.php'  => 'contao_backend_password',
+			'contao/popup.php'     => 'contao_backend_popup',
+			'contao/preview.php'   => 'contao_backend_preview',
 		);
 
-		return str_replace(array_keys($arrMapper), $arrMapper, $strContext);
+		$replace = static function ($matches) use ($arrMapper, &$arrCache)
+		{
+			$key = $matches[0];
+
+			if (!isset($arrCache[$key]))
+			{
+				trigger_deprecation('contao/core-bundle', '4.0', 'Using old backend paths has been deprecated in Contao 4.0 and will be removed in Contao 5. Use the backend routes instead.');
+
+				$router = System::getContainer()->get('router');
+				$arrCache[$key] = substr($router->generate($arrMapper[$key]), \strlen(Environment::get('path')) + 1);
+			}
+
+			return $arrCache[$key];
+		};
+
+		$regex = '(' . implode('|', array_map('preg_quote', array_keys($arrMapper))) . ')';
+
+		return preg_replace_callback($regex, $replace, $strContext);
 	}
 
 	/**
@@ -1393,6 +1434,18 @@ abstract class Controller extends System
 	}
 
 	/**
+	 * Do not name this "reset" because it might result in conflicts with child classes
+	 * @see https://github.com/contao/contao/issues/4257
+	 *
+	 * @internal
+	 */
+	public static function resetControllerCache()
+	{
+		self::$arrQueryCache = array();
+		self::$arrOldBePathCache = array();
+	}
+
+	/**
 	 * Redirect to a front end page
 	 *
 	 * @param integer $intPage    The page ID
@@ -1473,7 +1526,8 @@ abstract class Controller extends System
 
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
-		} while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		}
+		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1737,7 +1791,7 @@ abstract class Controller extends System
 
 		if (null === $figure)
 		{
-			System::getContainer()->get('contao.monolog.logger.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
+			System::getContainer()->get('monolog.logger.contao.error')->error('Image "' . $rowData['singleSRC'] . '" could not be processed: ' . $figureBuilder->getLastException()->getMessage());
 
 			// Fall back to apply a sparse data set instead of failing (BC)
 			foreach ($createFallBackTemplateData() as $key => $value)
@@ -2228,8 +2282,6 @@ abstract class Controller extends System
 
 	/**
 	 * Return the IDs of all child records of a particular record (see #2475)
-	 *
-	 * @author Andreas Schempp
 	 *
 	 * @param mixed   $arrParentIds An array of parent IDs
 	 * @param string  $strTable     The table name

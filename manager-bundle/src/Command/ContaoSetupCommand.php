@@ -25,6 +25,7 @@ use Symfony\Component\Process\Process;
 class ContaoSetupCommand extends Command
 {
     protected static $defaultName = 'contao:setup';
+    protected static $defaultDescription = 'Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.';
 
     private string $webDir;
     private string $consolePath;
@@ -55,10 +56,7 @@ class ContaoSetupCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setHidden(true)
-            ->setDescription('Sets up a Contao Managed Edition. This command will be run when executing the "contao-setup" binary.')
-        ;
+        $this->setHidden(true);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -69,7 +67,7 @@ class ContaoSetupCommand extends Command
 
         $php = [
             $this->phpPath,
-            '-dmemory_limit='.ini_get('memory_limit'),
+            '-dmemory_limit='.\ini_get('memory_limit'),
         ];
 
         if (OutputInterface::VERBOSITY_DEBUG === $output->getVerbosity()) {

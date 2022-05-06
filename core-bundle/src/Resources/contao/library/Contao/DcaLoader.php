@@ -20,8 +20,6 @@ namespace Contao;
  *
  *     $dca = new DcaLoader('tl_user');
  *     $dca->load();
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DcaLoader extends Controller
 {

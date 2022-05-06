@@ -49,6 +49,10 @@
         <source>Channels</source>
         <target>Kanāli</target>
       </trans-unit>
+      <trans-unit id="MSC.nl_overview">
+        <source>Back to the newsletter overview</source>
+        <target>Atpakaļ uz apkārtraksta pārskatu</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

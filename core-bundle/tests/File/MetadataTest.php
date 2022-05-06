@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\File;
 
+use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaLoader;
 use Contao\FilesModel;
 use Contao\System;
 
@@ -34,6 +36,15 @@ class MetadataTest extends TestCase
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = [
             'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
         ];
+    }
+
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([DcaLoader::class, System::class, Config::class]);
+
+        parent::tearDown();
     }
 
     public function testCreateAndAccessMetadataContainer(): void
@@ -191,10 +202,7 @@ class MetadataTest extends TestCase
             'get all metadata of first matching locale'
         );
 
-        $this->assertNull(
-            $model->getMetadata('es'),
-            'return null if no metadata is available for a locale'
-        );
+        $this->assertNull($model->getMetadata('es'), 'return null if no metadata is available for a locale');
     }
 
     public function testMergesMetadata(): void

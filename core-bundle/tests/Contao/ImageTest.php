@@ -17,6 +17,7 @@ use Contao\CoreBundle\Image\ImageFactory;
 use Contao\CoreBundle\Image\LegacyResizer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\File;
+use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image;
 use Contao\Image\DeferredImageInterface;
@@ -34,9 +35,9 @@ class ImageTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public static function setUpBeforeClass(): void
+    protected function setUp(): void
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $filesystem = new Filesystem();
 
@@ -50,11 +51,6 @@ class ImageTest extends TestCase
         }
 
         $filesystem->mkdir(Path::join(static::getTempDir(), 'system/tmp'));
-    }
-
-    protected function setUp(): void
-    {
-        parent::setUp();
 
         System::setContainer($this->getContainerWithImageServices());
 
@@ -69,6 +65,8 @@ class ImageTest extends TestCase
         parent::tearDown();
 
         (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/images'));
+
+        $this->resetStaticProperties([System::class, File::class, Files::class]);
 
         unset($GLOBALS['TL_CONFIG']);
     }
@@ -135,10 +133,7 @@ class ImageTest extends TestCase
         $imageObj->setTargetHeight($arguments[1]);
         $imageObj->setResizeMode($arguments[4]);
 
-        $this->assertSame(
-            $expectedResult,
-            $imageObj->computeResize()
-        );
+        $this->assertSame($expectedResult, $imageObj->computeResize());
 
         $imageObj->setZoomLevel(50);
 
@@ -999,7 +994,6 @@ class ImageTest extends TestCase
 
     /**
      * @group legacy
-     * @psalm-suppress NullArgument
      */
     public function testDoesNotFactorImagesInTheLegacyMethodIfTheArgumentIsInvalid(): void
     {
@@ -1474,7 +1468,7 @@ class ImageTest extends TestCase
         $imageObj->setTargetWidth(50)->setTargetHeight(50);
         $imageObj->executeResize();
 
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '(^assets/images/.*dummy.*.jpg$)',
             $imageObj->getResizedPath(),
             'Hook should not get called for cached images'
@@ -1565,7 +1559,7 @@ class ImageTest extends TestCase
         $container->set('contao.image.legacy_resizer', $resizer);
         $container->set('contao.image.factory', $factory);
         $container->set('filesystem', new Filesystem());
-        $container->set('contao.monolog.logger.error', $this->createMock(LoggerInterface::class));
+        $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
 
         return $container;
     }

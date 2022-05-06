@@ -171,8 +171,6 @@ use Contao\Model\Registry;
  * @method static integer countByUseTwoFactor($val, array $opt=array())
  * @method static integer countByBackupCodes($val, array $opt=array())
  * @method static integer countByTrustedTokenVersion($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class MemberModel extends Model
 {
@@ -214,7 +212,7 @@ class MemberModel extends Model
 	 *
 	 * @return static The model or null if there is no member
 	 */
-	public static function findUnactivatedByEmail($strEmail, array $arrOptions=array())
+	public static function findUnactivatedByEmail($strEmail)
 	{
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
@@ -246,7 +244,7 @@ class MemberModel extends Model
 	 *
 	 * @return Collection|MemberModel[]|MemberModel|null A collection of models or null if there are no expired registrations
 	 */
-	public static function findExpiredRegistrations(array $arrOptions=array())
+	public static function findExpiredRegistrations()
 	{
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
@@ -260,6 +258,38 @@ class MemberModel extends Model
 		}
 
 		return static::createCollectionFromDbResult($objResult, $t);
+	}
+
+	/**
+	 * Find an expired registration by email address that has not been activated for more than 24 hours
+	 *
+	 * @param string $strEmail The email address to find the expired registration for
+	 *
+	 * @return static The model or null if there is no expired registration
+	 */
+	public static function findExpiredRegistrationByEmail(string $strEmail)
+	{
+		$t = static::$strTable;
+		$objDatabase = Database::getInstance();
+
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable='1' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+								 ->limit(1)
+								 ->execute($strEmail, strtotime('-24 hours'));
+
+		if ($objResult->numRows < 1)
+		{
+			return null;
+		}
+
+		$objRegistry = Registry::getInstance();
+
+		/** @var MemberModel|Model $objMember */
+		if ($objMember = $objRegistry->fetch($t, $objResult->id))
+		{
+			return $objMember;
+		}
+
+		return new static($objResult);
 	}
 }
 

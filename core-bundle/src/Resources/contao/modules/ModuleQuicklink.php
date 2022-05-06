@@ -15,8 +15,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "quick link".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleQuicklink extends Module
 {
@@ -42,7 +40,7 @@ class ModuleQuicklink extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -82,7 +80,8 @@ class ModuleQuicklink extends Module
 		}
 
 		$items = array();
-		$security = System::getContainer()->get('security.helper');
+		$container = System::getContainer();
+		$security = $container->get('security.helper');
 		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		/** @var PageModel[] $objPages */
@@ -134,7 +133,7 @@ class ModuleQuicklink extends Module
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+							$container->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
 
 							continue 2;
 						}
@@ -156,7 +155,7 @@ class ModuleQuicklink extends Module
 		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
 

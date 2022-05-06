@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\MakerBundle\Generator;
 
 use Symfony\Bundle\MakerBundle\FileManager;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Webmozart\PathUtil\Path;
 
 class DcaGenerator implements GeneratorInterface
 {

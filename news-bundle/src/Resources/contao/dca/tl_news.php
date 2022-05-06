@@ -14,6 +14,7 @@ use Contao\Config;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Input;
 use Contao\LayoutModel;
 use Contao\News;
@@ -29,7 +30,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ptable'                      => 'tl_news_archive',
 		'ctable'                      => array('tl_content'),
 		'switchToEdit'                => true,
@@ -339,7 +340,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		),
 		'size' => array
 		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['size'],
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -500,8 +501,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property News $News
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_news extends Backend
 {

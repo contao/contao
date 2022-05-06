@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Doctrine\Schema;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Database\Installer;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
@@ -87,6 +87,18 @@ class DcaSchemaProvider
                         $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
                     }
 
+                    if (isset($options['customSchemaOptions']['charset'])) {
+                        $options['platformOptions']['charset'] = $options['customSchemaOptions']['charset'];
+                    }
+
+                    if (isset($options['customSchemaOptions']['collation'])) {
+                        if (!isset($options['customSchemaOptions']['charset'])) {
+                            $options['platformOptions']['charset'] = explode('_', $options['customSchemaOptions']['collation'], 2)[0];
+                        }
+
+                        $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
+                    }
+
                     $table->addColumn($config['name'], $config['type'], $options);
                 }
             }
@@ -124,6 +136,7 @@ class DcaSchemaProvider
         $scale = null;
         $precision = null;
         $default = null;
+        $charset = null;
         $collation = null;
         $unsigned = false;
         $notnull = false;
@@ -148,6 +161,7 @@ class DcaSchemaProvider
             }
 
             if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
+                $charset = explode('_', $match[1], 2)[0];
                 $collation = $match[1];
             }
 
@@ -178,8 +192,18 @@ class DcaSchemaProvider
             $options['precision'] = $precision;
         }
 
+        $platformOptions = [];
+
+        if (null !== $charset) {
+            $platformOptions['charset'] = $charset;
+        }
+
         if (null !== $collation) {
-            $options['platformOptions'] = ['collation' => $collation];
+            $platformOptions['collation'] = $collation;
+        }
+
+        if (!empty($platformOptions)) {
+            $options['platformOptions'] = $platformOptions;
         }
 
         $table->addColumn($columnName, $type, $options);
@@ -205,27 +229,27 @@ class DcaSchemaProvider
                 break;
 
             case 'tinytext':
-                $length = MySQLPlatform::LENGTH_LIMIT_TINYTEXT;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT;
                 break;
 
             case 'text':
-                $length = MySQLPlatform::LENGTH_LIMIT_TEXT;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_TEXT;
                 break;
 
             case 'mediumtext':
-                $length = MySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT;
                 break;
 
             case 'tinyblob':
-                $length = MySQLPlatform::LENGTH_LIMIT_TINYBLOB;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_TINYBLOB;
                 break;
 
             case 'blob':
-                $length = MySQLPlatform::LENGTH_LIMIT_BLOB;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_BLOB;
                 break;
 
             case 'mediumblob':
-                $length = MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB;
+                $length = AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB;
                 break;
 
             case 'tinyint':

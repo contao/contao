@@ -92,10 +92,7 @@ class TemplateLocator
         $paths = [];
 
         $add = function (string $group, string $basePath) use (&$paths): void {
-            $paths[$group] = array_merge(
-                $paths[$group] ?? [],
-                $this->expandSubdirectories($basePath)
-            );
+            $paths[$group] = array_merge($paths[$group] ?? [], $this->expandSubdirectories($basePath));
         };
 
         if (is_dir($path = Path::join($this->projectDir, 'contao/templates'))) {

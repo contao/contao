@@ -1,8 +1,8 @@
 <p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg"></p>
 
 <p align="center">
-<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=5.x" alt></a>
-<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/5.x/graph/badge.svg" alt></a>
+<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=4.13" alt></a>
+<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/4.13/graph/badge.svg" alt></a>
 <a href="https://packagist.org/packages/contao/contao"><img src="https://img.shields.io/packagist/v/contao/contao.svg" alt></a>
 </p>
 
@@ -96,7 +96,6 @@ composer run functional-tests
 composer run cs-fixer
 composer run service-linter
 composer run phpstan
-composer run psalm
 composer run monorepo-tools
 ```
 

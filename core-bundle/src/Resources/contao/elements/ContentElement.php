@@ -111,8 +111,6 @@ use Contao\Model\Collection;
  * @property string  $typePrefix
  * @property integer $origId
  * @property string  $hl
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class ContentElement extends Frontend
 {
@@ -184,8 +182,8 @@ abstract class ContentElement extends Frontend
 		}
 
 		$arrHeadline = StringUtil::deserialize($objElement->headline);
-		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] ?? '' : $arrHeadline;
+		$this->hl = $arrHeadline['unit'] ?? 'h1';
 		$this->strColumn = $strColumn;
 	}
 

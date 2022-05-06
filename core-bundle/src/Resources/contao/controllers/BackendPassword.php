@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Back end help wizard.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class BackendPassword extends Backend
 {
@@ -107,7 +105,7 @@ class BackendPassword extends Backend
 					$objUser->save();
 
 					Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
-					$this->redirect('contao/main.php');
+					$this->redirect(System::getContainer()->get('router')->generate('contao_backend'));
 				}
 			}
 

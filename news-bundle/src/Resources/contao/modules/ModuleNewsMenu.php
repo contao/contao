@@ -20,8 +20,6 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
  * @property array  $news_archives
  * @property string $news_order
  * @property string $news_format
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsMenu extends ModuleNews
 {
@@ -59,7 +57,7 @@ class ModuleNewsMenu extends ModuleNews
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -226,7 +224,14 @@ class ModuleNewsMenu extends ModuleNews
 		// Create the date object
 		try
 		{
-			$this->Date = Input::get('day') ? new Date(Input::get('day'), 'Ymd') : new Date();
+			if (($day = Input::get('day')) && \is_string($day))
+			{
+				$this->Date = new Date($day, 'Ymd');
+			}
+			else
+			{
+				$this->Date = new Date();
+			}
 		}
 		catch (\OutOfBoundsException $e)
 		{

@@ -16,8 +16,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
  * Provide methods to get all events of a certain period from the database.
  *
  * @property bool $cal_noSpan
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class Events extends Module
 {
@@ -316,7 +314,6 @@ abstract class Events extends Module
 		if ($arrEvent['teaser'])
 		{
 			$arrEvent['hasTeaser'] = true;
-			$arrEvent['teaser'] = StringUtil::toHtml5($arrEvent['teaser']);
 			$arrEvent['teaser'] = StringUtil::encodeEmail($arrEvent['teaser']);
 		}
 

@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Content element "Vimeo".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentVimeo extends ContentElement
 {

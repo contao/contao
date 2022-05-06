@@ -17,9 +17,6 @@ trigger_deprecation('contao/core-bundle', '4.12', 'Using the "Contao\PageRoot" c
 
 /**
  * Provide methods to handle a website root page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/Toflar>
  */
 class PageRoot extends Frontend
 {
@@ -31,9 +28,14 @@ class PageRoot extends Frontend
 	 * @param boolean $blnPreferAlias
 	 *
 	 * @return integer
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5; use
+	 *             the PageRoot::getResponse() method instead
 	 */
 	public function generate($rootPageId, $blnReturn=false, $blnPreferAlias=false)
 	{
+		trigger_deprecation('contao/core-bundle', '4.9', 'Using PageRoot::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRoot::getResponse() method instead.');
+
 		if (!$blnReturn)
 		{
 			$this->redirect($this->getRedirectUrl($rootPageId));

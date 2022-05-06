@@ -15,8 +15,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "quick navigation".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleQuicknav extends Module
 {
@@ -42,7 +40,7 @@ class ModuleQuicknav extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -116,7 +114,8 @@ class ModuleQuicknav extends Module
 		}
 
 		++$level;
-		$security = System::getContainer()->get('security.helper');
+		$container = System::getContainer();
+		$security = $container->get('security.helper');
 		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		foreach ($objSubpages as $objSubpage)
@@ -150,7 +149,7 @@ class ModuleQuicknav extends Module
 					}
 					catch (ExceptionInterface $exception)
 					{
-						System::log('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage(), __METHOD__, TL_ERROR);
+						$container->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
 
 						continue;
 					}

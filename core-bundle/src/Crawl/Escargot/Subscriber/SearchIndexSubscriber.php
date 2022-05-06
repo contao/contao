@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
+use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -38,6 +39,8 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
 
+    public const TAG_SKIP = 'skip-search-index';
+
     private IndexerInterface $indexer;
     private TranslatorInterface $translator;
     private array $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
@@ -55,12 +58,22 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function shouldRequest(CrawlUri $crawlUri): string
     {
-        // Respect robots.txt info and rel="nofollow" attributes
+        if ($crawlUri->hasTag(self::TAG_SKIP)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Do not request because it was marked to be skipped using the data-skip-search-index attribute.'
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
+        // Respect robots.txt info and nofollow meta data
         if (!Util::isAllowedToFollow($crawlUri, $this->escargot)) {
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because the URI was disallowed to be followed by either rel="nofollow" or robots.txt hints.'
+                'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -105,6 +118,19 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
                     'Did not index because according to the HTTP status code the response was not successful (%s).',
                     $response->getStatusCode()
                 )
+            );
+
+            return SubscriberInterface::DECISION_NEGATIVE;
+        }
+
+        // Skip any redirected URLs that are now outside our base hosts (#4213)
+        $actualHost = (new Uri($response->getInfo('url')))->getHost();
+
+        if ($crawlUri->getUri()->getHost() !== $actualHost && !$this->escargot->getBaseUris()->containsHost($actualHost)) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Did not index because it was not part of the base URI collection.'
             );
 
             return SubscriberInterface::DECISION_NEGATIVE;
@@ -184,18 +210,18 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function onTransportException(CrawlUri $crawlUri, TransportExceptionInterface $exception, ResponseInterface $response): void
     {
-        $this->logError($crawlUri, 'Could not request properly: '.$exception->getMessage());
+        $this->logWarning($crawlUri, 'Could not request properly: '.$exception->getMessage());
     }
 
     public function onHttpException(CrawlUri $crawlUri, HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk): void
     {
-        $this->logError($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
+        $this->logWarning($crawlUri, 'HTTP Status Code: '.$response->getStatusCode());
     }
 
-    private function logError(CrawlUri $crawlUri, string $message): void
+    private function logWarning(CrawlUri $crawlUri, string $message): void
     {
-        ++$this->stats['error'];
+        ++$this->stats['warning'];
 
-        $this->logWithCrawlUri($crawlUri, LogLevel::ERROR, sprintf('Broken link! %s.', $message));
+        $this->logWithCrawlUri($crawlUri, LogLevel::DEBUG, sprintf('Broken link! %s.', $message));
     }
 }

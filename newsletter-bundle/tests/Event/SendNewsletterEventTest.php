@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Event;
+namespace Contao\NewsletterBundle\Tests\Event;
 
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
 use PHPUnit\Framework\TestCase;

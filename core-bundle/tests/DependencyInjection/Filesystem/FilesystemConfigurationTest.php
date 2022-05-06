@@ -69,7 +69,7 @@ class FilesystemConfigurationTest extends TestCase
         $config->addVirtualFilesystem('foo', 'bar');
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('A virtual filesystem with the name \'foo\' is already defined.');
+        $this->expectExceptionMessage('A virtual filesystem with the name "foo" is already defined.');
 
         $config->addVirtualFilesystem('foo', 'bar');
     }
@@ -177,7 +177,7 @@ class FilesystemConfigurationTest extends TestCase
         $adapterDefinitionFactory = $this->createMock(AdapterDefinitionFactory::class);
         $adapterDefinitionFactory
             ->method('createDefinition')
-            ->with('local', ['directory' => $expected])
+            ->with('local', ['directory' => $expected, 'skip_links' => true])
             ->willReturn($this->createMock(Definition::class))
         ;
 
@@ -265,7 +265,7 @@ class FilesystemConfigurationTest extends TestCase
         $config = new FilesystemConfiguration($container);
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('A virtual filesystem with the name \'foo\' does not exist.');
+        $this->expectExceptionMessage('A virtual filesystem with the name "foo" does not exist.');
 
         $config->addDefaultDbafs('foo', 'tl_foo');
     }

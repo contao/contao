@@ -24,6 +24,9 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class LockCommand extends Command
 {
+    protected static $defaultName = 'contao:install:lock';
+    protected static $defaultDescription = 'Locks the install tool.';
+
     private string $lockFile;
 
     public function __construct(string $lockFile)
@@ -33,22 +36,8 @@ class LockCommand extends Command
         parent::__construct();
     }
 
-    protected function configure(): void
-    {
-        $this
-            ->setName('contao:install:lock')
-            ->setDescription('Locks the install tool.')
-        ;
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (file_exists($this->lockFile)) {
-            $output->writeln('<comment>The install tool has been locked already.</comment>');
-
-            return 1;
-        }
-
         $fs = new Filesystem();
         $fs->dumpFile($this->lockFile, 3);
 

@@ -12,9 +12,9 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Mailer\AvailableTransports;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
 use Contao\NewsletterBundle\Security\ContaoNewsletterPermissions;
@@ -27,7 +27,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'ctable'                      => array('tl_newsletter', 'tl_newsletter_recipients'),
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
@@ -166,7 +166,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
-			'options_callback'        => array(AvailableTransports::class, 'getTransportOptions'),
+			'options_callback'        => array('contao.mailer.available_transports', 'getTransportOptions'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'sender' => array
@@ -193,8 +193,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class tl_newsletter_channel extends Backend
 {

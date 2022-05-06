@@ -27,8 +27,6 @@ trigger_deprecation('contao/core-bundle', '4.13', 'Using the "Contao\FileSelecto
  * @property boolean $filesOnly
  * @property string  $extensions
  *
- * @author Leo Feyer <https://github.com/leofeyer>
- *
  * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
  *             Use the picker instead.
  */
@@ -313,16 +311,16 @@ class FileSelector extends Widget
 		$this->loadDataContainer($this->strTable);
 
 		// Load the current values
-		switch ($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null)
+		switch (true)
 		{
-			case 'File':
+			case is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null, DC_File::class, true):
 				if (Config::get($this->strField))
 				{
 					$this->varValue = Config::get($this->strField);
 				}
 				break;
 
-			case 'Table':
+			case is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null, DC_Table::class, true):
 				$this->import(Database::class, 'Database');
 
 				if (!$this->Database->fieldExists($this->strField, $this->strTable))
@@ -662,7 +660,8 @@ class FileSelector extends Widget
 			}
 
 			$path = \dirname($path);
-		} while ($path != '.');
+		}
+		while ($path != '.');
 
 		return true;
 	}

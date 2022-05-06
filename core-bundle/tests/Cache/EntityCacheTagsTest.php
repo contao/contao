@@ -21,20 +21,26 @@ use Contao\CoreBundle\Tests\Fixtures\Entity\Comment;
 use Contao\CoreBundle\Tests\Fixtures\Entity\Tag;
 use Contao\Model\Collection;
 use Contao\PageModel;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCache\ResponseTagger;
 
 class EntityCacheTagsTest extends DoctrineTestCase
 {
+    protected function tearDown(): void
+    {
+        $this->resetStaticProperties([[AnnotationRegistry::class, ['failedToAutoload']], DocParser::class]);
+
+        parent::tearDown();
+    }
+
     public function testGetTagForEntityClass(): void
     {
         $entityCacheTags = $this->getEntityCacheTags();
 
-        $this->assertSame(
-            'contao.db.tl_blog_post',
-            $entityCacheTags->getTagForEntityClass(BlogPost::class)
-        );
+        $this->assertSame('contao.db.tl_blog_post', $entityCacheTags->getTagForEntityClass(BlogPost::class));
     }
 
     public function testThrowsIfClassIsNoEntity(): void
@@ -52,10 +58,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $entityCacheTags = $this->getEntityCacheTags();
         $post = (new BlogPost())->setId(5);
 
-        $this->assertSame(
-            'contao.db.tl_blog_post.5',
-            $entityCacheTags->getTagForEntityInstance($post)
-        );
+        $this->assertSame('contao.db.tl_blog_post.5', $entityCacheTags->getTagForEntityInstance($post));
     }
 
     public function testThrowsIfInstanceIsNoEntity(): void
@@ -72,10 +75,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
     {
         $entityCacheTags = $this->getEntityCacheTags();
 
-        $this->assertSame(
-            'contao.db.tl_page',
-            $entityCacheTags->getTagForModelClass(PageModel::class)
-        );
+        $this->assertSame('contao.db.tl_page', $entityCacheTags->getTagForModelClass(PageModel::class));
     }
 
     public function testThrowsIfClassIsNoModel(): void
@@ -85,10 +85,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given class name "stdClass" is no valid model class.');
 
-        /*
-         * @phpstan-ignore-next-line
-         * @psalm-suppress InvalidArgument
-         */
+        /** @phpstan-ignore-next-line */
         $entityCacheTags->getTagForModelClass(\stdClass::class);
     }
 
@@ -100,10 +97,7 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $page = (new \ReflectionClass(PageModel::class))->newInstanceWithoutConstructor();
         $page->id = 5;
 
-        $this->assertSame(
-            'contao.db.tl_page.5',
-            $entityCacheTags->getTagForModelInstance($page)
-        );
+        $this->assertSame('contao.db.tl_page.5', $entityCacheTags->getTagForModelInstance($page));
     }
 
     /**

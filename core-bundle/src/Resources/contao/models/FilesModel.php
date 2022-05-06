@@ -81,8 +81,6 @@ use Symfony\Component\Filesystem\Path;
  * @method static integer countByImportantPartWidth($val, array $opt=array())
  * @method static integer countByImportantPartHeight($val, array $opt=array())
  * @method static integer countByMeta($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FilesModel extends Model
 {
@@ -437,7 +435,7 @@ class FilesModel extends Model
 			// Make sure we resolve insert tags pointing to files
 			if (isset($data[Metadata::VALUE_URL]))
 			{
-				$data[Metadata::VALUE_URL] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($data[Metadata::VALUE_URL]);
+				$data[Metadata::VALUE_URL] = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($data[Metadata::VALUE_URL] ?? '');
 			}
 
 			// Fill missing meta fields with empty values

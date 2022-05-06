@@ -12,15 +12,25 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
+use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\RootPageDependentSelect;
 use Contao\System;
-use Contao\TestCase\ContaoTestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class RootPageDependentSelectTest extends ContaoTestCase
+class RootPageDependentSelectTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([System::class, Config::class]);
+
+        parent::tearDown();
+    }
+
     public function testRendersMultipleSelects(): void
     {
         $rootPages = [
@@ -41,8 +51,8 @@ class RootPageDependentSelectTest extends ContaoTestCase
         $translator
             ->expects($this->once())
             ->method('trans')
-            ->with('tl_module.rootPageDependentModulesBlankOptionLabel', [], 'contao_module')
-            ->willReturn('Please choose your module for %s')
+            ->with('tl_module.rootPageDependentModulesBlankOptionLabel', [], 'contao_tl_module')
+            ->willReturn('Choose module for "%s"')
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
@@ -73,27 +83,29 @@ class RootPageDependentSelectTest extends ContaoTestCase
                     class="tl_select tl_chosen"
                     onfocus="Backend.getScrollOffset()"
                 >
-                    <option value="">Please choose your module for Root Page 1 (en)</option>
+                    <option value="">Choose module for "Root Page 1"</option>
                     <option value="10">Module-10</option>
                     <option value="20">Module-20</option>
-                    <option value="30">Module-30</option></select
-                ><select
+                    <option value="30">Module-30</option>
+                </select>
+                <select
                     name="rootPageDependentModules[]"
                     id="ctrl_rootPageDependentModules-2"
                     class="tl_select tl_chosen"
                     onfocus="Backend.getScrollOffset()"
                 >
-                    <option value="">Please choose your module for Root Page 2 (de)</option>
+                    <option value="">Choose module for "Root Page 2"</option>
                     <option value="10">Module-10</option>
                     <option value="20">Module-20</option>
-                    <option value="30">Module-30</option></select
-                ><select
+                    <option value="30">Module-30</option>
+                </select>
+                <select
                     name="rootPageDependentModules[]"
                     id="ctrl_rootPageDependentModules-3"
                     class="tl_select tl_chosen"
                     onfocus="Backend.getScrollOffset()"
                 >
-                    <option value="">Please choose your module for Root Page 3 (fr)</option>
+                    <option value="">Choose module for "Root Page 3"</option>
                     <option value="10">Module-10</option>
                     <option value="20">Module-20</option>
                     <option value="30">Module-30</option>

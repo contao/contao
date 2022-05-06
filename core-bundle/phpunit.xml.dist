@@ -1,74 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
-         colors="true"
-         defaultTestSuite="core-bundle"
-         bootstrap="vendor/autoload.php"
->
-    <php>
-        <ini name="error_reporting" value="-1" />
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0" />
-        <env name="SYMFONY_PATCH_TYPE_DECLARATIONS" value="deprecations=0" />
-        <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel" />
-        <env name="APP_SECRET" value="foobar" />
-        <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test" />
-    </php>
-
-    <testsuites>
-        <testsuite name="core-bundle">
-            <directory>./tests</directory>
-            <exclude>./tests/Fixtures</exclude>
-            <exclude>./tests/Functional</exclude>
-        </testsuite>
-        <testsuite name="functional">
-            <directory>./tests/Functional</directory>
-            <exclude>./tests/Functional/app</exclude>
-        </testsuite>
-        <testsuite name="coverage">
-            <directory>./tests</directory>
-            <exclude>./tests/Contao</exclude>
-            <exclude>./tests/Fixtures</exclude>
-            <exclude>./tests/Functional</exclude>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory>./src</directory>
-            <exclude>
-                <directory>./src/Resources</directory>
-                <!-- exclude resources that are exempt from testing -->
-                <directory>./src/Entity</directory>
-                <directory>./src/Migration/Version*</directory>
-                <!-- exclude files with symbols and side effects -->
-                <file>./src/EventListener/UserAwareTrait.php</file>
-                <file>./src/Exception/ServiceUnavailableException.php</file>
-                <file>./src/Framework/ScopeAwareTrait.php</file>
-            </exclude>
-        </whitelist>
-    </filter>
-
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
-            <arguments>
-                <array>
-                    <element key="time-sensitive">
-                        <array>
-                            <element key="0"><string>Contao\CoreBundle\Command</string></element>
-                            <element key="1"><string>Contao\CoreBundle\Tests\Command</string></element>
-                            <element key="2"><string>Contao\CoreBundle\Cron\Command</string></element>
-                            <element key="3"><string>Contao\CoreBundle\Tests\Cron</string></element>
-                            <element key="4"><string>Contao\CoreBundle\EventListener</string></element>
-                            <element key="5"><string>Contao\CoreBundle\Tests\EventListener</string></element>
-                        </array>
-                    </element>
-                </array>
-            </arguments>
-        </listener>
-    </listeners>
-
-    <extensions>
-        <extension class="Contao\CoreBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
-    </extensions>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" colors="true" defaultTestSuite="core-bundle" bootstrap="vendor/autoload.php">
+  <coverage>
+    <include>
+      <directory>./src</directory>
+    </include>
+    <exclude>
+      <directory>./src/Resources</directory>
+      <!-- exclude resources that are exempt from testing -->
+      <directory>./src/Entity</directory>
+      <directory>./src/Migration/Version*</directory>
+      <!-- exclude files with symbols and side effects -->
+      <file>./src/EventListener/UserAwareTrait.php</file>
+      <file>./src/Exception/ServiceUnavailableException.php</file>
+      <file>./src/Framework/ScopeAwareTrait.php</file>
+    </exclude>
+  </coverage>
+  <php>
+    <ini name="error_reporting" value="-1"/>
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"/>
+    <env name="SYMFONY_PATCH_TYPE_DECLARATIONS" value="deprecations=0"/>
+    <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel"/>
+    <env name="APP_SECRET" value="foobar"/>
+    <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test"/>
+  </php>
+  <testsuites>
+    <testsuite name="core-bundle">
+      <directory>./tests</directory>
+      <exclude>./tests/Fixtures</exclude>
+      <exclude>./tests/Functional</exclude>
+    </testsuite>
+    <testsuite name="functional">
+      <directory>./tests/Functional</directory>
+      <exclude>./tests/Functional/app</exclude>
+    </testsuite>
+    <testsuite name="coverage">
+      <directory>./tests</directory>
+      <exclude>./tests/Contao</exclude>
+      <exclude>./tests/Fixtures</exclude>
+      <exclude>./tests/Functional</exclude>
+    </testsuite>
+  </testsuites>
+  <listeners>
+    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
+      <arguments>
+        <array>
+          <element key="time-sensitive">
+            <array>
+              <element key="0"><string>Contao\CoreBundle\Command</string></element>
+              <element key="1"><string>Contao\CoreBundle\Controller\ContentElement</string></element>
+              <element key="2"><string>Contao\CoreBundle\Cron\Command</string></element>
+              <element key="3"><string>Contao\CoreBundle\EventListener\DataContainer</string></element>
+              <element key="4"><string>Contao\CoreBundle\Security\Authentication\Provider</string></element>
+              <element key="5"><string>Contao\CoreBundle\Security\Authentication\RememberMe</string></element>
+              <element key="6"><string>Contao\CoreBundle\Tests\Command</string></element>
+              <element key="7"><string>Contao\CoreBundle\Tests\Controller\ContentElement</string></element>
+              <element key="8"><string>Contao\CoreBundle\Tests\Cron</string></element>
+              <element key="9"><string>Contao\CoreBundle\Tests\EventListener\DataContainer</string></element>
+              <element key="10"><string>Contao\CoreBundle\Tests\Security\Authentication\Provider</string></element>
+              <element key="11"><string>Contao\CoreBundle\Tests\Security\Authentication\RememberMe</string></element>
+            </array>
+          </element>
+        </array>
+      </arguments>
+    </listener>
+  </listeners>
+  <extensions>
+    <extension class="Contao\CoreBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
+    <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>
+  </extensions>
 </phpunit>

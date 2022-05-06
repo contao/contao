@@ -35,16 +35,20 @@ class SitemapControllerTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_HOOKS']);
+
+        parent::tearDown();
+    }
+
     public function testNoSitemapIfNoRootPageFound(): void
     {
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
         $pageModelAdapter
             ->expects($this->exactly(2))
             ->method('findPublishedRootPages')
-            ->withConsecutive(
-                [['dns' => 'www.foobar.com']],
-                [['dns' => '']]
-            )
+            ->withConsecutive([['dns' => 'www.foobar.com']], [['dns' => '']])
             ->willReturn(null)
         ;
 
@@ -70,6 +74,36 @@ class SitemapControllerTest extends TestCase
         $response = $controller(Request::create('https://www.foobar.com/sitemap.xml'));
 
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+    }
+
+    public function testIgnoresRequestPort(): void
+    {
+        $page1 = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 43,
+            'pid' => 42,
+            'type' => 'regular',
+            'groups' => [],
+            'published' => '1',
+            'rootLanguage' => 'en',
+        ]);
+
+        $page1
+            ->expects($this->once())
+            ->method('getAbsoluteUrl')
+            ->willReturn('https://www.foobar.com:8000/en/page1.html')
+        ;
+
+        $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
+        $container = $this->getContainer($framework, null, 'https://www.foobar.com:8000');
+        $registry = new PageRegistry($this->createMock(Connection::class));
+
+        $controller = new SitemapController($registry);
+        $controller->setContainer($container);
+        $response = $controller(Request::create('https://www.foobar.com:8000/sitemap.xml'));
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
+        $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com:8000/en/page1.html']), $response->getContent());
     }
 
     public function testGeneratesSitemapForRegularPages(): void
@@ -642,10 +676,7 @@ class SitemapControllerTest extends TestCase
         $hook2
             ->expects($this->exactly(2))
             ->method('barFunction')
-            ->withConsecutive(
-                [['page1.html'], 42, true, 'en'],
-                [['page2.html'], 21, true, 'de']
-            )
+            ->withConsecutive([['page1.html'], 42, true, 'en'], [['page2.html'], 21, true, 'de'])
             ->willReturnArgument(0)
         ;
 
@@ -827,15 +858,15 @@ class SitemapControllerTest extends TestCase
     /**
      * @param array<bool> $isGranted
      */
-    private function getContainer(ContaoFramework $framework, array $isGranted = null): ContainerBuilder
+    private function getContainer(ContaoFramework $framework, array $isGranted = null, string $baseUrl = 'https://www.foobar.com'): ContainerBuilder
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(
-                function (SitemapEvent $event) {
-                    $this->assertSame('https://www.foobar.com/sitemap.xml', $event->getRequest()->getUri());
+                function (SitemapEvent $event) use ($baseUrl) {
+                    $this->assertSame($baseUrl.'/sitemap.xml', $event->getRequest()->getUri());
                     $this->assertSame([42, 21], $event->getRootPageIds());
 
                     return true;

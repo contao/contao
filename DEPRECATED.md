@@ -1,5 +1,15 @@
 # Deprecated features
 
+## Request library
+
+Using `Contao\Request` is deprecated and will no longer work in Contao 5.0. Use an alternative library
+such as `symfony/http-client` instead.
+
+## Cache library
+
+Using `Contao\Cache` is deprecated and will no longer work in Contao 5.0. Use your own in-memory
+caches instead. Use `symfony/cache` for persistence.
+
 ## $GLOBALS['TL_CSS_UNITS']
 
 The `$GLOBALS['TL_CSS_UNITS']` variable has been deprecated and will be removed
@@ -212,6 +222,24 @@ locale from the request object instead:
 
 ```php
 $locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
+```
+
+## $GLOBALS['TL_LANG']['LNG']
+
+Using the globals `$GLOBALS['TL_LANG']['LNG']` has been deprecated in Contao
+4.12 and will no longer work in Contao 5.0. Use the locales service instead:
+
+```php
+$locales = System::getContainer()->get('contao.intl.locales')->getLocales();
+```
+
+## $GLOBALS['TL_LANG']['CNT']
+
+Using the globals `$GLOBALS['TL_LANG']['CNT']` has been deprecated in Contao
+4.12 and will no longer work in Contao 5.0. Use the countries service instead:
+
+```php
+$countries = System::getContainer()->get('contao.intl.countries')->getCountries();
 ```
 
 ## Request.Mixed (JavaScript)

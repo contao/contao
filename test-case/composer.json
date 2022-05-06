@@ -1,0 +1,37 @@
+{
+    "name": "contao/test-case",
+    "description": "Contao 4 test case",
+    "license": "LGPL-3.0-or-later",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "phpunit/phpunit": "^9.3"
+    },
+    "require-dev": {
+        "ext-pdo": "*",
+        "contao/core-bundle": "self.version",
+        "doctrine/dbal": "^3.3",
+        "doctrine/orm": "^2.10",
+        "symfony/http-client": "^5.4"
+    },
+    "conflict": {
+        "phpunit/phpunit": "<8.0",
+        "roave/better-reflection": "<4.12.2 || >=6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\TestCase\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true
+        }
+    }
+}

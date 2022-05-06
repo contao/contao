@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to handle form field options.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class OptionWizard extends Widget
 {
@@ -43,7 +41,7 @@ class OptionWizard extends Widget
 			foreach ($options as $key=>$option)
 			{
 				// Unset empty rows
-				if (!$option['label'])
+				if (trim($option['label']) === '')
 				{
 					unset($options[$key]);
 					continue;

@@ -33,6 +33,14 @@
         <source>Add an image to the content element.</source>
         <target>Markera detta alternativ för att lägga till en bild i innehållselementet.</target>
       </trans-unit>
+      <trans-unit id="tl_content.showPreview.0">
+        <source>Show preview images</source>
+        <target>Visa förhandsvisningsbilder</target>
+      </trans-unit>
+      <trans-unit id="tl_content.showPreview.1">
+        <source>Show preview images of the selected files.</source>
+        <target>Visa förhandsvisningsbilder av de valda filerna.</target>
+      </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
         <target>Visa i webbläsaren</target>
@@ -72,14 +80,6 @@
       <trans-unit id="tl_content.imageTitle.1">
         <source>Here you can enter the image title (&lt;em&gt;title&lt;/em&gt; attribute).</source>
         <target>Du bör alltid ange en titel för bilden. Titeln visas i en textruta när muspekaren förs över bilden.</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.0">
-        <source>Image size</source>
-        <target>Bildstorlek</target>
-      </trans-unit>
-      <trans-unit id="tl_content.size.1">
-        <source>Here you can set the image dimensions and the resize mode.</source>
-        <target>Här kan du ställa in bildens dimensioner och omformateringsmetod.</target>
       </trans-unit>
       <trans-unit id="tl_content.imagemargin.0">
         <source>Image margin</source>
@@ -304,6 +304,14 @@
       <trans-unit id="tl_content.markdownSource.sourceFile">
         <source>File</source>
         <target>Fil</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.0">
+        <source>Template data</source>
+        <target>Malldata</target>
+      </trans-unit>
+      <trans-unit id="tl_content.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>Dessa värden är tillgängliga som &lt;code&gt;$this-&gt;data&lt;/code&gt; i mallen.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -657,6 +665,10 @@
         <source>Download settings</source>
         <target>Nedladdningsinställningar</target>
       </trans-unit>
+      <trans-unit id="tl_content.preview_legend">
+        <source>Preview settings</source>
+        <target>Förhandsgranska inställningar</target>
+      </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
         <target>Glidningsinställningar</target>
@@ -833,6 +845,9 @@
         <source>Use the youtube-nocookie.com domain</source>
         <target>Använd domänen youtube-nocookie.com</target>
       </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
+      </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>
         <target>Automatisk uppspelning</target>
@@ -852,6 +867,10 @@
       <trans-unit id="tl_content.vimeo_byline">
         <source>Hide the author</source>
         <target>Dölj författaren</target>
+      </trans-unit>
+      <trans-unit id="tl_content.vimeo_dnt">
+        <source>Prevent session data tracking</source>
+        <target>Förhindra spårning av sessionsdata</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

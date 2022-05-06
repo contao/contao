@@ -10,10 +10,11 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+
 /**
  * Provide methods regarding calendars.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Calendar extends Frontend
 {
@@ -214,13 +215,11 @@ class Calendar extends Frontend
 		$count = 0;
 		ksort($this->arrEvents);
 
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
 
-		if ($request)
-		{
-			$origScope = $request->attributes->get('_scope');
-			$request->attributes->set('_scope', 'frontend');
-		}
+		/** @var RequestStack $requestStack */
+		$requestStack = System::getContainer()->get('request_stack');
+		$currentRequest = $requestStack->getCurrentRequest();
 
 		$origObjPage = $GLOBALS['objPage'] ?? null;
 
@@ -238,6 +237,11 @@ class Calendar extends Frontend
 
 					// Override the global page object (#2946)
 					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
+
+					// Push a new request to the request stack (#3856)
+					$request = null !== $currentRequest ? $this->createSubRequest($event['link'], $currentRequest) : Request::create($event['link']);
+					$request->attributes->set('_scope', 'frontend');
+					$requestStack->push($request);
 
 					$objItem = new FeedItem();
 					$objItem->title = $event['title'];
@@ -278,7 +282,7 @@ class Calendar extends Frontend
 					}
 					else
 					{
-						$strDescription = $event['teaser'];
+						$strDescription = $event['teaser'] ?? '';
 					}
 
 					$strDescription = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strDescription);
@@ -301,18 +305,15 @@ class Calendar extends Frontend
 					}
 
 					$objFeed->addItem($objItem);
+
+					$requestStack->pop();
 				}
 			}
 		}
 
-		if ($request)
-		{
-			$request->attributes->set('_scope', $origScope);
-		}
-
 		$GLOBALS['objPage'] = $origObjPage;
 
-		$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
+		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		// Create the file
 		File::putContent($webDir . '/share/' . $strFile . '.xml', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
@@ -516,9 +517,6 @@ class Calendar extends Frontend
 		$arrEvent['endDate'] = $intEnd;
 		$arrEvent['isRepeated'] = $isRepeated;
 
-		// Clean the RTE output
-		$arrEvent['teaser'] = StringUtil::toHtml5($objEvent->teaser);
-
 		// Reset the enclosures (see #5685)
 		$arrEvent['enclosure'] = array();
 		$arrEvent['media:content'] = array();
@@ -637,6 +635,36 @@ class Calendar extends Frontend
 		}
 
 		return self::$arrPageCache[$intPageId];
+	}
+
+	/**
+	 * Creates a sub request for the given URI.
+	 */
+	private function createSubRequest(string $uri, Request $request): Request
+	{
+		$cookies = $request->cookies->all();
+		$server = $request->server->all();
+
+		unset($server['HTTP_IF_MODIFIED_SINCE'], $server['HTTP_IF_NONE_MATCH']);
+
+		$subRequest = Request::create($uri, 'get', array(), $cookies, array(), $server);
+
+		if (null !== ($session = $request->getSession()))
+		{
+			$subRequest->setSession($session);
+		}
+
+		if ($request->get('_format'))
+		{
+			$subRequest->attributes->set('_format', $request->get('_format'));
+		}
+
+		if ($request->getDefaultLocale() !== $request->getLocale())
+		{
+			$subRequest->setLocale($request->getLocale());
+		}
+
+		return $subRequest;
 	}
 }
 

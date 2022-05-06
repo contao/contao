@@ -49,6 +49,10 @@
         <source>Channels</source>
         <target>Vrste e-novic</target>
       </trans-unit>
+      <trans-unit id="MSC.nl_overview">
+        <source>Back to the newsletter overview</source>
+        <target>Nazaj na pregled nastavitev teh e-novic</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

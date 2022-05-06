@@ -16,8 +16,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 
 /**
  * Front end module "search".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleSearch extends Module
 {
@@ -43,7 +41,7 @@ class ModuleSearch extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -247,8 +245,8 @@ class ModuleSearch extends Module
 				$objTemplate->unit = $GLOBALS['TL_LANG']['UNITS'][1];
 
 				$arrContext = array();
-				$strText = StringUtil::stripInsertTags($arrResult[$i]['text']);
-				$arrMatches = StringUtil::trimsplit(',', $arrResult[$i]['matches']);
+				$strText = StringUtil::stripInsertTags(strtok($arrResult[$i]['text'], "\n"));
+				$arrMatches = Search::getMatchVariants(StringUtil::trimsplit(',', $arrResult[$i]['matches']), $strText, $GLOBALS['TL_LANGUAGE']);
 
 				// Get the context
 				foreach ($arrMatches as $strWord)
