@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\EventListener;
 
-use Contao\NewsBundle\EventListener\SitemapListener;
-use Contao\NewsModel;
-use Contao\NewsArchiveModel;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\Database;
+use Contao\NewsArchiveModel;
+use Contao\NewsBundle\EventListener\SitemapListener;
+use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
