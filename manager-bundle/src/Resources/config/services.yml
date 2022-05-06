@@ -84,12 +84,3 @@ services:
 
     # Autowiring aliases
     Contao\ManagerBundle\HttpKernel\JwtManager: '@contao_manager.jwt_manager'
-
-    # Backwards compatibility
-    contao_manager.routing_loader:
-        alias: contao_manager.routing.route_loader
-        public: true
-        deprecated:
-            package: contao/manager-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao_manager.routing.route_loader" instead.

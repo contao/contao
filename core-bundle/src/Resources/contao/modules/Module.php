@@ -151,8 +151,8 @@ abstract class Module extends Frontend
 		}
 
 		$arrHeadline = StringUtil::deserialize($objModule->headline);
-		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] ?? '' : $arrHeadline;
+		$this->hl = $arrHeadline['unit'] ?? 'h1';
 		$this->strColumn = $strColumn;
 	}
 
@@ -315,11 +315,6 @@ abstract class Module extends Frontend
 				$objSubpage->domain = $host;
 			}
 
-			if ($objSubpage->tabindex > 0)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
-			}
-
 			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
 			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
 			{
@@ -396,15 +391,6 @@ abstract class Module extends Frontend
 			}
 		}
 
-		// Add classes first and last
-		if (!empty($items))
-		{
-			$last = \count($items) - 1;
-
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
-		}
-
 		$objTemplate->items = $items;
 
 		return !empty($items) ? $objTemplate->parse() : '';
@@ -460,7 +446,6 @@ abstract class Module extends Frontend
 		$row['link'] = $objSubpage->title;
 		$row['href'] = $href;
 		$row['rel'] = '';
-		$row['nofollow'] = false; // backwards compatibility
 		$row['target'] = '';
 		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 

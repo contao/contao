@@ -376,13 +376,13 @@ class DcaExtractor extends Controller
 		}
 
 		// Return if the DC type is "File"
-		if (is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null, DC_File::class, true))
+		if (is_a(DataContainer::getDriverForTable($this->strTable), DC_File::class, true))
 		{
 			return;
 		}
 
 		// Return if the DC type is "Folder" and the DC is not database assisted
-		if (is_a($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null, DC_Folder::class, true) && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
+		if (is_a(DataContainer::getDriverForTable($this->strTable), DC_Folder::class, true) && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
 		{
 			return;
 		}
@@ -440,6 +440,39 @@ class DcaExtractor extends Controller
 			}
 		}
 
+		// Not a database table or no field information
+		if (empty($sql) || empty($fields))
+		{
+			return;
+		}
+
+		$params = System::getContainer()->get('database_connection')->getParams();
+
+		// Add the default engine and charset if none is given
+		if (empty($sql['engine']))
+		{
+			$sql['engine'] = $params['defaultTableOptions']['engine'] ?? 'InnoDB';
+		}
+
+		if (empty($sql['charset']))
+		{
+			$sql['charset'] = $params['defaultTableOptions']['charset'] ?? 'utf8mb4';
+		}
+
+		if (empty($sql['collate']))
+		{
+			$sql['collate'] = $params['defaultTableOptions']['collate'] ?? 'utf8mb4_unicode_ci';
+		}
+
+		// Meta
+		$this->arrMeta = array
+		(
+			'engine' => $sql['engine'],
+			'charset' => $sql['charset'],
+			'collate' => $sql['collate']
+		);
+
+		// Fields
 		$this->arrFields = array();
 		$this->arrOrderFields = array();
 
@@ -480,36 +513,6 @@ class DcaExtractor extends Controller
 		}
 
 		$this->arrUniqueFields = array_unique($this->arrUniqueFields);
-
-		if (!empty($this->arrFields) || !empty($this->arrKeys))
-		{
-			$params = System::getContainer()->get('database_connection')->getParams();
-
-			// Add the default engine and charset if none is given
-			if (empty($sql['engine']))
-			{
-				$sql['engine'] = $params['defaultTableOptions']['engine'] ?? 'InnoDB';
-			}
-
-			if (empty($sql['charset']))
-			{
-				$sql['charset'] = $params['defaultTableOptions']['charset'] ?? 'utf8mb4';
-			}
-
-			if (empty($sql['collate']))
-			{
-				$sql['collate'] = $params['defaultTableOptions']['collate'] ?? 'utf8mb4_unicode_ci';
-			}
-
-			// Meta
-			$this->arrMeta = array
-			(
-				'engine' => $sql['engine'],
-				'charset' => $sql['charset'],
-				'collate' => $sql['collate']
-			);
-
-			$this->blnIsDbTable = true;
-		}
+		$this->blnIsDbTable = true;
 	}
 }

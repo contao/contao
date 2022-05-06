@@ -352,7 +352,7 @@ abstract class DataContainer extends Backend
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="contao/help.php?table=' . $this->strTable . '&amp;field=' . $this->strField . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -477,7 +477,7 @@ abstract class DataContainer extends Backend
 			$paletteFields = array_intersect($postPaletteFields, $newPaletteFields);
 
 			// Deprecated since Contao 4.2, to be removed in Contao 5.0
-			if (!isset($_POST[$this->strInputName]) && \in_array($this->strInputName, $paletteFields))
+			if (Input::post($this->strInputName) === null && \in_array($this->strInputName, $paletteFields))
 			{
 				trigger_deprecation('contao/core-bundle', '4.2', 'Using $_POST[\'FORM_FIELDS\'] has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.');
 			}
@@ -693,7 +693,7 @@ abstract class DataContainer extends Backend
 			$objTemplate = new BackendTemplate('be_' . $file);
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
 			$objTemplate->type = $type;
-			$objTemplate->fileBrowserTypes = $fileBrowserTypes;
+			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
@@ -826,7 +826,7 @@ abstract class DataContainer extends Backend
 		$arrKeys = array();
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
-		foreach (array_keys($_GET) as $strKey)
+		foreach (Input::getKeys() as $strKey)
 		{
 			if (!\in_array($strKey, $arrUnset))
 			{
@@ -1345,7 +1345,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Reset all filters
-		if (isset($_POST['filter_reset']) && Input::post('FORM_SUBMIT') == 'tl_filters')
+		if (Input::post('filter_reset') !== null && Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
 			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');

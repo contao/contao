@@ -128,16 +128,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.4.3",
+            "version": "1.4.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "34545bb30a6f8bd86cfa371dbd42140a657bbf0d"
+                "reference": "129a63b3bc7caeb593c224c41f420675e63cfefc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/34545bb30a6f8bd86cfa371dbd42140a657bbf0d",
-                "reference": "34545bb30a6f8bd86cfa371dbd42140a657bbf0d",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/129a63b3bc7caeb593c224c41f420675e63cfefc",
+                "reference": "129a63b3bc7caeb593c224c41f420675e63cfefc",
                 "shasum": ""
             },
             "require": {
@@ -166,9 +166,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.4.3"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.4.5"
             },
-            "time": "2022-04-08T11:30:34+00:00"
+            "time": "2022-04-22T11:11:01+00:00"
         },
         {
             "name": "slevomat/coding-standard",
@@ -289,16 +289,16 @@
         },
         {
             "name": "symplify/easy-coding-standard",
-            "version": "10.1.4",
+            "version": "10.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symplify/easy-coding-standard.git",
-                "reference": "3fdbead9da24889727dc11804e9bbfb9d4502d3a"
+                "reference": "d847795500b929f68ed115357658122d64017f77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/3fdbead9da24889727dc11804e9bbfb9d4502d3a",
-                "reference": "3fdbead9da24889727dc11804e9bbfb9d4502d3a",
+                "url": "https://api.github.com/repos/symplify/easy-coding-standard/zipball/d847795500b929f68ed115357658122d64017f77",
+                "reference": "d847795500b929f68ed115357658122d64017f77",
                 "shasum": ""
             },
             "require": {
@@ -328,7 +328,7 @@
             ],
             "description": "Prefixed scoped version of ECS package",
             "support": {
-                "source": "https://github.com/symplify/easy-coding-standard/tree/10.1.4"
+                "source": "https://github.com/symplify/easy-coding-standard/tree/10.2.2"
             },
             "funding": [
                 {
@@ -340,7 +340,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-16T15:18:55+00:00"
+            "time": "2022-04-17T10:41:19+00:00"
         }
     ],
     "packages-dev": [],

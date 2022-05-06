@@ -182,11 +182,6 @@ and will no longer work in Contao 5.0. Use `$this->pages` instead.
 The constants `TL_SCRIPT_URL` and `TL_PLUGINS_URL` have been deprecated in
 Contao 4.0 and will be removed in Contao 5.0. Use `TL_ASSETS_URL` instead.
 
-## UnresolvableDependenciesException
-
-The `UnresolvableDependenciesException` class has been deprecated in Contao 4.0
-and will be removed in Contao 5.0.
-
 ## $this->language in TinyMCE config files
 
 Using `$this->language` in TinyMCE configuration files has been deprecated in
@@ -195,24 +190,6 @@ Contao 4.0 and will no longer work in Contao 5.0. Use the static method
 
 ```php
 $locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
-```
-
-## $GLOBALS['TL_LANG']['LNG']
-
-Using the globals `$GLOBALS['TL_LANG']['LNG']` has been deprecated in Contao
-4.12 and will no longer work in Contao 5.0. Use the locales service instead:
-
-```php
-$locales = System::getContainer()->get('contao.intl.locales')->getLocales();
-```
-
-## $GLOBALS['TL_LANG']['CNT']
-
-Using the globals `$GLOBALS['TL_LANG']['CNT']` has been deprecated in Contao
-4.12 and will no longer work in Contao 5.0. Use the countries service instead:
-
-```php
-$countries = System::getContainer()->get('contao.intl.countries')->getCountries();
 ```
 
 ## Request.Mixed (JavaScript)

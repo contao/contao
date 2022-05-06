@@ -72,8 +72,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         Controller::resetControllerCache();
         Environment::reset();
-        Input::resetCache();
-        Input::resetUnusedGet();
+        Input::setUnusedRouteParameters([]);
         InsertTags::reset();
         PageModel::reset();
         Registry::getInstance()->reset();
@@ -230,7 +229,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         // Set the error_reporting level
         error_reporting($this->errorLevel);
 
-        $this->includeHelpers();
         $this->includeBasicClasses();
 
         // Set the container
@@ -255,11 +253,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         $this->setTimezone();
         $this->triggerInitializeSystemHook();
         $this->handleRequestToken();
-    }
-
-    private function includeHelpers(): void
-    {
-        require __DIR__.'/../Resources/contao/config/constants.php';
     }
 
     /**

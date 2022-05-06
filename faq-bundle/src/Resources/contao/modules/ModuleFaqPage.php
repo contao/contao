@@ -39,7 +39,7 @@ class ModuleFaqPage extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -88,10 +88,7 @@ class ModuleFaqPage extends Module
 			/** @var FaqModel $objFaq */
 			$objTemp = (object) $objFaq->row();
 
-			// Clean the RTE output
-			$objTemp->answer = StringUtil::toHtml5($objFaq->answer);
-			$objTemp->answer = StringUtil::encodeEmail($objTemp->answer);
-
+			$objTemp->answer = StringUtil::encodeEmail($objFaq->answer);
 			$objTemp->addImage = false;
 			$objTemp->addBefore = false;
 
@@ -122,9 +119,15 @@ class ModuleFaqPage extends Module
 				$this->addEnclosuresToTemplate($objTemp, $objFaq->row());
 			}
 
+			$strAuthor = '';
+
 			/** @var UserModel $objAuthor */
-			$objAuthor = $objFaq->getRelated('author');
-			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $objAuthor->name);
+			if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel)
+			{
+				$strAuthor = $objAuthor->name;
+			}
+
+			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
 			/** @var FaqCategoryModel $objPid */
 			$objPid = $objFaq->getRelated('pid');
@@ -144,24 +147,7 @@ class ModuleFaqPage extends Module
 			$responseTagger->addTags($tags);
 		}
 
-		$arrFaqs = array_values(array_filter($arrFaqs));
-		$limit_i = \count($arrFaqs) - 1;
-
-		// Add classes first, last, even and odd
-		for ($i=0; $i<=$limit_i; $i++)
-		{
-			$class = (($i == 0) ? 'first ' : '') . (($i == $limit_i) ? 'last ' : '') . (($i%2 == 0) ? 'even' : 'odd');
-			$arrFaqs[$i]['class'] = trim($class);
-			$limit_j = \count($arrFaqs[$i]['items']) - 1;
-
-			for ($j=0; $j<=$limit_j; $j++)
-			{
-				$class = (($j == 0) ? 'first ' : '') . (($j == $limit_j) ? 'last ' : '') . (($j%2 == 0) ? 'even' : 'odd');
-				$arrFaqs[$i]['items'][$j]->class = trim($class);
-			}
-		}
-
-		$this->Template->faq = $arrFaqs;
+		$this->Template->faq = array_values(array_filter($arrFaqs));
 		$this->Template->request = Environment::get('indexFreeRequest');
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 

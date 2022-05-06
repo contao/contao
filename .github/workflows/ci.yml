@@ -155,6 +155,31 @@ jobs:
             - name: Run PHPStan
               run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
 
+    rector:
+        name: Rector
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 8.1
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install the dependencies
+              run: |
+                  composer install --no-interaction --no-progress
+                  composer bin rector install --no-interaction --no-progress
+
+            - name: Run Rector
+              run: tools/rector/vendor/bin/rector --config tools/rector/config/rector.php --dry-run --no-progress-bar
+
     yamllint:
         name: YAMLlint
         runs-on: ubuntu-latest

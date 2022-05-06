@@ -631,13 +631,13 @@ class ContaoFrameworkTest extends TestCase
         $registry->register($model);
 
         $this->assertSame('bar', Environment::get('scriptFilename'));
-        $this->assertNotEmpty(Input::getUnusedGet());
+        $this->assertNotEmpty(Input::getUnusedRouteParameters());
         $this->assertCount(1, $registry);
 
         $framework->reset();
 
         $this->assertNotSame('bar', Environment::get('scriptFilename'));
-        $this->assertEmpty(Input::getUnusedGet());
+        $this->assertEmpty(Input::getUnusedRouteParameters());
         $this->assertCount(0, $registry);
     }
 

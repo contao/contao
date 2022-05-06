@@ -13,7 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 
 /**
- * Class FormTextField
+ * Class FormText
  *
  * @property string  $value
  * @property string  $type
@@ -24,10 +24,8 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
  * @property integer $step
  * @property string  $placeholder
  * @property boolean $hideInput
- *
- * @todo Rename to FormText in Contao 5.0
  */
-class FormTextField extends Widget
+class FormText extends Widget
 {
 	/**
 	 * Submit user input
@@ -47,10 +45,8 @@ class FormTextField extends Widget
 	 * Template
 	 *
 	 * @var string
-	 *
-	 * @todo Rename to form_text in Contao 5.0
 	 */
-	protected $strTemplate = 'form_textfield';
+	protected $strTemplate = 'form_text';
 
 	/**
 	 * The CSS class prefix

@@ -11,7 +11,7 @@
 namespace Contao;
 
 /**
- * Class FormTextArea
+ * Class FormTextarea
  *
  * @property string  $value
  * @property integer $maxlength
@@ -20,10 +20,8 @@ namespace Contao;
  * @property string  $size
  * @property integer $rows
  * @property integer $cols
- *
- * @todo Rename to FormTextarea in Contao 5.0
  */
-class FormTextArea extends Widget
+class FormTextarea extends Widget
 {
 	/**
 	 * Submit user input
@@ -126,8 +124,6 @@ class FormTextArea extends Widget
 	 * @param string $strKey The parameter key
 	 *
 	 * @return mixed The parameter value
-	 *
-	 * @todo Remove specialchars() from the value in Contao 5 and apply it in the template/generate() method instead
 	 */
 	public function __get($strKey)
 	{
@@ -140,7 +136,7 @@ class FormTextArea extends Widget
 				return $this->intRows;
 
 			case 'value':
-				return StringUtil::specialchars(str_replace('\n', "\n", $this->varValue));
+				return str_replace('\n', "\n", $this->varValue);
 
 			case 'rawValue':
 				return $this->varValue;
@@ -165,7 +161,7 @@ class FormTextArea extends Widget
 			$this->intRows,
 			$this->intCols,
 			$this->getAttributes(),
-			$this->value
+			StringUtil::specialchars($this->value)
 		);
 	}
 }

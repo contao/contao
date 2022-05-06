@@ -447,6 +447,8 @@ class ImageFactoryTest extends TestCase
 
     /**
      * @dataProvider getCreateWithLegacyMode
+     *
+     * @group legacy
      */
     public function testCreatesAnImageObjectFromAnImagePathInLegacyMode(string $mode, array $expected): void
     {
@@ -506,6 +508,9 @@ class ImageFactoryTest extends TestCase
         $filesAdapter = $this->mockConfiguredAdapter(['findByPath' => $filesModel]);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
+
+        $this->expectDeprecation("%slegacy resize mode \"$mode\" has been deprecated%s");
+
         $image = $imageFactory->create($path, [50, 50, $mode]);
         $imageFromSerializedConfig = $imageFactory->create($path, serialize([50, 50, $mode]));
 
@@ -589,7 +594,9 @@ class ImageFactoryTest extends TestCase
         $framework ??= $this->createMock(ContaoFramework::class);
         $bypassCache ??= false;
         $validExtensions ??= ['jpg', 'svg'];
-        $uploadDir ??= Path::join($this->getTempDir(), 'images');
+
+        // Do not use Path::join here (see #4596)
+        $uploadDir ??= $this->getTempDir().'/images';
 
         if (null === $imagineOptions) {
             $imagineOptions = [

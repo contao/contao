@@ -39,7 +39,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
 
-    public const TAG_SKIP = 'skip-search-index';
+    final public const TAG_SKIP = 'skip-search-index';
 
     private array $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
 

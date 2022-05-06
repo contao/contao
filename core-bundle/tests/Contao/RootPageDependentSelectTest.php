@@ -18,6 +18,8 @@ use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\RootPageDependentSelect;
 use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RootPageDependentSelectTest extends TestCase
@@ -58,6 +60,9 @@ class RootPageDependentSelectTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework([PageModel::class => $pageAdapter]));
         $container->set('translator', $translator);
+
+        $container->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request());
 
         System::setContainer($container);
 

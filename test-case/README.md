@@ -120,6 +120,17 @@ $mock = $this->mockClassWithProperties(Contao\PageModel::class, $properties);
 echo $mock->title; // will output "Home"
 ```
 
+If you need to call a method of the original class, you can pass the method
+name as third argument. The resulting mock object will be a partial mock object
+without the given method(s).
+
+```php
+$mock = $this->mockClassWithProperties(Contao\PageModel::class, [], ['getTable']);
+$mock->id = 2;
+
+echo $mock->getTable(); // will call the original method
+```
+
 ## Mocking a token storage
 
 The `mockTokenStorage()` mocks a token storage with a token returning either a

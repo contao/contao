@@ -12,10 +12,8 @@ namespace Contao;
 
 /**
  * Front end module "lost password".
- *
- * @todo Rename to ModuleLostPassword in Contao 5.0
  */
-class ModulePassword extends Module
+class ModuleLostPassword extends Module
 {
 	/**
 	 * Template
@@ -39,7 +37,7 @@ class ModulePassword extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -105,7 +103,6 @@ class ModulePassword extends Module
 			);
 		}
 
-		$row = 0;
 		$strFields = '';
 		$doNotSubmit = false;
 		$strFormId = 'tl_lost_password_' . $this->id;
@@ -125,10 +122,7 @@ class ModulePassword extends Module
 
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
-
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
-			++$row;
 
 			// Validate the widget
 			if (Input::post('FORM_SUBMIT') == $strFormId)
@@ -173,7 +167,6 @@ class ModulePassword extends Module
 		$this->Template->username = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['username']);
 		$this->Template->email = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['emailAddress']);
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['requestPassword']);
-		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 	}
 
 	/**
@@ -221,7 +214,7 @@ class ModulePassword extends Module
 		$objVersions = new Versions('tl_member', $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
 		$objVersions->initialize();
 
 		// Define the form field
@@ -236,12 +229,6 @@ class ModulePassword extends Module
 
 		/** @var Widget $objWidget */
 		$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, 'password'));
-
-		// Set row classes
-		$objWidget->rowClass = 'row_0 row_first even';
-		$objWidget->rowClassConfirm = 'row_1 odd';
-		$this->Template->rowLast = 'row_2 row_last even';
-
 		$objSession = System::getContainer()->get('session');
 
 		// Validate the field

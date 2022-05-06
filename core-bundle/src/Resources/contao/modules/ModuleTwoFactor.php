@@ -46,7 +46,7 @@ class ModuleTwoFactor extends BackendModule
 		$user = BackendUser::getInstance();
 
 		// Inform the user if 2FA is enforced
-		if (!$user->useTwoFactor && empty($_GET['act']) && $container->getParameter('contao.security.two_factor.enforce_backend'))
+		if (!$user->useTwoFactor && !Input::get('act') && $container->getParameter('contao.security.two_factor.enforce_backend'))
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['twoFactorEnforced']);
 		}

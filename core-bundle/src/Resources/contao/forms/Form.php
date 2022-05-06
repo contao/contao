@@ -75,7 +75,7 @@ class Form extends Hybrid
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['CTE']['form'][0] . ' ###';
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->title;
-			$objTemplate->href = 'contao/main.php?do=form&amp;table=tl_form_field&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -148,9 +148,6 @@ class Form extends Hybrid
 		// Process the fields
 		if (!empty($arrFields) && \is_array($arrFields))
 		{
-			$row = 0;
-			$max_row = \count($arrFields);
-
 			foreach ($arrFields as $objField)
 			{
 				/** @var FormFieldModel $objField */
@@ -166,16 +163,6 @@ class Form extends Hybrid
 
 				$arrData['decodeEntities'] = true;
 				$arrData['allowHtml'] = $this->allowTags;
-				$arrData['rowClass'] = 'row_' . $row . (($row == 0) ? ' row_first' : (($row == ($max_row - 1)) ? ' row_last' : '')) . ((($row % 2) == 0) ? ' even' : ' odd');
-
-				// Increase the row count if it's a password field
-				if ($objField->type == 'password')
-				{
-					++$row;
-					++$max_row;
-
-					$arrData['rowClassConfirm'] = 'row_' . $row . (($row == ($max_row - 1)) ? ' row_last' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
-				}
 
 				// Submit buttons do not use the name attribute
 				if ($objField->type == 'submit')
@@ -225,7 +212,7 @@ class Form extends Hybrid
 					elseif ($objWidget->submitInput())
 					{
 						$arrSubmitted[$objField->name] = $objWidget->value;
-						unset($_POST[$objField->name]); // see #5474
+						Input::setPost($objField->name, null); // see #5474
 					}
 				}
 
@@ -238,7 +225,6 @@ class Form extends Hybrid
 				if ($objWidget instanceof FormHidden)
 				{
 					$this->Template->hidden .= $objWidget->parse();
-					--$max_row;
 					continue;
 				}
 
@@ -248,7 +234,6 @@ class Form extends Hybrid
 				}
 
 				$this->Template->fields .= $objWidget->parse();
-				++$row;
 			}
 		}
 

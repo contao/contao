@@ -125,7 +125,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $template->href = $this->pageModel->getAbsoluteUrl().'?2fa=enable';
         $template->trustedDevices = $this->container->get('contao.security.two_factor.trusted_device_manager')->getTrustedDevices($user);
 
-        return new Response($template->parse());
+        return $template->getResponse();
     }
 
     private function enableTwoFactor(Template $template, Request $request, FrontendUser $user, string $return): Response|null

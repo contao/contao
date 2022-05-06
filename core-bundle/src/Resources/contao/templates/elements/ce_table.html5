@@ -10,8 +10,12 @@
     <?php if ($this->useHeader): ?>
       <thead>
         <tr>
-          <?php foreach ($this->header as $col): ?>
-            <th class="<?= $col['class'] ?>"><?= $col['content'] ?></th>
+          <?php foreach ($this->header as $i => $col): ?>
+            <?php if (0 == $i && $this->useLeftTh): ?>
+              <th class="unsortable"><?= $col ?></th>
+            <?php else: ?>
+              <th><?= $col ?></th>
+            <?php endif; ?>
           <?php endforeach; ?>
         </tr>
       </thead>
@@ -21,20 +25,20 @@
       <tfoot>
         <tr>
           <?php foreach ($this->footer as $col): ?>
-            <td class="<?= $col['class'] ?>"><?= $col['content'] ?></td>
+            <td><?= $col ?></td>
           <?php endforeach; ?>
         </tr>
       </tfoot>
     <?php endif; ?>
 
     <tbody>
-      <?php foreach ($this->body as $class => $row): ?>
-        <tr class="<?= $class ?>">
+      <?php foreach ($this->body as $row): ?>
+        <tr>
           <?php foreach ($row as $i => $col): ?>
             <?php if (0 == $i && $this->useLeftTh): ?>
-              <th scope="row" class="<?= $col['class'] ?>"><?= $col['content'] ?></th>
+              <th scope="row"><?= $col ?></th>
             <?php else: ?>
-              <td class="<?= $col['class'] ?>"><?= $col['content'] ?></td>
+              <td><?= $col ?></td>
             <?php endif; ?>
           <?php endforeach; ?>
         </tr>

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\String;
 
-use Contao\StringUtil;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -60,7 +59,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
         foreach ($tags as $tag) {
             $decodedTag = $allowHtml
-                ? html_entity_decode(StringUtil::restoreBasicEntities($tag), ENT_QUOTES, 'UTF-8')
+                ? html_entity_decode($tag, ENT_QUOTES, 'UTF-8')
                 : $tag;
 
             // True if it is inside a matching if-tag

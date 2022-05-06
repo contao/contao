@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
@@ -544,11 +543,6 @@ class InstallationController implements ContainerAwareInterface
             $context['language'] = $this->container->get('translator')->getLocale();
         }
 
-        // Backwards compatibility
-        if (!isset($context['ua'])) {
-            $context['ua'] = $this->getUserAgentString();
-        }
-
         if (!isset($context['path'])) {
             $request = $this->container->get('request_stack')->getCurrentRequest();
 
@@ -581,14 +575,5 @@ class InstallationController implements ContainerAwareInterface
         }
 
         return null;
-    }
-
-    private function getUserAgentString(): string
-    {
-        if (!$this->container->has('contao.framework') || !$this->container->get('contao.framework')->isInitialized()) {
-            return '';
-        }
-
-        return Environment::get('agent')->class;
     }
 }

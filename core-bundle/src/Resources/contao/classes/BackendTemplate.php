@@ -68,14 +68,6 @@ class BackendTemplate extends Template
 	 */
 	protected function compile()
 	{
-		// Backwards compatibility (see #3074 and #6277)
-		$this->ua = Environment::get('agent')->class;
-
-		if (Config::get('fullscreen'))
-		{
-			$this->ua .= ' fullscreen';
-		}
-
 		$this->addBackendConfig();
 
 		// Style sheets

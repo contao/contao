@@ -40,7 +40,7 @@ class ModuleCustomnav extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -165,7 +165,6 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = false; // backwards compatibility
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
@@ -203,7 +202,6 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = false; // backwards compatibility
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
@@ -227,14 +225,6 @@ class ModuleCustomnav extends Module
 					$items[] = $row;
 				}
 			}
-		}
-
-		// Add classes first and last if there are items
-		if (!empty($items))
-		{
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$last = \count($items) - 1;
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
 		}
 
 		$objTemplate->items = $items;

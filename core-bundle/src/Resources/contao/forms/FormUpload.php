@@ -11,7 +11,7 @@
 namespace Contao;
 
 /**
- * Class FormFileUpload
+ * Class FormUpload
  *
  * @property boolean $mandatory
  * @property integer $maxlength
@@ -21,10 +21,8 @@ namespace Contao;
  * @property string  $extensions
  * @property string  $uploadFolder
  * @property boolean $doNotOverwrite
- *
- * @todo Rename to FormUpload in Contao 5.0
  */
-class FormFileUpload extends Widget implements UploadableWidgetInterface
+class FormUpload extends Widget implements UploadableWidgetInterface
 {
 	/**
 	 * Template

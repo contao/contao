@@ -42,7 +42,7 @@ class ModulePersonalData extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -95,7 +95,6 @@ class ModulePersonalData extends Module
 		$arrFields = array();
 		$doNotSubmit = false;
 		$hasUpload = false;
-		$row = 0;
 
 		// Predefine the group order (other groups will be appended automatically)
 		$arrGroups = array
@@ -118,7 +117,7 @@ class ModulePersonalData extends Module
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
 		$objVersions->initialize();
 
 		$arrSubmitted = array();
@@ -194,17 +193,10 @@ class ModulePersonalData extends Module
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
 
-			// Increase the row count if it is a password field
-			if ($objWidget instanceof FormPassword)
+			if ($objWidget instanceof FormPassword && $objMember->password)
 			{
-				if ($objMember->password)
-				{
-					$objWidget->mandatory = false;
-				}
-
-				$objWidget->rowClassConfirm = 'row_' . ++$row . ((($row % 2) == 0) ? ' even' : ' odd');
+				$objWidget->mandatory = false;
 			}
 
 			// Validate the form data
@@ -308,12 +300,10 @@ class ModulePersonalData extends Module
 			}
 
 			$arrFields[$strGroup][$field] .= $temp;
-
-			++$row;
 		}
 
 		// Save the model
-		if ($blnModified)
+		if ($blnModified && !$doNotSubmit)
 		{
 			$objMember->tstamp = time();
 			$objMember->save();
@@ -393,7 +383,6 @@ class ModulePersonalData extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
-		$this->Template->rowLast = 'row_' . $row . ((($row % 2) == 0) ? ' even' : ' odd');
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }
