@@ -250,5 +250,5 @@ final class ContaoCorePermissions
     /**
      * [View] Create view DC permission.
      */
-    public const DC_VIEW_CREATE = self::DC_VIEW_PREFIX.'create';
+    public const DC_VIEW_CREATE = self::DC_GLOBAL_OPERATION_PREFIX.'create';
 }
