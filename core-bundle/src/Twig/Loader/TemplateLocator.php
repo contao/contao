@@ -25,7 +25,7 @@ use Symfony\Component\Finder\Finder;
  */
 class TemplateLocator
 {
-    final public const FILE_MARKER_NAMESPACE_ROOT = '.root';
+    final public const FILE_MARKER_NAMESPACE_ROOT = '.twig-root';
 
     private Filesystem $filesystem;
 
