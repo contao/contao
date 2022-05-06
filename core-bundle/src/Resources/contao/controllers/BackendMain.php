@@ -24,8 +24,6 @@ class BackendMain extends Backend
 {
 	/**
 	 * @var Template
-	 *
-	 * @todo Remove in Contao 5.0
 	 */
 	protected $Template;
 
