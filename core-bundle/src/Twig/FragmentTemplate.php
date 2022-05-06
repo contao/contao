@@ -545,7 +545,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function generateScriptTag($src, $async = false, $mtime = false, $hash = null, $crossorigin = null, $referrerpolicy = null): never
+    public static function generateScriptTag($src, $async = false, $mtime = false, $hash = null, $crossorigin = null, $referrerpolicy = null, $defer = false): never
     {
         self::throwOnAccess();
     }

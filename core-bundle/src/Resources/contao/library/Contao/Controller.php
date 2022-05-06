@@ -42,13 +42,6 @@ use Symfony\Component\Finder\Glob;
 abstract class Controller extends System
 {
 	/**
-	 * @var Template
-	 *
-	 * @todo: Add in Contao 5.0
-	 */
-	//protected $Template;
-
-	/**
 	 * @var array
 	 */
 	protected static $arrQueryCache = array();
@@ -891,6 +884,7 @@ abstract class Controller extends System
 		{
 			$objCombiner = new Combiner();
 			$objCombinerAsync = new Combiner();
+			$objCombinerDefer = new Combiner();
 
 			foreach (array_unique($GLOBALS['TL_JAVASCRIPT']) as $javascript)
 			{
@@ -898,11 +892,22 @@ abstract class Controller extends System
 
 				if ($options->static)
 				{
-					$options->async ? $objCombinerAsync->add($javascript, $options->mtime) : $objCombiner->add($javascript, $options->mtime);
+					if ($options->async)
+					{
+						$objCombinerAsync->add($javascript, $options->mtime);
+					}
+					elseif ($options->defer)
+					{
+						$objCombinerDefer->add($javascript, $options->mtime);
+					}
+					else
+					{
+						$objCombiner->add($javascript, $options->mtime);
+					}
 				}
 				else
 				{
-					$strScripts .= Template::generateScriptTag(static::addAssetsUrlTo($javascript), $options->async, $options->mtime);
+					$strScripts .= Template::generateScriptTag(static::addAssetsUrlTo($javascript), $options->async, $options->mtime, null, null, null, $options->defer);
 				}
 			}
 
@@ -939,6 +944,24 @@ abstract class Controller extends System
 					{
 						$options = StringUtil::resolveFlaggedUrl($strUrl);
 						$strScripts = Template::generateScriptTag($strUrl, true, $options->mtime) . $strScripts;
+					}
+				}
+			}
+
+			if ($objCombinerDefer->hasEntries())
+			{
+				if ($blnCombineScripts)
+				{
+					$strScripts = Template::generateScriptTag($objCombinerDefer->getCombinedFile(), true) . $strScripts;
+				}
+				else
+				{
+					$arrReversed = array_reverse($objCombinerDefer->getFileUrls());
+
+					foreach ($arrReversed as $strUrl)
+					{
+						$options = StringUtil::resolveFlaggedUrl($strUrl);
+						$strScripts = Template::generateScriptTag($strUrl, false, $options->mtime, null, null, null, true) . $strScripts;
 					}
 				}
 			}
@@ -1136,6 +1159,8 @@ abstract class Controller extends System
 
 			if (!isset($arrCache[$key]))
 			{
+				trigger_deprecation('contao/core-bundle', '4.0', 'Using old backend paths has been deprecated in Contao 4.0 and will be removed in Contao 5. Use the backend routes instead.');
+
 				$router = System::getContainer()->get('router');
 				$arrCache[$key] = substr($router->generate($arrMapper[$key]), \strlen(Environment::get('path')) + 1);
 			}
