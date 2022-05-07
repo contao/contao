@@ -38,16 +38,12 @@
                         case 'copy':
                             bt.addEventListener('click', () => {
                                 Backend.getScrollOffset();
-                                const ntr = document.createElement('tr');
-                                Array.from(tr.children).forEach((child) => {
-                                    const next = child.cloneNode(true);
-                                    ntr.appendChild(next);
-                                    const selects = child.querySelectorAll('select');
-                                    const nselects = next.querySelectorAll('select');
-                                    for (let j=0; j<selects.length; j++) {
-                                        nselects[j].value = selects[j].value;
-                                    }
-                                });
+                                const ntr = tr.cloneNode(true);
+                                const selects = tr.querySelectorAll('select');
+                                const nselects = ntr.querySelectorAll('select');
+                                for (let j=0; j<selects.length; j++) {
+                                    nselects[j].value = selects[j].value;
+                                }
                                 tr.parentNode.insertBefore(ntr, tr.nextSibling);
                                 addEventsTo(ntr);
                                 makeSortable(tbody);
