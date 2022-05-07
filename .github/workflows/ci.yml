@@ -226,6 +226,29 @@ jobs:
             - name: Run the service linter
               run: tools/service-linter/bin/lint-service-ids --ansi
 
+    global-state:
+        name: PHP 8.1 Global State
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: none
+              env:
+                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install the dependencies
+              run: composer install --no-interaction --no-progress
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
+
     tests:
         name: PHP ${{ matrix.php }}
         runs-on: ubuntu-latest
