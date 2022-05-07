@@ -316,6 +316,7 @@ class ContaoExtensionTest extends TestCase
         $extension = $this->getContaoExtension();
 
         $property = new \ReflectionProperty(ContaoExtension::class, 'contaoEscaperFilterRules');
+        $property->setAccessible(true);
         $rules = $property->getValue($extension);
 
         $this->assertCount(2, $rules);
