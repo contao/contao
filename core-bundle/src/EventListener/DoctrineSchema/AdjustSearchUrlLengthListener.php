@@ -33,37 +33,15 @@ class AdjustSearchUrlLengthListener
 
     public function __invoke(GenerateSchemaEventArgs $event): void
     {
-        // Get the tl_search table definition
-        try {
-            $table = $event->getSchema()->getTable('tl_search');
-        } catch (SchemaException $e) {
-            if (SchemaException::TABLE_DOESNT_EXIST === $e->getCode()) {
-                return;
-            }
-
-            throw $e;
-        }
-
-        // Get the tl_search.url column definition
-        try {
-            $column = $table->getColumn('url');
-        } catch (SchemaException $e) {
-            if (SchemaException::COLUMN_DOESNT_EXIST === $e->getCode()) {
-                return;
-            }
-
-            throw $e;
-        }
-
-        // Check if the field has an index
-        try {
-            $table->getIndex('url');
-        } catch (SchemaException $e) {
-            if (SchemaException::INDEX_DOESNT_EXIST === $e->getCode()) {
-                return;
-            }
-
-            throw $e;
+        if (
+            !($schema = $event->getSchema())
+            || !$schema->hasTable('tl_search')
+            || !($table = $schema->getTable('tl_search'))
+            || !$table->hasColumn('url')
+            || !($column = $table->getColumn('url'))
+            || !$table->hasIndex('url')
+        ) {
+            return;
         }
 
         // Get maximum index size for this table
