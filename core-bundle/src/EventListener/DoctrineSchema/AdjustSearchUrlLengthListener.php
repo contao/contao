@@ -67,20 +67,20 @@ class AdjustSearchUrlLengthListener
         }
 
         // Get maximum index size for this table
-        $maximumIndexSize = $this->getMaximumIndexSize($table);
+        $maxIndexSize = $this->getMaximumIndexSize($table);
 
-        // Reduce maximum index size if collation is not "ascii_bin"
+        // Reduce maximum length if collation is not "ascii_bin"
         if ('ascii_bin' !== $column->getPlatformOption('collation')) {
             $bytesPerChar = 'utf8mb4' === $table->getOption('charset') ? 4 : 3;
-            $maximumIndexSize = floor($maximumIndexSize / $bytesPerChar);
+            $maxIndexSize = floor($maxIndexSize / $bytesPerChar);
         }
 
-        if ($column->getLength() <= $maximumIndexSize) {
+        if ($column->getLength() <= $maxIndexSize) {
             return;
         }
 
         // Set the length
-        $column->setLength($maximumIndexSize);
+        $column->setLength($maxIndexSize);
     }
 
     private function getMaximumIndexSize(Table $table): int

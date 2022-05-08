@@ -82,22 +82,10 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
 
     public function testAdjustsLengthIfLargePrefixIsDisabled(): void
     {
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->exactly(2))
-            ->method('fetchAssociative')
-            ->willReturnCallback(
-                static function (string $query) {
-                    switch ($query) {
-                        case "SHOW VARIABLES LIKE 'innodb_large_prefix'": return ['Value' => 'off'];
-
-                        case 'SELECT @@version as Value': return ['Value' => '5.1'];
-                    }
-
-                    return null;
-                }
-            )
-        ;
+        $connection = $this->getConnection([
+            "SHOW VARIABLES LIKE 'innodb_large_prefix'" => ['Value' => 'off'],
+            'SELECT @@version as Value' => ['Value' => '5.1'],
+        ]);
 
         $schema = $this->getSchema();
 
@@ -106,6 +94,38 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
         (new AdjustSearchUrlLengthListener($connection))($event);
 
         $this->assertSame(767, $schema->getTable('tl_search')->getColumn('url')->getLength());
+    }
+
+    public function testAdjustsLengthIfCollationIsNotAsciiBin(): void
+    {
+        $connection = $this->getConnection([
+            "SHOW VARIABLES LIKE 'innodb_large_prefix'" => ['Value' => 'on'],
+            'SELECT @@version as Value' => ['Value' => '5.1'],
+        ]);
+
+        $schema = $this->getSchema(['platformOptions' => ['collation' => 'utf8mb4_unicode_ci']]);
+
+        $event = new GenerateSchemaEventArgs($this->createMock(EntityManagerInterface::class), $schema);
+
+        (new AdjustSearchUrlLengthListener($connection))($event);
+
+        $this->assertSame(768, $schema->getTable('tl_search')->getColumn('url')->getLength());
+    }
+
+    public function testAdjustsLengthIfCollationIsNotAsciiBinAndLargePrefixIsNotEnabled(): void
+    {
+        $connection = $this->getConnection([
+            "SHOW VARIABLES LIKE 'innodb_large_prefix'" => ['Value' => 'off'],
+            'SELECT @@version as Value' => ['Value' => '5.1'],
+        ]);
+
+        $schema = $this->getSchema(['platformOptions' => ['collation' => 'utf8mb4_unicode_ci']]);
+
+        $event = new GenerateSchemaEventArgs($this->createMock(EntityManagerInterface::class), $schema);
+
+        (new AdjustSearchUrlLengthListener($connection))($event);
+
+        $this->assertSame(191, $schema->getTable('tl_search')->getColumn('url')->getLength());
     }
 
     private function getConnection(array $returnMap = []): Connection
