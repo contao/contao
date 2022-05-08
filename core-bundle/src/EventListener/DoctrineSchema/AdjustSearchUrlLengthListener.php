@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DoctrineSchema;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 
