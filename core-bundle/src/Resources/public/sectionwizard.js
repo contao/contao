@@ -1,15 +1,15 @@
 (function(){
     'use strict';
 
-    const initialized = [];
+    const initialized = new WeakMap();
 
     const init = (node) => {
         node.querySelectorAll('.tl_sectionwizard').forEach((table) => {
-            if (initialized.includes(table)) {
+            if (initialized.has(table)) {
                 return;
             }
 
-            initialized.push(table);
+            initialized.set(table, true);
 
             const tbody = table.querySelector('tbody');
 
