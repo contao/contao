@@ -461,6 +461,11 @@ $GLOBALS['TL_PURGE'] = array
 	)
 );
 
+if (!System::getContainer()->has('contao.search.indexer'))
+{
+	unset($GLOBALS['TL_PURGE']['tables']['index']);
+}
+
 // Hooks
 $GLOBALS['TL_HOOKS'] = array
 (

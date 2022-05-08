@@ -196,6 +196,13 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postGenerateSchema }
 
+    contao.listener.doctrine_schema.remove_search_tables:
+        class: Contao\CoreBundle\EventListener\DoctrineSchema\RemoveSearchTablesListener
+        arguments:
+            - '%contao.search.default_indexer.enable%'
+        tags:
+            - { name: doctrine.event_listener, event: postGenerateSchema, priority: -50 }
+
     contao.listener.element_template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
