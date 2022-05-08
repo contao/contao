@@ -19,7 +19,7 @@ use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 
 /**
  * Adjusts the length of tl_search.url if innodb_large_prefix is not enabled (#4615).
- * 
+ *
  * @internal
  */
 class AdjustSearchUrlLengthListener
@@ -37,8 +37,7 @@ class AdjustSearchUrlLengthListener
         try {
             $table = $event->getSchema()->getTable('tl_search');
         } catch (SchemaException $e) {
-            if ($e->getCode() === SchemaException::TABLE_DOESNT_EXIST) {
-                dump(__METHOD__); exit;
+            if (SchemaException::TABLE_DOESNT_EXIST === $e->getCode()) {
                 return;
             }
 
@@ -49,7 +48,7 @@ class AdjustSearchUrlLengthListener
         try {
             $column = $table->getColumn('url');
         } catch (SchemaException $e) {
-            if ($e->getCode() === SchemaException::COLUMN_DOESNT_EXIST) {
+            if (SchemaException::COLUMN_DOESNT_EXIST === $e->getCode()) {
                 return;
             }
 
@@ -60,7 +59,7 @@ class AdjustSearchUrlLengthListener
         try {
             $table->getIndex('url');
         } catch (SchemaException $e) {
-            if ($e->getCode() === SchemaException::INDEX_DOESNT_EXIST) {
+            if (SchemaException::INDEX_DOESNT_EXIST === $e->getCode()) {
                 return;
             }
 

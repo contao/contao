@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Tests\EventListener\DoctrineSchema;
 
 use Contao\CoreBundle\EventListener\DoctrineSchema\AdjustSearchUrlLengthListener;
@@ -70,22 +80,6 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
         $this->assertSame(2048, $schema->getTable('tl_search')->getColumn('url')->getLength());
     }
 
-    private function getConnection(array $returnMap = []): Connection
-    {
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->exactly(count($returnMap)))
-            ->method('fetchAssociative')
-            ->willReturnCallback(
-                static function (string $query) use ($returnMap) {
-                    return $returnMap[$query] ?? null;
-                }
-            )
-        ;
-
-        return $connection;
-    }
-
     public function testAdjustsLengthIfLargePrefixIsDisabled(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -96,6 +90,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
                 static function (string $query) {
                     switch ($query) {
                         case "SHOW VARIABLES LIKE 'innodb_large_prefix'": return ['Value' => 'off'];
+
                         case 'SELECT @@version as Value': return ['Value' => '5.1'];
                     }
 
@@ -113,24 +108,39 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
         $this->assertSame(767, $schema->getTable('tl_search')->getColumn('url')->getLength());
     }
 
+    private function getConnection(array $returnMap = []): Connection
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->exactly(\count($returnMap)))
+            ->method('fetchAssociative')
+            ->willReturnCallback(
+                static function (string $query) use ($returnMap) {
+                    return $returnMap[$query] ?? null;
+                }
+            )
+        ;
+
+        return $connection;
+    }
+
     private function getSchema(array $fieldOptions = [], array $tableOptions = [])
     {
         $fieldOptions = array_merge([
             'length' => 2048,
-            'platformOptions' => ['collation' => 'ascii_bin']
+            'platformOptions' => ['collation' => 'ascii_bin'],
         ], $fieldOptions);
 
         $tableOptions = array_merge([
-            'charset' => 'utf8mb4', 
-            'engine' => 'InnoDB', 
+            'charset' => 'utf8mb4',
+            'engine' => 'InnoDB',
             'row_format' => 'DYNAMIC',
         ], $tableOptions);
 
         $column = new Column('url', new StringType(), $fieldOptions);
         $index = new Index('url', ['url'], true);
         $table = new Table('tl_search', [$column], [$index], [], 0, $tableOptions);
-        $schema = new Schema([$table]);
 
-        return $schema;
+        return new Schema([$table]);
     }
 }
