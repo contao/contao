@@ -44,7 +44,31 @@ class Cron
     /**
      * Run all the registered Contao cron jobs.
      */
-    public function run(string $scope): void
+    public function run(string $scope, bool $force = false): void
+    {
+        $this->doRun($this->cronJobs, $scope, $force);
+    }
+
+    /**
+     * Run a single Contao cron job.
+     */
+    public function runJob(string $name, string $scope, bool $force = false): void
+    {
+        foreach ($this->cronJobs as $cronJob) {
+            if ($name === $cronJob->getName()) {
+                $this->doRun([$cronJob], $scope, $force);
+
+                return;
+            }
+        }
+
+        throw new \InvalidArgumentException('Cronjob "'.$name.'" does not exist.');
+    }
+
+    /**
+     * @param list<CronJob> $cronJobs
+     */
+    private function doRun(array $cronJobs, string $scope, bool $force = false): void
     {
         // Validate scope
         if (self::SCOPE_WEB !== $scope && self::SCOPE_CLI !== $scope) {
@@ -67,7 +91,7 @@ class Cron
             $repository->lockTable();
 
             // Go through each cron job
-            foreach ($this->cronJobs as $cron) {
+            foreach ($cronJobs as $cron) {
                 $interval = $cron->getInterval();
                 $name = $cron->getName();
 
@@ -87,7 +111,7 @@ class Cron
                 // Check if the cron should be run
                 $expression = CronExpression::factory($interval);
 
-                if (null !== $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
+                if (!$force && null !== $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;
                 }
 
