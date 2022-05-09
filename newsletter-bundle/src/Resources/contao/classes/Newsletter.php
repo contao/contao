@@ -932,9 +932,13 @@ class Newsletter extends Backend
 
 	/**
 	 * Purge subscriptions that have not been activated within 24 hours
+	 * 
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
 	 */
 	public function purgeSubscriptions()
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 6.0.', __CLASS__, __METHOD__);
+
 		$objRecipient = NewsletterRecipientsModel::findExpiredSubscriptions();
 
 		if ($objRecipient === null)
