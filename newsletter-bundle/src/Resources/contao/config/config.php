@@ -39,7 +39,6 @@ $GLOBALS['FE_MOD']['newsletter'] = array
 // Register hooks
 $GLOBALS['TL_HOOKS']['createNewUser'][] = array(Newsletter::class, 'createNewUser');
 $GLOBALS['TL_HOOKS']['activateAccount'][] = array(Newsletter::class, 'activateAccount');
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array(Newsletter::class, 'getSearchablePages');
 $GLOBALS['TL_HOOKS']['closeAccount'][] = array(Newsletter::class, 'removeSubscriptions');
 
 // Add permissions

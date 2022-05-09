@@ -124,8 +124,6 @@ class FormTextarea extends Widget
 	 * @param string $strKey The parameter key
 	 *
 	 * @return mixed The parameter value
-	 *
-	 * @todo Remove specialchars() from the value in Contao 5 and apply it in the template/generate() method instead
 	 */
 	public function __get($strKey)
 	{
@@ -138,7 +136,7 @@ class FormTextarea extends Widget
 				return $this->intRows;
 
 			case 'value':
-				return StringUtil::specialchars(str_replace('\n', "\n", $this->varValue));
+				return str_replace('\n', "\n", $this->varValue);
 
 			case 'rawValue':
 				return $this->varValue;
@@ -163,7 +161,7 @@ class FormTextarea extends Widget
 			$this->intRows,
 			$this->intCols,
 			$this->getAttributes(),
-			$this->value
+			StringUtil::specialchars($this->value)
 		);
 	}
 }

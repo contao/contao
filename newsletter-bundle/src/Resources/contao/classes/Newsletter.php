@@ -380,7 +380,7 @@ class Newsletter extends Backend
 		}
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
-		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=' . rawurlencode($GLOBALS['TL_LANG']['MSC']['unsubscribe']) . '>');
+		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe>');
 
 		return $objEmail;
 	}
@@ -421,7 +421,7 @@ class Newsletter extends Backend
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
-		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html))
+		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html ?? ''))
 			->setHtmlAllowed(!$objNewsletter->sendText)
 			->setNewsletterData($objNewsletter->row())
 			->setRecipientData($arrRecipient);
@@ -997,99 +997,5 @@ class Newsletter extends Backend
 		natsort($arrNewsletters); // see #7864
 
 		return $arrNewsletters;
-	}
-
-	/**
-	 * Add newsletters to the indexer
-	 *
-	 * @param array   $arrPages
-	 * @param integer $intRoot
-	 * @param boolean $blnIsSitemap
-	 *
-	 * @return array
-	 */
-	public function getSearchablePages($arrPages, $intRoot=0, $blnIsSitemap=false)
-	{
-		$arrRoot = array();
-
-		if ($intRoot > 0)
-		{
-			$arrRoot = $this->Database->getChildRecords($intRoot, 'tl_page');
-		}
-
-		$arrProcessed = array();
-		$time = time();
-
-		// Get all channels
-		$objNewsletter = NewsletterChannelModel::findAll();
-
-		// Walk through each channel
-		if ($objNewsletter !== null)
-		{
-			while ($objNewsletter->next())
-			{
-				if (!$objNewsletter->jumpTo)
-				{
-					continue;
-				}
-
-				// Skip channels outside the root nodes
-				if (!empty($arrRoot) && !\in_array($objNewsletter->jumpTo, $arrRoot))
-				{
-					continue;
-				}
-
-				// Get the URL of the jumpTo page
-				if (!isset($arrProcessed[$objNewsletter->jumpTo]))
-				{
-					$objParent = PageModel::findWithDetails($objNewsletter->jumpTo);
-
-					// The target page does not exist
-					if ($objParent === null)
-					{
-						continue;
-					}
-
-					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time))
-					{
-						continue;
-					}
-
-					if ($blnIsSitemap)
-					{
-						// The target page is protected (see #8416)
-						if ($objParent->protected)
-						{
-							continue;
-						}
-
-						// The target page is exempt from the sitemap (see #6418)
-						if ($objParent->robots == 'noindex,nofollow')
-						{
-							continue;
-						}
-					}
-
-					// Generate the URL
-					$arrProcessed[$objNewsletter->jumpTo] = $objParent->getAbsoluteUrl('/%s');
-				}
-
-				$strUrl = $arrProcessed[$objNewsletter->jumpTo];
-
-				// Get the items
-				$objItem = NewsletterModel::findSentByPid($objNewsletter->id);
-
-				if ($objItem !== null)
-				{
-					while ($objItem->next())
-					{
-						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItem->alias ?: $objItem->id));
-					}
-				}
-			}
-		}
-
-		return $arrPages;
 	}
 }

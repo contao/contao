@@ -151,6 +151,7 @@ class News extends Frontend
 
 			/** @var RequestStack $requestStack */
 			$requestStack = $container->get('request_stack');
+			$currentRequest = $requestStack->getCurrentRequest();
 
 			$time = time();
 			$origObjPage = $GLOBALS['objPage'] ?? null;
@@ -196,7 +197,7 @@ class News extends Frontend
 				$objItem->published = $objArticle->date;
 
 				// Push a new request to the request stack (#3856)
-				$request = Request::create($objItem->link);
+				$request = null !== $currentRequest ? $this->createSubRequest($objItem->link, $currentRequest) : Request::create($objItem->link);
 				$request->attributes->set('_scope', 'frontend');
 				$requestStack->push($request);
 
@@ -276,106 +277,6 @@ class News extends Frontend
 
 		// Create the file
 		File::putContent($webDir . '/share/' . $strFile . '.xml', $container->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
-	}
-
-	/**
-	 * Add news items to the indexer
-	 *
-	 * @param array   $arrPages
-	 * @param integer $intRoot
-	 * @param boolean $blnIsSitemap
-	 *
-	 * @return array
-	 */
-	public function getSearchablePages($arrPages, $intRoot=0, $blnIsSitemap=false)
-	{
-		$arrRoot = array();
-
-		if ($intRoot > 0)
-		{
-			$arrRoot = $this->Database->getChildRecords($intRoot, 'tl_page');
-		}
-
-		$arrProcessed = array();
-		$time = time();
-
-		// Get all news archives
-		$objArchive = NewsArchiveModel::findByProtected('');
-
-		// Walk through each archive
-		if ($objArchive !== null)
-		{
-			while ($objArchive->next())
-			{
-				// Skip news archives without target page
-				if (!$objArchive->jumpTo)
-				{
-					continue;
-				}
-
-				// Skip news archives outside the root nodes
-				if (!empty($arrRoot) && !\in_array($objArchive->jumpTo, $arrRoot))
-				{
-					continue;
-				}
-
-				// Get the URL of the jumpTo page
-				if (!isset($arrProcessed[$objArchive->jumpTo]))
-				{
-					$objParent = PageModel::findWithDetails($objArchive->jumpTo);
-
-					// The target page does not exist
-					if ($objParent === null)
-					{
-						continue;
-					}
-
-					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time))
-					{
-						continue;
-					}
-
-					if ($blnIsSitemap)
-					{
-						// The target page is protected (see #8416)
-						if ($objParent->protected)
-						{
-							continue;
-						}
-
-						// The target page is exempt from the sitemap (see #6418)
-						if ($objParent->robots == 'noindex,nofollow')
-						{
-							continue;
-						}
-					}
-
-					// Generate the URL
-					$arrProcessed[$objArchive->jumpTo] = $objParent->getAbsoluteUrl('/%s');
-				}
-
-				$strUrl = $arrProcessed[$objArchive->jumpTo];
-
-				// Get the items
-				$objArticle = NewsModel::findPublishedDefaultByPid($objArchive->id);
-
-				if ($objArticle !== null)
-				{
-					while ($objArticle->next())
-					{
-						if ($blnIsSitemap && $objArticle->robots === 'noindex,nofollow')
-						{
-							continue;
-						}
-
-						$arrPages[] = $this->getLink($objArticle, $strUrl);
-					}
-				}
-			}
-		}
-
-		return $arrPages;
 	}
 
 	/**
@@ -578,5 +479,35 @@ class News extends Frontend
 		}
 
 		return self::$arrPageCache[$intPageId];
+	}
+
+	/**
+	 * Creates a sub request for the given URI.
+	 */
+	private function createSubRequest(string $uri, Request $request): Request
+	{
+		$cookies = $request->cookies->all();
+		$server = $request->server->all();
+
+		unset($server['HTTP_IF_MODIFIED_SINCE'], $server['HTTP_IF_NONE_MATCH']);
+
+		$subRequest = Request::create($uri, 'get', array(), $cookies, array(), $server);
+
+		if (null !== ($session = $request->getSession()))
+		{
+			$subRequest->setSession($session);
+		}
+
+		if ($request->get('_format'))
+		{
+			$subRequest->attributes->set('_format', $request->get('_format'));
+		}
+
+		if ($request->getDefaultLocale() !== $request->getLocale())
+		{
+			$subRequest->setLocale($request->getLocale());
+		}
+
+		return $subRequest;
 	}
 }

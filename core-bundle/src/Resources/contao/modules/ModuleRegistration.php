@@ -39,7 +39,7 @@ class ModuleRegistration extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -80,6 +80,14 @@ class ModuleRegistration extends Module
 			}
 		}
 
+		$strFormId = 'tl_registration_' . $this->id;
+
+		// Remove expired registration (#3709)
+		if (Input::post('FORM_SUBMIT') == $strFormId && ($email = Input::post('email')) && ($member = MemberModel::findExpiredRegistrationByEmail($email)))
+		{
+			$member->delete();
+		}
+
 		// Activate account
 		if (strncmp(Input::get('token'), 'reg-', 4) === 0)
 		{
@@ -98,7 +106,6 @@ class ModuleRegistration extends Module
 
 		$objCaptcha = null;
 		$doNotSubmit = false;
-		$strFormId = 'tl_registration_' . $this->id;
 
 		// Predefine the group order (other groups will be appended automatically)
 		$arrGroups = array
@@ -337,7 +344,7 @@ class ModuleRegistration extends Module
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$this->Template->captcha = $arrFields['captcha']['captcha'];
+		$this->Template->captcha = $arrFields['captcha']['captcha'] ?? '';
 	}
 
 	/**
@@ -422,7 +429,7 @@ class ModuleRegistration extends Module
 		$objVersions = new Versions('tl_member', $objNewUser->id);
 		$objVersions->setUsername($objNewUser->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
 		$objVersions->initialize();
 
 		// Inform admin if no activation link is sent

@@ -210,7 +210,8 @@ class ModuleWizard extends Widget
 			{
 				if ($button == 'edit')
 				{
-					$return .= ' <a href="contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . ($this->varValue[$i]['mod'] ?? null) . '&amp;popup=1&amp;nb=1&amp;rt=' . REQUEST_TOKEN . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link" ' . (($this->varValue[$i]['mod'] ?? null) > 0 ? '' : ' style="display:none"') . ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>' . Image::getHtml('edit_.svg', '', 'class="module_image"' . (($this->varValue[$i]['mod'] ?? null) > 0 ? ' style="display:none"' : ''));
+					$href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>($this->varValue[$i]['mod'] ?? null), 'popup'=>'1', 'rt'=>REQUEST_TOKEN)));
+					$return .= ' <a href="' . $href . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link" ' . (($this->varValue[$i]['mod'] ?? null) > 0 ? '' : ' style="display:none"') . ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>' . Image::getHtml('edit_.svg', '', 'class="module_image"' . (($this->varValue[$i]['mod'] ?? null) > 0 ? ' style="display:none"' : ''));
 				}
 				elseif ($button == 'drag')
 				{

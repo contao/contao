@@ -61,9 +61,7 @@ class SitemapListenerTest extends ContaoTestCase
             ]),
             CalendarEventsModel::class => $this->mockConfiguredAdapter([
                 'findPublishedDefaultByPid' => [
-                    $this->mockClassWithProperties(CalendarEventsModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(CalendarEventsModel::class),
                 ],
             ]),
         ];
