@@ -1,5 +1,5 @@
 services:
-    contao_newsletter.cron.purge_subscriptions:
+    contao_newsletter.cron.purge_subscriptions_job:
         class: Contao\NewsletterBundle\Cron\PurgeSubscriptionsCronJob
         arguments:
             - '@contao.framework'
