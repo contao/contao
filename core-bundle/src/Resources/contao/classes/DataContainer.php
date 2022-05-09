@@ -899,9 +899,9 @@ abstract class DataContainer extends Backend
 			// Permissions
 			if (!$security->isGranted(ContaoCorePermissions::DC_OPERATION_PREFIX . $k, $subject))
 			{
-				// TODO: This would remove the operation completely if you do not have access. If we want to show a
-				// a disabled icon instead, we should probably re-think this whole method but this might also depend
-				// on some back end adjustments (e.g. automatically selecting the appropriate icon from an icon set?)
+				// TODO: This removes the operation completely if you do not have access. If we want to show a
+				// disabled icon instead, we should probably re-think this whole method (which might also depend on
+				// some back end adjustments, e.g. automatically selecting the appropriate icon from an icon set?).
 				continue;
 			}
 
@@ -1161,9 +1161,9 @@ abstract class DataContainer extends Backend
 			// Permissions
 			if (!$security->isGranted(ContaoCorePermissions::DC_OPERATION_PREFIX . $k, $subject))
 			{
-				// TODO: This would remove the operation completely if you do not have access. If we want to show a
-				// a disabled icon instead, we should probably re-think this whole method but this might also depend
-				// on some back end adjustments (e.g. automatically selecting the appropriate icon from an icon set?)
+				// TODO: This removes the operation completely if you do not have access. If we want to show a
+				// disabled icon instead, we should probably re-think this whole method (which might also depend on
+				// some back end adjustments, e.g. automatically selecting the appropriate icon from an icon set?).
 				continue;
 			}
 
