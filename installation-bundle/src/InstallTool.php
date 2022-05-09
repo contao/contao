@@ -303,6 +303,8 @@ class InstallTool
             $templates[] = $file->getRelativePathname();
         }
 
+        natcasesort($templates);
+
         return $templates;
     }
 

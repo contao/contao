@@ -17,5 +17,5 @@
     <p class="error"><?= $this->getErrorAsString() ?></p>
   <?php endif; ?>
 
-  <textarea name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="textarea<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>" rows="<?= $this->rows ?>" cols="<?= $this->cols ?>"<?= $this->getAttributes() ?>><?= $this->value ?></textarea>
+  <textarea name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="textarea<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>" rows="<?= $this->rows ?>" cols="<?= $this->cols ?>"<?= $this->getAttributes() ?>><?= Contao\StringUtil::specialchars($this->value) ?></textarea>
 <?php $this->endblock(); ?>
