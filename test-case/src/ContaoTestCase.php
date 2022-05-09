@@ -275,7 +275,6 @@ abstract class ContaoTestCase extends TestCase
             '_ENV' => $_ENV,
             '_GET' => $_GET,
             '_POST' => $_POST,
-            '_COOKIE' => $_COOKIE,
         ];
     }
 
@@ -285,7 +284,6 @@ abstract class ContaoTestCase extends TestCase
         $_ENV = $this->backupServerEnvGetPost['_ENV'] ?? $_ENV;
         $_GET = $this->backupServerEnvGetPost['_GET'] ?? [];
         $_POST = $this->backupServerEnvGetPost['_POST'] ?? [];
-        $_COOKIE = $this->backupServerEnvGetPost['_COOKIE'] ?? [];
     }
 
     /**
@@ -312,7 +310,7 @@ abstract class ContaoTestCase extends TestCase
                 && \is_callable([$class, 'reset'])
                 && method_exists($class, 'reset')
                 && $reflectionClass->getMethod('reset')->isStatic()
-                && $reflectionClass->getMethod('reset')->getDeclaringClass() === $class
+                && $reflectionClass->getMethod('reset')->getDeclaringClass()->getName() === $class
                 && 0 === \count($reflectionClass->getMethod('reset')->getParameters())
             ) {
                 $class::reset();

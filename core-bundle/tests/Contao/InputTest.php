@@ -57,6 +57,7 @@ class InputTest extends TestCase
     {
         unset($GLOBALS['TL_CONFIG']);
 
+        $_COOKIE = [];
         $this->restoreServerEnvGetPost();
         $this->resetStaticProperties([System::class, Input::class]);
 
