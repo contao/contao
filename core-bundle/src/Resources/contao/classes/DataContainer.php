@@ -888,7 +888,7 @@ abstract class DataContainer extends Backend
 		$return = '';
 
 		$security = System::getContainer()->get('security.helper');
-		$subject = new DataContainerSubject($strTable, $arrRow['id']);
+		$subject = new DataContainerSubject($strTable, rawurldecode($arrRow['id']));
 
 		foreach ($GLOBALS['TL_DCA'][$strTable]['list']['operations'] as $k=>$v)
 		{
@@ -1147,7 +1147,7 @@ abstract class DataContainer extends Backend
 		}
 
 		$security = System::getContainer()->get('security.helper');
-		$subject = new DataContainerSubject($strPtable, $arrRow['id']);
+		$subject = new DataContainerSubject($strPtable, rawurldecode($arrRow['id']));
 
 		$return = '';
 
