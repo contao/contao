@@ -15,7 +15,7 @@ namespace Contao\CalendarBundle\Cron;
 use Contao\Calendar;
 use Contao\CoreBundle\Framework\ContaoFramework;
 
-class GenerateFeedsCronJob
+class GenerateFeedsCron
 {
     public function __construct(private ContaoFramework $framework)
     {
