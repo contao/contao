@@ -41,21 +41,21 @@ class SitemapListener
         $arrProcessed = [];
         $time = time();
 
-        // Get all calendars
+        // Get all news archives
         $objArchives = $this->framework->getAdapter(NewsArchiveModel::class)->findByProtected('');
 
         if (null === $objArchives) {
             return;
         }
 
-        // Walk through each calendar
+        // Walk through each news archive
         foreach ($objArchives as $objArchive) {
-            // Skip calendars without target page
+            // Skip news archives without target page
             if (!$objArchive->jumpTo) {
                 continue;
             }
 
-            // Skip calendars outside the root nodes
+            // Skip news archives outside the root nodes
             if (!\in_array($objArchive->jumpTo, $arrRoot, true)) {
                 continue;
             }
