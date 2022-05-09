@@ -743,8 +743,8 @@ services:
             - Contao\BackendUser
             - '@?logger'
 
-    contao.security.data_container.default_dca_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDcaVoter
+    contao.security.default_data_container_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
 
