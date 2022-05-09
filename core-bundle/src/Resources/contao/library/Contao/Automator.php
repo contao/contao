@@ -230,7 +230,7 @@ class Automator extends System
 	 */
 	public function purgeRegistrations()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use MemberModel::findExpiredRegistrations() instead.', __CLASS__, __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 6.0. Use MemberModel::findExpiredRegistrations() instead.', __CLASS__, __METHOD__);
 
 		$objMember = MemberModel::findExpiredRegistrations();
 
@@ -255,6 +255,8 @@ class Automator extends System
 	 */
 	public function purgeOptInTokens()
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 6.0. Use the "contao.opt_in" service instead.', __CLASS__, __METHOD__);
+
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optIn->purgeTokens();
 
