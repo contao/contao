@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### getSearchablePages hook
+
+The `getSearchablePages` hook has been removed. Use the `SitemapEvent` instead.
+
 ### Backend::addFileMetaInformationToRequest
 
 `Backend::addFileMetaInformationToRequest()` and the corresponding `addFileMetaInformationToRequest` hook
