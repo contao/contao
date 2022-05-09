@@ -1,5 +1,5 @@
 services:
-    contao_comments.cron.purge_subscriptions:
+    contao_comments.cron.purge_subscriptions_job:
         class: Contao\CommentsBundle\Cron\PurgeSubscriptionsCronJob
         arguments:
             - '@contao.framework'
