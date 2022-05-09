@@ -990,7 +990,7 @@
         <source>Caption</source>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
+        <source>License URL</source>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
