@@ -932,7 +932,7 @@ class Newsletter extends Backend
 
 	/**
 	 * Purge subscriptions that have not been activated within 24 hours
-	 * 
+	 *
 	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
 	 */
 	public function purgeSubscriptions()
