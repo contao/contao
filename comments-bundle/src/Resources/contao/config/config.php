@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Comments;
 use Contao\CommentsModel;
 use Contao\CommentsNotifyModel;
 use Contao\ContentComments;
