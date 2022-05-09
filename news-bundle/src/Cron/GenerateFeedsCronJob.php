@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Cron;
 
-use Contao\News;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\News;
 
 class GenerateFeedsCronJob
 {
