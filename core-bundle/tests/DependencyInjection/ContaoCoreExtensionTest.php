@@ -1671,7 +1671,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoCsrfTokenManager::class, (string) $alias);
         $this->assertTrue($alias->isPublic());
-        $this->assertTrue($alias->isDeprecated());
+        $this->assertFalse($alias->isDeprecated());
     }
 
     public function testRegistersTheCsrfTokenStorage(): void
