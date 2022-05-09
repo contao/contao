@@ -264,7 +264,7 @@ jobs:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     reverse:
-        name: PHP 8.1 Reverse Order
+        name: PHP 8.1 Reverse Order and Global State
         runs-on: ubuntu-latest
         if: github.event_name != 'push'
         steps:
@@ -284,7 +284,7 @@ jobs:
               run: composer install --no-interaction --no-progress
 
             - name: Run the unit tests in reverse order
-              run: vendor/bin/phpunit --order-by=reverse --colors=always
+              run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
 
     nightly:
         name: PHP 8.2
