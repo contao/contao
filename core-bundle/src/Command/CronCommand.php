@@ -43,7 +43,7 @@ class CronCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $force = $input->getOption('force') ?? false;
+        $force = $input->getOption('force');
 
         if ($cronJobName = $input->getArgument('cronjob')) {
             $this->cron->runJob($cronJobName, Cron::SCOPE_CLI, $force);
