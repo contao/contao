@@ -7,6 +7,13 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
+    contao_calendar.cron.generate_feeds:
+        class: Contao\CalendarBundle\Cron\GenerateFeedsCronJob
+        arguments:
+            - '@contao.framework'
+        tags:
+            - { name: contao.cronjob, interval: daily }
+
     contao_calendar.listener.generate_page:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
         arguments:
