@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\NewsletterBundle\Tests\EventListener;
 
+use Contao\Model\Collection;
 use Contao\NewsletterBundle\Cron\PurgeSubscriptionsCronJob;
 use Contao\NewsletterRecipientsModel;
-use Contao\Model\Collection;
 use Contao\TestCase\ContaoTestCase;
 
 class PurgeSubscriptionsCronJobTest extends ContaoTestCase
