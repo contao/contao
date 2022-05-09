@@ -226,7 +226,7 @@ var AjaxRequest =
 				item.getElements('[data-required]').each(function(el) {
 					el.set('required', '').set('data-required', null);
 				});
-				new Request.Contao({field:el}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+				new Request.Contao({field: el, onSuccess:updateVersionNumber}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				el.value = '';
 				el.checked = '';
@@ -234,7 +234,7 @@ var AjaxRequest =
 				item.getElements('[required]').each(function(el) {
 					el.set('required', null).set('data-required', '');
 				});
-				new Request.Contao({field:el}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
+				new Request.Contao({field: el, onSuccess:updateVersionNumber}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return;
 		}
@@ -281,10 +281,19 @@ var AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
+				updateVersionNumber(txt);
+
 				AjaxRequest.hideBox();
 				window.fireEvent('ajax_change');
 			}
 		}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'load':1, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+
+		function updateVersionNumber(html) {
+			if (!el.form.elements.VERSION_NUMBER) {
+				return;
+			}
+			el.form.elements.VERSION_NUMBER.value = /<input\s+[^>]*?name="VERSION_NUMBER"\s+[^>]*?value="([^"]*)"/i.exec(html)[1];
+		}
 	},
 
 	/**

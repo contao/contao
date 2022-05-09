@@ -98,7 +98,7 @@ class Comments extends Frontend
 				$objPartial->setData($objComments->row());
 
 				// Clean the RTE output
-				$objPartial->comment = StringUtil::toHtml5($objComments->comment);
+				$objPartial->comment = $objComments->comment;
 				$objPartial->comment = trim(str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $objPartial->comment));
 
 				$objPartial->datim = Date::parse($objPage->datimFormat, $objComments->date);
@@ -116,9 +116,6 @@ class Comments extends Frontend
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
 					$objPartial->reply = System::getContainer()->get('contao.insert_tag.parser')->replace($objComments->reply);
 					$objPartial->author = $objAuthor;
-
-					// Clean the RTE output
-					$objPartial->reply = StringUtil::toHtml5($objPartial->reply);
 				}
 
 				$arrComments[] = $objPartial->parse();

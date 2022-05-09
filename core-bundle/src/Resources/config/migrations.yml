@@ -17,6 +17,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+            - '@contao.image.sizes'
 
     contao.migration.version_403.version_430_update:
         class: Contao\CoreBundle\Migration\Version403\Version430Update
@@ -98,6 +99,11 @@ services:
 
     contao.migration.version_412.page_language:
         class: Contao\CoreBundle\Migration\Version412\PageLanguageMigration
+        arguments:
+            - '@database_connection'
+
+    contao.migration.version_413.rel_lightbox:
+        class: Contao\CoreBundle\Migration\Version413\RelLightboxMigration
         arguments:
             - '@database_connection'
 
