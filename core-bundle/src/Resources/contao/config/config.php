@@ -473,12 +473,7 @@ $GLOBALS['TL_CRON'] = array
 (
 	'monthly' => array(),
 	'weekly' => array(),
-	'daily' => array
-	(
-		'purgeTempFolder' => array(Automator::class, 'purgeTempFolder'),
-		'purgeRegistrations' => array(Automator::class, 'purgeRegistrations'),
-		'purgeOptInTokens' => array(Automator::class, 'purgeOptInTokens')
-	),
+	'daily' => array(),
 	'hourly' => array(),
 	'minutely' => array()
 );
