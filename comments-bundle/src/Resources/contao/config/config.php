@@ -27,9 +27,6 @@ $GLOBALS['BE_MOD']['content']['comments'] = array
 	'stylesheet' => 'bundles/contaocomments/comments.min.css'
 );
 
-// Cron jobs
-$GLOBALS['TL_CRON']['daily']['purgeCommentSubscriptions'] = array(Comments::class, 'purgeSubscriptions');
-
 // Models
 $GLOBALS['TL_MODELS']['tl_comments'] = CommentsModel::class;
 $GLOBALS['TL_MODELS']['tl_comments_notify'] = CommentsNotifyModel::class;
