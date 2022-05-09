@@ -100,8 +100,8 @@ class MetaWizard extends Widget
 						$langTrans = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array($lang))[$lang];
 						$fieldLabel = $GLOBALS['TL_LANG']['MSC']['aw_' . $kk];
 
-						$errorMsg = isset($this->metaFields[$kk]['rgxpErrMsg']) ?
-							sprintf($this->metaFields[$kk]['rgxpErrMsg'], $fieldLabel, $langTrans, $rgxp)
+						$errorMsg = isset($this->metaFields[$kk]['rgxpErrMsg'])
+							? sprintf($this->metaFields[$kk]['rgxpErrMsg'], $fieldLabel, $langTrans, $rgxp)
 							: sprintf($GLOBALS['TL_LANG']['tl_files']['metaRgxpError'], $fieldLabel, $langTrans, $rgxp);
 
 						$this->addError($errorMsg);
@@ -174,9 +174,7 @@ class MetaWizard extends Widget
 				// Take the fields from the DCA (see #4327)
 				foreach ($this->metaFields as $field=>$fieldConfig)
 				{
-					$class = isset($this->arrFieldErrors[$lang][$field]) ? 'class="error" ' : '';
-
-					$return .= '<label ' . $class . 'for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
+					$return .= '<label' . (isset($this->arrFieldErrors[$lang][$field]) ? ' class="error"' : '') . ' for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
 
 					if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 					{

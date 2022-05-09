@@ -268,10 +268,10 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					'link'            => array('attributes'=>'maxlength="2048"', 'dcaPicker'=>true),
 					'caption'         => array('type'=>'textarea'),
 					'license'         => array(
-						'attributes' => 'maxlength="255"',
-						'dcaPicker'  => true,
-						'rgxp'       => '#(^$|^{{link_url::.+$|^https?://.+$)#',
-						'rgxpErrMsg' => &$GLOBALS['TL_LANG']['tl_files']['licenseRgxpError']
+						'attributes'  => 'maxlength="255"',
+						'dcaPicker'   => true,
+						'rgxp'        => '#(^$|^{{link_url::.+$|^https?://.+$)#',
+						'rgxpErrMsg'  => &$GLOBALS['TL_LANG']['tl_files']['licenseRgxpError']
 					)
 				)
 			),
