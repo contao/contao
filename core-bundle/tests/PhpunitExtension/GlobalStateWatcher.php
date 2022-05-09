@@ -181,6 +181,10 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                     continue;
                 }
 
+                if ($value instanceof \WeakMap && 0 === $value->count() && $property->hasType() && !$property->getType()->allowsNull()) {
+                    continue;
+                }
+
                 if (\is_array($value)) {
                     $value = 'array('.\count($value).')';
                 }
