@@ -8,7 +8,7 @@ services:
                 - [setFramework, ['@contao.framework']]
 
     contao_news.cron.generate_feeds_job:
-        class: Contao\NewsBundle\Cron\GenerateFeedsCronJob
+        class: Contao\NewsBundle\Cron\GenerateFeedsCron
         arguments:
             - '@contao.framework'
         tags:

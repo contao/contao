@@ -15,7 +15,7 @@ namespace Contao\NewsBundle\Cron;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\News;
 
-class GenerateFeedsCronJob
+class GenerateFeedsCron
 {
     public function __construct(private ContaoFramework $framework)
     {

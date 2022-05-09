@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\News;
-use Contao\NewsBundle\Cron\GenerateFeedsCronJob;
+use Contao\NewsBundle\Cron\GenerateFeedsCron;
 use Contao\TestCase\ContaoTestCase;
 
-class GenerateFeedsCronJobTest extends ContaoTestCase
+class GenerateFeedsCronTest extends ContaoTestCase
 {
     public function testExecutesGenerateFeeds(): void
     {
@@ -28,6 +28,6 @@ class GenerateFeedsCronJobTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([], [News::class => $calendarUtil]);
 
-        (new GenerateFeedsCronJob($framework))();
+        (new GenerateFeedsCron($framework))();
     }
 }
