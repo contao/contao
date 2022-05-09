@@ -16,7 +16,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\NewsletterRecipientsModel;
 use Psr\Log\LoggerInterface;
 
-class PurgeSubscriptionsCronJob
+class PurgeSubscriptionsCron
 {
     public function __construct(private ContaoFramework $framework, private LoggerInterface|null $logger)
     {

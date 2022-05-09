@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Contao\NewsletterBundle\Tests\EventListener;
 
 use Contao\Model\Collection;
-use Contao\NewsletterBundle\Cron\PurgeSubscriptionsCronJob;
+use Contao\NewsletterBundle\Cron\PurgeSubscriptionsCron;
 use Contao\NewsletterRecipientsModel;
 use Contao\TestCase\ContaoTestCase;
 
-class PurgeSubscriptionsCronJobTest extends ContaoTestCase
+class PurgeSubscriptionsCronTest extends ContaoTestCase
 {
     public function testDeletesExpiredSubscriptions(): void
     {
@@ -36,6 +36,6 @@ class PurgeSubscriptionsCronJobTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([NewsletterRecipientsModel::class => $commentsNotifyModelAdapter]);
 
-        (new PurgeSubscriptionsCronJob($framework, null))();
+        (new PurgeSubscriptionsCron($framework, null))();
     }
 }
