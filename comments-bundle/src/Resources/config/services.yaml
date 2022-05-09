@@ -1,6 +1,6 @@
 services:
     contao_comments.cron.purge_subscriptions_job:
-        class: Contao\CommentsBundle\Cron\PurgeSubscriptionsCronJob
+        class: Contao\CommentsBundle\Cron\PurgeSubscriptionsCron
         arguments:
             - '@contao.framework'
             - '@?monolog.logger.contao.cron'
