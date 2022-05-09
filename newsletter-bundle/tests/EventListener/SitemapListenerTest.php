@@ -10,23 +10,23 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CalendarBundle\Tests\EventListener;
+namespace Contao\NewsletterBundle\Tests\EventListener;
 
-use Contao\CalendarBundle\EventListener\SitemapListener;
-use Contao\CalendarEventsModel;
-use Contao\CalendarModel;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\Database;
+use Contao\NewsletterBundle\EventListener\SitemapListener;
+use Contao\NewsletterChannelModel;
+use Contao\NewsletterModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 class SitemapListenerTest extends ContaoTestCase
 {
-    public function testNothingIsAddedIfNoPublishedCalendar(): void
+    public function testNothingIsAddedIfNoPublishedChannel(): void
     {
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter(['findByProtected' => null]),
+            NewsletterChannelModel::class => $this->mockConfiguredAdapter(['findAll' => null]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([]);
@@ -36,7 +36,7 @@ class SitemapListenerTest extends ContaoTestCase
         $this->assertStringNotContainsString('<url><loc>', (string) $sitemapEvent->getDocument()->saveXML());
     }
 
-    public function testCalendarEventIsAdded(): void
+    public function testNewsletterIsAdded(): void
     {
         $jumpToPage = $this->mockClassWithProperties(PageModel::class, [
             'published' => 1,
@@ -49,9 +49,9 @@ class SitemapListenerTest extends ContaoTestCase
         ;
 
         $adapters = [
-            CalendarModel::class => $this->mockConfiguredAdapter([
-                'findByProtected' => [
-                    $this->mockClassWithProperties(CalendarModel::class, [
+            NewsletterChannelModel::class => $this->mockConfiguredAdapter([
+                'findAll' => [
+                    $this->mockClassWithProperties(NewsletterChannelModel::class, [
                         'jumpTo' => 42,
                     ]),
                 ],
@@ -59,9 +59,9 @@ class SitemapListenerTest extends ContaoTestCase
             PageModel::class => $this->mockConfiguredAdapter([
                 'findWithDetails' => $jumpToPage,
             ]),
-            CalendarEventsModel::class => $this->mockConfiguredAdapter([
-                'findPublishedDefaultByPid' => [
-                    $this->mockClassWithProperties(CalendarEventsModel::class),
+            NewsletterModel::class => $this->mockConfiguredAdapter([
+                'findSentByPid' => [
+                    $this->mockClassWithProperties(NewsletterModel::class),
                 ],
             ]),
         ];
