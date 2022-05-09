@@ -19,7 +19,6 @@ class GenerateFeedsCronJob
 {
     public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     public function __invoke(): void
