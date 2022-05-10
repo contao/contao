@@ -42,6 +42,14 @@ class Cron
     }
 
     /**
+     * @return array<CronJob>
+     */
+    public function getCronJobs(): array
+    {
+        return $this->cronJobs;
+    }
+
+    /**
      * Run all the registered Contao cron jobs.
      */
     public function run(string $scope, bool $force = false): void
