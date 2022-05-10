@@ -14,8 +14,12 @@ namespace Contao\CommentsBundle\Cron;
 
 use Contao\CommentsNotifyModel;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @CronJob("daily")
+ */
 class PurgeSubscriptionsCron
 {
     public function __construct(private ContaoFramework $framework, private LoggerInterface|null $logger)
