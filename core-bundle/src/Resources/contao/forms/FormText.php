@@ -66,14 +66,14 @@ class FormText extends Widget
 		switch ($strKey)
 		{
 			case 'minlength':
-				if ($varValue > 0 && $this->rgxp != 'digit')
+				if ($varValue > 0 && $this->rgxp != 'digit' && $this->rgxp != 'natural')
 				{
 					$this->arrAttributes['minlength'] =  $varValue;
 				}
 				break;
 
 			case 'maxlength':
-				if ($varValue > 0 && $this->rgxp != 'digit')
+				if ($varValue > 0 && $this->rgxp != 'digit' && $this->rgxp != 'natural')
 				{
 					$this->arrAttributes['maxlength'] =  $varValue;
 				}
@@ -93,7 +93,7 @@ class FormText extends Widget
 
 			case 'min':
 			case 'minval':
-				if ($this->rgxp == 'digit')
+				if ($this->rgxp == 'digit' || $this->rgxp == 'natural')
 				{
 					$this->arrAttributes['min'] = $varValue;
 				}
@@ -101,7 +101,7 @@ class FormText extends Widget
 
 			case 'max':
 			case 'maxval':
-				if ($this->rgxp == 'digit')
+				if ($this->rgxp == 'digit' || $this->rgxp == 'natural')
 				{
 					$this->arrAttributes['max'] = $varValue;
 				}
