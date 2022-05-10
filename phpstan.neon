@@ -50,8 +50,5 @@ parameters:
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 
-        # TODO: remove this once https://github.com/phpstan/phpstan/issues/7171 has been merged
-        - '#attribute class Doctrine\\ORM\\Mapping\\Entity constructor expects class-string<Doctrine\\ORM\\EntityRepository<T of object>>\|null#'
-
     treatPhpDocTypesAsCertain: false
     checkMissingIterableValueType: false

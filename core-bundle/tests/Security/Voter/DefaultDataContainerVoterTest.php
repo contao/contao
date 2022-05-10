@@ -13,16 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Voter;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\Voter\DataContainer\DefaultDcaVoter;
+use Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class DefaultDcaVoterTest extends TestCase
+class DefaultDataContainerVoterTest extends TestCase
 {
     public function testVoter(): void
     {
-        $voter = new DefaultDcaVoter();
+        $voter = new DefaultDataContainerVoter();
 
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
@@ -31,7 +31,7 @@ class DefaultDcaVoterTest extends TestCase
 
         $this->assertSame(
             VoterInterface::ACCESS_GRANTED,
-            $voter->vote($this->createMock(TokenInterface::class), 'foobar', [ContaoCorePermissions::DCA_PREFIX.'foobar'])
+            $voter->vote($this->createMock(TokenInterface::class), 'foobar', [ContaoCorePermissions::DC_PREFIX.'foobar'])
         );
     }
 }

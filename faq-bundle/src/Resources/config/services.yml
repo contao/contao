@@ -14,6 +14,13 @@ services:
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
 
+    contao_faq.listener.sitemap:
+        class: Contao\FaqBundle\EventListener\SitemapListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
     contao_faq.picker.faq_provider:
         class: Contao\FaqBundle\Picker\FaqPickerProvider
         arguments:

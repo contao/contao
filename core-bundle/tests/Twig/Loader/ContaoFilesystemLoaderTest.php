@@ -30,6 +30,13 @@ use Twig\Error\LoaderError;
 
 class ContaoFilesystemLoaderTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['objPage']);
+
+        parent::tearDown();
+    }
+
     public function testAddsPath(): void
     {
         $loader = $this->getContaoFilesystemLoader();
@@ -171,7 +178,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->addPath($path, 'Contao', true);
 
         $this->assertSame(
-            Path::join($path, '1.html.twig'),
+            'c'.Path::join($path, '1.html.twig'),
             Path::normalize($loader->getCacheKey('@Contao/1.html.twig'))
         );
     }
@@ -185,7 +192,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->addPath(Path::join($basePath, 'templates/my/theme'), 'Contao_Theme_my_theme');
 
         $this->assertSame(
-            Path::join($basePath, 'templates/text.html.twig'),
+            'c'.Path::join($basePath, 'templates/text.html.twig'),
             Path::normalize($loader->getCacheKey('@Contao/text.html.twig'))
         );
 
@@ -198,11 +205,9 @@ class ContaoFilesystemLoaderTest extends TestCase
         $GLOBALS['objPage'] = $page;
 
         $this->assertSame(
-            Path::join($basePath, 'templates/my/theme/text.html.twig'),
+            'c'.Path::join($basePath, 'templates/my/theme/text.html.twig'),
             Path::normalize($loader->getCacheKey('@Contao/text.html.twig'))
         );
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testGetsSourceContext(): void
@@ -243,8 +248,6 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $this->assertSame('@Contao_Theme_my_theme/text.html.twig', $source->getName());
         $this->assertSame(Path::join($basePath, 'templates/my/theme/text.html.twig'), Path::normalize($source->getPath()));
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testGetsSourceContextFromHtml5File(): void
@@ -303,8 +306,6 @@ class ContaoFilesystemLoaderTest extends TestCase
 
         $this->assertTrue($loader->exists('@Contao/text.html.twig'));
         $this->assertFalse($loader->exists('@Contao/foo.html.twig'));
-
-        unset($GLOBALS['objPage']);
     }
 
     /**
@@ -390,8 +391,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $GLOBALS['objPage'] = $page;
 
         $this->assertFalse($loader->isFresh('@Contao/text.html.twig', $cacheTime));
-
-        unset($GLOBALS['objPage']);
     }
 
     public function testGetsHierarchy(): void
@@ -622,8 +621,6 @@ class ContaoFilesystemLoaderTest extends TestCase
         $GLOBALS['objPage'] = $page;
 
         $this->assertFalse($loader->exists('@Contao/foo.html.twig'));
-
-        unset($GLOBALS['objPage']);
     }
 
     private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $bundles = [], array $bundlesMetadata = []): TemplateLocator
