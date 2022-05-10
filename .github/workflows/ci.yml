@@ -264,7 +264,7 @@ jobs:
                   DATABASE_URL: mysql://root:root@127.0.0.1:3306/contao_test
 
     reverse:
-        name: PHP 8.1 Reverse Order and Global State
+        name: PHP 8.1 Reverse Order
         runs-on: ubuntu-latest
         if: github.event_name != 'push'
         steps:
