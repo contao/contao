@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### onrestore_callback
+
+The `onrestore_callback` has been removed. Use the `onrestore_version_callback` instead.
+
 ### getSearchablePages hook
 
 The `getSearchablePages` hook has been removed. Use the `SitemapEvent` instead.

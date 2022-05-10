@@ -338,25 +338,6 @@ class Versions extends Controller
 			}
 		}
 
-		// Trigger the deprecated onrestore_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback'] ?? null))
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onrestore_callback" has been deprecated and will no longer work in Contao 5.0. Use the "onrestore_version_callback" instead.');
-
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->intPid, $this->strTable, $data, $intVersion);
-				}
-				elseif (\is_callable($callback))
-				{
-					$callback($this->intPid, $this->strTable, $data, $intVersion);
-				}
-			}
-		}
-
 		System::getContainer()->get('monolog.logger.contao.general')->info('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been restored' . $this->getParentEntries($this->strTable, $this->intPid));
 	}
 
