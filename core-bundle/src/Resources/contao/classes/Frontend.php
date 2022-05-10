@@ -587,7 +587,7 @@ abstract class Frontend extends Controller
 	 */
 	public static function getCronTimeout()
 	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 5.0.', self::class, __METHOD__);
+		trigger_deprecation('contao/core-bundle', '4.9', 'Calling "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
 
 		if (!empty($GLOBALS['TL_CRON']['minutely']))
 		{
