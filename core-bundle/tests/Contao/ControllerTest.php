@@ -42,7 +42,14 @@ class ControllerTest extends TestCase
     {
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
+        $this->resetStaticProperties([
+            DcaExtractor::class,
+            DcaLoader::class,
+            System::class,
+            Config::class,
+            Environment::class,
+            Controller::class,
+        ]);
 
         parent::tearDown();
     }

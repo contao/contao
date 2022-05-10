@@ -6,6 +6,10 @@
 
 The support for `runonce.php` files has been dropped. Use the migration framework instead.
 
+### onrestore_callback
+
+The `onrestore_callback` has been removed. Use the `onrestore_version_callback` instead.
+
 ### getSearchablePages hook
 
 The `getSearchablePages` hook has been removed. Use the `SitemapEvent` instead.

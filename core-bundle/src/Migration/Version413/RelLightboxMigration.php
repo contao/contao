@@ -58,7 +58,13 @@ class RelLightboxMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
+        $schemaManager = $this->connection->createSchemaManager();
+
         foreach ($this->getTargets() as [$table, $column]) {
+            if (!$schemaManager->tablesExist([$table]) || !isset($schemaManager->listTableColumns($table)[$column])) {
+                continue;
+            }
+
             $values = $this->connection->fetchAllKeyValue(
                 "SELECT id, `$column` FROM $table WHERE `$column` REGEXP ' rel=\"lightbox(\\\\[([^\\\\]]+)\\\\])?\"'"
             );

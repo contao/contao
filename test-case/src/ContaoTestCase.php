@@ -310,7 +310,7 @@ abstract class ContaoTestCase extends TestCase
                 && \is_callable([$class, 'reset'])
                 && method_exists($class, 'reset')
                 && $reflectionClass->getMethod('reset')->isStatic()
-                && $reflectionClass->getMethod('reset')->getDeclaringClass() === $class
+                && $reflectionClass->getMethod('reset')->getDeclaringClass()->getName() === $class
                 && 0 === \count($reflectionClass->getMethod('reset')->getParameters())
             ) {
                 $class::reset();
