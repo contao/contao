@@ -11,8 +11,6 @@ services:
         class: Contao\CalendarBundle\Cron\GenerateFeedsCron
         arguments:
             - '@contao.framework'
-        tags:
-            - { name: contao.cronjob, interval: daily }
 
     contao_calendar.listener.generate_page:
         class: Contao\CalendarBundle\EventListener\GeneratePageListener
