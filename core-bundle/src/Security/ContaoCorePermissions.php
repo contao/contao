@@ -190,35 +190,65 @@ final class ContaoCorePermissions
     /**
      * Prefix for all DCA related permission attributes.
      */
-    public const DCA_PREFIX = 'contao_dca.';
+    public const DC_PREFIX = 'contao_dc.';
 
     /**
-     * Create DCA permission.
+     * [Action] Prefix for all DCA action related permissions.
      */
-    public const DCA_CREATE = self::DCA_PREFIX.'create';
+    public const DC_ACTION_PREFIX = self::DC_PREFIX.'action.';
 
     /**
-     * Edit DCA permission.
+     * Prefix for all DCA view related permissions.
      */
-    public const DCA_EDIT = self::DCA_PREFIX.'edit';
+    public const DC_VIEW_PREFIX = self::DC_PREFIX.'view.';
 
     /**
-     * Delete DCA permission.
+     * Prefix for global_operations.
      */
-    public const DCA_DELETE = self::DCA_PREFIX.'delete';
+    public const DC_GLOBAL_OPERATION_PREFIX = self::DC_VIEW_PREFIX.'global_operation.';
 
     /**
-     * View DCA permission.
+     * Prefix for operations.
      */
-    public const DCA_VIEW = self::DCA_PREFIX.'view';
+    public const DC_OPERATION_PREFIX = self::DC_VIEW_PREFIX.'operation.';
 
     /**
-     * Copy DCA permission.
+     * Prefix for buttons.
      */
-    public const DCA_COPY = self::DCA_PREFIX.'copy';
+    public const DC_BUTTON_PREFIX = self::DC_VIEW_PREFIX.'button.';
 
     /**
-     * Move DCA permission.
+     * [Action] Create action DC permission.
      */
-    public const DCA_MOVE = self::DCA_PREFIX.'move';
+    public const DC_ACTION_CREATE = self::DC_ACTION_PREFIX.'create';
+
+    /**
+     * [Action] Edit action DC permission.
+     */
+    public const DC_ACTION_EDIT = self::DC_ACTION_PREFIX.'edit';
+
+    /**
+     * [Action] Delete action DC permission.
+     */
+    public const DC_ACTION_DELETE = self::DC_ACTION_PREFIX.'delete';
+
+    /**
+     * [Action] View action DC permission.
+     */
+    public const DC_ACTION_VIEW = self::DC_ACTION_PREFIX.'view';
+
+    /**
+     * [Action] Copy action DC permission.
+     */
+    public const DC_ACTION_COPY = self::DC_ACTION_PREFIX.'copy';
+
+    /**
+     * [Action] Move action DC permission.
+     */
+    public const DC_ACTION_MOVE = self::DC_ACTION_PREFIX.'move';
+
+    /**
+     * [View] Create view DC permission.
+     */
+    public const DC_VIEW_CREATE = self::DC_GLOBAL_OPERATION_PREFIX.'create';
 }

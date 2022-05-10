@@ -18,7 +18,6 @@ use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
-use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -58,14 +57,13 @@ class SitemapController extends AbstractController
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            $pages = $this->getPageAndArticleUrls((int) $rootPage->id);
-            $urls[] = $this->callLegacyHook($rootPage, $pages);
+            $urls = array_merge($urls, $this->getPageAndArticleUrls((int) $rootPage->id));
 
             $rootPageIds[] = $rootPage->id;
             $tags[] = 'contao.sitemap.'.$rootPage->id;
         }
 
-        $urls = array_unique(array_merge(...$urls));
+        $urls = array_unique($urls);
 
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
         $sitemap->formatOutput = true;
@@ -92,22 +90,6 @@ class SitemapController extends AbstractController
         $this->tagResponse($tags);
 
         return $response;
-    }
-
-    private function callLegacyHook(PageModel $rootPage, array $pages): array
-    {
-        $systemAdapter = $this->getContaoAdapter(System::class);
-
-        // HOOK: take additional pages
-        if (isset($GLOBALS['TL_HOOKS']['getSearchablePages']) && \is_array($GLOBALS['TL_HOOKS']['getSearchablePages'])) {
-            trigger_deprecation('contao/core-bundle', '4.11', 'Using the "getSearchablePages" hook is deprecated. Use the "contao.sitemap" event instead.');
-
-            foreach ($GLOBALS['TL_HOOKS']['getSearchablePages'] as $callback) {
-                $pages = $systemAdapter->importStatic($callback[0])->{$callback[1]}($pages, $rootPage->id, true, $rootPage->language);
-            }
-        }
-
-        return $pages;
     }
 
     private function getPageAndArticleUrls(int $parentPageId): array

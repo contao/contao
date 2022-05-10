@@ -36,6 +36,13 @@ services:
         tags:
             - kernel.event_listener
 
+    contao_news.listener.sitemap:
+        class: Contao\NewsBundle\EventListener\SitemapListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
     contao_news.picker.news_provider:
         class: Contao\NewsBundle\Picker\NewsPickerProvider
         arguments:
