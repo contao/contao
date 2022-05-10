@@ -116,7 +116,7 @@ class BackendController extends AbstractController
      */
     public function fileAction(): Response
     {
-        trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the picker instead.', __CLASS__, __METHOD__);
+        trigger_deprecation('contao/core-bundle', '4.13', 'Calling "%s()" has been deprecated and will no longer work in Contao 5.0. Use the picker instead.', __METHOD__);
 
         $this->initializeContaoFramework();
 

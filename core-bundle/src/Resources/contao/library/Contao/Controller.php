@@ -833,7 +833,7 @@ abstract class Controller extends System
 	 */
 	public static function replaceInsertTags($strBuffer, $blnCache=true)
 	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s::%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __CLASS__, __METHOD__);
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0. Use the InsertTagParser service instead.', __METHOD__);
 
 		$parser = System::getContainer()->get('contao.insert_tag.parser');
 
