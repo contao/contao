@@ -11,8 +11,6 @@ services:
         class: Contao\NewsBundle\Cron\GenerateFeedsCron
         arguments:
             - '@contao.framework'
-        tags:
-            - { name: contao.cronjob, interval: daily }
 
     contao_news.listener.generate_page:
         class: Contao\NewsBundle\EventListener\GeneratePageListener
