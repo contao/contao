@@ -13,9 +13,13 @@ declare(strict_types=1);
 namespace Contao\NewsletterBundle\Cron;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\ServiceAnnotation\CronJob;
 use Contao\NewsletterRecipientsModel;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @CronJob("daily")
+ */
 class PurgeSubscriptionsCron
 {
     public function __construct(private ContaoFramework $framework, private LoggerInterface|null $logger)
