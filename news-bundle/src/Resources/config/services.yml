@@ -53,7 +53,7 @@ services:
         tags:
             - { name: contao.picker_provider, priority: 128 }
 
-    contao_news.security.voter.news_archive_access_voter:
+    contao_news.security.news_archive_access_voter:
         class: Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter
         arguments:
             - '@contao.framework'

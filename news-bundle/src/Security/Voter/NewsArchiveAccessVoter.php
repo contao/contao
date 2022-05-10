@@ -23,8 +23,6 @@ use Symfony\Component\Security\Core\Security;
 
 class NewsArchiveAccessVoter extends Voter
 {
-    use NewsAccessVoterTrait;
-
     private const SUPPORTED_ATTRIBUTES = [
         // Action global
         ContaoCorePermissions::DC_ACTION_CREATE,
