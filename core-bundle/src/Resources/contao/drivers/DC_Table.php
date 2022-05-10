@@ -980,9 +980,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Consider the dynamic parent table (see #4867)
 				if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 				{
-					$cond = ($table === 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
-
-					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND $cond" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting" : ""))
+					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND ptable=?" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting" : ""))
 												->execute($id, $table);
 				}
 				else
@@ -1561,9 +1559,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Consider the dynamic parent table (see #4867)
 			if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 			{
-				$cond = ($table === 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
-
-				$objDelete = $this->Database->prepare("SELECT id FROM $v WHERE pid=? AND $cond")
+				$objDelete = $this->Database->prepare("SELECT id FROM $v WHERE pid=? AND ptable=?")
 											->execute($id, $table);
 			}
 			else
@@ -4416,10 +4412,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$arrProcedure = $this->procedure;
 			$arrValues = $this->values;
 
-			// Support empty ptable fields
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
 			{
-				$arrProcedure[] = ($this->ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
+				$arrProcedure[] = 'ptable=?';
 				$arrValues[] = $this->ptable;
 			}
 
@@ -5428,10 +5423,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$arrProcedure[] = 'id IN(' . implode(',', $this->root) . ')';
 			}
 
-			// Support empty ptable fields
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
 			{
-				$arrProcedure[] = ($this->ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
+				$arrProcedure[] = 'ptable=?';
 				$arrValues[] = $this->ptable;
 			}
 
@@ -5680,10 +5674,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Support empty ptable fields
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
 			{
-				$arrProcedure[] = ($this->ptable == 'tl_article') ? "(ptable=? OR ptable='')" : "ptable=?";
+				$arrProcedure[] = 'ptable=?';
 				$arrValues[] = $this->ptable;
 			}
 

@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+## tl_content.ptable
+
+Contao no longer treats an empty `tl_content.ptable` column like it had been set to `tl_article`. Make
+sure to always set the `ptable` column.
+
 ### runonce.php
 
 The support for `runonce.php` files has been dropped. Use the migration framework instead.
