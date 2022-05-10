@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### Only show guests
+
+The "only show guests" function has been removed. Use the "protect page" function instead.
+
 ### onrestore_callback
 
 The `onrestore_callback` has been removed. Use the `onrestore_version_callback` instead.
