@@ -4,7 +4,7 @@
 
 ### onrestore_callback
 
-The `onrestore_callback` has been removed. Use `onrestore_version_callback` instead.
+The `onrestore_callback` has been removed. Use the `onrestore_version_callback` instead.
 
 ### getSearchablePages hook
 
