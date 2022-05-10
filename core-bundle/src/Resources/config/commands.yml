@@ -42,7 +42,6 @@ services:
         class: Contao\CoreBundle\Command\CronCommand
         arguments:
             - '@contao.cron'
-    
     contao.command.cron_list:
         class: Contao\CoreBundle\Command\CronListCommand
         arguments:
