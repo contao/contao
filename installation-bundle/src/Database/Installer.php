@@ -243,8 +243,14 @@ class Installer
                 }
             }
 
-            $collate = $table->hasOption('collate') ? $table->getOption('collate') : '';
+            $collate = '';
             $charset = $table->hasOption('charset') ? $table->getOption('charset') : '';
+
+            if ($table->hasOption('collation')) {
+                $collate = $table->getOption('collation');
+            } elseif ($table->hasOption('collate')) {
+                $collate = $table->getOption('collate');
+            }
 
             if ($tableOptions['Collation'] !== $collate && '' !== $charset) {
                 $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;

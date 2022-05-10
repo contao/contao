@@ -82,9 +82,6 @@ services:
         class: Contao\CoreBundle\Command\MigrateCommand
         arguments:
             - '@contao.migration.collection'
-            - '@contao.resource_locator'
-            - '%kernel.project_dir%'
-            - '@contao.framework'
             - '@contao.doctrine.backup_manager'
             - '@contao.doctrine.schema_provider'
             - '@contao.doctrine.schema.mysql_innodb_row_size_calculator'

@@ -23,6 +23,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SitemapListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testNothingIsAddedIfNoPublishedArchive(): void
     {
         $adapters = [

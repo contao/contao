@@ -12,9 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
+use Contao\DcaLoader;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Config\FileLocator;
@@ -47,6 +49,10 @@ class DcaExtractorTest extends TestCase
 
     protected function tearDown(): void
     {
+        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_TEST'], $GLOBALS['TL_LANG'], $GLOBALS['TL_DCA']);
+
+        $this->resetStaticProperties([System::class, DcaExtractor::class, Config::class, DcaLoader::class]);
+
         parent::tearDown();
 
         (new Filesystem())->remove($this->getTempDir());
