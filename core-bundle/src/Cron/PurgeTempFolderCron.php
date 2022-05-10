@@ -14,7 +14,11 @@ namespace Contao\CoreBundle\Cron;
 
 use Contao\Automator;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\ServiceAnnotation\CronJob;
 
+/**
+ * @CronJob("daily")
+ */
 class PurgeTempFolderCron
 {
     public function __construct(private ContaoFramework $framework)
