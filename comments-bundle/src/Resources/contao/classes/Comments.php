@@ -508,10 +508,11 @@ class Comments extends Frontend
 	 * Purge subscriptions that have not been activated within 24 hours
 	 *
 	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 *             Use CommentsNotifyModel::findExpiredSubscriptions() instead.
 	 */
 	public function purgeSubscriptions()
 	{
-		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use CommentsNotifyModel::findExpiredSubscriptions() instead.', __METHOD__);
 
 		$objNotify = CommentsNotifyModel::findExpiredSubscriptions();
 
