@@ -37,8 +37,6 @@ class PurgeSubscriptionsCron
             $subscription->delete();
         }
 
-        if (null !== $this->logger) {
-            $this->logger->info('Purged the unactivated comment subscriptions');
-        }
+        $this->logger?->info('Purged the unactivated comment subscriptions');
     }
 }
