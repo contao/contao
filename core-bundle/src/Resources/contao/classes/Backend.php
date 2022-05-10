@@ -15,9 +15,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -201,67 +198,6 @@ abstract class Backend extends Controller
 		$arrUnset[] = 'nb';
 
 		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
-	}
-
-	/**
-	 * Handle "runonce" files
-	 *
-	 * @throws \Exception
-	 */
-	public static function handleRunOnce()
-	{
-		try
-		{
-			$files = System::getContainer()->get('contao.resource_locator')->locate('config/runonce.php', null, false);
-		}
-		catch (\InvalidArgumentException $e)
-		{
-			return;
-		}
-
-		foreach ($files as $file)
-		{
-			try
-			{
-				include $file;
-			}
-			catch (\Exception $e)
-			{
-			}
-
-			$strRelpath = StringUtil::stripRootDir($file);
-
-			if (!unlink($file))
-			{
-				throw new \Exception('The file ' . $strRelpath . ' cannot be deleted. Please remove the file manually and correct the file permission settings on your server.');
-			}
-
-			System::getContainer()->get('monolog.logger.contao.general')->info('File ' . $strRelpath . ' ran once and has then been removed successfully');
-		}
-
-		$appDir = System::getContainer()->getParameter('kernel.project_dir') . '/app';
-
-		if (!is_dir($appDir))
-		{
-			return;
-		}
-
-		$finder = Finder::create()->files()->in($appDir);
-
-		// Do not remove the app folder if there are still files in it
-		if ($finder->hasResults())
-		{
-			return;
-		}
-
-		try
-		{
-			(new Filesystem())->remove($appDir);
-		}
-		catch (IOException $e)
-		{
-			// ignore
-		}
 	}
 
 	/**

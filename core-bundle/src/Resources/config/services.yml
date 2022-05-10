@@ -116,6 +116,11 @@ services:
         tags:
             - { name: contao.cronjob, interval: daily }
 
+    contao.cron.purge_preview_links:
+        class: Contao\CoreBundle\Cron\PurgePreviewLinksCron
+        arguments:
+            - '@database_connection'
+
     contao.cron.purge_registrations:
         class: Contao\CoreBundle\Cron\PurgeRegistrationsCron
         arguments:
