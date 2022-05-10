@@ -2,9 +2,13 @@
 
 ## Version 4.* to 5.0
 
-### Only show guests
+### Show to guests only
 
-The "only show guests" function has been removed. Use the "protect page" function instead.
+The "show to guests only" function has been removed. Use the "protect page" function instead.
+
+### runonce.php
+
+The support for `runonce.php` files has been dropped. Use the migration framework instead.
 
 ### onrestore_callback
 
