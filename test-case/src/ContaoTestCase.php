@@ -52,6 +52,14 @@ abstract class ContaoTestCase extends TestCase
         unset(self::$tempDirs[$key]);
     }
 
+    protected function tearDown(): void
+    {
+        // Unset TL_CONFIG, since we populate it in loadDefaultConfiguration
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     /**
      * Returns the path to the temporary directory and creates it if it does not yet exist.
      */
