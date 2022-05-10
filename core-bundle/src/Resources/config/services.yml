@@ -110,6 +110,11 @@ services:
             - '@contao.framework'
             - '@database_connection'
 
+    contao.cron.purge_preview_links:
+        class: Contao\CoreBundle\Cron\PurgePreviewLinksCron
+        arguments:
+            - '@database_connection'
+
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
         public: true
