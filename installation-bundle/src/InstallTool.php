@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle;
 
-use Contao\Backend;
 use Contao\Config;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -271,16 +270,6 @@ class InstallTool
         if (!array_intersect(explode(',', strtoupper($mode)), ['TRADITIONAL', 'STRICT_ALL_TABLES', 'STRICT_TRANS_TABLES'])) {
             $context['optionKey'] = $this->connection->getDriver() instanceof MysqliDriver ? 3 : 1002;
         }
-    }
-
-    public function handleRunOnce(): void
-    {
-        // Wait for the tables to be created (see #5061)
-        if (!$this->hasTable('tl_log')) {
-            return;
-        }
-
-        Backend::handleRunOnce();
     }
 
     /**
