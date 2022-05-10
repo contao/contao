@@ -29,8 +29,6 @@ class PurgeRegistrationsCron
             $member->delete();
         }
 
-        if (null !== $this->logger) {
-            $this->logger->info('Purged the unactivated member registrations');
-        }
+        $this->logger?->info('Purged the unactivated member registrations');
     }
 }

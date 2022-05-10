@@ -17,8 +17,6 @@ class PurgeOptInTokensCron
     {
         $this->optIn->purgeTokens();
 
-        if (null !== $this->logger) {
-            $this->logger->info('Purged the expired double opt-in tokens');
-        }
+        $this->logger?->info('Purged the expired double opt-in tokens');
     }
 }
