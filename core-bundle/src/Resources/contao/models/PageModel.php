@@ -11,9 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
@@ -321,61 +318,6 @@ class PageModel extends Model
 
 	private static array|null $prefixes = null;
 	private static array|null $suffixes = null;
-
-	public function __set($strKey, $varValue)
-	{
-		// Deprecate setting dynamic page attributes if they are set on the global $objPage
-		if (\in_array($strKey, array('pageTitle', 'description', 'robots', 'noSearch'), true) && ($GLOBALS['objPage'] ?? null) === $this)
-		{
-			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
-
-			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
-
-			if (!$responseContext)
-			{
-				parent::__set($strKey, $varValue);
-
-				return;
-			}
-
-			if (\in_array($strKey, array('pageTitle', 'description', 'robots')) && $responseContext->has(HtmlHeadBag::class))
-			{
-				/** @var HtmlHeadBag $htmlHeadBag */
-				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
-
-				switch ($strKey)
-				{
-					case 'pageTitle':
-						$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($varValue ?? ''));
-						break;
-
-					case 'description':
-						$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($varValue ?? ''));
-						break;
-
-					case 'robots':
-						$htmlHeadBag->setMetaRobots($varValue);
-						break;
-				}
-			}
-
-			if ('noSearch' === $strKey && $responseContext->has(JsonLdManager::class))
-			{
-				/** @var JsonLdManager $jsonLdManager */
-				$jsonLdManager = $responseContext->get(JsonLdManager::class);
-
-				if ($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class))
-				{
-					/** @var ContaoPageSchema $schema */
-					$schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
-					$schema->setNoSearch((bool) $varValue);
-				}
-			}
-		}
-
-		parent::__set($strKey, $varValue);
-	}
 
 	public static function reset()
 	{
