@@ -6,6 +6,11 @@
 
 The "show to guests only" function has been removed. Use the "protect page" function instead.
 
+### disableInsertTags
+
+The `disableInsertTags` config option has been removed. Use the `contao.insert_tags.allowed_tags`
+parameter instead.
+
 ### runonce.php
 
 The support for `runonce.php` files has been dropped. Use the migration framework instead.
