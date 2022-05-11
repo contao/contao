@@ -15,7 +15,7 @@ class HighlightResult extends BaseHighlightResult implements \Stringable
     /**
      * @internal
      */
-    public function __construct(self|\stdClass $result)
+    public function __construct(BaseHighlightResult|\stdClass $result)
     {
         foreach (get_object_vars($result) as $key => $value) {
             $this->$key = $value;
