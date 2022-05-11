@@ -54,7 +54,7 @@ abstract class ContaoTestCase extends TestCase
 
     protected function tearDown(): void
     {
-        // Unset TL_CONFIG, since we populate it in loadDefaultConfiguration
+        // Unset TL_CONFIG, since we populate it in loadDefaultConfiguration (#4656)
         unset($GLOBALS['TL_CONFIG']);
 
         parent::tearDown();
