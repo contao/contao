@@ -21,6 +21,7 @@ use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\FormText;
 use Contao\System;
 use Contao\TemplateLoader;
+use Highlight\Highlighter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
@@ -159,5 +160,7 @@ class TwigIntegrationTest extends TestCase
         );
 
         $this->assertSame($expectedOutput, $output);
+
+        $this->resetStaticProperties([Highlighter::class]);
     }
 }
