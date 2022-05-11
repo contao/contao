@@ -263,12 +263,11 @@ class Form extends Hybrid
 
 		// Add a warning to the page title
 		if (
-		    $doNotSubmit
+			$doNotSubmit
 			&& !Environment::get('isAjaxRequest')
 			&& ($responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext())
 			&& $responseContext->has(HtmlHeadBag::class)
-		)
-		{
+		) {
 			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 			$htmlHeadBag->setTitle($GLOBALS['TL_LANG']['ERR']['form'] . ' - ' . $htmlHeadBag->getTitle());
