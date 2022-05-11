@@ -208,11 +208,6 @@ final class ContaoCorePermissions
     public const DC_GLOBAL_OPERATION_PREFIX = self::DC_VIEW_PREFIX.'global_operation.';
 
     /**
-     * Prefix for operations.
-     */
-    public const DC_OPERATION_PREFIX = self::DC_VIEW_PREFIX.'operation.';
-
-    /**
      * Prefix for buttons.
      */
     public const DC_BUTTON_PREFIX = self::DC_VIEW_PREFIX.'button.';
