@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+### disableInsertTags
+
+The `disableInsertTags` config option has been removed. Use the `contao.insert_tags.allowed_tags`
+parameter instead.
+
 ### runonce.php
 
 The support for `runonce.php` files has been dropped. Use the migration framework instead.
