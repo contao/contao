@@ -970,6 +970,9 @@ services:
             - { name: kernel.cache_warmer }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
+    contao.twig.highlighter_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
+
     contao.twig.insert_tag_runtime:
         class: Contao\CoreBundle\Twig\Runtime\InsertTagRuntime
         arguments:
