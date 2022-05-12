@@ -50,7 +50,14 @@ class ControllerTest extends TestCase
     {
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([DcaExtractor::class, DcaLoader::class, System::class, Config::class]);
+        $this->resetStaticProperties([
+            DcaExtractor::class,
+            DcaLoader::class,
+            System::class,
+            Config::class,
+            Environment::class,
+            Controller::class,
+        ]);
 
         parent::tearDown();
     }
@@ -690,6 +697,8 @@ class ControllerTest extends TestCase
 
     /**
      * @dataProvider redirectProvider
+     *
+     * @group legacy
      */
     public function testReplacesOldBePathsInRedirect(string $location, array $routes, string $expected): void
     {
@@ -755,6 +764,9 @@ class ControllerTest extends TestCase
         }
     }
 
+    /**
+     * @group legacy
+     */
     public function testCachesOldBackendPaths(): void
     {
         $router = $this->createMock(RouterInterface::class);

@@ -521,9 +521,13 @@ class StringUtil
 	 * @param string $strString The XHTML string
 	 *
 	 * @return string The HTML5 string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
 	 */
 	public static function toHtml5($strString)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'The "StringUtil::toHtml5()" method has been deprecated and will no longer work in Contao 5.0.');
+
 		$arrPregReplace = array
 		(
 			'/<(br|hr|img)([^>]*) \/>/i'                  => '<$1$2>',             // Close stand-alone tags

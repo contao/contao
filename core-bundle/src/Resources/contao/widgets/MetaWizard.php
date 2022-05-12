@@ -32,6 +32,11 @@ class MetaWizard extends Widget
 	protected $strTemplate = 'be_widget';
 
 	/**
+	 * @var array
+	 */
+	private $arrFieldErrors = array();
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey   The property name
@@ -83,6 +88,25 @@ class MetaWizard extends Widget
 				if (!empty($v['link']))
 				{
 					$v['link'] = StringUtil::specialcharsUrl($v['link']);
+				}
+
+				foreach ($v as $kk => $vv)
+				{
+					$rgxp = $this->metaFields[$kk]['rgxp'] ?? null;
+
+					if ($rgxp && !preg_match($rgxp, $vv))
+					{
+						$lang = LocaleUtil::formatAsLocale($k);
+						$langTrans = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array($lang))[$lang];
+						$fieldLabel = $GLOBALS['TL_LANG']['MSC']['aw_' . $kk];
+
+						$errorMsg = isset($this->metaFields[$kk]['rgxpErrMsg'])
+							? sprintf($this->metaFields[$kk]['rgxpErrMsg'], $fieldLabel, $langTrans, $rgxp)
+							: sprintf($GLOBALS['TL_LANG']['tl_files']['metaRgxpError'], $fieldLabel, $langTrans, $rgxp);
+
+						$this->addError($errorMsg);
+						$this->arrFieldErrors[$lang][$kk] = true;
+					}
 				}
 
 				$varInput[$k] = array_map('trim', $v);
@@ -150,7 +174,7 @@ class MetaWizard extends Widget
 				// Take the fields from the DCA (see #4327)
 				foreach ($this->metaFields as $field=>$fieldConfig)
 				{
-					$return .= '<label for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
+					$return .= '<label' . (isset($this->arrFieldErrors[$lang][$field]) ? ' class="error"' : '') . ' for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
 
 					if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 					{

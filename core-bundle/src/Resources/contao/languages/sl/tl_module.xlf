@@ -493,6 +493,7 @@
       </trans-unit>
       <trans-unit id="tl_module.data.0">
         <source>Template data</source>
+        <target>Podatki predloge</target>
       </trans-unit>
       <trans-unit id="tl_module.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
@@ -508,6 +509,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot;</source>
+        <target>Izberite modul za &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

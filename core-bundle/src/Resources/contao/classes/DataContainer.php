@@ -352,7 +352,7 @@ abstract class DataContainer extends Backend
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="contao/help.php?table=' . $this->strTable . '&amp;field=' . $this->strField . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -1622,9 +1622,18 @@ abstract class DataContainer extends Backend
 
 		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
 
-		if (false === strpos($dataContainer, '\\'))
+		if ('' !== $dataContainer && false === strpos($dataContainer, '\\'))
 		{
+			trigger_deprecation('contao/core-bundle', '4.9', 'The usage of a non fully qualified class name as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.');
+
 			$dataContainer = 'DC_' . $dataContainer;
+
+			if (class_exists($dataContainer))
+			{
+				$ref = new \ReflectionClass($dataContainer);
+
+				return $ref->getName();
+			}
 		}
 
 		return $dataContainer;

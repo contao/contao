@@ -841,7 +841,9 @@ class ImageFactoryTest extends TestCase
         $framework ??= $this->createMock(ContaoFramework::class);
         $bypassCache ??= false;
         $validExtensions ??= ['jpg', 'svg'];
-        $uploadDir ??= Path::join($this->getTempDir(), 'images');
+
+        // Do not use Path::join here (see #4596)
+        $uploadDir ??= $this->getTempDir().'/images';
 
         if (null === $imagineOptions) {
             $imagineOptions = [

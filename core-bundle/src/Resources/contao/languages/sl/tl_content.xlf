@@ -307,6 +307,7 @@
       </trans-unit>
       <trans-unit id="tl_content.data.0">
         <source>Template data</source>
+        <target>Podatki predloge</target>
       </trans-unit>
       <trans-unit id="tl_content.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
@@ -837,6 +838,9 @@
       <trans-unit id="tl_content.youtube_nocookie">
         <source>Use the youtube-nocookie.com domain</source>
         <target>Uporabi domeno youtube-nocookie.com</target>
+      </trans-unit>
+      <trans-unit id="tl_content.youtube_loop">
+        <source>Loop video</source>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>

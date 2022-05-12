@@ -181,7 +181,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
 
-        return parent::getCacheKey($templateName);
+        // We prefix the cache key to make sure templates from the default
+        // Symfony loader won't be reused. Otherwise, we cannot reliably
+        // differentiate when to apply our input encoding tolerant escaper
+        // filters (see #4623).
+        return 'c'.parent::getCacheKey($templateName);
     }
 
     /**

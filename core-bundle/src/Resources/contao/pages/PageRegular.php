@@ -230,12 +230,12 @@ class PageRegular extends Frontend
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = $headBag->getMetaRobots();
+		$this->Template->robots = htmlspecialchars($headBag->getMetaRobots());
 
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
-			$this->Template->canonical = $headBag->getCanonicalUriForRequest($request);
+			$this->Template->canonical = htmlspecialchars($headBag->getCanonicalUriForRequest($request));
 		}
 
 		// Fall back to the default title tag

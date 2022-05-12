@@ -2,6 +2,47 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.4] (2022-05-05)
+
+**New features:**
+
+- [#4329] Deprecated Cache lib ([Toflar])
+- [#4506] Disable the TinyMCE context menu by default ([de-es])
+
+**Fixed issues:**
+
+- [#4504] Improve the XDebug experience ([m-vo])
+- [#4514] Do not use head and attribute data in search context ([aschempp])
+- [#4603] Correctly generate the edit URL of a version ([leofeyer])
+- [#4396] Deprecate the StringUtil::toHtml5() method ([m-vo])
+- [#4604] Use host name without port in some controllers ([bezin])
+- [#4601] Correctly toggle the CSS class when (un)publishing a format definition ([leofeyer])
+- [#4600] Fix the DCA picker in the CSS editor ([leofeyer])
+- [#4599] Do not throw an exception if a page insert tag cannot be generated ([leofeyer])
+- [#3995] Replace old back end paths ([aschempp])
+- [#4501] Fix undefined sorting mode for group header ([rabauss])
+- [#4489] Fix the SendNewsletterEvent when sending as text only ([fritzmg])
+- [#4573] Add loop as an option to YouTube videos ([Wusch])
+- [#4567] Deprecate Controller::getSpellcheckerString() ([ausi])
+- [#4523] Handle predefined image sizes when validating the ImageSize widget ([qzminski])
+- [#4549] Fix a type error in the listing module ([Toflar])
+- [#4534] Fix the FAQ page module throwing a warning in PHP 8 if author could not be fetched ([qzminski])
+- [#4535] Fix the registration module throwing a warning in PHP 8 if captcha is disabled ([qzminski])
+- [#4533] Fix an error when unpacking an associative array of model search criteria values ([qzminski])
+- [#4527] Deprecate Contao\Request ([Toflar])
+- [#4521] Fix the translation domain in the root page dependent select ([leofeyer])
+- [#4456] Fix the record preview ([bezin])
+- [#4437] Correctly resolve parameters when prepending bundle config ([aschempp])
+- [#4451] Quote all schema names, same as we do for inserts ([ausi])
+- [#4448] Skip row size calculation for MyISAM ([ausi])
+- [#4447] Fix simple token parser default value for unknown variables ([m-vo])
+
+## [4.13.3] (2022-05-05)
+
+**Security fixes:**
+
+- Prevent XSS via canonical tags in the front end ([CVE-2022-24899])
+
 ## [4.13.2] (2022-03-31)
 
 **Fixed issues:**
@@ -299,18 +340,22 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.4]: https://github.com/contao/contao/releases/tag/4.13.4
+[4.13.3]: https://github.com/contao/contao/releases/tag/4.13.3
 [4.13.2]: https://github.com/contao/contao/releases/tag/4.13.2
 [4.13.1]: https://github.com/contao/contao/releases/tag/4.13.1
 [4.13.0]: https://github.com/contao/contao/releases/tag/4.13.0
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
 [AlexanderWillner]: https://github.com/AlexanderWillner
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
 [CMSworker]: https://github.com/CMSworker
+[de-es]: https://github.com/de-es
 [dennisbohn]: https://github.com/dennisbohn
 [dmolineus]: https://github.com/dmolineus
 [doishub]: https://github.com/doishub
@@ -326,7 +371,35 @@ This project adheres to [Semantic Versioning].
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
 [sheeep]: https://github.com/sheeep
 [Toflar]: https://github.com/Toflar
+[Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[#4329]: https://github.com/contao/contao/pull/4329
+[#4506]: https://github.com/contao/contao/pull/4506
+[#4504]: https://github.com/contao/contao/pull/4504
+[#4514]: https://github.com/contao/contao/pull/4514
+[#4603]: https://github.com/contao/contao/pull/4603
+[#4396]: https://github.com/contao/contao/pull/4396
+[#4604]: https://github.com/contao/contao/pull/4604
+[#4601]: https://github.com/contao/contao/pull/4601
+[#4600]: https://github.com/contao/contao/pull/4600
+[#4599]: https://github.com/contao/contao/pull/4599
+[#3995]: https://github.com/contao/contao/pull/3995
+[#4501]: https://github.com/contao/contao/pull/4501
+[#4489]: https://github.com/contao/contao/pull/4489
+[#4573]: https://github.com/contao/contao/pull/4573
+[#4567]: https://github.com/contao/contao/pull/4567
+[#4523]: https://github.com/contao/contao/pull/4523
+[#4549]: https://github.com/contao/contao/pull/4549
+[#4534]: https://github.com/contao/contao/pull/4534
+[#4535]: https://github.com/contao/contao/pull/4535
+[#4533]: https://github.com/contao/contao/pull/4533
+[#4527]: https://github.com/contao/contao/pull/4527
+[#4521]: https://github.com/contao/contao/pull/4521
+[#4456]: https://github.com/contao/contao/pull/4456
+[#4437]: https://github.com/contao/contao/pull/4437
+[#4451]: https://github.com/contao/contao/pull/4451
+[#4448]: https://github.com/contao/contao/pull/4448
+[#4447]: https://github.com/contao/contao/pull/4447
 [#4431]: https://github.com/contao/contao/pull/4431
 [#4433]: https://github.com/contao/contao/pull/4433
 [#4426]: https://github.com/contao/contao/pull/4426

@@ -126,7 +126,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	{
 		parent::__construct();
 
-		$objSession = System::getContainer()->get('session');
+		$container = System::getContainer();
+		$objSession = $container->get('session');
 
 		// Check the request token (see #4007)
 		if (isset($_GET['act']))
@@ -134,7 +135,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			if (!isset($_GET['rt']) || !RequestToken::validate(Input::get('rt')))
 			{
 				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));
-				$this->redirect('contao/confirm.php');
+				$this->redirect($container->get('router')->generate('contao_backend_confirm'));
 			}
 		}
 
@@ -150,7 +151,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
+			$container->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -202,7 +203,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->strTable = $strTable;
 		$this->blnIsDbAssisted = $GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'] ?? false;
-		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$this->strRootDir = $container->getParameter('kernel.project_dir');
 
 		// Check for valid file types
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['validFileTypes'] ?? null)
@@ -232,14 +233,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.editableFileTypes for DC_Folder is deprecated and will no longer work in Contao 5.0.');
 		}
 
-		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')));
+		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? $container->getParameter('contao.editable_files')));
 
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath']))
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.uploadPath for DC_Folder is deprecated and will no longer work in Contao 5.0.');
 		}
 
-		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? $GLOBALS['TL_CONFIG']['uploadPath'] ?? System::getContainer()->getParameter('contao.upload_path');
+		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? $GLOBALS['TL_CONFIG']['uploadPath'] ?? $container->getParameter('contao.upload_path');
 
 		// Get all filemounts (root folders)
 		if (\is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root'] ?? null))

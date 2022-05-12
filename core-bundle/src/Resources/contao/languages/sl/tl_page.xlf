@@ -189,6 +189,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
+        <target>Parametri poizvedbe</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.1">
         <source>By default, Contao strips the query parameters in the canonical URL. Here you can add a comma-separated list of query parameters to preserve. Use &quot;*&quot; as a wildcard.</source>

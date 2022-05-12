@@ -45,7 +45,7 @@ class ModuleFaqReader extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -137,10 +137,6 @@ class ModuleFaqReader extends Module
 		}
 
 		$this->Template->question = $objFaq->question;
-
-		// Clean the RTE output
-		$objFaq->answer = StringUtil::toHtml5($objFaq->answer);
-
 		$this->Template->answer = StringUtil::encodeEmail($objFaq->answer);
 		$this->Template->addImage = false;
 		$this->Template->before = false;

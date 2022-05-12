@@ -309,6 +309,38 @@ class ContaoExtensionTest extends TestCase
     }
 
     /**
+     * @dataProvider provideTemplateNames
+     */
+    public function testDefaultEscaperRules(string $templateName): void
+    {
+        $extension = $this->getContaoExtension();
+
+        $property = new \ReflectionProperty(ContaoExtension::class, 'contaoEscaperFilterRules');
+        $property->setAccessible(true);
+        $rules = $property->getValue($extension);
+
+        $this->assertCount(2, $rules);
+
+        foreach ($rules as $rule) {
+            if (1 === preg_match($rule, $templateName)) {
+                return;
+            }
+        }
+
+        $this->fail(sprintf('No escaper rule matched template "%s".', $templateName));
+    }
+
+    public function provideTemplateNames(): \Generator
+    {
+        yield '@Contao namespace' => ['@Contao/foo.html.twig'];
+        yield '@Contao namespace with folder' => ['@Contao/foo/bar.html.twig'];
+        yield '@Contao_* namespace' => ['@Contao_Global/foo.html.twig'];
+        yield '@Contao_* namespace with folder' => ['@Contao_Global/foo/bar.html.twig'];
+        yield 'core-bundle template' => ['@ContaoCore/Image/Studio/figure.html.twig'];
+        yield 'installation-bundle template' => ['@ContaoInstallation/database.html.twig'];
+    }
+
+    /**
      * @param Environment&MockObject $environment
      */
     private function getContaoExtension(Environment $environment = null, TemplateHierarchyInterface $hierarchy = null): ContaoExtension
