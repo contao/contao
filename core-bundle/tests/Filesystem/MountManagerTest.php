@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\PublicUriProviderInterface;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Config;
@@ -21,6 +23,8 @@ use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use Nyholm\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
 
 class MountManagerTest extends TestCase
 {
@@ -554,6 +558,52 @@ class MountManagerTest extends TestCase
         $this->assertFalse($manager->directoryExists('a'));
         $this->assertTrue($manager->directoryExists('b'));
         $this->assertFalse($manager->directoryExists('c'));
+    }
+
+    public function testGeneratePublicUri(): void
+    {
+        $fooAdapter = $this->createMock(FilesystemAdapter::class);
+
+        $publicUriProvider1 = $this->createMock(PublicUriProviderInterface::class);
+        $publicUriProvider1
+            ->expects($this->exactly(2))
+            ->method('getUri')
+            ->willReturnCallback(
+                function (FilesystemAdapter $adapter, string $adapterPath, ?OptionsInterface $options) use ($fooAdapter): ?UriInterface {
+                    if ('bar/baz.jpg' !== $adapterPath) {
+                        return null;
+                    }
+
+                    $this->assertSame($fooAdapter, $adapter);
+                    $this->assertNull($options);
+
+                    return new Uri('https://example.com/files/bar/baz.jpg');
+                }
+            )
+        ;
+
+        $options = $this->createMock(OptionsInterface::class);
+
+        $publicUriProvider2 = $this->createMock(PublicUriProviderInterface::class);
+        $publicUriProvider2
+            ->expects($this->once())
+            ->method('getUri')
+            ->with($fooAdapter, 'other.jpg', $options)
+            ->willReturn(new Uri('https://some-service.org/user42/other.jpg'))
+        ;
+
+        $mountManager = new MountManager([$publicUriProvider1, $publicUriProvider2]);
+        $mountManager->mount($fooAdapter, 'foo');
+
+        $this->assertSame(
+            'https://example.com/files/bar/baz.jpg',
+            (string) $mountManager->generatePublicUri('foo/bar/baz.jpg')
+        );
+
+        $this->assertSame(
+            'https://some-service.org/user42/other.jpg',
+            (string) $mountManager->generatePublicUri('foo/other.jpg', $options)
+        );
     }
 
     private function getMountManagerWithRootAdapter(FilesystemAdapter $adapter): MountManager
