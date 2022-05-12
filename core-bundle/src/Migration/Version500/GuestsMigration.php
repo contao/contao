@@ -79,7 +79,7 @@ class GuestsMigration extends AbstractMigration
 
                 $data = [
                     'protected' => '1',
-                    'groups' => serialize($groups),
+                    '`groups`' => serialize($groups),
                 ];
 
                 $this->connection->update($table, $data, ['id' => (int) $id]);
