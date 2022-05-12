@@ -74,7 +74,7 @@ class Cron
     }
 
     /**
-     * @param list<CronJob> $cronJobs
+     * @param array<CronJob> $cronJobs
      */
     private function doRun(array $cronJobs, string $scope, bool $force = false): void
     {
