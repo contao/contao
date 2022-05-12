@@ -932,7 +932,41 @@ abstract class DataContainer extends Backend
 				continue;
 			}
 
+			$hasAccess = true;
+
+			if (\is_array($v['access_callback'] ?? null))
+			{
+				foreach ($v['access_callback'] as $callback)
+				{
+					if (\is_array($callback))
+					{
+						$this->import($callback[0]);
+						$hasAccess = $this->{$callback[0]}->{$callback[1]}($arrRow, $strTable, $k, $this);
+					}
+					elseif (\is_callable($callback ?? null))
+					{
+						$hasAccess = $callback($arrRow, $strTable, $k, $this);
+					}
+
+					if (!$hasAccess)
+					{
+						break;
+					}
+				}
+			}
+
+			if (!$hasAccess)
+			{
+				unset($v['route'], $v['href']);
+
+				if (isset($v['icon']))
+				{
+					$v['icon'] = preg_replace('/(\.svg)$/i', '_.svg', $v['icon']);
+				}
+			}
+
 			$isPopup = $k == 'show';
+			$href = null;
 
 			if (!empty($v['route']))
 			{
@@ -945,7 +979,7 @@ abstract class DataContainer extends Backend
 
 				$href = System::getContainer()->get('router')->generate($v['route'], $params);
 			}
-			else
+			elseif (isset($v['href']))
 			{
 				$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
 			}
@@ -981,6 +1015,10 @@ abstract class DataContainer extends Backend
 				}
 
 				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+			}
+			elseif ($href === null)
+			{
+				$return .= Image::getHtml($v['icon'], $label) . ' ';
 			}
 			else
 			{
