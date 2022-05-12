@@ -402,16 +402,7 @@ class ContentModel extends Model
 	public static function findPublishedByPidAndTable($intPid, $strParentTable, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-
-		// Also handle empty ptable fields
-		if ($strParentTable == 'tl_article')
-		{
-			$arrColumns = array("$t.pid=? AND ($t.ptable=? OR $t.ptable='')");
-		}
-		else
-		{
-			$arrColumns = array("$t.pid=? AND $t.ptable=?");
-		}
+		$arrColumns = array("$t.pid=? AND $t.ptable=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -442,16 +433,7 @@ class ContentModel extends Model
 	public static function countPublishedByPidAndTable($intPid, $strParentTable, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-
-		// Also handle empty ptable fields (backwards compatibility)
-		if ($strParentTable == 'tl_article')
-		{
-			$arrColumns = array("$t.pid=? AND ($t.ptable=? OR $t.ptable='')");
-		}
-		else
-		{
-			$arrColumns = array("$t.pid=? AND $t.ptable=?");
-		}
+		$arrColumns = array("$t.pid=? AND $t.ptable=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{

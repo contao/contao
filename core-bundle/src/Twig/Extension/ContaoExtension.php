@@ -24,6 +24,8 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
+use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
@@ -60,8 +62,9 @@ final class ContaoExtension extends AbstractExtension
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
         $this->addContaoEscaperRule('%^@Contao(Core|Installation)/%');
 
-        // Mark HtmlAttributes class as safe for HTML as it escapes its output itself
+        // Mark classes as safe for HTML that already escape their output themselves
         $escaperExtension->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
+        $escaperExtension->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
     }
 
     /**
@@ -193,6 +196,14 @@ final class ContaoExtension extends AbstractExtension
             new TwigFilter(
                 'insert_tag_raw',
                 [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw']
+            ),
+            new TwigFilter(
+                'highlight',
+                [HighlighterRuntime::class, 'highlight'],
+            ),
+            new TwigFilter(
+                'highlight_auto',
+                [HighlighterRuntime::class, 'highlightAuto'],
             ),
         ];
     }
