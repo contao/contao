@@ -46,7 +46,7 @@ class NewsArchiveAccessVoter extends Voter
         return match ($attribute) {
             ContaoCorePermissions::DC_ACTION_CREATE => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES),
             ContaoCorePermissions::DC_ACTION_COPY => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES) &&
-                $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
+                $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id),
             ContaoCorePermissions::DC_ACTION_EDIT,
             ContaoCorePermissions::DC_ACTION_VIEW => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id),
             ContaoCorePermissions::DC_ACTION_DELETE => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id) &&
