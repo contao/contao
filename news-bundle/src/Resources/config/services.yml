@@ -56,5 +56,4 @@ services:
     contao_news.security.news_archive_access_voter:
         class: Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter
         arguments:
-            - '@contao.framework'
             - '@security.helper'

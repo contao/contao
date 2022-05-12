@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Security;
 
 class NewsArchiveAccessVoter extends Voter
 {
-    public function __construct(private ContaoFramework $contaoFramework, private Security $security)
+    public function __construct(private Security $security)
     {
     }
 
