@@ -111,3 +111,8 @@ services:
         class: Contao\CoreBundle\Migration\Version500\BasicEntitiesMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_500.empty_ptable:
+        class: Contao\CoreBundle\Migration\Version500\EmptyPtableMigration
+        arguments:
+            - '@database_connection'
