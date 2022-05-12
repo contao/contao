@@ -955,7 +955,7 @@ class tl_content extends Backend
 					$this->checkAccessToElement(Input::get('pid'), $pagemounts, (Input::get('mode') == 2));
 				}
 
-				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE (ptable='tl_article' OR ptable='') AND pid=?")
+				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_article' AND pid=?")
 										 ->execute(CURRENT_ID);
 
 				$objSession = System::getContainer()->get('session');
@@ -1106,7 +1106,7 @@ class tl_content extends Backend
 	{
 		if (Input::get('act') == 'delete')
 		{
-			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE type='alias' AND cteAlias=? AND (ptable='tl_article' OR ptable='')")
+			$objCes = $this->Database->prepare("SELECT COUNT(*) AS cnt FROM tl_content WHERE type='alias' AND cteAlias=? AND ptable='tl_article'")
 									 ->execute(Input::get('id'));
 
 			if ($objCes->cnt > 0)
@@ -1117,7 +1117,7 @@ class tl_content extends Backend
 
 		if (Input::get('act') == 'deleteAll')
 		{
-			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND (ptable='tl_article' OR ptable='')")
+			$objCes = $this->Database->prepare("SELECT cteAlias FROM tl_content WHERE type='alias' AND ptable='tl_article'")
 									 ->execute();
 
 			$objSession = System::getContainer()->get('session');
