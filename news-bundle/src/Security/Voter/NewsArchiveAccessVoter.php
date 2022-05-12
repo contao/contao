@@ -43,7 +43,7 @@ class NewsArchiveAccessVoter extends Voter
             ContaoCorePermissions::DC_ACTION_VIEW => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id),
             ContaoCorePermissions::DC_ACTION_DELETE => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id) &&
                 $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
-            default: false,
+            default => false,
         };
     }
 }
