@@ -22,6 +22,7 @@ use Contao\Image\ImportantPart;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @internal
@@ -32,6 +33,10 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
      * @var array<string>|null
      */
     private array|null $defaultLocales = null;
+
+    public function __construct(private readonly RequestStack $requestStack)
+    {
+    }
 
     public function enhanceMetadata(RetrieveDbafsMetadataEvent $event): void
     {
@@ -114,7 +119,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             return $this->defaultLocales;
         }
 
-        $page = $GLOBALS['objPage'] ?? null;
+        $page = $this->requestStack->getMainRequest()?->attributes?->get('pageModel');
 
         if (!$page instanceof PageModel) {
             return [];

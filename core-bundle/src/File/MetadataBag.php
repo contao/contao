@@ -26,7 +26,7 @@ class MetadataBag implements \ArrayAccess
      */
     public function __construct(
         private readonly array $metadata,
-        private readonly array $defaultLocales = []
+        private readonly array $defaultLocales = [],
     ) {
         foreach ($metadata as $item) {
             if (!$item instanceof Metadata) {
