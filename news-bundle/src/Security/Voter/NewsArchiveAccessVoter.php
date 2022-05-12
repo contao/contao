@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Security\Voter;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
