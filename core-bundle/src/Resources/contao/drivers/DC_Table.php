@@ -1102,7 +1102,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
 				$this->intId = $id;
-				$id = $this->copy(true);
+				try
+				{
+					$id = $this->copy(true);
+				}
+				catch (AccessDeniedException)
+				{
+					continue;
+				}
 				Input::setGet('pid', $id);
 				Input::setGet('mode', 1);
 			}
@@ -1535,7 +1542,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($ids as $id)
 			{
 				$this->intId = $id;
-				$this->delete(true);
+				try
+				{
+					$this->delete(true);
+				}
+				catch (AccessDeniedException)
+				{
+					continue;
+				}
 			}
 		}
 
