@@ -22,7 +22,12 @@ class TemplateController extends AbstractContentElementController
 {
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
-        $template->data = StringUtil::deserialize($model->data, true);
+        $arrData = StringUtil::deserialize($model->data, true);
+
+        $template->data = array_combine(
+            array_column($arrData, 'key'),
+            array_column($arrData, 'value'),
+        );
 
         return $template->getResponse();
     }
