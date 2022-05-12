@@ -222,7 +222,6 @@ services:
     # Backwards compatibility
     contao.csrf.token_manager:
         alias: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
-        deprecated: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Csrf\ContaoCsrfTokenManager" instead.
         public: true
 
     contao.csrf.token_storage:
