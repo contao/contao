@@ -25,7 +25,7 @@ class CronListCommand extends Command
     protected static $defaultName = 'contao:cron:list';
     protected static $defaultDescription = 'Lists all available cron jobs and their intervals.';
 
-    public function __construct(protected Cron $cron)
+    public function __construct(private Cron $cron)
     {
         parent::__construct();
     }

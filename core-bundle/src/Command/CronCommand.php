@@ -24,7 +24,7 @@ class CronCommand extends Command
     protected static $defaultName = 'contao:cron';
     protected static $defaultDescription = 'Runs cron jobs on the command line.';
 
-    public function __construct(protected Cron $cron)
+    public function __construct(private Cron $cron)
     {
         parent::__construct();
     }
