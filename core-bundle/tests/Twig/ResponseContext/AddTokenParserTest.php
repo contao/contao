@@ -42,11 +42,9 @@ class AddTokenParserTest extends TestCase
     public function testAddsContent(string $code, array $expectedHeadContent, array $expectedBodyContent): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
-
         $environment->addExtension(new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class)));
         $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));
         $environment->setLoader(new ArrayLoader(['template.html.twig' => $code]));
-
         $environment->render('template.html.twig');
 
         $this->assertSame($GLOBALS['TL_HEAD'] ?? [], $expectedHeadContent);
@@ -115,7 +113,6 @@ class AddTokenParserTest extends TestCase
     public function testValidatesSource(string $code, string $expectedException): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
-
         $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));
 
         $parser = new Parser($environment);

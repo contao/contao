@@ -15,6 +15,5 @@ namespace Contao\CoreBundle\Twig\ResponseContext;
 enum DocumentLocation: string
 {
     case head = 'head';
-
     case endOfBody = 'body';
 }
