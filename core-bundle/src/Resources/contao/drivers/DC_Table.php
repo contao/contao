@@ -779,6 +779,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					continue;
 				}
+
 				Input::setGet('pid', $id);
 				Input::setGet('mode', 1);
 			}
@@ -1112,6 +1113,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					continue;
 				}
+
 				Input::setGet('pid', $id);
 				Input::setGet('mode', 1);
 			}
