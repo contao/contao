@@ -241,9 +241,4 @@ final class ContaoCorePermissions
      * [Action] Move action DC permission.
      */
     public const DC_ACTION_MOVE = self::DC_ACTION_PREFIX.'move';
-
-    /**
-     * [View] Create view DC permission.
-     */
-    public const DC_VIEW_CREATE = self::DC_GLOBAL_OPERATION_PREFIX.'create';
 }
