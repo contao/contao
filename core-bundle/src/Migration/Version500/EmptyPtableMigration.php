@@ -35,11 +35,7 @@ class EmptyPtableMigration extends AbstractMigration
 
         $test = $this->connection->fetchOne("SELECT TRUE FROM tl_content WHERE ptable='' LIMIT 1");
 
-        if (false !== $test) {
-            return true;
-        }
-
-        return false;
+        return false !== $test;
     }
 
     public function run(): MigrationResult
