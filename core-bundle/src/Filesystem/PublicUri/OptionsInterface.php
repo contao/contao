@@ -14,5 +14,4 @@ namespace Contao\CoreBundle\Filesystem\PublicUri;
 
 interface OptionsInterface
 {
-    // For future options (e.g. lifetime for S3 signed URLs)
 }
