@@ -770,7 +770,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
 				$this->intId = $id;
-				$this->cut(true);
+				try
+				{
+					$this->cut(true);
+				}
+				catch (AccessDeniedException)
+				{
+					continue;
+				}
 				Input::setGet('pid', $id);
 				Input::setGet('mode', 1);
 			}
