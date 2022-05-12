@@ -22,14 +22,6 @@ use Symfony\Component\Security\Core\Security;
 
 class NewsArchiveAccessVoter extends Voter
 {
-    private const SUPPORTED_ATTRIBUTES = [
-        ContaoCorePermissions::DC_ACTION_CREATE,
-        ContaoCorePermissions::DC_ACTION_EDIT,
-        ContaoCorePermissions::DC_ACTION_COPY,
-        ContaoCorePermissions::DC_ACTION_DELETE,
-        ContaoCorePermissions::DC_ACTION_VIEW,
-    ];
-
     public function __construct(private ContaoFramework $contaoFramework, private Security $security)
     {
     }
@@ -38,7 +30,7 @@ class NewsArchiveAccessVoter extends Voter
     {
         return $subject instanceof DataContainerSubject &&
             'tl_news_archive' === $subject->table &&
-            \in_array($attribute, self::SUPPORTED_ATTRIBUTES, true);
+            str_starts_with($attribute, ContaoCorePermissions::DC_ACTION_PREFIX);
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
@@ -51,6 +43,7 @@ class NewsArchiveAccessVoter extends Voter
             ContaoCorePermissions::DC_ACTION_VIEW => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id),
             ContaoCorePermissions::DC_ACTION_DELETE => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id) &&
                 $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
+            default: false,
         };
     }
 }
