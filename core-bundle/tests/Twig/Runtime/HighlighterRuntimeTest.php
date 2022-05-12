@@ -28,7 +28,6 @@ class HighlighterRuntimeTest extends TestCase
         ;
 
         $runtime = new HighlighterRuntime($highlighter);
-
         $result = $runtime->highlight('code', $languageName);
 
         $this->assertSame(50, $result->relevance);
@@ -66,7 +65,6 @@ class HighlighterRuntimeTest extends TestCase
         ;
 
         $runtime = new HighlighterRuntime($highlighter);
-
         $result = $runtime->highlightAuto('code', ['lang1', 'lang2', 'lang3']);
 
         $this->assertSame(50, $result->relevance);

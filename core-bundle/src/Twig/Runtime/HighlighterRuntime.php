@@ -27,9 +27,6 @@ final class HighlighterRuntime implements RuntimeExtensionInterface
         $this->highlighter = $highlighter ?? new Highlighter();
     }
 
-    /**
-     * Highlights code.
-     */
     public function highlight(string $code, string|null $languageName = null): HighlightResult
     {
         $languageName = match ($languageName) {
