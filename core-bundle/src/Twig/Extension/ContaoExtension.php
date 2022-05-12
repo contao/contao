@@ -21,6 +21,8 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
+use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
@@ -102,6 +104,8 @@ final class ContaoExtension extends AbstractExtension
             // additionally support the Contao template hierarchy
             new DynamicExtendsTokenParser($this->hierarchy),
             new DynamicIncludeTokenParser($this->hierarchy),
+            // Add a parser for the Contao specific "add" tag
+            new AddTokenParser(self::class),
         ];
     }
 
@@ -238,6 +242,34 @@ final class ContaoExtension extends AbstractExtension
         $partialTemplate->setBlocks($blocks);
 
         return $partialTemplate->parse();
+    }
+
+    /**
+     * @see \Contao\CoreBundle\Twig\ResponseContext\AddNode
+     * @see \Contao\CoreBundle\Twig\ResponseContext\AddTokenParser
+     *
+     * @internal
+     */
+    public function addDocumentContent(string|null $identifier, string $content, DocumentLocation $location): void
+    {
+        // TODO: This should make use of the response context in the future.
+        if (DocumentLocation::head === $location) {
+            if (null !== $identifier) {
+                $GLOBALS['TL_HEAD'][$identifier] = $content;
+            } else {
+                $GLOBALS['TL_HEAD'][] = $content;
+            }
+
+            return;
+        }
+
+        if (DocumentLocation::endOfBody === $location) {
+            if (null !== $identifier) {
+                $GLOBALS['TL_BODY'][$identifier] = $content;
+            } else {
+                $GLOBALS['TL_BODY'][] = $content;
+            }
+        }
     }
 
     private function getTwigIncludeFunction(): TwigFunction
