@@ -111,6 +111,21 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return $this;
     }
 
+    /**
+     * Enable the property $name if the $condition is truthy.
+     */
+    public function setIf(string $name, \Stringable|bool|int|string|null $condition): self
+    {
+        if ($condition) {
+            $this->set($name);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the property $name to $value if the value is truthy.
+     */
     public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
     {
         if (!empty($value)) {
@@ -120,9 +135,24 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return $this;
     }
 
-    public function unset(string $key): self
+    /**
+     * Unset the property $name.
+     */
+    public function unset(string $name): self
     {
-        unset($this->attributes[$key]);
+        unset($this->attributes[$name]);
+
+        return $this;
+    }
+
+    /**
+     * Disable the property $name if the $condition is truthy.
+     */
+    public function unsetIf(string $name, \Stringable|bool|int|string|null $condition): self
+    {
+        if ($condition) {
+            $this->unset($name);
+        }
 
         return $this;
     }
