@@ -558,7 +558,9 @@ class tl_article extends Backend
 			Image::getPath(rtrim($image, '_') . '_')
 		);
 
-		return '<a href="contao/preview.php?page=' . $row['pid'] . '&amp;article=' . ($row['alias'] ?: $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image . '.svg', '', $attributes) . '</a> ' . $label;
+		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
+
+		return '<a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image . '.svg', '', $attributes) . '</a> ' . $label;
 	}
 
 	/**
@@ -793,7 +795,7 @@ class tl_article extends Backend
 		}
 
 		// Generate the aliases
-		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
+		if (Input::post('alias') !== null && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
 			$objSession = System::getContainer()->get('session');
 			$session = $objSession->all();

@@ -24,6 +24,7 @@ use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaLoader;
 use Contao\FilesModel;
@@ -275,11 +276,9 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
-     * @param mixed $identifier
-     *
      * @dataProvider provideMixedIdentifiers
      */
-    public function testFromMixed($identifier): void
+    public function testFromMixed(mixed $identifier): void
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
@@ -342,47 +341,6 @@ class FigureBuilderTest extends TestCase
         $this->expectExceptionObject($exception);
 
         $figureBuilder->build();
-    }
-
-    /**
-     * @param mixed $invalidType
-     *
-     * @dataProvider provideInvalidTypes
-     */
-    public function testFromInvalidTypeThrowsTypeError($invalidType, string $typeString): void
-    {
-        $framework = $this->mockContaoFramework([
-            Validator::class => new Adapter(Validator::class),
-        ]);
-
-        $figureBuilder = $this->getFigureBuilder(null, $framework);
-
-        $this->expectException(\TypeError::class);
-
-        $this->expectExceptionMessage(sprintf(
-            'Contao\CoreBundle\Image\Studio\FigureBuilder::from(): Argument #1 ($identifier) must be of type FilesModel|ImageInterface|string|int|null, %s given',
-            $typeString
-        ));
-
-        $figureBuilder->from($invalidType);
-    }
-
-    public function provideInvalidTypes(): \Generator
-    {
-        yield 'true' => [
-            true,
-            'boolean',
-        ];
-
-        yield 'false' => [
-            false,
-            'boolean',
-        ];
-
-        yield 'object' => [
-            new Metadata([]),
-            Metadata::class,
-        ];
     }
 
     public function provideMixedIdentifiers(): \Generator
@@ -565,7 +523,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideMetadataAutoFetchCases
      */
-    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, ?string $locale, array $expectedMetadata): void
+    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata): void
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
@@ -584,9 +542,7 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FilesModel $filesModel */
-        $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
-
+        $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
@@ -716,9 +672,7 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FilesModel $filesModel */
-        $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
-
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
@@ -747,11 +701,9 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
-     * @param ImageInterface|string|null $resource
-     *
      * @dataProvider provideUuidMetadataAutoFetchCases
      */
-    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata($resource, ?Metadata $metadataToSet, ?string $locale, array $expectedMetadata): void
+    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(FilesModel|ImageInterface|string|null $resource, Metadata|null $metadataToSet, string|null $locale, array $expectedMetadata): void
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
@@ -799,10 +751,8 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        $getFilesModel = static function (array $metaData, ?string $uuid) use ($relativeFilePath) {
-            /** @var FilesModel $filesModel */
-            $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
-
+        $getFilesModel = function (array $metaData, ?string $uuid) use ($relativeFilePath) {
+            $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
             $filesModel->setRow([
                 'type' => 'file',
                 'path' => $relativeFilePath,
@@ -871,7 +821,7 @@ class FigureBuilderTest extends TestCase
             }
         );
 
-        $this->assertSame(['foo' => 'bar'], $figure->getLinkAttributes());
+        $this->assertSame(['foo' => 'bar'], iterator_to_array($figure->getLinkAttributes()));
     }
 
     public function testUnsetLinkAttribute(): void
@@ -884,7 +834,7 @@ class FigureBuilderTest extends TestCase
             }
         );
 
-        $this->assertSame(['foobar' => 'test'], $figure->getLinkAttributes());
+        $this->assertSame(['foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
     }
 
     public function testSetLinkAttributes(): void
@@ -895,7 +845,18 @@ class FigureBuilderTest extends TestCase
             }
         );
 
-        $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], $figure->getLinkAttributes());
+        $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
+    }
+
+    public function testSetLinkAttributesFromHtmlAttributes(): void
+    {
+        $figure = $this->getFigure(
+            static function (FigureBuilder $builder): void {
+                $builder->setLinkAttributes(new HtmlAttributes(['foo' => 'bar', 'foobar' => 'test']));
+            }
+        );
+
+        $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
     }
 
     /**
@@ -950,11 +911,9 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
-     * @param ImageInterface|string|null $resource
-     *
      * @dataProvider provideLightboxResourcesOrUrls
      */
-    public function testSetLightboxResourceOrUrl($resource, array $expectedArguments, bool $hasLightbox = true): void
+    public function testSetLightboxResourceOrUrl(ImageInterface|string|null $resource, array $expectedArguments, bool $hasLightbox = true): void
     {
         if ($hasLightbox) {
             $studio = $this->mockStudioForLightbox(...$expectedArguments);
@@ -1032,7 +991,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideLightboxFallbackResources
      */
-    public function testLightboxResourceFallback(?Metadata $metadata, ?string $expectedFilePath, ?string $expectedUrl): void
+    public function testLightboxResourceFallback(Metadata|null $metadata, string|null $expectedFilePath, string|null $expectedUrl): void
     {
         $studio = $this->mockStudioForLightbox($expectedFilePath, $expectedUrl);
 
@@ -1256,11 +1215,9 @@ class FigureBuilderTest extends TestCase
     }
 
     /**
-     * @param ImageInterface|string|null $expectedResource
-     *
      * @return Studio&MockObject
      */
-    private function mockStudioForLightbox($expectedResource, ?string $expectedUrl, string $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
     {
         $lightbox = $this->createMock(LightboxResult::class);
 

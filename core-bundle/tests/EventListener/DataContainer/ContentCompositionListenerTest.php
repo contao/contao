@@ -1025,11 +1025,9 @@ class ContentCompositionListenerTest extends TestCase
     }
 
     /**
-     * @param int|false|null $moduleId
-     *
      * @return PageModel&MockObject
      */
-    private function mockPageWithRow($moduleId = false): PageModel
+    private function mockPageWithRow(int|false|null $moduleId = false): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page
@@ -1073,11 +1071,9 @@ class ContentCompositionListenerTest extends TestCase
     }
 
     /**
-     * @param int|false|null $moduleId
-     *
      * @return PageModel&MockObject
      */
-    private function MockPageFindByPk($moduleId = false): PageModel
+    private function MockPageFindByPk(int|false|null $moduleId = false): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page

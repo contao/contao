@@ -24,13 +24,8 @@ use Doctrine\DBAL\Connection;
  */
 class RecordPreviewListener
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-
-    public function __construct(ContaoFramework $framework, Connection $connection)
+    public function __construct(private ContaoFramework $framework, private Connection $connection)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
     }
 
     /**
@@ -54,14 +49,18 @@ class RecordPreviewListener
 
     public function storePrecompiledRecordPreview(DataContainer $dc, string $undoId): void
     {
-        try {
-            $row = $this->connection
-                ->executeQuery('SELECT * FROM '.$this->connection->quoteIdentifier($dc->table).' WHERE id = ?', [$dc->id])
-                ->fetchAssociative()
-            ;
+        $row = $this->connection
+            ->executeQuery('SELECT * FROM '.$this->connection->quoteIdentifier($dc->table).' WHERE id = ?', [$dc->id])
+            ->fetchAssociative()
+        ;
 
+        if (!$row) {
+            return;
+        }
+
+        try {
             $preview = $this->compilePreview($dc, $row);
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             $preview = '';
         }
 

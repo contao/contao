@@ -45,7 +45,7 @@ class ModuleRssReader extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -145,7 +145,6 @@ class ModuleRssReader extends Module
 		}
 
 		$items = array();
-		$last = min($limit, \count($arrItems)) - 1;
 
 		/** @var \SimplePie_Item[] $arrItems */
 		for ($i=$offset, $c=\count($arrItems); $i<$limit && $i<$c; $i++)
@@ -156,7 +155,6 @@ class ModuleRssReader extends Module
 				'title' => $arrItems[$i]->get_title(),
 				'permalink' => $arrItems[$i]->get_permalink(),
 				'description' => str_replace(array('<?', '?>'), array('&lt;?', '?&gt;'), $arrItems[$i]->get_description()),
-				'class' => (($i == 0) ? ' first' : '') . (($i == $last) ? ' last' : '') . ((($i % 2) == 0) ? ' even' : ' odd'),
 				'pubdate' => Date::parse($objPage->datimFormat, $arrItems[$i]->get_date('U')),
 				'category' => $arrItems[$i]->get_category(),
 				'object' => $arrItems[$i]

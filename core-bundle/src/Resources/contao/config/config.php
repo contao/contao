@@ -27,9 +27,9 @@ use Contao\ContentHtml;
 use Contao\ContentHyperlink;
 use Contao\ContentImage;
 use Contao\ContentList;
-use Contao\ContentMedia;
 use Contao\ContentModel;
 use Contao\ContentModule;
+use Contao\ContentPlayer;
 use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
 use Contao\ContentTable;
@@ -44,22 +44,22 @@ use Contao\FilesModel;
 use Contao\FileTree;
 use Contao\Form;
 use Contao\FormCaptcha;
-use Contao\FormCheckBox;
+use Contao\FormCheckbox;
 use Contao\FormExplanation;
 use Contao\FormFieldModel;
 use Contao\FormFieldsetStart;
 use Contao\FormFieldsetStop;
-use Contao\FormFileUpload;
+use Contao\FormFile;
 use Contao\FormHidden;
 use Contao\FormHtml;
 use Contao\FormModel;
 use Contao\FormPassword;
-use Contao\FormRadioButton;
+use Contao\FormRadio;
 use Contao\FormRange;
-use Contao\FormSelectMenu;
+use Contao\FormSelect;
 use Contao\FormSubmit;
-use Contao\FormTextArea;
-use Contao\FormTextField;
+use Contao\FormText;
+use Contao\FormTextarea;
 use Contao\ImageSize;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
@@ -81,10 +81,10 @@ use Contao\ModuleCustomnav;
 use Contao\ModuleHtml;
 use Contao\ModuleLogin;
 use Contao\ModuleLogout;
+use Contao\ModuleLostPassword;
 use Contao\ModuleMaintenance;
 use Contao\ModuleModel;
 use Contao\ModuleNavigation;
-use Contao\ModulePassword;
 use Contao\ModulePersonalData;
 use Contao\ModuleQuicklink;
 use Contao\ModuleQuicknav;
@@ -105,7 +105,6 @@ use Contao\PageLogout;
 use Contao\PageModel;
 use Contao\PageRedirect;
 use Contao\PageRegular;
-use Contao\PageRoot;
 use Contao\PageTree;
 use Contao\Password;
 use Contao\Picker;
@@ -121,7 +120,6 @@ use Contao\System;
 use Contao\TableWizard;
 use Contao\TextArea;
 use Contao\TextField;
-use Contao\TextStore;
 use Contao\Theme;
 use Contao\ThemeModel;
 use Contao\TimePeriod;
@@ -260,7 +258,7 @@ $GLOBALS['FE_MOD'] = array
 		'personalData'   => ModulePersonalData::class,
 		'registration'   => ModuleRegistration::class,
 		'changePassword' => ModuleChangePassword::class,
-		'lostPassword'   => ModulePassword::class,
+		'lostPassword'   => ModuleLostPassword::class,
 		'closeAccount'   => ModuleCloseAccount::class
 	),
 	'application' => array
@@ -309,7 +307,7 @@ $GLOBALS['TL_CTE'] = array
 	(
 		'image'           => ContentImage::class,
 		'gallery'         => ContentGallery::class,
-		'player'          => ContentMedia::class,
+		'player'          => ContentPlayer::class,
 		'youtube'         => ContentYouTube::class,
 		'vimeo'           => ContentVimeo::class
 	),
@@ -333,7 +331,6 @@ $GLOBALS['BE_FFL'] = array
 (
 	'text'                    => TextField::class,
 	'password'                => Password::class,
-	'textStore'               => TextStore::class,
 	'textarea'                => TextArea::class,
 	'select'                  => SelectMenu::class,
 	'checkbox'                => CheckBox::class,
@@ -367,13 +364,13 @@ $GLOBALS['TL_FFL'] = array
 	'html'          => FormHtml::class,
 	'fieldsetStart' => FormFieldsetStart::class,
 	'fieldsetStop'  => FormFieldsetStop::class,
-	'text'          => FormTextField::class,
+	'text'          => FormText::class,
 	'password'      => FormPassword::class,
-	'textarea'      => FormTextArea::class,
-	'select'        => FormSelectMenu::class,
-	'radio'         => FormRadioButton::class,
-	'checkbox'      => FormCheckBox::class,
-	'upload'        => FormFileUpload::class,
+	'textarea'      => FormTextarea::class,
+	'select'        => FormSelect::class,
+	'radio'         => FormRadio::class,
+	'checkbox'      => FormCheckbox::class,
+	'upload'        => FormFile::class,
 	'range'         => FormRange::class,
 	'hidden'        => FormHidden::class,
 	'captcha'       => FormCaptcha::class,
@@ -386,7 +383,6 @@ $GLOBALS['TL_PTY'] = array
 	'regular'   => PageRegular::class,
 	'forward'   => PageForward::class,
 	'redirect'  => PageRedirect::class,
-	'root'      => PageRoot::class,
 	'logout'    => PageLogout::class,
 	'error_401' => PageError401::class,
 	'error_403' => PageError403::class,
@@ -472,27 +468,6 @@ $GLOBALS['TL_PURGE'] = array
 );
 
 // Backwards compatibility
-// Image crop modes
-$GLOBALS['TL_CROP'] = array
-(
-	'image_sizes' => array
-	(
-		// will be added dynamically
-	),
-	'relative' => array
-	(
-		'proportional', 'box'
-	),
-	'exact' => array
-	(
-		'crop',
-		'left_top',    'center_top',    'right_top',
-		'left_center', 'center_center', 'right_center',
-		'left_bottom', 'center_bottom', 'right_bottom'
-	)
-);
-
-// Backwards compatibility
 // Cron jobs
 $GLOBALS['TL_CRON'] = array
 (
@@ -516,9 +491,6 @@ $GLOBALS['TL_HOOKS'] = array
 		array(Messages::class, 'languageFallback')
 	)
 );
-
-// Register the auto_item keywords
-$GLOBALS['TL_AUTO_ITEM'] = array('items', 'events');
 
 // Wrapper elements
 $GLOBALS['TL_WRAPPERS'] = array

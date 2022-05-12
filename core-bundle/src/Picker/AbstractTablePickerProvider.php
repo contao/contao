@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DataContainer;
 use Contao\DcaLoader;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
@@ -25,19 +26,13 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     private const PREFIX = 'dc.';
     private const PREFIX_LENGTH = 3;
 
-    private ContaoFramework $framework;
-    private FactoryInterface $menuFactory;
-    private RouterInterface $router;
-    private TranslatorInterface $translator;
-    private Connection $connection;
-
-    public function __construct(ContaoFramework $framework, FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, Connection $connection)
-    {
-        $this->framework = $framework;
-        $this->menuFactory = $menuFactory;
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->connection = $connection;
+    public function __construct(
+        private ContaoFramework $framework,
+        private FactoryInterface $menuFactory,
+        private RouterInterface $router,
+        private TranslatorInterface $translator,
+        private Connection $connection,
+    ) {
     }
 
     public function getUrl(PickerConfig $config): string
@@ -108,7 +103,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
     public function supportsContext(string $context): bool
     {
-        if (0 !== strpos($context, self::PREFIX)) {
+        if (!str_starts_with($context, self::PREFIX)) {
             return false;
         }
 
@@ -117,8 +112,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->initialize();
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
-        return isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer'])
-            && $this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
+        return $this->getDataContainer() === DataContainer::getDriverForTable($table)
             && 0 !== \count($this->getModulesForTable($table));
     }
 
@@ -129,7 +123,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
     public function isCurrent(PickerConfig $config): bool
     {
-        return 0 === strpos($config->getCurrent(), $this->getName().'.');
+        return str_starts_with($config->getCurrent(), $this->getName().'.');
     }
 
     public function getDcaTable(PickerConfig $config = null): string
@@ -160,7 +154,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, mixed $value): string|int
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string
     {
         return (int) $value;
     }
@@ -254,7 +248,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     }
 
     /**
-     * Returns the DataContainer name supported by this picker (e.g. "Table" for DC_Table).
+     * Returns the DataContainer fully qualified class name (FQCN) supported by this picker (e.g. "Contao\DC_Table" for DC_Table).
      */
     abstract protected function getDataContainer(): string;
 }

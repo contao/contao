@@ -17,6 +17,8 @@ use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\Pagination;
 use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class PaginationTest extends TestCase
 {
@@ -39,8 +41,7 @@ class PaginationTest extends TestCase
         unset($GLOBALS['TL_LANG']);
         $_GET = [];
 
-        Input::resetCache();
-        Input::resetUnusedGet();
+        Input::setUnusedRouteParameters([]);
 
         $this->resetStaticProperties([System::class]);
 
@@ -52,7 +53,8 @@ class PaginationTest extends TestCase
      */
     public function testGeneratesPaginationItems(array $data): void
     {
-        $_GET['page'] = $data['currentPage'] ?? 1;
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(['page' => $data['currentPage'] ?? 1]));
 
         $pagination = new Pagination($data['total'], $data['perPage'], $data['maxLinks'], 'page', $this->createMock(FrontendTemplate::class));
         $items = $pagination->getItemsAsArray();

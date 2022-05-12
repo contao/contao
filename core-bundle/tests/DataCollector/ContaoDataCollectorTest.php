@@ -157,9 +157,7 @@ class ContaoDataCollectorTest extends TestCase
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
         $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
-
         $method = new \ReflectionMethod($collector, 'getData');
-        $method->setAccessible(true);
 
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));
     }

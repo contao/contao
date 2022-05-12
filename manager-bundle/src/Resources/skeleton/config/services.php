@@ -21,7 +21,7 @@ return static function (ContainerConfigurator $configurator) use ($container): v
 
     // Don't do anything if there is a service definition for the App namespace
     foreach ($originalDefinitions as $id => $definition) {
-        if (0 === strpos($id, 'App\\')) {
+        if (str_starts_with($id, 'App\\')) {
             return;
         }
     }
@@ -34,12 +34,12 @@ return static function (ContainerConfigurator $configurator) use ($container): v
     try {
         $config
             ->load('App\\', $servicesDir.'/*')
-            ->exclude($servicesDir.'/{DependencyInjection,Entity,Tests}')
+            ->exclude($servicesDir.'/{DependencyInjection,Entity,Resources,Tests}')
         ;
 
         // Trigger __destruct handler
         unset($config);
-    } catch (Throwable $e) {
+    } catch (Throwable) {
         // Ignore failed autoloading
     }
 

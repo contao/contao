@@ -14,7 +14,6 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\Database;
 use Contao\DcaExtractor;
-use Contao\SqlFileParser;
 use Contao\System;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -45,29 +44,6 @@ class Installer extends Controller
 
 		$sql_current = $this->getFromDb();
 		$sql_target = $this->getFromDca();
-		$sql_legacy = $this->getFromFile();
-
-		// Manually merge the legacy definitions (see #4766)
-		if (!empty($sql_legacy))
-		{
-			foreach ($sql_legacy as $table=>$categories)
-			{
-				foreach ($categories as $category=>$fields)
-				{
-					if (\is_array($fields))
-					{
-						foreach ($fields as $name=>$sql)
-						{
-							$sql_target[$table][$category][$name] = $sql;
-						}
-					}
-					else
-					{
-						$sql_target[$table][$category] = $fields;
-					}
-				}
-			}
-		}
 
 		// Create tables
 		foreach (array_diff(array_keys($sql_target), array_keys($sql_current)) as $table)
@@ -224,38 +200,6 @@ class Installer extends Controller
 		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromDca']) && \is_array($GLOBALS['TL_HOOKS']['sqlGetFromDca']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback)
-			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
-			}
-		}
-
-		return $return;
-	}
-
-	/**
-	 * Get the DCA table settings from the database.sql files
-	 *
-	 * @return array An array of DCA table settings
-	 */
-	public function getFromFile()
-	{
-		$return = array();
-
-		/** @var SplFileInfo[] $files */
-		$files = System::getContainer()->get('contao.resource_finder')->findIn('config')->depth(0)->files()->name('database.sql');
-
-		foreach ($files as $file)
-		{
-			$return = array_replace_recursive($return, SqlFileParser::parse($file));
-		}
-
-		ksort($return);
-
-		// HOOK: allow third-party developers to modify the array (see #3281)
-		if (isset($GLOBALS['TL_HOOKS']['sqlGetFromFile']) && \is_array($GLOBALS['TL_HOOKS']['sqlGetFromFile']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromFile'] as $callback)
 			{
 				$this->import($callback[0]);
 				$return = $this->{$callback[0]}->{$callback[1]}($return);

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\AuthenticationEntryPoint;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\UriSigner;
@@ -73,7 +72,6 @@ class AuthenticationEntryPointTest extends TestCase
 
         $response = $entryPoint->start($request);
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/contao/login?_hash=%2FxSCw6cwMlws5DEhBCvs0%2F75oQA8q%2FgMkZEnYCf6QSE%3D&redirect=https%3A%2F%2Fcontao.org%2Fpreview.php%2Fabout-contao.html', $response->getTargetUrl());
     }
 
@@ -105,7 +103,6 @@ class AuthenticationEntryPointTest extends TestCase
 
         $response = $entryPoint->start($request);
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('http://localhost/contao/login?_hash=VmECH%2B5ZGFFG41uxiQVkwzSN%2F7YazPja98g5QNG4Zes%3D', $response->getTargetUrl());
     }
 }

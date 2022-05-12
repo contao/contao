@@ -24,8 +24,6 @@ class BackendMain extends Backend
 {
 	/**
 	 * @var Template
-	 *
-	 * @todo Remove in Contao 5.0
 	 */
 	protected $Template;
 
@@ -62,7 +60,7 @@ class BackendMain extends Backend
 		// Password change required
 		if ($this->User->pwChange && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
-			$this->redirect('contao/password.php');
+			$this->redirect($container->get('router')->generate('contao_backend_password'));
 		}
 
 		// Two-factor setup required
@@ -110,7 +108,7 @@ class BackendMain extends Backend
 		$this->Template->main = '';
 
 		// Ajax request
-		if ($_POST && Environment::get('isAjaxRequest'))
+		if (Input::isPost() && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax = new Ajax(Input::post('action'));
 			$this->objAjax->executePreActions();
@@ -138,7 +136,7 @@ class BackendMain extends Backend
 		{
 			$picker = null;
 
-			if (isset($_GET['picker']))
+			if (Input::get('picker') !== null)
 			{
 				$picker = System::getContainer()->get('contao.picker.builder')->createFromData(Input::get('picker', true));
 

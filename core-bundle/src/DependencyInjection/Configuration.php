@@ -24,11 +24,8 @@ use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    private string $projectDir;
-
-    public function __construct(string $projectDir)
+    public function __construct(private string $projectDir)
     {
-        $this->projectDir = $projectDir;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder
@@ -44,10 +41,6 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('csrf_token_name')
                     ->cannotBeEmpty()
                     ->defaultValue('contao_csrf_token')
-                ->end()
-                ->scalarNode('encryption_key')
-                    ->cannotBeEmpty()
-                    ->defaultValue('%kernel.secret%')
                 ->end()
                 ->integerNode('error_level')
                     ->info('The error reporting level set when the framework is initialized. Defaults to E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED.')
@@ -179,7 +172,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->booleanNode('reject_large_uploads')
-                    ->info('Reject uploaded images exceeding the localconfig.gdMaxImgWidth and localconfig.gdMaxImgHeight dimensions.')
+                    ->info('Reject uploaded images exceeding the localconfig.imageWidth and localconfig.imageHeight dimensions.')
                     ->defaultValue(false)
                 ->end()
                 ->arrayNode('sizes')
@@ -652,7 +645,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $intervals) {
                                 try {
                                     RetentionPolicy::validateAndSortIntervals($intervals);
-                                } catch (\Exception $e) {
+                                } catch (\Exception) {
                                     return true;
                                 }
 

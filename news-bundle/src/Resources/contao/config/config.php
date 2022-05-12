@@ -47,7 +47,6 @@ if (defined('TL_MODE') && TL_MODE == 'BE')
 
 // Register hooks
 $GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array(News::class, 'purgeOldFeeds');
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array(News::class, 'getSearchablePages');
 $GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array(News::class, 'generateFeeds');
 
 // Add permissions

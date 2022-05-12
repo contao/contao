@@ -19,19 +19,14 @@ use Symfony\Component\Asset\Packages;
  */
 class AssetListener
 {
-    private Packages $packages;
-
-    public function __construct(Packages $packages)
+    public function __construct(private Packages $packages)
     {
-        $this->packages = $packages;
     }
 
     /**
      * Replaces the "asset" insert tag.
-     *
-     * @return string|false
      */
-    public function onReplaceInsertTags(string $tag)
+    public function onReplaceInsertTags(string $tag): string|false
     {
         $chunks = explode('::', $tag);
 

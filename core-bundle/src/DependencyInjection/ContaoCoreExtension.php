@@ -58,7 +58,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     public function prepend(ContainerBuilder $container): void
     {
         $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
-        $config = $this->processConfiguration($configuration, $container->getExtensionConfig($this->getAlias()));
+
+        $config = $container->getExtensionConfig($this->getAlias());
+        $config = $container->getParameterBag()->resolveValue($config);
+        $config = $this->processConfiguration($configuration, $config);
 
         // Prepend the backend route prefix to make it available for third-party bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
@@ -132,7 +135,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
-        $this->handleTokenCheckerConfig($config, $container);
+        $this->handleTokenCheckerConfig($container);
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
 
@@ -361,7 +364,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             // Will throw an exception if the PHP implementation is not available
             try {
                 new $class();
-            } catch (RuntimeException $e) {
+            } catch (RuntimeException) {
                 continue;
             }
 
@@ -371,7 +374,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         return Imagine::class; // see #616
     }
 
-    private function handleTokenCheckerConfig(array $config, ContainerBuilder $container): void
+    private function handleTokenCheckerConfig(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('contao.security.token_checker')) {
             return;
@@ -415,7 +418,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->removeDefinition('contao.image.fallback_preview_provider');
     }
 
-    private function getComposerPublicDir(string $projectDir): ?string
+    private function getComposerPublicDir(string $projectDir): string|null
     {
         $fs = new Filesystem();
 

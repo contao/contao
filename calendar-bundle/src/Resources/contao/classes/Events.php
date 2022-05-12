@@ -305,7 +305,6 @@ abstract class Events extends Module
 		if ($arrEvent['teaser'])
 		{
 			$arrEvent['hasTeaser'] = true;
-			$arrEvent['teaser'] = StringUtil::toHtml5($arrEvent['teaser']);
 			$arrEvent['teaser'] = StringUtil::encodeEmail($arrEvent['teaser']);
 		}
 
@@ -461,7 +460,7 @@ abstract class Events extends Module
 			}
 			else
 			{
-				$params = (Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id);
+				$params = '/' . ($objEvent->alias ?: $objEvent->id);
 
 				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}

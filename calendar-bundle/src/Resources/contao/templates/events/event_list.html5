@@ -1,6 +1,6 @@
 
 <?php if ($this->header): ?>
-  <div class="header<?= $this->classHeader ?>">
+  <div class="header">
     <?php if ($this->firstDay): ?><span class="day"><?= $this->firstDay ?>, </span><?php endif; ?><span class="date"><?= $this->firstDate ?></span>
   </div>
 <?php endif; ?>

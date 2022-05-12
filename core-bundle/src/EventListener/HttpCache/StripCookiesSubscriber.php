@@ -71,12 +71,10 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         'CookieConsent',
     ];
 
-    private array $allowList;
     private array $removeFromDenyList = [];
 
-    public function __construct(array $allowList = [])
+    public function __construct(private array $allowList = [])
     {
-        $this->allowList = $allowList;
     }
 
     public function getAllowList(): array

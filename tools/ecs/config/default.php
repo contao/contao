@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
+use PhpCsFixer\Fixer\Whitespace\BlankLineBeforeStatementFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
 use SlevomatCodingStandard\Sniffs\Variables\UnusedVariableSniff;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -18,6 +19,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         '*/Fixtures/system/*',
         '*/Resources/contao/*',
         'maker-bundle/src/Resources/skeleton/*',
+        BlankLineBeforeStatementFixer::class => [
+            'core-bundle/src/Filesystem/SortMode.php',
+        ],
         MethodChainingIndentationFixer::class => [
             '*/DependencyInjection/Configuration.php',
             '*/Resources/config/*.php',

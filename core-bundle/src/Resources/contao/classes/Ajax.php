@@ -226,7 +226,15 @@ class Ajax extends Backend
 					}
 					elseif ($intId > 0 && $this->Database->tableExists($dc->table))
 					{
-						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+						$idField = 'id';
+
+						// ID is file path for DC_Folder
+						if ($dc instanceof DC_Folder)
+						{
+							$idField = 'path';
+						}
+
+						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
 												 ->execute($intId);
 
 						// The record does not exist
@@ -349,6 +357,11 @@ class Ajax extends Backend
 						{
 							throw new ResponseException($this->convertToResponse($dc->editAll($this->strAjaxId, Input::post('id'))));
 						}
+
+						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+						{
+							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
+						}
 					}
 					else
 					{
@@ -362,6 +375,11 @@ class Ajax extends Backend
 						if (Input::post('load'))
 						{
 							throw new ResponseException($this->convertToResponse($dc->edit(false, Input::post('id'))));
+						}
+
+						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+						{
+							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 						}
 					}
 				}

@@ -27,7 +27,6 @@ class SearchTest extends TestCase
     {
         $search = new \ReflectionClass(Search::class);
         $compareUrls = $search->getMethod('compareUrls');
-        $compareUrls->setAccessible(true);
 
         $this->assertLessThan(0, $compareUrls->invokeArgs(null, [$moreCanonicalUrl, $lessCanonicalUrl]));
         $this->assertGreaterThan(0, $compareUrls->invokeArgs(null, [$lessCanonicalUrl, $moreCanonicalUrl]));
@@ -54,7 +53,6 @@ class SearchTest extends TestCase
     {
         $search = new \ReflectionClass(Search::class);
         $method = $search->getMethod('splitIntoWords');
-        $method->setAccessible(true);
 
         $this->assertSame($expectedWords, $method->invokeArgs(null, [$source, '']));
     }

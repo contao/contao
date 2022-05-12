@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Migration\Version409;
 use Contao\ContentText;
 use Contao\CoreBundle\Migration\Version409\CeAccessMigration;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\FormTextField;
+use Contao\FormText;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
@@ -35,7 +35,7 @@ class CeAccessMigrationTest extends TestCase
         ];
 
         $GLOBALS['TL_FFL'] = [
-            'text' => FormTextField::class,
+            'text' => FormText::class,
         ];
     }
 

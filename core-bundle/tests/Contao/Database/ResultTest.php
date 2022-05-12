@@ -44,7 +44,6 @@ class ResultTest extends TestCase
                 $this->assertNull($result->modifiedKey);
                 $result->modifiedKey = 'value';
                 $this->assertSame(['modifiedKey' => 'value'], $result->row());
-                $this->assertSame(['modifiedKey' => 'value'], $result->row());
                 $this->assertSame(['value'], $result->row(true));
                 $this->assertTrue(isset($result->modifiedKey));
                 $this->assertSame('value', $result->modifiedKey);
@@ -182,11 +181,9 @@ class ResultTest extends TestCase
     }
 
     /**
-     * @param string|array|object $statement
-     *
      * @dataProvider getInvalidStatements
      */
-    public function testInvalidStatements($statement): void
+    public function testInvalidStatements(array|object|string $statement): void
     {
         $this->expectException('InvalidArgumentException');
 

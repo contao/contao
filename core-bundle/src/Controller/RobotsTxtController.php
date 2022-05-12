@@ -29,13 +29,8 @@ use webignition\RobotsTxt\File\Parser;
  */
 class RobotsTxtController
 {
-    private ContaoFramework $framework;
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function __construct(ContaoFramework $framework, EventDispatcherInterface $eventDispatcher)
+    public function __construct(private ContaoFramework $framework, private EventDispatcherInterface $eventDispatcher)
     {
-        $this->framework = $framework;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -48,7 +43,7 @@ class RobotsTxtController
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
         $rootPage = $pageModel->findPublishedFallbackByHostname(
-            $request->server->get('HTTP_HOST'),
+            $request->getHost(),
             ['fallbackToEmpty' => true]
         );
 

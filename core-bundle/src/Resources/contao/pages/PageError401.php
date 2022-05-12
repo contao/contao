@@ -20,43 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 class PageError401 extends Frontend
 {
 	/**
-	 * Generate an error 401 page
-	 *
-	 * @param PageModel|integer|null $objRootPage
-	 *
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5; use
-	 *             the PageError401::getResponse() method instead
-	 */
-	public function generate($objRootPage=null)
-	{
-		trigger_deprecation('contao/core-bundle', '4.19', 'Using PageError401::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageError401::getResponse() method instead.');
-
-		if (is_numeric($objRootPage))
-		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError401::generate() has been deprecated and will no longer work in Contao 5.0.');
-		}
-
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		$obj401 = $this->prepare($objRootPage);
-		$objPage = $obj401->loadDetails();
-
-		// Reset inherited cache timeouts (see #231)
-		if (!$objPage->includeCache)
-		{
-			$objPage->cache = 0;
-			$objPage->clientCache = 0;
-		}
-
-		/** @var PageRegular $objHandler */
-		$objHandler = new $GLOBALS['TL_PTY']['regular']();
-
-		header('HTTP/1.1 401 Unauthorized');
-		$objHandler->generate($objPage);
-	}
-
-	/**
 	 * Return a response object
 	 *
 	 * @param PageModel|integer|null $objRootPage

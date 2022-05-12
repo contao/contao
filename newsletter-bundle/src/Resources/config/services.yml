@@ -1,0 +1,7 @@
+services:
+    contao_newsletter.listener.sitemap:
+        class: Contao\NewsletterBundle\EventListener\SitemapListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener

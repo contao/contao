@@ -47,8 +47,8 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $pass = new IntlInstalledLocalesAndCountriesPass();
         $pass->process($container);
 
-        $availableLocales = $container->getDefinition('contao.intl.locales')->getArgument(3);
-        $enabledLocales = $container->getDefinition('contao.intl.locales')->getArgument(4);
+        $availableLocales = $container->getDefinition('contao.intl.locales')->getArgument(2);
+        $enabledLocales = $container->getDefinition('contao.intl.locales')->getArgument(3);
 
         $this->assertIsArray($availableLocales);
         $this->assertNotEmpty($availableLocales);
@@ -75,7 +75,7 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $pass = new IntlInstalledLocalesAndCountriesPass();
         $pass->process($container);
 
-        $availableCountries = $container->getDefinition('contao.intl.countries')->getArgument(3);
+        $availableCountries = $container->getDefinition('contao.intl.countries')->getArgument(2);
 
         $this->assertIsArray($availableCountries);
         $this->assertNotEmpty($availableCountries);

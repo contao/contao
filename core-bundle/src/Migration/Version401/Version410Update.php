@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Migration\Version401;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Image\ImageSizes;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
@@ -22,13 +23,8 @@ use Doctrine\DBAL\Connection;
  */
 class Version410Update extends AbstractMigration
 {
-    private Connection $connection;
-    private ContaoFramework $framework;
-
-    public function __construct(Connection $connection, ContaoFramework $framework)
+    public function __construct(private Connection $connection, private ContaoFramework $framework, private ImageSizes $imageSizes)
     {
-        $this->connection = $connection;
-        $this->framework = $framework;
     }
 
     public function getName(): string
@@ -53,31 +49,14 @@ class Version410Update extends AbstractMigration
     {
         $this->framework->initialize();
 
-        $crop = $GLOBALS['TL_CROP'] ?? [];
-
-        if (empty($crop)) {
-            return $this->createResult(true);
-        }
-
         $options = [];
 
-        foreach ($crop as $modes) {
+        foreach ($this->imageSizes->getAllOptions() as $modes) {
             $options[] = array_values($modes);
         }
 
         if (!empty($options)) {
             $options = array_merge(...$options);
-        }
-
-        $rows = $this->connection->fetchAllAssociative('
-            SELECT
-                id
-            FROM
-                tl_image_size
-        ');
-
-        foreach ($rows as $imageSize) {
-            $options[] = $imageSize['id'];
         }
 
         // Add the database fields

@@ -19,18 +19,11 @@ use Doctrine\DBAL\Connection;
 
 class DefaultIndexer implements IndexerInterface
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private bool $indexProtected;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.search.default_indexer" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
+    public function __construct(private ContaoFramework $framework, private Connection $connection, private bool $indexProtected = false)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->indexProtected = $indexProtected;
     }
 
     public function index(Document $document): void
@@ -49,13 +42,13 @@ class DefaultIndexer implements IndexerInterface
 
         try {
             $title = $document->getContentCrawler()->filterXPath('//head/title')->first()->text();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $title = 'undefined';
         }
 
         try {
             $language = $document->getContentCrawler()->filterXPath('//html[@lang]')->first()->attr('lang');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $language = 'en';
         }
 

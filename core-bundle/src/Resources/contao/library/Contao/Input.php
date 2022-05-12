@@ -10,6 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Safely read the user input
  *
@@ -28,37 +32,107 @@ namespace Contao;
 class Input
 {
 	/**
-	 * Object instance (Singleton)
-	 * @var Input
+	 * Unused route parameters (/key/value/key2/value2)
 	 */
-	protected static $objInstance;
+	private static array $arrUnusedRouteParameters = array();
 
 	/**
-	 * Cache
-	 * @var array
+	 * Parameters set via setGet() are stored by request
+	 *
+	 * @var \WeakMap<Request,array<string,array|string>>
 	 */
-	protected static $arrCache = array();
+	private static \WeakMap $setGet;
 
 	/**
-	 * Unused $_GET parameters
-	 * @var array
+	 * Parameters set via setPost() are stored by request
+	 *
+	 * @var \WeakMap<Request,array<string,array|string>>
 	 */
-	protected static $arrUnusedGet = array();
+	private static \WeakMap $setPost;
 
 	/**
-	 * Magic quotes setting
-	 * @var boolean
+	 * Parameters set via setCookie() are stored by request
+	 *
+	 * @var \WeakMap<Request,array<string,array|string>>
 	 */
-	protected static $blnMagicQuotes = false;
+	private static \WeakMap $setCookie;
 
 	/**
 	 * Clean the global GPC arrays
 	 */
 	public static function initialize()
 	{
-		$_GET    = static::cleanKey($_GET);
-		$_POST   = static::cleanKey($_POST);
-		$_COOKIE = static::cleanKey($_COOKIE);
+		if (isset($_GET))
+		{
+			$_GET = static::cleanKeyInternal($_GET);
+		}
+
+		if (isset($_POST))
+		{
+			$_POST = static::cleanKeyInternal($_POST);
+		}
+
+		if (isset($_COOKIE))
+		{
+			$_COOKIE = static::cleanKeyInternal($_COOKIE);
+		}
+	}
+
+	/**
+	 * Encode a string using the input encoding algorithm
+	 */
+	public static function encodeInput(string $value, InputEncodingMode $mode, bool $encodeInsertTags = true): string
+	{
+		// Ensure UTF-8 string
+		if (1 !== preg_match('//u', $value))
+		{
+			$subBefore = mb_substitute_character();
+			mb_substitute_character(0xFFFD);
+			$value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
+			mb_substitute_character($subBefore);
+		}
+
+		// Normalize newlines
+		$value = preg_replace('(\r\n?)', "\n", $value);
+
+		// Replace null bytes with U+FFFD Replacement Character
+		$value = str_replace("\0", "\u{FFFD}", $value);
+
+		$value = match ($mode)
+		{
+			InputEncodingMode::encodeAll => str_replace(
+				array('#', '<', '>', '(', ')', '\\', '=', '"', "'"),
+				array('&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;'),
+				$value,
+			),
+			InputEncodingMode::sanitizeHtml => static::stripTags($value, Config::get('allowedTags'), Config::get('allowedAttributes')),
+			InputEncodingMode::encodeLessThanSign => str_replace('<', '&#60;', $value),
+			InputEncodingMode::encodeNone => $value,
+		};
+
+		$value = str_replace('\0', '&#92;0', $value);
+
+		if ($encodeInsertTags)
+		{
+			$value = static::encodeInsertTags($value);
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Encode a value using the input encoding algorithm
+	 *
+	 * @param array|string $values
+	 */
+	public static function encodeInputRecursive($values, InputEncodingMode $mode, bool $encodeInsertTags = true): array|string
+	{
+		if (!\is_array($values))
+		{
+			return static::encodeInput((string) $values, $mode, $encodeInsertTags);
+		}
+
+		return array_map(static fn ($value) => static::encodeInputRecursive($value, $mode, $encodeInsertTags), $values);
 	}
 
 	/**
@@ -66,44 +140,63 @@ class Input
 	 *
 	 * @param string  $strKey            The variable name
 	 * @param boolean $blnDecodeEntities If true, all entities will be decoded
-	 * @param boolean $blnKeepUnused     If true, the parameter will not be marked as used (see #4277)
 	 *
-	 * @return mixed The cleaned variable value
+	 * @return array|string|null The cleaned variable value
 	 */
-	public static function get($strKey, $blnDecodeEntities=false, $blnKeepUnused=false)
+	public static function get($strKey, $blnDecodeEntities=false)
 	{
-		if (!isset($_GET[$strKey]))
+		$varValue = static::findGet($strKey);
+
+		if ($varValue === null)
 		{
 			return null;
 		}
 
-		$strCacheKey = $blnDecodeEntities ? 'getDecoded' : 'getEncoded';
-
-		if (!isset(static::$arrCache[$strCacheKey][$strKey]))
+		// Mark the parameter as used (see #4277)
+		if (\func_num_args() > 2 && func_get_arg(2))
 		{
-			$varValue = $_GET[$strKey];
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() with the third parameter "$blnKeepUnused" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+		}
+		else
+		{
+			unset(self::$arrUnusedRouteParameters[$strKey]);
+		}
 
-			$varValue = static::decodeEntities($varValue);
-			$varValue = static::xssClean($varValue, true);
-			$varValue = static::stripTags($varValue);
+		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll);
+	}
 
-			if (!$blnDecodeEntities)
+	/**
+	 * Return all keys from $_GET
+	 *
+	 * @return list<string>
+	 */
+	public static function getKeys(): array
+	{
+		if ($request = static::getRequest())
+		{
+			$keys = $request->query->keys();
+
+			if (isset(static::$setGet) && static::$setGet->offsetExists($request))
 			{
-				$varValue = static::encodeSpecialChars($varValue);
+				foreach (static::$setGet->offsetGet($request) as $key => $value)
+				{
+					if ($value === null)
+					{
+						$keys = array_diff($keys, array($key));
+					}
+					else
+					{
+						$keys[] = $key;
+					}
+				}
 			}
 
-			$varValue = static::encodeInsertTags($varValue);
-
-			static::$arrCache[$strCacheKey][$strKey] = $varValue;
+			return array_map(strval(...), array_values($keys));
 		}
 
-		// Mark the parameter as used (see #4277)
-		if (!$blnKeepUnused)
-		{
-			unset(static::$arrUnusedGet[$strKey]);
-		}
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
 
-		return static::$arrCache[$strCacheKey][$strKey];
+		return array_map(strval(...), array_keys($_GET ?? array()));
 	}
 
 	/**
@@ -112,39 +205,35 @@ class Input
 	 * @param string  $strKey            The variable name
 	 * @param boolean $blnDecodeEntities If true, all entities will be decoded
 	 *
-	 * @return mixed The cleaned variable value
+	 * @return array|string|null The cleaned variable value
 	 */
 	public static function post($strKey, $blnDecodeEntities=false)
 	{
-		$strCacheKey = $blnDecodeEntities ? 'postDecoded' : 'postEncoded';
+		$varValue = static::findPost($strKey);
 
-		if (!isset(static::$arrCache[$strCacheKey][$strKey]))
+		if ($varValue === null)
 		{
-			$varValue = static::findPost($strKey);
-
-			if ($varValue === null)
-			{
-				return null;
-			}
-
-			$varValue = static::decodeEntities($varValue);
-			$varValue = static::xssClean($varValue, true);
-			$varValue = static::stripTags($varValue);
-
-			if (!$blnDecodeEntities)
-			{
-				$varValue = static::encodeSpecialChars($varValue);
-			}
-
-			if (!\defined('TL_MODE') || TL_MODE != 'BE')
-			{
-				$varValue = static::encodeInsertTags($varValue);
-			}
-
-			static::$arrCache[$strCacheKey][$strKey] = $varValue;
+			return null;
 		}
 
-		return static::$arrCache[$strCacheKey][$strKey];
+		$varValue = static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll, !\defined('TL_MODE') || TL_MODE != 'BE');
+
+		return $varValue;
+	}
+
+	/**
+	 * Return true if the request is a POST request
+	 */
+	public static function isPost(): bool
+	{
+		if ($request = static::getRequest())
+		{
+			return $request->isMethod('POST');
+		}
+
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
+
+		return !empty($_POST);
 	}
 
 	/**
@@ -153,39 +242,23 @@ class Input
 	 * @param string  $strKey            The variable name
 	 * @param boolean $blnDecodeEntities If true, all entities will be decoded
 	 *
-	 * @return mixed The cleaned variable value
+	 * @return array|string|null The cleaned variable value
 	 */
 	public static function postHtml($strKey, $blnDecodeEntities=false)
 	{
-		$strCacheKey = $blnDecodeEntities ? 'postHtmlDecoded' : 'postHtmlEncoded';
-
-		if (!isset(static::$arrCache[$strCacheKey][$strKey]))
+		if (!$blnDecodeEntities)
 		{
-			$varValue = static::findPost($strKey);
-
-			if ($varValue === null)
-			{
-				return null;
-			}
-
-			$varValue = static::decodeEntities($varValue);
-			$varValue = static::xssClean($varValue);
-			$varValue = static::stripTags($varValue, Config::get('allowedTags'), Config::get('allowedAttributes'));
-
-			if (!$blnDecodeEntities)
-			{
-				$varValue = static::encodeSpecialChars($varValue);
-			}
-
-			if (!\defined('TL_MODE') || TL_MODE != 'BE')
-			{
-				$varValue = static::encodeInsertTags($varValue);
-			}
-
-			static::$arrCache[$strCacheKey][$strKey] = $varValue;
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() with $blnDecodeEntities set to false has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
 		}
 
-		return static::$arrCache[$strCacheKey][$strKey];
+		$varValue = static::findPost($strKey);
+
+		if ($varValue === null)
+		{
+			return null;
+		}
+
+		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::sanitizeHtml : InputEncodingMode::encodeAll, !\defined('TL_MODE') || TL_MODE != 'BE', true);
 	}
 
 	/**
@@ -193,33 +266,18 @@ class Input
 	 *
 	 * @param string $strKey The variable name
 	 *
-	 * @return mixed The raw variable value
+	 * @return array|string|null The raw variable value
 	 */
 	public static function postRaw($strKey)
 	{
-		$strCacheKey = 'postRaw';
+		$varValue = static::findPost($strKey);
 
-		if (!isset(static::$arrCache[$strCacheKey][$strKey]))
+		if ($varValue === null)
 		{
-			$varValue = static::findPost($strKey);
-
-			if ($varValue === null)
-			{
-				return null;
-			}
-
-			$varValue = static::preserveBasicEntities($varValue);
-			$varValue = static::xssClean($varValue);
-
-			if (!\defined('TL_MODE') || TL_MODE != 'BE')
-			{
-				$varValue = static::encodeInsertTags($varValue);
-			}
-
-			static::$arrCache[$strCacheKey][$strKey] = $varValue;
+			return null;
 		}
 
-		return static::$arrCache[$strCacheKey][$strKey];
+		return static::encodeInputRecursive($varValue, InputEncodingMode::encodeNone, !\defined('TL_MODE') || TL_MODE != 'BE');
 	}
 
 	/**
@@ -231,21 +289,7 @@ class Input
 	 */
 	public static function postUnsafeRaw($strKey)
 	{
-		$strCacheKey = 'postUnsafeRaw';
-
-		if (!isset(static::$arrCache[$strCacheKey][$strKey]))
-		{
-			$varValue = static::findPost($strKey);
-
-			if ($varValue === null)
-			{
-				return null;
-			}
-
-			static::$arrCache[$strCacheKey][$strKey] = $varValue;
-		}
-
-		return static::$arrCache[$strCacheKey][$strKey];
+		return static::findPost($strKey);
 	}
 
 	/**
@@ -258,63 +302,50 @@ class Input
 	 */
 	public static function cookie($strKey, $blnDecodeEntities=false)
 	{
-		if (!isset($_COOKIE[$strKey]))
+		$varValue = static::findCookie($strKey);
+
+		if ($varValue === null)
 		{
 			return null;
 		}
 
-		$strCacheKey = $blnDecodeEntities ? 'cookieDecoded' : 'cookieEncoded';
-
-		if (!isset(static::$arrCache[$strCacheKey][$strKey]))
-		{
-			$varValue = $_COOKIE[$strKey];
-
-			$varValue = static::decodeEntities($varValue);
-			$varValue = static::xssClean($varValue, true);
-			$varValue = static::stripTags($varValue);
-
-			if (!$blnDecodeEntities)
-			{
-				$varValue = static::encodeSpecialChars($varValue);
-			}
-
-			$varValue = static::encodeInsertTags($varValue);
-
-			static::$arrCache[$strCacheKey][$strKey] = $varValue;
-		}
-
-		return static::$arrCache[$strCacheKey][$strKey];
+		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll);
 	}
 
 	/**
 	 * Set a $_GET variable
 	 *
-	 * @param string  $strKey       The variable name
-	 * @param mixed   $varValue     The variable value
-	 * @param boolean $blnAddUnused If true, the value usage will be checked
+	 * @param string $strKey   The variable name
+	 * @param mixed  $varValue The variable value
 	 */
-	public static function setGet($strKey, $varValue, $blnAddUnused=false)
+	public static function setGet($strKey, $varValue)
 	{
 		// Convert special characters (see #7829)
 		$strKey = str_replace(array(' ', '.', '['), '_', $strKey);
+		$strKey = static::cleanKeyInternal($strKey);
 
-		$strKey = static::cleanKey($strKey);
-
-		unset(static::$arrCache['getEncoded'][$strKey], static::$arrCache['getDecoded'][$strKey]);
+		if ($request = static::getRequest())
+		{
+			static::$setGet ??= new \WeakMap();
+			$arrGet = static::$setGet->offsetExists($request) ? static::$setGet->offsetGet($request) : array();
+			$arrGet[$strKey] = $varValue;
+			static::$setGet->offsetSet($request, $arrGet);
+		}
 
 		if ($varValue === null)
 		{
 			unset($_GET[$strKey]);
-		}
-		else
-		{
-			$_GET[$strKey] = $varValue;
 
-			if ($blnAddUnused)
-			{
-				static::setUnusedGet($strKey, $varValue); // see #4277
-			}
+			return;
 		}
+
+		if (\func_num_args() > 2 && func_get_arg(2))
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() with the third parameter "$blnAddUnused" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+			self::$arrUnusedRouteParameters[$strKey] = true;
+		}
+
+		$_GET[$strKey] = $varValue;
 	}
 
 	/**
@@ -325,25 +356,26 @@ class Input
 	 */
 	public static function setPost($strKey, $varValue)
 	{
-		$strKey = static::cleanKey($strKey);
+		// Convert special characters (see #7829)
+		$strKey = str_replace(array(' ', '.', '['), '_', $strKey);
+		$strKey = static::cleanKeyInternal($strKey);
 
-		unset(
-			static::$arrCache['postEncoded'][$strKey],
-			static::$arrCache['postDecoded'][$strKey],
-			static::$arrCache['postHtmlEncoded'][$strKey],
-			static::$arrCache['postHtmlDecoded'][$strKey],
-			static::$arrCache['postRaw'][$strKey],
-			static::$arrCache['postUnsafeRaw'][$strKey]
-		);
+		if ($request = static::getRequest())
+		{
+			static::$setPost ??= new \WeakMap();
+			$arrPost = static::$setPost->offsetExists($request) ? static::$setPost->offsetGet($request) : array();
+			$arrPost[$strKey] = $varValue;
+			static::$setPost->offsetSet($request, $arrPost);
+		}
 
 		if ($varValue === null)
 		{
 			unset($_POST[$strKey]);
+
+			return;
 		}
-		else
-		{
-			$_POST[$strKey] = $varValue;
-		}
+
+		$_POST[$strKey] = $varValue;
 	}
 
 	/**
@@ -354,18 +386,26 @@ class Input
 	 */
 	public static function setCookie($strKey, $varValue)
 	{
-		$strKey = static::cleanKey($strKey);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
 
-		unset(static::$arrCache['cookieEncoded'][$strKey], static::$arrCache['cookieDecoded'][$strKey]);
+		$strKey = static::cleanKeyInternal($strKey);
+
+		if ($request = static::getRequest())
+		{
+			static::$setCookie ??= new \WeakMap();
+			$arrCookie = static::$setCookie->offsetExists($request) ? static::$setCookie->offsetGet($request) : array();
+			$arrCookie[$strKey] = $varValue;
+			static::$setCookie->offsetSet($request, $arrCookie);
+		}
 
 		if ($varValue === null)
 		{
 			unset($_COOKIE[$strKey]);
+
+			return;
 		}
-		else
-		{
-			$_COOKIE[$strKey] = $varValue;
-		}
+
+		$_COOKIE[$strKey] = $varValue;
 	}
 
 	/**
@@ -373,7 +413,7 @@ class Input
 	 */
 	public static function resetCache()
 	{
-		static::$arrCache = array();
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
 	}
 
 	/**
@@ -383,7 +423,9 @@ class Input
 	 */
 	public static function hasUnusedGet()
 	{
-		return \count(static::$arrUnusedGet) > 0;
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
+		return \count(static::getUnusedRouteParameters()) > 0;
 	}
 
 	/**
@@ -393,7 +435,9 @@ class Input
 	 */
 	public static function getUnusedGet()
 	{
-		return array_keys(static::$arrUnusedGet);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
+		return static::getUnusedRouteParameters();
 	}
 
 	/**
@@ -404,7 +448,9 @@ class Input
 	 */
 	public static function setUnusedGet($strKey, $varValue)
 	{
-		static::$arrUnusedGet[$strKey] = $varValue;
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
+		self::$arrUnusedRouteParameters[$strKey] = true;
 	}
 
 	/**
@@ -412,7 +458,53 @@ class Input
 	 */
 	public static function resetUnusedGet()
 	{
-		static::$arrUnusedGet = array();
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
+		static::setUnusedRouteParameters(array());
+	}
+
+	/**
+	 * @internal This method is used by the InputEnhancer to set the route
+	 *           parameters that have to be retrieved through Input::get() in
+	 *           order to not generate a 404 response
+	 *
+	 * @see InputEnhancer::enhance()
+	 *
+	 * @param list<string> $routeParameters
+	 */
+	public static function setUnusedRouteParameters(array $routeParameters): void
+	{
+		self::$arrUnusedRouteParameters = array_combine($routeParameters, array_fill(0, \count($routeParameters), true));
+	}
+
+	/**
+	 * @internal This method is used by the FrontendTemplate to generate a 404
+	 *           response if some route parameters were not retrieved through
+	 *           Input::get()
+	 *
+	 * @see FrontendTemplate::compile()
+	 *
+	 * @return list<string>
+	 */
+	public static function getUnusedRouteParameters(): array
+	{
+		return array_keys(self::$arrUnusedRouteParameters);
+	}
+
+	/**
+	 * Sanitize the variable names (thanks to Andreas Schempp)
+	 *
+	 * @param mixed $varValue A variable name or an array of variable names
+	 *
+	 * @return mixed The clean name or array of names
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 */
+	public static function cleanKey($varValue)
+	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
+		return static::cleanKeyInternal($varValue);
 	}
 
 	/**
@@ -422,7 +514,7 @@ class Input
 	 *
 	 * @return mixed The clean name or array of names
 	 */
-	public static function cleanKey($varValue)
+	private static function cleanKeyInternal($varValue)
 	{
 		// Recursively clean arrays
 		if (\is_array($varValue))
@@ -431,11 +523,11 @@ class Input
 
 			foreach ($varValue as $k=>$v)
 			{
-				$k = static::cleanKey($k);
+				$k = static::cleanKeyInternal($k);
 
 				if (\is_array($v))
 				{
-					$v = static::cleanKey($v);
+					$v = static::cleanKeyInternal($v);
 				}
 
 				$return[$k] = $v;
@@ -444,26 +536,14 @@ class Input
 			return $return;
 		}
 
-		$varValue = static::decodeEntities($varValue);
-		$varValue = static::xssClean($varValue, true);
-		$varValue = static::stripTags($varValue);
+		$encoded = static::encodeInput((string) $varValue, InputEncodingMode::encodeLessThanSign, false);
 
-		return $varValue;
-	}
+		if ((\is_array($varValue) ? $varValue : (string) $varValue) !== $encoded)
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Relying on input keys being encoded in "%s::cleanKey()" has been deprecated and will no longer work in Contao 6.0.', __CLASS__);
+		}
 
-	/**
-	 * Strip slashes
-	 *
-	 * @param mixed $varValue A string or array
-	 *
-	 * @return mixed The string or array without slashes
-	 *
-	 * @deprecated Deprecated since Contao 3.5, to be removed in Contao 5.
-	 *             Since get_magic_quotes_gpc() always returns false in PHP 5.4+, the method was never actually executed.
-	 */
-	public static function stripSlashes($varValue)
-	{
-		return $varValue;
+		return $encoded;
 	}
 
 	/**
@@ -477,10 +557,9 @@ class Input
 	 */
 	public static function stripTags($varValue, $strAllowedTags='', $strAllowedAttributes='')
 	{
-		if ($strAllowedTags !== '' && \func_num_args() < 3)
+		if ($strAllowedTags === '' || $strAllowedAttributes === '')
 		{
-			trigger_deprecation('contao/core-bundle', '4.4', 'Using %s() with $strAllowedTags but without $strAllowedAttributes has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
-			$strAllowedAttributes = Config::get('allowedAttributes');
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() without setting allowed tags and allowed attributes has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
 		}
 
 		if (!$varValue)
@@ -516,7 +595,7 @@ class Input
 			{
 				if (!$matches[1] || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
 				{
-					$matches[0] = str_replace('<', '&lt;', $matches[0]);
+					$matches[0] = str_replace('<', '&#60;', $matches[0]);
 				}
 
 				return $matches[0];
@@ -527,8 +606,11 @@ class Input
 		// Strip the tags
 		$varValue = strip_tags($varValue, $strAllowedTags);
 
-		// Restore HTML comments and recheck for encoded null bytes
-		$varValue = str_replace(array('&lt;!--', '&lt;![', '\\0'), array('<!--', '<![', '&#92;0'), $varValue);
+		if ($strAllowedTags)
+		{
+			// Restore HTML comments and recheck for encoded null bytes
+			$varValue = str_replace(array('&#60;!--', '&#60;![', '\\0'), array('<!--', '<![', '&#92;0'), $varValue);
+		}
 
 		// Strip attributes
 		if ($strAllowedTags)
@@ -578,29 +660,34 @@ class Input
 					return $matches[0];
 				}
 
+				$encode = static function (string $strText): string
+				{
+					return str_replace('&#35;', '#', self::encodeInput($strText, InputEncodingMode::encodeAll, false));
+				};
+
 				if ($blnCommentOpen && substr($matches[0], -3) === '-->')
 				{
 					$blnCommentOpen = false;
 
-					return static::encodeSpecialChars(substr($matches[0], 0, -3)) . '-->';
+					return $encode(substr($matches[0], 0, -3)) . '-->';
 				}
 
 				if (!$blnCommentOpen && 0 === strncmp($matches[0], '<!--', 4))
 				{
 					if (substr($matches[0], -3) === '-->')
 					{
-						return '<!--' . static::encodeSpecialChars(substr($matches[0], 4, -3)) . '-->';
+						return '<!--' . $encode(substr($matches[0], 4, -3)) . '-->';
 					}
 
 					$blnCommentOpen = true;
 
-					return '<!--' . static::encodeSpecialChars(substr($matches[0], 4));
+					return '<!--' . $encode(substr($matches[0], 4));
 				}
 
 				// Matched special characters or tag is invalid or not allowed, return everything encoded
 				if ($strTagName == '' || stripos($strAllowedTags, '<' . $strTagName . '>') === false)
 				{
-					return static::encodeSpecialChars($matches[0]);
+					return $encode($matches[0]);
 				}
 
 				// Closing tags have no attributes
@@ -729,9 +816,13 @@ class Input
 	 * @param boolean $blnStrictMode If true, the function removes also JavaScript event handlers
 	 *
 	 * @return mixed The cleaned string or array
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
 	 */
 	public static function xssClean($varValue, $blnStrictMode=false)
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
 		if (!$varValue)
 		{
 			return $varValue;
@@ -844,9 +935,13 @@ class Input
 	 * @param mixed $varValue A string or array
 	 *
 	 * @return mixed The decoded string or array
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
 	 */
 	public static function decodeEntities($varValue)
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
 		if (!$varValue)
 		{
 			return $varValue;
@@ -876,9 +971,13 @@ class Input
 	 * @param mixed $varValue A string or array
 	 *
 	 * @return mixed The string or array with the converted entities
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
 	 */
 	public static function preserveBasicEntities($varValue)
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
 		if (!$varValue)
 		{
 			return $varValue;
@@ -911,9 +1010,13 @@ class Input
 	 * @param mixed $varValue A string or array
 	 *
 	 * @return mixed The encoded string or array
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
 	 */
 	public static function encodeSpecialChars($varValue)
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
+
 		if (!$varValue)
 		{
 			return $varValue;
@@ -974,60 +1077,79 @@ class Input
 	 *
 	 * @return mixed The variable value
 	 */
+	public static function findGet($strKey)
+	{
+		if ($request = static::getRequest())
+		{
+			$arrGet = (isset(static::$setGet) && static::$setGet->offsetExists($request)) ? static::$setGet->offsetGet($request) : array();
+
+			if (\array_key_exists($strKey, $arrGet))
+			{
+				return $arrGet[$strKey];
+			}
+
+			return $request->query->get($strKey);
+		}
+
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
+
+		return $_GET[$strKey] ?? null;
+	}
+
+	/**
+	 * Fallback to the session form data if there is no post data
+	 *
+	 * @param string $strKey The variable name
+	 *
+	 * @return mixed The variable value
+	 */
 	public static function findPost($strKey)
 	{
-		if (isset($_POST[$strKey]))
+		if ($request = static::getRequest())
 		{
-			return $_POST[$strKey];
+			$arrPost = (isset(static::$setPost) && static::$setPost->offsetExists($request)) ? static::$setPost->offsetGet($request) : array();
+
+			if (\array_key_exists($strKey, $arrPost))
+			{
+				return $arrPost[$strKey];
+			}
+
+			return $request->request->get($strKey);
 		}
 
-		// Do not check for $request->hasPreviousSession() and early return here (see #3971)
-		if (isset($_SESSION['FORM_DATA'][$strKey]))
-		{
-			return ($strKey == 'FORM_SUBMIT') ? preg_replace('/^auto_/i', '', $_SESSION['FORM_DATA'][$strKey]) : $_SESSION['FORM_DATA'][$strKey];
-		}
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_POST with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
 
-		return null;
+		return $_POST[$strKey] ?? null;
 	}
 
 	/**
-	 * Clean the keys of the request arrays
+	 * Fallback to the session form data if there is no post data
 	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Input class is now static.
+	 * @param string $strKey The variable name
+	 *
+	 * @return mixed The variable value
 	 */
-	protected function __construct()
+	public static function findCookie($strKey)
 	{
-		static::initialize();
-	}
-
-	/**
-	 * Prevent cloning of the object (Singleton)
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Input class is now static.
-	 */
-	final public function __clone()
-	{
-	}
-
-	/**
-	 * Return the object instance (Singleton)
-	 *
-	 * @return Input The object instance
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Input class is now static.
-	 */
-	public static function getInstance()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Input::getInstance()" has been deprecated and will no longer work in Contao 5.0. The "Contao\Input" class is now static.');
-
-		if (static::$objInstance === null)
+		if ($request = static::getRequest())
 		{
-			static::$objInstance = new static();
+			$arrCookie = (isset(static::$setCookie) && static::$setCookie->offsetExists($request)) ? static::$setCookie->offsetGet($request) : array();
+
+			if (\array_key_exists($strKey, $arrCookie))
+			{
+				return $arrCookie[$strKey];
+			}
+
+			return $request->cookies->get($strKey);
 		}
 
-		return static::$objInstance;
+		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_COOKIE with the "%s" class has been deprecated and will no longer work in Contao 6.0. Make sure the request_stack has a request instead.', __CLASS__);
+
+		return $_COOKIE[$strKey] ?? null;
+	}
+
+	private static function getRequest(): Request|null
+	{
+		return System::getContainer()?->get('request_stack', ContainerInterface::NULL_ON_INVALID_REFERENCE)?->getCurrentRequest();
 	}
 }

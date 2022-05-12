@@ -355,6 +355,16 @@ class PageCandidatesTest extends TestCase
                 'legacy' => [],
             ],
         ];
+
+        // Ensure that 0 does not trigger the "AbstractCandidates::getCandidates cannot handle empty path" exception
+        yield [
+            '/0',
+            ['.html'],
+            [''],
+            [
+                'default' => [],
+            ],
+        ];
     }
 
     public function testIncluesPageWithAbsolutePath(): void
@@ -482,7 +492,7 @@ class PageCandidatesTest extends TestCase
     /**
      * @return PageRegistry&MockObject
      */
-    private function mockPageRegistry(?array $urlPrefixes, ?array $urlSuffixes): PageRegistry
+    private function mockPageRegistry(array|null $urlPrefixes, array|null $urlSuffixes): PageRegistry
     {
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry

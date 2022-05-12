@@ -17,9 +17,9 @@ use Contao\ContentProxy;
 
 class ContentElementReference extends FragmentReference
 {
-    public const TAG_NAME = 'contao.content_element';
-    public const GLOBALS_KEY = 'TL_CTE';
-    public const PROXY_CLASS = ContentProxy::class;
+    final public const TAG_NAME = 'contao.content_element';
+    final public const GLOBALS_KEY = 'TL_CTE';
+    final public const PROXY_CLASS = ContentProxy::class;
 
     public function __construct(ContentModel $model, string $section = 'main', array $templateProperties = [], bool $inline = false)
     {

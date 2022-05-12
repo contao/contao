@@ -105,7 +105,7 @@ class InitializeApplicationListener implements ContainerAwareInterface
     /**
      * Runs a command and returns the error (if any).
      */
-    private function runCommand(Command $command, InputInterface $input): ?string
+    private function runCommand(Command $command, InputInterface $input): string|null
     {
         if ($command instanceof ContainerAwareInterface) {
             $command->setContainer($this->container);

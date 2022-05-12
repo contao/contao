@@ -25,17 +25,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendLogoutListener
 {
-    private Security $security;
-    private RouterInterface $router;
-    private BaseLogoutUrlGenerator $urlGenerator;
-    private TranslatorInterface $translator;
-
-    public function __construct(Security $security, RouterInterface $router, BaseLogoutUrlGenerator $urlGenerator, TranslatorInterface $translator)
-    {
-        $this->security = $security;
-        $this->router = $router;
-        $this->urlGenerator = $urlGenerator;
-        $this->translator = $translator;
+    public function __construct(
+        private Security $security,
+        private RouterInterface $router,
+        private BaseLogoutUrlGenerator $urlGenerator,
+        private TranslatorInterface $translator,
+    ) {
     }
 
     public function __invoke(MenuEvent $event): void
