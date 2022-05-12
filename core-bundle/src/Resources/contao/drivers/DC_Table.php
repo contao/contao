@@ -770,6 +770,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
 				$this->intId = $id;
+
 				try
 				{
 					$this->cut(true);
@@ -1102,6 +1103,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
 				$this->intId = $id;
+
 				try
 				{
 					$id = $this->copy(true);
@@ -1542,6 +1544,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($ids as $id)
 			{
 				$this->intId = $id;
+
 				try
 				{
 					$this->delete(true);
