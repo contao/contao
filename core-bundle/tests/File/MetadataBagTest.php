@@ -138,7 +138,7 @@ class MetadataBagTest extends TestCase
     {
         yield 'contains non-string literal' => [
             ['en', 42],
-            'integer',
+            'int',
         ];
 
         yield 'contains objects' => [

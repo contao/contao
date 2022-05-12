@@ -30,17 +30,13 @@ class MetadataBag implements \ArrayAccess
     ) {
         foreach ($metadata as $item) {
             if (!$item instanceof Metadata) {
-                $type = \is_object($item) ? \get_class($item) : \gettype($item);
-
-                throw new \TypeError(sprintf('%s can only contain elements of type %s, got %s.', __CLASS__, Metadata::class, $type));
+                throw new \TypeError(sprintf('%s can only contain elements of type %s, got %s.', __CLASS__, Metadata::class, get_debug_type($item)));
             }
         }
 
         foreach ($defaultLocales as $locale) {
             if (!\is_string($locale)) {
-                $type = \is_object($locale) ? \get_class($locale) : \gettype($locale);
-
-                throw new \TypeError(sprintf('%s can only be constructed with default locales of type string, got %s.', __CLASS__, $type));
+                throw new \TypeError(sprintf('%s can only be constructed with default locales of type string, got %s.', __CLASS__, get_debug_type($locale)));
             }
         }
     }
