@@ -110,6 +110,8 @@ class DcaLoader extends Controller
 		// Set the ptable dynamically
 		$this->setDynamicPTable();
 
+		$GLOBALS['TL_DCA'][$this->strTable]['list']['operations'] = System::getContainer()->get('contao.data_container.operations_factory')->getForTable($this->strTable);
+
 		// HOOK: allow loading custom settings
 		if (isset($GLOBALS['TL_HOOKS']['loadDataContainer']) && \is_array($GLOBALS['TL_HOOKS']['loadDataContainer']))
 		{
