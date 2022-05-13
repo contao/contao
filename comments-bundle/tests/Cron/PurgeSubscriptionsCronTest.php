@@ -23,13 +23,13 @@ class PurgeSubscriptionsCronTest extends ContaoTestCase
     {
         $commentsNotifyModel = $this->createMock(CommentsNotifyModel::class);
         $commentsNotifyModel
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('delete')
         ;
 
         $commentsNotifyModelAdapter = $this->mockAdapter(['findExpiredSubscriptions']);
         $commentsNotifyModelAdapter
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('findExpiredSubscriptions')
             ->willReturn(new Collection([$commentsNotifyModel], CommentsNotifyModel::getTable()))
         ;
