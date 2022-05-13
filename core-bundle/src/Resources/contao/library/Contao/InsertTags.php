@@ -96,9 +96,8 @@ class InsertTags extends Controller
 
 		$container = System::getContainer();
 
-		// Backwards compatibility
 		// Preserve insert tags
-		if (!empty($GLOBALS['TL_CONFIG']['disableInsertTags']) || !$container->getParameter('contao.insert_tags.allowed_tags'))
+		if (!$container->getParameter('contao.insert_tags.allowed_tags'))
 		{
 			return new ChunkedText(array($strBuffer));
 		}
