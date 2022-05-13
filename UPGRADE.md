@@ -6,6 +6,11 @@
 
 The "show to guests only" function has been removed. Use the "protect page" function instead.
 
+### tl_content.ptable
+
+Contao no longer treats an empty `tl_content.ptable` column like it had been set to `tl_article`. Make
+sure to always set the `ptable` column.
+
 ### disableInsertTags
 
 The `disableInsertTags` config option has been removed. Use the `contao.insert_tags.allowed_tags`
