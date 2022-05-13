@@ -257,9 +257,8 @@ class HtmlAttributesTest extends TestCase
         $attributes->set('data-feature3', condition: 0);
         $attributes->set(
             'data-feature5',
-            condition: new class implements \Stringable 
-            { 
-                public function __toString(): string 
+            condition: new class() implements \Stringable {
+                public function __toString(): string
                 {
                     return '';
                 }
