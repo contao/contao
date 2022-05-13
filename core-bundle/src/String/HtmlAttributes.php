@@ -90,7 +90,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     public function set(string $name, \Stringable|bool|int|string|null $value = true, \Stringable|bool|int|string|null $condition = true): self
     {
-        if (!$condition) {
+        if (!$condition || ($condition instanceof \Stringable && !(string) $condition)) {
             return $this;
         }
 
