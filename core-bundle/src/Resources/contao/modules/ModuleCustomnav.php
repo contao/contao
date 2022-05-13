@@ -139,8 +139,6 @@ class ModuleCustomnav extends Module
 						}
 						catch (ExceptionInterface $exception)
 						{
-							$container->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objModel->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;
