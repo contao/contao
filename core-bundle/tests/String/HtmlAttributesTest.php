@@ -255,7 +255,16 @@ class HtmlAttributesTest extends TestCase
         $attributes->set('data-feature1', condition: null);
         $attributes->set('data-feature2', condition: false);
         $attributes->set('data-feature3', condition: 0);
-        $attributes->set('data-feature4', condition: '');
+        $attributes->set(
+            'data-feature5',
+            condition: new class implements \Stringable 
+            { 
+                public function __toString(): string 
+                {
+                    return '';
+                }
+            },
+        );
 
         $this->assertSame([], iterator_to_array($attributes));
 
