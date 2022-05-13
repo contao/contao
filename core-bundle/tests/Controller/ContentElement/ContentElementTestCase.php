@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
+use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -21,6 +22,9 @@ use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\InsertTags;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
@@ -33,6 +37,21 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class ContentElementTestCase extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([
+            DcaExtractor::class,
+            DcaLoader::class,
+            System::class,
+            Config::class,
+            InsertTags::class,
+        ]);
+
+        parent::tearDown();
+    }
+
     /**
      * @param array<string, mixed> $modelData
      * @param-out array<string, array<int|string, string>> $responseContextData
@@ -83,6 +102,7 @@ class ContentElementTestCase extends TestCase
 
         // Reset state
         unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_BODY']);
+
         $this->resetStaticProperties([Highlighter::class]);
 
         return $response;
