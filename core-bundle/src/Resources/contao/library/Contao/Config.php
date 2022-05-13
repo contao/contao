@@ -107,7 +107,6 @@ class Config
 		'disableRefererCheck'   => true,
 		'requestTokenWhitelist' => true,
 		'sessionTimeout'        => true,
-		'disableInsertTags'     => true,
 		'rootFiles'             => true,
 		'exampleWebsite'        => true,
 		'coreOnlyMode'          => true,
