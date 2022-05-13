@@ -255,8 +255,6 @@ class ModuleBreadcrumb extends Module
 		}
 		catch (ExceptionInterface $exception)
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $pageModel->id . ': ' . $exception->getMessage());
-
 			return '';
 		}
 	}
