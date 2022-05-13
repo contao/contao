@@ -55,6 +55,18 @@ services:
         tags:
             - controller.service_arguments
 
+    Contao\CoreBundle\Controller\ContentElement\CodeController:
+        tags:
+            - { name: contao.content_element, category: texts }
+
+    Contao\CoreBundle\Controller\ContentElement\HtmlController:
+        tags:
+            - { name: contao.content_element, category: texts }
+
+    Contao\CoreBundle\Controller\ContentElement\HeadlineController:
+        tags:
+            - { name: contao.content_element, category: texts }
+
     Contao\CoreBundle\Controller\ContentElement\MarkdownController:
         tags:
             - { name: contao.content_element, category: texts }
