@@ -1,0 +1,7 @@
+{% if as_overview %}
+    {% block overview %}
+        <pre>{{ html }}</pre>
+    {% endblock %}
+{% else %}
+    {% block html %}{{ html|insert_tag|raw }}{% endblock %}
+{% endif %}
