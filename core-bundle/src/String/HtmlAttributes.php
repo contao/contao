@@ -136,7 +136,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     public function unset(string $name, \Stringable|bool|int|string|null $condition = true): self
     {
-        if (!$condition) {
+        if (!$condition || ($condition instanceof \Stringable && !(string) $condition)) {
             return $this;
         }
 
