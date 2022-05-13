@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\NewsBundle\Tests\EventListener;
+namespace Contao\NewsBundle\Tests\Cron;
 
 use Contao\News;
 use Contao\NewsBundle\Cron\GenerateFeedsCron;
@@ -22,7 +22,7 @@ class GenerateFeedsCronTest extends ContaoTestCase
     {
         $newsUtil = $this->createMock(News::class);
         $newsUtil
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('generateFeeds')
         ;
 
