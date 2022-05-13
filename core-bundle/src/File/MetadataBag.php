@@ -30,13 +30,13 @@ class MetadataBag implements \ArrayAccess
     ) {
         foreach ($metadata as $item) {
             if (!$item instanceof Metadata) {
-                throw new \TypeError(sprintf('%s can only contain elements of type %s, got %s.', __CLASS__, Metadata::class, get_debug_type($item)));
+                throw new \TypeError(sprintf('The metadata bag can only contain elements of type %s, got %s.', Metadata::class, get_debug_type($item)));
             }
         }
 
         foreach ($defaultLocales as $locale) {
             if (!\is_string($locale)) {
-                throw new \TypeError(sprintf('%s can only be constructed with default locales of type string, got %s.', __CLASS__, get_debug_type($locale)));
+                throw new \TypeError(sprintf('The metadata bag can only be constructed with default locales of type string, got %s.', get_debug_type($locale)));
             }
         }
     }
@@ -101,11 +101,11 @@ class MetadataBag implements \ArrayAccess
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        throw new \RuntimeException(sprintf('Setting metadata to a %s is not supported.', __CLASS__));
+        throw new \RuntimeException('Setting metadata is not supported in this metadata bag.');
     }
 
     public function offsetUnset(mixed $offset): void
     {
-        throw new \RuntimeException(sprintf('Unsetting metadata from a %s is not supported.', __CLASS__));
+        throw new \RuntimeException('Unsetting metadata is not supported in this metadata bag.');
     }
 }

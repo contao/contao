@@ -100,6 +100,7 @@ class DbafsMetadataSubscriberTest extends TestCase
         $metadataBag = $event->getExtraMetadata()['metadata'];
 
         $this->assertInstanceOf(MetadataBag::class, $metadataBag);
+
         $this->assertSame(
             ['fr', 'de'],
             (new \ReflectionClass(MetadataBag::class))

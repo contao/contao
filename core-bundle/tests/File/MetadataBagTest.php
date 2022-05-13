@@ -84,7 +84,7 @@ class MetadataBagTest extends TestCase
         $bag = new MetadataBag([]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Setting metadata to a Contao\CoreBundle\File\MetadataBag is not supported.');
+        $this->expectExceptionMessage('Setting metadata is not supported in this metadata bag.');
 
         $bag['de'] = new Metadata([]);
     }
@@ -94,7 +94,7 @@ class MetadataBagTest extends TestCase
         $bag = new MetadataBag(['en' => new Metadata([])]);
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage('Unsetting metadata from a Contao\CoreBundle\File\MetadataBag is not supported.');
+        $this->expectExceptionMessage('Unsetting metadata is not supported in this metadata bag.');
 
         unset($bag['en']);
     }
@@ -105,7 +105,7 @@ class MetadataBagTest extends TestCase
     public function testPreventsConstructingWithInvalidObjects(array $elements, string $type): void
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage("Contao\\CoreBundle\\File\\MetadataBag can only contain elements of type Contao\\CoreBundle\\File\\Metadata, got $type.");
+        $this->expectExceptionMessage("The metadata bag can only contain elements of type Contao\\CoreBundle\\File\\Metadata, got $type.");
 
         new MetadataBag($elements);
     }
@@ -129,7 +129,7 @@ class MetadataBagTest extends TestCase
     public function testPreventsConstructingWithInvalidLocales(array $locales, string $type): void
     {
         $this->expectException(\TypeError::class);
-        $this->expectExceptionMessage("Contao\\CoreBundle\\File\\MetadataBag can only be constructed with default locales of type string, got $type.");
+        $this->expectExceptionMessage("The metadata bag can only be constructed with default locales of type string, got $type.");
 
         new MetadataBag([], $locales);
     }
