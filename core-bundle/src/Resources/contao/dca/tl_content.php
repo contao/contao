@@ -177,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'ptable' => array
 		(
-			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default 'tl_article'"
 		),
 		'sorting' => array
 		(
