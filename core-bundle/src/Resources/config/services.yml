@@ -128,7 +128,9 @@ services:
     contao.cron.purge_temp_folder:
         class: Contao\CoreBundle\Cron\PurgeTempFolderCron
         arguments:
-            - '@contao.framework'
+            - '@filesystem'
+            - '%kernel.project_dir%'
+            - '@monolog.logger.contao.cron'
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager

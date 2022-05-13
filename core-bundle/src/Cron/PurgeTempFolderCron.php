@@ -12,22 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Cron;
 
-use Contao\Automator;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\CronJob;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Finder\Finder;
 
 /**
  * @CronJob("daily")
  */
 class PurgeTempFolderCron
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private Filesystem $filesystem, private string $projectDir, private LoggerInterface|null $logger)
     {
     }
 
     public function __invoke(): void
     {
-        $this->framework->initialize();
-        $this->framework->createInstance(Automator::class)->purgeTempFolder();
+        $finder = Finder::create()->in(Path::join($this->projectDir, 'system/tmp'));
+
+        $this->filesystem->remove($finder->getIterator());
+
+        $this->logger?->info('Purged the temp folder');
     }
 }

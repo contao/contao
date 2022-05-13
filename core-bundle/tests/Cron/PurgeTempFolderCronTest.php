@@ -12,22 +12,42 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Cron;
 
-use Contao\Automator;
 use Contao\CoreBundle\Cron\PurgeTempFolderCron;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 
 class PurgeTempFolderCronTest extends ContaoTestCase
 {
-    public function testExecutesPurgeTempFolder(): void
+    public function testPurgesTheTempFolder(): void
     {
-        $automator = $this->createMock(Automator::class);
-        $automator
+        $projectDir = $this->getTempDir();
+        $tempDir = Path::join($projectDir, 'system/tmp');
+        $testFile = Path::join($tempDir, 'test.txt');
+
+        $fs = new Filesystem();
+        $fs->mkdir($tempDir);
+        $fs->touch($testFile);
+
+        (new Filesystem())->mkdir($tempDir);
+
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
             ->expects($this->once())
-            ->method('purgeTempFolder')
+            ->method('remove')
+            ->with($this->callback(
+                static function (\Traversable $files) use ($testFile) {
+                    foreach ($files as $file) {
+                        if (Path::normalize((string) $file) === $testFile) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            ))
         ;
 
-        $framework = $this->mockContaoFramework([], [Automator::class => $automator]);
-
-        (new PurgeTempFolderCron($framework))();
+        (new PurgeTempFolderCron($filesystem, $projectDir, null))();
     }
 }
