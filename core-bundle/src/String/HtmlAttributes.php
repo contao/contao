@@ -85,9 +85,15 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      * Sets a property and validates the name. If the given $value is false the
      * property will be unset instead. All values will be coerced to strings,
      * whereby null and true will result in an empty string.
+     *
+     * If a falsy $condition is specified, the method is a no-op.
      */
-    public function set(string $name, \Stringable|bool|int|string|null $value = true): self
+    public function set(string $name, \Stringable|bool|int|string|null $value = true, \Stringable|bool|int|string|null $condition = true): self
     {
+        if (!$condition) {
+            return $this;
+        }
+
         $name = strtolower($name);
 
         if (1 !== preg_match('/^[a-z](?:[_-]?[a-z0-9])*$/', $name)) {
@@ -112,18 +118,6 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * Enable the property $name if the $condition is truthy.
-     */
-    public function setIf(string $name, \Stringable|bool|int|string|null $condition): self
-    {
-        if ($condition) {
-            $this->set($name);
-        }
-
-        return $this;
-    }
-
-    /**
      * Set the property $name to $value if the value is truthy.
      */
     public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
@@ -137,22 +131,16 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
     /**
      * Unset the property $name.
+     *
+     * If a falsy $condition is specified, the method is a no-op.
      */
-    public function unset(string $name): self
+    public function unset(string $name, \Stringable|bool|int|string|null $condition = true): self
     {
-        unset($this->attributes[$name]);
-
-        return $this;
-    }
-
-    /**
-     * Disable the property $name if the $condition is truthy.
-     */
-    public function unsetIf(string $name, \Stringable|bool|int|string|null $condition): self
-    {
-        if ($condition) {
-            $this->unset($name);
+        if (!$condition) {
+            return $this;
         }
+
+        unset($this->attributes[$name]);
 
         return $this;
     }

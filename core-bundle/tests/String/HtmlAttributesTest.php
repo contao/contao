@@ -252,31 +252,31 @@ class HtmlAttributesTest extends TestCase
     {
         $attributes = new HtmlAttributes();
 
-        $attributes->setIf('data-feature1', null);
-        $attributes->setIf('data-feature2', false);
-        $attributes->setIf('data-feature3', 0);
-        $attributes->setIf('data-feature4', '');
+        $attributes->set('data-feature1', condition: null);
+        $attributes->set('data-feature2', condition: false);
+        $attributes->set('data-feature3', condition: 0);
+        $attributes->set('data-feature4', condition: '');
 
         $this->assertSame([], iterator_to_array($attributes));
 
-        $attributes->setIf('data-feature1', true);
-        $attributes->setIf('data-feature2', 1);
-        $attributes->setIf('data-feature3', 'true');
-        $attributes->setIf('data-feature4', '1');
+        $attributes->set('data-feature1', condition: true);
+        $attributes->set('data-feature2', condition: 1);
+        $attributes->set('data-feature3', condition: 'true');
+        $attributes->set('data-feature4', condition: '1');
 
         $this->assertSame(['data-feature1' => '', 'data-feature2' => '', 'data-feature3' => '', 'data-feature4' => ''], iterator_to_array($attributes));
 
-        $attributes->unsetIf('data-feature1', null);
-        $attributes->unsetIf('data-feature2', false);
-        $attributes->unsetIf('data-feature3', 0);
-        $attributes->unsetIf('data-feature4', '');
+        $attributes->unset('data-feature1', null);
+        $attributes->unset('data-feature2', false);
+        $attributes->unset('data-feature3', 0);
+        $attributes->unset('data-feature4', '');
 
         $this->assertSame(['data-feature1' => '', 'data-feature2' => '', 'data-feature3' => '', 'data-feature4' => ''], iterator_to_array($attributes));
 
-        $attributes->unsetIf('data-feature1', true);
-        $attributes->unsetIf('data-feature2', 1);
-        $attributes->unsetIf('data-feature3', 'true');
-        $attributes->unsetIf('data-feature4', '1');
+        $attributes->unset('data-feature1', true);
+        $attributes->unset('data-feature2', 1);
+        $attributes->unset('data-feature3', 'true');
+        $attributes->unset('data-feature4', '1');
 
         $this->assertSame([], iterator_to_array($attributes));
     }
