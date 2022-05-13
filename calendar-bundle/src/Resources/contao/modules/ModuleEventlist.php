@@ -210,7 +210,7 @@ class ModuleEventlist extends Events
 						continue;
 					}
 
-					$event['firstDay'] = $GLOBALS['TL_LANG']['DAYS'][date('w', $day)];
+					$event['firstDay'] = $GLOBALS['TL_LANG']['DAYS'][date('w', (int) $day)];
 					$event['firstDate'] = Date::parse($objPage->dateFormat, $day);
 
 					$arrEvents[] = $event;
