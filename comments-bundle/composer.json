@@ -26,8 +26,11 @@
         "symfony/http-kernel": "^5.4"
     },
     "require-dev": {
-        "contao/manager-plugin": "^2.0",
-        "symfony/http-client": "^5.4"
+        "contao/manager-plugin": "^2.3.1",
+        "contao/test-case": "self.version",
+        "phpunit/phpunit": "^9.5",
+        "symfony/http-client": "^5.4",
+        "symfony/phpunit-bridge": "^5.4"
     },
     "conflict": {
         "contao/core": "*",
