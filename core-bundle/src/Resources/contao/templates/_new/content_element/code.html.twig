@@ -14,7 +14,7 @@
     {% endblock %}
     <pre>
         {%- apply spaceless %}
-            {% if as_overview %}
+            {% if as_editor_view %}
                 {% block overview %}{{ code }}{% endblock %}
             {% else %}
                 {% block highlighted %}

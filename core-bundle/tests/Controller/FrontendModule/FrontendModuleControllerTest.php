@@ -179,7 +179,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $this->assertSame('html', $template['type']);
         $this->assertSame('frontend_module/html', $template['template']);
-        $this->assertFalse($template['as_overview']);
+        $this->assertFalse($template['as_editor_view']);
         $this->assertSame('main', $template['section']);
         $this->assertSame('main', $template['section']);
         $this->assertSame(['id' => 'foo-id', 'class' => 'foo-class'], $template['attributes']);

@@ -1,7 +1,7 @@
 <{{ headline.tagName }}>
 {%- block inner %}
     {%- apply spaceless %}
-        {% if as_overview %}
+        {% if as_editor_view %}
             {% block overview %}{{ headline.text|striptags }}{% endblock %}
         {% else %}
             {% block headline %}{{ headline.text|insert_tag_raw }}{% endblock %}

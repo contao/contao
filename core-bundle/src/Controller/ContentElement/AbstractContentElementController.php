@@ -67,7 +67,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
      * @param array<string>        $classes
      * @param array<string, mixed> $properties
      */
-    protected function addDefaultDataToTemplate(FragmentTemplate $template, array $modelData = [], string $section = 'main', array $classes = [], array $properties = [], bool $asOverview = false): void
+    protected function addDefaultDataToTemplate(FragmentTemplate $template, array $modelData = [], string $section = 'main', array $classes = [], array $properties = [], bool $asEditorView = false): void
     {
         if ($this->isLegacyTemplate($template->getName())) {
             // Legacy fragments
@@ -85,7 +85,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         $template->setData([
             'type' => $this->getType(),
             'template' => $template->getName(),
-            'as_overview' => $asOverview,
+            'as_editor_view' => $asEditorView,
             'data' => $modelData,
             'section' => $section,
             'properties' => $properties,

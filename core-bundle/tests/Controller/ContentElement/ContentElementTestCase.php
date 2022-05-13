@@ -56,7 +56,7 @@ class ContentElementTestCase extends TestCase
      * @param array<string, mixed> $modelData
      * @param-out array<string, array<int|string, string>> $responseContextData
      */
-    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asOverview = false, array|null &$responseContextData = null): Response
+    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null): Response
     {
         // Setup Twig environment
         $loader = $this->getContaoFilesystemLoader();
@@ -66,7 +66,7 @@ class ContentElementTestCase extends TestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
             ->method('isBackendRequest')
-            ->willReturn($asOverview)
+            ->willReturn($asEditorView)
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
