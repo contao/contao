@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
@@ -733,7 +734,7 @@ class InsertTags extends Controller
 
 				// Version
 				case 'version':
-					$arrCache[$strTag] = VERSION . '.' . BUILD;
+					$arrCache[$strTag] = ContaoCoreBundle::getVersion();
 					break;
 
 				// Request token
