@@ -56,21 +56,21 @@ class MaintenanceModeCommand extends Command
             $this->enable($input->getOption('template'), $input->getOption('templateVars'));
             $this->outputResult($input, $output, true, true);
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         if (\in_array($state, ['disable', 'off'], true)) {
             $this->disable();
             $this->outputResult($input, $output, false, true);
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $isEnabled = $this->filesystem->exists($this->maintenanceFilePath);
 
         $this->outputResult($input, $output, $isEnabled, false);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function enable(string $templateName, string $templateVars): void

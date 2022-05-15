@@ -37,7 +37,7 @@ class UnlockCommand extends Command
         if (!file_exists($this->lockFile)) {
             $output->writeln('<comment>The install tool was not locked.</comment>');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $fs = new Filesystem();

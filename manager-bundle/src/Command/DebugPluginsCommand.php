@@ -106,7 +106,7 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function listBundles(): int
@@ -136,7 +136,7 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function showPlugin(string $name, InputInterface $input): int
@@ -204,7 +204,7 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function findPlugin(string $name): array|null
