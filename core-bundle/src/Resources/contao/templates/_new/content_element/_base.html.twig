@@ -1,5 +1,6 @@
 {% if not searchable|default(true) %}<!-- indexer::stop -->{% endif %}
 
+{% block before %}{% endblock %}
 {% block wrapper %}
     {# Wrapper attributes: add the user defined id/classes, also add the template name (e.g. "content_element/text") as a class #}
     {% set attributes = attrs(attributes|default)
@@ -20,5 +21,6 @@
         {% endblock %}
     </{{ block('wrapper_tag') }}>
 {% endblock %}
+{% block after %}{% endblock %}
 
 {% if not searchable|default(true) %}<!-- indexer::continue -->{% endif %}
