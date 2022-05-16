@@ -22,13 +22,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class PreviewUrlCreateListenerTest extends ContaoTestCase
 {
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_CONFIG']);
-
-        parent::tearDown();
-    }
-
     public function testCreatesThePreviewUrl(): void
     {
         $requestStack = new RequestStack();

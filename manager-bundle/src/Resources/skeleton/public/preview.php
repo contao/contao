@@ -30,7 +30,7 @@ if (file_exists(__DIR__.'/../var/maintenance.html')) {
 
     http_response_code(503);
     header('Content-Type: text/html; charset=UTF-8');
-    header('Content-Length: '.strlen($contents));
+    header('Content-Length: '.strlen((string) $contents));
     header('Cache-Control: no-store');
 
     die($contents);

@@ -105,7 +105,7 @@ class TimePeriod extends Widget
 	 */
 	protected function isSelected($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
+		if (empty($this->varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
 		{
 			return $this->optionSelected(1, 1);
 		}
@@ -137,7 +137,7 @@ class TimePeriod extends Widget
 		{
 			$arrUnits[] = sprintf(
 				'<option value="%s"%s>%s</option>',
-				StringUtil::specialchars($arrUnit['value']),
+				self::specialcharsValue($arrUnit['value']),
 				$this->isSelected($arrUnit),
 				$arrUnit['label']
 			);
@@ -153,7 +153,7 @@ class TimePeriod extends Widget
 			$this->strName,
 			$this->strId,
 			($this->strClass ? ' ' . $this->strClass : ''),
-			StringUtil::specialchars($this->varValue['value']),
+			self::specialcharsValue($this->varValue['value']),
 			$this->getAttributes(),
 			$this->strName,
 			$this->getAttribute('disabled'),

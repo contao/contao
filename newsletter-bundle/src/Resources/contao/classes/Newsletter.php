@@ -14,6 +14,7 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database\Result;
 use Contao\NewsletterBundle\Event\SendNewsletterEvent;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Mime\Exception\RfcComplianceException;
 
 /**
@@ -102,7 +103,8 @@ class Newsletter extends Backend
 			$html = $this->convertRelativeUrls($html);
 		}
 
-		$objSession = System::getContainer()->get('session');
+		/** @var Session $objSession */
+		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
 		$token = Input::get('token');
 
 		// Send newsletter
@@ -111,12 +113,12 @@ class Newsletter extends Backend
 			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('request'));
 
 			// Preview
-			if (isset($_GET['preview']))
+			if (Input::get('preview') !== null)
 			{
 				// Check the e-mail address
 				if (!Validator::isEmail(Input::get('recipient', true)))
 				{
-					$_SESSION['TL_PREVIEW_MAIL_ERROR'] = true;
+					$objSession->set('tl_preview_mail_error', true);
 					$this->redirect($referer);
 				}
 
@@ -159,6 +161,8 @@ class Newsletter extends Backend
 
 			echo '<div style="font-family:Verdana,sans-serif;font-size:11px;line-height:16px;margin-bottom:12px">';
 
+			$arrSkippedRecipients = array();
+
 			// Send newsletter
 			if ($objRecipients->numRows > 0)
 			{
@@ -168,8 +172,8 @@ class Newsletter extends Backend
 					$this->Database->prepare("UPDATE tl_newsletter SET sent='1', date=? WHERE id=?")
 								   ->execute(time(), $objNewsletter->id);
 
-					$_SESSION['REJECTED_RECIPIENTS'] = array();
-					$_SESSION['SKIPPED_RECIPIENTS'] = array();
+					$objSession->set('rejected_recipients', array());
+					$objSession->set('skipped_recipients', array());
 				}
 
 				$time = time();
@@ -192,11 +196,13 @@ class Newsletter extends Backend
 					}
 					else
 					{
-						$_SESSION['SKIPPED_RECIPIENTS'][] = $objRecipients->email;
+						$arrSkippedRecipients[] = $objRecipients->email;
 						echo 'Skipping <strong>' . Idna::decodeEmail($objRecipients->email) . '</strong><br>';
 					}
 				}
 			}
+
+			$objSession->set('skipped_recipients', $arrSkippedRecipients);
 
 			echo '<div style="margin-top:12px">';
 
@@ -206,13 +212,14 @@ class Newsletter extends Backend
 				$objSession->set('tl_newsletter_send', null);
 
 				// Deactivate rejected addresses
-				if (!empty($_SESSION['REJECTED_RECIPIENTS']))
+				if ($objSession->has('rejected_recipients'))
 				{
-					$intRejected = \count($_SESSION['REJECTED_RECIPIENTS']);
+					$intRejected = \count($objSession->get('rejected_recipients', array()));
+
 					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['rejected'], $intRejected));
 					$intTotal -= $intRejected;
 
-					foreach ($_SESSION['REJECTED_RECIPIENTS'] as $strRecipient)
+					foreach ($objSession->get('rejected_recipients', array()) as $strRecipient)
 					{
 						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='' WHERE email=?")
 									   ->execute($strRecipient);
@@ -221,13 +228,14 @@ class Newsletter extends Backend
 					}
 				}
 
-				if ($intSkipped = \count($_SESSION['SKIPPED_RECIPIENTS']))
+				if ($intSkipped = \count($objSession->get('skipped_recipients', array())))
 				{
 					$intTotal -= $intSkipped;
 					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['skipped'], $intSkipped));
 				}
 
-				unset($_SESSION['REJECTED_RECIPIENTS'], $_SESSION['SKIPPED_RECIPIENTS']);
+				$objSession->remove('rejected_recipients');
+				$objSession->remove('skipped_recipients');
 
 				Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['tl_newsletter']['confirm'], $intTotal));
 
@@ -266,21 +274,21 @@ class Newsletter extends Backend
 <input type="hidden" name="id" value="' . Input::get('id') . '">
 <input type="hidden" name="token" value="' . $strToken . '">
 <table class="prev_header">
-  <tr class="row_0">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['from'] . '</td>
-    <td class="col_1">' . sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['from'] . '</td>
+    <td>' . sprintf($sprintf, Idna::decodeEmail($objNewsletter->sender)) . '</td>
   </tr>
-  <tr class="row_1">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['subject'][0] . '</td>
-    <td class="col_1">' . $objNewsletter->subject . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['subject'][0] . '</td>
+    <td>' . $objNewsletter->subject . '</td>
   </tr>
-  <tr class="row_2">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter_channel']['template'][0] . '</td>
-    <td class="col_1">' . ($objNewsletter->template ?: 'mail_default') . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter_channel']['template'][0] . '</td>
+    <td>' . ($objNewsletter->template ?: 'mail_default') . '</td>
   </tr>' . ((!empty($arrAttachments) && \is_array($arrAttachments)) ? '
-  <tr class="row_3">
-    <td class="col_0">' . $GLOBALS['TL_LANG']['tl_newsletter']['attachments'] . '</td>
-    <td class="col_1">' . implode(', ', $arrAttachments) . '</td>
+  <tr>
+    <td>' . $GLOBALS['TL_LANG']['tl_newsletter']['attachments'] . '</td>
+    <td>' . implode(', ', $arrAttachments) . '</td>
   </tr>' : '') . '
 </table>' . (!$objNewsletter->sendText ? '
 <div class="preview_html">
@@ -308,7 +316,7 @@ class Newsletter extends Backend
 </div>
 <div class="w50 widget">
   <h3><label for="ctrl_recipient">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][0] . '</label></h3>
-  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail($this->User->email) . '" class="tl_text" onfocus="Backend.getScrollOffset()">' . (isset($_SESSION['TL_PREVIEW_MAIL_ERROR']) ? '
+  <input type="text" name="recipient" id="ctrl_recipient" value="' . Idna::decodeEmail($this->User->email) . '" class="tl_text" onfocus="Backend.getScrollOffset()">' . ($objSession->has('tl_preview_mail_error') ? '
   <div class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['email'] . '</div>' : (($GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_newsletter']['sendPreviewTo'][1] . '</p>' : '')) . '
 </div>
@@ -326,7 +334,7 @@ class Newsletter extends Backend
 
 </form>';
 
-		unset($_SESSION['TL_PREVIEW_MAIL_ERROR']);
+		$objSession->remove('tl_preview_mail_error');
 
 		return $return;
 	}
@@ -372,7 +380,7 @@ class Newsletter extends Backend
 		}
 
 		// Newsletters with an unsubscribe header are less likely to be blocked (see #2174)
-		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=' . rawurlencode($GLOBALS['TL_LANG']['MSC']['unsubscribe']) . '>');
+		$objEmail->addHeader('List-Unsubscribe', '<mailto:' . $objNewsletter->sender . '?subject=Unsubscribe>');
 
 		return $objEmail;
 	}
@@ -413,7 +421,7 @@ class Newsletter extends Backend
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';
 		}
 
-		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html))
+		$event = (new SendNewsletterEvent($arrRecipient['email'], $objEmail->text, $objEmail->html ?? ''))
 			->setHtmlAllowed(!$objNewsletter->sendText)
 			->setNewsletterData($objNewsletter->row())
 			->setRecipientData($arrRecipient);
@@ -429,6 +437,10 @@ class Newsletter extends Backend
 		$objEmail->html = $event->isHtmlAllowed() ? $event->getHtml() : '';
 		$arrRecipient = array_merge($event->getRecipientData(), array('email' => $event->getRecipientAddress()));
 
+		/** @var Session $objSession */
+		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
+		$arrRejected = $objSession->get('rejected_recipients', array());
+
 		// Deactivate invalid addresses
 		try
 		{
@@ -436,14 +448,16 @@ class Newsletter extends Backend
 		}
 		catch (RfcComplianceException $e)
 		{
-			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
+			$arrRejected[] = $arrRecipient['email'];
 		}
 
 		// Rejected recipients
 		if ($objEmail->hasFailures())
 		{
-			$_SESSION['REJECTED_RECIPIENTS'][] = $arrRecipient['email'];
+			$arrRejected[] = $arrRecipient['email'];
 		}
+
+		$objSession->set('rejected_recipients', $arrRejected);
 
 		return true;
 	}
@@ -849,7 +863,7 @@ class Newsletter extends Backend
 				$strEmail = Input::post('email', true);
 
 				// E-mail address has changed
-				if (!empty($_POST) && $strEmail && $strEmail != $objUser->email)
+				if (Input::isPost() && $strEmail && $strEmail != $objUser->email)
 				{
 					$objCount = $this->Database->prepare("SELECT COUNT(*) AS count FROM tl_newsletter_recipients WHERE email=?")
 											   ->execute($strEmail);
@@ -891,7 +905,7 @@ class Newsletter extends Backend
 				}
 
 				// Check activation status
-				elseif (!empty($_POST) && Input::post('disable') != $objUser->disable)
+				elseif (Input::isPost() && Input::post('disable') != $objUser->disable)
 				{
 					$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=? WHERE email=?")
 								   ->execute((Input::post('disable') ? '' : 1), $objUser->email);
@@ -918,9 +932,14 @@ class Newsletter extends Backend
 
 	/**
 	 * Purge subscriptions that have not been activated within 24 hours
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 *             Use NewsletterRecipientsModel::findExpiredSubscriptions() instead.
 	 */
 	public function purgeSubscriptions()
 	{
+		trigger_deprecation('contao/newsletter-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use NewsletterRecipientsModel::findExpiredSubscriptions() instead.', __METHOD__);
+
 		$objRecipient = NewsletterRecipientsModel::findExpiredSubscriptions();
 
 		if ($objRecipient === null)
@@ -983,99 +1002,5 @@ class Newsletter extends Backend
 		natsort($arrNewsletters); // see #7864
 
 		return $arrNewsletters;
-	}
-
-	/**
-	 * Add newsletters to the indexer
-	 *
-	 * @param array   $arrPages
-	 * @param integer $intRoot
-	 * @param boolean $blnIsSitemap
-	 *
-	 * @return array
-	 */
-	public function getSearchablePages($arrPages, $intRoot=0, $blnIsSitemap=false)
-	{
-		$arrRoot = array();
-
-		if ($intRoot > 0)
-		{
-			$arrRoot = $this->Database->getChildRecords($intRoot, 'tl_page');
-		}
-
-		$arrProcessed = array();
-		$time = time();
-
-		// Get all channels
-		$objNewsletter = NewsletterChannelModel::findAll();
-
-		// Walk through each channel
-		if ($objNewsletter !== null)
-		{
-			while ($objNewsletter->next())
-			{
-				if (!$objNewsletter->jumpTo)
-				{
-					continue;
-				}
-
-				// Skip channels outside the root nodes
-				if (!empty($arrRoot) && !\in_array($objNewsletter->jumpTo, $arrRoot))
-				{
-					continue;
-				}
-
-				// Get the URL of the jumpTo page
-				if (!isset($arrProcessed[$objNewsletter->jumpTo]))
-				{
-					$objParent = PageModel::findWithDetails($objNewsletter->jumpTo);
-
-					// The target page does not exist
-					if ($objParent === null)
-					{
-						continue;
-					}
-
-					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time))
-					{
-						continue;
-					}
-
-					if ($blnIsSitemap)
-					{
-						// The target page is protected (see #8416)
-						if ($objParent->protected)
-						{
-							continue;
-						}
-
-						// The target page is exempt from the sitemap (see #6418)
-						if ($objParent->robots == 'noindex,nofollow')
-						{
-							continue;
-						}
-					}
-
-					// Generate the URL
-					$arrProcessed[$objNewsletter->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
-				}
-
-				$strUrl = $arrProcessed[$objNewsletter->jumpTo];
-
-				// Get the items
-				$objItem = NewsletterModel::findSentByPid($objNewsletter->id);
-
-				if ($objItem !== null)
-				{
-					while ($objItem->next())
-					{
-						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objItem->alias ?: $objItem->id));
-					}
-				}
-			}
-		}
-
-		return $arrPages;
 	}
 }

@@ -130,7 +130,7 @@ class DynamicIncludeTokenParserTest extends TestCase
     /**
      * @dataProvider provideTokens
      */
-    public function testParsesArguments(string $source, ?AbstractExpression $variables, bool $only, bool $ignoreMissing): void
+    public function testParsesArguments(string $source, AbstractExpression|null $variables, bool $only, bool $ignoreMissing): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
         $environment->addTokenParser(new DynamicIncludeTokenParser($this->createMock(TemplateHierarchyInterface::class)));

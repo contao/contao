@@ -43,7 +43,6 @@ class DbafsFactoryTest extends TestCase
 
         foreach ($expectedValues as $propertyName => $value) {
             $property = $reflection->getProperty($propertyName);
-            $property->setAccessible(true);
 
             $this->assertSame($value, $property->getValue($dbafs));
         }

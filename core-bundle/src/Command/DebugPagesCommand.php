@@ -28,9 +28,6 @@ class DebugPagesCommand extends Command
     protected static $defaultName = 'debug:pages';
     protected static $defaultDescription = 'Displays the page controller configuration.';
 
-    private ContaoFramework $framework;
-    private PageRegistry $pageRegistry;
-
     /**
      * @var array<RouteConfig>
      */
@@ -46,18 +43,12 @@ class DebugPagesCommand extends Command
      */
     private array $contentComposition = [];
 
-    public function __construct(ContaoFramework $framework, PageRegistry $pageRegistry)
+    public function __construct(private ContaoFramework $framework, private PageRegistry $pageRegistry)
     {
         parent::__construct();
-
-        $this->framework = $framework;
-        $this->pageRegistry = $pageRegistry;
     }
 
-    /**
-     * @param ContentCompositionInterface|bool $contentComposition
-     */
-    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, $contentComposition = true): void
+    public function add(string $type, RouteConfig $config, DynamicRouteInterface $routeEnhancer = null, ContentCompositionInterface|bool $contentComposition = true): void
     {
         $this->routeConfigs[$type] = $config;
 
@@ -97,7 +88,7 @@ class DebugPagesCommand extends Command
                 $config && $config->getPath() ? $config->getPath() : '*',
                 $config && $config->getUrlSuffix() ? $config->getUrlSuffix() : '*',
                 $contentComposition,
-                isset($this->routeEnhancers[$type]) ? \get_class($this->routeEnhancers[$type]) : '-',
+                isset($this->routeEnhancers[$type]) ? $this->routeEnhancers[$type]::class : '-',
                 $config ? $this->generateArray($config->getRequirements()) : '-',
                 $config ? $this->generateArray($config->getDefaults()) : '-',
                 $config ? $this->generateArray($config->getOptions()) : '-',
@@ -107,7 +98,7 @@ class DebugPagesCommand extends Command
         $io->title('Contao Pages');
         $io->table(['Type', 'Path', 'URL Suffix', 'Content Composition', 'Route Enhancer', 'Requirements', 'Defaults', 'Options'], $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function generateArray(array $values): string
@@ -115,7 +106,7 @@ class DebugPagesCommand extends Command
         $length = array_reduce(
             array_keys($values),
             static function ($carry, $item): int {
-                $length = \strlen($item);
+                $length = \strlen((string) $item);
 
                 return max($carry, $length);
             },

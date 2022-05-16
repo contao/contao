@@ -98,7 +98,6 @@ class ConfigurationTest extends TestCase
     {
         $params = [
             'contao' => [
-                'encryption_key' => 's3cr3t',
                 'upload_path' => $uploadPath,
             ],
         ];

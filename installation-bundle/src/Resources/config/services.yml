@@ -46,28 +46,3 @@ services:
 
     contao_installation.twig.ansi_extension:
         class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
-
-    # Backwards compatibility
-    contao.install_tool:
-        alias: contao_installation.install_tool
-        public: true
-        deprecated:
-            package: contao/installation-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao_installation.install_tool" instead.
-
-    contao.install_tool_user:
-        alias: contao_installation.install_tool_user
-        public: true
-        deprecated:
-            package: contao/installation-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao_installation.install_tool_user" instead.
-
-    contao.installer:
-        alias: contao_installation.database.installer
-        public: true
-        deprecated:
-            package: contao/installation-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao_installation.database.installer" instead.

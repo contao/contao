@@ -47,13 +47,9 @@ class ContentTable extends ContentElement
 		// Table header
 		if ($this->thead)
 		{
-			foreach ($rows[0] as $i=>$v)
+			foreach ($rows[0] as $v)
 			{
-				$arrHeader[] = array
-				(
-					'class' => 'head_' . $i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[0]) - 1)) ? ' col_last' : '') . (($i == 0 && $this->tleft) ? ' unsortable' : ''),
-					'content' => ((string) $v !== '' ? $this->nl2br($v) : '&nbsp;')
-				);
+				$arrHeader[] = (string) $v !== '' ? $this->nl2br($v) : '&nbsp;';
 			}
 
 			array_shift($rows);
@@ -65,39 +61,9 @@ class ContentTable extends ContentElement
 		// Table body
 		for ($j=0; $j<$limit; $j++)
 		{
-			$class_tr = '';
-
-			if ($j == 0)
+			foreach ($rows[$j] as $v)
 			{
-				$class_tr .= ' row_first';
-			}
-
-			if ($j == ($limit - 1))
-			{
-				$class_tr .= ' row_last';
-			}
-
-			$class_eo = (($j % 2) == 0) ? ' odd' : ' even';
-
-			foreach ($rows[$j] as $i=>$v)
-			{
-				$class_td = '';
-
-				if ($i == 0)
-				{
-					$class_td .= ' col_first';
-				}
-
-				if ($i == (\count($rows[$j]) - 1))
-				{
-					$class_td .= ' col_last';
-				}
-
-				$arrBody['row_' . $j . $class_tr . $class_eo][] = array
-				(
-					'class' => 'col_' . $i . $class_td,
-					'content' => ((string) $v !== '' ? $this->nl2br($v) : '&nbsp;')
-				);
+				$arrBody[$j][] = (string) $v !== '' ? $this->nl2br($v) : '&nbsp;';
 			}
 		}
 
@@ -106,13 +72,9 @@ class ContentTable extends ContentElement
 		// Table footer
 		if ($this->tfoot)
 		{
-			foreach ($rows[(\count($rows)-1)] as $i=>$v)
+			foreach ($rows[(\count($rows)-1)] as $v)
 			{
-				$arrFooter[] = array
-				(
-					'class' => 'foot_' . $i . (($i == 0) ? ' col_first' : '') . (($i == (\count($rows[(\count($rows)-1)]) - 1)) ? ' col_last' : ''),
-					'content' => ((string) $v !== '' ? $this->nl2br($v) : '&nbsp;')
-				);
+				$arrFooter[] = (string) $v !== '' ? $this->nl2br($v) : '&nbsp;';
 			}
 		}
 

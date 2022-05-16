@@ -32,12 +32,8 @@ class FilesyncCommand extends Command
     protected static $defaultName = 'contao:filesync';
     protected static $defaultDescription = 'Synchronizes the registered DBAFS with the virtual filesystem.';
 
-    private DbafsManager $dbafsManager;
-
-    public function __construct(DbafsManager $dbafsManager)
+    public function __construct(private DbafsManager $dbafsManager)
     {
-        $this->dbafsManager = $dbafsManager;
-
         parent::__construct();
     }
 
@@ -58,7 +54,7 @@ class FilesyncCommand extends Command
 
         (new SymfonyStyle($input, $output))->success("Synchronization complete in {$timeTotal}s.");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function renderStats(ChangeSet $changeSet, OutputInterface $output): void

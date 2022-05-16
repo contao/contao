@@ -151,8 +151,8 @@ abstract class Module extends Frontend
 		}
 
 		$arrHeadline = StringUtil::deserialize($objModule->headline);
-		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] ?? '' : $arrHeadline;
+		$this->hl = $arrHeadline['unit'] ?? 'h1';
 		$this->strColumn = $strColumn;
 	}
 
@@ -315,11 +315,6 @@ abstract class Module extends Frontend
 				$objSubpage->domain = $host;
 			}
 
-			if ($objSubpage->tabindex > 0)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
-			}
-
 			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
 			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
 			{
@@ -372,8 +367,6 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;
@@ -385,8 +378,6 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;
@@ -394,15 +385,6 @@ abstract class Module extends Frontend
 
 				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);
 			}
-		}
-
-		// Add classes first and last
-		if (!empty($items))
-		{
-			$last = \count($items) - 1;
-
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
 		}
 
 		$objTemplate->items = $items;
@@ -460,16 +442,10 @@ abstract class Module extends Frontend
 		$row['link'] = $objSubpage->title;
 		$row['href'] = $href;
 		$row['rel'] = '';
-		$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0); // backwards compatibility
 		$row['target'] = '';
 		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
 		$arrRel = array();
-
-		if (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0)
-		{
-			$arrRel[] = 'nofollow';
-		}
 
 		// Override the link target
 		if ($objSubpage->type == 'redirect' && $objSubpage->target)
@@ -498,7 +474,7 @@ abstract class Module extends Frontend
 	 *
 	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
 	 */
-	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
+	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): array|null
 	{
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');

@@ -147,7 +147,7 @@ class FigureTest extends TestCase
     /**
      * @dataProvider provideLinkAttributesAndPreconditions
      */
-    public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, ?string $expectedHref): void
+    public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, string|null $expectedHref): void
     {
         $image = $this->createMock(ImageResult::class);
 
@@ -155,7 +155,7 @@ class FigureTest extends TestCase
 
         $figure = new Figure($image, $metadata, $attributes, $lightbox);
 
-        $this->assertSame($expectedAttributes, $figure->getLinkAttributes());
+        $this->assertSame($expectedAttributes, iterator_to_array($figure->getLinkAttributes()));
         $this->assertSame($expectedHref ?? '', $figure->getLinkHref());
         $this->assertSame($expectedHref, $figure->getLinkAttributes(true)['href'] ?? null);
     }

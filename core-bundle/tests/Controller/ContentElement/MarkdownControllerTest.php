@@ -52,8 +52,8 @@ class MarkdownControllerTest extends TestCase
     {
         $expectedHtml = <<<'HTML'
             <h1>Headline</h1>
-            &lt;iframe src&#61;&#34;https://example.com&#34;&#62;&lt;/iframe&#62;
-            &lt;script&#62;I might be evil.&lt;/script&#62;
+            &#60;iframe src&#61;&#34;https://example.com&#34;&#62;&#60;/iframe&#62;
+            &#60;script&#62;I might be evil.&#60;/script&#62;
             <img>
             <video controls="">
                 <source src="contao.mp4" type="video/mp4">

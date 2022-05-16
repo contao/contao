@@ -38,7 +38,7 @@ class ModuleChangePassword extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -93,7 +93,6 @@ class ModuleChangePassword extends Module
 		$arrFields['newPassword']['name'] = 'password';
 		$arrFields['newPassword']['label'] = &$GLOBALS['TL_LANG']['MSC']['newPassword'];
 
-		$row = 0;
 		$strFields = '';
 		$doNotSubmit = false;
 		$objMember = MemberModel::findByPk($this->User->id);
@@ -106,7 +105,7 @@ class ModuleChangePassword extends Module
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
 		$objVersions->initialize();
 
 		/** @var FormPassword $objNewPassword */
@@ -127,17 +126,7 @@ class ModuleChangePassword extends Module
 
 			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
-
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $row . (($row == 0) ? ' row_first' : '') . ((($row % 2) == 0) ? ' even' : ' odd');
-
-			// Increase the row count if it is a password field
-			if ($objWidget instanceof FormPassword)
-			{
-				$objWidget->rowClassConfirm = 'row_' . ++$row . ((($row % 2) == 0) ? ' even' : ' odd');
-			}
-
-			++$row;
 
 			// Store the widget objects
 			$strVar  = 'obj' . ucfirst($strKey);
@@ -217,7 +206,6 @@ class ModuleChangePassword extends Module
 
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['changePassword']);
-		$this->Template->rowLast = 'row_' . $row . ' row_last' . ((($row % 2) == 0) ? ' even' : ' odd');
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }

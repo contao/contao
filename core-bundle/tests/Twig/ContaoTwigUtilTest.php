@@ -20,7 +20,7 @@ class ContaoTwigUtilTest extends TestCase
     /**
      * @dataProvider provideContaoNames
      */
-    public function testParseContaoNameSplitsNames(string $name, string $expectedNamespace, ?string $expectedShortName): void
+    public function testParseContaoNameSplitsNames(string $name, string $expectedNamespace, string|null $expectedShortName): void
     {
         [$namespace, $shortName] = ContaoTwigUtil::parseContaoName($name);
 

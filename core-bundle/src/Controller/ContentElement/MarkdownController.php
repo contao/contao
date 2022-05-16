@@ -87,7 +87,7 @@ class MarkdownController extends AbstractContentElementController
         return new MarkdownConverter($environment);
     }
 
-    private function getContentFromFile(?string $file): string
+    private function getContentFromFile(string|null $file): string
     {
         if (!$file) {
             return '';

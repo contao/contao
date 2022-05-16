@@ -26,13 +26,9 @@ class VersionCommand extends Command
     protected static $defaultName = 'version';
     protected static $defaultDescription = 'Gets the Contao Manager API version and features.';
 
-    private Application $application;
-
-    public function __construct(Application $application)
+    public function __construct(private Application $application)
     {
         parent::__construct();
-
-        $this->application = $application;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

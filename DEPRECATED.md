@@ -1,11 +1,5 @@
 # Deprecated features
 
-## $GLOBALS['TL_AUTO_ITEM']
-
-The `$GLOBALS['TL_AUTO_ITEM']` variable has been deprecated and will be removed
-together with the `useAutoItem` setting in Contao 5.0. Using auto items can no
-longer be disabled then.
-
 ## BE_USER_LOGGED_IN
 
 The constant `BE_USER_LOGGED_IN` has been deprecated and will be removed in
@@ -188,43 +182,14 @@ and will no longer work in Contao 5.0. Use `$this->pages` instead.
 The constants `TL_SCRIPT_URL` and `TL_PLUGINS_URL` have been deprecated in
 Contao 4.0 and will be removed in Contao 5.0. Use `TL_ASSETS_URL` instead.
 
-## UnresolvableDependenciesException
-
-The `UnresolvableDependenciesException` class has been deprecated in Contao 4.0
-and will be removed in Contao 5.0.
-
 ## $this->language in TinyMCE config files
 
 Using `$this->language` in TinyMCE configuration files has been deprecated in
 Contao 4.0 and will no longer work in Contao 5.0. Use the static method
 `Backend::getTinyMceLanguage()` instead.
 
-## $GLOBALS['TL_LANGUAGE'] and $_SESSION['TL_LANGUAGE']
-
-Using the globals `$GLOBALS['TL_LANGUAGE']` and `$_SESSION['TL_LANGUAGE']` has
-been deprecated in Contao 4.0 and will no longer work in Contao 5.0. Use the
-locale from the request object instead:
-
 ```php
 $locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
-```
-
-## $GLOBALS['TL_LANG']['LNG']
-
-Using the globals `$GLOBALS['TL_LANG']['LNG']` has been deprecated in Contao
-4.12 and will no longer work in Contao 5.0. Use the locales service instead:
-
-```php
-$locales = System::getContainer()->get('contao.intl.locales')->getLocales();
-```
-
-## $GLOBALS['TL_LANG']['CNT']
-
-Using the globals `$GLOBALS['TL_LANG']['CNT']` has been deprecated in Contao
-4.12 and will no longer work in Contao 5.0. Use the countries service instead:
-
-```php
-$countries = System::getContainer()->get('contao.intl.countries')->getCountries();
 ```
 
 ## Request.Mixed (JavaScript)
@@ -251,16 +216,6 @@ $session = System::getContainer()->get('session');
 
 The `Widget::addSubmit()` method has been deprecated in Contao 4.0 and will be
 removed in Contao 5.0. It already does not add a submit button anymore.
-
-## Content elements
-
-For reasons of backwards compatibility, it is currently not required to set the
-`tl_content.ptable` column; it will treat an empty column like it had been set
-to `tl_article`.
-
-This behavior has been deprecated in Contao 4.0 and will no longer be supported
-in Contao 5.0. If you have developed an extension which creates content
-elements, make sure to always set the `ptable` column.
 
 ## Contao class loader
 
@@ -342,40 +297,3 @@ has been set up for each one instead (see UPGRADE.md).
 
 Using the old paths is deprecated and will no longer work in Contao 5.0.
 
-## database.sql files
-
-Using `database.sql` files to set up tables is deprecated in Contao 4.0 and
-will no longer be supported in Contao 5.0. Use DCA files instead:
-
-```php
-$GLOBALS['TL_DCA']['tl_example'] = array
-(
-	'config' => array
-	(
-		'sql' => array
-		(
-			'keys' => array
-			(
-				'id' => 'primary',
-				'name' => 'unique'
-			)
-		)
-	),
-	'fields' => array
-	(
-		'id' => array
-		(
-			'sql' => "int(10) unsigned NOT NULL auto_increment"
-		),
-		'name' => array
-		(
-			'sql' => "varchar(32) NULL"
-		),
-		'value' => array
-		(
-			'sql' => "varchar(32) NOT NULL default ''"
-		)
-	)
-);
-
-```

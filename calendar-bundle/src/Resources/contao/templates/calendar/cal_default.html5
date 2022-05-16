@@ -13,10 +13,10 @@
   </tr>
 </thead>
 <tbody>
-  <?php foreach ($this->weeks as $class => $week): ?>
-    <tr class="<?= $class ?>">
+  <?php foreach ($this->weeks as $week): ?>
+    <tr>
       <?php foreach ($week as $day): ?>
-        <td class="<?= $day['class'] ?>">
+        <td<?php if (!empty($day['class'])): ?> class="<?= $day['class'] ?>"<?php endif; ?>>
           <div class="header"><?= $day['label'] ?></div>
           <?php foreach ($day['events'] as $event): ?>
             <div class="event cal_<?= $event['parent'] ?><?= $event['class'] ?>">
