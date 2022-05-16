@@ -1,16 +1,23 @@
 {% if not searchable|default(true) %}<!-- indexer::stop -->{% endif %}
 
 {% block wrapper %}
-<{% block wrapper_tag %}div{% endblock %}{% block attributes %}{{ attributes.addClass(template) }}{% endblock %}>
-    {% block inner %}
-        {% block headline %}
-            {% if headline.text %}
-                {% include "@Contao/component/_headline.html.twig" %}
-            {% endif %}
-        {% endblock %}
+    {# Wrapper attributes: add the user defined id/classes, also add the template name (e.g. "content_element/text") as a class #}
+    {% set attributes = attrs(attributes|default)
+        .setIfExists('id', html_id)
+        .addClass(html_classes, template)
+    %}
 
-        {% block content %}{% endblock %}
-    {% endblock %}
+    {# Wrapper element around headline and content #}
+    <{% block wrapper_tag %}div{% endblock %}{% block attributes %}{{ attributes }}{% endblock %}>
+        {% block inner %}
+            {% block headline %}
+                {% if headline.text %}
+                    {% include "@Contao/component/_headline.html.twig" with {headline} only %}
+                {% endif %}
+            {% endblock %}
+
+            {% block content %}{% endblock %}
+        {% endblock %}
     </{{ block('wrapper_tag') }}>
 {% endblock %}
 

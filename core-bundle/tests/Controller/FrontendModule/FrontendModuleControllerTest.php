@@ -174,7 +174,7 @@ class FrontendModuleControllerTest extends TestCase
             'cssID' => serialize(['foo-id', 'foo-class']),
         ]);
 
-        $response = $controller(new Request(), $model, 'main');
+        $response = $controller(new Request(), $model, 'main', ['bar-class', 'baz-class']);
         $template = json_decode($response->getContent(), true);
 
         $this->assertSame('html', $template['type']);
@@ -182,7 +182,8 @@ class FrontendModuleControllerTest extends TestCase
         $this->assertFalse($template['as_editor_view']);
         $this->assertSame('main', $template['section']);
         $this->assertSame('main', $template['section']);
-        $this->assertSame(['id' => 'foo-id', 'class' => 'foo-class'], $template['attributes']);
+        $this->assertSame('foo-id', $template['html_id']);
+        $this->assertSame('foo-class bar-class baz-class', $template['html_classes']);
         $this->assertSame(['text' => 'foo', 'tagName' => 'h3'], $template['headline']);
         $this->assertSame($model->row(), $template['data']);
     }

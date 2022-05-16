@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\Controller\AbstractFragmentController;
-use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,9 +88,8 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             'data' => $modelData,
             'section' => $section,
             'properties' => $properties,
-            'attributes' => (new HtmlAttributes())
-                ->setIfExists('id', $attributesData[0] ?? null)
-                ->addClass($attributesData[1] ?? '', ...$classes),
+            'html_id' => $attributesData[0] ?? null,
+            'html_classes' => trim(($attributesData[1] ?? '').' '.implode(' ', $classes)),
             'headline' => [
                 'text' => $headlineData['value'] ?? '',
                 'tagName' => $headlineData['unit'] ?? 'h1',
