@@ -138,12 +138,13 @@ class Input
 	/**
 	 * Return a $_GET variable
 	 *
-	 * @param string  $strKey            The variable name
-	 * @param boolean $blnDecodeEntities If true, all entities will be decoded
+	 * @param string  $strKey                      The variable name
+	 * @param boolean $blnDecodeEntities           If true, all entities will be decoded
+	 * @param boolean $blnKeepUnusedRouteParameter If true, the route parameter will not be marked as used (see #4277)
 	 *
 	 * @return array|string|null The cleaned variable value
 	 */
-	public static function get($strKey, $blnDecodeEntities=false)
+	public static function get($strKey, $blnDecodeEntities=false, $blnKeepUnusedRouteParameter=false)
 	{
 		$varValue = static::findGet($strKey);
 
@@ -153,11 +154,7 @@ class Input
 		}
 
 		// Mark the parameter as used (see #4277)
-		if (\func_num_args() > 2 && func_get_arg(2))
-		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using %s() with the third parameter "$blnKeepUnused" has been deprecated and will no longer work in Contao 6.0.', __METHOD__);
-		}
-		else
+		if (!$blnKeepUnusedRouteParameter)
 		{
 			unset(self::$arrUnusedRouteParameters[$strKey]);
 		}
