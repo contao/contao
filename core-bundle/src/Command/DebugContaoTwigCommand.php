@@ -82,7 +82,7 @@ class DebugContaoTwigCommand extends Command
         $io->title('Template hierarchy');
         $io->table(['Identifier', 'Effective logical name', 'Path'], $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function getThemeSlug(InputInterface $input): string|null

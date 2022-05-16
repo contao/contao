@@ -80,7 +80,7 @@ class MigrateCommand extends Command
             ]);
         }
 
-        return 1;
+        return Command::FAILURE;
     }
 
     private function backup(InputInterface $input): void
@@ -147,22 +147,22 @@ class MigrateCommand extends Command
         }
 
         if (!$this->executeMigrations($dryRun, $asJson, $specifiedHash)) {
-            return 1;
+            return Command::FAILURE;
         }
 
         if (!$this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash)) {
-            return 1;
+            return Command::FAILURE;
         }
 
         if (!$dryRun && null === $specifiedHash && !$this->executeMigrations($dryRun, $asJson)) {
-            return 1;
+            return Command::FAILURE;
         }
 
         if (!$asJson) {
             $this->io->success('All migrations completed.');
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
