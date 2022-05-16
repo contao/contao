@@ -1,11 +1,11 @@
-<{{ headline.tagName }}>
+<{{ tagName }}>
 {%- block inner %}
     {%- apply spaceless %}
         {% if as_editor_view %}
-            {% block overview %}{{ headline.text|striptags }}{% endblock %}
+            {% block overview %}{{ text|striptags }}{% endblock %}
         {% else %}
-            {% block headline %}{{ headline.text|insert_tag_raw }}{% endblock %}
+            {% block headline %}{{ text|insert_tag_raw }}{% endblock %}
         {% endif %}
     {% endapply -%}
 {% endblock -%}
-</{{ headline.tagName }}>
+</{{ tagName }}>
