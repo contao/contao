@@ -2,7 +2,8 @@
 
 {% set highlighter_css_file = 'vendor/scrivo/highlight_php/styles/foundation.css' %}
 
-{% block content %}
+{% block before %}
+    {{ parent() }}
     {% block style %}
         {% add 'highlighter_css' to head %}
             {# Lazy load styles, see https://web.dev/defer-non-critical-css/ #}
@@ -12,6 +13,9 @@
             </noscript>
         {% endadd %}
     {% endblock %}
+{% endblock %}
+
+{% block content %}
     <pre>
         {%- apply spaceless %}
             {% if as_editor_view %}
