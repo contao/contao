@@ -1,4 +1,4 @@
-<{{ tagName }}>
+<{{ tagName }}{% block attributes %}{{ attributes|default }}{% endblock%}>
 {%- block inner %}
     {%- apply spaceless %}
         {% if as_editor_view %}
