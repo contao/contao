@@ -255,6 +255,7 @@ class HtmlAttributesTest extends TestCase
         $attributes->set('data-feature1', condition: null);
         $attributes->set('data-feature2', condition: false);
         $attributes->set('data-feature3', condition: 0);
+
         $attributes->set(
             'data-feature5',
             condition: new class() implements \Stringable {
