@@ -1469,9 +1469,6 @@
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
       </trans-unit>
-      <trans-unit id="MSC.wordWrap">
-        <source>Word wrap</source>
-      </trans-unit>
       <trans-unit id="MSC.saveAlert">
         <source>ATTENTION! You will lose any unsaved changes. Continue?</source>
       </trans-unit>
