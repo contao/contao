@@ -57,19 +57,19 @@ class DeprecationsNodeVisitor extends AbstractNodeVisitor
 
         $suggestedTransformation = sprintf('"{{ \'{{%1$s}}\' }}" -> "{{ insert_tag(\'%1$s\') }}".', $matches[1]);
 
-        $message = 'You should not rely on insert tags being replaced in the rendered HTML. '.
-            'This behavior will gradually be phased out in Contao 5 and will no longer work in Contao 6.0. '.
-            "Explicitly replace insert tags with the \"insert_tag\" function instead: $suggestedTransformation";
+        $message = 'You should not rely on insert tags being replaced in the rendered HTML. '
+            .'This behavior will gradually be phased out in Contao 5 and will no longer work in Contao 6.0. '
+            .'Explicitly replace insert tags with the "insert_tag" function instead: '.$suggestedTransformation;
 
-        return $this->addDeprecation($node, '4.13', $message);
+        return $this->addDeprecation($node, $message);
     }
 
-    private function addDeprecation(Node $node, string $version, string $message): Node
+    private function addDeprecation(Node $node, string $message): Node
     {
         $line = $node->getTemplateLine();
 
         $deprecatedNode = new DeprecatedNode(
-            new ConstantExpression("Since contao/core-bundle $version: $message", $line),
+            new ConstantExpression("Since contao/core-bundle 4.13: $message", $line),
             $line,
             $node->getNodeTag()
         );
