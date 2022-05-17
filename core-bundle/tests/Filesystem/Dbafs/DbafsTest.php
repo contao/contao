@@ -29,7 +29,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
-use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -587,7 +586,7 @@ class DbafsTest extends TestCase
     {
         $getFilesystem = function (): VirtualFilesystemInterface {
             $filesystem = new VirtualFilesystem(
-                $this->getMountManagerWithRootAdapter(new InMemoryFilesystemAdapter()),
+                $this->getMountManagerWithRootAdapter(),
                 $this->createMock(DbafsManager::class)
             );
 
@@ -887,7 +886,7 @@ class DbafsTest extends TestCase
     public function testSyncWithLastModified(): void
     {
         $filesystem = new VirtualFilesystem(
-            $this->getMountManagerWithRootAdapter(new InMemoryFilesystemAdapter()),
+            $this->getMountManagerWithRootAdapter(),
             $this->createMock(DbafsManager::class)
         );
 
@@ -1162,7 +1161,7 @@ class DbafsTest extends TestCase
         ;
 
         $filesystem = new VirtualFilesystem(
-            $this->getMountManagerWithRootAdapter(new InMemoryFilesystemAdapter()),
+            $this->getMountManagerWithRootAdapter(),
             $this->createMock(DbafsManager::class)
         );
 
@@ -1231,7 +1230,7 @@ class DbafsTest extends TestCase
         }
 
         $filesystem = new VirtualFilesystem(
-            $this->getMountManagerWithRootAdapter(new InMemoryFilesystemAdapter()),
+            $this->getMountManagerWithRootAdapter(),
             $this->createMock(DbafsManager::class)
         );
 
@@ -1250,9 +1249,9 @@ class DbafsTest extends TestCase
         $this->assertSame('valid.txt', $changeSet->getItemsToCreate()[0][ChangeSet::ATTR_PATH]);
     }
 
-    private function getMountManagerWithRootAdapter(FilesystemAdapter $adapter): MountManager
+    private function getMountManagerWithRootAdapter(): MountManager
     {
-        return (new MountManager())->mount($adapter);
+        return (new MountManager())->mount(new InMemoryFilesystemAdapter());
     }
 
     private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null, EventDispatcherInterface $eventDispatcher = null): Dbafs

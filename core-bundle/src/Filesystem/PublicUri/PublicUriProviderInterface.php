@@ -18,7 +18,7 @@ use Psr\Http\Message\UriInterface;
 interface PublicUriProviderInterface
 {
     /**
-     * Return a public URI for this resource or null if this provider does not
+     * Returns a public URI for this resource or null if this provider does not
      * support the given adapter/path/options.
      */
     public function getUri(FilesystemAdapter $adapter, string $adapterPath, ?OptionsInterface $options): ?UriInterface;
