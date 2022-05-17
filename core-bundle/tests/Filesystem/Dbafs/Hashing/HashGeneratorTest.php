@@ -118,7 +118,7 @@ class HashGeneratorTest extends TestCase
     private function getDemoFilesystem(): VirtualFilesystemInterface
     {
         $filesystem = new VirtualFilesystem(
-            new MountManager(new InMemoryFilesystemAdapter()),
+            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
             $this->createMock(DbafsManager::class)
         );
 
