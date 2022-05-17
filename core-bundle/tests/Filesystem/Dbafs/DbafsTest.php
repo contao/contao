@@ -572,9 +572,6 @@ class DbafsTest extends TestCase
 
         $dbafs = $this->getDbafs($connection, $filesystem);
 
-        // Lower max file size, so that we can test the limit without excessive memory usage
-        $dbafs->setMaxFileSize(100);
-
         $changeSet = $dbafs->computeChangeSet(...((array) $paths));
 
         $this->assertSame($expected->getItemsToCreate(), $changeSet->getItemsToCreate(), 'items to create');
@@ -754,18 +751,14 @@ class DbafsTest extends TestCase
         ];
 
         $filesystem7 = $getFilesystem();
-        $filesystem7->write('large', str_pad('A', 100));
-        $filesystem7->write('too-large', str_pad('A', 101));
         $filesystem7->write('bar/'.Dbafs::FILE_MARKER_EXCLUDED, '');
         $filesystem7->write('foo/'.Dbafs::FILE_MARKER_PUBLIC, '');
 
-        yield 'large and ignored files' => [
+        yield 'ignored files' => [
             $filesystem7,
             '',
             new ChangeSet(
-                [
-                    ['hash' => '7866a94bb1745dee3a9601b4a5518b71', 'path' => 'large', 'type' => ChangeSet::TYPE_FILE],
-                ],
+                [],
                 [],
                 [
                     'bar' => ChangeSet::TYPE_DIRECTORY,
