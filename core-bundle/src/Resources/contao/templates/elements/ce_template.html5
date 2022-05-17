@@ -2,10 +2,10 @@
 
 <?php $this->block('content'); ?>
 
-  <?php foreach ($this->data as $key => $entry): ?>
+  <?php foreach ($this->data as $entry): ?>
     <dl>
-      <dt><?= $key ?></dt>
-      <dd><?= $entry ?></dd>
+      <dt><?= $entry['key'] ?></dt>
+      <dd><?= $entry['value'] ?></dd>
     </dl>
   <?php endforeach; ?>
 
