@@ -94,8 +94,8 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
             'data' => $modelData,
             'section' => $section,
             'properties' => $properties,
-            'html_id' => $attributesData[0] ?? null,
-            'html_classes' => trim(($attributesData[1] ?? '').' '.implode(' ', $classes)),
+            'element_html_id' => $attributesData[0] ?? null,
+            'element_css_classes' => trim(($attributesData[1] ?? '').' '.implode(' ', $classes)),
             'headline' => [
                 'text' => $headlineData['value'] ?? '',
                 'tagName' => $headlineData['unit'] ?? 'h1',
