@@ -90,6 +90,9 @@ final class ContaoExtension extends AbstractExtension
             // Allows rendering PHP templates with the legacy framework by
             // installing proxy nodes
             new PhpTemplateProxyNodeVisitor(self::class),
+            // Triggers PHP deprecations if deprecated constructs are found in
+            // the parsed templates.
+            new DeprecationsNodeVisitor(),
         ];
     }
 
