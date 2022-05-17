@@ -29,8 +29,6 @@ class PurgeTempFolderCronTest extends ContaoTestCase
         $fs->mkdir($tempDir);
         $fs->touch($testFile);
 
-        (new Filesystem())->mkdir($tempDir);
-
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem
             ->expects($this->once())
