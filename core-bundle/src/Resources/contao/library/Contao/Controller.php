@@ -728,20 +728,11 @@ abstract class Controller extends System
 		$blnReturn = true;
 
 		// Only apply the restrictions in the front end
-		if (TL_MODE == 'FE')
+		if (TL_MODE == 'FE' && $objElement->protected)
 		{
+			$groups = StringUtil::deserialize($objElement->groups, true);
 			$security = System::getContainer()->get('security.helper');
-
-			if ($objElement->protected)
-			{
-				$groups = StringUtil::deserialize($objElement->groups, true);
-				$blnReturn = $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $groups);
-			}
-			elseif ($objElement->guests)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				$blnReturn = !$security->isGranted('ROLE_MEMBER'); // backwards compatibility
-			}
+			$blnReturn = $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $groups);
 		}
 
 		// HOOK: add custom logic
