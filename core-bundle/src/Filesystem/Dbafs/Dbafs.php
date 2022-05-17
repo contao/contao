@@ -87,6 +87,9 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->dbPathPrefix = Path::canonicalize($prefix);
     }
 
+    /**
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+     */
     public function setMaxFileSize(int $bytes): void
     {
         trigger_deprecation('contao/core-bundle', '4.13', 'Setting a maximum file size has no effect anymore. The "%s()" method will be removed in Contao 5.', __METHOD__);
