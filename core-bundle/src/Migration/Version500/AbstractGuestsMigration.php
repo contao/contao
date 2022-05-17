@@ -34,7 +34,13 @@ abstract class AbstractGuestsMigration extends AbstractMigration
         $schemaManager = $this->connection->createSchemaManager();
 
         foreach ($this->getTables() as $table) {
-            if (!$schemaManager->tablesExist([$table]) || !isset($schemaManager->listTableColumns($table)['guests'])) {
+            if (!$schemaManager->tablesExist([$table])) {
+                continue;
+            }
+
+            $columns = $schemaManager->listTableColumns($table);
+
+            if (!isset($columns['guests'], $columns['groups'])) {
                 continue;
             }
 
@@ -58,7 +64,13 @@ abstract class AbstractGuestsMigration extends AbstractMigration
         $schemaManager = $this->connection->createSchemaManager();
 
         foreach ($this->getTables() as $table) {
-            if (!$schemaManager->tablesExist([$table]) || !isset($schemaManager->listTableColumns($table)['guests'])) {
+            if (!$schemaManager->tablesExist([$table])) {
+                continue;
+            }
+
+            $columns = $schemaManager->listTableColumns($table);
+
+            if (!isset($columns['guests'], $columns['groups'])) {
                 continue;
             }
 
