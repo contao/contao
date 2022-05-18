@@ -16,6 +16,8 @@ use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\ParsedInsertTag;
+use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
@@ -59,5 +61,41 @@ class InsertTagParserTest extends TestCase
         $this->expectExceptionMessage('Rendering a single insert tag has to return a single raw chunk');
 
         $parser->render('br}}foo{{br');
+    }
+
+    public function testParseTag(): void
+    {
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
+
+        $insertTag = $insertTagParser->parseTag('insert_tag::first::second?foo=bar&baz[]=1&baz[]=1.23|flag1|flag2');
+
+        $this->assertInstanceOf(ResolvedInsertTag::class, $insertTag);
+        $this->assertSame('insert_tag', $insertTag->getName());
+        $this->assertSame([0, 1, 'foo', 'baz'], $insertTag->getParameters()->keys());
+        $this->assertSame('first', $insertTag->getParameters()->get(0));
+        $this->assertSame('second', $insertTag->getParameters()->get(1));
+        $this->assertSame('bar', $insertTag->getParameters()->get('foo'));
+        $this->assertSame(1, $insertTag->getParameters()->get('baz')->get(0));
+        $this->assertSame(1.23, $insertTag->getParameters()->get('baz')->get(1));
+        $this->assertSame('flag1', $insertTag->getFlags()[0]->getName());
+        $this->assertSame('flag2', $insertTag->getFlags()[1]->getName());
+
+        $insertTag = $insertTagParser->parseTag('insert_tag::param?foo={{bar::param|flag1}}|flag2');
+
+        $this->assertInstanceOf(ParsedInsertTag::class, $insertTag);
+        $this->assertSame('insert_tag', $insertTag->getName());
+        $this->assertSame([0, 'foo'], $insertTag->getParameters()->keys());
+        $this->assertSame('param', $insertTag->getParameters()->get(0)->get(0));
+        $this->assertSame('bar', $insertTag->getParameters()->get('foo')->get(0)->getName());
+        $this->assertSame('flag1', $insertTag->getParameters()->get('foo')->get(0)->getFlags()[0]->getName());
+        $this->assertSame('flag2', $insertTag->getFlags()[0]->getName());
+    }
+
+    public function testParse(): void
+    {
+        //$insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
+        //$sequence = $insertTagParser->parse('foo{{insert_tag::a{{first}}b::a{{second}}b?foo=bar&baz[]={{value|valflag}}&baz[]=1.23|flag1|flag2}}bar{{baz}}');
+
+        //var_dump($sequence);
     }
 }
