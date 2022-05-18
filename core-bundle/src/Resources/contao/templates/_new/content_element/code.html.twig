@@ -2,33 +2,24 @@
 
 {% set highlighter_css_file = 'vendor/scrivo/highlight_php/styles/foundation.css' %}
 
-{% block before %}
-    {{ parent() }}
-    {% block style %}
-        {% add 'highlighter_css' to head %}
-            {# Lazy load styles, see https://web.dev/defer-non-critical-css/ #}
-            <link rel="preload" href="{{ highlighter_css_file }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-            <noscript>
-                <link rel="stylesheet" href="{{ highlighter_css_file }}">
-            </noscript>
-        {% endadd %}
-    {% endblock %}
-{% endblock %}
-
 {% block content %}
-    <pre>
-        {%- apply spaceless %}
-            {% if as_editor_view %}
-                {% block editor_view %}{{ code }}{% endblock %}
-            {% else %}
-                {% block highlighted %}
-                    {# @var \Contao\CoreBundle\Twig\Runtime\HighlightResult highlighted #}
-                    {% set highlighted = code|highlight(language) %}
-                    <code{% block code_attributes %}{{ attrs(code_attributes|default).addClass('hljs', highlighted.language) }}{% endblock %}>
-                        {{- highlighted.value|raw -}}
-                    </code>
-                {% endblock %}
-            {% endif -%}
-        {% endapply -%}
-    </pre>
+    {% if as_editor_view %}
+        {% block editor_view %}<pre>{{ code }}</pre>{% endblock %}
+    {% else %}
+        {% block highlighted %}
+            {% block style %}
+                {% add "highlighter_css" to head %}
+                    {% include "@Contao/component/_stylesheet.html.twig" with {file: highlighter_css_file} %}
+                {% endadd %}
+            {% endblock %}
+
+            {% block code %}
+                {# @var \Contao\CoreBundle\Twig\Runtime\HighlightResult highlighted #}
+                {% set highlighted = code|highlight(language) %}
+                <pre><code{% block code_attributes %}{{ attrs(code_attributes|default).addClass('hljs', highlighted.language) }}{% endblock %}>
+                    {{- highlighted.value|raw -}}
+                </code></pre>
+            {% endblock %}
+        {% endblock %}
+    {% endif -%}
 {% endblock %}

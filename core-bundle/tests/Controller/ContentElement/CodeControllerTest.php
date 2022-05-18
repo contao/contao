@@ -34,7 +34,7 @@ class CodeControllerTest extends ContentElementTestCase
         $expectedOutput = <<<'HTML'
             <div id="my-id" class="my-class content_element/code">
                 <h1>Some Code</h1>
-                <pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><span class="hljs-class"><span class="hljs-keyword">class</span><span class="hljs-title">Foo</span></span>{}</code></pre>
+                <pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span></span>{}</code></pre>
             </div>
             HTML;
 
@@ -51,5 +51,31 @@ class CodeControllerTest extends ContentElementTestCase
 
         $this->assertCount(1, $additionalHeadCode);
         $this->assertSameHtml($expectedHeadCode, $additionalHeadCode['highlighter_css']);
+    }
+
+    public function testOutputsPlainEditorView(): void
+    {
+        $response = $this->renderWithModelData(
+            new CodeController(),
+            [
+                'type' => 'code',
+                'code' => '<?php class Foo{}',
+                'highlight' => 'php',
+                'headline' => ['unit' => 'h1', 'value' => 'Some Code'],
+                'cssID' => serialize(['my-id', 'my-class']),
+            ],
+            asEditorView: true,
+            responseContextData: $responseContextData
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div id="my-id" class="my-class content_element/code">
+                <h1>Some Code</h1>
+                <pre>&lt;?php class Foo{}</pre>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $this->assertEmpty($responseContextData[DocumentLocation::head->value]);
     }
 }
