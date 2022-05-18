@@ -18,29 +18,21 @@ interface PickerInterface
 {
     /**
      * Returns the picker configuration.
-     *
-     * @return PickerConfig
      */
-    public function getConfig()/*: PickerConfig*/;
+    public function getConfig(): PickerConfig;
 
     /**
      * Returns the picker menu.
-     *
-     * @return ItemInterface
      */
-    public function getMenu()/*: ItemInterface*/;
+    public function getMenu(): ItemInterface;
 
     /**
      * Returns the current provider.
-     *
-     * @return PickerProviderInterface|null
      */
-    public function getCurrentProvider()/*: ?PickerProviderInterface*/;
+    public function getCurrentProvider(): PickerProviderInterface|null;
 
     /**
      * Returns the URL to the current picker tab.
-     *
-     * @return string
      */
-    public function getCurrentUrl()/*: string*/;
+    public function getCurrentUrl(): string|null;
 }

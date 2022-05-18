@@ -67,5 +67,3 @@ class FormHidden extends Widget
 		);
 	}
 }
-
-class_alias(FormHidden::class, 'FormHidden');

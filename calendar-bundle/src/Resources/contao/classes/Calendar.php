@@ -173,7 +173,7 @@ class Calendar extends Frontend
 				// Get the jumpTo URL
 				if (!isset($arrUrls[$jumpTo]))
 				{
-					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/events/%s');
+					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl('/%s');
 				}
 
 				$strUrl = $arrUrls[$jumpTo];
@@ -319,106 +319,6 @@ class Calendar extends Frontend
 
 		// Create the file
 		File::putContent($webDir . '/share/' . $strFile . '.xml', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
-	}
-
-	/**
-	 * Add events to the indexer
-	 *
-	 * @param array   $arrPages
-	 * @param integer $intRoot
-	 * @param boolean $blnIsSitemap
-	 *
-	 * @return array
-	 */
-	public function getSearchablePages($arrPages, $intRoot=0, $blnIsSitemap=false)
-	{
-		$arrRoot = array();
-
-		if ($intRoot > 0)
-		{
-			$arrRoot = $this->Database->getChildRecords($intRoot, 'tl_page');
-		}
-
-		$arrProcessed = array();
-		$time = time();
-
-		// Get all calendars
-		$objCalendar = CalendarModel::findByProtected('');
-
-		// Walk through each calendar
-		if ($objCalendar !== null)
-		{
-			while ($objCalendar->next())
-			{
-				// Skip calendars without target page
-				if (!$objCalendar->jumpTo)
-				{
-					continue;
-				}
-
-				// Skip calendars outside the root nodes
-				if (!empty($arrRoot) && !\in_array($objCalendar->jumpTo, $arrRoot))
-				{
-					continue;
-				}
-
-				// Get the URL of the jumpTo page
-				if (!isset($arrProcessed[$objCalendar->jumpTo]))
-				{
-					$objParent = PageModel::findWithDetails($objCalendar->jumpTo);
-
-					// The target page does not exist
-					if ($objParent === null)
-					{
-						continue;
-					}
-
-					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time))
-					{
-						continue;
-					}
-
-					if ($blnIsSitemap)
-					{
-						// The target page is protected (see #8416)
-						if ($objParent->protected)
-						{
-							continue;
-						}
-
-						// The target page is exempt from the sitemap (see #6418)
-						if ($objParent->robots == 'noindex,nofollow')
-						{
-							continue;
-						}
-					}
-
-					// Generate the URL
-					$arrProcessed[$objCalendar->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/events/%s');
-				}
-
-				$strUrl = $arrProcessed[$objCalendar->jumpTo];
-
-				// Get the items
-				$objEvents = CalendarEventsModel::findPublishedDefaultByPid($objCalendar->id);
-
-				if ($objEvents !== null)
-				{
-					while ($objEvents->next())
-					{
-						if ($blnIsSitemap && $objEvents->robots === 'noindex,nofollow')
-						{
-							continue;
-						}
-
-						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objEvents->alias ?: $objEvents->id));
-					}
-				}
-			}
-		}
-
-		return $arrPages;
 	}
 
 	/**
@@ -670,5 +570,3 @@ class Calendar extends Frontend
 		return $subRequest;
 	}
 }
-
-class_alias(Calendar::class, 'Calendar');

@@ -38,5 +38,3 @@ class ContentHtml extends ContentElement
 		}
 	}
 }
-
-class_alias(ContentHtml::class, 'ContentHtml');

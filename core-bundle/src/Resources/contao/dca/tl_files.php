@@ -282,6 +282,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
+ *
+ * @internal
  */
 class tl_files extends Backend
 {

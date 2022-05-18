@@ -70,5 +70,3 @@ class PageLogout extends Frontend
 		return new RedirectResponse($uri, Response::HTTP_TEMPORARY_REDIRECT);
 	}
 }
-
-class_alias(PageLogout::class, 'PageLogout');

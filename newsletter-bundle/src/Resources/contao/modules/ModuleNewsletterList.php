@@ -103,7 +103,7 @@ class ModuleNewsletterList extends Module
 					if (($objJumpTo = $objTarget->getRelated('jumpTo')) instanceof PageModel)
 					{
 						/** @var PageModel $objJumpTo */
-						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
+						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl('/%s');
 					}
 					else
 					{
@@ -139,5 +139,3 @@ class ModuleNewsletterList extends Module
 		$this->Template->newsletters = $arrNewsletter;
 	}
 }
-
-class_alias(ModuleNewsletterList::class, 'ModuleNewsletterList');

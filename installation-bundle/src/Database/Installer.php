@@ -16,22 +16,17 @@ use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
-use Doctrine\DBAL\Schema\Table;
 
 class Installer
 {
-    private Connection $connection;
-    private ?array $commands = null;
+    private array|null $commands = null;
     private array $commandOrder;
-    private SchemaProvider $schemaProvider;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao_installation.database.installer" service instead
      */
-    public function __construct(Connection $connection, SchemaProvider $schemaProvider)
+    public function __construct(private Connection $connection, private SchemaProvider $schemaProvider)
     {
-        $this->connection = $connection;
-        $this->schemaProvider = $schemaProvider;
     }
 
     /**
@@ -119,31 +114,31 @@ class Installer
 
         foreach ($diff as $sql) {
             switch (true) {
-                case 0 === strncmp($sql, 'CREATE TABLE ', 13):
+                case str_starts_with($sql, 'CREATE TABLE '):
                     $return['CREATE'][md5($sql)] = $sql;
                     $order[] = md5($sql);
                     break;
 
-                case 0 === strncmp($sql, 'DROP TABLE ', 11):
+                case str_starts_with($sql, 'DROP TABLE '):
                     $return['DROP'][md5($sql)] = $sql;
                     $order[] = md5($sql);
                     break;
 
-                case 0 === strncmp($sql, 'CREATE INDEX ', 13):
-                case 0 === strncmp($sql, 'CREATE UNIQUE INDEX ', 20):
-                case 0 === strncmp($sql, 'CREATE FULLTEXT INDEX ', 22):
+                case str_starts_with($sql, 'CREATE INDEX '):
+                case str_starts_with($sql, 'CREATE UNIQUE INDEX '):
+                case str_starts_with($sql, 'CREATE FULLTEXT INDEX '):
                     $return['ALTER_ADD'][md5($sql)] = $sql;
                     $order[] = md5($sql);
                     break;
 
-                case 0 === strncmp($sql, 'DROP INDEX', 10):
+                case str_starts_with($sql, 'DROP INDEX'):
                     $return['ALTER_CHANGE'][md5($sql)] = $sql;
                     $order[] = md5($sql);
                     break;
 
                 case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
                     $prefix = $matches[1];
-                    $sql = substr($sql, \strlen($prefix));
+                    $sql = substr($sql, \strlen((string) $prefix));
                     $parts = array_reverse(array_map('trim', explode(',', $sql)));
 
                     for ($i = 0, $count = \count($parts); $i < $count; ++$i) {
@@ -151,18 +146,18 @@ class Installer
                         $command = $prefix.' '.$part;
 
                         switch (true) {
-                            case 0 === strncmp($part, 'DROP ', 5):
+                            case str_starts_with($part, 'DROP '):
                                 $return['ALTER_DROP'][md5($command)] = $command;
                                 $order[] = md5($command);
                                 break;
 
-                            case 0 === strncmp($part, 'ADD ', 4):
+                            case str_starts_with($part, 'ADD '):
                                 $return['ALTER_ADD'][md5($command)] = $command;
                                 $order[] = md5($command);
                                 break;
 
-                            case 0 === strncmp($part, 'CHANGE ', 7):
-                            case 0 === strncmp($part, 'RENAME ', 7):
+                            case str_starts_with($part, 'CHANGE '):
+                            case str_starts_with($part, 'RENAME '):
                                 $return['ALTER_CHANGE'][md5($command)] = $command;
                                 $order[] = md5($command);
                                 break;
@@ -207,11 +202,9 @@ class Installer
             $alterTables = [];
             $deleteIndexes = false;
 
-            if (0 !== strncmp($tableName, 'tl_', 3)) {
+            if (!str_starts_with($tableName, 'tl_')) {
                 continue;
             }
-
-            $this->setLegacyOptions($table);
 
             $tableOptions = $this->connection->fetchAssociative(
                 'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL',
@@ -222,7 +215,7 @@ class Installer
                 continue;
             }
 
-            $engine = $table->getOption('engine');
+            $engine = $table->hasOption('engine') ? $table->getOption('engine') : '';
             $innodb = 'innodb' === strtolower($engine);
 
             if (strtolower($tableOptions['Engine']) !== strtolower($engine)) {
@@ -250,14 +243,16 @@ class Installer
                 }
             }
 
+            $collate = '';
+            $charset = $table->hasOption('charset') ? $table->getOption('charset') : '';
+
             if ($table->hasOption('collation')) {
                 $collate = $table->getOption('collation');
-            } else {
+            } elseif ($table->hasOption('collate')) {
                 $collate = $table->getOption('collate');
             }
 
-            if ($tableOptions['Collation'] !== $collate) {
-                $charset = $table->getOption('charset');
+            if ($tableOptions['Collation'] !== $collate && '' !== $charset) {
                 $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
                 $deleteIndexes = true;
                 $alterTables[md5($command)] = $command;
@@ -315,23 +310,5 @@ class Installer
 
         // Dynamic rows require the Barracuda file format in MySQL <8 and MariaDB <10.3
         return 'barracuda' === strtolower((string) $fileFormat['Value']);
-    }
-
-    /**
-     * Adds the legacy table options to remain backwards compatibility with database.sql files.
-     */
-    private function setLegacyOptions(Table $table): void
-    {
-        if (!$table->hasOption('engine')) {
-            $table->addOption('engine', 'MyISAM');
-        }
-
-        if (!$table->hasOption('charset')) {
-            $table->addOption('charset', 'utf8');
-        }
-
-        if (!$table->hasOption('collate')) {
-            $table->addOption('collate', 'utf8_general_ci');
-        }
     }
 }

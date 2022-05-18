@@ -32,7 +32,7 @@ final class Callback implements ServiceTagInterface
 {
     public string $table;
     public string $target;
-    public ?int $priority = null;
+    public int|null $priority = null;
 
     public function getName(): string
     {

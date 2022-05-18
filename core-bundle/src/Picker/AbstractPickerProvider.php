@@ -14,30 +14,25 @@ namespace Contao\CoreBundle\Picker;
 
 use Contao\BackendUser;
 use Knp\Menu\FactoryInterface;
+use Knp\Menu\ItemInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
-    private FactoryInterface $menuFactory;
-    private RouterInterface $router;
-    private ?TranslatorInterface $translator;
-    private ?TokenStorageInterface $tokenStorage = null;
+    private TokenStorageInterface|null $tokenStorage = null;
 
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
+    public function __construct(private FactoryInterface $menuFactory, private RouterInterface $router, private TranslatorInterface|null $translator = null)
     {
-        $this->menuFactory = $menuFactory;
-        $this->router = $router;
-        $this->translator = $translator;
     }
 
-    public function getUrl(PickerConfig $config)/*: ?string*/
+    public function getUrl(PickerConfig $config): string|null
     {
         return $this->generateUrl($config, false);
     }
 
-    public function createMenuItem(PickerConfig $config)/*: ItemInterface*/
+    public function createMenuItem(PickerConfig $config): ItemInterface
     {
         $name = $this->getName();
 
@@ -70,7 +65,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function isCurrent(PickerConfig $config)/*: bool*/
+    public function isCurrent(PickerConfig $config): bool
     {
         return $config->getCurrent() === $this->getName();
     }
@@ -111,12 +106,12 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      *
      * @return array<string,string|int>
      */
-    abstract protected function getRouteParameters(PickerConfig $config = null)/*: array*/;
+    abstract protected function getRouteParameters(PickerConfig $config = null): array;
 
     /**
      * Generates the URL for the picker.
      */
-    private function generateUrl(PickerConfig $config, bool $ignoreValue): ?string
+    private function generateUrl(PickerConfig $config, bool $ignoreValue): string|null
     {
         $params = array_merge(
             $this->getRouteParameters($ignoreValue ? null : $config),

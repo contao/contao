@@ -67,5 +67,3 @@ class FormHtml extends Widget
 		return $this->html;
 	}
 }
-
-class_alias(FormHtml::class, 'FormHtml');

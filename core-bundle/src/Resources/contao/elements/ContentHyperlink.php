@@ -95,5 +95,3 @@ class ContentHyperlink extends ContentElement
 		}
 	}
 }
-
-class_alias(ContentHyperlink::class, 'ContentHyperlink');

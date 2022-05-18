@@ -164,7 +164,6 @@ class ModuleRegistration extends Module
 		$arrUser = array();
 		$arrFields = array();
 		$hasUpload = false;
-		$i = 0;
 
 		// Build the form
 		foreach ($this->editable as $field)
@@ -204,13 +203,6 @@ class ModuleRegistration extends Module
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
-
-			// Increase the row count if it's a password field
-			if ($objWidget instanceof FormPassword)
-			{
-				$objWidget->rowClassConfirm = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
-			}
 
 			// Validate input
 			if (Input::post('FORM_SUBMIT') == $strFormId)
@@ -290,12 +282,6 @@ class ModuleRegistration extends Module
 						$varValue = $objWidget->getEmptyValue();
 					}
 
-					// Encrypt the value (see #7815)
-					if ($arrData['eval']['encrypt'] ?? null)
-					{
-						$varValue = Encryption::encrypt($varValue);
-					}
-
 					// Set the new value
 					$arrUser[$field] = $varValue;
 				}
@@ -316,21 +302,17 @@ class ModuleRegistration extends Module
 			}
 
 			$arrFields[$arrData['eval']['feGroup']][$field] .= $temp;
-
-			++$i;
 		}
 
 		// Captcha
 		if (!$this->disableCaptcha)
 		{
-			$objCaptcha->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 			$strCaptcha = $objCaptcha->parse();
 
 			$this->Template->fields .= $strCaptcha;
 			$arrFields['captcha']['captcha'] = ($arrFields['captcha']['captcha'] ?? '') . $strCaptcha;
 		}
 
-		$this->Template->rowLast = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->hasError = $doNotSubmit;
 
@@ -665,5 +647,3 @@ class ModuleRegistration extends Module
 		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
 	}
 }
-
-class_alias(ModuleRegistration::class, 'ModuleRegistration');

@@ -501,6 +501,8 @@ $GLOBALS['TL_DCA']['tl_news'] = array
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property News $News
+ *
+ * @internal
  */
 class tl_news extends Backend
 {

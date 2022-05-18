@@ -90,5 +90,3 @@ class ModuleLogout extends Module
 	{
 	}
 }
-
-class_alias(ModuleLogout::class, 'ModuleLogout');

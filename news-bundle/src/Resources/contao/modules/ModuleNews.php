@@ -273,7 +273,7 @@ abstract class ModuleNews extends Module
 
 		foreach ($objArticles as $objArticle)
 		{
-			$arrArticles[] = $this->parseArticle($objArticle, $blnAddArchive, ((++$count == 1) ? ' first' : '') . (($count == $limit) ? ' last' : '') . ((($count % 2) == 0) ? ' odd' : ' even'), $count);
+			$arrArticles[] = $this->parseArticle($objArticle, $blnAddArchive, '', $count);
 		}
 
 		return $arrArticles;
@@ -341,24 +341,6 @@ abstract class ModuleNews extends Module
 	}
 
 	/**
-	 * Generate a URL and return it as string
-	 *
-	 * @param NewsModel $objItem
-	 * @param boolean   $blnAddArchive
-	 *
-	 * @return string
-	 *
-	 * @deprecated Deprecated since Contao 4.1, to be removed in Contao 5.
-	 *             Use News::generateNewsUrl() instead.
-	 */
-	protected function generateNewsUrl($objItem, $blnAddArchive=false)
-	{
-		trigger_deprecation('contao/news-bundle', '4.1', 'Using "Contao\ModuleNews::generateNewsUrl()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\News::generateNewsUrl()" instead.');
-
-		return News::generateNewsUrl($objItem, $blnAddArchive);
-	}
-
-	/**
 	 * Generate a link and return it as string
 	 *
 	 * @param string    $strLink
@@ -384,5 +366,3 @@ abstract class ModuleNews extends Module
 		);
 	}
 }
-
-class_alias(ModuleNews::class, 'ModuleNews');

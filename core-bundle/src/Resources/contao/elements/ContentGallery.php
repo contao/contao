@@ -160,11 +160,6 @@ class ContentGallery extends ContentElement
 				array_multisort($images, SORT_NUMERIC, $auxDate, SORT_DESC);
 				break;
 
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			case 'meta':
-				trigger_deprecation('contao/core-bundle', '4.0', 'The "meta" key in "Contao\ContentGallery::compile()" has been deprecated and will no longer work in Contao 5.0.');
-				// no break
-
 			case 'custom':
 				$images = ArrayUtil::sortByOrderField($images, $this->orderSRC);
 				break;
@@ -208,7 +203,6 @@ class ContentGallery extends ContentElement
 			$this->Template->pagination = $objPagination->generate("\n  ");
 		}
 
-		$rowcount = 0;
 		$colwidth = floor(100/$this->perRow);
 		$body = array();
 
@@ -222,35 +216,9 @@ class ContentGallery extends ContentElement
 		// Rows
 		for ($i=$offset; $i<$limit; $i+=$this->perRow)
 		{
-			$class_tr = '';
-
-			if ($rowcount == 0)
-			{
-				$class_tr .= ' row_first';
-			}
-
-			if (($i + $this->perRow) >= $limit)
-			{
-				$class_tr .= ' row_last';
-			}
-
-			$class_eo = (($rowcount % 2) == 0) ? ' even' : ' odd';
-
 			// Columns
 			for ($j=0; $j<$this->perRow; $j++)
 			{
-				$class_td = '';
-
-				if ($j == 0)
-				{
-					$class_td .= ' col_first';
-				}
-
-				if ($j == ($this->perRow - 1))
-				{
-					$class_td .= ' col_last';
-				}
-
 				// Image / empty cell
 				if (($j + $i) < $limit && null !== ($image = $images[$i + $j] ?? null))
 				{
@@ -266,14 +234,11 @@ class ContentGallery extends ContentElement
 					$cellData = array('addImage' => false);
 				}
 
-				// Add column width and class
+				// Add column width
 				$cellData['colWidth'] = $colwidth . '%';
-				$cellData['class'] = 'col_' . $j . $class_td;
 
-				$body['row_' . $rowcount . $class_tr . $class_eo][$j] = (object) $cellData;
+				$body[$i][$j] = (object) $cellData;
 			}
-
-			++$rowcount;
 		}
 
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
@@ -292,5 +257,3 @@ class ContentGallery extends ContentElement
 		$this->Template->images = $objTemplate->parse();
 	}
 }
-
-class_alias(ContentGallery::class, 'ContentGallery');

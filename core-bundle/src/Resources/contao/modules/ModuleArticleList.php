@@ -111,5 +111,3 @@ class ModuleArticleList extends Module
 		$this->Template->articles = $articles;
 	}
 }
-
-class_alias(ModuleArticleList::class, 'ModuleArticleList');

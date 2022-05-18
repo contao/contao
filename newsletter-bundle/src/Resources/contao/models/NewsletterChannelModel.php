@@ -89,5 +89,3 @@ class NewsletterChannelModel extends Model
 		return static::findBy(array("$t.id IN(" . implode(',', array_map('\intval', $arrIds)) . ")"), null, $arrOptions);
 	}
 }
-
-class_alias(NewsletterChannelModel::class, 'NewsletterChannelModel');

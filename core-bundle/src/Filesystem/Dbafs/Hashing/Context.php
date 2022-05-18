@@ -17,22 +17,15 @@ namespace Contao\CoreBundle\Filesystem\Dbafs\Hashing;
  */
 final class Context
 {
-    private ?string $oldHash;
-    private ?int $oldLastModified;
-    private ?int $newLastModified;
-
-    /**
-     * @var string|false|null
-     */
-    private $result = false;
+    private int|null $newLastModified;
+    private bool|string|null $result = false;
 
     /**
      * @internal
      */
-    public function __construct(string $fallback = null, int $oldLastModified = null)
+    public function __construct(private string|null $oldHash = null, private int|null $oldLastModified = null)
     {
-        $this->oldHash = $fallback;
-        $this->oldLastModified = $this->newLastModified = $oldLastModified;
+        $this->newLastModified = $oldLastModified;
     }
 
     public function canSkipHashing(): bool
@@ -54,12 +47,12 @@ final class Context
         $this->result = $hash;
     }
 
-    public function getLastModified(): ?int
+    public function getLastModified(): int|null
     {
         return $this->newLastModified ?? $this->oldLastModified;
     }
 
-    public function updateLastModified(?int $lastModified): void
+    public function updateLastModified(int|null $lastModified): void
     {
         $this->newLastModified = $lastModified;
     }

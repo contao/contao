@@ -60,5 +60,3 @@ class BackendAlerts extends Backend
 		return $objTemplate->getResponse();
 	}
 }
-
-class_alias(BackendAlerts::class, 'BackendAlerts');

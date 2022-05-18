@@ -275,6 +275,8 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
+ *
+ * @internal
  */
 class tl_newsletter extends Backend
 {

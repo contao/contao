@@ -139,13 +139,12 @@ trait TemplateInheritance
 		if ($blnDebug === null)
 		{
 			$blnDebug = System::getContainer()->getParameter('kernel.debug');
+		}
 
-			// Backwards compatibility
-			if ($blnDebug !== (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false))
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Dynamically setting TL_CONFIG.debugMode has been deprecated. Use %s::setDebug() instead.', __CLASS__);
-				$blnDebug = (bool) ($GLOBALS['TL_CONFIG']['debugMode'] ?? false);
-			}
+		// Replace insert tags
+		if ($this instanceof FrontendTemplate)
+		{
+			$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
 		}
 
 		// Add start and end markers in debug mode
@@ -354,7 +353,7 @@ trait TemplateInheritance
 	/**
 	 * Render a Twig template if one exists
 	 */
-	protected function renderTwigSurrogateIfExists(): ?string
+	protected function renderTwigSurrogateIfExists(): string|null
 	{
 		$container = System::getContainer();
 
@@ -380,5 +379,3 @@ trait TemplateInheritance
 		return $twig->render($templateCandidate, $context);
 	}
 }
-
-class_alias(TemplateInheritance::class, 'TemplateInheritance');

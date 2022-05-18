@@ -17,9 +17,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class PickerBuilder implements PickerBuilderInterface
 {
-    private FactoryInterface $menuFactory;
-    private RouterInterface $router;
-
     /**
      * @var array<PickerProviderInterface>
      */
@@ -28,10 +25,8 @@ class PickerBuilder implements PickerBuilderInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao.picker.builder" service instead
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router)
+    public function __construct(private FactoryInterface $menuFactory, private RouterInterface $router)
     {
-        $this->menuFactory = $menuFactory;
-        $this->router = $router;
     }
 
     /**
@@ -42,7 +37,7 @@ class PickerBuilder implements PickerBuilderInterface
         $this->providers[$provider->getName()] = $provider;
     }
 
-    public function create(PickerConfig $config): ?Picker
+    public function create(PickerConfig $config): Picker|null
     {
         $providers = $this->providers;
 
@@ -62,18 +57,18 @@ class PickerBuilder implements PickerBuilderInterface
         return new Picker($this->menuFactory, $providers, $config);
     }
 
-    public function createFromData($data): ?Picker
+    public function createFromData(string $data): Picker|null
     {
         try {
             $config = PickerConfig::urlDecode($data);
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException) {
             return null;
         }
 
         return $this->create($config);
     }
 
-    public function supportsContext($context, array $allowed = null): bool
+    public function supportsContext(string $context, array $allowed = null): bool
     {
         $providers = $this->providers;
 
@@ -90,7 +85,7 @@ class PickerBuilder implements PickerBuilderInterface
         return false;
     }
 
-    public function getUrl($context, array $extras = [], $value = ''): string
+    public function getUrl(string $context, array $extras = [], string $value = ''): string
     {
         $providers = isset($extras['providers']) && \is_array($extras['providers']) ? $extras['providers'] : null;
 
@@ -98,6 +93,6 @@ class PickerBuilder implements PickerBuilderInterface
             return '';
         }
 
-        return $this->router->generate('contao_backend_picker', compact('context', 'extras', 'value'));
+        return $this->router->generate('contao_backend_picker', ['context' => $context, 'extras' => $extras, 'value' => $value]);
     }
 }

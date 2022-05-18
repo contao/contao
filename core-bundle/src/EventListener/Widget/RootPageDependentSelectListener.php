@@ -26,17 +26,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class RootPageDependentSelectListener
 {
-    private Connection $connection;
-    private UrlGeneratorInterface $router;
-    private TranslatorInterface $translator;
-    private ContaoCsrfTokenManager $csrfTokenManager;
-
-    public function __construct(Connection $connection, UrlGeneratorInterface $router, TranslatorInterface $translator, ContaoCsrfTokenManager $csrfTokenManager)
-    {
-        $this->connection = $connection;
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->csrfTokenManager = $csrfTokenManager;
+    public function __construct(
+        private Connection $connection,
+        private UrlGeneratorInterface $router,
+        private TranslatorInterface $translator,
+        private ContaoCsrfTokenManager $csrfTokenManager,
+    ) {
     }
 
     /**
@@ -68,11 +63,9 @@ class RootPageDependentSelectListener
     }
 
     /**
-     * @param mixed $value
-     *
      * @Callback(table="tl_module", target="fields.rootPageDependentModules.save")
      */
-    public function saveCallback($value, DataContainer $dataContainer): string
+    public function saveCallback(mixed $value, DataContainer $dataContainer): string
     {
         $values = StringUtil::deserialize($value);
 

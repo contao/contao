@@ -176,5 +176,3 @@ class ModuleArticlenav extends Module
 		}
 	}
 }
-
-class_alias(ModuleArticlenav::class, 'ModuleArticlenav');

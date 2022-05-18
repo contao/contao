@@ -92,13 +92,6 @@ class ModuleCustomnav extends Module
 		{
 			$objModel->loadDetails();
 
-			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objModel->guests && !$objModel->protected && $isMember)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				continue;
-			}
-
 			// PageModel->groups is an array after calling loadDetails()
 			if (!$objModel->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objModel->groups))
 			{
@@ -163,7 +156,6 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = false; // backwards compatibility
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
@@ -201,7 +193,6 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = false; // backwards compatibility
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
@@ -227,14 +218,6 @@ class ModuleCustomnav extends Module
 			}
 		}
 
-		// Add classes first and last if there are items
-		if (!empty($items))
-		{
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$last = \count($items) - 1;
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
-		}
-
 		$objTemplate->items = $items;
 
 		$this->Template->request = Environment::get('indexFreeRequest');
@@ -243,5 +226,3 @@ class ModuleCustomnav extends Module
 		$this->Template->items = !empty($items) ? $objTemplate->parse() : '';
 	}
 }
-
-class_alias(ModuleCustomnav::class, 'ModuleCustomnav');

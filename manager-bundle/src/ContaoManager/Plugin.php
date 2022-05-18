@@ -58,7 +58,7 @@ use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
  */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
 {
-    private static ?string $autoloadModules = null;
+    private static string|null $autoloadModules = null;
 
     /**
      * Sets the path to enable autoloading of legacy Contao modules.
@@ -131,7 +131,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         );
     }
 
-    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): ?RouteCollection
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): RouteCollection|null
     {
         if ('dev' !== $kernel->getEnvironment()) {
             return null;
@@ -219,12 +219,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
         switch ($extensionName) {
-            case 'contao':
-                return $this->handlePrependLocale($extensionConfigs, $container);
-
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
-                $extensionConfigs = $this->addDefaultMailer($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
 
                 if (!isset($_SERVER['APP_SECRET'])) {
                     $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
@@ -253,32 +250,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             case 'nelmio_security':
                 return $this->checkClickjackingPaths($extensionConfigs);
         }
-
-        return $extensionConfigs;
-    }
-
-    /**
-     * Adds backwards compatibility for the %prepend_locale% parameter.
-     *
-     * @return array<string,array<string,mixed>>
-     */
-    private function handlePrependLocale(array $extensionConfigs, ContainerBuilder $container): array
-    {
-        if (!$container->hasParameter('prepend_locale')) {
-            return $extensionConfigs;
-        }
-
-        foreach ($extensionConfigs as $extensionConfig) {
-            if (isset($extensionConfig['prepend_locale'])) {
-                return $extensionConfigs;
-            }
-        }
-
-        trigger_deprecation('contao/manager-bundle', '4.6', 'Defining the "prepend_locale" parameter in the parameters.yml file has been deprecated and will no longer work in Contao 5.0. Define the "contao.prepend_locale" parameter in the config.yml file instead.');
-
-        $extensionConfigs[] = [
-            'prepend_locale' => '%prepend_locale%',
-        ];
 
         return $extensionConfigs;
     }
@@ -469,7 +440,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
-    private function addDefaultMailer(array $extensionConfigs, ContainerBuilder $container): array
+    private function addDefaultMailer(array $extensionConfigs): array
     {
         foreach ($extensionConfigs as $config) {
             if (isset($config['mailer']) && (isset($config['mailer']['transports']) || isset($config['mailer']['dsn']))) {

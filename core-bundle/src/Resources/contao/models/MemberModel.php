@@ -292,5 +292,3 @@ class MemberModel extends Model
 		return new static($objResult);
 	}
 }
-
-class_alias(MemberModel::class, 'MemberModel');

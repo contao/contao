@@ -95,5 +95,3 @@ class ImageSizeItemModel extends Model
 		return static::findBy(array("$t.pid=? AND $t.invisible=''"), (int) $intPid, $arrOptions);
 	}
 }
-
-class_alias(ImageSizeItemModel::class, 'ImageSizeItemModel');

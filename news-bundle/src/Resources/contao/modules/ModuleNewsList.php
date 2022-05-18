@@ -58,7 +58,7 @@ class ModuleNewsList extends ModuleNews
 		}
 
 		// Show the news reader if an item has been selected
-		if ($this->news_readerModule > 0 && (isset($_GET['items']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->news_readerModule > 0 && Input::get('auto_item') !== null)
 		{
 			return $this->getFrontendModule($this->news_readerModule, $this->strColumn);
 		}
@@ -253,5 +253,3 @@ class ModuleNewsList extends ModuleNews
 		return NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset, array('order'=>$order));
 	}
 }
-
-class_alias(ModuleNewsList::class, 'ModuleNewsList');

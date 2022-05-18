@@ -238,5 +238,3 @@ class Feed
 		}
 	}
 }
-
-class_alias(Feed::class, 'Feed');

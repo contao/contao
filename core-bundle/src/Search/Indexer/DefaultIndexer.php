@@ -19,18 +19,11 @@ use Doctrine\DBAL\Connection;
 
 class DefaultIndexer implements IndexerInterface
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private bool $indexProtected;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.search.default_indexer" service instead
      */
-    public function __construct(ContaoFramework $framework, Connection $connection, bool $indexProtected = false)
+    public function __construct(private ContaoFramework $framework, private Connection $connection, private bool $indexProtected = false)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->indexProtected = $indexProtected;
     }
 
     public function index(Document $document): void
@@ -48,14 +41,14 @@ class DefaultIndexer implements IndexerInterface
         }
 
         try {
-            $title = $document->getContentCrawler()->filterXPath('//head/title')->first()->text(null, true);
-        } catch (\Exception $e) {
+            $title = $document->getContentCrawler()->filterXPath('//head/title')->first()->text();
+        } catch (\Exception) {
             $title = 'undefined';
         }
 
         try {
             $language = $document->getContentCrawler()->filterXPath('//html[@lang]')->first()->attr('lang');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $language = 'en';
         }
 
@@ -139,13 +132,7 @@ class DefaultIndexer implements IndexerInterface
         $jsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
 
         if (0 === \count($jsonLds)) {
-            $jsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'RegularPage');
-
-            if (0 === \count($jsonLds)) {
-                $this->throwBecause('No JSON-LD found.');
-            }
-
-            trigger_deprecation('contao/core-bundle', '4.9', 'Using the JSON-LD type "RegularPage" has been deprecated and will no longer work in Contao 5.0. Use "Page" instead.');
+            $this->throwBecause('No JSON-LD found.');
         }
 
         // Merge all entries to one meta array (the latter overrides the former)

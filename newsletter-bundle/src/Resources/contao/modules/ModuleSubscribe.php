@@ -387,5 +387,3 @@ class ModuleSubscribe extends Module
 		$this->reload();
 	}
 }
-
-class_alias(ModuleSubscribe::class, 'ModuleSubscribe');

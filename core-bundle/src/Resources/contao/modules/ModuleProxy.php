@@ -83,5 +83,3 @@ class ModuleProxy extends Module
 		// noop
 	}
 }
-
-class_alias(ModuleProxy::class, 'ModuleProxy');

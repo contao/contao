@@ -75,5 +75,3 @@ class ContentCode extends ContentElement
 		$this->Template->cssClass = 'hljs ' . (strtolower($this->highlight) ?: 'nohighlight');
 	}
 }
-
-class_alias(ContentCode::class, 'ContentCode');

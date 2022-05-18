@@ -118,10 +118,8 @@ class TextArea extends Widget
 			$this->intRows,
 			$this->intCols,
 			$this->getAttributes(),
-			StringUtil::specialchars($this->varValue),
+			self::specialcharsValue($this->varValue),
 			$this->wizard
 		);
 	}
 }
-
-class_alias(TextArea::class, 'TextArea');

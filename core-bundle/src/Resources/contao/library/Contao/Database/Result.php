@@ -449,5 +449,3 @@ class Result
 		}
 	}
 }
-
-class_alias(Result::class, 'Database\Result');

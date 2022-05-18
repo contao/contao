@@ -19,45 +19,22 @@ use Symfony\Component\Filesystem\Path;
 /**
  * @experimental
  */
-class FilesystemItem
+class FilesystemItem implements \Stringable
 {
-    private bool $isFile;
-    private string $path;
-
     /**
-     * @var int|(\Closure(self):int|null)|null
-     */
-    private $lastModified;
-
-    /**
-     * @var int|\Closure(self):int|null
-     */
-    private $fileSize;
-
-    /**
-     * @var string|\Closure(self):string|null
-     */
-    private $mimeType;
-
-    /**
-     * @var array<string, mixed>|\Closure(self):array<string, mixed>
-     */
-    private $extraMetadata;
-
-    /**
-     * @param int|(\Closure(self):int|null)|null $lastModified
-     * @param int|\Closure(self):int|null $fileSize
-     * @param string|\Closure(self):string|null $mimeType
+     * @param int|(\Closure(self):int|null)|null                       $lastModified
+     * @param int|\Closure(self):int|null                              $fileSize
+     * @param string|\Closure(self):string|null                        $mimeType
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
      */
-    public function __construct(bool $isFile, string $path, $lastModified = null, $fileSize = null, $mimeType = null, $extraMetadata = [])
-    {
-        $this->isFile = $isFile;
-        $this->path = $path;
-        $this->lastModified = $lastModified;
-        $this->fileSize = $fileSize;
-        $this->mimeType = $mimeType;
-        $this->extraMetadata = $extraMetadata;
+    public function __construct(
+        private bool $isFile,
+        private string $path,
+        private \Closure|int|null $lastModified = null,
+        private \Closure|int|null $fileSize = null,
+        private \Closure|string|null $mimeType = null,
+        private \Closure|array $extraMetadata = [],
+    ) {
     }
 
     public function __toString(): string
@@ -89,7 +66,7 @@ class FilesystemItem
     /**
      * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
      */
-    public function withExtraMetadata($extraMetadata): self
+    public function withExtraMetadata(array|callable $extraMetadata): self
     {
         return new self(
             $this->isFile,
@@ -140,7 +117,7 @@ class FilesystemItem
         return $this->path;
     }
 
-    public function getLastModified(): ?int
+    public function getLastModified(): int|null
     {
         $this->resolveIfClosure($this->lastModified);
 
@@ -180,10 +157,8 @@ class FilesystemItem
 
     /**
      * Evaluates closures to retrieve the value.
-     *
-     * @param mixed $property
      */
-    private function resolveIfClosure(&$property): void
+    private function resolveIfClosure(mixed &$property): void
     {
         if ($property instanceof \Closure) {
             $property = $property($this);

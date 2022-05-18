@@ -69,10 +69,6 @@ $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = array();
 $GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8mb4';
 $GLOBALS['TL_CONFIG']['dbCollation'] = 'utf8mb4_unicode_ci';
 
-// Encryption
-$GLOBALS['TL_CONFIG']['encryptionMode']   = 'cfb';
-$GLOBALS['TL_CONFIG']['encryptionCipher'] = 'rijndael-256';
-
 // File uploads
 $GLOBALS['TL_CONFIG']['uploadTypes']
 	= 'jpg,jpeg,gif,png,ico,svg,svgz,webp,avif,heic,jxl,'
@@ -84,8 +80,6 @@ $GLOBALS['TL_CONFIG']['uploadTypes']
 $GLOBALS['TL_CONFIG']['maxFileSize']    = 2048000;
 $GLOBALS['TL_CONFIG']['imageWidth']     = 0;
 $GLOBALS['TL_CONFIG']['imageHeight']    = 0;
-$GLOBALS['TL_CONFIG']['gdMaxImgWidth']  = 3000;
-$GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
 
 // Timeout values
 $GLOBALS['TL_CONFIG']['undoPeriod']     = 2592000;
@@ -114,15 +108,12 @@ $GLOBALS['TL_CONFIG']['allowedDownload']
 	. 'zip,rar,7z,md';
 $GLOBALS['TL_CONFIG']['installPassword']      = '';
 $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
-$GLOBALS['TL_CONFIG']['fullscreen']           = false;
-$GLOBALS['TL_CONFIG']['disableInsertTags']    = false;
 $GLOBALS['TL_CONFIG']['rootFiles']            = array();
 $GLOBALS['TL_CONFIG']['doNotCollapse']        = false;
 $GLOBALS['TL_CONFIG']['exampleWebsite']       = '';
 $GLOBALS['TL_CONFIG']['minPasswordLength']    = 8;
 $GLOBALS['TL_CONFIG']['disableCron']          = false;
 $GLOBALS['TL_CONFIG']['coreOnlyMode']         = false;
-$GLOBALS['TL_CONFIG']['useAutoItem']          = true;
 $GLOBALS['TL_CONFIG']['privacyAnonymizeIp']   = true;
 $GLOBALS['TL_CONFIG']['privacyAnonymizeGA']   = true;
 $GLOBALS['TL_CONFIG']['bypassCache']          = false;

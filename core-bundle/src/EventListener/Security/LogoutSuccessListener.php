@@ -30,22 +30,16 @@ class LogoutSuccessListener
 {
     use TargetPathTrait;
 
-    private HttpUtils $httpUtils;
-    private ScopeMatcher $scopeMatcher;
-    private ContaoFramework $framework;
-    private Security $security;
-    private ?LoggerInterface $logger;
-
     /**
      * @internal
      */
-    public function __construct(HttpUtils $httpUtils, ScopeMatcher $scopeMatcher, ContaoFramework $framework, Security $security, ?LoggerInterface $logger)
-    {
-        $this->httpUtils = $httpUtils;
-        $this->scopeMatcher = $scopeMatcher;
-        $this->framework = $framework;
-        $this->security = $security;
-        $this->logger = $logger;
+    public function __construct(
+        private HttpUtils $httpUtils,
+        private ScopeMatcher $scopeMatcher,
+        private ContaoFramework $framework,
+        private Security $security,
+        private LoggerInterface|null $logger,
+    ) {
     }
 
     public function __invoke(LogoutEvent $event): void
@@ -92,12 +86,10 @@ class LogoutSuccessListener
                 return;
             }
 
-            if (null !== $this->logger) {
-                $this->logger->info(
-                    sprintf('User "%s" has logged out', $user->username),
-                    ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
-                );
-            }
+            $this->logger?->info(
+                sprintf('User "%s" has logged out', $user->username),
+                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
+            );
 
             $this->triggerPostLogoutHook($user);
         }

@@ -13,13 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Routing;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\Model\Collection;
 use Contao\PageModel;
-use Contao\System;
-use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
@@ -27,20 +23,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteProvider extends AbstractPageRouteProvider
 {
-    private bool $legacyRouting;
-    private bool $prependLocale;
-
-    /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.route_provider" service instead
-     */
-    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry, bool $legacyRouting, bool $prependLocale)
-    {
-        parent::__construct($framework, $candidates, $pageRegistry);
-
-        $this->legacyRouting = $legacyRouting;
-        $this->prependLocale = $prependLocale;
-    }
-
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $this->framework->initialize(true);
@@ -48,13 +30,13 @@ class RouteProvider extends AbstractPageRouteProvider
         $pathInfo = rawurldecode($request->getPathInfo());
 
         // The request string must not contain "auto_item" (see #4012)
-        if (false !== strpos($pathInfo, '/auto_item/')) {
+        if (str_contains($pathInfo, '/auto_item/')) {
             return new RouteCollection();
         }
 
         $routes = [];
 
-        if ('/' === $pathInfo || ($this->legacyRouting && $this->prependLocale && preg_match('@^/([a-z]{2}(-[A-Z]{2})?)/$@', $pathInfo))) {
+        if ('/' === $pathInfo) {
             $this->addRoutesForRootPages($this->findRootPages($request->getHttpHost()), $routes);
 
             return $this->createCollectionForRoutes($routes, $request->getLanguages());
@@ -175,7 +157,7 @@ class RouteProvider extends AbstractPageRouteProvider
             if (!$page->rootId) {
                 return;
             }
-        } catch (NoRootPageFoundException $e) {
+        } catch (NoRootPageFoundException) {
             return;
         }
 
@@ -205,7 +187,7 @@ class RouteProvider extends AbstractPageRouteProvider
             $route->getMethods()
         );
 
-        if (!$urlPrefix || (!$this->legacyRouting && $page->loadDetails()->disableLanguageRedirect)) {
+        if (!$urlPrefix || $page->loadDetails()->disableLanguageRedirect) {
             return;
         }
 
@@ -248,8 +230,8 @@ class RouteProvider extends AbstractPageRouteProvider
                 $nameA = array_search($a, $routes, true);
                 $nameB = array_search($b, $routes, true);
 
-                $fallbackA = 0 === substr_compare($nameA, '.fallback', -9);
-                $fallbackB = 0 === substr_compare($nameB, '.fallback', -9);
+                $fallbackA = str_ends_with($nameA, '.fallback');
+                $fallbackB = str_ends_with($nameB, '.fallback');
 
                 if ($fallbackA && !$fallbackB) {
                     return 1;
@@ -269,22 +251,6 @@ class RouteProvider extends AbstractPageRouteProvider
      */
     private function findRootPages(string $httpHost): array
     {
-        if (
-            $this->legacyRouting
-            && !empty($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
-            && \is_array($GLOBALS['TL_HOOKS']['getRootPageFromUrl'])
-        ) {
-            $system = $this->framework->getAdapter(System::class);
-
-            foreach ($GLOBALS['TL_HOOKS']['getRootPageFromUrl'] as $callback) {
-                $page = $system->importStatic($callback[0])->{$callback[1]}();
-
-                if ($page instanceof PageModel) {
-                    return [$page];
-                }
-            }
-        }
-
         $models = [];
 
         $pageModel = $this->framework->getAdapter(PageModel::class);

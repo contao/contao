@@ -1,426 +1,242 @@
 # API changes
 
-## Version 4.* to 4.11
+## Version 4.* to 5.0
 
-Loading MooTools and jQuery from CDN is no longer supported, because it does
-not provide any advantage anymore.
+### Show to guests only
 
-More information: https://github.com/contao/contao/pull/2438
+The "show to guests only" function has been removed. Use the "protect page" function instead.
 
-## Version 4.* to 4.10
+### tl_content.ptable
 
-### CSS classes "first" and "last"
+Contao no longer treats an empty `tl_content.ptable` column like it had been set to `tl_article`. Make
+sure to always set the `ptable` column.
 
-The CSS classes "first" and "last" are no longer applied to articles and
-content elements. Use CSS selectors instead.
+### disableInsertTags
 
-More information: https://github.com/contao/contao/issues/239
+The `disableInsertTags` config option has been removed. Use the `contao.insert_tags.allowed_tags`
+parameter instead.
 
-## Version 4.* to 4.8
+### runonce.php
 
-### Contao image 1.0
+The support for `runonce.php` files has been dropped. Use the migration framework instead.
 
-The `contao/image` library got updated from version 0.3 to 1.0. See
-[contao/image/UPGRADE.md][1] to get more information about the changes.
+### onrestore_callback
 
-### User agent body class
+The `onrestore_callback` has been removed. Use the `onrestore_version_callback` instead.
 
-The body class for the user agent (via the `{{ua::class}}` insert tag) has been
-removed in Contao `4.8` to improve caching capabilities. Adjust your CSS or use
-JavaScript if you need information about the user agent on the client side.
+### getSearchablePages hook
 
-### MediaElement.js
+The `getSearchablePages` hook has been removed. Use the `SitemapEvent` instead.
 
-The [MediaElement.js][2] component along with its `js_mediaelement` template has
-been removed in Contao 4.8 due to widespread support of HTML5 videos in current
-browsers. Use the HTML5 video element natively or integrate your own video player
-solution manually.
+### Backend::addFileMetaInformationToRequest
 
-## Version 4.* to 4.6
+`Backend::addFileMetaInformationToRequest()` and the corresponding `addFileMetaInformationToRequest` hook
+have been removed. Use the image handling services and the `FileMetadataEvent` instead.
 
-### Anonymize Google Analytics
+### FormTextarea->value
 
-The "Anonymize Google Analytics" flag in the back end settings has been
-removed. IP addresses are anonymized by default in the `analytics_google.html5`
-template now.
+The value of the `FormTextarea` widget is no longer encoded with `specialchars()`. Encode the value in
+your custom `form_textarea` templates instead.
 
-### Anonymize IP addresses
+### languages.php, getLanguages and $GLOBALS['TL_LANG']['LNG']
 
-The "Anonymize IP addresses" flag in the back end settings has been removed. It
-was used to bypass IP anonymization in the `System::anonymizeIp()` method,
-which is no longer supported.
+The `System::getLanguages()` method, the `getLanguages` hook and the `config/languages.php` file have been
+removed. Use or decorate the `contao.intl.locales` service instead.
 
-### Maximum front end width
+To add or remove countries, you can use the `contao.intl.locales` or `contao.intl.enabled_locales
+configuration. `$GLOBALS['TL_LANG']['LNG']` can still be used for overwriting translations, but no longer to
+retrieve language names.
 
-The `$GLOBALS['TL_CONFIG']['maxImageWidth']` parameter has been deprecated. Use
-responsive images instead.
+### countries.php, getCountries and $GLOBALS['TL_LANG']['CNT']
 
-### Flash movie
+The `System::getCountries()` method, the `getCountries` hook and the `config/countries.php` file have been
+removed. Use or decorate the `contao.intl.countries` service instead.
 
-The "flash movie" front end module has been removed.
+To add or remove countries, you can use the `contao.intl.countries` configuration. `$GLOBALS['TL_LANG']['CNT']`
+can still be used for overwriting translations, but no longer to retrieve country names.
 
-## Version 4.* to 4.5
+### UnresolvableDependenciesException
+
+The following classes and interfaces have been removed from the global namespace:
+
+ - `listable`
+ - `editable`
+ - `executable`
+ - `uploadable`
+ - `UnresolvableDependenciesException`
+ - `UnusedArgumentsException`
+
+### Model
+
+The protected `$arrClassNames` property was removed from the `Contao\Model` base class.
+
+### Request
+
+The `Contao\Request` library has been removed. Use another library such as `symfony/http-client` instead.
+
+### Renamed resources
+
+The following resources have been renamed:
+
+ - `ContentMedia` -> `ContentPlayer`
+ - `FormCheckBox` -> `FormCheckbox`
+ - `FormRadioButton` -> `FormRadio`
+ - `FormSelectMenu` -> `FormSelect`
+ - `FormTextField` -> `FormText`
+ - `FormTextArea` -> `FormTextarea`
+ - `FormFileUpload` -> `FormUpload`
+ - `ModulePassword` -> `ModuleLostPassword`
+ - `form_textfield` -> `form_text`
+
+### CSS classes "first", "last", "even" and "odd"
+
+The CSS classes `first`, `last`, `even`, `odd`, `row_*` and `col_*` are no longer applied anywhere.
+Use CSS selectors instead.
 
 ### Template changes
 
-The `pagination.html5` and `be_pagination.html5` templates now use a `<nav>`
-element as container and a `<strong>` element to mark the active item:
+The items in the `ce_list` and `ce_table` templates no longer consist of an associative array
+containing the item's CSS class and content. Instead, it will only be the content.
 
 ```php
 <!-- OLD -->
-<div class="pagination block">
-  ...
-  <li><span class="active">...</span></li>
-  ...
-</div>
+<?php foreach ($this->items as $item): ?>
+  <li<?php if ($item['class']): ?> class="<?= $item['class'] ?>"<?php endif; ?>><?= $item['content'] ?></li>
+<?php endforeach; ?>
 
 <!-- NEW -->
-<nav class="pagination block" aria-label="...">
-  ...
-  <li><strong class="active">...</strong></li>
-  ...
-</nav>
+<?php foreach ($this->items as $item): ?>
+  <li><?= $item ?></li>
+<?php endforeach; ?>
 ```
 
-### $_SESSION['TL_LANGUAGE']
+### Input type "textStore"
 
-The `$_SESSION['TL_LANGUAGE']` flag has been removed.
+The `textStore` input type was removed. Use `password` instead.
 
-## Version 4.* to 4.3
+### Global functions
 
-### Image upscaling
+The following global functions have been removed:
 
-The image service no longer supports upscaling images for reasons of bandwidth
-and storage consumption. Images should be upscaled via CSS if needed.
+ - `scan()`
+ - `specialchars()`
+ - `standardize()`
+ - `strip_insert_tags()`
+ - `deserialize()`
+ - `trimsplit()`
+ - `ampersand()`
+ - `nl2br_html5()`
+ - `nl2br_xhtml()`
+ - `nl2br_pre()`
+ - `basename_natcasecmp()`
+ - `basename_natcasercmp()`
+ - `natcaseksort()`
+ - `length_sort_asc()`
+ - `length_sort_desc()`
+ - `array_insert()`
+ - `array_dupliacte()`
+ - `array_move_up()`
+ - `array_move_down()`
+ - `array_delete()`
+ - `array_is_assoc()`
+ - `utf8_chr()`
+ - `utf8_ord()`
+ - `utf8_convert_encoding()`
+ - `utf8_decode_entities()`
+ - `utf8_chr_callback()`
+ - `utf8_hexchr_callback()`
+ - `utf8_detect_encoding()`
+ - `utf8_romanize()`
+ - `utf8_strlen()`
+ - `utf8_strpos()`
+ - `utf8_strrchr()`
+ - `utf8_strrpos()`
+ - `utf8_strstr()`
+ - `utf8_strtolower()`
+ - `utf8_strtoupper()`
+ - `utf8_substr()`
+ - `utf8_ucfirst()`
+ - `utf8_str_split()`
+ - `nl2br_callback()`
 
-### Form template
+Most of them have alternatives in either `StringUtil`, `ArrayUtil` or may have PHP native alternatives such as
+the `mb_*` functions. For advanced UTF-8 handling, use `symfony/string`.
 
-The form template `form.html5` has been renamed to `form_wrapper.html5`, so it
-can be overridden with a custom template in the form settings.
+### eval->orderField in PageTree and Picker widgets
 
-## Version 3.* to 4.0
+Support for a separate database `orderField` column has been removed. Use `isSortable` instead which
+stores the order in the same database column.
 
-### StringUtil class
+### Removed {{post::*}} insert tag
 
-Since the `String` class is not compatible with PHP 7, we have renamed it to
-`StringUtil`. The `String` class remains available for reasons of backwards
-compatibility, however it has been deprecated and will be removed in a future
-version.
+The `{{post::*}}` insert tag has been removed. To access submitted form data on forward pages, use the
+new `{{form_session_data::*}}` insert tag instead.
 
-### Mime icons
+### $_SESSION access no longer mapped to Symfony Session
 
-The mime icons have been removed from all front end templates. Instead, a new
-style sheet called `icons.css` has been added to the layout builder, which
-restores the mime icons for downloads and enclosures via CSS.
+The use of `$_SESSION` is discouraged because it makes testing and configuring alternative storage
+back ends hard. In Contao 4, access to `$_SESSION` has been transparently mapped to the Symfony session.
+This has been removed. Use `$request->getSession()` directly instead.
 
-### article_raster_designer hook
+### database.sql files
 
-The "article_raster_designer" hook has been removed. Use the "getArticles" hook
-instead and return a string to override the default articles content.
+Support for `database.sql` files has been dropped. Use DCA definitions and/or Doctrine DBAL schema
+listeners instead.
 
-### Add submit button
+### Simple Token Parser
 
-The "add submit button" option in the form generator has been removed. To
-generate an inline form, add a text field and a submit button and assign the
-CSS class `inline-form` to the form element (requires the `form.css` style
-sheet to be enabled in the page layout).
+Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are not supported anymore by the
+Simple Token Parser.
 
-### Space before/after
+### $GLOBALS['TL_KEYWORDS']
 
-The field "space before/after" has been removed. Use a CSS class instead and
-define the spacing in your style sheet.
+Keyword support in articles, and as such also `$GLOBALS['TL_KEYWORDS']`, has been removed.
 
-### CSS classes of included elements
+### Legacy routing
 
-If an element is included in another element, the CSS classes are now merged
-instead of overwritten, e.g. if content element A has the CSS class `elemA` and
-includes a front end module with the CSS class `elemB`, both CSS classes will
-be applied (`class="elemA elemB"`).
+The legacy routing has been dropped. As such, the `getPageIdFromUrl` and `getRootPageFromUrl` hooks do
+not exist anymore. Use Symfony routing instead.
 
-Here's how to select the elements separately:
+### Custom entry points
 
-```css
-.elemA {
-    /* Content element only */
-}
+The `initialize.php` file has been removed, so custom entry points will no longer work. Register your
+entry points as controllers instead.
 
-.elemB {
-    /* Content element and front end module */
-}
+### ClassLoader
 
-.elemB:not(.elemA) {
-    /* Front end module only */
-}
-```
+The `Contao\ClassLoader` has been removed. Use Composer autoloading instead.
 
-### Form option "tableless"
+### Encryption
 
-The form option "tableless" has been removed, because all forms are now
-tableless by default. Instead, the `form.css` style sheet of the layout builder
-has been enhanced to provide basic formattings for labels and input fields.
+The `Contao\Encryption` class and the `eval->encrypt` DCA flag have been removed. Use `save_callback`
+and `load_callback` and libraries such as `phpseclib/phpseclib` instead.
 
-By default, labels and input fields are listed underneath each other. However,
-if you add the CSS class `horizontal-form` to a form, they will be aligned in a
-horizontal layout, similar to the old table-based layout.
+### Internal CSS editor
 
-If you add the CSS class `inline-form`, the widgets will be aligned vertically.
+The internal CSS editor has been removed. Export your existing CSS files, import them in the file manager
+and then add them as external CSS files to the page layout.
 
-### Form field "headline"
+### log_message()
 
-The form field "headline" has been removed in favor of the "explanation" field.
+The function `log_message()` has been removed. Use the Symfony logger services instead. Consequently, the
+`Automator::rotateLogs()` method has been removed, too.
 
-### FORM_SUBMIT
+### config.dataContainer
 
-Every form now appends its numeric ID to the `FORM_SUBMIT` parameter, so custom
-forms used for triggering modules such as the login module have to be adjusted
-to pass the correct form ID (e.g. `tl_login_12` instead of `tl_login`).
+The DCA `config.dataContainer` property needs to be a FQCN instead of just `Table` or `Folder`.
 
-### Store form data
+More information: https://github.com/contao/contao/pull/4322
 
-If a front end form is set up to store the submitted data in the database, date
-and time fields are now automatically converted to Unix timestamps.
+### pageSelector and fileSelector widgets
 
-### Meta keywords
+The back end widgets `pageSelector` and `fileSelector` have been removed. Use the `picker` widget instead.
 
-The meta keywords tag has been removed from the `fe_page.html5` template, as
-it does not serve a purpose anymore. If you still want to use it, adjust the
-template as follows:
-
-```php
-<?php $this->extend('fe_page'); ?>
-
-<?php $this->block('meta'); ?>
-  <?php $this->parent(); ?>
-  <meta name="keywords" content="<?= $this->keywords ?>">
-<?php $this->endblock(); ?>
-```
-
-### Template name changes
-
-The following templates have been renamed to match the content element or
-module key:
-
- * `ce_accordion`          -> `ce_accordionSingle`
- * `ce_accordion_start`    -> `ce_accordionStart`
- * `ce_accordion_stop`     -> `ce_accordionStop`
- * `ce_slider_start`       -> `ce_sliderStart`
- * `ce_slider_stop`        -> `ce_sliderStop`
- * `mod_article_list`      -> `mod_articlelist`
- * `mod_article_nav`       -> `mod_articlenav`
- * `mod_random_image`      -> `mod_randomImage`
- * `mod_change_password`   -> `mod_changePassword`
- * `mod_event`             -> `mod_eventreader`
- * `mod_newsletter_list`   -> `mod_newsletterlist`
- * `mod_newsletter_reader` -> `mod_newsletterreader`
+### Public folder
 
-The following templates have been consolidated:
+The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
 
- * `ce_hyperlink_image`  -> `ce_hyperlink`
- * `mod_article_plain`   -> `mod_article`
- * `mod_article_teaser`  -> `mod_article`
- * `mod_login_1cl`       -> `mod_login`
- * `mod_login_2cl`       -> `mod_login`
- * `mod_logout_1cl`      -> `mod_login`
- * `mod_logout_2cl`      -> `mod_login`
- * `mod_search_advanced` -> `mod_search`
- * `mod_search_simple`   -> `mod_search`
- * `mod_eventmenu_year`  -> `mod_eventmenu`
- * `mod_newsmenu_day`    -> `mod_newsmenu`
- * `mod_newsmenu_year`   -> `mod_newsmenu`
- * `nl_list`             -> `mod_newsletterlist`
- * `nl_reader`           -> `mod_newsletterreader`
+### Figure
 
-Generally, we now require the template names to match the content element or
-module keys, so if your module has the key `taskList`, the corresponding
-template should be named `mod_taskList.html5`.
-
-Users can then create custom templates à la `mod_taskList_custom.html`, which
-will be shown in the "custom module template" list.
-
-### Front end module keys
-
-The keys of the following front end modules have been changed:
-
- * `articleList` -> `articlelist`
- * `rss_reader`  -> `rssReader`
- * `nl_list`     -> `newsletterlist`
- * `nl_reader`   -> `newsletterreader`
-
-### Custom database drivers
-
-The database classes have been mapped to the Doctrine DBAL, therefore custom
-drivers are no longer supported. If you have been using a custom driver for a
-database other than MySQL, use the corresponding Doctrine driver instead.
-
-### dump()
-
-The `dump()` function has been replaced by the Symfony debug bundle. Its output
-will be added to the web profiler.
-
-### tinymce.css and tiny_templates
-
-The style sheet `files/tinymce.css` and the folder `files/tiny_templates` have
-been removed. If you want to use the feature, please adjust the TinyMCE config
-file, which is now a template (e.g. `be_tinyMCE.html5`).
-
-### Frontend::parseMetaFile()
-
-The `Frontend::parseMetaFile()` method was deprecated since Contao 3 and has
-been removed in Contao 4.0.
-
-### $_SESSION['TL_USER_LOGGED_IN']
-
-The `$_SESSION['TL_USER_LOGGED_IN']` flag has been removed.
-
-### PHP entry points
-
-Contao 4 only uses a single PHP entry point, namely the `index.php` file. The
-previous PHP entry points have been removed and a route has been set up for
-each one instead.
-
- - `contao/confirm.php`  -> `contao_backend_confirm`
- - `contao/file.php`     -> `contao_backend_file`
- - `contao/help.php`     -> `contao_backend_help`
- - `contao/index.php`    -> `contao_backend_login`
- - `contao/main.php`     -> `contao_backend`
- - `contao/page.php`     -> `contao_backend_page`
- - `contao/password.php` -> `contao_backend_password`
- - `contao/popup.php`    -> `contao_backend_popup`
- - `contao/preview.php`  -> `contao_backend_preview`
- - `contao/switch.php`   -> `contao_backend_switch`
-
-The old paths are replaced automatically in the back end, still you should
-adjust your templates to use `$this->route()` instead:
-
-```php
-// Old
-<form action="contao/main.php">
-
-// New
-<form action="<?= $this->route('contao_backend') ?>">
-```
-
-### cron.php
-
-The `cron.php` entry point has been removed. Use the `/_contao/cron` route
-instead if you want to trigger the cron job manually.
-
-### Disable aliases
-
-In Contao 3 it was possible to disable aliases and make Contao use numeric IDs
-only. This was a workaround for an old IIS server, which has now been dropped.
-
-More information: https://github.com/contao/core-bundle/issues/118
-
-### system/runonce.php
-
-The `system/runonce.php` file is no longer supported. If you need to set up a
-`runonce.php` file, put it in the `src/Resources/contao/config/` directory.
-
-### DcaExtractor
-
-The `DcaExtractor` class is no longer instantiable via `new DcaExtractor()`.
-Use the `DcaExtractor::getInstance($table)` method instead.
-
-### MooTools slimbox
-
-The MooTools "slimbox" plugin has been removed. Use the MooTools "mediabox" or
-the jQuery "colorbox" plugin instead.
-
-### Message::generate()
-
-The `Message` class now supports scopes, which can optionally be passed as
-second argument:
-
-```php
-// Add an error message to "my-scope"
-Message::addError('An error ocurred', 'my-scope');
-
-// Generate all messages in "my-scope"
-Message::generate('my-scope');
-```
-
-The scope defaults to `TL_MODE`. The previous arguments of the `generate()`
-method have been removed. If you want to output the messages without the
-wrapping element, use `Message::generateUnwrapped()` instead.
-
-### prepareFormData hook
-
-The "prepareFormData" hook now passes `$this` as last argument, just like in
-any other hook.
-
-### Markup changes
-
- * The navigation menus are now using `<strong>` instead of `<span>` to
-   highlight the active menu item.
-
- * The search module is now using `<mark>` instead of `<span>` to highlight
-   the keywords.
-
- * The newsletter channel menu is now using `<fieldset>` and `<legend>`
-   instead of `<label>` and `<div>`.
-
- * The main section of the `fe_page.html` template now uses the `<main>` tag.
-
- * Submit buttons now use `<button type="submit">` instead of `<input>`.
-
-### CSS class changes
-
- * The book navigation module now uses the CSS class `previous` instead of
-   `prev` for the link to the previous page.
-
- * The pagination menu now uses the CSS class `active` instead of `current` for
-   the active menu item.
-
- * The classes `odd` and `even` are now correctly assigned to tables.
-
- * The form submit widget now uses the CSS class `widget widget-submit` instead
-   of `submit_container`.
-
- * The content syndication links of the `mod_article.html5` template now have
-   CSS classes and the class "pdf_link" has been replaced with "syndication":
-
-```html
-<div class="syndication">
-  <a href="..." class="print"></a>
-  <a href="..." class="pdf"></a>
-  <a href="..." class="facebook"></a>
-  <a href="..." class="twitter"></a>
-</div>
-```
-
-### new File()
-
-In Contao 3 `new File('tmp.txt')` automatically created the file if it did not
-exist and all write operations such as `$file->write()` or `$file->append()`
-were carried out directly on the target file.
-
-This behavior could already be changed in Contao 3 by passing `true` as second
-argument; the file was then only created if there was a write operation at all
-and any operation was carried out on a temporary file first, which was then
-moved to its final destination.
-
-In Contao 4 this changed behavior has become the default and the second
-argument has been dropped.
-
-### Protected folders
-
-In Contao 3 the user files in the `files/` directory were publicly available
-via HTTP by default, and it was possible to protect certain subfolders. Now,
-due to a technical change, the user files are protected by default and
-subfolders have to be published explicitly to be available via HTTP.
-
-### Article CSS IDs
-
-In Contao 3 the alias of an article was automatically used as its CSS ID, if
-no custom CSS ID was defined. In Contao 4 the default CSS ID will be generated
-from its numeric ID, e.g. `article-1`.
-
-### Database::listTables()
-
-In Contao 3 the table inspection methods of the `Database` class processed both
-tables and views. However, the Doctrine schema manager, which is used in Contao
-4, only processes tables.
-
-[1]: https://github.com/contao/image/blob/master/UPGRADE.md#version-03-to-10
-[2]: https://www.mediaelementjs.com
+The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
+`Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
+back to an array representation. If you are just using array access, nothing needs to be changed.

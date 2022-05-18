@@ -70,13 +70,6 @@ class QueryBuilder
 			$strQuery .= " WHERE " . (\is_array($arrOptions['column']) ? implode(" AND ", $arrOptions['column']) : $arrOptions['table'] . '.' . Database::quoteIdentifier($arrOptions['column']) . "=?");
 		}
 
-		// Group by
-		if (isset($arrOptions['group']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.4', 'Using the "group" option has been deprecated and will no longer work in Contao 5.0. See https://github.com/contao/contao/issues/1680.');
-			$strQuery .= " GROUP BY " . $arrOptions['group'];
-		}
-
 		// Having (see #6446)
 		if (isset($arrOptions['having']))
 		{
@@ -111,5 +104,3 @@ class QueryBuilder
 		return $strQuery;
 	}
 }
-
-class_alias(QueryBuilder::class, 'Model\QueryBuilder');

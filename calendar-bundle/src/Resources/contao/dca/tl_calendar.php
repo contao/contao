@@ -255,6 +255,8 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property Calendar $Calendar
+ *
+ * @internal
  */
 class tl_calendar extends Backend
 {

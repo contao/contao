@@ -20,16 +20,12 @@ use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    private string $projectDir;
-
-    public function __construct(string $projectDir)
+    public function __construct(private string $projectDir)
     {
-        $this->projectDir = $projectDir;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder
@@ -46,10 +42,6 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('contao_csrf_token')
                 ->end()
-                ->scalarNode('encryption_key')
-                    ->cannotBeEmpty()
-                    ->defaultValue('%kernel.secret%')
-                ->end()
                 ->integerNode('error_level')
                     ->info('The error reporting level set when the framework is initialized. Defaults to E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED.')
                     ->min(-1)
@@ -57,10 +49,6 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED)
                 ->end()
                 ->append($this->addIntlNode())
-                ->booleanNode('legacy_routing')
-                    ->defaultTrue()
-                    ->info('Disabling legacy routing allows to configure the URL prefix and suffix per root page. However, it might not be compatible with third-party extensions.')
-                ->end()
                 ->variableNode('localconfig')
                     ->info('Allows to set TL_CONFIG variables, overriding settings stored in localconfig.php. Changes in the Contao back end will not have any effect.')
                     ->validate()
@@ -82,11 +70,6 @@ class Configuration implements ConfigurationInterface
                     ->setDeprecated('contao/core-bundle', '4.12', 'Using contao.locales is deprecated. Please use contao.intl.enabled_locales instead.')
                     ->prototype('scalar')->end()
                     ->defaultValue([])
-                ->end()
-                ->booleanNode('prepend_locale')
-                    ->info('Whether or not to add the page language to the URL.')
-                    ->setDeprecated('contao/core-bundle', '4.10', 'The URL prefix is configured per root page since Contao 4.10. Using this option requires legacy routing.')
-                    ->defaultFalse()
                 ->end()
                 ->booleanNode('pretty_error_screens')
                     ->info('Show customizable, pretty error screens instead of the default PHP error messages.')
@@ -112,15 +95,11 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('editable_files')
                     ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,ts,txt,xliff,xml,yml,yaml')
                 ->end()
-                ->scalarNode('url_suffix')
-                    ->setDeprecated('contao/core-bundle', '4.10', 'The URL suffix is configured per root page since Contao 4.10. Using this option requires legacy routing.')
-                    ->defaultValue('.html')
-                ->end()
                 ->scalarNode('web_dir')
                     ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
                     ->setDeprecated('contao/core-bundle', '4.13', 'Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.')
                     ->cannotBeEmpty()
-                    ->defaultValue($this->getDefaultWebDir())
+                    ->defaultValue('public')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
@@ -193,7 +172,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->booleanNode('reject_large_uploads')
-                    ->info('Reject uploaded images exceeding the localconfig.gdMaxImgWidth and localconfig.gdMaxImgHeight dimensions.')
+                    ->info('Reject uploaded images exceeding the localconfig.imageWidth and localconfig.imageHeight dimensions.')
                     ->defaultValue(false)
                 ->end()
                 ->arrayNode('sizes')
@@ -666,7 +645,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $intervals) {
                                 try {
                                     RetentionPolicy::validateAndSortIntervals($intervals);
-                                } catch (\Exception $e) {
+                                } catch (\Exception) {
                                     return true;
                                 }
 
@@ -706,16 +685,5 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
-    }
-
-    private function getDefaultWebDir(): string
-    {
-        $webDir = Path::join($this->projectDir, 'web');
-
-        if ((new Filesystem())->exists($webDir)) {
-            return $webDir;
-        }
-
-        return Path::join($this->projectDir, 'public');
     }
 }

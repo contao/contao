@@ -282,18 +282,6 @@ class Validator
 	}
 
 	/**
-	 * Valid Google+ ID or vanity name
-	 *
-	 * @param mixed $varValue The numeric ID or vanity name
-	 *
-	 * @return boolean True if the value is a Google+ ID
-	 */
-	public static function isGooglePlusId($varValue)
-	{
-		return preg_match('/^([0-9]{21}|\+[\w-]+)$/u', $varValue);
-	}
-
-	/**
 	 * Insecure path potentially containing directory traversal
 	 *
 	 * @param string $strPath The file path
@@ -392,5 +380,3 @@ class Validator
 		return preg_match('/^[A-Za-z0-9[\]_-]+$/', $strName);
 	}
 }
-
-class_alias(Validator::class, 'Validator');

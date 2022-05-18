@@ -83,8 +83,8 @@
               <th class="tl_folder_tlist"><?= $this->trans('MSC.operatingSystem') ?></th>
               <th class="tl_folder_tlist"><?= $this->trans('MSC.createdOn') ?></th>
             </tr>
-            <?php foreach ($this->trustedDevices as $index => $trustedDevice): ?>
-              <tr class="<?= $index % 2 ? 'odd' : 'even' ?> hover-row">
+            <?php foreach ($this->trustedDevices as $trustedDevice): ?>
+              <tr class="hover-row">
                 <td class="tl_file_list"><?= $trustedDevice->getDeviceFamily() ?></td>
                 <td class="tl_file_list"><?= $trustedDevice->getUaFamily() ?></td>
                 <td class="tl_file_list"><?= $trustedDevice->getOsFamily() ?></td>

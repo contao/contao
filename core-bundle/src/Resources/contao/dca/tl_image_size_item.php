@@ -198,6 +198,8 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
+ *
+ * @internal
  */
 class tl_image_size_item extends Backend
 {

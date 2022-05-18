@@ -350,5 +350,3 @@ class CalendarEventsModel extends Model
 		return static::findBy($arrColumns, null, $arrOptions);
 	}
 }
-
-class_alias(CalendarEventsModel::class, 'CalendarEventsModel');

@@ -862,5 +862,3 @@ class Dbafs
 		}
 	}
 }
-
-class_alias(Dbafs::class, 'Dbafs');

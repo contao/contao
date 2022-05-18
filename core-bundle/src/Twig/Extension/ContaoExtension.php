@@ -14,13 +14,18 @@ namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
+use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
+use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
@@ -40,15 +45,10 @@ use Twig\TwigFunction;
  */
 final class ContaoExtension extends AbstractExtension
 {
-    private Environment $environment;
-    private TemplateHierarchyInterface $hierarchy;
     private array $contaoEscaperFilterRules = [];
 
-    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
+    public function __construct(private Environment $environment, private TemplateHierarchyInterface $hierarchy)
     {
-        $this->environment = $environment;
-        $this->hierarchy = $hierarchy;
-
         $contaoEscaper = new ContaoEscaper();
 
         /** @var EscaperExtension $escaperExtension */
@@ -61,6 +61,10 @@ final class ContaoExtension extends AbstractExtension
         // shipping.
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
         $this->addContaoEscaperRule('%^@Contao(Core|Installation)/%');
+
+        // Mark classes as safe for HTML that already escape their output themselves
+        $escaperExtension->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
+        $escaperExtension->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
     }
 
     /**
@@ -100,6 +104,8 @@ final class ContaoExtension extends AbstractExtension
             // additionally support the Contao template hierarchy
             new DynamicExtendsTokenParser($this->hierarchy),
             new DynamicIncludeTokenParser($this->hierarchy),
+            // Add a parser for the Contao specific "add" tag
+            new AddTokenParser(self::class),
         ];
     }
 
@@ -119,6 +125,10 @@ final class ContaoExtension extends AbstractExtension
                     return $includeFunctionCallable(...$args);
                 },
                 ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]
+            ),
+            new TwigFunction(
+                'attrs',
+                static fn (iterable|string|HtmlAttributes|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes),
             ),
             new TwigFunction(
                 'contao_figure',
@@ -146,11 +156,6 @@ final class ContaoExtension extends AbstractExtension
                 'contao_section',
                 [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSection'],
                 ['needs_context' => true, 'is_safe' => ['html']]
-            ),
-            new TwigFunction(
-                'render_contao_backend_template',
-                [LegacyTemplateFunctionsRuntime::class, 'renderContaoBackendTemplate'],
-                ['is_safe' => ['html']]
             ),
         ];
     }
@@ -192,6 +197,14 @@ final class ContaoExtension extends AbstractExtension
                 'insert_tag_raw',
                 [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw']
             ),
+            new TwigFilter(
+                'highlight',
+                [HighlighterRuntime::class, 'highlight'],
+            ),
+            new TwigFilter(
+                'highlight_auto',
+                [HighlighterRuntime::class, 'highlightAuto'],
+            ),
         ];
     }
 
@@ -219,7 +232,7 @@ final class ContaoExtension extends AbstractExtension
                 return $this->inherit();
             }
 
-            protected function renderTwigSurrogateIfExists(): ?string
+            protected function renderTwigSurrogateIfExists(): string|null
             {
                 return null;
             }
@@ -229,6 +242,34 @@ final class ContaoExtension extends AbstractExtension
         $partialTemplate->setBlocks($blocks);
 
         return $partialTemplate->parse();
+    }
+
+    /**
+     * @see \Contao\CoreBundle\Twig\ResponseContext\AddNode
+     * @see \Contao\CoreBundle\Twig\ResponseContext\AddTokenParser
+     *
+     * @internal
+     */
+    public function addDocumentContent(string|null $identifier, string $content, DocumentLocation $location): void
+    {
+        // TODO: This should make use of the response context in the future.
+        if (DocumentLocation::head === $location) {
+            if (null !== $identifier) {
+                $GLOBALS['TL_HEAD'][$identifier] = $content;
+            } else {
+                $GLOBALS['TL_HEAD'][] = $content;
+            }
+
+            return;
+        }
+
+        if (DocumentLocation::endOfBody === $location) {
+            if (null !== $identifier) {
+                $GLOBALS['TL_BODY'][$identifier] = $content;
+            } else {
+                $GLOBALS['TL_BODY'][] = $content;
+            }
+        }
     }
 
     private function getTwigIncludeFunction(): TwigFunction

@@ -184,6 +184,8 @@ services:
 
     contao.listener.dbafs_metadata:
         class: Contao\CoreBundle\EventListener\DbafsMetadataSubscriber
+        arguments:
+            - '@request_stack'
         tags:
             - kernel.event_subscriber
 
@@ -222,11 +224,6 @@ services:
         arguments:
             - '@security.helper'
             - '@contao.image.sizes'
-
-    contao.listener.initialize_controller:
-        class: Contao\CoreBundle\EventListener\InitializeControllerListener
-        tags:
-            - { name: kernel.event_listener, priority: 1000 }
 
     contao.listener.insecure_installation:
         class: Contao\CoreBundle\EventListener\InsecureInstallationListener
@@ -337,6 +334,16 @@ services:
         tags:
             - { name: contao.callback, table: tl_module, target: fields.customTpl.options }
 
+    contao.listener.page_access:
+        class: Contao\CoreBundle\EventListener\PageAccessListener
+        arguments:
+            - '@contao.framework'
+            - '@security.helper'
+        tags:
+            # The priority must be lower than the Symfony route listener (defaults to 32)
+            # and lower than the Symfony firewall listener (defaults to 8)
+            - { name: kernel.event_listener, priority: 7 }
+
     contao.listener.pretty_error_screen:
         class: Contao\CoreBundle\EventListener\PrettyErrorScreenListener
         arguments:
@@ -402,7 +409,6 @@ services:
     contao.listener.request_token:
         class: Contao\CoreBundle\EventListener\RequestTokenListener
         arguments:
-            - '@contao.framework'
             - '@contao.routing.scope_matcher'
             - '@contao.csrf.token_manager'
             - '%contao.csrf_token_name%'
@@ -513,28 +519,3 @@ services:
             - '@router'
             - '@translator'
             - '@contao.csrf.token_manager'
-
-    # Backwards compatibility
-    Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
-        alias: contao.listener.data_container.content_composition
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.listener.data_container.content_composition" instead.
-
-    Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener:
-        alias: contao.listener.data_container.page_type_options
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.listener.data_container.page_type_options" instead.
-
-    Contao\CoreBundle\EventListener\DataContainer\PageUrlListener:
-        alias: contao.listener.data_container.page_url
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.listener.data_container.page_url" instead.

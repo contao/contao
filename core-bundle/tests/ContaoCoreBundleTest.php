@@ -17,7 +17,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
@@ -42,6 +41,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
+use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
@@ -56,7 +56,6 @@ class ContaoCoreBundleTest extends TestCase
         $passes = [
             AddEventAliasesPass::class,
             MakeServicesPublicPass::class,
-            AddPackagesPass::class,
             AddAssetsPackagesPass::class,
             AddSessionBagsPass::class,
             AddResourcesPathsPass::class,
@@ -102,12 +101,13 @@ class ContaoCoreBundleTest extends TestCase
                             PreviewUrlConvertEvent::class => ContaoCoreEvents::PREVIEW_URL_CONVERT,
                             RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
                             SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
+                            SitemapEvent::class => ContaoCoreEvents::SITEMAP,
                         ];
 
                         $this->assertEquals(new AddEventAliasesPass($eventAliases), $pass);
                     }
 
-                    $this->assertContains(\get_class($pass), $passes);
+                    $this->assertContains($pass::class, $passes);
 
                     return true;
                 }
@@ -123,27 +123,6 @@ class ContaoCoreBundleTest extends TestCase
 
         $bundle = new ContaoCoreBundle();
         $bundle->build($container);
-    }
-
-    public function testAddsPackagesPassBeforeAssetsPackagesPass(): void
-    {
-        $container = new ContainerBuilder();
-        $container->registerExtension(new SecurityExtension());
-
-        $bundle = new ContaoCoreBundle();
-        $bundle->build($container);
-
-        $classes = [];
-
-        foreach ($container->getCompilerPassConfig()->getPasses() as $pass) {
-            $reflection = new \ReflectionClass($pass);
-            $classes[] = $reflection->getName();
-        }
-
-        $packagesPosition = array_search(AddPackagesPass::class, $classes, true);
-        $assetsPosition = array_search(AddAssetsPackagesPass::class, $classes, true);
-
-        $this->assertTrue($packagesPosition < $assetsPosition);
     }
 
     public function testAddsFragmentsPassBeforeHooksPass(): void

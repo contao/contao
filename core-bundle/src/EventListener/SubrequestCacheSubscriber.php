@@ -42,9 +42,9 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterface
 {
-    public const MERGE_CACHE_HEADER = 'Contao-Merge-Cache-Control';
+    final public const MERGE_CACHE_HEADER = 'Contao-Merge-Cache-Control';
 
-    private ?ResponseCacheStrategy $currentStrategy = null;
+    private ResponseCacheStrategy|null $currentStrategy = null;
 
     /**
      * @var array<ResponseCacheStrategy>

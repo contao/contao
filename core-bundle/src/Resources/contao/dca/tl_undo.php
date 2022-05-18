@@ -125,6 +125,8 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
+ *
+ * @internal
  */
 class tl_undo extends Backend
 {

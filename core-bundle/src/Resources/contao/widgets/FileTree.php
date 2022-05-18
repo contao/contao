@@ -306,7 +306,7 @@ class FileTree extends Widget
 								}
 							}
 							// Only show allowed download types
-							elseif (\in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+							elseif (\in_array($objFile->extension, $allowedDownload))
 							{
 								if ($this->showAsImage($objFile))
 								{
@@ -333,7 +333,7 @@ class FileTree extends Widget
 							}
 						}
 						// Only show allowed download types
-						elseif (\in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
+						elseif (\in_array($objFile->extension, $allowedDownload))
 						{
 							if ($this->showAsImage($objFile))
 							{
@@ -464,7 +464,7 @@ class FileTree extends Widget
 			$objFile = new File(StringUtil::stripRootDir($previewPath));
 		}
 
-		if ($objFile->viewWidth && $objFile->viewHeight && ($objFile->isSvgImage || ($objFile->height <= Config::get('gdMaxImgHeight') && $objFile->width <= Config::get('gdMaxImgWidth'))))
+		if ($objFile->viewWidth && $objFile->viewHeight)
 		{
 			// Inline the image if no preview image will be generated (see #636)
 			if ($objFile->height !== null && $objFile->height <= 75 && $objFile->width !== null && $objFile->width <= 100)
@@ -490,7 +490,7 @@ class FileTree extends Widget
 		return Image::getHtml($image, '', 'class="' . $strClass . '" title="' . StringUtil::specialchars($strInfo) . '"');
 	}
 
-	private function getFilePreviewPath(string $path): ?string
+	private function getFilePreviewPath(string $path): string|null
 	{
 		if (!$this->showFilePreview)
 		{
@@ -521,5 +521,3 @@ class FileTree extends Widget
 		return $this->getFilePreviewPath($objFile->path) !== null;
 	}
 }
-
-class_alias(FileTree::class, 'FileTree');

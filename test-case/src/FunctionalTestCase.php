@@ -26,7 +26,7 @@ abstract class FunctionalTestCase extends WebTestCase
     private static int $alterCount = -1;
     private static bool $supportsAlterCount;
 
-    protected static function loadFixtures(array $yamlFiles, bool $truncateTables = true): void
+    protected static function loadFixtures(array $yamlFiles): void
     {
         if (!self::$booted) {
             throw new \RuntimeException('Please boot the kernel before calling '.__METHOD__);
@@ -54,7 +54,7 @@ abstract class FunctionalTestCase extends WebTestCase
 
         try {
             $connection->executeStatement('SET @@SESSION.information_schema_stats_expiry = 0');
-        } catch (\Throwable $exception) {
+        } catch (\Throwable) {
             // Ignore
         }
 
@@ -78,7 +78,7 @@ abstract class FunctionalTestCase extends WebTestCase
 
             try {
                 $getAlterCount();
-            } catch (\Throwable $exception) {
+            } catch (\Throwable) {
                 self::$supportsAlterCount = false;
             }
         }

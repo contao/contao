@@ -64,5 +64,3 @@ class ThemeModel extends Model
 	 */
 	protected static $strTable = 'tl_theme';
 }
-
-class_alias(ThemeModel::class, 'ThemeModel');

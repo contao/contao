@@ -26,19 +26,13 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     private const PREFIX = 'dc.';
     private const PREFIX_LENGTH = 3;
 
-    private ContaoFramework $framework;
-    private FactoryInterface $menuFactory;
-    private RouterInterface $router;
-    private TranslatorInterface $translator;
-    private Connection $connection;
-
-    public function __construct(ContaoFramework $framework, FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator, Connection $connection)
-    {
-        $this->framework = $framework;
-        $this->menuFactory = $menuFactory;
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->connection = $connection;
+    public function __construct(
+        private ContaoFramework $framework,
+        private FactoryInterface $menuFactory,
+        private RouterInterface $router,
+        private TranslatorInterface $translator,
+        private Connection $connection,
+    ) {
     }
 
     public function getUrl(PickerConfig $config): string
@@ -107,9 +101,9 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $menu->getFirstChild();
     }
 
-    public function supportsContext($context): bool
+    public function supportsContext(string $context): bool
     {
-        if (0 !== strpos($context, self::PREFIX)) {
+        if (!str_starts_with($context, self::PREFIX)) {
             return false;
         }
 
@@ -129,7 +123,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
     public function isCurrent(PickerConfig $config): bool
     {
-        return 0 === strpos($config->getCurrent(), $this->getName().'.');
+        return str_starts_with($config->getCurrent(), $this->getName().'.');
     }
 
     public function getDcaTable(PickerConfig $config = null): string
@@ -160,7 +154,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, $value)/*: int*/
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string
     {
         return (int) $value;
     }
@@ -236,14 +230,8 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             $data = $qb->executeQuery()->fetchAssociative();
         }
 
-        if ($dynamicPtable) {
-            if (!empty($data['ptable'])) {
-                $ptable = $data['ptable'];
-            }
-
-            if (!$ptable) {
-                $ptable = 'tl_article'; // backwards compatibility
-            }
+        if ($dynamicPtable && !empty($data['ptable'])) {
+            $ptable = $data['ptable'];
         }
 
         if (false === $data) {

@@ -23,7 +23,7 @@
   <?= $this->javascripts ?>
 
 </head>
-<body class="<?= $this->ua ?>">
+<body>
 
   <div id="container">
     <main id="main">

@@ -161,5 +161,3 @@ class BackendConfirm extends Backend
 		return $objTemplate->getResponse();
 	}
 }
-
-class_alias(BackendConfirm::class, 'BackendConfirm');

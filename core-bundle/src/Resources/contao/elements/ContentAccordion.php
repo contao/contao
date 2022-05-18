@@ -56,5 +56,3 @@ class ContentAccordion extends ContentElement
 		$this->Template->headline = $this->mooHeadline;
 	}
 }
-
-class_alias(ContentAccordion::class, 'ContentAccordion');

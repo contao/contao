@@ -65,5 +65,3 @@ class FormFieldsetStart extends Widget
 		);
 	}
 }
-
-class_alias(FormFieldsetStart::class, 'FormFieldsetStart');

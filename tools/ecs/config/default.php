@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
+use PhpCsFixer\Fixer\Whitespace\BlankLineBeforeStatementFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
 use SlevomatCodingStandard\Sniffs\Variables\UnusedVariableSniff;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -18,6 +19,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         '*/Fixtures/system/*',
         '*/Resources/contao/*',
         'maker-bundle/src/Resources/skeleton/*',
+        // TODO: remove these once we can define rules for enums
+        BlankLineBeforeStatementFixer::class => [
+            'core-bundle/src/Filesystem/SortMode.php',
+            'core-bundle/src/Twig/ResponseContext/DocumentLocation.php',
+        ],
         MethodChainingIndentationFixer::class => [
             '*/DependencyInjection/Configuration.php',
             '*/Resources/config/*.php',

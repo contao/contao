@@ -23,11 +23,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PreviewUrlConvertListener
 {
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     /**
@@ -46,7 +43,7 @@ class PreviewUrlConvertListener
         $event->setUrl($this->framework->getAdapter(News::class)->generateNewsUrl($news, false, true));
     }
 
-    private function getNewsModel(Request $request): ?NewsModel
+    private function getNewsModel(Request $request): NewsModel|null
     {
         if (!$request->query->has('news')) {
             return null;

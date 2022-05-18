@@ -210,5 +210,3 @@ class BackendPopup extends Backend
 		return $objTemplate->getResponse();
 	}
 }
-
-class_alias(BackendPopup::class, 'BackendPopup');

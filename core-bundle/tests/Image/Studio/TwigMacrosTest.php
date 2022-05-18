@@ -104,7 +104,7 @@ class TwigMacrosTest extends TestCase
     /**
      * @dataProvider provideImgData
      */
-    public function testImgMacro(array $imageData, ?Metadata $metadata, string $expected): void
+    public function testImgMacro(array $imageData, Metadata|null $metadata, string $expected): void
     {
         $image = $this->createMock(ImageResult::class);
         $image
@@ -368,7 +368,7 @@ class TwigMacrosTest extends TestCase
     /**
      * @dataProvider provideFigureData
      */
-    public function testFigureMacro(?Metadata $metadata, array $linkAttributes, ?LightboxResult $lightbox, string $expected): void
+    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, LightboxResult|null $lightbox, string $expected): void
     {
         $figure = new Figure(
             $this->createMock(ImageResult::class),

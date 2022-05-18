@@ -128,5 +128,3 @@ class CommentsNotifyModel extends Model
 		return static::createCollectionFromDbResult($objResult, $t);
 	}
 }
-
-class_alias(CommentsNotifyModel::class, 'CommentsNotifyModel');

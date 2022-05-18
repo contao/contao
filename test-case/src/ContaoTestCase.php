@@ -19,7 +19,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Roave\BetterReflection\BetterReflection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\Filesystem\Filesystem;
@@ -30,7 +29,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 abstract class ContaoTestCase extends TestCase
 {
     private static array $tempDirs = [];
-    private static array $betterReflectionCache = [];
+
     private array $backupServerEnvGetPost = [];
 
     public static function tearDownAfterClass(): void
@@ -116,7 +115,7 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return ContaoFramework&MockObject
      */
-    protected function mockContaoFramework(array $adapters = []): ContaoFramework
+    protected function mockContaoFramework(array $adapters = [], array $instances = []): ContaoFramework
     {
         $this->addConfigAdapter($adapters);
 
@@ -130,6 +129,13 @@ abstract class ContaoTestCase extends TestCase
             ->method('getAdapter')
             ->willReturnCallback(static fn (string $key): ?Adapter => $adapters[$key] ?? null)
         ;
+
+        if (0 !== \count($instances)) {
+            $framework
+                ->method('createInstance')
+                ->willReturnCallback(static fn (string $key): mixed => $instances[$key] ?? null)
+            ;
+        }
 
         return $framework;
     }
@@ -180,9 +186,16 @@ abstract class ContaoTestCase extends TestCase
      *
      * @return T&MockObject
      */
-    protected function mockClassWithProperties(string $class, array $properties = []): MockObject
+    protected function mockClassWithProperties(string $class, array $properties = [], array $except = []): MockObject
     {
-        $mock = $this->createMock($class);
+        $classMethods = get_class_methods($class);
+
+        if (!$except) {
+            $mock = $this->createMock($class);
+        } else {
+            $mock = $this->createPartialMock($class, array_diff($classMethods, $except));
+        }
+
         $mock
             ->method('__get')
             ->willReturnCallback(
@@ -192,7 +205,7 @@ abstract class ContaoTestCase extends TestCase
             )
         ;
 
-        if (\in_array('__set', get_class_methods($class), true)) {
+        if (\in_array('__set', $classMethods, true)) {
             $mock
                 ->method('__set')
                 ->willReturnCallback(
@@ -203,12 +216,34 @@ abstract class ContaoTestCase extends TestCase
             ;
         }
 
-        if (\in_array('__isset', get_class_methods($class), true)) {
+        if (\in_array('__isset', $classMethods, true)) {
             $mock
                 ->method('__isset')
                 ->willReturnCallback(
                     static function (string $key) use (&$properties) {
                         return isset($properties[$key]);
+                    }
+                )
+            ;
+        }
+
+        if (\in_array('row', $classMethods, true)) {
+            $mock
+                ->method('row')
+                ->willReturnCallback(
+                    static function () use (&$properties) {
+                        return $properties;
+                    }
+                )
+            ;
+        }
+
+        if (\in_array('setRow', $classMethods, true)) {
+            $mock
+                ->method('setRow')
+                ->willReturnCallback(
+                    static function (array $data) use (&$properties): void {
+                        $properties = $data;
                     }
                 )
             ;
@@ -300,52 +335,19 @@ abstract class ContaoTestCase extends TestCase
                     continue;
                 }
 
-                $property->setAccessible(true);
-
                 if (!$property->isInitialized()) {
                     continue;
                 }
 
-                [$hasDefaultValue, $defaultValue] = $this->getDefaultStaticProperty($property);
+                $defaultValue = $property->getDefaultValue();
 
-                if (!$hasDefaultValue || $property->getValue() === $defaultValue) {
+                if (!$property->hasDefaultValue() || $property->getValue() === $defaultValue) {
                     continue;
                 }
 
                 $property->setValue($defaultValue);
             }
         }
-    }
-
-    private function getDefaultStaticProperty(\ReflectionProperty $property): array
-    {
-        // See https://github.com/php/php-src/commit/3eb97a456648c739533d92c81102cb919eab01c9
-        if (\PHP_VERSION_ID >= 80100) {
-            return [$property->hasDefaultValue(), $property->getDefaultValue()];
-        }
-
-        if (!class_exists(BetterReflection::class)) {
-            throw new \RuntimeException('To use the ContaoTestCase::resetStaticProperties() method on PHP 8.0 or lower please install "roave/better-reflection".');
-        }
-
-        $class = $property->getDeclaringClass()->getName();
-        $name = $property->getName();
-        $cacheKey = $class.'::'.$name;
-
-        if (isset(self::$betterReflectionCache[$cacheKey])) {
-            return self::$betterReflectionCache[$cacheKey];
-        }
-
-        if (method_exists(BetterReflection::class, 'reflector')) {
-            $betterProperty = (new BetterReflection())->reflector()->reflectClass($class)->getProperty($name);
-        } else {
-            $betterProperty = (new BetterReflection())->classReflector()->reflect($class)->getProperty($name);
-        }
-
-        return self::$betterReflectionCache[$cacheKey] = [
-            $betterProperty->isDefault(),
-            $betterProperty->getDefaultValue(),
-        ];
     }
 
     /**

@@ -18,18 +18,14 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 
 class MigrateCommandTest extends TestCase
 {
@@ -76,7 +72,6 @@ class MigrateCommandTest extends TestCase
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
-            [],
             null,
             $backupsEnabled
         );
@@ -124,54 +119,6 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
-     * @group legacy
-     * @dataProvider getOutputFormats
-     */
-    public function testExecutesRunOnceFiles(string $format): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Using "runonce.php" files has been deprecated %s.');
-
-        $runOnceFile = Path::join($this->getTempDir(), 'runonceFile.php');
-
-        (new Filesystem())->dumpFile($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
-
-        $command = $this->getCommand([], [], [[$runOnceFile]]);
-
-        $tester = new CommandTester($command);
-        $tester->setInputs(['y']);
-
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
-        $display = $tester->getDisplay();
-
-        $this->assertSame('executed', $GLOBALS['test_'.self::class]);
-
-        unset($GLOBALS['test_'.self::class]);
-
-        $this->assertSame(0, $code);
-
-        if ('ndjson' === $format) {
-            $this->assertSame(
-                [
-                    [
-                        'type' => 'migration-pending',
-                        'names' => ['Runonce file: runonceFile.php'],
-                        'hash' => '1ff509c324643092e7d68c763d03832e4b96f5be8fa3a95ea6765abfe96443ca',
-                    ],
-                    ['type' => 'migration-result', 'message' => 'Executed runonce file: runonceFile.php', 'isSuccessful' => true],
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                ],
-                $this->jsonArrayFromNdjson($display)
-            );
-        } else {
-            $this->assertMatchesRegularExpression('/runonceFile.php/', $display);
-            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
-            $this->assertFileDoesNotExist($runOnceFile, 'File should be gone once executed');
-        }
-    }
-
-    /**
      * @dataProvider getOutputFormats
      */
     public function testExecutesSchemaDiff(string $format): void
@@ -200,7 +147,7 @@ class MigrateCommandTest extends TestCase
             )
         ;
 
-        $command = $this->getCommand([], [], [], $installer);
+        $command = $this->getCommand([], [], $installer);
 
         $tester = new CommandTester($command);
         $tester->setInputs(['yes', 'yes']);
@@ -241,13 +188,10 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
-     * @group legacy
      * @dataProvider getOutputFormats
      */
     public function testDoesNotExecuteWithDryRun(string $format): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Using "runonce.php" files has been deprecated %s.');
-
         $installer = $this->createMock(Installer::class);
         $installer
             ->expects($this->once())
@@ -266,14 +210,9 @@ class MigrateCommandTest extends TestCase
             )
         ;
 
-        $runOnceFile = Path::join($this->getTempDir(), 'runonceFile.php');
-
-        (new Filesystem())->dumpFile($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
-
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
-            [[$runOnceFile]],
             $installer
         );
 
@@ -290,8 +229,8 @@ class MigrateCommandTest extends TestCase
                 [
                     [
                         'type' => 'migration-pending',
-                        'names' => ['Migration 1', 'Migration 2', 'Runonce file: runonceFile.php'],
-                        'hash' => 'fd96e0795abea843b443ccd39c746b5f1491c45131611f14a7c5bfb518824252',
+                        'names' => ['Migration 1', 'Migration 2'],
+                        'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd',
                     ],
                     [
                         'type' => 'schema-pending',
@@ -306,9 +245,6 @@ class MigrateCommandTest extends TestCase
             $this->assertMatchesRegularExpression('/Migration 2/', $display);
             $this->assertDoesNotMatchRegularExpression('/Result 1/', $display);
             $this->assertDoesNotMatchRegularExpression('/Result 2/', $display);
-
-            $this->assertMatchesRegularExpression('/runonceFile.php/', $display);
-            $this->assertFileExists($runOnceFile, 'File should not be gone in dry-run mode');
 
             $this->assertMatchesRegularExpression('/First call QUERY 1/', $display);
             $this->assertMatchesRegularExpression('/First call QUERY 2/', $display);
@@ -391,7 +327,7 @@ class MigrateCommandTest extends TestCase
             ->willThrowException(new \Exception('Fatal'))
         ;
 
-        $command = $this->getCommand([], [], [], $installer);
+        $command = $this->getCommand([], [], $installer);
         $tester = new CommandTester($command);
 
         if ('ndjson' !== $format) {
@@ -426,9 +362,8 @@ class MigrateCommandTest extends TestCase
     /**
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
-     * @param array<array<string>>          $runonceFiles
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null, bool $backupsEnabled = false): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], Installer $installer = null, bool $backupsEnabled = false): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
 
@@ -446,22 +381,6 @@ class MigrateCommandTest extends TestCase
         $migrations
             ->method('run')
             ->willReturn(...$migrationResults)
-        ;
-
-        $runonceFiles[] = [];
-        $runonceFiles[] = [];
-        $duplicatedRunonceFiles = [];
-
-        foreach ($runonceFiles as $runonceFile) {
-            $duplicatedRunonceFiles[] = $runonceFile;
-            $duplicatedRunonceFiles[] = $runonceFile;
-        }
-
-        $fileLocator = $this->createMock(FileLocator::class);
-        $fileLocator
-            ->method('locate')
-            ->with('config/runonce.php', null, false)
-            ->willReturn(...$duplicatedRunonceFiles)
         ;
 
         $backupManager = $this->createMock(BackupManager::class);
@@ -484,9 +403,6 @@ class MigrateCommandTest extends TestCase
 
         return new MigrateCommand(
             $migrations,
-            $fileLocator,
-            $this->getTempDir(),
-            $this->createMock(ContaoFramework::class),
             $backupManager,
             $schemaProvider,
             $this->createMock(MysqlInnodbRowSizeCalculator::class),

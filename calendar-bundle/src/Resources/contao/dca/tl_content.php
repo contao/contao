@@ -26,6 +26,8 @@ if (Input::get('do') == 'calendar')
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property Calendar $Calendar
+ *
+ * @internal
  */
 class tl_content_calendar extends Backend
 {

@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('protected'),
-		'default'                     => '{title_legend},title,alias,author;{layout_legend},inColumn,keywords;{teaser_legend:hide},teaserCssID,showTeaser,teaser;{syndication_legend},printable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},title,alias,author;{layout_legend},inColumn;{teaser_legend:hide},teaserCssID,showTeaser,teaser;{syndication_legend},printable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -221,14 +221,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['COLS'],
 			'sql'                     => "varchar(32) NOT NULL default 'main'"
 		),
-		'keywords' => array
-		(
-			'exclude'                 => true,
-			'inputType'               => 'textarea',
-			'search'                  => true,
-			'eval'                    => array('style'=>'height:60px', 'decodeEntities'=>true, 'tl_class'=>'clr'),
-			'sql'                     => "text NULL"
-		),
 		'showTeaser' => array
 		(
 			'exclude'                 => true,
@@ -289,14 +281,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
-		'guests' => array
-		(
-			'exclude'                 => true,
-			'filter'                  => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
-		),
 		'cssID' => array
 		(
 			'exclude'                 => true,
@@ -332,6 +316,8 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
+ *
+ * @internal
  */
 class tl_article extends Backend
 {
@@ -768,29 +754,6 @@ class tl_article extends Backend
 	}
 
 	/**
-	 * Return the paste article button
-	 *
-	 * @param DataContainer $dc
-	 * @param array         $row
-	 * @param string        $table
-	 * @param boolean       $cr
-	 * @param array         $arrClipboard
-	 *
-	 * @return string
-	 *
-	 * @deprecated
-	 */
-	public function pasteArticle(DataContainer $dc, $row, $table, $cr, $arrClipboard=null)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "tl_article::pasteArticle()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return System::getContainer()
-			->get('contao.listener.data_container.content_composition')
-			->renderArticlePasteButton($dc, $row, $table, $cr, $arrClipboard)
-		;
-	}
-
-	/**
 	 * Return the delete article button
 	 *
 	 * @param array  $row
@@ -824,7 +787,7 @@ class tl_article extends Backend
 		}
 
 		// Generate the aliases
-		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
+		if (Input::post('alias') !== null && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
 			$objSession = System::getContainer()->get('session');
 			$session = $objSession->all();

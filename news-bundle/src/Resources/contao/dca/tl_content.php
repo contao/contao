@@ -26,6 +26,8 @@ if (Input::get('do') == 'news')
  * Provide miscellaneous methods that are used by the data configuration array.
  *
  * @property News $News
+ *
+ * @internal
  */
 class tl_content_news extends Backend
 {

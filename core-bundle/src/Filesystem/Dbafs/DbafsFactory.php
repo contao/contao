@@ -22,16 +22,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class DbafsFactory
 {
-    private Connection $connection;
-    private EventDispatcherInterface $eventDispatcher;
-
     /**
      * @internal
      */
-    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher)
+    public function __construct(private Connection $connection, private EventDispatcherInterface $eventDispatcher)
     {
-        $this->connection = $connection;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function __invoke(VirtualFilesystemInterface $filesystem, HashGeneratorInterface $hashGenerator, string $table): Dbafs

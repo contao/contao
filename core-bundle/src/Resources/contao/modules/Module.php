@@ -315,18 +315,6 @@ abstract class Module extends Frontend
 				$objSubpage->domain = $host;
 			}
 
-			if ($objSubpage->tabindex > 0)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
-			}
-
-			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				continue;
-			}
-
 			$subitems = '';
 
 			// PageModel->groups is an array after calling loadDetails()
@@ -392,15 +380,6 @@ abstract class Module extends Frontend
 			}
 		}
 
-		// Add classes first and last
-		if (!empty($items))
-		{
-			$last = \count($items) - 1;
-
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
-		}
-
 		$objTemplate->items = $items;
 
 		return !empty($items) ? $objTemplate->parse() : '';
@@ -456,7 +435,6 @@ abstract class Module extends Frontend
 		$row['link'] = $objSubpage->title;
 		$row['href'] = $href;
 		$row['rel'] = '';
-		$row['nofollow'] = false; // backwards compatibility
 		$row['target'] = '';
 		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
@@ -489,7 +467,7 @@ abstract class Module extends Frontend
 	 *
 	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
 	 */
-	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
+	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): array|null
 	{
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
@@ -497,52 +475,6 @@ abstract class Module extends Frontend
 		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
 
 		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
-										   ->execute($intPid)
-										   ->fetchAllAssoc();
-
-		if (\count($arrPages) < 1)
-		{
-			return null;
-		}
-
-		// Load models into the registry with a single query
-		PageModel::findMultipleByIds(array_map(static function ($row) { return $row['id']; }, $arrPages));
-
-		return array_map(
-			static function (array $row): array
-			{
-				return array(
-					'page' => PageModel::findByPk($row['id']),
-					'hasSubpages' => (bool) $row['hasSubpages'],
-				);
-			},
-			$arrPages
-		);
-	}
-
-	/**
-	 * Get all published pages by their parent ID and exclude pages only visible for guests
-	 *
-	 * @param integer $intPid        The parent page's ID
-	 * @param boolean $blnShowHidden If true, hidden pages will be included
-	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
-	 *
-	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0;
-	 *             use Module::getPublishedSubpagesByPid() instead and filter the guests pages yourself.
-	 */
-	protected static function getPublishedSubpagesWithoutGuestsByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
-	{
-		trigger_deprecation('contao/core-bundle', '4.9', 'Using Module::getPublishedSubpagesWithoutGuestsByPid() has been deprecated and will no longer work Contao 5.0. Use Module::getPublishedSubpagesByPid() instead and filter the guests pages yourself.');
-
-		$time = Date::floorToMinute();
-		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
-		$blnFeUserLoggedIn = $tokenChecker->hasFrontendUser();
-		$blnBeUserLoggedIn = $tokenChecker->isPreviewMode();
-		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
-
-		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p2.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . ($blnFeUserLoggedIn ? " AND p1.guests=''" : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
 										   ->execute($intPid)
 										   ->fetchAllAssoc();
 
@@ -589,5 +521,3 @@ abstract class Module extends Frontend
 		return '';
 	}
 }
-
-class_alias(Module::class, 'Module');

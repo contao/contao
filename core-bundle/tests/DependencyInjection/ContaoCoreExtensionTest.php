@@ -106,70 +106,6 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($makeResponsePrivatePriority < (int) $csrfCookieListenerPriority);
     }
 
-    /**
-     * @group legacy
-     */
-    public function testOnlyRegistersTheRoutingLegacyRouteProviderInLegacyMode(): void
-    {
-        $this->expectDeprecation('%sURL suffix is configured per root page %s this option requires legacy routing%s');
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'legacy_routing' => false,
-            ],
-        ]);
-
-        $this->assertFalse($container->has('contao.routing.legacy_route_provider'));
-
-        $container = $this->getContainerBuilder();
-
-        $this->assertTrue($container->has('contao.routing.legacy_route_provider'));
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'url_suffix' => '.php',
-            ],
-        ]);
-
-        $this->assertTrue($container->has('contao.routing.legacy_route_provider'));
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testOnlyRegistersTheRoutingUrlGeneratorInLegacyMode(): void
-    {
-        $this->expectDeprecation('%sURL suffix is configured per root page %s this option requires legacy routing%s');
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'legacy_routing' => false,
-            ],
-        ]);
-
-        $this->assertFalse($container->has('contao.routing.url_generator'));
-
-        $container = $this->getContainerBuilder();
-
-        $this->assertTrue($container->has('contao.routing.url_generator'));
-
-        $container = $this->getContainerBuilder([
-            'contao' => [
-                'encryption_key' => 'foobar',
-                'localconfig' => ['foo' => 'bar'],
-                'url_suffix' => '.php',
-            ],
-        ]);
-
-        $this->assertTrue($container->has('contao.routing.url_generator'));
-    }
-
     public function testRegistersTheSecurityTokenCheckerWithRoleHierarchyVoter(): void
     {
         $container = $this->getContainerBuilder();
@@ -487,13 +423,8 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->has('contao.listener.search_index'));
     }
 
-    /**
-     * @group legacy
-     */
     public function testRegistersTheImageTargetPath(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.4: Using the "contao.image.target_path" parameter has been deprecated %s.');
-
         $container = new ContainerBuilder(
             new ParameterBag([
                 'kernel.debug' => false,
@@ -507,17 +438,6 @@ class ContaoCoreExtensionTest extends TestCase
         $extension->load([], $container);
 
         $this->assertSame(Path::normalize($this->getTempDir()).'/assets/images', $container->getParameter('contao.image.target_dir'));
-
-        $params = [
-            'contao' => [
-                'image' => ['target_path' => 'my/custom/dir'],
-            ],
-        ];
-
-        $extension = new ContaoCoreExtension();
-        $extension->load($params, $container);
-
-        $this->assertSame(Path::normalize($this->getTempDir()).'/my/custom/dir', $container->getParameter('contao.image.target_dir'));
     }
 
     /**
@@ -968,7 +888,6 @@ class ContaoCoreExtensionTest extends TestCase
 
         $params ??= [
             'contao' => [
-                'encryption_key' => 'foobar',
                 'localconfig' => ['foo' => 'bar'],
             ],
         ];

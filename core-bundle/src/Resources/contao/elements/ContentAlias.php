@@ -87,5 +87,3 @@ class ContentAlias extends ContentElement
 	{
 	}
 }
-
-class_alias(ContentAlias::class, 'ContentAlias');

@@ -130,7 +130,8 @@
         <target>Veritabanını güncelle</target>
       </trans-unit>
       <trans-unit id="33" resname="update_tables_explain">
-        <source>Here you can update the database schema.</source>
+        <source>Please note that the update assistant only handles tables starting with &lt;code&gt;tl_&lt;/code&gt;.</source>
+        <target>Lütfen güncelleme yardımcısının yalnız &lt;code&gt;tl_&lt;/code&gt; ile başlayan tabloları işleyeceğini unutmayın.</target>
       </trans-unit>
       <trans-unit id="34" resname="update_tables_confirm">
         <source>The database is up-to-date.</source>

@@ -112,5 +112,3 @@ class ContentModule extends ContentElement
 	{
 	}
 }
-
-class_alias(ContentModule::class, 'ContentModule');

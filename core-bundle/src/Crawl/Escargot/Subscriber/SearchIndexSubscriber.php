@@ -39,16 +39,12 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     use LoggerAwareTrait;
     use SubscriberLoggerTrait;
 
-    public const TAG_SKIP = 'skip-search-index';
+    final public const TAG_SKIP = 'skip-search-index';
 
-    private IndexerInterface $indexer;
-    private TranslatorInterface $translator;
     private array $stats = ['ok' => 0, 'warning' => 0, 'error' => 0];
 
-    public function __construct(IndexerInterface $indexer, TranslatorInterface $translator)
+    public function __construct(private IndexerInterface $indexer, private TranslatorInterface $translator)
     {
-        $this->indexer = $indexer;
-        $this->translator = $translator;
     }
 
     public function getName(): string
@@ -68,7 +64,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             return SubscriberInterface::DECISION_NEGATIVE;
         }
 
-        // Respect robots.txt info and nofollow meta data
+        // Respect robots.txt info and nofollow metadata
         if (!Util::isAllowedToFollow($crawlUri, $this->escargot)) {
             $this->logWithCrawlUri(
                 $crawlUri,

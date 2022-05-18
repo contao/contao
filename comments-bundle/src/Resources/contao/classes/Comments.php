@@ -90,7 +90,6 @@ class Comments extends Frontend
 		// Parse the comments
 		if ($objComments !== null && ($total = $objComments->count()) > 0)
 		{
-			$count = 0;
 			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
 
@@ -104,7 +103,6 @@ class Comments extends Frontend
 
 				$objPartial->datim = Date::parse($objPage->datimFormat, $objComments->date);
 				$objPartial->date = Date::parse($objPage->dateFormat, $objComments->date);
-				$objPartial->class = (($count < 1) ? ' first' : '') . (($count >= ($total - 1)) ? ' last' : '') . (($count % 2 == 0) ? ' even' : ' odd');
 				$objPartial->by = $GLOBALS['TL_LANG']['MSC']['com_by'];
 				$objPartial->id = 'c' . $objComments->id;
 				$objPartial->timestamp = $objComments->date;
@@ -122,8 +120,6 @@ class Comments extends Frontend
 
 				$arrComments[] = $objPartial->parse();
 				$tags[] = 'contao.db.tl_comments.' . $objComments->id;
-
-				++$count;
 			}
 
 			// Tag the comments (see #2137)
@@ -304,7 +300,6 @@ class Comments extends Frontend
 
 			// Do not parse any tags in the comment
 			$strComment = StringUtil::specialchars(trim($arrWidgets['comment']->value));
-			$strComment = str_replace(array('&amp;', '&lt;', '&gt;'), array('[&]', '[lt]', '[gt]'), $strComment);
 
 			// Remove multiple line feeds
 			$strComment = preg_replace('@\n\n+@', "\n\n", $strComment);
@@ -372,7 +367,6 @@ class Comments extends Frontend
 			// Convert the comment to plain text
 			$strComment = strip_tags($strComment);
 			$strComment = StringUtil::decodeEntities($strComment);
-			$strComment = str_replace(array('[&]', '[lt]', '[gt]'), array('&', '<', '>'), $strComment);
 
 			// Add the comment details
 			$objEmail->text = sprintf(
@@ -682,5 +676,3 @@ class Comments extends Frontend
 		$objComment->save();
 	}
 }
-
-class_alias(Comments::class, 'Comments');

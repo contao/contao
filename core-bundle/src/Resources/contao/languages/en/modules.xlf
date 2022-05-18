@@ -140,15 +140,6 @@
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
       </trans-unit>
-      <trans-unit id="MOD.tl_style">
-        <source>Format definitions</source>
-      </trans-unit>
-      <trans-unit id="MOD.tl_style_sheet">
-        <source>Style sheets</source>
-      </trans-unit>
-      <trans-unit id="MOD.css">
-        <source>Style sheets</source>
-      </trans-unit>
       <trans-unit id="MOD.modules">
         <source>Front end modules</source>
       </trans-unit>

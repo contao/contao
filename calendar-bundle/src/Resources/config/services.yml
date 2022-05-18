@@ -36,6 +36,13 @@ services:
         tags:
             - kernel.event_listener
 
+    contao_calendar.listener.sitemap:
+        class: Contao\CalendarBundle\EventListener\SitemapListener
+        arguments:
+            - '@contao.framework'
+        tags:
+            - kernel.event_listener
+
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider
         arguments:

@@ -147,24 +147,7 @@ class ModuleFaqPage extends Module
 			$responseTagger->addTags($tags);
 		}
 
-		$arrFaqs = array_values(array_filter($arrFaqs));
-		$limit_i = \count($arrFaqs) - 1;
-
-		// Add classes first, last, even and odd
-		for ($i=0; $i<=$limit_i; $i++)
-		{
-			$class = (($i == 0) ? 'first ' : '') . (($i == $limit_i) ? 'last ' : '') . (($i%2 == 0) ? 'even' : 'odd');
-			$arrFaqs[$i]['class'] = trim($class);
-			$limit_j = \count($arrFaqs[$i]['items']) - 1;
-
-			for ($j=0; $j<=$limit_j; $j++)
-			{
-				$class = (($j == 0) ? 'first ' : '') . (($j == $limit_j) ? 'last ' : '') . (($j%2 == 0) ? 'even' : 'odd');
-				$arrFaqs[$i]['items'][$j]->class = trim($class);
-			}
-		}
-
-		$this->Template->faq = $arrFaqs;
+		$this->Template->faq = array_values(array_filter($arrFaqs));
 		$this->Template->request = Environment::get('indexFreeRequest');
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 
@@ -174,5 +157,3 @@ class ModuleFaqPage extends Module
 		};
 	}
 }
-
-class_alias(ModuleFaqPage::class, 'ModuleFaqPage');

@@ -12,57 +12,24 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Doctrine\Schema;
 
-use Contao\CoreBundle\Doctrine\Schema\DcaSchemaProvider;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
-    use ExpectDeprecationTrait;
-
-    /**
-     * @group legacy
-     */
-    public function testCreateSchema(): void
-    {
-        $schema = $this->createMock(Schema::class);
-
-        $schemaProvider = $this->createMock(SchemaProvider::class);
-        $schemaProvider
-            ->expects($this->once())
-            ->method('createSchema')
-            ->willReturn($schema)
-        ;
-
-        $dcaSchemaProvider = new DcaSchemaProvider(
-            $this->createMock(ContaoFramework::class),
-            $this->createMock(Registry::class),
-            $schemaProvider
-        );
-
-        $this->expectDeprecation('Since contao/core-bundle 4.11: Using the DcaSchemaProvider class to create the schema has been deprecated and will no longer work in Contao 5.0. Use the Contao\CoreBundle\Doctrine\Schema\SchemaProvider\SchemaProvider class instead.');
-
-        $this->assertSame($schema, $dcaSchemaProvider->createSchema());
-    }
-
     /**
      * @dataProvider provideDefinitions
      */
-    public function testAppendToSchema(array $dca = [], array $sql = []): void
+    public function testAppendToSchema(array $dca = []): void
     {
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, $sql)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasColumn('id'));
@@ -207,28 +174,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                 ],
             ],
         ];
-
-        yield 'table fields from database.sql file' => [
-            [],
-            [
-                'tl_member' => [
-                    'TABLE_FIELDS' => [
-                        'id' => '`id` int(10) NOT NULL default 0',
-                        'pid' => '`pid` int(10) NULL',
-                        'title' => "`title` varchar(128) BINARY NOT NULL default ''",
-                        'uppercase' => "`uppercase` varchar(64) NOT NULL DEFAULT '1.00'",
-                        'teaser' => '`teaser` tinytext NULL',
-                        'description' => '`description` text NULL',
-                        'content' => '`content` mediumtext NULL',
-                        'price' => '`price` decimal(6,2) NOT NULL default 1.99',
-                        'thumb' => '`thumb` tinyblob NULL',
-                        'image' => '`image` blob NULL',
-                        'attachment' => '`attachment` mediumblob NULL',
-                        'published' => "`published` char(1) NOT NULL default ''",
-                    ],
-                ],
-            ],
-        ];
     }
 
     public function testAppendToSchemaHandlesSimpleFieldDefinition(): void
@@ -343,10 +288,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
     /**
      * @dataProvider provideIndexes
-     *
-     * @param bool|string $largePrefixes
      */
-    public function testAppendToSchemaAddsTheIndexLength(?int $expected, string $tableOptions, $largePrefixes = null, string $version = null, string $filePerTable = null, string $fileFormat = null): void
+    public function testAppendToSchemaAddsTheIndexLength(int|null $expected, string $tableOptions, bool|string $largePrefixes = null, string $version = null, string $filePerTable = null, string $fileFormat = null): void
     {
         $dca = [
             'tl_files' => [
@@ -387,7 +330,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ;
 
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, [], $connection)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca, $connection)->appendToSchema($schema);
         $table = $schema->getTable('tl_files');
 
         $this->assertTrue($table->hasColumn('name'));
@@ -621,7 +564,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ;
 
         $schema = $this->getSchema();
-        $this->getDcaSchemaProvider($dca, [], $connection)->appendToSchema($schema);
+        $this->getDcaSchemaProvider($dca, $connection)->appendToSchema($schema);
         $table = $schema->getTable('tl_search');
 
         $this->assertTrue($table->hasColumn('text'));

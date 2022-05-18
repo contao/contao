@@ -181,11 +181,9 @@ class ResultTest extends TestCase
     }
 
     /**
-     * @param string|array|object $statement
-     *
      * @dataProvider getInvalidStatements
      */
-    public function testInvalidStatements($statement): void
+    public function testInvalidStatements(array|object|string $statement): void
     {
         $this->expectException('InvalidArgumentException');
 

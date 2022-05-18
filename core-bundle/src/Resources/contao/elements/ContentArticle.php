@@ -32,5 +32,3 @@ class ContentArticle extends ContentElement
 	{
 	}
 }
-
-class_alias(ContentArticle::class, 'ContentArticle');

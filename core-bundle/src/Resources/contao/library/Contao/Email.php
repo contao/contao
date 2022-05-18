@@ -658,5 +658,3 @@ class Email
 		return $arrReturn;
 	}
 }
-
-class_alias(Email::class, 'Email');

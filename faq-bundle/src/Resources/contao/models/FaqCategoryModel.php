@@ -84,5 +84,3 @@ class FaqCategoryModel extends Model
 	 */
 	protected static $strTable = 'tl_faq_category';
 }
-
-class_alias(FaqCategoryModel::class, 'FaqCategoryModel');

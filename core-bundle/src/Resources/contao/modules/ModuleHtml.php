@@ -38,5 +38,3 @@ class ModuleHtml extends Module
 		}
 	}
 }
-
-class_alias(ModuleHtml::class, 'ModuleHtml');

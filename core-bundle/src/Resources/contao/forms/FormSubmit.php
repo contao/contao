@@ -138,5 +138,3 @@ class FormSubmit extends Widget
 		);
 	}
 }
-
-class_alias(FormSubmit::class, 'FormSubmit');
