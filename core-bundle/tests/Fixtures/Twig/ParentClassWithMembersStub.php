@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Fixtures\Twig;
 
 class ParentClassWithMembersStub
 {
-    public const PARENT_PUBLIC_CONSTANT = 3;
+    final public const PARENT_PUBLIC_CONSTANT = 3;
     protected const PARENT_PROTECTED_CONSTANT = 2;
     private const PARENT_PRIVATE_CONSTANT = 1;
 

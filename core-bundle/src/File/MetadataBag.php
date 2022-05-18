@@ -99,12 +99,12 @@ class MetadataBag implements \ArrayAccess
         return $this->get($offset) ?? throw new \OutOfBoundsException(sprintf('The locale "%s" does not exist in this metadata bag.', $offset));
     }
 
-    public function offsetSet(mixed $offset, mixed $value): void
+    public function offsetSet(mixed $offset, mixed $value): never
     {
         throw new \RuntimeException('Setting metadata is not supported in this metadata bag.');
     }
 
-    public function offsetUnset(mixed $offset): void
+    public function offsetUnset(mixed $offset): never
     {
         throw new \RuntimeException('Unsetting metadata is not supported in this metadata bag.');
     }
