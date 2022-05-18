@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Front end module "event list".
@@ -98,6 +99,11 @@ class ModuleEventlist extends Events
 		$intYear = Input::get('year');
 		$intMonth = Input::get('month');
 		$intDay = Input::get('day');
+
+		if (\is_array($intYear) || \is_array($intMonth) || \is_array($intDay))
+		{
+			throw new BadRequestHttpException('Expected string, got array');
+		}
 
 		// Handle featured events
 		$blnFeatured = null;

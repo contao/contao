@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Front end module "news archive".
@@ -96,6 +97,11 @@ class ModuleNewsArchive extends ModuleNews
 		$intYear = Input::get('year');
 		$intMonth = Input::get('month');
 		$intDay = Input::get('day');
+
+		if (\is_array($intYear) || \is_array($intMonth) || \is_array($intDay))
+		{
+			throw new BadRequestHttpException('Expected string, got array');
+		}
 
 		// Jump to the current period
 		if (!isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']) && $this->news_jumpToCurrent != 'all_items')

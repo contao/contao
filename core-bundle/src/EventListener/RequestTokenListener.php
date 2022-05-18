@@ -17,8 +17,10 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\Validator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 
 /**
@@ -93,7 +95,13 @@ class RequestTokenListener
             }
         }
 
-        $token = new CsrfToken($this->csrfTokenName, $this->getTokenFromRequest($request));
+        $value = $this->getTokenFromRequest($request);
+
+        if (Validator::isInsecurePath($value)) {
+            throw new BadRequestHttpException('Invalid CSRF token');
+        }
+
+        $token = new CsrfToken($this->csrfTokenName, $value);
 
         if ($this->csrfTokenManager->isTokenValid($token)) {
             return;
