@@ -15,7 +15,7 @@
         {% block inner %}
             {% block headline %}
                 {% if headline.text %}
-                    {% include "@Contao/component/_headline.html.twig" with headline only %}
+                    {% include "@Contao/component/_headline.html.twig" with headline|merge({as_editor_view}) only %}
                 {% endif %}
             {% endblock %}
 

@@ -189,6 +189,8 @@ class ContentElementTestCase extends TestCase
             ])
         );
 
+        $environment->enableStrictVariables();
+
         return $environment;
     }
 }
