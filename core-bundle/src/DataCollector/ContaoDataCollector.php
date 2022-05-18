@@ -22,6 +22,7 @@ use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * @internal
@@ -183,12 +184,12 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         /** @var PageModel $objPage */
         $objPage = $GLOBALS['objPage'];
 
-        /** @var LayoutModel $layout */
-        $layout = $this->framework->getAdapter(LayoutModel::class);
-
         if (!$objPage->layoutId) {
             return null;
         }
+
+        /** @var LayoutModel $layout */
+        $layout = $this->framework->getAdapter(LayoutModel::class);
 
         return $layout->findByPk($objPage->layoutId);
     }
