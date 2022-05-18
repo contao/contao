@@ -1,8 +1,8 @@
-<{{ tagName }}{% block attributes %}{{ attributes|default }}{% endblock%}>
+<{{ tagName }}{% block attributes %}{{ attributes|default }}{% endblock %}>
 {%- block inner %}
     {%- apply spaceless %}
         {% if as_editor_view %}
-            {% block overview %}{{ text|striptags }}{% endblock %}
+            {% block editor_view %}{{ text|striptags }}{% endblock %}
         {% else %}
             {% block headline %}{{ text|insert_tag_raw }}{% endblock %}
         {% endif %}

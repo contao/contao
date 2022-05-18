@@ -19,7 +19,7 @@
     <pre>
         {%- apply spaceless %}
             {% if as_editor_view %}
-                {% block overview %}{{ code }}{% endblock %}
+                {% block editor_view %}{{ code }}{% endblock %}
             {% else %}
                 {% block highlighted %}
                     {# @var \Contao\CoreBundle\Twig\Runtime\HighlightResult highlighted #}
