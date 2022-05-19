@@ -343,8 +343,8 @@ class InstallTool
 
         $this->connection->executeStatement(
             "
-            INSERT INTO
-                tl_user
+                INSERT INTO
+                    tl_user
                     (
                         tstamp,
                         name,
