@@ -95,13 +95,7 @@ class RequestTokenListener
             }
         }
 
-        $value = $this->getTokenFromRequest($request);
-
-        if (Validator::isInsecurePath($value)) {
-            throw new BadRequestHttpException('Invalid CSRF token');
-        }
-
-        $token = new CsrfToken($this->csrfTokenName, $value);
+        $token = new CsrfToken($this->csrfTokenName, $this->getTokenFromRequest($request));
 
         if ($this->csrfTokenManager->isTokenValid($token)) {
             return;
