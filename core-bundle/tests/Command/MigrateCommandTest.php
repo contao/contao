@@ -44,7 +44,7 @@ class MigrateCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function testEarlyAbortsIfBackupFails(): void
+    public function testAbortsEarlyIfTheBackupFails(): void
     {
         $backupManager = $this->createBackupManager(true);
         $backupManager
@@ -503,9 +503,9 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
-     * @return BackupManager|MockObject
+     * @return BackupManager&MockObject
      */
-    private function createBackupManager(bool $backupsEnabled)
+    private function createBackupManager(bool $backupsEnabled): BackupManager
     {
         $backupManager = $this->createMock(BackupManager::class);
         $backupManager
