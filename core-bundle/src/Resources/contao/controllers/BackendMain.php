@@ -134,7 +134,7 @@ class BackendMain extends Backend
 			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
 			$objSessionBag->replace($session);
 
-			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
+			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*$|mtg=[^&]*&(amp;)?/i', '', Environment::get('request')));
 		}
 		// Error
 		elseif (Input::get('act') == 'error')
