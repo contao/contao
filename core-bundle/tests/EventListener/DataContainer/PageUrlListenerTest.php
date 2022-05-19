@@ -254,8 +254,6 @@ class PageUrlListenerTest extends TestCase
         );
 
         $pageRegistry = $this->mockPageRegistry(array_fill(0, \count($pages) + 1, true), [$currentRoute, ...$aliasRoutes]);
-        $urlPrefix = $activeRecord['urlPrefix'] ? $activeRecord['urlPrefix'].'/' : '';
-        $url = '/'.$urlPrefix.$value.$activeRecord['urlSuffix'];
 
         if ($expectExists) {
             $translator = $this->mockTranslator('ERR.pageUrlNameExists', [$pages[0]['title'], $pages[0]['id']]);
