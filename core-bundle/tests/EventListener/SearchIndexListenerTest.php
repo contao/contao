@@ -90,17 +90,9 @@ class SearchIndexListenerTest extends TestCase
             false,
         ];
 
-        yield 'Should be ignored because the response was not successful (404) but there was no ld+json data' => [
-            Request::create('/foobar'),
-            new Response('', 404),
-            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
-            false,
-            false,
-        ];
-
         yield 'Should be deleted because the response was not successful (404)' => [
             Request::create('/foobar'),
-            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 404),
+            new Response('', 404),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
@@ -108,7 +100,7 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should be deleted because the response was not successful (403)' => [
             Request::create('/foobar'),
-            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
+            new Response('', 403),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
@@ -130,7 +122,7 @@ class SearchIndexListenerTest extends TestCase
             $response,
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
-            false,
+            true,
         ];
 
         yield 'Should not be handled because the meta robots tag contains "noindex" ' => [
@@ -138,7 +130,7 @@ class SearchIndexListenerTest extends TestCase
             new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>', 403),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
-            false,
+            true,
         ];
     }
 }

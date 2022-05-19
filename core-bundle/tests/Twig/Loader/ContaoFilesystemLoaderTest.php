@@ -170,7 +170,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->addPath($path, 'Contao', true);
 
         $this->assertSame(
-            Path::join($path, '1.html.twig'),
+            'c'.Path::join($path, '1.html.twig'),
             Path::normalize($loader->getCacheKey('@Contao/1.html.twig'))
         );
     }
@@ -184,7 +184,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->addPath(Path::join($basePath, 'templates/my/theme'), 'Contao_Theme_my_theme');
 
         $this->assertSame(
-            Path::join($basePath, 'templates/text.html.twig'),
+            'c'.Path::join($basePath, 'templates/text.html.twig'),
             Path::normalize($loader->getCacheKey('@Contao/text.html.twig'))
         );
 
@@ -197,7 +197,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $GLOBALS['objPage'] = $page;
 
         $this->assertSame(
-            Path::join($basePath, 'templates/my/theme/text.html.twig'),
+            'c'.Path::join($basePath, 'templates/my/theme/text.html.twig'),
             Path::normalize($loader->getCacheKey('@Contao/text.html.twig'))
         );
 

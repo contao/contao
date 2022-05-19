@@ -56,8 +56,11 @@ final class ContaoExtension extends AbstractExtension
         $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
         $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
 
-        // Use our escaper on all templates in the "@Contao" and "@Contao_*" namespaces
+        // Use our escaper on all templates in the "@Contao" and "@Contao_*"
+        // namespaces, as well as the existing bundle templates we're already
+        // shipping.
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
+        $this->addContaoEscaperRule('%^@Contao(Core|Installation)/%');
     }
 
     /**
@@ -87,6 +90,9 @@ final class ContaoExtension extends AbstractExtension
             // Allows rendering PHP templates with the legacy framework by
             // installing proxy nodes
             new PhpTemplateProxyNodeVisitor(self::class),
+            // Triggers PHP deprecations if deprecated constructs are found in
+            // the parsed templates.
+            new DeprecationsNodeVisitor(),
         ];
     }
 
@@ -203,8 +209,8 @@ final class ContaoExtension extends AbstractExtension
         $template = Path::getFilenameWithoutExtension($name);
 
         $partialTemplate = new class($template) extends Template {
-            use FrontendTemplateTrait;
             use BackendTemplateTrait;
+            use FrontendTemplateTrait;
 
             public function setBlocks(array $blocks): void
             {
