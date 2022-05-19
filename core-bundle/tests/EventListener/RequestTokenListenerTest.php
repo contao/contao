@@ -32,6 +32,7 @@ class RequestTokenListenerTest extends TestCase
     {
         $request = Request::create('/account.html', 'POST');
         $request->setMethod('POST');
+        $request->request->set('REQUEST_TOKEN', 'foo');
         $request->attributes->set('_token_check', true);
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
@@ -42,6 +43,7 @@ class RequestTokenListenerTest extends TestCase
     {
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->request->set('REQUEST_TOKEN', 'foo');
         $request->attributes->set('_token_check', true);
         $request->headers->set('PHP_AUTH_USER', 'user');
 
@@ -58,6 +60,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->request->set('REQUEST_TOKEN', 'foo');
         $request->attributes->set('_token_check', true);
         $request->setSession($session);
 
@@ -104,6 +107,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->request->set('REQUEST_TOKEN', 'foo');
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
         $event = $this->createMock(RequestEvent::class);
@@ -138,6 +142,7 @@ class RequestTokenListenerTest extends TestCase
 
         $request = Request::create('/account.html');
         $request->setMethod('POST');
+        $request->request->set('REQUEST_TOKEN', 'foo');
         $request->attributes->set('_token_check', true);
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
@@ -157,6 +162,7 @@ class RequestTokenListenerTest extends TestCase
         $listener = new RequestTokenListener($framework, $scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
 
         $this->expectException(InvalidRequestTokenException::class);
+        $this->expectExceptionMessage('Invalid CSRF token');
 
         $listener($event);
     }
