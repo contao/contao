@@ -33,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_noSpan'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50 m12'),
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_hideRunning'] = array
@@ -41,7 +41,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_hideRunning'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_startDay'] = array
@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_format'] = array
 	'options_callback'        => array('tl_module_calendar', 'getFormats'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50', 'submitOnChange'=>true),
-	'sql'                     => "varchar(32) NOT NULL default 'cal_month'"
+	'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default 'cal_month'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ignoreDynamic'] = array
@@ -69,7 +69,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ignoreDynamic'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_order'] = array
@@ -79,7 +79,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_order'] = array
 	'options'                 => array('ascending', 'descending'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(32) NOT NULL default 'ascending'"
+	'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default 'ascending'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_readerModule'] = array
@@ -109,7 +109,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_template'] = array
 		return Contao\Controller::getTemplateGroup('event_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
@@ -121,7 +121,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
 		return Contao\Controller::getTemplateGroup('cal_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
@@ -129,7 +129,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50 m12'),
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $bundles = Contao\System::getContainer()->getParameter('kernel.bundles');
