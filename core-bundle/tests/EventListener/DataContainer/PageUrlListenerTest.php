@@ -258,11 +258,7 @@ class PageUrlListenerTest extends TestCase
         $url = '/'.$urlPrefix.$value.$activeRecord['urlSuffix'];
 
         if ($expectExists) {
-            $translator = $this->mockTranslator('ERR.pageUrlNameExists', [
-                $url,
-                $pages[0]['title'],
-                $pages[0]['id'],
-            ]);
+            $translator = $this->mockTranslator('ERR.pageUrlNameExists', [$url, $pages[0]['title'], $pages[0]['id']]);
         } else {
             $translator = $this->mockTranslator();
         }
