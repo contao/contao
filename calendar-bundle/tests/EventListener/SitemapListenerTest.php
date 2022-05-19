@@ -23,6 +23,13 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SitemapListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_CONFIG']);
+
+        parent::tearDown();
+    }
+
     public function testNothingIsAddedIfNoPublishedCalendar(): void
     {
         $adapters = [
@@ -61,9 +68,7 @@ class SitemapListenerTest extends ContaoTestCase
             ]),
             CalendarEventsModel::class => $this->mockConfiguredAdapter([
                 'findPublishedDefaultByPid' => [
-                    $this->mockClassWithProperties(CalendarEventsModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(CalendarEventsModel::class),
                 ],
             ]),
         ];

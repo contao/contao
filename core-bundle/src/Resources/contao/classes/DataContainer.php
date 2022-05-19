@@ -343,12 +343,6 @@ abstract class DataContainer extends Backend
 
 		$xlabel = '';
 
-		// Toggle line wrap (textarea)
-		if (($arrData['inputType'] ?? null) == 'textarea' && !isset($arrData['eval']['rte']))
-		{
-			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_' . $this->strInputName . '\')"');
-		}
-
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
@@ -887,11 +881,23 @@ abstract class DataContainer extends Backend
 
 		$return = '';
 
+		$security = System::getContainer()->get('security.helper');
+		$subject = new DataContainerSubject($strTable, rawurldecode($arrRow['id']));
+
 		foreach ($GLOBALS['TL_DCA'][$strTable]['list']['operations'] as $k=>$v)
 		{
 			$v = \is_array($v) ? $v : array($v);
 			$id = StringUtil::specialchars(rawurldecode($arrRow['id']));
 			$label = $title = $k;
+
+			// Permissions
+			if (!$security->isGranted(ContaoCorePermissions::DC_OPERATION_PREFIX . $k, $subject))
+			{
+				// TODO: This removes the operation completely if you do not have access. If we want to show a
+				// disabled icon instead, we should probably re-think this whole method (which might also depend on
+				// some back end adjustments, e.g. automatically selecting the appropriate icon from an icon set?).
+				continue;
+			}
 
 			if (isset($v['label']))
 			{
@@ -1037,11 +1043,20 @@ abstract class DataContainer extends Backend
 			return '';
 		}
 
+		$security = System::getContainer()->get('security.helper');
+		$subject = new DataContainerSubject($this->strTable);
+
 		$return = '';
 
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] as $k=>$v)
 		{
 			if (!($v['showOnSelect'] ?? null) && Input::get('act') == 'select')
+			{
+				continue;
+			}
+
+			// Permissions
+			if (!$security->isGranted(ContaoCorePermissions::DC_GLOBAL_OPERATION_PREFIX . $k, $subject))
 			{
 				continue;
 			}
@@ -1125,12 +1140,24 @@ abstract class DataContainer extends Backend
 			return '';
 		}
 
+		$security = System::getContainer()->get('security.helper');
+		$subject = new DataContainerSubject($strPtable, rawurldecode($arrRow['id']));
+
 		$return = '';
 
 		foreach ($GLOBALS['TL_DCA'][$strPtable]['list']['operations'] as $k=> $v)
 		{
 			if (empty($v['showInHeader']) || (Input::get('act') == 'select' && !($v['showOnSelect'] ?? null)))
 			{
+				continue;
+			}
+
+			// Permissions
+			if (!$security->isGranted(ContaoCorePermissions::DC_OPERATION_PREFIX . $k, $subject))
+			{
+				// TODO: This removes the operation completely if you do not have access. If we want to show a
+				// disabled icon instead, we should probably re-think this whole method (which might also depend on
+				// some back end adjustments, e.g. automatically selecting the appropriate icon from an icon set?).
 				continue;
 			}
 

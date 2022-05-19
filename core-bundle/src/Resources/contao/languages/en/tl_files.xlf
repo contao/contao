@@ -62,6 +62,12 @@
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file metadata. To add a language, create a matching root page in the site structure.</source>
       </trans-unit>
+      <trans-unit id="tl_files.metaRgxpError">
+        <source>Field "%s" for language "%s" must match "%s".</source>
+      </trans-unit>
+      <trans-unit id="tl_files.licenseRgxpError">
+        <source>Field "%s" for language "%s" must contain a valid URL.</source>
+      </trans-unit>
       <trans-unit id="tl_files.fileupload.0">
         <source>File upload</source>
       </trans-unit>

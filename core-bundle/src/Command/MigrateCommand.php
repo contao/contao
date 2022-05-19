@@ -15,21 +15,16 @@ namespace Contao\CoreBundle\Command;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Schema\Table;
-use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 
 class MigrateCommand extends Command
 {
@@ -40,9 +35,6 @@ class MigrateCommand extends Command
 
     public function __construct(
         private MigrationCollection $migrations,
-        private FileLocator $fileLocator,
-        private string $projectDir,
-        private ContaoFramework $framework,
         private BackupManager $backupManager,
         private SchemaProvider $schemaProvider,
         private MysqlInnodbRowSizeCalculator $rowSizeCalculator,
@@ -88,7 +80,7 @@ class MigrateCommand extends Command
             ]);
         }
 
-        return 1;
+        return Command::FAILURE;
     }
 
     private function backup(InputInterface $input): void
@@ -155,22 +147,22 @@ class MigrateCommand extends Command
         }
 
         if (!$this->executeMigrations($dryRun, $asJson, $specifiedHash)) {
-            return 1;
+            return Command::FAILURE;
         }
 
         if (!$this->executeSchemaDiff($dryRun, $asJson, $input->getOption('with-deletes'), $specifiedHash)) {
-            return 1;
+            return Command::FAILURE;
         }
 
         if (!$dryRun && null === $specifiedHash && !$this->executeMigrations($dryRun, $asJson)) {
-            return 1;
+            return Command::FAILURE;
         }
 
         if (!$asJson) {
             $this->io->success('All migrations completed.');
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function executeMigrations(bool &$dryRun, bool $asJson, string $specifiedHash = null): bool
@@ -192,28 +184,6 @@ class MigrateCommand extends Command
 
                 if (!$asJson) {
                     $this->io->writeln(' * '.$migration);
-                }
-            }
-
-            $runOnceFiles = $this->getRunOnceFiles();
-
-            if ($runOnceFiles) {
-                trigger_deprecation('contao/core-bundle', '4.9', 'Using "runonce.php" files has been deprecated and will no longer work in Contao 5.0. Use the migration framework instead.');
-            }
-
-            foreach ($runOnceFiles as $file) {
-                if ($first) {
-                    if (!$asJson) {
-                        $this->io->section('Pending migrations');
-                    }
-
-                    $first = false;
-                }
-
-                $migrationLabels[] = "Runonce file: $file";
-
-                if (!$asJson) {
-                    $this->io->writeln(' * Runonce file: '.$file);
                 }
             }
 
@@ -259,21 +229,6 @@ class MigrateCommand extends Command
                 }
             }
 
-            foreach ($this->getRunOnceFiles() as $file) {
-                ++$count;
-
-                $this->executeRunonceFile($file);
-
-                if ($asJson) {
-                    $this->writeNdjson('migration-result', [
-                        'message' => 'Executed runonce file: '.$file,
-                        'isSuccessful' => true,
-                    ]);
-                } else {
-                    $this->io->writeln(' * Executed runonce file: '.$file);
-                }
-            }
-
             if (!$asJson) {
                 $this->io->success('Executed '.$count.' migrations.');
             }
@@ -290,28 +245,6 @@ class MigrateCommand extends Command
         }
 
         return true;
-    }
-
-    private function getRunOnceFiles(): array
-    {
-        try {
-            $files = $this->fileLocator->locate('config/runonce.php', null, false);
-        } catch (FileLocatorFileNotFoundException) {
-            return [];
-        }
-
-        return array_map(fn ($path) => Path::makeRelative($path, $this->projectDir), $files);
-    }
-
-    private function executeRunonceFile(string $file): void
-    {
-        $this->framework->initialize();
-
-        $filePath = Path::join($this->projectDir, $file);
-
-        include $filePath;
-
-        (new Filesystem())->remove($filePath);
     }
 
     private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string $specifiedHash = null): bool

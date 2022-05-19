@@ -108,6 +108,11 @@ services:
             - '@contao.framework'
             - '@database_connection'
 
+    contao.cron.purge_preview_links:
+        class: Contao\CoreBundle\Cron\PurgePreviewLinksCron
+        arguments:
+            - '@database_connection'
+
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
         public: true
@@ -743,8 +748,8 @@ services:
             - Contao\BackendUser
             - '@?logger'
 
-    contao.security.data_container.default_dca_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDcaVoter
+    contao.security.default_data_container_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\DefaultDataContainerVoter
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
 
@@ -964,6 +969,9 @@ services:
         tags:
             - { name: kernel.cache_warmer }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    contao.twig.highlighter_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
 
     contao.twig.insert_tag_runtime:
         class: Contao\CoreBundle\Twig\Runtime\InsertTagRuntime

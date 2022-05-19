@@ -15,9 +15,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -201,67 +198,6 @@ abstract class Backend extends Controller
 		$arrUnset[] = 'nb';
 
 		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
-	}
-
-	/**
-	 * Handle "runonce" files
-	 *
-	 * @throws \Exception
-	 */
-	public static function handleRunOnce()
-	{
-		try
-		{
-			$files = System::getContainer()->get('contao.resource_locator')->locate('config/runonce.php', null, false);
-		}
-		catch (\InvalidArgumentException $e)
-		{
-			return;
-		}
-
-		foreach ($files as $file)
-		{
-			try
-			{
-				include $file;
-			}
-			catch (\Exception $e)
-			{
-			}
-
-			$strRelpath = StringUtil::stripRootDir($file);
-
-			if (!unlink($file))
-			{
-				throw new \Exception('The file ' . $strRelpath . ' cannot be deleted. Please remove the file manually and correct the file permission settings on your server.');
-			}
-
-			System::getContainer()->get('monolog.logger.contao.general')->info('File ' . $strRelpath . ' ran once and has then been removed successfully');
-		}
-
-		$appDir = System::getContainer()->getParameter('kernel.project_dir') . '/app';
-
-		if (!is_dir($appDir))
-		{
-			return;
-		}
-
-		$finder = Finder::create()->files()->in($appDir);
-
-		// Do not remove the app folder if there are still files in it
-		if ($finder->hasResults())
-		{
-			return;
-		}
-
-		try
-		{
-			(new Filesystem())->remove($appDir);
-		}
-		catch (IOException $e)
-		{
-			// ignore
-		}
 	}
 
 	/**
@@ -637,74 +573,6 @@ abstract class Backend extends Controller
 		}
 
 		return null;
-	}
-
-	/**
-	 * Get all searchable pages and return them as array
-	 *
-	 * @param integer $pid
-	 * @param string  $domain
-	 * @param boolean $blnIsXmlSitemap
-	 *
-	 * @return array
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0
-	 */
-	public static function findSearchablePages($pid=0, $domain='', $blnIsXmlSitemap=false)
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Backend::findSearchablePages()" has been deprecated and will no longer work in Contao 5.0.');
-
-		// Since the publication status of a page is not inherited by its child
-		// pages, we have to use findByPid() instead of findPublishedByPid() and
-		// filter out unpublished pages in the foreach loop (see #2217)
-		$objPages = PageModel::findByPid($pid, array('order'=>'sorting'));
-
-		if ($objPages === null)
-		{
-			return array();
-		}
-
-		$arrPages = array();
-		$user = null;
-
-		if (Config::get('indexProtected') && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
-		{
-			$user = FrontendUser::getInstance();
-		}
-
-		// Recursively walk through all subpages
-		foreach ($objPages as $objPage)
-		{
-			$objPage->loadDetails();
-
-			// PageModel->groups is an array after calling loadDetails()
-			// Cannot use security voters across firewall context (backend to frontend)
-			$indexProtected = (!$user && \in_array(-1, $objPage->groups)) || ($user && $user->isMemberOf($objPage->groups));
-			$isPublished = ($objPage->published && (!$objPage->start || $objPage->start <= time()) && (!$objPage->stop || $objPage->stop > time()));
-
-			// Searchable and not protected
-			if ($isPublished && $objPage->type == 'regular' && !$objPage->requireItem && (!$objPage->noSearch || $blnIsXmlSitemap) && (!$blnIsXmlSitemap || $objPage->robots != 'noindex,nofollow') && (!$objPage->protected || $indexProtected))
-			{
-				$arrPages[] = $objPage->getAbsoluteUrl();
-
-				// Get articles with teaser
-				if (($objArticles = ArticleModel::findPublishedWithTeaserByPid($objPage->id, array('ignoreFePreview'=>true))) !== null)
-				{
-					foreach ($objArticles as $objArticle)
-					{
-						$arrPages[] = $objPage->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id));
-					}
-				}
-			}
-
-			// Get subpages
-			if ((!$objPage->protected || $indexProtected) && ($arrSubpages = static::findSearchablePages($objPage->id, $domain, $blnIsXmlSitemap)))
-			{
-				$arrPages = array_merge($arrPages, $arrSubpages);
-			}
-		}
-
-		return $arrPages;
 	}
 
 	/**
