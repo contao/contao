@@ -10,23 +10,31 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\DataContainer;
+namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
+ *
+ * @Hook("loadDataContainer", priority=200)
  */
-class OperationsFactory
+class DefaultOperationsListener
 {
     public function __construct(private Security $security)
     {
     }
 
-    public function getForTable(string $table): array
+    public function __invoke(string $table): void
+    {
+        $GLOBALS['TL_DCA'][$table]['list']['operations'] = $this->getForTable($table);
+    }
+
+    private function getForTable(string $table): array
     {
         $defaults = $this->getDefaults($table);
         $dca = $GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null;
