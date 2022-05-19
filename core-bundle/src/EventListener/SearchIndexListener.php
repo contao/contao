@@ -57,9 +57,7 @@ class SearchIndexListener
     {
         $request = $event->getRequest();
         $response = $event->getResponse();
-
         $document = Document::createFromRequestResponse($request, $response);
-
         $needsIndex = $this->needsIndex($request, $response, $document);
 
         try {
