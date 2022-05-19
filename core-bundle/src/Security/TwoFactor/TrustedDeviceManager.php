@@ -20,7 +20,6 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterfa
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use UAParser\AbstractParser;
 use UAParser\Parser;
 
 class TrustedDeviceManager implements TrustedDeviceManagerInterface
@@ -44,7 +43,6 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
 
         $userAgent = $this->requestStack->getMainRequest()->headers->get('User-Agent');
 
-        /** @var Parser&AbstractParser $parser */
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 

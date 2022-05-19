@@ -209,8 +209,8 @@ final class ContaoExtension extends AbstractExtension
         $template = Path::getFilenameWithoutExtension($name);
 
         $partialTemplate = new class($template) extends Template {
-            use FrontendTemplateTrait;
             use BackendTemplateTrait;
+            use FrontendTemplateTrait;
 
             public function setBlocks(array $blocks): void
             {

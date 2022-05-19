@@ -1205,7 +1205,7 @@ class DbafsTest extends TestCase
     public function testSupportsLastModifiedWhenEnabled(): void
     {
         $dbafs = $this->getDbafs();
-        $dbafs->useLastModified(true);
+        $dbafs->useLastModified();
 
         $this->assertSame(DbafsInterface::FEATURE_LAST_MODIFIED, $dbafs->getSupportedFeatures());
     }

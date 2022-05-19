@@ -547,12 +547,12 @@ class ZipReader
 	{
 		return mktime
 		(
-			($intTime & 0xf800) >> 11,
-			($intTime & 0x07e0) >>  5,
-			($intTime & 0x001f) <<  1,
-			($intDate & 0x01e0) >>  5,
-			($intDate & 0x001f),
-			(($intDate & 0xfe00) >>  9) + 1980
+			($intTime & 0xF800) >> 11,
+			($intTime & 0x07E0) >>  5,
+			($intTime & 0x001F) <<  1,
+			($intDate & 0x01E0) >>  5,
+			($intDate & 0x001F),
+			(($intDate & 0xFE00) >>  9) + 1980
 		);
 	}
 }
