@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\Filesystem;
 
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
 
@@ -256,6 +258,13 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->ensureNotReadonly();
 
         $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
+    }
+
+    public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null
+    {
+        $path = $this->resolve($location);
+
+        return $this->mountManager->generatePublicUri($path, $options);
     }
 
     /**

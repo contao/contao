@@ -248,6 +248,48 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame(['e' => ' ', 'f' => 'abc'], iterator_to_array($attributes));
     }
 
+    public function testSetAndUnsetConditionalProperties(): void
+    {
+        $attributes = new HtmlAttributes();
+
+        $attributes->set('data-feature1', condition: null);
+        $attributes->set('data-feature2', condition: false);
+        $attributes->set('data-feature3', condition: 0);
+
+        $attributes->set(
+            'data-feature5',
+            condition: new class() implements \Stringable {
+                public function __toString(): string
+                {
+                    return '';
+                }
+            },
+        );
+
+        $this->assertSame([], iterator_to_array($attributes));
+
+        $attributes->set('data-feature1', condition: true);
+        $attributes->set('data-feature2', condition: 1);
+        $attributes->set('data-feature3', condition: 'true');
+        $attributes->set('data-feature4', condition: '1');
+
+        $this->assertSame(['data-feature1' => '', 'data-feature2' => '', 'data-feature3' => '', 'data-feature4' => ''], iterator_to_array($attributes));
+
+        $attributes->unset('data-feature1', null);
+        $attributes->unset('data-feature2', false);
+        $attributes->unset('data-feature3', 0);
+        $attributes->unset('data-feature4', '');
+
+        $this->assertSame(['data-feature1' => '', 'data-feature2' => '', 'data-feature3' => '', 'data-feature4' => ''], iterator_to_array($attributes));
+
+        $attributes->unset('data-feature1', true);
+        $attributes->unset('data-feature2', 1);
+        $attributes->unset('data-feature3', 'true');
+        $attributes->unset('data-feature4', '1');
+
+        $this->assertSame([], iterator_to_array($attributes));
+    }
+
     public function testAddAndRemoveClasses(): void
     {
         // Whitespaces should get normalized by default

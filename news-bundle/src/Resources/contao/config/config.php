@@ -36,9 +36,6 @@ $GLOBALS['FE_MOD']['news'] = array
 	'newsmenu'    => ModuleNewsMenu::class
 );
 
-// Cron jobs
-$GLOBALS['TL_CRON']['daily']['generateNewsFeeds'] = array(News::class, 'generateFeeds');
-
 // Style sheet
 if (defined('TL_MODE') && TL_MODE == 'BE')
 {

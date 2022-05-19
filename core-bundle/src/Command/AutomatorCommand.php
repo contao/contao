@@ -53,10 +53,10 @@ class AutomatorCommand extends Command
         } catch (InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help contao:automator).', $e->getMessage()));
 
-            return 1;
+            return Command::FAILURE;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function runAutomator(InputInterface $input, OutputInterface $output): void

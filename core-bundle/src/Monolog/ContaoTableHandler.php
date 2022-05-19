@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Monolog;
 
 use Contao\StringUtil;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Monolog\Formatter\FormatterInterface;
@@ -57,8 +56,6 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         } catch (\Exception) {
             return false;
         }
-
-        $this->executeHook($record['message'], $record['extra']['contao']);
 
         return false === $this->bubble;
     }
@@ -112,38 +109,5 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
                 VALUES
                     (:tstamp, :source, :action, :username, :text, :func, :browser)
         ');
-    }
-
-    /**
-     * Executes the legacy hook if the Contao framework is booted.
-     */
-    private function executeHook(string $message, ContaoContext $context): void
-    {
-        if (null === $this->container || !$this->container->has('contao.framework')) {
-            return;
-        }
-
-        $framework = $this->container->get('contao.framework');
-
-        if (!$this->hasAddLogEntryHook() || !$framework->isInitialized()) {
-            return;
-        }
-
-        trigger_deprecation('contao/core-bundle', '4.0', 'Using the "addLogEntry" hook has been deprecated and will no longer work in Contao 5.0.');
-
-        $system = $framework->getAdapter(System::class);
-
-        // Must create variables to allow modification-by-reference in hook
-        $func = $context->getFunc();
-        $action = $context->getAction();
-
-        foreach ($GLOBALS['TL_HOOKS']['addLogEntry'] as $callback) {
-            $system->importStatic($callback[0])->{$callback[1]}($message, $func, $action);
-        }
-    }
-
-    private function hasAddLogEntryHook(): bool
-    {
-        return !empty($GLOBALS['TL_HOOKS']['addLogEntry']) && \is_array($GLOBALS['TL_HOOKS']['addLogEntry']);
     }
 }

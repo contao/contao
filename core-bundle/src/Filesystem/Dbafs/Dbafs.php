@@ -45,7 +45,6 @@ class Dbafs implements DbafsInterface, ResetInterface
     private const PATH_SUFFIX_SHALLOW_DIRECTORY = '//';
 
     private string $dbPathPrefix = '';
-    private int $maxFileSize = 2147483647; // 2 GiB - 1 byte (see #4208)
     private int $bulkInsertSize = 100;
     private bool $useLastModified = true;
 
@@ -80,11 +79,6 @@ class Dbafs implements DbafsInterface, ResetInterface
     public function setDatabasePathPrefix(string $prefix): void
     {
         $this->dbPathPrefix = Path::canonicalize($prefix);
-    }
-
-    public function setMaxFileSize(int $bytes): void
-    {
-        $this->maxFileSize = $bytes;
     }
 
     public function setBulkInsertSize(int $chunkSize): void
@@ -726,11 +720,6 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 // Ignore dot files
                 if (str_starts_with(basename($path), '.')) {
-                    continue;
-                }
-
-                // Ignore files that are too big
-                if ($item->getFileSize() > $this->maxFileSize) {
                     continue;
                 }
 

@@ -295,10 +295,10 @@
         "all": [
             "@unit-tests",
             "@functional-tests",
+            "@rector",
             "@cs-fixer",
             "@service-linter",
             "@phpstan",
-            "@rector",
             "@require-checker",
             "@monorepo-tools"
         ],
