@@ -175,7 +175,7 @@ class MigrateCommand extends Command
             return 1;
         }
 
-        if (!$dryRun && null === $specifiedHash && !$this->executeMigrations($dryRun, $asJson, null)) {
+        if (!$dryRun && null === $specifiedHash && !$this->executeMigrations($dryRun, $asJson)) {
             return 1;
         }
 
