@@ -18,19 +18,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Statement;
 use Monolog\Logger;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ContaoTableHandlerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_HOOKS']);
-
-        parent::tearDown();
-    }
-
     public function testSupportsReadingAndWritingTheDbalServiceName(): void
     {
         $handler = new ContaoTableHandler();
