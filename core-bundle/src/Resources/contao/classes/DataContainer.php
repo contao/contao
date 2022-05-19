@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Event\DcaButtonConfig;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
@@ -890,85 +891,49 @@ abstract class DataContainer extends Backend
 		foreach ($GLOBALS['TL_DCA'][$strTable]['list']['operations'] as $k=>$v)
 		{
 			$v = \is_array($v) ? $v : array($v);
-			$id = StringUtil::specialchars(rawurldecode($arrRow['id']));
-			$label = $title = $k;
 
-			if (isset($v['label']))
-			{
-				if (\is_array($v['label']))
-				{
-					$label = $v['label'][0] ?? null;
-					$title = sprintf($v['label'][1] ?? '', $id);
-				}
-				else
-				{
-					$label = $title = sprintf($v['label'], $id);
-				}
-			}
-
-			$attributes = !empty($v['attributes']) ? ' ' . ltrim(sprintf($v['attributes'], $id, $id)) : '';
-
-			// Add the key as CSS class
-			if (strpos($attributes, 'class="') !== false)
-			{
-				$attributes = str_replace('class="', 'class="' . $k . ' ', $attributes);
-			}
-			else
-			{
-				$attributes = ' class="' . $k . '"' . $attributes;
-			}
+			$config = new DcaButtonConfig($k, $v, $arrRow, $this);
 
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $v['href'] ?? null, $label, $title, $v['icon'] ?? null, $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
-				continue;
-			}
 
-			if (\is_callable($v['button_callback'] ?? null))
-			{
-				$return .= $v['button_callback']($arrRow, $v['href'] ?? null, $label, $title, $v['icon'] ?? null, $attributes, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
-				continue;
-			}
-
-			$hasAccess = true;
-
-			if (\is_array($v['access_callback'] ?? null))
-			{
-				foreach ($v['access_callback'] as $callback)
+				$ref = new \ReflectionMethod($this->{$v['button_callback'][0]}, $v['button_callback'][1]);
+				if ($ref->getNumberOfParameters() === 1 && $ref->getParameters()[0]->getType()->getName() === DcaButtonConfig::class)
 				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$hasAccess = $this->{$callback[0]}->{$callback[1]}($arrRow, $strTable, $k, $this);
-					}
-					elseif (\is_callable($callback ?? null))
-					{
-						$hasAccess = $callback($arrRow, $strTable, $k, $this);
-					}
+					$this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($config);
+				}
+				else
+				{
+					$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+					continue;
+				}
+			}
+			elseif (\is_callable($v['button_callback'] ?? null))
+			{
+				$ref = new \ReflectionFunction($v['button_callback']);
 
-					if (!$hasAccess)
-					{
-						break;
-					}
+				if ($ref->getNumberOfParameters() === 1 && $ref->getParameters()[0]->getType()->getName() === DcaButtonConfig::class)
+				{
+					$v['button_callback']($config);
+				}
+				else
+				{
+					$return .= $v['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
+					continue;
 				}
 			}
 
-			if (!$hasAccess)
+			if (($html = $config->getHtml()) !== null)
 			{
-				unset($v['route'], $v['href']);
-
-				if (isset($v['icon']))
-				{
-					$v['icon'] = preg_replace('/(\.svg)$/i', '_.svg', $v['icon']);
-				}
+				$return .= $html;
 			}
 
 			$isPopup = $k == 'show';
 			$href = null;
 
-			if (!empty($v['route']))
+			if (!empty($config['route']))
 			{
 				$params = array('id' => $arrRow['id']);
 
@@ -977,14 +942,14 @@ abstract class DataContainer extends Backend
 					$params['popup'] = '1';
 				}
 
-				$href = System::getContainer()->get('router')->generate($v['route'], $params);
+				$href = System::getContainer()->get('router')->generate($config['route'], $params);
 			}
-			elseif (isset($v['href']))
+			elseif (isset($config['href']))
 			{
-				$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
+				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
 			}
 
-			parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
+			parse_str(StringUtil::decodeEntities($config['href'] ?? ''), $params);
 
 			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
 			{
@@ -994,12 +959,12 @@ abstract class DataContainer extends Backend
 					continue;
 				}
 
-				$icon = $v['icon'];
-				$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
+				$icon = $config['icon'];
+				$_icon = pathinfo($config['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($config['icon'], PATHINFO_EXTENSION);
 
-				if (false !== strpos($v['icon'], '/'))
+				if (false !== strpos($config['icon'], '/'))
 				{
-					$_icon = \dirname($v['icon']) . '/' . $_icon;
+					$_icon = \dirname($config['icon']) . '/' . $_icon;
 				}
 
 				if ($icon == 'visible.svg')
@@ -1009,20 +974,20 @@ abstract class DataContainer extends Backend
 
 				$state = $arrRow[$params['field']] ? 1 : 0;
 
-				if ($v['reverse'] ?? false)
+				if ($config['reverse'] ?? false)
 				{
 					$state = $arrRow[$params['field']] ? 0 : 1;
 				}
 
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
 			}
 			elseif ($href === null)
 			{
-				$return .= Image::getHtml($v['icon'], $label) . ' ';
+				$return .= Image::getHtml($config['icon'], $config['label']) . ' ';
 			}
 			else
 			{
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . ($isPopup ? ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $label)) . '\',\'url\':this.href});return false"' : '') . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '"' . ($isPopup ? ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $config['label'])) . '\',\'url\':this.href});return false"' : '') . $config['attributes'] . '>' . Image::getHtml($config['icon'], $config['label']) . '</a> ';
 			}
 		}
 

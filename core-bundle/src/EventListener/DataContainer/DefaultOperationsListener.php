@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\Event\DcaButtonConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
@@ -56,17 +57,7 @@ class DefaultOperationsListener
                 continue;
             }
 
-            $v = \is_array($v) ? $v : [$v];
-
-            // If the operation exists but only has access_callback, the callbacks were probably added
-            // by an event listener and should just be merged with the default config.
-            if (1 === \count($v) && \is_array($v['access_callback'] ?? null)) {
-                $callbacks = $v['access_callback'];
-                $v = $defaults[$k];
-                $v['access_callback'] = array_merge($callbacks, $v['access_callback'] ?? []);
-            }
-
-            $operations[$k] = $v;
+            $operations[$k] = \is_array($v) ? $v : [$v];
         }
 
         return $operations;
@@ -89,14 +80,14 @@ class DefaultOperationsListener
                 'editheader' => [
                     'href' => 'act=edit',
                     'icon' => 'header.svg',
-                    'access_callback' => [$this->accessCallback(ContaoCorePermissions::DC_ACTION_EDIT)],
+                    'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_EDIT),
                 ],
             ];
         } else {
             $operations['edit'] = [
                 'href' => 'act=edit',
                 'icon' => 'edit.svg',
-                'access_callback' => [$this->accessCallback(ContaoCorePermissions::DC_ACTION_EDIT)],
+                'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_EDIT),
             ];
         }
 
@@ -105,7 +96,7 @@ class DefaultOperationsListener
                 'href' => 'act=paste&amp;mode=copy',
                 'icon' => 'copy.svg',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'access_callback' => [$this->accessCallback(ContaoCorePermissions::DC_ACTION_COPY)],
+                'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_COPY),
             ];
 
             if ($isTreeMode) {
@@ -121,13 +112,13 @@ class DefaultOperationsListener
                 'href' => 'act=paste&amp;mode=cut',
                 'icon' => 'cut.svg',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'access_callback' => [$this->accessCallback(ContaoCorePermissions::DC_ACTION_MOVE)],
+                'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_MOVE),
             ];
         } else {
             $operations['copy'] = [
                 'href' => 'act=copy',
                 'icon' => 'copy.svg',
-                'access_callback' => [$this->accessCallback(ContaoCorePermissions::DC_ACTION_COPY)],
+                'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_COPY),
             ];
         }
 
@@ -136,7 +127,7 @@ class DefaultOperationsListener
                 'href' => 'act=delete',
                 'icon' => 'delete.svg',
                 'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
-                'access_callback' => [$this->accessCallback(ContaoCorePermissions::DC_ACTION_DELETE)],
+                'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_DELETE),
             ],
             'show' => [
                 'href' => 'act=show',
@@ -147,12 +138,18 @@ class DefaultOperationsListener
         return $operations;
     }
 
-    private function accessCallback(string $attribute): \Closure
+    private function generateCallback(string $attribute): \Closure
     {
-        return function (array $row, string $table) use ($attribute) {
-            $subject = new DataContainerSubject($table, rawurldecode((string) $row['id']));
+        return function (DcaButtonConfig $config) use ($attribute) {
+            $subject = new DataContainerSubject($config->getDataContainer()->table, rawurldecode((string) $config->getRecord()['id']));
 
-            return $this->security->isGranted($attribute, $subject);
+            if (!$this->security->isGranted($attribute, $subject)) {
+                unset($config['route'], $config['href']);
+
+                if (isset($config['icon'])) {
+                    $config['icon'] = preg_replace('/(\.svg)$/i', '_.svg', $config['icon']);
+                }
+            }
         };
     }
 }
