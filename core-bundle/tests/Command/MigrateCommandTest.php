@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\MigrateCommand;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
+use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
@@ -23,6 +24,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Schema\Schema;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -36,6 +38,24 @@ class MigrateCommandTest extends TestCase
         $this->resetStaticProperties([Terminal::class]);
 
         parent::tearDown();
+    }
+
+    public function testAbortsEarlyIfTheBackupFails(): void
+    {
+        $backupManager = $this->createBackupManager(true);
+        $backupManager
+            ->expects($this->once())
+            ->method('create')
+            ->willThrowException(new BackupManagerException('Something went terribly wrong.'))
+        ;
+
+        $command = $this->getCommand([], [], null, $backupManager);
+        $tester = new CommandTester($command);
+        $code = $tester->execute([]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(1, $code);
+        $this->assertDoesNotMatchRegularExpression('/All migrations completed/', $display);
     }
 
     /**
@@ -73,7 +93,7 @@ class MigrateCommandTest extends TestCase
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
             null,
-            $backupsEnabled
+            $this->createBackupManager($backupsEnabled)
         );
 
         $tester = new CommandTester($command);
@@ -363,7 +383,7 @@ class MigrateCommandTest extends TestCase
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], Installer $installer = null, bool $backupsEnabled = false): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], Installer $installer = null, BackupManager $backupManager = null): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
 
@@ -383,6 +403,26 @@ class MigrateCommandTest extends TestCase
             ->willReturn(...$migrationResults)
         ;
 
+        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider
+            ->method('createSchema')
+            ->willReturn(new Schema())
+        ;
+
+        return new MigrateCommand(
+            $migrations,
+            $backupManager ?? $this->createBackupManager(false),
+            $schemaProvider,
+            $this->createMock(MysqlInnodbRowSizeCalculator::class),
+            $installer ?? $this->createMock(Installer::class)
+        );
+    }
+
+    /**
+     * @return BackupManager&MockObject
+     */
+    private function createBackupManager(bool $backupsEnabled): BackupManager
+    {
         $backupManager = $this->createMock(BackupManager::class);
         $backupManager
             ->expects($backupsEnabled ? $this->once() : $this->never())
@@ -395,19 +435,7 @@ class MigrateCommandTest extends TestCase
             ->method('create')
         ;
 
-        $schemaProvider = $this->createMock(SchemaProvider::class);
-        $schemaProvider
-            ->method('createSchema')
-            ->willReturn(new Schema())
-        ;
-
-        return new MigrateCommand(
-            $migrations,
-            $backupManager,
-            $schemaProvider,
-            $this->createMock(MysqlInnodbRowSizeCalculator::class),
-            $installer ?? $this->createMock(Installer::class)
-        );
+        return $backupManager;
     }
 
     private function jsonArrayFromNdjson(string $ndjson): array
