@@ -1,6 +1,0 @@
-
-<ul class="tl_level_2">
-  <?php foreach ($this->modules as $arrConfig): ?>
-    <li<?php if ($arrConfig['isActive']): ?> class="active"<?php endif; ?>><a href="<?= $arrConfig['href'] ?>" class="<?= $arrConfig['class'] ?>" title="<?= $arrConfig['title'] ?>"><?= $arrConfig['label'] ?></a></li>
-  <?php endforeach; ?>
-</ul>
