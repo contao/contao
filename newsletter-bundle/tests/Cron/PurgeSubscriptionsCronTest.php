@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\NewsletterBundle\Tests\EventListener;
+namespace Contao\NewsletterBundle\Tests\Cron;
 
 use Contao\Model\Collection;
 use Contao\NewsletterBundle\Cron\PurgeSubscriptionsCron;
