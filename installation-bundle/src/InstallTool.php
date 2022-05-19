@@ -341,7 +341,8 @@ class InstallTool
             '=' => '&#61;',
         ];
 
-        $this->connection->executeStatement("
+        $this->connection->executeStatement(
+            "
             INSERT INTO
                 tl_user
                     (
