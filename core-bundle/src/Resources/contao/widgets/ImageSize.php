@@ -16,8 +16,6 @@ namespace Contao;
  * @property integer $maxlength
  * @property array   $options
  * @property array   $unknownOption
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ImageSize extends Widget
 {
@@ -77,7 +75,7 @@ class ImageSize extends Widget
 	{
 		$varInput[2] = preg_replace('/[^a-z0-9_]+/', '', $varInput[2] ?? '');
 
-		if (!is_numeric($varInput[2]))
+		if (!is_numeric($varInput[2]) && strpos($varInput[2], '_') !== 0)
 		{
 			switch ($varInput[2])
 			{
@@ -135,7 +133,7 @@ class ImageSize extends Widget
 
 		foreach ($this->arrAvailableOptions as $strGroup=>$arrValues)
 		{
-			if ($strGroup == 'relative' || $strGroup == 'exact')
+			if ($strGroup == 'custom' || $strGroup == 'relative' || $strGroup == 'exact')
 			{
 				if (\in_array($varInput, $arrValues))
 				{
@@ -190,7 +188,7 @@ class ImageSize extends Widget
 			{
 				$arrOptions[] = sprintf(
 					'<option value="%s"%s>%s</option>',
-					StringUtil::specialchars($arrOption['value'] ?? ''),
+					self::specialcharsValue($arrOption['value'] ?? ''),
 					$this->optionSelected($arrOption['value'] ?? null, $this->varValue[2] ?? null),
 					$arrOption['label'] ?? null
 				);
@@ -203,7 +201,7 @@ class ImageSize extends Widget
 				{
 					$arrOptgroups[] = sprintf(
 						'<option value="%s"%s>%s</option>',
-						StringUtil::specialchars($arrOptgroup['value'] ?? ''),
+						self::specialcharsValue($arrOptgroup['value'] ?? ''),
 						$this->optionSelected($arrOptgroup['value'] ?? null, $this->varValue[2] ?? null),
 						$arrOptgroup['label'] ?? null
 					);
@@ -229,7 +227,7 @@ class ImageSize extends Widget
 				$i,
 				$this->strId . '_' . $i,
 				$i,
-				StringUtil::specialchars(@$this->varValue[$i]), // see #4979
+				self::specialcharsValue(@$this->varValue[$i]), // see #4979
 				$this->getAttributes()
 			);
 		}

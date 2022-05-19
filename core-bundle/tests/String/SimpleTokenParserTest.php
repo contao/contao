@@ -301,7 +301,7 @@ class SimpleTokenParserTest extends TestCase
      *
      * @dataProvider parsesSimpleTokensWithShorthandIfProvider
      */
-    public function testParsesSimpleTokensWithShorthandIf($value, bool $match): void
+    public function testParsesSimpleTokensWithShorthandIf(array|bool|int|string|null $value, bool $match): void
     {
         $this->assertSame(
             $match ? 'match' : 'no-match',
@@ -378,11 +378,6 @@ class SimpleTokenParserTest extends TestCase
             false,
         ];
 
-        yield 'Test single unknown token (regex test)' => [
-            'foo matches "/whatever/"', 'Tried to evaluate unknown simple token(s): "foo".',
-            false,
-        ];
-
         yield 'Test PHP constants are treated as unknown variables' => [
             '__FILE__=="foo"',
             'Tried to evaluate unknown simple token(s): "__FILE__".',
@@ -417,80 +412,6 @@ class SimpleTokenParserTest extends TestCase
             'foo == 0 or foobar == 1 or bar == 2',
             'Tried to evaluate unknown simple token(s): "foo", "bar".',
             true,
-        ];
-    }
-
-    /**
-     * @group legacy
-     * @dataProvider parseSimpleTokensLegacyProvider
-     */
-    public function testParsesSimpleTokensLegacy(string $string, array $tokens, string $expected): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.10: Using tokens that are not valid PHP variables has been deprecated %s.');
-
-        $this->assertSame($expected, $this->getParser()->parse($string, $tokens));
-    }
-
-    public function parseSimpleTokensLegacyProvider(): \Generator
-    {
-        yield 'Test token replacement with token delimiter (##)' => [
-            'This is my ##e##mail##',
-            ['e##mail' => 'test@foobar.com'],
-            'This is my ##e##mail##',
-        ];
-
-        yield 'Test whitespace in tokens not allowed and ignored' => [
-            'This is my ##dumb token## you know',
-            ['dumb token' => 'foobar'],
-            'This is my ##dumb token## you know',
-        ];
-
-        yield 'Test token replacement with special characters (-)' => [
-            'This is my ##e-mail##',
-            ['e-mail' => 'test@foobar.com'],
-            'This is my test@foobar.com',
-        ];
-
-        yield 'Test token replacement with special characters (&)' => [
-            'This is my ##e&mail##',
-            ['e&mail' => 'test@foobar.com'],
-            'This is my test@foobar.com',
-        ];
-
-        yield 'Test token replacement with special characters (#)' => [
-            'This is my ##e#mail##',
-            ['e#mail' => 'test@foobar.com'],
-            'This is my test@foobar.com',
-        ];
-
-        yield 'Test comparisons (<) with special characters (match)' => [
-            'This is my {if val&#ue<0}match{endif}',
-            ['val&#ue' => -5],
-            'This is my match',
-        ];
-
-        yield 'Test comparisons (<) with special characters (no match)' => [
-            'This is my {if val&#ue<0}match{endif}',
-            ['val&#ue' => 9],
-            'This is my ',
-        ];
-
-        yield 'Test unknown token is treated as null (match)' => [
-            'This is my {if foo===null}match{endif}',
-            ['val&#ue' => 1],
-            'This is my match',
-        ];
-
-        yield 'Test unknown token is treated as null (no match)' => [
-            'This is my {if foo!="bar"}match{endif}',
-            ['val&#ue' => 1],
-            'This is my match',
-        ];
-
-        yield 'Test indexed token replacement' => [
-            'This is my ##0##,##1##',
-            ['test@foobar.com', 'foo@test.com'],
-            'This is my test@foobar.com,foo@test.com',
         ];
     }
 

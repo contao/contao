@@ -97,11 +97,11 @@ use Contao\Model\Collection;
  * @property string|integer    $module
  * @property string|boolean    $protected
  * @property string|array|null $groups
- * @property string|boolean    $guests
  * @property string|array      $cssID
  * @property string|boolean    $invisible
  * @property string|integer    $start
  * @property string|integer    $stop
+ * @property string|boolean    $showPreview
  *
  * @property string         $typePrefix
  * @property array          $classes
@@ -191,12 +191,12 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByModule($val, array $opt=array())
  * @method static ContentModel|null findOneByProtected($val, array $opt=array())
  * @method static ContentModel|null findOneByGroups($val, array $opt=array())
- * @method static ContentModel|null findOneByGuests($val, array $opt=array())
  * @method static ContentModel|null findOneByCssID($val, array $opt=array())
  * @method static ContentModel|null findOneBySpace($val, array $opt=array())
  * @method static ContentModel|null findOneByInvisible($val, array $opt=array())
  * @method static ContentModel|null findOneByStart($val, array $opt=array())
  * @method static ContentModel|null findOneByStop($val, array $opt=array())
+ * @method static ContentModel|null findOneByShowPreview($val, array $opt=array())
  *
  * @method static Collection|ContentModel[]|ContentModel|null findByPid($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPtable($val, array $opt=array())
@@ -278,12 +278,12 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByModule($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByProtected($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByGroups($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByGuests($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByCssID($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBySpace($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByInvisible($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByStart($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByStop($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByShowPreview($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findAll(array $opt=array())
@@ -369,14 +369,12 @@ use Contao\Model\Collection;
  * @method static integer countByModule($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
- * @method static integer countByGuests($val, array $opt=array())
  * @method static integer countByCssID($val, array $opt=array())
  * @method static integer countBySpace($val, array $opt=array())
  * @method static integer countByInvisible($val, array $opt=array())
  * @method static integer countByStart($val, array $opt=array())
  * @method static integer countByStop($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @method static integer countByShowPreview($val, array $opt=array())
  */
 class ContentModel extends Model
 {
@@ -400,16 +398,7 @@ class ContentModel extends Model
 	public static function findPublishedByPidAndTable($intPid, $strParentTable, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-
-		// Also handle empty ptable fields
-		if ($strParentTable == 'tl_article')
-		{
-			$arrColumns = array("$t.pid=? AND ($t.ptable=? OR $t.ptable='')");
-		}
-		else
-		{
-			$arrColumns = array("$t.pid=? AND $t.ptable=?");
-		}
+		$arrColumns = array("$t.pid=? AND $t.ptable=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
@@ -440,16 +429,7 @@ class ContentModel extends Model
 	public static function countPublishedByPidAndTable($intPid, $strParentTable, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-
-		// Also handle empty ptable fields (backwards compatibility)
-		if ($strParentTable == 'tl_article')
-		{
-			$arrColumns = array("$t.pid=? AND ($t.ptable=? OR $t.ptable='')");
-		}
-		else
-		{
-			$arrColumns = array("$t.pid=? AND $t.ptable=?");
-		}
+		$arrColumns = array("$t.pid=? AND $t.ptable=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{

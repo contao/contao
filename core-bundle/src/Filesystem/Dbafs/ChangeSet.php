@@ -23,36 +23,13 @@ use Symfony\Component\Filesystem\Path;
  */
 class ChangeSet
 {
-    public const ATTR_HASH = 'hash';
-    public const ATTR_PATH = 'path';
-    public const ATTR_TYPE = 'type';
-    public const ATTR_LAST_MODIFIED = 'lastModified';
+    final public const ATTR_HASH = 'hash';
+    final public const ATTR_PATH = 'path';
+    final public const ATTR_TYPE = 'type';
+    final public const ATTR_LAST_MODIFIED = 'lastModified';
 
-    public const TYPE_FILE = 0;
-    public const TYPE_DIRECTORY = 1;
-
-    /**
-     * @var array<array<string, string|int>>
-     * @phpstan-var array<CreateItemDefinition>
-     */
-    private array $itemsToCreate;
-
-    /**
-     * @var array<string, array<string, string>>
-     * @phpstan-var array<string, UpdateItemDefinition>
-     */
-    private array $itemsToUpdate;
-
-    /**
-     * @var array<string, int>
-     * @phpstan-var array<string, self::TYPE_*>
-     */
-    private array $itemsToDelete;
-
-    /**
-     * @var array<string, int|null>
-     */
-    private array $lastModifiedUpdates;
+    final public const TYPE_FILE = 0;
+    final public const TYPE_DIRECTORY = 1;
 
     /**
      * @param array<array<string, string|int>>         $itemsToCreate
@@ -66,12 +43,12 @@ class ChangeSet
      *
      * @internal
      */
-    public function __construct(array $itemsToCreate, array $itemsToUpdate, array $itemsToDelete, array $lastModifiedUpdates = [])
-    {
-        $this->itemsToCreate = $itemsToCreate;
-        $this->itemsToUpdate = $itemsToUpdate;
-        $this->itemsToDelete = $itemsToDelete;
-        $this->lastModifiedUpdates = $lastModifiedUpdates;
+    public function __construct(
+        private array $itemsToCreate,
+        private array $itemsToUpdate,
+        private array $itemsToDelete,
+        private array $lastModifiedUpdates = [],
+    ) {
     }
 
     /**
@@ -177,7 +154,7 @@ class ChangeSet
             }
         }
 
-        return array_merge($lastModifiedUpdates, $itemsToUpdate);
+        return [...$lastModifiedUpdates, ...$itemsToUpdate];
     }
 
     /**

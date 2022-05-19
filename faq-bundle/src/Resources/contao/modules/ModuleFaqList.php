@@ -15,8 +15,6 @@ namespace Contao;
  *
  * @property array $faq_categories
  * @property int   $faq_readerModule
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaqList extends Module
 {
@@ -48,7 +46,7 @@ class ModuleFaqList extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -62,7 +60,7 @@ class ModuleFaqList extends Module
 		}
 
 		// Show the FAQ reader if an item has been selected
-		if ($this->faq_readerModule > 0 && (isset($_GET['items']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->faq_readerModule > 0 && Input::get('auto_item') !== null)
 		{
 			return $this->getFrontendModule($this->faq_readerModule, $this->strColumn);
 		}
@@ -118,26 +116,7 @@ class ModuleFaqList extends Module
 			$responseTagger->addTags($tags);
 		}
 
-		$arrFaq = array_values(array_filter($arrFaq));
-
-		$cat_count = 0;
-		$cat_limit = \count($arrFaq);
-
-		// Add classes
-		foreach ($arrFaq as $k=>$v)
-		{
-			$count = 0;
-			$limit = \count($v['items']);
-
-			for ($i=0; $i<$limit; $i++)
-			{
-				$arrFaq[$k]['items'][$i]['class'] = trim(((++$count == 1) ? ' first' : '') . (($count >= $limit) ? ' last' : '') . ((($count % 2) == 0) ? ' odd' : ' even'));
-			}
-
-			$arrFaq[$k]['class'] = trim(((++$cat_count == 1) ? ' first' : '') . (($cat_count >= $cat_limit) ? ' last' : '') . ((($cat_count % 2) == 0) ? ' odd' : ' even'));
-		}
-
-		$this->Template->faq = $arrFaq;
+		$this->Template->faq = array_values(array_filter($arrFaq));
 	}
 
 	/**
@@ -169,7 +148,7 @@ class ModuleFaqList extends Module
 			if ($jumpTo > 0 && ($objTarget = PageModel::findByPk($jumpTo)) !== null)
 			{
 				/** @var PageModel $objTarget */
-				$this->arrTargets[$jumpTo] = StringUtil::ampersand($objTarget->getFrontendUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+				$this->arrTargets[$jumpTo] = StringUtil::ampersand($objTarget->getFrontendUrl('/%s'));
 			}
 		}
 

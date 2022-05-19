@@ -152,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_templates extends Backend
 {
@@ -177,7 +177,7 @@ class tl_templates extends Backend
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		// Set a new node
-		if (isset($_GET['fn']))
+		if (Input::get('fn') !== null)
 		{
 			// Check the path (thanks to Arnaud Buchoux)
 			if (Validator::isInsecurePath(Input::get('fn', true)))

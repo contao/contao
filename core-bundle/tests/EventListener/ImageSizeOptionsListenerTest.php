@@ -24,14 +24,8 @@ class ImageSizeOptionsListenerTest extends TestCase
     {
         $imageSizeConfig = [
             'image_sizes' => [],
-            'relative' => [
-                'proportional', 'box',
-            ],
-            'exact' => [
-                'crop',
-                'left_top', 'center_top', 'right_top',
-                'left_center', 'center_center', 'right_center',
-                'left_bottom', 'center_bottom', 'right_bottom',
+            'custom' => [
+                'crop', 'proportional', 'box',
             ],
         ];
 

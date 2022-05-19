@@ -10,16 +10,10 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Controller\BackendCsvImportController;
-use Contao\CoreBundle\Exception\ResponseException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-
 /**
  * Provide methods to handle list items.
  *
  * @property integer $maxlength
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ListWizard extends Widget
 {
@@ -77,7 +71,7 @@ class ListWizard extends Widget
 		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
 			$return .= '
-    <li><input type="text" name="' . $this->strId . '[]" class="tl_text" value="' . StringUtil::specialchars($this->varValue[$i]) . '"' . $this->getAttributes() . '> ';
+    <li><input type="text" name="' . $this->strId . '[]" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]) . '"' . $this->getAttributes() . '> ';
 
 			// Add buttons
 			foreach ($arrButtons as $button)
@@ -98,30 +92,5 @@ class ListWizard extends Widget
 		return $return . '
   </ul>
   <script>Backend.listWizard("ctrl_' . $this->strId . '")</script>';
-	}
-
-	/**
-	 * Return a form to choose a CSV file and import it
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @return string
-	 *
-	 * @throws \Exception
-	 * @throws ResponseException
-	 *
-	 * @deprecated Deprecated since Contao 4.3 to be removed in 5.0.
-	 *             Use the Contao\CoreBundle\Controller\BackendCsvImportController service instead.
-	 */
-	public function importList(DataContainer $dc)
-	{
-		$response = System::getContainer()->get(BackendCsvImportController::class)->importListWizardAction($dc);
-
-		if ($response instanceof RedirectResponse)
-		{
-			throw new ResponseException($response);
-		}
-
-		return $response->getContent();
 	}
 }

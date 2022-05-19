@@ -42,7 +42,6 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string            $email
  * @property string            $language
  * @property string            $backendTheme
- * @property string|boolean    $fullscreen
  * @property string            $uploader
  * @property string|boolean    $showHelp
  * @property string|boolean    $thumbnails
@@ -100,8 +99,6 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property object $objAuth
  * @property object $objLogin
  * @property object $objLogout
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class User extends System implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, \Serializable
 {
@@ -465,7 +462,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return self::loadUserByIdentifier($username);
 	}
 
-	public static function loadUserByIdentifier(string $identifier): ?self
+	public static function loadUserByIdentifier(string $identifier): self|null
 	{
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
@@ -545,7 +542,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getPassword(): ?string
+	public function getPassword(): string|null
 	{
 		return $this->password;
 	}

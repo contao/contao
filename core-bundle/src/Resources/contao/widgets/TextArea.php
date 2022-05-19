@@ -18,8 +18,6 @@ namespace Contao;
  * @property boolean $rte
  * @property integer $rows
  * @property integer $cols
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class TextArea extends Widget
 {
@@ -120,7 +118,7 @@ class TextArea extends Widget
 			$this->intRows,
 			$this->intCols,
 			$this->getAttributes(),
-			StringUtil::specialchars($this->varValue),
+			self::specialcharsValue($this->varValue),
 			$this->wizard
 		);
 	}

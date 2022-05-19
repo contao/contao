@@ -24,14 +24,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserChecker implements UserCheckerInterface
 {
-    private ContaoFramework $framework;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.user_checker" service instead
      */
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
     public function checkPreAuth(UserInterface $user): void

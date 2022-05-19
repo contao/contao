@@ -29,10 +29,10 @@ interface PickerInterface
     /**
      * Returns the current provider.
      */
-    public function getCurrentProvider(): ?PickerProviderInterface;
+    public function getCurrentProvider(): PickerProviderInterface|null;
 
     /**
      * Returns the URL to the current picker tab.
      */
-    public function getCurrentUrl(): ?string;
+    public function getCurrentUrl(): string|null;
 }

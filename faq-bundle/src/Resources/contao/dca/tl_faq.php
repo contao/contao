@@ -360,7 +360,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_faq extends Backend
 {
@@ -603,7 +603,7 @@ class tl_faq extends Backend
 			throw new Exception('Invalid jumpTo page: ' . $jumpTo);
 		}
 
-		$strSuffix = StringUtil::ampersand($objTarget->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s'));
+		$strSuffix = StringUtil::ampersand($objTarget->getAbsoluteUrl('/%s'));
 
 		return sprintf(preg_replace('/%(?!s)/', '%%', $strSuffix), $objFaq->alias ?: $objFaq->id);
 	}

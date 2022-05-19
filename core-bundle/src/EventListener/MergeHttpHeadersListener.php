@@ -25,7 +25,6 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class MergeHttpHeadersListener implements ResetInterface
 {
-    private ContaoFramework $framework;
     private HeaderStorageInterface $headerStorage;
     private array $headers = [];
 
@@ -37,9 +36,8 @@ class MergeHttpHeadersListener implements ResetInterface
         'cache-control',
     ];
 
-    public function __construct(ContaoFramework $framework, HeaderStorageInterface $headerStorage = null)
+    public function __construct(private ContaoFramework $framework, HeaderStorageInterface $headerStorage = null)
     {
-        $this->framework = $framework;
         $this->headerStorage = $headerStorage ?: new NativeHeaderStorage();
     }
 
@@ -105,12 +103,12 @@ class MergeHttpHeadersListener implements ResetInterface
         $allowOverrides = [];
 
         foreach ($this->headers as $header) {
-            if (preg_match('/^HTTP\/[^ ]+ (\d{3})( (.+))?$/i', $header, $matches)) {
+            if (preg_match('/^HTTP\/[^ ]+ (\d{3})( (.+))?$/i', (string) $header, $matches)) {
                 $response->setStatusCode((int) $matches[1], $matches[3] ?? '');
                 continue;
             }
 
-            [$name, $content] = explode(':', $header, 2);
+            [$name, $content] = explode(':', (string) $header, 2);
 
             $uniqueKey = $this->getUniqueKey($name);
 

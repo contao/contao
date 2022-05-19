@@ -27,10 +27,10 @@
         <!-- indexer::stop -->
         <div class="syndication">
           <?php if ($this->printButton): ?>
-            <a href="<?= $this->print ?>" class="print" rel="nofollow" title="<?= $this->printTitle ?>" onclick="window.print();return false"><?= Contao\Image::getHtml('assets/contao/images/print.svg') ?></a>
+            <a href="<?= $this->print ?>" class="print" title="<?= $this->printTitle ?>" onclick="window.print();return false" data-skip-search-index><?= Contao\Image::getHtml('assets/contao/images/print.svg') ?></a>
           <?php endif; ?>
           <?php if ($this->pdfButton): ?>
-            <a href="<?= $this->href ?>" class="pdf" rel="nofollow" title="<?= $this->pdfTitle ?>"><?= Contao\Image::getHtml('assets/contao/images/pdf.svg') ?></a>
+            <a href="<?= $this->href ?>" class="pdf" title="<?= $this->pdfTitle ?>" data-skip-search-index><?= Contao\Image::getHtml('assets/contao/images/pdf.svg') ?></a>
           <?php endif; ?>
           <?php if ($this->facebookButton): ?>
             <a href="<?= $this->route('contao_frontend_share', ['p' => 'facebook', 'u' => $this->encUrl]) ?>" class="facebook" rel="nofollow" title="<?= $this->facebookTitle ?>" onclick="var w=window.open(this.href,'','width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');w.opener=null;return false"><?= Contao\Image::getHtml('assets/contao/images/facebook.svg') ?></a>

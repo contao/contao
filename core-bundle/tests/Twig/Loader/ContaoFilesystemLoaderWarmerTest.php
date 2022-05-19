@@ -141,11 +141,17 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
             ->method('getInheritanceChains')
             ->willReturn([
                 'a' => [
-                    '/templates/a.html.twig' => '@Contao_Global/templates/a.html.twig',
-                    '/some/place/contao/templates/a.html.twig' => '@Contao_App/a.html.twig',
+                    '/templates/a.html.twig' => '@Contao_Global/a.html.twig',
+                    '/contao/templates/a.html.twig' => '@Contao_App/a.html.twig',
                 ],
                 'b' => [
                     '/templates/b.html.twig' => '@Contao_Global/b.html.twig',
+                ],
+                'foo/c' => [
+                    '/templates/foo/c.html.twig' => '@Contao_Global/foo/c.html.twig',
+                ],
+                'bar/d' => [
+                    '/vendor/demo/bar/d.html.twig' => '@Contao_DemoBundle/bar/d.html.twig',
                 ],
             ])
         ;
@@ -154,8 +160,10 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
             'namespaces' => [
                 ['namespace' => 'Contao', 'path' => '../../templates'],
                 ['namespace' => 'Contao_Global', 'path' => '../../templates'],
-                ['namespace' => 'Contao', 'path' => '../../some/place/contao/templates'],
-                ['namespace' => 'Contao_App', 'path' => '../../some/place/contao/templates'],
+                ['namespace' => 'Contao', 'path' => '../../contao/templates'],
+                ['namespace' => 'Contao_App', 'path' => '../../contao/templates'],
+                ['namespace' => 'Contao', 'path' => '../../vendor/demo'],
+                ['namespace' => 'Contao_DemoBundle', 'path' => '../../vendor/demo'],
             ],
         ];
 

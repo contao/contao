@@ -22,12 +22,8 @@ class CronCommand extends Command
     protected static $defaultName = 'contao:cron';
     protected static $defaultDescription = 'Runs all registered cron jobs on the command line.';
 
-    protected Cron $cron;
-
-    public function __construct(Cron $cron)
+    public function __construct(protected Cron $cron)
     {
-        $this->cron = $cron;
-
         parent::__construct();
     }
 
@@ -35,6 +31,6 @@ class CronCommand extends Command
     {
         $this->cron->run(Cron::SCOPE_CLI);
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

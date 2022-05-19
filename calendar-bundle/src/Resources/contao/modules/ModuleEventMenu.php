@@ -17,8 +17,6 @@ namespace Contao;
  * @property string $cal_order
  * @property string $cal_format
  * @property string $cal_featured
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleEventMenu extends ModuleCalendar
 {
@@ -44,7 +42,7 @@ class ModuleEventMenu extends ModuleCalendar
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -119,8 +117,6 @@ class ModuleEventMenu extends ModuleCalendar
 		($this->cal_order == 'ascending') ? ksort($arrData) : krsort($arrData);
 
 		$arrItems = array();
-		$count = 0;
-		$limit = \count($arrData);
 
 		// Prepare navigation
 		foreach ($arrData as $intYear=>$intCount)
@@ -132,7 +128,6 @@ class ModuleEventMenu extends ModuleCalendar
 			$arrItems[$intYear]['link'] = $intYear;
 			$arrItems[$intYear]['href'] = $this->strLink . '?year=' . $intDate;
 			$arrItems[$intYear]['title'] = StringUtil::specialchars($intYear . ' (' . $quantity . ')');
-			$arrItems[$intYear]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 			$arrItems[$intYear]['isActive'] = (Input::get('year') == $intDate);
 			$arrItems[$intYear]['quantity'] = $quantity;
 		}
@@ -191,9 +186,6 @@ class ModuleEventMenu extends ModuleCalendar
 		// Prepare the navigation
 		foreach ($arrData as $intYear=>$arrMonth)
 		{
-			$count = 0;
-			$limit = \count($arrMonth);
-
 			foreach ($arrMonth as $intMonth=>$intCount)
 			{
 				$intDate = $intYear . $intMonth;
@@ -205,7 +197,6 @@ class ModuleEventMenu extends ModuleCalendar
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
 				$arrItems[$intYear][$intMonth]['href'] = $this->strLink . '?month=' . $intDate;
 				$arrItems[$intYear][$intMonth]['title'] = StringUtil::specialchars($GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear . ' (' . $quantity . ')');
-				$arrItems[$intYear][$intMonth]['class'] = trim(((++$count == 1) ? 'first ' : '') . (($count == $limit) ? 'last' : ''));
 				$arrItems[$intYear][$intMonth]['isActive'] = (Input::get('month') == $intDate);
 				$arrItems[$intYear][$intMonth]['quantity'] = $quantity;
 			}

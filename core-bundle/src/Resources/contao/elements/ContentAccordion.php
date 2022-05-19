@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end content element "accordion".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ContentAccordion extends ContentElement
 {
@@ -28,9 +26,6 @@ class ContentAccordion extends ContentElement
 	 */
 	protected function compile()
 	{
-		// Clean the RTE output
-		$this->text = StringUtil::toHtml5($this->text);
-
 		$this->Template->text = StringUtil::encodeEmail($this->text);
 		$this->Template->addImage = false;
 		$this->Template->addBefore = false;

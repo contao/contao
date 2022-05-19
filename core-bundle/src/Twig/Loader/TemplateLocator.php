@@ -16,6 +16,7 @@ use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
@@ -24,27 +25,22 @@ use Symfony\Component\Finder\Finder;
  */
 class TemplateLocator
 {
-    private string $projectDir;
-    private ThemeNamespace $themeNamespace;
-    private Connection $connection;
+    final public const FILE_MARKER_NAMESPACE_ROOT = '.twig-root';
+
+    private Filesystem $filesystem;
 
     /**
-     * @var array<string,string>
+     * @param array<string, string>                $bundles
+     * @param array<string, array<string, string>> $bundlesMetadata
      */
-    private array $bundles;
-
-    /**
-     * @var array<string, array<string, string>>
-     */
-    private array $bundlesMetadata;
-
-    public function __construct(string $projectDir, array $bundles, array $bundlesMetadata, ThemeNamespace $themeNamespace, Connection $connection)
-    {
-        $this->projectDir = $projectDir;
-        $this->bundles = $bundles;
-        $this->bundlesMetadata = $bundlesMetadata;
-        $this->themeNamespace = $themeNamespace;
-        $this->connection = $connection;
+    public function __construct(
+        private string $projectDir,
+        private array $bundles,
+        private array $bundlesMetadata,
+        private ThemeNamespace $themeNamespace,
+        private Connection $connection,
+    ) {
+        $this->filesystem = new Filesystem();
     }
 
     /**
@@ -63,7 +59,7 @@ class TemplateLocator
             // framework here because this function will be called when the
             // container is built (see #3567)
             $themePaths = $this->connection->fetchFirstColumn('SELECT templates FROM tl_theme');
-        } catch (DriverException $e) {
+        } catch (DriverException) {
             return [];
         }
 
@@ -98,10 +94,6 @@ class TemplateLocator
             $add('App', $path);
         }
 
-        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao/templates'))) {
-            $add('App', $path);
-        }
-
         foreach (array_reverse($this->bundles) as $name => $class) {
             if (ContaoModuleBundle::class === $class && is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'templates'))) {
                 $add($name, $path);
@@ -127,26 +119,52 @@ class TemplateLocator
         $finder = (new Finder())
             ->files()
             ->in($path)
-            ->depth('< 1')
             ->name('/(\.html\.twig|\.html5)$/')
             ->sortByName()
         ;
 
+        if (!$this->isNamespaceRoot($path)) {
+            $finder = $finder->depth('< 1');
+        }
+
         $templates = [];
 
         foreach ($finder as $file) {
-            $templates[$file->getFilename()] = Path::canonicalize($file->getPathname());
+            $templates[Path::normalize($file->getRelativePathname())] = Path::canonicalize($file->getPathname());
         }
 
         return $templates;
     }
 
+    /**
+     * Return a list of all subdirectories in $path that are not inside a
+     * directory containing a namespace root marker file.
+     */
     private function expandSubdirectories(string $path): array
     {
+        $namespaceRoots = [];
+
         $finder = (new Finder())
             ->directories()
             ->in($path)
             ->sortByName()
+            ->filter(
+                function (\SplFileInfo $info) use (&$namespaceRoots): bool {
+                    $path = $info->getPathname();
+
+                    foreach ($namespaceRoots as $directory) {
+                        if (Path::isBasePath($directory, $path)) {
+                            return false;
+                        }
+                    }
+
+                    if ($this->isNamespaceRoot($path)) {
+                        $namespaceRoots[] = $path;
+                    }
+
+                    return true;
+                }
+            )
         ;
 
         $paths = [$path];
@@ -156,5 +174,10 @@ class TemplateLocator
         }
 
         return $paths;
+    }
+
+    private function isNamespaceRoot(string $path): bool
+    {
+        return $this->filesystem->exists(Path::join($path, self::FILE_MARKER_NAMESPACE_ROOT));
     }
 }

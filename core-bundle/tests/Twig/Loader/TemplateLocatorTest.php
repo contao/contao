@@ -118,10 +118,10 @@ class TemplateLocatorTest extends TestCase
         $expectedResourcePaths = [
             'App' => [
                 Path::join($projectDir, 'contao/templates'),
+                Path::join($projectDir, 'contao/templates/other'),
                 Path::join($projectDir, 'contao/templates/some'),
                 Path::join($projectDir, 'contao/templates/some/random'),
                 Path::join($projectDir, 'src/Resources/contao/templates'),
-                Path::join($projectDir, 'app/Resources/contao/templates'),
             ],
             'CoreBundle' => [
                 Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
@@ -149,6 +149,19 @@ class TemplateLocatorTest extends TestCase
 
         $expectedTemplates = [
             'foo.html.twig' => Path::join($path, 'foo.html.twig'),
+        ];
+
+        $this->assertSame($expectedTemplates, $locator->findTemplates($path));
+    }
+
+    public function testFindsTemplatesWithDirectoryStructure(): void
+    {
+        $path = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/nested');
+        $locator = $this->getTemplateLocator('/project/dir');
+
+        $expectedTemplates = [
+            'content-element/text.html.twig' => Path::join($path, 'content-element/text.html.twig'),
+            'content-element/text/variant.html.twig' => Path::join($path, 'content-element/text/variant.html.twig'),
         ];
 
         $this->assertSame($expectedTemplates, $locator->findTemplates($path));

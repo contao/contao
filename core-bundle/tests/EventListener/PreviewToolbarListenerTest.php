@@ -45,7 +45,6 @@ class PreviewToolbarListenerTest extends TestCase
         $response = new Response($content);
 
         $m = new \ReflectionMethod($listener, 'injectToolbar');
-        $m->setAccessible(true);
         $m->invoke($listener, $response, Request::create('/'));
 
         $this->assertSame($expected, $response->getContent());

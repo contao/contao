@@ -21,8 +21,6 @@ use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
  * @property boolean $multiple
  * @property boolean $hideInput
  * @property integer $size
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class TextField extends Widget
 {
@@ -167,7 +165,7 @@ class TextField extends Widget
 				$this->strName,
 				$this->strId,
 				($this->strClass ? ' ' . $this->strClass : ''),
-				StringUtil::specialchars($this->varValue),
+				self::specialcharsValue($this->varValue),
 				$this->getAttributes(),
 				$this->wizard
 			);
@@ -195,7 +193,7 @@ class TextField extends Widget
 				$this->strName,
 				$this->strId . '_' . $i,
 				$this->size,
-				StringUtil::specialchars(@$this->varValue[$i]), // see #4979
+				self::specialcharsValue(@$this->varValue[$i]), // see #4979
 				$blnPlaceholderArray && isset($this->arrAttributes['placeholder'][$i]) ? ' placeholder="' . $this->arrAttributes['placeholder'][$i] . '"' : '',
 				$this->getAttributes($blnPlaceholderArray ? array('placeholder') : array())
 			);

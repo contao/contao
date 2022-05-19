@@ -276,7 +276,6 @@ class FilesystemConfigurationTest extends TestCase
 
         $class = new \ReflectionClass(FilesystemConfiguration::class);
         $property = $class->getProperty('adapterDefinitionFactory');
-        $property->setAccessible(true);
         $property->setValue($config, $adapterDefinitionFactory);
 
         return $config;

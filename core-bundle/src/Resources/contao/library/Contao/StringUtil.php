@@ -19,9 +19,7 @@ use Symfony\Component\Filesystem\Path;
  *
  *     $short = StringUtil::substr($str, 32);
  *     $html  = StringUtil::substrHtml($str, 32);
- *     $xhtml = StringUtil::toXhtml($html5);
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ *     $decoded = StringUtil::decodeEntities($str);
  */
 class StringUtil
 {
@@ -37,7 +35,7 @@ class StringUtil
 	 *
 	 * @return string The shortened string
 	 */
-	public static function substr($strString, $intNumberOfChars, $strEllipsis=' …')
+	public static function substr($strString, $intNumberOfChars, string $strEllipsis=' …'): string
 	{
 		$strString = preg_replace('/[\t\n\r]+/', ' ', $strString);
 		$strString = strip_tags($strString);
@@ -69,19 +67,6 @@ class StringUtil
 			}
 
 			break;
-		}
-
-		if ($strEllipsis === false)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "false" as third argument to "Contao\StringUtil::substr()" has been deprecated and will no longer work in Contao 5.0. Pass an empty string instead.');
-			$strEllipsis = '';
-		}
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($strEllipsis === true)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Passing "true" as third argument to "Contao\StringUtil::substr()" has been deprecated and will no longer work in Contao 5.0. Pass the ellipsis string instead.');
-			$strEllipsis = ' …';
 		}
 
 		return implode(' ', $arrWords) . $strEllipsis;
@@ -221,26 +206,29 @@ class StringUtil
 	 *
 	 * @return string The decoded string
 	 */
-	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES, $strCharset=null)
+	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES)
 	{
 		if ((string) $strString === '')
 		{
 			return '';
 		}
 
-		if ($strCharset === null)
-		{
-			$strCharset = 'UTF-8';
-		}
-		else
-		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a charset to StringUtil::decodeEntities() has been deprecated and will no longer work in Contao 5.0. Always use UTF-8 instead.');
-		}
-
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
 		$strString = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $strString);
 
-		return html_entity_decode($strString, $strQuoteStyle, $strCharset);
+		return html_entity_decode($strString, $strQuoteStyle, 'UTF-8');
+	}
+
+	/**
+	 * Convert basic entities
+	 *
+	 * @param string|array $strBuffer The string with the entities to be replaced
+	 *
+	 * @return string|array The string with the tags in square brackets
+	 */
+	public static function convertBasicEntities($strBuffer)
+	{
+		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]'), $strBuffer);
 	}
 
 	/**
@@ -265,7 +253,6 @@ class StringUtil
 	public static function generateAlias($strString)
 	{
 		$strString = static::decodeEntities($strString);
-		$strString = static::restoreBasicEntities($strString);
 		$strString = static::standardize(strip_tags($strString));
 
 		// Remove the prefix if the alias is not numeric (see #707)
@@ -287,7 +274,6 @@ class StringUtil
 	public static function prepareSlug($strSlug)
 	{
 		$strSlug = static::stripInsertTags($strSlug);
-		$strSlug = static::restoreBasicEntities($strSlug);
 		$strSlug = static::decodeEntities($strSlug);
 
 		return $strSlug;
@@ -485,9 +471,13 @@ class StringUtil
 	 * @param string $strString The XHTML string
 	 *
 	 * @return string The HTML5 string
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
 	 */
 	public static function toHtml5($strString)
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'The "StringUtil::toHtml5()" method has been deprecated and will no longer work in Contao 5.0.');
+
 		$arrPregReplace = array
 		(
 			'/<(br|hr|img)([^>]*) \/>/i'                  => '<$1$2>',             // Close stand-alone tags
@@ -509,28 +499,6 @@ class StringUtil
 		$strString = str_ireplace(array_keys($arrStrReplace), $arrStrReplace, $strString);
 
 		return $strString;
-	}
-
-	/**
-	 * Parse simple tokens
-	 *
-	 * @param string $strString    The string to be parsed
-	 * @param array  $arrData      The replacement data
-	 * @param array  $blnAllowHtml Whether HTML should be decoded inside conditions
-	 *
-	 * @return string The converted string
-	 *
-	 * @throws \RuntimeException         If $strString cannot be parsed
-	 * @throws \InvalidArgumentException If there are incorrectly formatted if-tags
-	 *
-	 * @deprecated Deprecated since Contao 4.10, to be removed in Contao 5.
-	 *             Use the contao.string.simple_token_parser service instead.
-	 */
-	public static function parseSimpleTokens($strString, $arrData, $blnAllowHtml = true)
-	{
-		trigger_deprecation('contao/core-bundle', '4.10', 'Using "Contao\StringUtil::parseSimpleTokens()" has been deprecated and will no longer work in Contao 5.0. Use the "contao.string.simple_token_parser" service instead.');
-
-		return System::getContainer()->get('contao.string.simple_token_parser')->parse($strString, $arrData, $blnAllowHtml);
 	}
 
 	/**
@@ -652,7 +620,7 @@ class StringUtil
 				continue;
 			}
 
-			$file = FilesModel::findByPath($paths[$i+3]);
+			$file = FilesModel::findByPath(rawurldecode($paths[$i+3]));
 
 			if ($file !== null)
 			{
@@ -740,6 +708,7 @@ class StringUtil
 		$options->media  = null;
 		$options->mtime  = null;
 		$options->async  = false;
+		$options->defer = false;
 
 		$chunks = explode('|', $url);
 
@@ -763,6 +732,10 @@ class StringUtil
 					$options->async = true;
 					break;
 
+				case 'defer':
+					$options->defer = true;
+					break;
+
 				case is_numeric($chunks[$i]):
 					$options->mtime = $chunks[$i];
 					break;
@@ -779,21 +752,14 @@ class StringUtil
 	/**
 	 * Convert the character encoding
 	 *
-	 * @param string $str  The input string
+	 * @param mixed  $str  The input string
 	 * @param string $to   The target character set
 	 * @param string $from An optional source character set
 	 *
 	 * @return string The converted string
 	 */
-	public static function convertEncoding($str, $to, $from=null)
+	public static function convertEncoding(\Stringable|float|int|string|null $str, $to, $from=null): string
 	{
-		if ($str !== null && !is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
-		{
-			trigger_deprecation('contao/core-bundle', '4.9', 'Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated an will no longer work in Contao 5.0.');
-
-			return '';
-		}
-
 		$str = (string) $str;
 
 		if ('' === $str)
@@ -1101,7 +1067,6 @@ class StringUtil
 	 */
 	public static function revertInputEncoding(string $strValue): string
 	{
-		$strValue = static::restoreBasicEntities($strValue);
 		$strValue = static::decodeEntities($strValue);
 
 		// Ensure valid UTF-8

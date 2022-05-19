@@ -262,14 +262,6 @@ hooks:
         return_type: Contao\PageModel
         arguments: []
 
-    getSearchablePages:
-        return_type: array
-        arguments:
-            pages: array
-            rootId: [int, 'null']
-            isSitemap: [bool, 'false']
-            language: [string, 'null']
-
     getSystemMessages:
         return_type: string
         arguments: []

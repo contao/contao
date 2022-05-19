@@ -27,23 +27,13 @@ class LockCommand extends Command
     protected static $defaultName = 'contao:install:lock';
     protected static $defaultDescription = 'Locks the install tool.';
 
-    private string $lockFile;
-
-    public function __construct(string $lockFile)
+    public function __construct(private string $lockFile)
     {
-        $this->lockFile = $lockFile;
-
         parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (file_exists($this->lockFile)) {
-            $output->writeln('<comment>The install tool has been locked already.</comment>');
-
-            return 1;
-        }
-
         $fs = new Filesystem();
         $fs->dumpFile($this->lockFile, 3);
 

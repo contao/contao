@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use PhpCsFixer\Fixer\ClassNotation\VisibilityRequiredFixer;
-use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\ControlStructure\NoAlternativeSyntaxFixer;
 use PhpCsFixer\Fixer\FunctionNotation\VoidReturnFixer;
 use PhpCsFixer\Fixer\PhpTag\BlankLineAfterOpeningTagFixer;
@@ -13,19 +12,15 @@ use PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer;
 use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
 use PhpCsFixer\Fixer\Strict\StrictParamFixer;
 use SlevomatCodingStandard\Sniffs\Namespaces\ReferenceUsedNamesOnlySniff;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php');
+return static function (ECSConfig $ecsConfig): void {
+    $ecsConfig->sets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php']);
 
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PARALLEL, true);
-
-    $parameters->set(Option::SKIP, [
+    $ecsConfig->skip([
         BlankLineAfterOpeningTagFixer::class => null,
         DeclareStrictTypesFixer::class => null,
-        HeaderCommentFixer::class => null,
         LinebreakAfterOpeningTagFixer::class => null,
         NoAlternativeSyntaxFixer::class => null,
         ReferenceUsedNamesOnlySniff::class => null,
@@ -36,6 +31,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         VoidReturnFixer::class => null,
     ]);
 
+    $ecsConfig->parallel();
+
+    $parameters = $ecsConfig->parameters();
     $parameters->set(Option::FILE_EXTENSIONS, ['html5']);
     $parameters->set(Option::CACHE_DIRECTORY, sys_get_temp_dir().'/ecs_template_cache');
 };

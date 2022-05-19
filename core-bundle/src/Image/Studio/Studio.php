@@ -19,21 +19,15 @@ use Psr\Container\ContainerInterface;
 
 class Studio
 {
-    private ContainerInterface $locator;
-    private string $projectDir;
-    private string $uploadPath;
-
     /**
-     * @var array<string>
+     * @param array<string> $validExtensions
      */
-    private array $validExtensions;
-
-    public function __construct(ContainerInterface $locator, string $projectDir, string $uploadPath, array $validExtensions)
-    {
-        $this->locator = $locator;
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->validExtensions = $validExtensions;
+    public function __construct(
+        private ContainerInterface $locator,
+        private string $projectDir,
+        private string $uploadPath,
+        private array $validExtensions,
+    ) {
     }
 
     public function createFigureBuilder(): FigureBuilder
@@ -41,20 +35,12 @@ class Studio
         return new FigureBuilder($this->locator, $this->projectDir, $this->uploadPath, $this->validExtensions);
     }
 
-    /**
-     * @param string|ImageInterface                      $filePathOrImage
-     * @param array|PictureConfiguration|int|string|null $sizeConfiguration
-     */
-    public function createImage($filePathOrImage, $sizeConfiguration, ResizeOptions $resizeOptions = null): ImageResult
+    public function createImage(ImageInterface|string $filePathOrImage, PictureConfiguration|array|int|string|null $sizeConfiguration, ResizeOptions $resizeOptions = null): ImageResult
     {
         return new ImageResult($this->locator, $this->projectDir, $filePathOrImage, $sizeConfiguration, $resizeOptions);
     }
 
-    /**
-     * @param string|ImageInterface|null                 $filePathOrImage
-     * @param array|PictureConfiguration|int|string|null $sizeConfiguration
-     */
-    public function createLightboxImage($filePathOrImage, string $url = null, $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null): LightboxResult
+    public function createLightboxImage(ImageInterface|string|null $filePathOrImage, string $url = null, PictureConfiguration|array|int|string|null $sizeConfiguration = null, string $groupIdentifier = null, ResizeOptions $resizeOptions = null): LightboxResult
     {
         return new LightboxResult($this->locator, $filePathOrImage, $url, $sizeConfiguration, $groupIdentifier, $resizeOptions);
     }

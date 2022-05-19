@@ -536,26 +536,6 @@ class MountManagerTest extends TestCase
         $this->assertFalse($manager->directoryExists(''));
     }
 
-    public function testDirectoryExistsFallback(): void
-    {
-        if (method_exists(FilesystemAdapter::class, 'directoryExists')) {
-            $this->markTestSkipped('The fallback is only in place for Flysystem v2.');
-        }
-
-        $config = new Config();
-
-        $rootAdapter = new InMemoryFilesystemAdapter();
-        $rootAdapter->write('a', '', $config);
-        $rootAdapter->createDirectory('b', $config);
-        $rootAdapter->write('c', '', $config);
-
-        $manager = new MountManager($rootAdapter);
-
-        $this->assertFalse($manager->directoryExists('a'));
-        $this->assertTrue($manager->directoryExists('b'));
-        $this->assertFalse($manager->directoryExists('c'));
-    }
-
     private function mockFilesystemAdapterThatDoesNotReceiveACall(string $method): FilesystemAdapter
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
@@ -567,10 +547,7 @@ class MountManagerTest extends TestCase
         return $adapter;
     }
 
-    /**
-     * @param mixed $return
-     */
-    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, $return): FilesystemAdapter
+    private function mockFilesystemAdapterWithCall(string $method, array $expectedArguments, mixed $return): FilesystemAdapter
     {
         $adapter = $this->createMock(FilesystemAdapter::class);
 

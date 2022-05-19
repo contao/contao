@@ -27,7 +27,7 @@ if (Input::get('do') == 'calendar')
  *
  * @property Calendar $Calendar
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_content_calendar extends Backend
 {

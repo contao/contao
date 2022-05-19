@@ -52,8 +52,6 @@ namespace Contao;
  * @property string  $file_dirname              The file dirname
  * @property string  $extra_field               The extra field
  * @property string  $file_comment              The file comment
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ZipReader
 {
@@ -423,7 +421,7 @@ class ZipReader
 		$strMbCharset = null;
 
 		// Set the mbstring encoding to ASCII (see #5842)
-		if (ini_get('mbstring.func_overload') > 0)
+		if (\ini_get('mbstring.func_overload') > 0)
 		{
 			$strMbCharset = mb_internal_encoding();
 
@@ -549,12 +547,12 @@ class ZipReader
 	{
 		return mktime
 		(
-			($intTime & 0xf800) >> 11,
-			($intTime & 0x07e0) >>  5,
-			($intTime & 0x001f) <<  1,
-			($intDate & 0x01e0) >>  5,
-			($intDate & 0x001f),
-			(($intDate & 0xfe00) >>  9) + 1980
+			($intTime & 0xF800) >> 11,
+			($intTime & 0x07E0) >>  5,
+			($intTime & 0x001F) <<  1,
+			($intDate & 0x01E0) >>  5,
+			($intDate & 0x001F),
+			(($intDate & 0xFE00) >>  9) + 1980
 		);
 	}
 }

@@ -21,8 +21,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property Comments $Comments
  * @property string   $com_template
  * @property array    $news_archives
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsReader extends ModuleNews
 {
@@ -50,21 +48,9 @@ class ModuleNewsReader extends ModuleNews
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
-		}
-
-		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
-		{
-			Input::setGet('items', Input::get('auto_item'));
-		}
-
-		// Return an empty string if "items" is not set (to combine list and reader on same page)
-		if (!Input::get('items'))
-		{
-			return '';
 		}
 
 		$this->news_archives = $this->sortOutProtected(StringUtil::deserialize($this->news_archives));
@@ -91,7 +77,7 @@ class ModuleNewsReader extends ModuleNews
 		}
 
 		// Get the news item
-		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
+		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('auto_item'), $this->news_archives);
 
 		// The news item does not exist (see #33)
 		if ($objArticle === null)

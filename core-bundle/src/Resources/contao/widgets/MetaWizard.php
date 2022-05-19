@@ -16,8 +16,6 @@ use Contao\CoreBundle\Util\LocaleUtil;
  * Provide methods to handle file meta information.
  *
  * @property array $metaFields
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class MetaWizard extends Widget
 {
@@ -32,6 +30,11 @@ class MetaWizard extends Widget
 	 * @var string
 	 */
 	protected $strTemplate = 'be_widget';
+
+	/**
+	 * @var array
+	 */
+	private $arrFieldErrors = array();
 
 	/**
 	 * Set an object property
@@ -85,6 +88,25 @@ class MetaWizard extends Widget
 				if (!empty($v['link']))
 				{
 					$v['link'] = StringUtil::specialcharsUrl($v['link']);
+				}
+
+				foreach ($v as $kk => $vv)
+				{
+					$rgxp = $this->metaFields[$kk]['rgxp'] ?? null;
+
+					if ($rgxp && !preg_match($rgxp, $vv))
+					{
+						$lang = LocaleUtil::formatAsLocale($k);
+						$langTrans = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array($lang))[$lang];
+						$fieldLabel = $GLOBALS['TL_LANG']['MSC']['aw_' . $kk];
+
+						$errorMsg = isset($this->metaFields[$kk]['rgxpErrMsg'])
+							? sprintf($this->metaFields[$kk]['rgxpErrMsg'], $fieldLabel, $langTrans, $rgxp)
+							: sprintf($GLOBALS['TL_LANG']['tl_files']['metaRgxpError'], $fieldLabel, $langTrans, $rgxp);
+
+						$this->addError($errorMsg);
+						$this->arrFieldErrors[$lang][$kk] = true;
+					}
 				}
 
 				$varInput[$k] = array_map('trim', $v);
@@ -147,12 +169,12 @@ class MetaWizard extends Widget
 			foreach ($this->varValue as $lang=>$meta)
 			{
 				$return .= '
-    <li class="' . (($count % 2 == 0) ? 'even' : 'odd') . '" data-language="' . $lang . '"><span class="lang">' . ($languages[$lang] ?? $lang) . ' ' . Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" onclick="Backend.metaDelete(this)"') . '</span>';
+    <li data-language="' . $lang . '"><span class="lang">' . ($languages[$lang] ?? $lang) . ' ' . Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" data-delete') . '</span>';
 
 				// Take the fields from the DCA (see #4327)
 				foreach ($this->metaFields as $field=>$fieldConfig)
 				{
-					$return .= '<label for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
+					$return .= '<label' . (isset($this->arrFieldErrors[$lang][$field]) ? ' class="error"' : '') . ' for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
 
 					if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 					{
@@ -160,7 +182,7 @@ class MetaWizard extends Widget
 					}
 					else
 					{
-						$return .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . StringUtil::specialchars($meta[$field] ?? '') . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>';
+						$return .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . self::specialcharsValue($meta[$field] ?? '') . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>';
 					}
 
 					// DCA picker

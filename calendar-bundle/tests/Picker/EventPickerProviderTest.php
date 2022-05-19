@@ -26,13 +26,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EventPickerProviderTest extends ContaoTestCase
 {
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_CONFIG']);
-
-        parent::tearDown();
-    }
-
     public function testCreatesTheMenuItem(): void
     {
         $config = json_encode([
@@ -165,7 +158,6 @@ class EventPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('calendar', $params['do']);
@@ -185,7 +177,6 @@ class EventPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('calendar', $params['do']);
@@ -213,7 +204,6 @@ class EventPickerProviderTest extends ContaoTestCase
         $picker->setFramework($this->mockContaoFramework($adapters));
 
         $method = new \ReflectionMethod(EventPickerProvider::class, 'getRouteParameters');
-        $method->setAccessible(true);
         $params = $method->invokeArgs($picker, [$config]);
 
         $this->assertSame('calendar', $params['do']);

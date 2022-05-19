@@ -25,8 +25,6 @@ use Terminal42\Escargot\Exception\InvalidJobIdException;
 
 /**
  * Maintenance module "crawl".
- *
- * @author Yanick Witschi <https://github.com/toflar>
  */
 class Crawl extends Backend implements MaintenanceModuleInterface
 {
@@ -163,7 +161,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		// Configure with sane defaults for the back end (maybe we should make this configurable one day)
 		$escargot = $escargot
 			->withConcurrency(5)
-			->withMaxDepth(32)
+			->withMaxDepth(10)
 			->withMaxRequests(20)
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 

@@ -378,7 +378,7 @@ class PageUrlListenerTest extends TestCase
             ]
         );
 
-        $pageRegistry = $this->mockPageRegistry(array_merge([true], array_fill(0, \count($pages), false)), [$currentRoute, ...$aliasRoutes]);
+        $pageRegistry = $this->mockPageRegistry([...[true], ...array_fill(0, \count($pages), false)], [$currentRoute, ...$aliasRoutes]);
 
         $listener = new PageUrlListener(
             $framework,
@@ -1729,11 +1729,9 @@ class PageUrlListenerTest extends TestCase
     }
 
     /**
-     * @param PageRoute|int|null $route
-     *
-     * @return MockObject|RouterInterface
+     * @return RouterInterface&MockObject
      */
-    private function mockRouter($route = null)
+    private function mockRouter(PageRoute|int|null $route = null): RouterInterface
     {
         $router = $this->createMock(RouterInterface::class);
 
