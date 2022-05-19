@@ -95,7 +95,6 @@ use Contao\Model\Collection;
  * @property integer $module
  * @property boolean $protected
  * @property string  $groups
- * @property boolean $guests
  * @property string  $cssID
  * @property boolean $invisible
  * @property string  $start
