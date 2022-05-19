@@ -60,8 +60,8 @@ class MigrateCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        if (!$input->getOption('dry-run') && !$input->getOption('no-backup')) {
-            $this->backup($input);
+        if (!$input->getOption('dry-run') && !$input->getOption('no-backup') && !$this->backup($input)) {
+            return Command::FAILURE;
         }
 
         if ('ndjson' !== $input->getOption('format')) {
@@ -83,7 +83,7 @@ class MigrateCommand extends Command
         return Command::FAILURE;
     }
 
-    private function backup(InputInterface $input): void
+    private function backup(InputInterface $input): bool
     {
         $asJson = 'ndjson' === $input->getOption('format');
         $config = $this->backupManager->createCreateConfig();
@@ -101,6 +101,8 @@ class MigrateCommand extends Command
             if ($asJson) {
                 $this->writeNdjson('backup-result', $config->getBackup()->toArray());
             }
+
+            return true;
         } catch (\Throwable $exception) {
             if ($asJson) {
                 $this->writeNdjson('error', [
@@ -113,6 +115,8 @@ class MigrateCommand extends Command
             } else {
                 $this->io->error($exception->getMessage());
             }
+
+            return false;
         }
     }
 

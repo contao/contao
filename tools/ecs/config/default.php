@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
 use PhpCsFixer\Fixer\Comment\HeaderCommentFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
 use SlevomatCodingStandard\Sniffs\Variables\UnusedVariableSniff;
@@ -19,6 +20,7 @@ return static function (ECSConfig $ecsConfig): void {
             '*/DependencyInjection/Configuration.php',
             '*/Resources/config/*.php',
         ],
+        TypeHintOrderFixer::class,
         UnusedVariableSniff::class => [
             'core-bundle/tests/Session/Attribute/ArrayAttributeBagTest.php',
             'manager-bundle/src/Resources/skeleton/*.php',

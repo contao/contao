@@ -34,7 +34,7 @@ class DbafsTest extends FunctionalTestCase
         static::resetDatabaseSchema();
 
         $filesystem = new VirtualFilesystem(
-            new MountManager($adapter = new InMemoryFilesystemAdapter()),
+            (new MountManager())->mount($adapter = new InMemoryFilesystemAdapter()),
             $dbafsManager = new DbafsManager()
         );
 
