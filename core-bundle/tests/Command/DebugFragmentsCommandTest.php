@@ -74,7 +74,7 @@ class DebugFragmentsCommandTest extends TestCase
                  ---------------- ----------------------------------------------------------------- ---------- ---------------- ------------------
 
 
-                OUTPUT
+                OUTPUT,
         ];
 
         yield 'Multiple fragments' => [
@@ -95,7 +95,7 @@ class DebugFragmentsCommandTest extends TestCase
                  ---------------- --------------------------------------------------------------------- ---------- ---------------- ------------------------
 
 
-                OUTPUT
+                OUTPUT,
         ];
 
         yield 'ESI fragment' => [
@@ -115,7 +115,7 @@ class DebugFragmentsCommandTest extends TestCase
                  ---------------- --------------------------------------------------------------------- ---------- ----------------------- ------------------
 
 
-                OUTPUT
+                OUTPUT,
         ];
     }
 }

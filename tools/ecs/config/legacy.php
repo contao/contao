@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Contao\EasyCodingStandard\Fixer\MultiLineLambdaFunctionArgumentsFixer;
+use Contao\EasyCodingStandard\Fixer\TypeHintOrderFixer;
 use Contao\EasyCodingStandard\Sniffs\UseSprintfInExceptionsSniff;
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
 use PhpCsFixer\Fixer\Basic\BracesFixer;
@@ -30,7 +31,6 @@ use PhpCsFixer\Fixer\Strict\DeclareStrictTypesFixer;
 use PhpCsFixer\Fixer\Strict\StrictComparisonFixer;
 use PhpCsFixer\Fixer\Strict\StrictParamFixer;
 use PhpCsFixer\Fixer\StringNotation\SingleQuoteFixer;
-use PhpCsFixer\Fixer\Whitespace\BlankLineBeforeStatementFixer;
 use PhpCsFixer\Fixer\Whitespace\MethodChainingIndentationFixer;
 use PhpCsFixer\Fixer\Whitespace\NoExtraBlankLinesFixer;
 use SlevomatCodingStandard\Sniffs\PHP\UselessParenthesesSniff;
@@ -38,105 +38,84 @@ use SlevomatCodingStandard\Sniffs\TypeHints\DisallowArrayTypeHintSyntaxSniff;
 use SlevomatCodingStandard\Sniffs\Variables\UnusedVariableSniff;
 use SlevomatCodingStandard\Sniffs\Variables\UselessVariableSniff;
 use SlevomatCodingStandard\Sniffs\Whitespaces\DuplicateSpacesSniff;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $containerConfigurator->import(__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php');
+return static function (ECSConfig $ecsConfig): void {
+    $ecsConfig->sets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php']);
 
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PARALLEL, true);
-
-    $parameters->set(Option::SKIP, [
+    $ecsConfig->skip([
         '*/languages/*',
         '*/templates/*',
         '*/themes/*',
-        BinaryOperatorSpacesFixer::class => null,
-        DeclareStrictTypesFixer::class => null,
-        DisallowArrayTypeHintSyntaxSniff::class => null,
-        DuplicateSpacesSniff::class => null,
-        IncrementStyleFixer::class => null,
-        MethodChainingIndentationFixer::class => null,
-        MultiLineLambdaFunctionArgumentsFixer::class => null,
-        MultilineWhitespaceBeforeSemicolonsFixer::class => null,
-        NoSpacesAfterFunctionNameFixer::class => null,
-        NoSuperfluousPhpdocTagsFixer::class => null,
-        OrderedClassElementsFixer::class => null,
-        PhpdocOrderFixer::class => null,
-        PhpdocScalarFixer::class => null,
-        PhpdocSeparationFixer::class => null,
-        PhpdocSummaryFixer::class => null,
-        PhpdocToCommentFixer::class => null,
-        ReturnAssignmentFixer::class => null,
-        SingleQuoteFixer::class => null,
-        StrictComparisonFixer::class => null,
-        StrictParamFixer::class => null,
-        TrailingCommaInMultilineFixer::class => null,
-        UnusedVariableSniff::class => null,
-        UseArrowFunctionsFixer::class => null,
-        UselessParenthesesSniff::class => null,
-        UselessVariableSniff::class => null,
-        UseSprintfInExceptionsSniff::class => null,
-        VisibilityRequiredFixer::class => null,
-        VoidReturnFixer::class => null,
-        YodaStyleFixer::class => null,
+        BinaryOperatorSpacesFixer::class,
+        DeclareStrictTypesFixer::class,
+        DisallowArrayTypeHintSyntaxSniff::class,
+        DuplicateSpacesSniff::class,
+        IncrementStyleFixer::class,
+        MethodChainingIndentationFixer::class,
+        MultiLineLambdaFunctionArgumentsFixer::class,
+        MultilineWhitespaceBeforeSemicolonsFixer::class,
+        NoSpacesAfterFunctionNameFixer::class,
+        NoSuperfluousPhpdocTagsFixer::class,
+        OrderedClassElementsFixer::class,
+        PhpdocOrderFixer::class,
+        PhpdocScalarFixer::class,
+        PhpdocSeparationFixer::class,
+        PhpdocSummaryFixer::class,
+        PhpdocToCommentFixer::class,
+        ReturnAssignmentFixer::class,
+        SingleQuoteFixer::class,
+        StrictComparisonFixer::class,
+        StrictParamFixer::class,
+        TrailingCommaInMultilineFixer::class,
+        TypeHintOrderFixer::class,
+        UnusedVariableSniff::class,
+        UseArrowFunctionsFixer::class,
+        UselessParenthesesSniff::class,
+        UselessVariableSniff::class,
+        UseSprintfInExceptionsSniff::class,
+        VisibilityRequiredFixer::class,
+        VoidReturnFixer::class,
+        YodaStyleFixer::class,
     ]);
 
-    $parameters->set(Option::INDENTATION, 'tab');
-    $parameters->set(Option::LINE_ENDING, "\n");
+    $ecsConfig->ruleWithConfiguration(ArraySyntaxFixer::class, [
+        'syntax' => 'long',
+    ]);
+
+    $ecsConfig->ruleWithConfiguration(BracesFixer::class, [
+        'allow_single_line_closure' => true,
+        'position_after_anonymous_constructs' => BracesFixer::LINE_NEXT,
+        'position_after_control_structures' => BracesFixer::LINE_NEXT,
+    ]);
+
+    $ecsConfig->ruleWithConfiguration(ConcatSpaceFixer::class, [
+        'spacing' => 'one',
+    ]);
+
+    $ecsConfig->ruleWithConfiguration(HeaderCommentFixer::class, [
+        'header' => "This file is part of Contao.\n\n(c) Leo Feyer\n\n@license LGPL-3.0-or-later",
+    ]);
+
+    $ecsConfig->ruleWithConfiguration(ListSyntaxFixer::class, [
+        'syntax' => 'long',
+    ]);
+
+    $ecsConfig->ruleWithConfiguration(NoExtraBlankLinesFixer::class, [
+        'tokens' => [
+            'curly_brace_block',
+            'extra',
+            'parenthesis_brace_block',
+            'square_brace_block',
+            'use',
+        ],
+    ]);
+
+    $ecsConfig->parallel();
+    $ecsConfig->indentation(Option::INDENTATION_TAB);
+    $ecsConfig->lineEnding("\n");
+
+    $parameters = $ecsConfig->parameters();
     $parameters->set(Option::CACHE_DIRECTORY, sys_get_temp_dir().'/ecs_legacy_cache');
-
-    $services = $containerConfigurator->services();
-    $services
-        ->set(ArraySyntaxFixer::class)
-        ->call('configure', [[
-            'syntax' => 'long',
-        ]])
-    ;
-
-    $services
-        ->set(BlankLineBeforeStatementFixer::class)
-        ->call('configure', [[
-            // Remove "case"
-            'statements' => ['declare', 'default', 'do', 'for', 'foreach', 'if', 'return', 'switch', 'throw', 'try', 'while'],
-        ]])
-    ;
-
-    $services
-        ->set(BracesFixer::class)
-        ->call('configure', [[
-            'allow_single_line_closure' => true,
-            'position_after_anonymous_constructs' => BracesFixer::LINE_NEXT,
-            'position_after_control_structures' => BracesFixer::LINE_NEXT,
-        ]])
-    ;
-
-    $services
-        ->set(ConcatSpaceFixer::class)
-        ->call('configure', [[
-            'spacing' => 'one',
-        ]])
-    ;
-
-    $services
-        ->set(HeaderCommentFixer::class)
-        ->call('configure', [[
-            'header' => "This file is part of Contao.\n\n(c) Leo Feyer\n\n@license LGPL-3.0-or-later",
-        ]])
-    ;
-
-    $services
-        ->set(ListSyntaxFixer::class)
-        ->call('configure', [[
-            'syntax' => 'long',
-        ]])
-    ;
-
-    $services
-        ->set(NoExtraBlankLinesFixer::class)
-        ->call('configure', [[
-            // Remove "throw"
-            'tokens' => ['curly_brace_block', 'extra', 'parenthesis_brace_block', 'square_brace_block', 'use'],
-        ]])
-    ;
 };
