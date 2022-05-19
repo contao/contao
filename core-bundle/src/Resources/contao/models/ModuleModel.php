@@ -75,7 +75,6 @@ use Contao\Model\Collection;
  * @property string|null       $reg_password
  * @property string|boolean    $protected
  * @property string|array|null $groups
- * @property string|boolean    $guests
  * @property string|array      $cssID
  * @property string|array|null $rootPageDependentModules
  *
@@ -146,7 +145,6 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByReg_password($val, array $opt=array())
  * @method static ModuleModel|null findOneByProtected($val, array $opt=array())
  * @method static ModuleModel|null findOneByGroups($val, array $opt=array())
- * @method static ModuleModel|null findOneByGuests($val, array $opt=array())
  * @method static ModuleModel|null findOneByCssID($val, array $opt=array())
  * @method static ModuleModel|null findOneBySpace($val, array $opt=array())
  *
@@ -210,7 +208,6 @@ use Contao\Model\Collection;
  * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_password($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByProtected($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByGroups($val, array $opt=array())
- * @method static Collection|ModuleModel[]|ModuleModel|null findByGuests($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByCssID($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findBySpace($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findMultipleByIds($val, array $opt=array())
@@ -278,7 +275,6 @@ use Contao\Model\Collection;
  * @method static integer countByReg_password($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
- * @method static integer countByGuests($val, array $opt=array())
  * @method static integer countByCssID($val, array $opt=array())
  * @method static integer countBySpace($val, array $opt=array())
  */

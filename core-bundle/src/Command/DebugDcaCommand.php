@@ -59,6 +59,6 @@ class DebugDcaCommand extends Command
 
         $dumper->dump($cloner->cloneVar($GLOBALS['TL_DCA'][$table]));
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

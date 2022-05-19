@@ -314,12 +314,6 @@
       <trans-unit id="tl_page.hide.1">
         <source>Hide the page in the navigation menu.</source>
       </trans-unit>
-      <trans-unit id="tl_page.guests.0">
-        <source>Show to guests only</source>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if a member is logged in.</source>
-      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
       </trans-unit>

@@ -61,7 +61,7 @@ class UserListCommand extends Command
                 if (!$users || 0 === $users->count()) {
                     $io->note('No accounts found.');
 
-                    return 0;
+                    return Command::SUCCESS;
                 }
 
                 $rows = $this->formatTableRows($users, $columns);
@@ -79,7 +79,7 @@ class UserListCommand extends Command
                 throw new \LogicException('Invalid format: '.$input->getOption('format'));
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function getUsers(bool $onlyAdmins = false): Collection|null
