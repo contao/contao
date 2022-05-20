@@ -108,10 +108,29 @@ services:
             - '@contao.framework'
             - '@database_connection'
 
+    contao.cron.purge_opt_in_tokens:
+        class: Contao\CoreBundle\Cron\PurgeOptInTokensCron
+        arguments:
+            - '@contao.opt_in'
+            - '@?monolog.logger.contao.cron'
+
     contao.cron.purge_preview_links:
         class: Contao\CoreBundle\Cron\PurgePreviewLinksCron
         arguments:
             - '@database_connection'
+
+    contao.cron.purge_registrations:
+        class: Contao\CoreBundle\Cron\PurgeRegistrationsCron
+        arguments:
+            - '@contao.framework'
+            - '@?monolog.logger.contao.cron'
+
+    contao.cron.purge_temp_folder:
+        class: Contao\CoreBundle\Cron\PurgeTempFolderCron
+        arguments:
+            - '@filesystem'
+            - '%kernel.project_dir%'
+            - '@monolog.logger.contao.cron'
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
