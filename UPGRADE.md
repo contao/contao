@@ -2,6 +2,28 @@
 
 ## Version 4.* to 5.0
 
+### Content elements
+
+The following content element types have been rewritten as fragment controllers with
+Twig-only templates:
+
+#### Category "texts"
+
+  - `code` (`ce_code` &rarr; `content_element/code`)
+  - `headline` (`ce_headline` &rarr; `content_element/headline`)
+  - `html` (`ce_html` &rarr; `content_element/html`)
+
+The legacy content elements and their templates are still around and will only be dropped in Contao 6.
+If you want to use them instead of the new ones, you can opt in on a per-element basis by adding the
+respective lines to your `contao/config/config.php`:
+
+```php
+// Restore legacy content elements
+$GLOBALS['TL_CTE']['texts']['code'] = \Contao\ContentCode::class;
+$GLOBALS['TL_CTE']['texts']['headline'] = \Contao\ContentHeadline::class;
+$GLOBALS['TL_CTE']['texts']['html'] = \Contao\ContentHtml::class;
+```
+
 ### Show to guests only
 
 The "show to guests only" function has been removed. Use the "protect page" function instead.
@@ -240,25 +262,3 @@ The public folder is now called `public` by default. It can be renamed in the `c
 The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
 `Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
 back to an array representation. If you are just using array access, nothing needs to be changed.
-
-### Content Elements
-
-The following content element types have been rewritten as fragment controllers
-with Twig-only templates:
-
-* category `texts`
-  - `code` (`ce_code` &rarr; `content_element/code`)
-  - `headline` (`ce_headline` &rarr; `content_element/headline`)
-  - `html` (`ce_html` &rarr; `content_element/html`)
-
-The legacy content elements and their templates are still around and will only
-be dropped in Contao 6. If you want to use them instead of the new ones, you
-can opt in on a per-element basis by adding the respective lines to your
-`contao/config/config.php`:
-
-```php
-// Restore legacy content elements
-$GLOBALS['TL_CTE']['texts']['code'] = \Contao\ContentCode::class;
-$GLOBALS['TL_CTE']['texts']['headline'] = \Contao\ContentHeadline::class;
-$GLOBALS['TL_CTE']['texts']['html'] = \Contao\ContentHtml::class;
-```
