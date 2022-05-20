@@ -461,17 +461,6 @@ $GLOBALS['TL_PURGE'] = array
 	)
 );
 
-// Backwards compatibility
-// Cron jobs
-$GLOBALS['TL_CRON'] = array
-(
-	'monthly' => array(),
-	'weekly' => array(),
-	'daily' => array(),
-	'hourly' => array(),
-	'minutely' => array()
-);
-
 // Hooks
 $GLOBALS['TL_HOOKS'] = array
 (

@@ -97,11 +97,6 @@ services:
             - !service_closure '@doctrine.orm.entity_manager'
             - '@?logger'
 
-    contao.cron.legacy:
-        class: Contao\CoreBundle\Cron\LegacyCron
-        arguments:
-            - '@contao.framework'
-
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
         arguments:
