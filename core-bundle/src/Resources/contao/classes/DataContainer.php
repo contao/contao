@@ -343,12 +343,6 @@ abstract class DataContainer extends Backend
 
 		$xlabel = '';
 
-		// Toggle line wrap (textarea)
-		if (($arrData['inputType'] ?? null) == 'textarea' && !isset($arrData['eval']['rte']))
-		{
-			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_' . $this->strInputName . '\')"');
-		}
-
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
@@ -1011,6 +1005,8 @@ abstract class DataContainer extends Backend
 
 				continue;
 			}
+
+			trigger_deprecation('contao/core-bundle', '4.13', 'The DCA "move" operation is deprecated and will be removed in Contao 5.');
 
 			$arrDirections = array('up', 'down');
 			$arrRootIds = \is_array($arrRootIds) ? $arrRootIds : array($arrRootIds);

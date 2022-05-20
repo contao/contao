@@ -97,11 +97,11 @@ class CrawlCommand extends Command
         } catch (InvalidJobIdException) {
             $io->error('Could not find the given job ID.');
 
-            return 1;
+            return Command::FAILURE;
         } catch (InvalidArgumentException $e) {
             $io->error($e->getMessage());
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $logOutput = $output instanceof ConsoleOutput ? $output->section() : $output;
@@ -143,7 +143,7 @@ class CrawlCommand extends Command
             }
         }
 
-        return (int) $errored;
+        return $errored ? Command::FAILURE : Command::SUCCESS;
     }
 
     private function createLogger(OutputInterface $output, InputInterface $input): LoggerInterface

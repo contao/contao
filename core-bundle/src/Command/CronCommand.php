@@ -51,6 +51,6 @@ class CronCommand extends Command
             $this->cron->run(Cron::SCOPE_CLI, $force);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

@@ -18,11 +18,13 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Path;
@@ -55,20 +57,22 @@ class ContaoExtensionTest extends TestCase
     {
         $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();
 
-        $this->assertCount(2, $nodeVisitors);
+        $this->assertCount(3, $nodeVisitors);
 
         $this->assertInstanceOf(ContaoEscaperNodeVisitor::class, $nodeVisitors[0]);
         $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[1]);
+        $this->assertInstanceOf(DeprecationsNodeVisitor::class, $nodeVisitors[2]);
     }
 
     public function testAddsTheTokenParsers(): void
     {
         $tokenParsers = $this->getContaoExtension()->getTokenParsers();
 
-        $this->assertCount(2, $tokenParsers);
+        $this->assertCount(3, $tokenParsers);
 
         $this->assertInstanceOf(DynamicExtendsTokenParser::class, $tokenParsers[0]);
         $this->assertInstanceOf(DynamicIncludeTokenParser::class, $tokenParsers[1]);
+        $this->assertInstanceOf(AddTokenParser::class, $tokenParsers[2]);
     }
 
     public function testAddsTheFunctions(): void
@@ -318,7 +322,6 @@ class ContaoExtensionTest extends TestCase
         $extension = $this->getContaoExtension();
 
         $property = new \ReflectionProperty(ContaoExtension::class, 'contaoEscaperFilterRules');
-        $property->setAccessible(true);
         $rules = $property->getValue($extension);
 
         $this->assertCount(2, $rules);

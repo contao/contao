@@ -55,7 +55,7 @@ class InstallWebDirCommand extends Command
         $this->addFiles($path);
         $this->purgeOldFiles($path);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**

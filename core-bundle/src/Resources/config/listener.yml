@@ -184,6 +184,8 @@ services:
 
     contao.listener.dbafs_metadata:
         class: Contao\CoreBundle\EventListener\DbafsMetadataSubscriber
+        arguments:
+            - '@request_stack'
         tags:
             - kernel.event_subscriber
 

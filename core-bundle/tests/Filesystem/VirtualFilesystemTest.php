@@ -944,7 +944,7 @@ class VirtualFilesystemTest extends TestCase
         }
 
         $filesystem = new VirtualFilesystem(
-            new MountManager(new InMemoryFilesystemAdapter()),
+            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
             $this->createMock(DbafsManager::class)
         );
 
