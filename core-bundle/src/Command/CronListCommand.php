@@ -65,10 +65,7 @@ class CronListCommand extends Command
         }
 
         $table = new Table($output);
-        $table
-            ->setHeaders(['Name', 'Interval'])
-            ->setRows($list)
-        ;
+        $table->setHeaders(['Name', 'Interval'])->setRows($list);
         $table->render();
 
         return Command::SUCCESS;

@@ -33,7 +33,7 @@ class CronCommand extends Command
     {
         $this
             ->addArgument('cronjob', InputArgument::OPTIONAL, 'An optional single cron job to run')
-            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force jobs to run, disregarding their last execution times')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force jobs to run, disregarding their last execution time')
             ->setHelp('Runs all registered cron jobs by default, otherwise a specific cron job.')
             ->addUsage('"Contao\CoreBundle\Cron\PurgeExpiredDataCron::onHourly"')
             ->addUsage('--force')

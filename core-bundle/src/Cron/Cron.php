@@ -42,7 +42,7 @@ class Cron
     }
 
     /**
-     * @return array<CronJob>
+     * @return list<CronJob>
      */
     public function getCronJobs(): array
     {
@@ -70,7 +70,7 @@ class Cron
             }
         }
 
-        throw new \InvalidArgumentException('Cronjob "'.$name.'" does not exist.');
+        throw new \InvalidArgumentException(sprintf('Cronjob "%s" does not exist.', $name));
     }
 
     /**
