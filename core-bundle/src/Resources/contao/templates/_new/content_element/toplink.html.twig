@@ -1,0 +1,36 @@
+{% trans_default_domain "contao_default" %}
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    {% block link %}
+        {% set link_attributes = attrs(link_attributes|default)
+            .set('href', '#')
+            .set('data-toplink')
+            .setIfExists('title', link_text)
+        %}
+        <a{% block link_attributes %}{{ link_attributes }}{% endblock %}>
+            {%- block link_inner %}
+                {{- link_text|default('MSC.backToTop'|trans) -}}
+            {% endblock -%}
+        </a>
+    {% endblock %}
+
+    {% block script %}
+        {% if not as_editor_view %}
+            {% add "toplink_script" to body %}
+                <script type="application/javascript">
+                    {# Scroll toplink_anchor into view when an element with a data-toplink attribute is clicked #}
+                    const toplink_anchor = document.getElementById('{% block toplink_anchor %}top{% endblock %}');
+
+                    document.querySelectorAll('*[data-toplink]').forEach(link => link.addEventListener('click', e => {
+                        e.preventDefault();
+                        toplink_anchor.scrollIntoView({
+                            block: '{% block toplink_scroll_align %}start{% endblock %}',
+                            behavior: '{% block toplink_scroll_behavior %}smooth{% endblock %}',
+                        });
+                    }));
+                </script>
+            {% endadd %}
+        {% endif %}
+    {% endblock %}
+{% endblock %}
