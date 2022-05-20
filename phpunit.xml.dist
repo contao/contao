@@ -3,6 +3,7 @@
   <coverage>
     <include>
       <directory>./calendar-bundle/src</directory>
+      <directory>./comments-bundle/src</directory>
       <directory>./core-bundle/src</directory>
       <directory>./faq-bundle/src</directory>
       <directory>./maker-bundle/src</directory>
@@ -12,6 +13,7 @@
     </include>
     <exclude>
       <directory>./calendar-bundle/src/Resources</directory>
+      <directory>./comments-bundle/src/Resources</directory>
       <directory>./core-bundle/src/Resources</directory>
       <directory>./faq-bundle/src/Resources</directory>
       <directory>./maker-bundle/src/Resources</directory>
