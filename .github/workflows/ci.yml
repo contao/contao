@@ -101,34 +101,15 @@ jobs:
                   composer bin ecs install --no-interaction --no-progress
 
             - name: Run ECS
-              run: tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --no-progress-bar --ansi
+              run: |
+                  tools/ecs/vendor/bin/ecs check *-bundle/bin *-bundle/src *-bundle/tests test-case/src tools/*/src --config tools/ecs/config/default.php --fix --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --fix --no-progress-bar --ansi
+                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --fix --no-progress-bar --ansi
 
-    ecs-legacy:
-        name: ECS Legacy
-        runs-on: ubuntu-latest
-        if: github.event_name != 'push'
-        steps:
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
+            - name: Commit the changes
+              uses: stefanzweifel/git-auto-commit-action@v4
               with:
-                  php-version: 8.1
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
-                  coverage: none
-              env:
-                  COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Checkout
-              uses: actions/checkout@v3
-
-            - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-progress
-                  composer bin ecs install --no-interaction --no-progress
-
-            - name: Run ECS
-              run: |
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao --config tools/ecs/config/legacy.php --no-progress-bar --ansi
-                  tools/ecs/vendor/bin/ecs check *-bundle/src/Resources/contao/templates --config tools/ecs/config/template.php --no-progress-bar --ansi
+                  commit_message: CS
 
     phpstan:
         name: PHPStan
