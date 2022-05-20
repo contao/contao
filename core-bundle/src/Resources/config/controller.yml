@@ -79,17 +79,11 @@ services:
             - { name: container.service_subscriber, id: contao.cron }
             - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
-    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController:
-        tags:
-            - { name: contao.frontend_module, category: miscellaneous }
+    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController: ~
 
-    Contao\CoreBundle\Controller\FrontendModule\TemplateController:
-        tags:
-            - { name: contao.frontend_module, category: miscellaneous }
+    Contao\CoreBundle\Controller\FrontendModule\TemplateController: ~
 
-    Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
-        tags:
-            - { name: contao.frontend_module, category: user }
+    Contao\CoreBundle\Controller\FrontendModule\TwoFactorController: ~
 
     Contao\CoreBundle\Controller\ImagesController:
         public: true
