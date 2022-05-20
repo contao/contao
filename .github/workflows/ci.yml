@@ -2,7 +2,6 @@ name: CI
 
 on:
     pull_request: ~
-    pull_request_target: ~
     push:
         branches:
             - 5.x
@@ -99,6 +98,7 @@ jobs:
               with:
                   repository: ${{ github.event.pull_request.head.repo.full_name }}
                   ref: ${{ github.head_ref }}
+                  token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Install the dependencies
               run: |
