@@ -973,8 +973,8 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('twig'),
                 new Reference('router'),
                 new Reference(ContaoCsrfTokenManager::class),
-                new Reference('%contao.csrf_token_name%'),
                 new Reference('translator'),
+                new Reference('%contao.csrf_token_name%'),
             ],
             $definition->getArguments()
         );

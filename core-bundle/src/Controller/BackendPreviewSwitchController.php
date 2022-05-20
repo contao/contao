@@ -66,26 +66,26 @@ class BackendPreviewSwitchController
     private $twig;
 
     /**
-     * @var CsrfTokenManagerInterface
-     */
-    private $tokenManager;
-
-    /**
-     * @var string
-     */
-    private $csrfTokenName;
-
-    /**
      * @var RouterInterface
      */
     private $router;
+
+    /**
+     * @var CsrfTokenManagerInterface
+     */
+    private $tokenManager;
 
     /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, string $csrfTokenName, TranslatorInterface $translator)
+    /**
+     * @var string
+     */
+    private $csrfTokenName;
+
+    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, CsrfTokenManagerInterface $tokenManager, TranslatorInterface $translator, string $csrfTokenName)
     {
         $this->previewAuthenticator = $previewAuthenticator;
         $this->tokenChecker = $tokenChecker;
@@ -94,8 +94,8 @@ class BackendPreviewSwitchController
         $this->twig = $twig;
         $this->router = $router;
         $this->tokenManager = $tokenManager;
-        $this->csrfTokenName = $csrfTokenName;
         $this->translator = $translator;
+        $this->csrfTokenName = $csrfTokenName;
     }
 
     /**
