@@ -57,7 +57,7 @@ class InstallCommand extends Command
             $io->listing($this->rows);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function addEmptyDirs(): void

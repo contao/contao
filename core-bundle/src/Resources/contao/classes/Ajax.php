@@ -83,21 +83,6 @@ class Ajax extends Backend
 
 				throw new NoContentResponseException();
 
-			// Load a navigation menu group
-			case 'loadNavigation':
-				$bemod = $objSessionBag->get('backend_modules');
-				$bemod[Input::post('id')] = (int) Input::post('state');
-				$objSessionBag->set('backend_modules', $bemod);
-
-				$this->import(BackendUser::class, 'User');
-
-				$navigation = $this->User->navigation();
-
-				$objTemplate = new BackendTemplate('be_navigation');
-				$objTemplate->modules = $navigation[Input::post('id')]['modules'];
-
-				throw new ResponseException($objTemplate->getResponse());
-
 			// Toggle nodes of the file or page tree
 			case 'toggleStructure':
 			case 'toggleFileManager':
