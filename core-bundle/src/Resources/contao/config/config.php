@@ -18,12 +18,9 @@ use Contao\ContentAccordionStart;
 use Contao\ContentAccordionStop;
 use Contao\ContentAlias;
 use Contao\ContentArticle;
-use Contao\ContentCode;
 use Contao\ContentDownload;
 use Contao\ContentDownloads;
 use Contao\ContentGallery;
-use Contao\ContentHeadline;
-use Contao\ContentHtml;
 use Contao\ContentHyperlink;
 use Contao\ContentImage;
 use Contao\ContentList;
@@ -280,12 +277,9 @@ $GLOBALS['TL_CTE'] = array
 (
 	'texts' => array
 	(
-		'headline'        => ContentHeadline::class,
 		'text'            => ContentText::class,
-		'html'            => ContentHtml::class,
 		'list'            => ContentList::class,
 		'table'           => ContentTable::class,
-		'code'            => ContentCode::class,
 	),
 	'accordion' => array
 	(
@@ -473,12 +467,7 @@ $GLOBALS['TL_CRON'] = array
 (
 	'monthly' => array(),
 	'weekly' => array(),
-	'daily' => array
-	(
-		'purgeTempFolder' => array(Automator::class, 'purgeTempFolder'),
-		'purgeRegistrations' => array(Automator::class, 'purgeRegistrations'),
-		'purgeOptInTokens' => array(Automator::class, 'purgeOptInTokens')
-	),
+	'daily' => array(),
 	'hourly' => array(),
 	'minutely' => array()
 );

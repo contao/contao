@@ -40,14 +40,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		'onload_callback' => array
 		(
 			array('tl_theme', 'checkPermission'),
-		),
-		'oncopy_callback' => array
-		(
-			array('tl_theme', 'scheduleUpdate')
-		),
-		'onsubmit_callback' => array
-		(
-			array('tl_theme', 'scheduleUpdate')
 		)
 	),
 

@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem;
 
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -142,4 +144,9 @@ interface VirtualFilesystemInterface
      * @throws UnableToResolveUuidException
      */
     public function setExtraMetadata(Uuid|string $location, array $metadata): void;
+
+    /**
+     * @throws UnableToResolveUuidException
+     */
+    public function generatePublicUri(Uuid|string $location, OptionsInterface $options = null): UriInterface|null;
 }

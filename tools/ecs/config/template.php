@@ -19,16 +19,16 @@ return static function (ECSConfig $ecsConfig): void {
     $ecsConfig->sets([__DIR__.'/../vendor/contao/easy-coding-standard/config/contao.php']);
 
     $ecsConfig->skip([
-        BlankLineAfterOpeningTagFixer::class => null,
-        DeclareStrictTypesFixer::class => null,
-        LinebreakAfterOpeningTagFixer::class => null,
-        NoAlternativeSyntaxFixer::class => null,
-        ReferenceUsedNamesOnlySniff::class => null,
-        SemicolonAfterInstructionFixer::class => null,
-        StrictComparisonFixer::class => null,
-        StrictParamFixer::class => null,
-        VisibilityRequiredFixer::class => null,
-        VoidReturnFixer::class => null,
+        BlankLineAfterOpeningTagFixer::class,
+        DeclareStrictTypesFixer::class,
+        LinebreakAfterOpeningTagFixer::class,
+        NoAlternativeSyntaxFixer::class,
+        ReferenceUsedNamesOnlySniff::class,
+        SemicolonAfterInstructionFixer::class,
+        StrictComparisonFixer::class,
+        StrictParamFixer::class,
+        VisibilityRequiredFixer::class,
+        VoidReturnFixer::class,
     ]);
 
     $ecsConfig->parallel();

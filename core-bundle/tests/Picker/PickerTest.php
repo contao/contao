@@ -76,7 +76,8 @@ class PickerTest extends TestCase
     {
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
-        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
+        $translator = $this->createMock(TranslatorInterface::class);
+        $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
         $config = new PickerConfig('page');
         $picker = new Picker($factory, [$provider], $config);
 

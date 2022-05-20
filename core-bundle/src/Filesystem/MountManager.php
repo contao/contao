@@ -12,10 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
+use Contao\CoreBundle\Filesystem\PublicUri\OptionsInterface;
+use Contao\CoreBundle\Filesystem\PublicUri\PublicUriProviderInterface;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemReader;
+use Psr\Http\Message\UriInterface;
 use Symfony\Component\Filesystem\Path;
 
 /**
@@ -35,18 +38,20 @@ class MountManager
      */
     private array $mounts = [];
 
-    public function __construct(FilesystemAdapter $rootAdapter = null)
+    /**
+     * @param iterable<int,PublicUriProviderInterface> $publicUriProviders
+     */
+    public function __construct(private iterable $publicUriProviders = [])
     {
-        if (null !== $rootAdapter) {
-            $this->mounts = ['' => $rootAdapter];
-        }
     }
 
-    public function mount(FilesystemAdapter $adapter, string $path): void
+    public function mount(FilesystemAdapter $adapter, string $path = ''): self
     {
         $this->mounts[$path] = $adapter;
 
         krsort($this->mounts);
+
+        return $this;
     }
 
     /**
@@ -361,6 +366,20 @@ class MountManager
         } catch (FilesystemException $e) {
             throw VirtualFilesystemException::unableToRetrieveMetadata($path, $e);
         }
+    }
+
+    public function generatePublicUri(string $path, OptionsInterface|null $options = null): UriInterface|null
+    {
+        /** @var FilesystemAdapter $adapter */
+        [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
+
+        foreach ($this->publicUriProviders as $provider) {
+            if (null !== ($uri = $provider->getUri($adapter, $adapterPath, $options))) {
+                return $uri;
+            }
+        }
+
+        return null;
     }
 
     private function getAdapterAndPath(string $path): array

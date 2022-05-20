@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Controller\FrontendModule;
 
 use Contao\CoreBundle\Controller\AbstractFragmentController;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
-use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\ModuleModel;
 use Contao\StringUtil;
@@ -73,7 +72,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
      * @param array<string>        $classes
      * @param array<string, mixed> $properties
      */
-    protected function addDefaultDataToTemplate(FragmentTemplate $template, array $modelData = [], string $section = 'main', array $classes = [], array $properties = [], bool $asOverview = false): void
+    protected function addDefaultDataToTemplate(FragmentTemplate $template, array $modelData = [], string $section = 'main', array $classes = [], array $properties = [], bool $asEditorView = false): void
     {
         if ($this->isLegacyTemplate($template->getName())) {
             // Legacy fragments
@@ -91,13 +90,12 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         $template->setData([
             'type' => $this->getType(),
             'template' => $template->getName(),
-            'as_overview' => $asOverview,
+            'as_editor_view' => $asEditorView,
             'data' => $modelData,
             'section' => $section,
             'properties' => $properties,
-            'attributes' => (new HtmlAttributes())
-                ->setIfExists('id', $attributesData[0] ?? null)
-                ->addClass($attributesData[1] ?? '', ...$classes),
+            'element_html_id' => $attributesData[0] ?? null,
+            'element_css_classes' => trim(($attributesData[1] ?? '').' '.implode(' ', $classes)),
             'headline' => [
                 'text' => $headlineData['value'] ?? '',
                 'tagName' => $headlineData['unit'] ?? 'h1',
