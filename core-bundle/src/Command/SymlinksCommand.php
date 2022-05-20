@@ -40,7 +40,7 @@ class SymlinksCommand extends Command
 
     private array $rows = [];
     private string|null $webDir = null;
-    private int $statusCode = 0;
+    private int $statusCode = Command::SUCCESS;
 
     public function __construct(
         private string $projectDir,
@@ -179,7 +179,7 @@ class SymlinksCommand extends Command
                 $target,
             ];
         } catch (\Exception $e) {
-            $this->statusCode = 1;
+            $this->statusCode = Command::FAILURE;
 
             $this->rows[] = [
                 sprintf(

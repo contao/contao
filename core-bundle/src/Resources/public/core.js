@@ -853,17 +853,6 @@ var Backend =
 	},
 
 	/**
-	 * Toggle the line wrapping mode of a textarea
-	 *
-	 * @param {string} id The ID of the target element
-	 */
-	toggleWrap: function(id) {
-		var textarea = $(id),
-			status = (textarea.getProperty('wrap') == 'off') ? 'soft' : 'off';
-		textarea.setProperty('wrap', status);
-	},
-
-	/**
 	 * Toggle the synchronization results
 	 */
 	toggleUnchanged: function() {
@@ -2412,11 +2401,6 @@ window.addEvent('domready', function() {
 	if (Elements.chosen != undefined) {
 		$$('select.tl_chosen').chosen();
 	}
-
-	// Remove line wraps from textareas
-	$$('textarea.monospace').each(function(el) {
-		Backend.toggleWrap(el);
-	});
 });
 
 // Resize the table wizard

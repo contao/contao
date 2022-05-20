@@ -284,12 +284,6 @@
       <trans-unit id="tl_module.groups.1">
         <source>These groups will be able to see the module.</source>
       </trans-unit>
-      <trans-unit id="tl_module.guests.0">
-        <source>Show to guests only</source>
-      </trans-unit>
-      <trans-unit id="tl_module.guests.1">
-        <source>Hide the module if a member is logged in.</source>
-      </trans-unit>
       <trans-unit id="tl_module.cssID.0">
         <source>CSS ID/class</source>
       </trans-unit>

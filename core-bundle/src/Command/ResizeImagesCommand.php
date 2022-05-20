@@ -117,7 +117,7 @@ class ResizeImagesCommand extends Command
     private function resizeImage(string $path, bool $preserveMissing, bool $quiet = false): int
     {
         if ($this->filesystem->exists(Path::join($this->targetDir, $path))) {
-            return 0;
+            return Command::SUCCESS;
         }
 
         try {
@@ -144,14 +144,14 @@ class ResizeImagesCommand extends Command
                 $this->io->writeln('Image "'.$path.'" does not exist anymore, deleted deferred image reference');
             }
 
-            return 1;
+            return Command::FAILURE;
         }
 
         if (!$quiet) {
             $this->io->writeln('Image "'.$path.'" resized successfully');
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess, bool $preserveMissing): int
@@ -222,11 +222,11 @@ class ResizeImagesCommand extends Command
             if (0 !== $failedCount && $count - $failedCount <= 0) {
                 $this->io->error('No image could be resized successfully.');
 
-                return 1;
+                return Command::FAILURE;
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function executeConcurrent(float $timeLimit, float $concurrent): int
@@ -316,10 +316,10 @@ class ResizeImagesCommand extends Command
         if (0 !== $failedCount && $count - $failedCount <= 0) {
             $this->io->error('No image could be resized successfully.');
 
-            return 1;
+            return Command::FAILURE;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function updateOutput(array $processes, array $counts, array $paths): void

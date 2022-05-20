@@ -315,13 +315,6 @@ abstract class Module extends Frontend
 				$objSubpage->domain = $host;
 			}
 
-			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				continue;
-			}
-
 			$subitems = '';
 
 			// PageModel->groups is an array after calling loadDetails()
@@ -367,8 +360,6 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;
@@ -380,8 +371,6 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;

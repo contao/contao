@@ -43,6 +43,11 @@ services:
         arguments:
             - '@contao.cron'
 
+    contao.command.cron_list:
+        class: Contao\CoreBundle\Command\CronListCommand
+        arguments:
+            - '@contao.cron'
+
     contao.command.debug_dca:
         class: Contao\CoreBundle\Command\DebugDcaCommand
         arguments:

@@ -116,3 +116,8 @@ services:
         class: Contao\CoreBundle\Migration\Version500\EmptyPtableMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_500.guests:
+        class: Contao\CoreBundle\Migration\Version500\GuestsMigration
+        arguments:
+            - '@database_connection'
