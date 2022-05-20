@@ -2,6 +2,12 @@
 
 ## Version 4.* to 5.0
 
+### TL_CRON
+
+Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob`
+instead (you can also use the `@CronJob` annotation or `#[AsCronJob]` attribute). See the official developer
+documentation for more details.
+
 ### Content elements
 
 The following content element types have been rewritten as fragment controllers with
