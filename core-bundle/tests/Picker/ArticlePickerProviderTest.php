@@ -189,9 +189,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
             ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
         ;
 
-        if (null === $translator) {
-            $translator = $this->createMock(TranslatorInterface::class);
-        }
+        $translator ??= $this->createMock(TranslatorInterface::class);
 
         return new ArticlePickerProvider($menuFactory, $router, $translator, $security);
     }
