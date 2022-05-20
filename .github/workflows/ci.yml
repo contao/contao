@@ -83,6 +83,7 @@ jobs:
         name: ECS
         runs-on: ubuntu-latest
         if: github.event_name != 'push'
+        permissions: write-all
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
