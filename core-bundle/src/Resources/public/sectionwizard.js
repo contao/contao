@@ -20,6 +20,7 @@
                     });
                 });
 
+                // TODO: replace this with a vanilla JS solution
                 new Sortables(tbody, {
                     constrain: true,
                     opacity: 0.6,
