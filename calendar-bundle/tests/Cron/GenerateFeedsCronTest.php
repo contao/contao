@@ -22,7 +22,7 @@ class GenerateFeedsCronTest extends ContaoTestCase
     {
         $calendarUtil = $this->createMock(Calendar::class);
         $calendarUtil
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('generateFeeds')
         ;
 
