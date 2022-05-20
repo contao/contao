@@ -2,6 +2,12 @@
 
 ## Version 4.* to 5.0
 
+### TL_CRON
+
+Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob`
+instead (you can also use the `@CronJob` annotation or `#[AsCronJob]` attribute). See the official developer
+documentation for more details.
+
 ### Content elements
 
 The following content element types have been rewritten as fragment controllers with
@@ -262,9 +268,3 @@ The public folder is now called `public` by default. It can be renamed in the `c
 The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
 `Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
 back to an array representation. If you are just using array access, nothing needs to be changed.
-
-### TL_CRON
-
-Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob`
-instead (you can also use the `@CronJob` annotation or `#[AsCronJob]` attribute). See the official developer
-documentation for more details.
