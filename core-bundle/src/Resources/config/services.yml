@@ -97,6 +97,7 @@ services:
             - '@twig'
             - '@router'
             - '@Contao\CoreBundle\Csrf\ContaoCsrfTokenManager'
+            - '@translator'
             - '%contao.csrf_token_name%'
         tags:
             - controller.service_arguments
