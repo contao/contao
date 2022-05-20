@@ -18,12 +18,9 @@ use Contao\ContentAccordionStart;
 use Contao\ContentAccordionStop;
 use Contao\ContentAlias;
 use Contao\ContentArticle;
-use Contao\ContentCode;
 use Contao\ContentDownload;
 use Contao\ContentDownloads;
 use Contao\ContentGallery;
-use Contao\ContentHeadline;
-use Contao\ContentHtml;
 use Contao\ContentHyperlink;
 use Contao\ContentImage;
 use Contao\ContentList;
@@ -280,12 +277,9 @@ $GLOBALS['TL_CTE'] = array
 (
 	'texts' => array
 	(
-		'headline'        => ContentHeadline::class,
 		'text'            => ContentText::class,
-		'html'            => ContentHtml::class,
 		'list'            => ContentList::class,
 		'table'           => ContentTable::class,
-		'code'            => ContentCode::class,
 	),
 	'accordion' => array
 	(
