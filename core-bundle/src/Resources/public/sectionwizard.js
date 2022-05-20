@@ -50,6 +50,7 @@
                                 makeSortable(tbody);
                             });
                             break;
+
                         case 'delete':
                             bt.addEventListener('click', function() {
                                 Backend.getScrollOffset();
@@ -81,7 +82,7 @@
     };
 
     new MutationObserver(function (mutationsList) {
-        for(const mutation of mutationsList) {
+        for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
                 mutation.addedNodes.forEach(function (element) {
                     if (element.querySelectorAll) {
