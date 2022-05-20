@@ -1,4 +1,4 @@
-<{{ tagName }}{% block attributes %}{{ attributes|default }}{% endblock %}>
+<{{ tag_name }}{% block attributes %}{{ attributes|default }}{% endblock %}>
 {%- block inner %}
     {%- apply spaceless %}
         {% if as_editor_view %}
@@ -8,4 +8,4 @@
         {% endif %}
     {% endapply -%}
 {% endblock -%}
-</{{ tagName }}>
+</{{ tag_name }}>
