@@ -15,10 +15,9 @@ namespace Contao\CoreBundle\Security\User;
 use Contao\BackendUser;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FrontendUser;
-use Contao\System;
 use Contao\User;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -60,7 +59,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             return $user;
         }
 
-        throw new UsernameNotFoundException(sprintf('Could not find user "%s"', $identifier));
+        throw new UserNotFoundException(sprintf('Could not find user "%s"', $identifier));
     }
 
     public function refreshUser(UserInterface $user): User
