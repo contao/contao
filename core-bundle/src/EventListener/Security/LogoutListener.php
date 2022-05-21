@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\EventListener\Security;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\System;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
@@ -90,27 +89,6 @@ class LogoutListener
                 sprintf('User "%s" has logged out', $user->username),
                 ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
             );
-
-            $this->triggerPostLogoutHook($user);
-        }
-    }
-
-    private function triggerPostLogoutHook(User $user): void
-    {
-        $this->framework->initialize();
-
-        if (empty($GLOBALS['TL_HOOKS']['postLogout']) || !\is_array($GLOBALS['TL_HOOKS']['postLogout'])) {
-            return;
-        }
-
-        trigger_deprecation('contao/core-bundle', '4.5', 'Using the "postLogout" hook has been deprecated and will no longer work in Contao 5.0.');
-
-        $system = $this->framework->getAdapter(System::class);
-
-        $GLOBALS['TL_USERNAME'] = $user->getUserIdentifier();
-
-        foreach ($GLOBALS['TL_HOOKS']['postLogout'] as $callback) {
-            $system->importStatic($callback[0])->{$callback[1]}($user);
         }
     }
 }
