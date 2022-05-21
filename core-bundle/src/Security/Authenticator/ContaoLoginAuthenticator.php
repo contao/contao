@@ -100,8 +100,6 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         try {
             return $pageHandler->getResponse();
-        } catch (ResponseException $e) {
-            return $e->getResponse();
         } catch (InsufficientAuthenticationException $e) {
             throw new UnauthorizedHttpException('', $e->getMessage(), $e);
         }
