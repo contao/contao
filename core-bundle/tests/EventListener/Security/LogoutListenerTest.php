@@ -17,8 +17,6 @@ use Contao\CoreBundle\EventListener\Security\LogoutListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\System;
-use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
