@@ -71,8 +71,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 
         $user = $this->loadUserByIdentifier($user->getUserIdentifier());
 
-        $this->triggerPostAuthenticateHook($user);
-
         return $user;
     }
 
@@ -95,20 +93,5 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 
         $user->password = $newHashedPassword;
         $user->save();
-    }
-
-    private function triggerPostAuthenticateHook(User $user): void
-    {
-        if (empty($GLOBALS['TL_HOOKS']['postAuthenticate']) || !\is_array($GLOBALS['TL_HOOKS']['postAuthenticate'])) {
-            return;
-        }
-
-        trigger_deprecation('contao/core-bundle', '4.5', 'Using the "postAuthenticate" hook has been deprecated and will no longer work in Contao 5.0.');
-
-        $system = $this->framework->getAdapter(System::class);
-
-        foreach ($GLOBALS['TL_HOOKS']['postAuthenticate'] as $callback) {
-            $system->importStatic($callback[0])->{$callback[1]}($user);
-        }
     }
 }
