@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Security;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\User;
@@ -35,7 +34,6 @@ class LogoutListener
     public function __construct(
         private HttpUtils $httpUtils,
         private ScopeMatcher $scopeMatcher,
-        private ContaoFramework $framework,
         private Security $security,
         private LoggerInterface|null $logger,
     ) {

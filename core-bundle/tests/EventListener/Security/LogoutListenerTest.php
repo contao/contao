@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\EventListener\Security;
 
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\Security\LogoutListener;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Log\LoggerInterface;
@@ -181,8 +180,6 @@ class LogoutListenerTest extends TestCase
 
     public function testAddsTheLogEntry(): void
     {
-        $framework = $this->mockContaoFramework();
-
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
@@ -212,14 +209,12 @@ class LogoutListenerTest extends TestCase
         $event = new LogoutEvent(new Request(), null);
         $event->setResponse($response);
 
-        $listener = $this->mockLogoutListener(null, null, $framework, $security, $logger);
+        $listener = $this->mockLogoutListener(null, null, $security, $logger);
         $listener($event);
     }
 
     public function testDoesNotAddALogEntryIfTheUserIsNotSupported(): void
     {
-        $framework = $this->mockContaoFramework();
-
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->never())
@@ -245,7 +240,7 @@ class LogoutListenerTest extends TestCase
         $event = new LogoutEvent(new Request(), null);
         $event->setResponse($response);
 
-        $listener = $this->mockLogoutListener(null, null, $framework, $security, $logger);
+        $listener = $this->mockLogoutListener(null, null, $security, $logger);
         $listener($event);
     }
 
@@ -296,7 +291,7 @@ class LogoutListenerTest extends TestCase
         $event = new LogoutEvent($request, null);
         $event->setResponse($response);
 
-        $listener = $this->mockLogoutListener($httpUtils, $scopeMatcher, $this->mockContaoFramework(), $security);
+        $listener = $this->mockLogoutListener($httpUtils, $scopeMatcher, $security);
         $listener($event);
     }
 
@@ -347,11 +342,11 @@ class LogoutListenerTest extends TestCase
         $event = new LogoutEvent($request, null);
         $event->setResponse($response);
 
-        $listener = $this->mockLogoutListener($httpUtils, $scopeMatcher, $this->mockContaoFramework(), $security);
+        $listener = $this->mockLogoutListener($httpUtils, $scopeMatcher, $security);
         $listener($event);
     }
 
-    private function mockLogoutListener(HttpUtils $httpUtils = null, ScopeMatcher $scopeMatcher = null, ContaoFramework $framework = null, Security $security = null, LoggerInterface $logger = null): LogoutListener
+    private function mockLogoutListener(HttpUtils $httpUtils = null, ScopeMatcher $scopeMatcher = null, Security $security = null, LoggerInterface $logger = null): LogoutListener
     {
         if (null === $httpUtils) {
             $httpUtils = $this->createMock(HttpUtils::class);
@@ -359,10 +354,6 @@ class LogoutListenerTest extends TestCase
 
         if (null === $scopeMatcher) {
             $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        }
-
-        if (null === $framework) {
-            $framework = $this->mockContaoFramework();
         }
 
         if (null === $security) {
@@ -373,6 +364,6 @@ class LogoutListenerTest extends TestCase
             ;
         }
 
-        return new LogoutListener($httpUtils, $scopeMatcher, $framework, $security, $logger);
+        return new LogoutListener($httpUtils, $scopeMatcher, $security, $logger);
     }
 }
