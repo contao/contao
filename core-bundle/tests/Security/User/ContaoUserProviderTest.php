@@ -121,43 +121,6 @@ class ContaoUserProviderTest extends TestCase
         $provider->upgradePassword($user, 'newsuperhash');
     }
 
-    /**
-     * @group legacy
-     */
-    public function testTriggersThePostAuthenticateHook(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.5: Using the "postAuthenticate" hook has been deprecated %s.');
-
-        $user = $this->mockClassWithProperties(BackendUser::class);
-        $user->username = 'foobar';
-
-        $systemAdapter = $this->mockAdapter(['importStatic']);
-        $systemAdapter
-            ->expects($this->once())
-            ->method('importStatic')
-            ->with(static::class)
-            ->willReturn($this)
-        ;
-
-        $framework = $this->mockContaoFramework([
-            BackendUser::class => $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]),
-            System::class => $systemAdapter,
-        ]);
-
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
-
-        $GLOBALS['TL_HOOKS']['postAuthenticate'][] = [static::class, 'onPostAuthenticate'];
-
-        $provider = $this->getProvider($framework);
-
-        $this->assertSame($user, $provider->refreshUser($user));
-
-        unset($GLOBALS['TL_HOOKS']);
-    }
-
     public function onPostAuthenticate(): void
     {
         // Dummy method to test the postAuthenticate hook
