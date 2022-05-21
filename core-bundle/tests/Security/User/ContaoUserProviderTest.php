@@ -120,11 +120,6 @@ class ContaoUserProviderTest extends TestCase
         $provider->upgradePassword($user, 'newsuperhash');
     }
 
-    public function onPostAuthenticate(): void
-    {
-        // Dummy method to test the postAuthenticate hook
-    }
-
     private function getProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {
         $framework ??= $this->mockContaoFramework();
