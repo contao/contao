@@ -29,7 +29,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $user
      */
     public function addTrustedDevice($user, string $firewallName): void
     {
@@ -58,7 +58,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $user
      */
     public function isTrustedDevice($user, string $firewallName): bool
     {
@@ -102,7 +102,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $user
      */
     public function canSetTrustedDevice($user, Request $request, string $firewallName): bool
     {

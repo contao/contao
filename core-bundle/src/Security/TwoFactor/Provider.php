@@ -38,7 +38,7 @@ class Provider implements TwoFactorProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $user
      */
     public function validateAuthenticationCode($user, string $authenticationCode): bool
     {
@@ -59,7 +59,7 @@ class Provider implements TwoFactorProviderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $user
      */
     public function prepareAuthentication($user): void
     {
