@@ -17,7 +17,10 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Backup\BackupCodeManagerInterface;
 
 class BackupCodeManager implements BackupCodeManagerInterface
 {
-    public function isBackupCode(object $user, string $code): bool
+    /**
+     * {@inheritdoc}
+     */
+    public function isBackupCode($user, string $code): bool
     {
         if (!$user instanceof User) {
             return false;
@@ -42,7 +45,10 @@ class BackupCodeManager implements BackupCodeManagerInterface
         return false;
     }
 
-    public function invalidateBackupCode(object $user, string $code): void
+    /**
+     * {@inheritdoc}
+     */
+    public function invalidateBackupCode($user, string $code): void
     {
         if (!$user instanceof User) {
             return;
@@ -82,12 +88,10 @@ class BackupCodeManager implements BackupCodeManagerInterface
             $backupCodes[] = $this->generateCode();
         }
 
-        $user->backupCodes = json_encode(
-            array_map(
-                static fn ($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
-                $backupCodes
-            )
-        );
+        $user->backupCodes = json_encode(array_map(
+            static fn($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
+            $backupCodes
+        ), JSON_THROW_ON_ERROR);
 
         $user->save();
 

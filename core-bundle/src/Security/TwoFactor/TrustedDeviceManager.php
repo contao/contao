@@ -28,7 +28,10 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     {
     }
 
-    public function addTrustedDevice(object $user, string $firewallName): void
+    /**
+     * {@inheritdoc}
+     */
+    public function addTrustedDevice($user, string $firewallName): void
     {
         if (!$user instanceof User) {
             return;
@@ -54,7 +57,10 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $this->entityManager->flush();
     }
 
-    public function isTrustedDevice(object $user, string $firewallName): bool
+    /**
+     * {@inheritdoc}
+     */
+    public function isTrustedDevice($user, string $firewallName): bool
     {
         if (!($user instanceof User)) {
             return false;
@@ -95,7 +101,10 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         ;
     }
 
-    public function canSetTrustedDevice(object $user, Request $request, string $firewallName): bool
+    /**
+     * {@inheritdoc}
+     */
+    public function canSetTrustedDevice($user, Request $request, string $firewallName): bool
     {
         return true;
     }
