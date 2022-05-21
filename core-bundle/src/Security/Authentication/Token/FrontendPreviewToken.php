@@ -26,8 +26,6 @@ class FrontendPreviewToken extends AbstractToken
             parent::__construct($user->getRoles());
             $this->setUser($user);
         }
-
-        $this->setAuthenticated(true);
     }
 
     public function __serialize(): array
