@@ -49,28 +49,10 @@ use Symfony\Component\Security\Http\ParameterBagUtils;
 
 class ContaoLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface, InteractiveAuthenticatorInterface
 {
-    private UserProviderInterface $userProvider;
-    private AuthenticationSuccessHandlerInterface $successHandler;
-    private AuthenticationFailureHandlerInterface $failureHandler;
-    private ScopeMatcher $scopeMatcher;
-    private RouterInterface $router;
-    private UriSigner $uriSigner;
-    private ContaoFramework $framework;
-    private TokenStorageInterface $tokenStorage;
-    private TwoFactorAuthenticator $twoFactorAuthenticator;
     private array $options;
 
-    public function __construct(UserProviderInterface $userProvider, AuthenticationSuccessHandlerInterface $successHandler, AuthenticationFailureHandlerInterface $failureHandler, ScopeMatcher $scopeMatcher, RouterInterface $router, UriSigner $uriSigner, ContaoFramework $framework, TokenStorageInterface $tokenStorage, TwoFactorAuthenticator $twoFactorAuthenticator, array $options)
+    public function __construct(private UserProviderInterface $userProvider, private AuthenticationSuccessHandlerInterface $successHandler, private AuthenticationFailureHandlerInterface $failureHandler, private ScopeMatcher $scopeMatcher, private RouterInterface $router, private UriSigner $uriSigner, private ContaoFramework $framework, private TokenStorageInterface $tokenStorage, private TwoFactorAuthenticator $twoFactorAuthenticator, array $options)
     {
-        $this->userProvider = $userProvider;
-        $this->successHandler = $successHandler;
-        $this->failureHandler = $failureHandler;
-        $this->scopeMatcher = $scopeMatcher;
-        $this->router = $router;
-        $this->uriSigner = $uriSigner;
-        $this->framework = $framework;
-        $this->tokenStorage = $tokenStorage;
-        $this->twoFactorAuthenticator = $twoFactorAuthenticator;
         $this->options = array_merge([
             'username_parameter' => 'username',
             'password_parameter' => 'password',
@@ -108,7 +90,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     {
         return $request->isMethod('POST')
             && $request->request->has('FORM_SUBMIT')
-            && 0 === strncmp($request->request->get('FORM_SUBMIT'), 'tl_login', 8);
+            && str_starts_with($request->request->get('FORM_SUBMIT'), 'tl_login');
     }
 
     public function authenticate(Request $request): Passport
