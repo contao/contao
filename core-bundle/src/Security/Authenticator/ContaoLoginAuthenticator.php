@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authenticator;
 
 use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
-use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageError401;
