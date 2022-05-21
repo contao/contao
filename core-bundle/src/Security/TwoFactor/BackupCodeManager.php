@@ -89,7 +89,7 @@ class BackupCodeManager implements BackupCodeManagerInterface
         }
 
         $user->backupCodes = json_encode(array_map(
-            static fn($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
+            static fn ($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
             $backupCodes
         ), JSON_THROW_ON_ERROR);
 
