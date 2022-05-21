@@ -29,7 +29,7 @@ class FrontendPreviewTokenTest extends TestCase
 
         $token = new FrontendPreviewToken($user, false);
 
-        $this->assertTrue($token->isAuthenticated());
+        $this->assertInstanceOf(FrontendUser::class, $token->getUser());
         $this->assertSame($user, $token->getUser());
 
         $this->assertSame(['ROLE_MEMBER'], $token->getRoleNames());
@@ -39,8 +39,7 @@ class FrontendPreviewTokenTest extends TestCase
     {
         $token = new FrontendPreviewToken(null, false);
 
-        $this->assertTrue($token->isAuthenticated());
-        $this->assertSame('anon.', $token->getUser()); // @phpstan-ignore-line
+        $this->assertNull($token->getUser());
     }
 
     public function testReturnsThePublicationStatus(): void
@@ -54,7 +53,7 @@ class FrontendPreviewTokenTest extends TestCase
     {
         $token = new FrontendPreviewToken(null, true);
         $serialized = $token->__serialize();
-        $expected = [true, [$token->getUser(), true, null, [], []]];
+        $expected = [true, [$token->getUser(), false, null, [], []]];
 
         $this->assertSame($expected, $serialized);
 

@@ -193,9 +193,12 @@ class TokenCheckerTest extends TestCase
 
     public function getPreviewModeData(): \Generator
     {
+        /** @var FrontendUser $user */
+        $user = $this->mockUser(FrontendUser::class);
+
         yield [new FrontendPreviewToken(null, true), false, false];
-        yield [new FrontendPreviewToken(null, true), true, true];
-        yield [new FrontendPreviewToken(null, false), true, false];
+        yield [new FrontendPreviewToken($user, true), true, true];
+        yield [new FrontendPreviewToken($user, false), true, false];
         yield [new UsernamePasswordToken($this->createMock(FrontendUser::class), 'provider'), true, false];
     }
 

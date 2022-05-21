@@ -114,7 +114,7 @@ class TokenChecker
             $token = $this->getTokenFromSession('_security_'.$context);
         }
 
-        if (!$token instanceof TokenInterface || !$token->isAuthenticated()) {
+        if (!$token instanceof TokenInterface) {
             return null;
         }
 
