@@ -837,6 +837,13 @@ services:
     contao.security.member_group_voter:
         class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
 
+    contao.security.table_accesss_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
+        arguments:
+            - '@security.helper'
+        tags:
+            - { name: security.voter, priority: 100 }
+
     contao.security.token_checker:
         public: true
         class: Contao\CoreBundle\Security\Authentication\Token\TokenChecker
