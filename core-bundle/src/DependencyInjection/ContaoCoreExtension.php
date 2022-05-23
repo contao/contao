@@ -20,6 +20,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
+use Contao\CoreBundle\DependencyInjection\Attribute\EntityExtension;
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
@@ -169,6 +170,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             AsCronJob::class => 'contao.cronjob',
             AsHook::class => 'contao.hook',
             AsCallback::class => 'contao.callback',
+            EntityExtension::class => 'contao.entity_extension',
         ];
 
         foreach ($attributesForAutoconfiguration as $attributeClass => $tag) {
