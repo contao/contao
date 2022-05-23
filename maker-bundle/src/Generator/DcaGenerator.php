@@ -18,13 +18,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class DcaGenerator implements GeneratorInterface
 {
-    private FileManager $fileManager;
-    private string $projectDir;
-
-    public function __construct(FileManager $fileManager, string $projectDir)
+    public function __construct(private FileManager $fileManager, private string $projectDir)
     {
-        $this->fileManager = $fileManager;
-        $this->projectDir = $projectDir;
     }
 
     public function generate(array $options): string

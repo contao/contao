@@ -305,7 +305,6 @@ abstract class Events extends Module
 		if ($arrEvent['teaser'])
 		{
 			$arrEvent['hasTeaser'] = true;
-			$arrEvent['teaser'] = StringUtil::toHtml5($arrEvent['teaser']);
 			$arrEvent['teaser'] = StringUtil::encodeEmail($arrEvent['teaser']);
 		}
 

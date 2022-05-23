@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Image;
 use Contao\BackendUser;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\ImageSizesEvent;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -24,22 +23,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizes implements ResetInterface
 {
-    private Connection $connection;
-    private EventDispatcherInterface $eventDispatcher;
-    private ContaoFramework $framework;
-    private TranslatorInterface $translator;
     private array $predefinedSizes = [];
-    private ?array $options = null;
+    private array|null $options = null;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.sizes" service instead
      */
-    public function __construct(Connection $connection, EventDispatcherInterface $eventDispatcher, ContaoFramework $framework, TranslatorInterface $translator)
-    {
-        $this->connection = $connection;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->framework = $framework;
-        $this->translator = $translator;
+    public function __construct(
+        private Connection $connection,
+        private EventDispatcherInterface $eventDispatcher,
+        private TranslatorInterface $translator,
+    ) {
     }
 
     /**
@@ -105,21 +99,6 @@ class ImageSizes implements ResetInterface
             return;
         }
 
-        // The framework is required to have the TL_CROP options available
-        $this->framework->initialize();
-
-        // Backwards compatibility
-        $this->options = $GLOBALS['TL_CROP'] ?? [];
-
-        if (
-            3 !== \count($this->options)
-            || 0 !== \count($this->options['image_sizes'] ?? [])
-            || 2 !== \count($this->options['relative'] ?? [])
-            || 10 !== \count($this->options['exact'] ?? [])
-        ) {
-            trigger_deprecation('contao/core-bundle', '4.13', 'Using $GLOBALS[\'TL_CROP\'] has been deprecated and will be removed in Contao 5.0. Use the "contao.image.sizes" service instead.');
-        }
-
         $rows = $this->connection->fetchAllAssociative(
             'SELECT
                 s.id, s.name, s.width, s.height, t.name as theme
@@ -144,7 +123,7 @@ class ImageSizes implements ResetInterface
 
         foreach ($rows as $imageSize) {
             // Prefix theme names that are numeric or collide with existing group names
-            if (is_numeric($imageSize['theme']) || \in_array($imageSize['theme'], ['exact', 'relative', 'image_sizes'], true)) {
+            if (is_numeric($imageSize['theme']) || \in_array($imageSize['theme'], ['custom', 'image_sizes', 'exact', 'relative'], true)) {
                 $imageSize['theme'] = 'Theme '.$imageSize['theme'];
             }
 
@@ -160,7 +139,13 @@ class ImageSizes implements ResetInterface
             );
         }
 
-        $this->options = array_merge_recursive($options, $this->options);
+        $this->options = array_merge_recursive(
+            $options,
+            [
+                'image_sizes' => [],
+                'custom' => ['crop', 'proportional', 'box'],
+            ]
+        );
     }
 
     /**
@@ -177,7 +162,7 @@ class ImageSizes implements ResetInterface
         $filteredSizes = [];
 
         foreach ($this->options as $group => $sizes) {
-            if ('relative' === $group || 'exact' === $group) {
+            if ('custom' === $group || 'relative' === $group || 'exact' === $group) {
                 $this->filterResizeModes($sizes, $allowedSizes, $filteredSizes, $group);
             } else {
                 $this->filterImageSizes($sizes, $allowedSizes, $filteredSizes, $group);

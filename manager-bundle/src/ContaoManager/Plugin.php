@@ -58,7 +58,7 @@ use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
  */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
 {
-    private static ?string $autoloadModules = null;
+    private static string|null $autoloadModules = null;
 
     /**
      * Sets the path to enable autoloading of legacy Contao modules.
@@ -131,7 +131,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         );
     }
 
-    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): ?RouteCollection
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): RouteCollection|null
     {
         if ('dev' !== $kernel->getEnvironment()) {
             return null;
@@ -221,7 +221,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         switch ($extensionName) {
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
-                $extensionConfigs = $this->addDefaultMailer($extensionConfigs, $container);
+                $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
 
                 if (!isset($_SERVER['APP_SECRET'])) {
                     $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
@@ -440,7 +440,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
      */
-    private function addDefaultMailer(array $extensionConfigs, ContainerBuilder $container): array
+    private function addDefaultMailer(array $extensionConfigs): array
     {
         foreach ($extensionConfigs as $config) {
             if (isset($config['mailer']) && (isset($config['mailer']['transports']) || isset($config['mailer']['dsn']))) {

@@ -39,22 +39,16 @@ class SymlinksCommand extends Command
     protected static $defaultDescription = 'Symlinks the public resources into the public directory.';
 
     private array $rows = [];
-    private string $projectDir;
-    private ?string $webDir;
-    private string $uploadPath;
-    private string $logsDir;
-    private ResourceFinderInterface $resourceFinder;
-    private EventDispatcherInterface $eventDispatcher;
-    private int $statusCode = 0;
+    private string|null $webDir = null;
+    private int $statusCode = Command::SUCCESS;
 
-    public function __construct(string $projectDir, string $uploadPath, string $logsDir, ResourceFinderInterface $resourceFinder, EventDispatcherInterface $eventDispatcher)
-    {
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->logsDir = $logsDir;
-        $this->resourceFinder = $resourceFinder;
-        $this->eventDispatcher = $eventDispatcher;
-
+    public function __construct(
+        private string $projectDir,
+        private string $uploadPath,
+        private string $logsDir,
+        private ResourceFinderInterface $resourceFinder,
+        private EventDispatcherInterface $eventDispatcher,
+    ) {
         parent::__construct();
     }
 
@@ -185,7 +179,7 @@ class SymlinksCommand extends Command
                 $target,
             ];
         } catch (\Exception $e) {
-            $this->statusCode = 1;
+            $this->statusCode = Command::FAILURE;
 
             $this->rows[] = [
                 sprintf(

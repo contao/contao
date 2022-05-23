@@ -11,9 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
@@ -82,8 +79,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string                 $cssClass
  * @property string                 $sitemap
  * @property string|boolean         $hide
- * @property string|boolean         $guests
- * @property string|integer         $tabindex
  * @property string                 $accesskey
  * @property string|boolean         $published
  * @property string|integer         $start
@@ -174,8 +169,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByCssClass($val, array $opt=array())
  * @method static PageModel|null findOneBySitemap($val, array $opt=array())
  * @method static PageModel|null findOneByHide($val, array $opt=array())
- * @method static PageModel|null findOneByGuests($val, array $opt=array())
- * @method static PageModel|null findOneByTabindex($val, array $opt=array())
  * @method static PageModel|null findOneByAccesskey($val, array $opt=array())
  * @method static PageModel|null findOneByPublished($val, array $opt=array())
  * @method static PageModel|null findOneByStart($val, array $opt=array())
@@ -235,8 +228,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection|PageModel[]|PageModel|null findByCssClass($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findBySitemap($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByHide($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByGuests($val, array $opt=array())
- * @method static Collection|PageModel[]|PageModel|null findByTabindex($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByAccesskey($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByPublished($val, array $opt=array())
  * @method static Collection|PageModel[]|PageModel|null findByStart($val, array $opt=array())
@@ -300,8 +291,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByCssClass($val, array $opt=array())
  * @method static integer countBySitemap($val, array $opt=array())
  * @method static integer countByHide($val, array $opt=array())
- * @method static integer countByGuests($val, array $opt=array())
- * @method static integer countByTabindex($val, array $opt=array())
  * @method static integer countByAccesskey($val, array $opt=array())
  * @method static integer countByPublished($val, array $opt=array())
  * @method static integer countByStart($val, array $opt=array())
@@ -323,63 +312,8 @@ class PageModel extends Model
 	 */
 	protected $blnDetailsLoaded = false;
 
-	private static ?array $prefixes = null;
-	private static ?array $suffixes = null;
-
-	public function __set($strKey, $varValue)
-	{
-		// Deprecate setting dynamic page attributes if they are set on the global $objPage
-		if (\in_array($strKey, array('pageTitle', 'description', 'robots', 'noSearch'), true) && ($GLOBALS['objPage'] ?? null) === $this)
-		{
-			trigger_deprecation('contao/core-bundle', '4.12', sprintf('Overriding "%s" is deprecated and will not work in Contao 5.0 anymore. Use the ResponseContext instead.', $strKey));
-
-			$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
-
-			if (!$responseContext)
-			{
-				parent::__set($strKey, $varValue);
-
-				return;
-			}
-
-			if (\in_array($strKey, array('pageTitle', 'description', 'robots')) && $responseContext->has(HtmlHeadBag::class))
-			{
-				/** @var HtmlHeadBag $htmlHeadBag */
-				$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
-				$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
-
-				switch ($strKey)
-				{
-					case 'pageTitle':
-						$htmlHeadBag->setTitle($htmlDecoder->inputEncodedToPlainText($varValue ?? ''));
-						break;
-
-					case 'description':
-						$htmlHeadBag->setMetaDescription($htmlDecoder->inputEncodedToPlainText($varValue ?? ''));
-						break;
-
-					case 'robots':
-						$htmlHeadBag->setMetaRobots($varValue);
-						break;
-				}
-			}
-
-			if ('noSearch' === $strKey && $responseContext->has(JsonLdManager::class))
-			{
-				/** @var JsonLdManager $jsonLdManager */
-				$jsonLdManager = $responseContext->get(JsonLdManager::class);
-
-				if ($jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class))
-				{
-					/** @var ContaoPageSchema $schema */
-					$schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
-					$schema->setNoSearch((bool) $varValue);
-				}
-			}
-		}
-
-		parent::__set($strKey, $varValue);
-	}
+	private static array|null $prefixes = null;
+	private static array|null $suffixes = null;
 
 	public static function reset()
 	{
@@ -1376,7 +1310,7 @@ class PageModel extends Model
 		return $alias;
 	}
 
-	private static function regexArray(array $data): ?string
+	private static function regexArray(array $data): string|null
 	{
 		$data = array_filter(array_unique($data));
 

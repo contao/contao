@@ -50,12 +50,6 @@
       <trans-unit id="tl_article.printable.1">
         <source>Here you can choose which options are available.</source>
       </trans-unit>
-      <trans-unit id="tl_article.guests.0">
-        <source>Show to guests only</source>
-      </trans-unit>
-      <trans-unit id="tl_article.guests.1">
-        <source>Hide the article if a member is logged in.</source>
-      </trans-unit>
       <trans-unit id="tl_article.customTpl.0">
         <source>Article template</source>
       </trans-unit>

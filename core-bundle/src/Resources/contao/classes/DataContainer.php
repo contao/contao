@@ -343,16 +343,10 @@ abstract class DataContainer extends Backend
 
 		$xlabel = '';
 
-		// Toggle line wrap (textarea)
-		if (($arrData['inputType'] ?? null) == 'textarea' && !isset($arrData['eval']['rte']))
-		{
-			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_' . $this->strInputName . '\')"');
-		}
-
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="contao/help.php?table=' . $this->strTable . '&amp;field=' . $this->strField . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -477,7 +471,7 @@ abstract class DataContainer extends Backend
 			$paletteFields = array_intersect($postPaletteFields, $newPaletteFields);
 
 			// Deprecated since Contao 4.2, to be removed in Contao 5.0
-			if (!isset($_POST[$this->strInputName]) && \in_array($this->strInputName, $paletteFields))
+			if (Input::post($this->strInputName) === null && \in_array($this->strInputName, $paletteFields))
 			{
 				trigger_deprecation('contao/core-bundle', '4.2', 'Using $_POST[\'FORM_FIELDS\'] has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.');
 			}
@@ -693,7 +687,7 @@ abstract class DataContainer extends Backend
 			$objTemplate = new BackendTemplate('be_' . $file);
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
 			$objTemplate->type = $type;
-			$objTemplate->fileBrowserTypes = $fileBrowserTypes;
+			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
@@ -826,7 +820,7 @@ abstract class DataContainer extends Backend
 		$arrKeys = array();
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
-		foreach (array_keys($_GET) as $strKey)
+		foreach (Input::getKeys() as $strKey)
 		{
 			if (!\in_array($strKey, $arrUnset))
 			{
@@ -887,11 +881,23 @@ abstract class DataContainer extends Backend
 
 		$return = '';
 
+		$security = System::getContainer()->get('security.helper');
+		$subject = new DataContainerSubject($strTable, rawurldecode($arrRow['id']));
+
 		foreach ($GLOBALS['TL_DCA'][$strTable]['list']['operations'] as $k=>$v)
 		{
 			$v = \is_array($v) ? $v : array($v);
 			$id = StringUtil::specialchars(rawurldecode($arrRow['id']));
 			$label = $title = $k;
+
+			// Permissions
+			if (!$security->isGranted(ContaoCorePermissions::DC_OPERATION_PREFIX . $k, $subject))
+			{
+				// TODO: This removes the operation completely if you do not have access. If we want to show a
+				// disabled icon instead, we should probably re-think this whole method (which might also depend on
+				// some back end adjustments, e.g. automatically selecting the appropriate icon from an icon set?).
+				continue;
+			}
 
 			if (isset($v['label']))
 			{
@@ -1000,6 +1006,8 @@ abstract class DataContainer extends Backend
 				continue;
 			}
 
+			trigger_deprecation('contao/core-bundle', '4.13', 'The DCA "move" operation is deprecated and will be removed in Contao 5.');
+
 			$arrDirections = array('up', 'down');
 			$arrRootIds = \is_array($arrRootIds) ? $arrRootIds : array($arrRootIds);
 
@@ -1037,11 +1045,20 @@ abstract class DataContainer extends Backend
 			return '';
 		}
 
+		$security = System::getContainer()->get('security.helper');
+		$subject = new DataContainerSubject($this->strTable);
+
 		$return = '';
 
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] as $k=>$v)
 		{
 			if (!($v['showOnSelect'] ?? null) && Input::get('act') == 'select')
+			{
+				continue;
+			}
+
+			// Permissions
+			if (!$security->isGranted(ContaoCorePermissions::DC_GLOBAL_OPERATION_PREFIX . $k, $subject))
 			{
 				continue;
 			}
@@ -1125,12 +1142,24 @@ abstract class DataContainer extends Backend
 			return '';
 		}
 
+		$security = System::getContainer()->get('security.helper');
+		$subject = new DataContainerSubject($strPtable, rawurldecode($arrRow['id']));
+
 		$return = '';
 
 		foreach ($GLOBALS['TL_DCA'][$strPtable]['list']['operations'] as $k=> $v)
 		{
 			if (empty($v['showInHeader']) || (Input::get('act') == 'select' && !($v['showOnSelect'] ?? null)))
 			{
+				continue;
+			}
+
+			// Permissions
+			if (!$security->isGranted(ContaoCorePermissions::DC_OPERATION_PREFIX . $k, $subject))
+			{
+				// TODO: This removes the operation completely if you do not have access. If we want to show a
+				// disabled icon instead, we should probably re-think this whole method (which might also depend on
+				// some back end adjustments, e.g. automatically selecting the appropriate icon from an icon set?).
 				continue;
 			}
 
@@ -1345,7 +1374,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Reset all filters
-		if (isset($_POST['filter_reset']) && Input::post('FORM_SUBMIT') == 'tl_filters')
+		if (Input::post('filter_reset') !== null && Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
 			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
@@ -1618,7 +1647,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return string
 	 */
-	public static function getDriverForTable(string $table): ?string
+	public static function getDriverForTable(string $table): string|null
 	{
 		return $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? null;
 	}

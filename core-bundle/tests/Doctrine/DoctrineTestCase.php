@@ -92,7 +92,7 @@ abstract class DoctrineTestCase extends TestCase
     /**
      * @param Connection&MockObject $connection
      */
-    protected function getDcaSchemaProvider(array $dca = [], $connection = null): DcaSchemaProvider
+    protected function getDcaSchemaProvider(array $dca = [], Connection $connection = null): DcaSchemaProvider
     {
         return new DcaSchemaProvider(
             $this->mockContaoFrameworkWithInstaller($dca),

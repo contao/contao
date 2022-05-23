@@ -72,19 +72,17 @@ class InputEnhancerTest extends TestCase
      */
     public function testAddsParameters(string $parameters, array ...$setters): void
     {
-        // Input::setGet must always be called with $blnAddUnused=true
-        array_walk(
-            $setters,
-            static function (array &$set): void {
-                $set[2] = true;
-            }
-        );
-
-        $input = $this->mockAdapter(['setGet']);
+        $input = $this->mockAdapter(['setGet', 'setUnusedRouteParameters']);
         $input
             ->expects($this->exactly(\count($setters)))
             ->method('setGet')
             ->withConsecutive(...$setters)
+        ;
+
+        $input
+            ->expects($this->once())
+            ->method('setUnusedRouteParameters')
+            ->with(array_map(static fn ($setter) => $setter[0], $setters))
         ;
 
         $framework = $this->mockContaoFramework([Input::class => $input]);

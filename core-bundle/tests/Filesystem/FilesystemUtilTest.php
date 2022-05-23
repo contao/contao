@@ -19,10 +19,8 @@ class FilesystemUtilTest extends TestCase
 {
     /**
      * @dataProvider provideInvalidArguments
-     *
-     * @param mixed $argument
      */
-    public function testThrowIfArgumentIsNotAnOpenResource($argument, string $exception): void
+    public function testThrowIfArgumentIsNotAnOpenResource(mixed $argument, string $exception): void
     {
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage($exception);

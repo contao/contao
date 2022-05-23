@@ -147,7 +147,7 @@ class FigureTest extends TestCase
     /**
      * @dataProvider provideLinkAttributesAndPreconditions
      */
-    public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, ?string $expectedHref): void
+    public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, string|null $expectedHref): void
     {
         $image = $this->createMock(ImageResult::class);
 

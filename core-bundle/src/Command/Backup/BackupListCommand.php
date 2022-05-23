@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\Backup;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -40,7 +41,7 @@ class BackupListCommand extends AbstractBackupCommand
         if ($this->isJson($input)) {
             $io->writeln($this->formatForJson($this->backupManager->listBackups()));
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $timeZone = new \DateTimeZone(date_default_timezone_get());
@@ -50,7 +51,7 @@ class BackupListCommand extends AbstractBackupCommand
             $this->formatForTable($this->backupManager->listBackups(), $timeZone)
         );
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
@@ -61,8 +62,7 @@ class BackupListCommand extends AbstractBackupCommand
         $formatted = [];
 
         foreach ($backups as $backup) {
-            // TODO: Change this to \DateTime::createFromInterface($backup->getCreatedAt()) as soon as we require PHP >=8.0
-            $localeDateTime = new \DateTime('@'.$backup->getCreatedAt()->getTimestamp(), $backup->getCreatedAt()->getTimezone());
+            $localeDateTime = \DateTime::createFromInterface($backup->getCreatedAt());
             $localeDateTime->setTimezone($timeZone);
 
             $formatted[] = [

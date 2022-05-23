@@ -421,7 +421,7 @@ class FilesModel extends Model
 	 *
 	 * Returns the metadata of the first matching locale or null if none was found.
 	 */
-	public function getMetadata(string ...$locales): ?Metadata
+	public function getMetadata(string ...$locales): Metadata|null
 	{
 		$dataCollection = StringUtil::deserialize($this->meta, true);
 

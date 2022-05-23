@@ -272,6 +272,8 @@ class Date
 
 		foreach ($arrCharacters as $strCharacter)
 		{
+			$arrInputFormat[$strFormat] ??= '';
+
 			if (isset($arrCharacterMapper[$strCharacter]))
 			{
 				$arrInputFormat[$strFormat] .= $arrCharacterMapper[$strCharacter];

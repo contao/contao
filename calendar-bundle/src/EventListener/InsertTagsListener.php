@@ -31,17 +31,11 @@ class InsertTagsListener
         'event_teaser',
     ];
 
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
     }
 
-    /**
-     * @return string|false
-     */
-    public function __invoke(string $tag, bool $useCache, $cacheValue, array $flags)
+    public function __invoke(string $tag, bool $useCache, $cacheValue, array $flags): string|false
     {
         $elements = explode('::', $tag);
         $key = strtolower($elements[0]);
@@ -107,7 +101,7 @@ class InsertTagsListener
                 return StringUtil::specialcharsAttribute($model->title);
 
             case 'event_teaser':
-                return StringUtil::toHtml5($model->teaser);
+                return $model->teaser;
         }
 
         return '';

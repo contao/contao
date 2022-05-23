@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\DataContainer;
 
-class DataContainerSubject
+class DataContainerSubject implements \Stringable
 {
     public function __construct(
         public readonly string $table,
         public readonly int|string|null $id = null,
-        public readonly array $attributes = []
+        public readonly array $attributes = [],
     ) {
     }
 

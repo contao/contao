@@ -36,9 +36,6 @@ $GLOBALS['FE_MOD']['events'] = array
 	'eventmenu'   => ModuleEventMenu::class
 );
 
-// Cron jobs
-$GLOBALS['TL_CRON']['daily']['generateCalendarFeeds'] = array(Calendar::class, 'generateFeeds');
-
 // Style sheet
 if (defined('TL_MODE') && TL_MODE == 'BE')
 {
@@ -47,7 +44,6 @@ if (defined('TL_MODE') && TL_MODE == 'BE')
 
 // Register hooks
 $GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array(Calendar::class, 'purgeOldFeeds');
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array(Calendar::class, 'getSearchablePages');
 $GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array(Calendar::class, 'generateFeeds');
 
 // Add permissions

@@ -32,6 +32,6 @@ class VersionCommand extends Command
     {
         $output->writeln(ContaoCoreBundle::getVersion());
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

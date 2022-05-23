@@ -54,7 +54,7 @@ abstract class FunctionalTestCase extends WebTestCase
 
         try {
             $connection->executeStatement('SET @@SESSION.information_schema_stats_expiry = 0');
-        } catch (\Throwable $exception) {
+        } catch (\Throwable) {
             // Ignore
         }
 
@@ -78,7 +78,7 @@ abstract class FunctionalTestCase extends WebTestCase
 
             try {
                 $getAlterCount();
-            } catch (\Throwable $exception) {
+            } catch (\Throwable) {
                 self::$supportsAlterCount = false;
             }
         }

@@ -24,16 +24,12 @@ use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
  */
 class LogoutSuccessHandler extends DefaultLogoutSuccessHandler
 {
-    private ScopeMatcher $scopeMatcher;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.logout_success_handler" service instead
      */
-    public function __construct(HttpUtils $httpUtils, ScopeMatcher $scopeMatcher)
+    public function __construct(HttpUtils $httpUtils, private ScopeMatcher $scopeMatcher)
     {
         parent::__construct($httpUtils);
-
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function onLogoutSuccess(Request $request): Response

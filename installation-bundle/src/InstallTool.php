@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle;
 
-use Contao\Backend;
 use Contao\Config;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -28,20 +27,15 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class InstallTool
 {
-    private Connection $connection;
-    private string $projectDir;
-    private LoggerInterface $logger;
-    private MigrationCollection $migrations;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao_installation.install_tool" service instead
      */
-    public function __construct(Connection $connection, string $projectDir, LoggerInterface $logger, MigrationCollection $migrations)
-    {
-        $this->connection = $connection;
-        $this->projectDir = $projectDir;
-        $this->logger = $logger;
-        $this->migrations = $migrations;
+    public function __construct(
+        private Connection $connection,
+        private string $projectDir,
+        private LoggerInterface $logger,
+        private MigrationCollection $migrations,
+    ) {
     }
 
     public function isLocked(): bool
@@ -85,7 +79,7 @@ class InstallTool
         $this->connection = $connection;
     }
 
-    public function canConnectToDatabase(?string $name): bool
+    public function canConnectToDatabase(string|null $name): bool
     {
         // Return if there is a working database connection already
         try {
@@ -93,7 +87,7 @@ class InstallTool
             $this->connection->executeQuery('SHOW TABLES');
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception) {
         }
 
         if (null === $name) {
@@ -165,7 +159,7 @@ class InstallTool
      */
     public function hasConfigurationError(array &$context): bool
     {
-        [$version] = explode('-', $this->connection->fetchOne('SELECT @@version'));
+        [$version] = explode('-', (string) $this->connection->fetchOne('SELECT @@version'));
 
         // The database version is too old
         if (version_compare($version, '5.1.0', '<')) {
@@ -212,7 +206,7 @@ class InstallTool
         }
 
         // Check if utf8mb4 can be used if the user has configured it
-        if (isset($options['engine'], $options['collate']) && 0 === strncmp($options['collate'], 'utf8mb4', 7)) {
+        if (isset($options['engine'], $options['collate']) && str_starts_with($options['collate'], 'utf8mb4')) {
             if ('innodb' !== strtolower($options['engine'])) {
                 $context['errorCode'] = 4;
                 $context['engine'] = $options['engine'];
@@ -278,16 +272,6 @@ class InstallTool
         }
     }
 
-    public function handleRunOnce(): void
-    {
-        // Wait for the tables to be created (see #5061)
-        if (!$this->hasTable('tl_log')) {
-            return;
-        }
-
-        Backend::handleRunOnce();
-    }
-
     /**
      * Returns the available SQL templates.
      *
@@ -308,6 +292,8 @@ class InstallTool
             $templates[] = $file->getRelativePathname();
         }
 
+        natcasesort($templates);
+
         return $templates;
     }
 
@@ -317,7 +303,7 @@ class InstallTool
             $tables = $this->connection->createSchemaManager()->listTableNames();
 
             foreach ($tables as $table) {
-                if (0 === strncmp($table, 'tl_', 3)) {
+                if (str_starts_with($table, 'tl_')) {
                     $this->connection->executeStatement('TRUNCATE TABLE '.$this->connection->quoteIdentifier($table));
                 }
             }
@@ -336,7 +322,7 @@ class InstallTool
             if ($this->connection->fetchOne("SELECT COUNT(*) FROM tl_user WHERE `admin` = '1'") > 0) {
                 return true;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             // ignore
         }
 
@@ -345,9 +331,20 @@ class InstallTool
 
     public function persistAdminUser(string $username, string $name, string $email, string $password, string $language): void
     {
-        $statement = $this->connection->prepare("
-            INSERT INTO
-                tl_user
+        $replace = [
+            '#' => '&#35;',
+            '<' => '&#60;',
+            '>' => '&#62;',
+            '(' => '&#40;',
+            ')' => '&#41;',
+            '\\' => '&#92;',
+            '=' => '&#61;',
+        ];
+
+        $this->connection->executeStatement(
+            "
+                INSERT INTO
+                    tl_user
                     (
                         tstamp,
                         name,
@@ -365,32 +362,19 @@ class InstallTool
                     )
                  VALUES
                     (:time, :name, :email, :username, :password, :language, 'flexible', 1, 1, 1, 1, 1, :time)
-        ");
-
-        $replace = [
-            '#' => '&#35;',
-            '<' => '&#60;',
-            '>' => '&#62;',
-            '(' => '&#40;',
-            ')' => '&#41;',
-            '\\' => '&#92;',
-            '=' => '&#61;',
-        ];
-
-        $statement->executeStatement([
-            ':time' => time(),
-            ':name' => strtr($name, $replace),
-            ':email' => $email,
-            ':username' => strtr($username, $replace),
-            ':password' => password_hash($password, PASSWORD_DEFAULT),
-            ':language' => $language,
-        ]);
+            ",
+            [
+                'time' => time(),
+                'name' => strtr($name, $replace),
+                'email' => $email,
+                'username' => strtr($username, $replace),
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'language' => $language,
+            ],
+        );
     }
 
-    /**
-     * @return mixed|null
-     */
-    public function getConfig(string $key)
+    public function getConfig(string $key): mixed
     {
         return Config::get($key);
     }

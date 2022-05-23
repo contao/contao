@@ -20,13 +20,9 @@ use Symfony\Component\Filesystem\Path;
  */
 class XliffFileLoader extends Loader
 {
-    private string $projectDir;
-    private bool $addToGlobals;
-
-    public function __construct(string $projectDir, bool $addToGlobals = false)
+    public function __construct(private string $projectDir, private bool $addToGlobals = false)
     {
-        $this->projectDir = $projectDir;
-        $this->addToGlobals = $addToGlobals;
+        parent::__construct();
     }
 
     public function load($resource, string $type = null): string
@@ -181,10 +177,7 @@ class XliffFileLoader extends Loader
         $data = $value;
     }
 
-    /**
-     * @return int|string
-     */
-    private function quoteKey(string $key)
+    private function quoteKey(string $key): int|string
     {
         if ('0' === $key) {
             return 0;
@@ -201,7 +194,7 @@ class XliffFileLoader extends Loader
     {
         $value = str_replace("\n", '\n', $value);
 
-        if (false !== strpos($value, '\n')) {
+        if (str_contains($value, '\n')) {
             return '"'.str_replace(['$', '"'], ['\\$', '\\"'], $value).'"';
         }
 

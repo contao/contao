@@ -24,21 +24,14 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  */
 class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 {
-    private ContaoFilesystemLoader $loader;
-    private TemplateLocator $templateLocator;
-    private string $projectDir;
-    private string $cacheDir;
-    private string $environment;
-    private ?Filesystem $filesystem;
-
-    public function __construct(ContaoFilesystemLoader $contaoFilesystemLoader, TemplateLocator $templateLocator, string $projectDir, string $cacheDir, string $environment, Filesystem $filesystem = null)
-    {
-        $this->loader = $contaoFilesystemLoader;
-        $this->templateLocator = $templateLocator;
-        $this->projectDir = $projectDir;
-        $this->cacheDir = $cacheDir;
-        $this->environment = $environment;
-        $this->filesystem = $filesystem;
+    public function __construct(
+        private ContaoFilesystemLoader $loader,
+        private TemplateLocator $templateLocator,
+        private string $projectDir,
+        private string $cacheDir,
+        private string $environment,
+        private Filesystem|null $filesystem = null,
+    ) {
     }
 
     public function warmUp(string $cacheDir = null): array
@@ -118,7 +111,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 
         foreach ($mappings as $path => $namespace) {
             $data['namespaces'][] = ['namespace' => 'Contao', 'path' => $path];
-            $data['namespaces'][] = compact('namespace', 'path');
+            $data['namespaces'][] = ['namespace' => $namespace, 'path' => $path];
         }
 
         if (null === $this->filesystem) {
@@ -130,7 +123,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
                 Path::join($targetDir, 'ide-twig.json'),
                 json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES)
             );
-        } catch (IOException $e) {
+        } catch (IOException) {
             // ignore
         }
     }

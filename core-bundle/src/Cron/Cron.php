@@ -20,20 +20,8 @@ use Psr\Log\LoggerInterface;
 
 class Cron
 {
-    public const SCOPE_WEB = 'web';
-    public const SCOPE_CLI = 'cli';
-
-    /**
-     * @var \Closure():CronJobRepository
-     */
-    private \Closure $repository;
-
-    /**
-     * @var \Closure():EntityManagerInterface
-     */
-    private \Closure $entityManager;
-
-    private ?LoggerInterface $logger;
+    final public const SCOPE_WEB = 'web';
+    final public const SCOPE_CLI = 'cli';
 
     /**
      * @var array<CronJob>
@@ -44,11 +32,8 @@ class Cron
      * @param \Closure():CronJobRepository      $repository
      * @param \Closure():EntityManagerInterface $entityManager
      */
-    public function __construct(\Closure $repository, \Closure $entityManager, LoggerInterface $logger = null)
+    public function __construct(private \Closure $repository, private \Closure $entityManager, private LoggerInterface|null $logger = null)
     {
-        $this->repository = $repository;
-        $this->entityManager = $entityManager;
-        $this->logger = $logger;
     }
 
     public function addCronJob(CronJob $cronjob): void
@@ -57,9 +42,41 @@ class Cron
     }
 
     /**
+     * @return list<CronJob>
+     */
+    public function getCronJobs(): array
+    {
+        return $this->cronJobs;
+    }
+
+    /**
      * Run all the registered Contao cron jobs.
      */
-    public function run(string $scope): void
+    public function run(string $scope, bool $force = false): void
+    {
+        $this->doRun($this->cronJobs, $scope, $force);
+    }
+
+    /**
+     * Run a single Contao cron job.
+     */
+    public function runJob(string $name, string $scope, bool $force = false): void
+    {
+        foreach ($this->cronJobs as $cronJob) {
+            if ($name === $cronJob->getName()) {
+                $this->doRun([$cronJob], $scope, $force);
+
+                return;
+            }
+        }
+
+        throw new \InvalidArgumentException(sprintf('Cronjob "%s" does not exist.', $name));
+    }
+
+    /**
+     * @param array<CronJob> $cronJobs
+     */
+    private function doRun(array $cronJobs, string $scope, bool $force = false): void
     {
         // Validate scope
         if (self::SCOPE_WEB !== $scope && self::SCOPE_CLI !== $scope) {
@@ -72,8 +89,9 @@ class Cron
         /** @var EntityManagerInterface $entityManager */
         $entityManager = ($this->entityManager)();
 
-        /** @var array<CronJob> */
+        /** @var array<CronJob> $cronJobsToBeRun */
         $cronJobsToBeRun = [];
+
         $now = new \DateTimeImmutable();
 
         try {
@@ -81,7 +99,7 @@ class Cron
             $repository->lockTable();
 
             // Go through each cron job
-            foreach ($this->cronJobs as $cron) {
+            foreach ($cronJobs as $cron) {
                 $interval = $cron->getInterval();
                 $name = $cron->getName();
 
@@ -101,7 +119,7 @@ class Cron
                 // Check if the cron should be run
                 $expression = CronExpression::factory($interval);
 
-                if (null !== $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
+                if (!$force && null !== $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;
                 }
 
@@ -119,9 +137,7 @@ class Cron
 
         // Execute all crons to be run
         foreach ($cronJobsToBeRun as $cron) {
-            if (null !== $this->logger) {
-                $this->logger->debug(sprintf('Executing cron job "%s"', $cron->getName()));
-            }
+            $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
 
             $cron($scope);
         }

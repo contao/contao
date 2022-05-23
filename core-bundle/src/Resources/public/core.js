@@ -37,11 +37,11 @@ var AjaxRequest =
 		if (item) {
 			if (parent.hasClass('collapsed')) {
 				parent.removeClass('collapsed');
-				$(el).store('tip:title', Contao.lang.collapse);
+				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				parent.addClass('collapsed');
-				$(el).store('tip:title', Contao.lang.expand);
+				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
@@ -70,12 +70,12 @@ var AjaxRequest =
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
-				$(el).store('tip:title', Contao.lang.collapse);
+				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
 				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
-				$(el).store('tip:title', Contao.lang.expand);
+				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
@@ -126,7 +126,7 @@ var AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
-				$(el).store('tip:title', Contao.lang.collapse);
+				$(el).setAttribute('title', Contao.lang.collapse);
 				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
 				window.fireEvent('structure');
 				AjaxRequest.hideBox();
@@ -159,12 +159,12 @@ var AjaxRequest =
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
-				$(el).store('tip:title', Contao.lang.collapse);
+				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
 				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
-				$(el).store('tip:title', Contao.lang.expand);
+				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
@@ -195,7 +195,7 @@ var AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
-				$(el).store('tip:title', Contao.lang.collapse);
+				$(el).setAttribute('title', Contao.lang.collapse);
 				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
 				AjaxRequest.hideBox();
 
@@ -226,7 +226,7 @@ var AjaxRequest =
 				item.getElements('[data-required]').each(function(el) {
 					el.set('required', '').set('data-required', null);
 				});
-				new Request.Contao({field:el}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+				new Request.Contao({field: el, onSuccess:updateVersionNumber}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				el.value = '';
 				el.checked = '';
@@ -234,7 +234,7 @@ var AjaxRequest =
 				item.getElements('[required]').each(function(el) {
 					el.set('required', null).set('data-required', '');
 				});
-				new Request.Contao({field:el}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
+				new Request.Contao({field: el, onSuccess:updateVersionNumber}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return;
 		}
@@ -281,13 +281,19 @@ var AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
-				AjaxRequest.hideBox();
+				updateVersionNumber(txt);
 
-				// HOOK
-				window.fireEvent('subpalette'); // Backwards compatibility
+				AjaxRequest.hideBox();
 				window.fireEvent('ajax_change');
 			}
 		}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'load':1, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+
+		function updateVersionNumber(html) {
+			if (!el.form.elements.VERSION_NUMBER) {
+				return;
+			}
+			el.form.elements.VERSION_NUMBER.value = /<input\s+[^>]*?name="VERSION_NUMBER"\s+[^>]*?value="([^"]*)"/i.exec(html)[1];
+		}
 	},
 
 	/**
@@ -806,102 +812,12 @@ var Backend =
 	},
 
 	/**
-	 * Toggle the line wrapping mode of a textarea
-	 *
-	 * @param {string} id The ID of the target element
-	 */
-	toggleWrap: function(id) {
-		var textarea = $(id),
-			status = (textarea.getProperty('wrap') == 'off') ? 'soft' : 'off';
-		textarea.setProperty('wrap', status);
-	},
-
-	/**
 	 * Toggle the synchronization results
 	 */
 	toggleUnchanged: function() {
 		$$('#result-list .tl_confirm').each(function(el) {
 			el.toggleClass('hidden');
 		});
-	},
-
-	/**
-	 * Add the interactive help
-	 */
-	addInteractiveHelp: function() {
-		new Tips.Contao('p.tl_tip', {
-			offset: {x:9, y:23},
-			text: function(e) {
-				return e.get('html');
-			}
-		});
-
-		// Home
-		new Tips.Contao($('home'), {
-			offset: {x:15, y:42}
-		});
-
-		// Top navigation links
-		new Tips.Contao($$('#tmenu a[title]').filter(function(i) {
-			return i.title != '';
-		}), {
-			offset: {x:9, y:42}
-		});
-
-		// Navigation groups
-		new Tips.Contao($$('a[title][class^="group-"]').filter(function(i) {
-			return i.title != '';
-		}), {
-			offset: {x:3, y:27}
-		});
-
-		// Navigation links
-		new Tips.Contao($$('a[title].navigation').filter(function(i) {
-			return i.title != '';
-		}), {
-			offset: {x:34, y:32}
-		});
-
-		// Images
-		$$('img[title]').filter(function(i) {
-			return i.title != '';
-		}).each(function(el) {
-			new Tips.Contao(el, {
-				offset: {x:0, y:((el.get('class') == 'gimage') ? 60 : 30)}
-			});
-		});
-
-		// Links and input elements
-		['a[title]', 'input[title]', 'button[title]', 'time[title]', 'span[title]'].each(function(el) {
-			new Tips.Contao($$(el).filter(function(i) {
-				return i.title != ''
-			}), {
-				offset: {x:0, y:((el == 'time[title]' || el == 'span[title]') ? 26 : 30)}
-			});
-		});
-	},
-
-	/**
-	 * Retrieve the interactive help
-	 */
-	retrieveInteractiveHelp: function (elements) {
-		elements && elements.each(function (element) {
-			var title = element.retrieve('tip:title');
-			title && element.set('title', title);
-		});
-	},
-
-	/**
-	 * Hide the interactive help
-	 */
-	hideInteractiveHelp: function () {
-		var hideTips = function () {
-			document.querySelectorAll('.tip-wrap').forEach(function (tip) {
-				tip.setStyle('display', 'none');
-			});
-		};
-		hideTips();
-		setTimeout(hideTips, (new Tips.Contao).options.showDelay); // hide delayed tips
 	},
 
 	/**
@@ -1299,7 +1215,6 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (textarea = childs[i].getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1308,7 +1223,6 @@ var Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
-								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'rdelete':
@@ -1318,7 +1232,6 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
 							});
 							break;
 						case 'ccopy':
@@ -1328,7 +1241,6 @@ var Backend =
 								childs = tbody.getChildren();
 								for (i=0; i<childs.length; i++) {
 									current = childs[i].getChildren()[index];
-									Backend.retrieveInteractiveHelp(current.getElements('button,a'));
 									next = current.clone(true).inject(current, 'after');
 									if (textarea = current.getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1336,11 +1248,9 @@ var Backend =
 									addEventsTo(next);
 								}
 								var headFirst = head.getFirst('td');
-								Backend.retrieveInteractiveHelp(headFirst.getElements('button,a'));
 								next = headFirst.clone(true).inject(head.getLast('td'), 'before');
 								addEventsTo(next);
 								makeSortable(tbody);
-								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'cmovel':
@@ -1393,7 +1303,6 @@ var Backend =
 									head.getFirst('td').destroy();
 								}
 								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
 							});
 							break;
 						case null:
@@ -1534,7 +1443,6 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (select = childs[i].getElement('select')) {
 										next.getElement('select').value = select.value;
@@ -1545,7 +1453,6 @@ var Backend =
 								new Chosen(ntr.getElement('select.tl_select'));
 								addEventsTo(ntr);
 								makeSortable(tbody);
-								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'delete':
@@ -1555,7 +1462,6 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
 							});
 							break;
 						case 'enable':
@@ -1653,7 +1559,6 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (input = childs[i].getFirst('input')) {
 										next.getFirst('input').value = input.value;
@@ -1665,7 +1570,6 @@ var Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
-								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'delete':
@@ -1675,7 +1579,6 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
 							});
 							break;
 						case null:
@@ -1755,7 +1658,6 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (input = childs[i].getFirst('input')) {
 										next.getFirst().value = input.value;
@@ -1764,7 +1666,6 @@ var Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
-								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'delete':
@@ -1774,7 +1675,6 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
 							});
 							break;
 						case null:
@@ -1870,110 +1770,6 @@ var Backend =
 		} else {
 			inp.setProperty('disabled', true);
 		}
-	},
-
-	/**
-	 * Section wizard
-	 *
-	 * @param {string} id The ID of the target element
-	 */
-	sectionWizard: function(id) {
-		var table = $(id),
-			tbody = table.getElement('tbody'),
-			makeSortable = function(tbody) {
-				var rows = tbody.getChildren(),
-					childs, i, j;
-
-				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						childs[j].getElements('input').each(function(input) {
-							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']')
-						});
-						childs[j].getElements('select').each(function(select) {
-							select.name = select.name.replace(/\[[0-9]+]/g, '[' + i + ']');
-						});
-					}
-				}
-
-				new Sortables(tbody, {
-					constrain: true,
-					opacity: 0.6,
-					handle: '.drag-handle',
-					onComplete: function() {
-						makeSortable(tbody);
-					}
-				});
-			},
-			addEventsTo = function(tr) {
-				var command, next, ntr, childs, selects, nselects, i, j;
-				tr.getElements('button').each(function(bt) {
-					if (bt.hasEvent('click')) return;
-					command = bt.getProperty('data-command');
-
-					switch (command) {
-						case 'copy':
-							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
-								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									selects = childs[i].getElements('select');
-									nselects = next.getElements('select');
-									for (j=0; j<selects.length; j++) {
-										nselects[j].value = selects[j].value;
-									}
-								}
-								ntr.inject(tr, 'after');
-								addEventsTo(ntr);
-								makeSortable(tbody);
-								Backend.addInteractiveHelp();
-							});
-							break;
-						case 'delete':
-							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
-								if (tbody.getChildren().length > 1) {
-									tr.destroy();
-								}
-								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
-							});
-							break;
-						case null:
-							bt.addEvent('keydown', function(e) {
-								if (e.event.keyCode == 38) {
-									e.preventDefault();
-									if (ntr = tr.getPrevious('tr')) {
-										tr.inject(ntr, 'before');
-									} else {
-										tr.inject(tbody, 'bottom');
-									}
-									bt.focus();
-									makeSortable(tbody);
-								} else if (e.event.keyCode == 40) {
-									e.preventDefault();
-									if (ntr = tr.getNext('tr')) {
-										tr.inject(ntr, 'after');
-									} else {
-										tr.inject(tbody, 'top');
-									}
-									bt.focus();
-									makeSortable(tbody);
-								}
-							});
-							break;
-					}
-				});
-			};
-
-		makeSortable(tbody);
-
-		tbody.getChildren().each(function(tr) {
-			addEventsTo(tr);
-		});
 	},
 
 	/**
@@ -2440,7 +2236,6 @@ window.addEvent('domready', function() {
 		$(document.body).addClass('touch');
 	}
 
-	Backend.addInteractiveHelp();
 	Backend.tableWizardSetWidth();
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
@@ -2450,11 +2245,6 @@ window.addEvent('domready', function() {
 	if (Elements.chosen != undefined) {
 		$$('select.tl_chosen').chosen();
 	}
-
-	// Remove line wraps from textareas
-	$$('textarea.monospace').each(function(el) {
-		Backend.toggleWrap(el);
-	});
 });
 
 // Resize the table wizard
@@ -2464,7 +2254,6 @@ window.addEvent('resize', function() {
 
 // Re-apply certain changes upon ajax_change
 window.addEvent('ajax_change', function() {
-	Backend.addInteractiveHelp();
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 

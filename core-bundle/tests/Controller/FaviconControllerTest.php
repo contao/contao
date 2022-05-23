@@ -55,6 +55,17 @@ class FaviconControllerTest extends TestCase
         $this->assertSame('image/x-icon', $response->headers->get('Content-Type'));
     }
 
+    public function testIgnoresRequestPort(): void
+    {
+        $controller = $this->getController('images/favicon.ico');
+
+        $request = Request::create('https://localhost:8000/favicon.ico');
+        $response = $controller($request);
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('image/x-icon', $response->headers->get('Content-Type'));
+    }
+
     public function testSvgFavicon(): void
     {
         $controller = $this->getController('images/favicon.svg');
@@ -80,6 +91,7 @@ class FaviconControllerTest extends TestCase
         $pageModelAdapter
             ->expects($this->once())
             ->method('findPublishedFallbackByHostname')
+            ->with('localhost')
             ->willReturn($pageModel)
         ;
 

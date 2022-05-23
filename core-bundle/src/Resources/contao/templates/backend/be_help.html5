@@ -30,7 +30,7 @@
   <?= $this->javascripts ?>
 
 </head>
-<body class="<?= $this->ua ?> popup">
+<body class="popup">
 
   <div id="container">
     <main id="main">

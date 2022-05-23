@@ -1,11 +1,9 @@
 
 <ul class="cols_<?= $this->perRow ?>">
-  <?php foreach ($this->body as $class => $row): ?>
+  <?php foreach ($this->body as $row): ?>
     <?php foreach ($row as $col): ?>
       <?php if ($col->addImage): ?>
-        <li class="<?= $class ?> <?= $col->class ?>">
-          <?php $this->insert('image', (array) $col); ?>
-        </li>
+        <li><?php $this->insert('image', (array) $col); ?></li>
       <?php endif; ?>
     <?php endforeach; ?>
   <?php endforeach; ?>

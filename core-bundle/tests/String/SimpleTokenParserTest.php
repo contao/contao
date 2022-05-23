@@ -301,7 +301,7 @@ class SimpleTokenParserTest extends TestCase
      *
      * @dataProvider parsesSimpleTokensWithShorthandIfProvider
      */
-    public function testParsesSimpleTokensWithShorthandIf($value, bool $match): void
+    public function testParsesSimpleTokensWithShorthandIf(array|bool|int|string|null $value, bool $match): void
     {
         $this->assertSame(
             $match ? 'match' : 'no-match',
