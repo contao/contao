@@ -147,7 +147,6 @@ class BackendMenuListener
 
         $submenu = $factory
             ->createItem('submenu')
-            //->setLabel($this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username)
             ->setLabel('<button type="button">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
             ->setExtra('safe_label', true)
