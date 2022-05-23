@@ -107,7 +107,7 @@ final class ContaoMailer implements MailerInterface
 
         $message->from($from);
 
-        // Also override 'Return-Path' and 'Sender', if set
+        // Also override 'Return-Path' and 'Sender', if set (see #4712)
         if (null !== $message->getReturnPath()) {
             $message->returnPath($from);
         }
