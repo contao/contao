@@ -2,6 +2,56 @@
 
 ## Version 4.* to 5.0
 
+### TL_CRON
+
+Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob`
+instead (you can also use the `@CronJob` annotation or `#[AsCronJob]` attribute). See the official developer
+documentation for more details.
+
+### Content elements
+
+The following content element types have been rewritten as fragment controllers with
+Twig-only templates:
+
+#### Category "texts"
+
+  - `code` (`ce_code` &rarr; `content_element/code`)
+  - `headline` (`ce_headline` &rarr; `content_element/headline`)
+  - `html` (`ce_html` &rarr; `content_element/html`)
+
+The legacy content elements and their templates are still around and will only be dropped in Contao 6.
+If you want to use them instead of the new ones, you can opt in on a per-element basis by adding the
+respective lines to your `contao/config/config.php`:
+
+```php
+// Restore legacy content elements
+$GLOBALS['TL_CTE']['texts']['code'] = \Contao\ContentCode::class;
+$GLOBALS['TL_CTE']['texts']['headline'] = \Contao\ContentHeadline::class;
+$GLOBALS['TL_CTE']['texts']['html'] = \Contao\ContentHtml::class;
+```
+
+### Show to guests only
+
+The "show to guests only" function has been removed. Use the "protect page" function instead.
+
+### tl_content.ptable
+
+Contao no longer treats an empty `tl_content.ptable` column like it had been set to `tl_article`. Make
+sure to always set the `ptable` column.
+
+### disableInsertTags
+
+The `disableInsertTags` config option has been removed. Use the `contao.insert_tags.allowed_tags`
+parameter instead.
+
+### runonce.php
+
+The support for `runonce.php` files has been dropped. Use the migration framework instead.
+
+### onrestore_callback
+
+The `onrestore_callback` has been removed. Use the `onrestore_version_callback` instead.
+
 ### getSearchablePages hook
 
 The `getSearchablePages` hook has been removed. Use the `SitemapEvent` instead.

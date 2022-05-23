@@ -97,16 +97,35 @@ services:
             - !service_closure '@doctrine.orm.entity_manager'
             - '@?logger'
 
-    contao.cron.legacy:
-        class: Contao\CoreBundle\Cron\LegacyCron
-        arguments:
-            - '@contao.framework'
-
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
         arguments:
             - '@contao.framework'
             - '@database_connection'
+
+    contao.cron.purge_opt_in_tokens:
+        class: Contao\CoreBundle\Cron\PurgeOptInTokensCron
+        arguments:
+            - '@contao.opt_in'
+            - '@?monolog.logger.contao.cron'
+
+    contao.cron.purge_preview_links:
+        class: Contao\CoreBundle\Cron\PurgePreviewLinksCron
+        arguments:
+            - '@database_connection'
+
+    contao.cron.purge_registrations:
+        class: Contao\CoreBundle\Cron\PurgeRegistrationsCron
+        arguments:
+            - '@contao.framework'
+            - '@?monolog.logger.contao.cron'
+
+    contao.cron.purge_temp_folder:
+        class: Contao\CoreBundle\Cron\PurgeTempFolderCron
+        arguments:
+            - '@filesystem'
+            - '%kernel.project_dir%'
+            - '@monolog.logger.contao.cron'
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
@@ -187,7 +206,16 @@ services:
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
         arguments:
-            - ~
+            - !tagged_iterator contao.public_file_uri_provider
+
+    contao.filesystem.public_uri.symlinked_local_files_provider:
+        class: Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider
+        arguments:
+            - '@contao.filesystem.adapter.files'
+            - '%contao.upload_path%'
+            - '@request_stack'
+        tags:
+            - { name: contao.public_file_uri_provider }
 
     contao.filesystem.virtual_factory:
         class: Contao\CoreBundle\Filesystem\VirtualFilesystemFactory
@@ -964,6 +992,9 @@ services:
         tags:
             - { name: kernel.cache_warmer }
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    contao.twig.highlighter_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime
 
     contao.twig.insert_tag_runtime:
         class: Contao\CoreBundle\Twig\Runtime\InsertTagRuntime

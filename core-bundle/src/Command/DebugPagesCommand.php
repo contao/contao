@@ -98,7 +98,7 @@ class DebugPagesCommand extends Command
         $io->title('Contao Pages');
         $io->table(['Type', 'Path', 'URL Suffix', 'Content Composition', 'Route Enhancer', 'Requirements', 'Defaults', 'Options'], $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function generateArray(array $values): string

@@ -17,6 +17,7 @@ use Contao\Environment;
 use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -50,7 +51,14 @@ class EnvironmentTest extends TestCase
     protected function tearDown(): void
     {
         $this->restoreServerEnvGetPost();
-        $this->resetStaticProperties([Environment::class, [Environment::class, ['strSapi']], System::class]);
+
+        $this->resetStaticProperties([
+            Environment::class,
+            [Environment::class, ['strSapi']],
+            System::class,
+            Request::class,
+            IpUtils::class,
+        ]);
 
         parent::tearDown();
     }

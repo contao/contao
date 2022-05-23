@@ -154,7 +154,6 @@ class SectionWizard extends Widget
 
 		return $return . '
   </tbody>
-  </table>
-  <script>Backend.sectionWizard("ctrl_' . $this->strId . '")</script>';
+  </table>';
 	}
 }

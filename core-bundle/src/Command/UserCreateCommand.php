@@ -170,7 +170,7 @@ class UserCreateCommand extends Command
         ) {
             $io->error('Please provide at least and each of: username, name, email, password');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $isAdmin = $input->getOption('admin');
@@ -188,7 +188,7 @@ class UserCreateCommand extends Command
 
         $io->success(sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function ask(string $label, InputInterface $input, OutputInterface $output, callable $callback = null): string

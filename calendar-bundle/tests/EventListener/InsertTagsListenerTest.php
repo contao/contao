@@ -20,13 +20,6 @@ use Contao\TestCase\ContaoTestCase;
 
 class InsertTagsListenerTest extends ContaoTestCase
 {
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_CONFIG']);
-
-        parent::tearDown();
-    }
-
     public function testReplacesTheCalendarFeedTag(): void
     {
         $feedModel = $this->mockClassWithProperties(CalendarFeedModel::class);

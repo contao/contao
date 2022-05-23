@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
@@ -96,9 +97,8 @@ class InsertTags extends Controller
 
 		$container = System::getContainer();
 
-		// Backwards compatibility
 		// Preserve insert tags
-		if (!empty($GLOBALS['TL_CONFIG']['disableInsertTags']) || !$container->getParameter('contao.insert_tags.allowed_tags'))
+		if (!$container->getParameter('contao.insert_tags.allowed_tags'))
 		{
 			return new ChunkedText(array($strBuffer));
 		}
@@ -509,7 +509,6 @@ class InsertTags extends Controller
 										}
 										catch (ExceptionInterface $exception)
 										{
-											System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objNext->id . ': ' . $exception->getMessage());
 										}
 										break;
 									}
@@ -522,7 +521,6 @@ class InsertTags extends Controller
 									}
 									catch (ExceptionInterface $exception)
 									{
-										System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objNextPage->id . ': ' . $exception->getMessage());
 									}
 									break;
 							}
@@ -618,7 +616,6 @@ class InsertTags extends Controller
 					}
 					catch (ExceptionInterface $exception)
 					{
-						System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objPid->id . ': ' . $exception->getMessage());
 					}
 
 					// Replace the tag
@@ -680,7 +677,7 @@ class InsertTags extends Controller
 
 				// Version
 				case 'version':
-					$arrCache[$strTag] = VERSION . '.' . BUILD;
+					$arrCache[$strTag] = ContaoCoreBundle::getVersion();
 					break;
 
 				// Form session data

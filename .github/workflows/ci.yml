@@ -309,7 +309,7 @@ jobs:
               run: composer install --no-interaction --no-progress
 
             - name: Run the unit tests in reverse order
-              run: vendor/bin/phpunit --order-by=reverse --colors=always
+              run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher --colors=always
 
     nightly:
         name: PHP 8.2
@@ -397,7 +397,7 @@ jobs:
 
             - name: Test the single bundles
               run: |
-                  bundles=(calendar-bundle core-bundle faq-bundle maker-bundle manager-bundle news-bundle newsletter-bundle)
+                  bundles=(calendar-bundle comments-bundle core-bundle faq-bundle maker-bundle manager-bundle news-bundle newsletter-bundle)
                   for bundle in "${bundles[@]}"; do
                       cd $bundle
                       php -r '

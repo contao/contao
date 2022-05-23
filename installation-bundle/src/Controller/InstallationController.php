@@ -334,8 +334,6 @@ class InstallationController implements ContainerAwareInterface
      */
     private function adjustDatabaseTables(): RedirectResponse|null
     {
-        $this->container->get('contao_installation.install_tool')->handleRunOnce();
-
         $installer = $this->container->get('contao_installation.database.installer');
 
         $this->context['sql_form'] = $installer->getCommands();
@@ -399,7 +397,8 @@ class InstallationController implements ContainerAwareInterface
             $installTool->persistConfig('exampleWebsite', null);
             $installTool->logException($e);
 
-            for ($rootException = $e; null !== $rootException->getPrevious(); $rootException = $rootException->getPrevious());
+            for ($rootException = $e; null !== $rootException->getPrevious(); $rootException = $rootException->getPrevious()) {
+            }
 
             $this->context['import_error'] = $this->trans('import_exception')."\n".$rootException->getMessage();
 
