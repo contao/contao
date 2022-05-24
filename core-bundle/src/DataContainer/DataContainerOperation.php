@@ -10,13 +10,12 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Event;
-
+namespace Contao\CoreBundle\DataContainer;
 
 use Contao\DataContainer;
 use Contao\StringUtil;
 
-class DcaButtonConfig implements \ArrayAccess
+class DataContainerOperation implements \ArrayAccess
 {
     private string|null $html = null;
 
@@ -29,8 +28,8 @@ class DcaButtonConfig implements \ArrayAccess
 
         if (isset($operation['label'])) {
             if (\is_array($operation['label'])) {
-                $operation['label'] = $operation['label'][0] ?? null;
                 $operation['title'] = sprintf($operation['label'][1] ?? '', $id);
+                $operation['label'] = $operation['label'][0] ?? $name;
             } else {
                 $operation['label'] = $operation['title'] = sprintf($operation['label'], $id);
             }
@@ -41,10 +40,10 @@ class DcaButtonConfig implements \ArrayAccess
         $attributes = !empty($operation['attributes']) ? ' '.ltrim(sprintf($operation['attributes'], $id, $id)) : '';
 
         // Add the key as CSS class
-        if (strpos($attributes, 'class="') !== false) {
+        if (str_contains($attributes, 'class="')) {
             $attributes = str_replace('class="', 'class="'.$name.' ', $attributes);
         } else {
-            $attributes = ' class="'.$name.'"'.$attributes;
+            $attributes = ' class="'.$name.'" '.$attributes;
         }
         $operation['attributes'] = $attributes;
 
@@ -86,12 +85,12 @@ class DcaButtonConfig implements \ArrayAccess
         return $this->dataContainer;
     }
 
-    public function getHtml(): ?string
+    public function getHtml(): string|null
     {
         return $this->html;
     }
 
-    public function setHtml(string $html): self
+    public function setHtml(string|null $html): self
     {
         $this->html = $html;
 

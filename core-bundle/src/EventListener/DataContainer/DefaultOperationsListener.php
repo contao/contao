@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
-use Contao\CoreBundle\Event\DcaButtonConfig;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
@@ -47,7 +47,7 @@ class DefaultOperationsListener
         $operations = [];
 
         // If none of the defined operations are name-only, we append the operations to the defaults.
-        if (empty(array_filter($dca, static fn($v) => \is_string($v) && isset($defaults[$v])))) {
+        if (empty(array_filter($dca, static fn ($v) => \is_string($v) && isset($defaults[$v])))) {
             $operations = $defaults;
         }
 
@@ -140,7 +140,7 @@ class DefaultOperationsListener
 
     private function generateCallback(string $attribute): \Closure
     {
-        return function (DcaButtonConfig $config) use ($attribute) {
+        return function (DataContainerOperation $config) use ($attribute): void {
             $subject = new DataContainerSubject($config->getDataContainer()->table, rawurldecode((string) $config->getRecord()['id']));
 
             if (!$this->security->isGranted($attribute, $subject)) {

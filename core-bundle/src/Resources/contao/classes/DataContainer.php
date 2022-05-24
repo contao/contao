@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Event\DcaButtonConfig;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
@@ -886,7 +886,7 @@ abstract class DataContainer extends Backend
 		{
 			$v = \is_array($v) ? $v : array($v);
 
-			$config = new DcaButtonConfig($k, $v, $arrRow, $this);
+			$config = new DataContainerOperation($k, $v, $arrRow, $this);
 
 			// Call a custom function instead of using the default button
 			if (\is_array($v['button_callback'] ?? null))
@@ -894,7 +894,7 @@ abstract class DataContainer extends Backend
 				$this->import($v['button_callback'][0]);
 
 				$ref = new \ReflectionMethod($this->{$v['button_callback'][0]}, $v['button_callback'][1]);
-				if ($ref->getNumberOfParameters() === 1 && $ref->getParameters()[0]->getType()->getName() === DcaButtonConfig::class)
+				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
 				{
 					$this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($config);
 				}
@@ -908,7 +908,7 @@ abstract class DataContainer extends Backend
 			{
 				$ref = new \ReflectionFunction($v['button_callback']);
 
-				if ($ref->getNumberOfParameters() === 1 && $ref->getParameters()[0]->getType()->getName() === DcaButtonConfig::class)
+				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
 				{
 					$v['button_callback']($config);
 				}
@@ -922,6 +922,7 @@ abstract class DataContainer extends Backend
 			if (($html = $config->getHtml()) !== null)
 			{
 				$return .= $html;
+				continue;
 			}
 
 			$isPopup = $k == 'show';
