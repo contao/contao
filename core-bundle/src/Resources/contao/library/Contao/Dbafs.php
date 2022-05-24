@@ -49,8 +49,8 @@ class Dbafs
 	{
 		self::validateUtf8Path($strResource);
 
-		$strUploadPath = Config::get('uploadPath') . '/';
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$uploadPath = Path::normalize(System::getContainer()->getParameter('contao.upload_path'));
+		$projectDir = Path::normalize(System::getContainer()->getParameter('kernel.project_dir'));
 
 		// Remove trailing slashes (see #5707)
 		if (substr($strResource, -1) == '/')
@@ -62,7 +62,7 @@ class Dbafs
 		$strResource = str_replace(array('\\', '//'), '/', $strResource);
 
 		// The resource does not exist or lies outside the upload directory
-		if (!$strResource || !file_exists($projectDir . '/' . $strResource) || strncmp($strResource, $strUploadPath, \strlen($strUploadPath)) !== 0)
+		if (!$strResource || !file_exists($projectDir . '/' . $strResource) || !Path::isBasePath($uploadPath, $strResource))
 		{
 			throw new \InvalidArgumentException("Invalid resource $strResource");
 		}
@@ -96,6 +96,13 @@ class Dbafs
 		while (\count($arrChunks))
 		{
 			$strPath .= '/' . array_shift($arrChunks);
+
+			// Skip paths outside the upload_path
+			if ($strPath === $uploadPath || !Path::isBasePath($uploadPath, $strPath))
+			{
+				continue;
+			}
+
 			$arrPaths[] = $strPath;
 		}
 
@@ -439,14 +446,16 @@ class Dbafs
 			$varResource = array($varResource);
 		}
 
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		$projectDir = Path::normalize(System::getContainer()->getParameter('kernel.project_dir'));
+		$uploadPath = Path::normalize(System::getContainer()->getParameter('contao.upload_path'));
 
 		foreach ($varResource as $strResource)
 		{
 			self::validateUtf8Path($strResource);
 
-			$arrChunks = explode('/', $strResource);
-			$strPath   = array_shift($arrChunks);
+			$strResource = Path::normalize($strResource);
+			$arrChunks   = explode('/', $strResource);
+			$strPath     = array_shift($arrChunks);
 
 			// Do not check files
 			if (is_file($projectDir . '/' . $strResource))
@@ -458,6 +467,13 @@ class Dbafs
 			while (\count($arrChunks))
 			{
 				$strPath .= '/' . array_shift($arrChunks);
+
+				// Skip paths outside the upload_path
+				if ($strPath === $uploadPath || !Path::isBasePath($uploadPath, $strPath))
+				{
+					continue;
+				}
+
 				$arrPaths[] = $strPath;
 			}
 
