@@ -382,47 +382,6 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle the visibility of a fieldset
-	 *
-	 * @param {object} el    The DOM element
-	 * @param {string} id    The ID of the target element
-	 * @param {string} table The table name
-	 *
-	 * @returns {boolean}
-	 */
-	toggleFieldset: function(el, id, table) {
-		el.blur();
-		Backend.getScrollOffset();
-
-		var fs = $('pal_' + id);
-
-		if (fs.hasClass('collapsed')) {
-			fs.removeClass('collapsed');
-			new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
-		} else {
-			var form = fs.getParent('form'),
-				inp = fs.getElements('[required]'),
-				collapse = true;
-
-			for (var i=0; i<inp.length; i++) {
-				if (!inp[i].get('value')) {
-					collapse = false;
-					break;
-				}
-			}
-
-			if (!collapse) {
-				if (typeof(form.checkValidity) == 'function') form.getElement('button[type="submit"]').click();
-			} else {
-				fs.addClass('collapsed');
-				new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
-			}
-		}
-
-		return false;
-	},
-
-	/**
 	 * Toggle a group of a multi-checkbox field
 	 *
 	 * @param {object} el The DOM element
@@ -858,19 +817,6 @@ var Backend =
 	toggleUnchanged: function() {
 		$$('#result-list .tl_confirm').each(function(el) {
 			el.toggleClass('hidden');
-		});
-	},
-
-	/**
-	 * Collapse all palettes
-	 */
-	collapsePalettes: function() {
-		$$('fieldset.hide').each(function(el) {
-			el.addClass('collapsed');
-		});
-		$$('label.error, label.mandatory').each(function(el) {
-			var fs = el.getParent('fieldset');
-			fs && fs.removeClass('collapsed');
 		});
 	},
 
@@ -2290,7 +2236,6 @@ window.addEvent('domready', function() {
 		$(document.body).addClass('touch');
 	}
 
-	Backend.collapsePalettes();
 	Backend.tableWizardSetWidth();
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
