@@ -161,7 +161,7 @@ class ModuleBreadcrumb extends Module
 				'class'    => ''
 			);
 
-			list($strSection, $strArticle) = explode(':', Input::get('articles'));
+			list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
 
 			if ($strArticle === null)
 			{
