@@ -26,7 +26,6 @@ use Contao\Environment;
 use Contao\Input;
 use Contao\Model\Registry;
 use Contao\PageModel;
-use Contao\RequestToken;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -378,7 +377,6 @@ class ContaoFrameworkTest extends TestCase
 
         $adapters = [
             Config::class => $this->mockConfigAdapter(false),
-            RequestToken::class => $this->mockRequestTokenAdapter(),
         ];
 
         $ref = new \ReflectionObject($framework);
@@ -417,7 +415,6 @@ class ContaoFrameworkTest extends TestCase
 
         $adapters = [
             Config::class => $this->mockConfigAdapter(false),
-            RequestToken::class => $this->mockRequestTokenAdapter(),
         ];
 
         $ref = new \ReflectionObject($framework);
@@ -660,7 +657,6 @@ class ContaoFrameworkTest extends TestCase
 
         $adapters = [
             Config::class => $this->mockConfigAdapter(),
-            RequestToken::class => $this->mockRequestTokenAdapter(),
         ];
 
         $ref = new \ReflectionObject($framework);
@@ -696,24 +692,5 @@ class ContaoFrameworkTest extends TestCase
         ;
 
         return $config;
-    }
-
-    /**
-     * @return Adapter<RequestToken>&MockObject
-     */
-    private function mockRequestTokenAdapter(bool $valid = true): Adapter
-    {
-        $adapter = $this->mockAdapter(['get', 'validate']);
-        $adapter
-            ->method('get')
-            ->willReturn('foobar')
-        ;
-
-        $adapter
-            ->method('validate')
-            ->willReturn($valid)
-        ;
-
-        return $adapter;
     }
 }

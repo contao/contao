@@ -591,7 +591,7 @@ class Newsletter extends Backend
 <form id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_recipients_import">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
 <input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
 
 <fieldset class="tl_tbox nolegend">

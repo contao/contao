@@ -190,6 +190,16 @@ The following global functions have been removed:
 Most of them have alternatives in either `StringUtil`, `ArrayUtil` or may have PHP native alternatives such as
 the `mb_*` functions. For advanced UTF-8 handling, use `symfony/string`.
 
+### Constants
+
+The constant `REQUEST_TOKEN` has been removed.
+
+Use the `contao.csrf.token_manager` service instead of `REQUEST_TOKEN`:
+
+```php
+$requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+```
+
 ### eval->orderField in PageTree and Picker widgets
 
 Support for a separate database `orderField` column has been removed. Use `isSortable` instead which
