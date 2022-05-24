@@ -894,6 +894,7 @@ abstract class DataContainer extends Backend
 				$this->import($v['button_callback'][0]);
 
 				$ref = new \ReflectionMethod($this->{$v['button_callback'][0]}, $v['button_callback'][1]);
+
 				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
 				{
 					$this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($config);

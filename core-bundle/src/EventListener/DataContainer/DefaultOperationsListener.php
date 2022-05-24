@@ -17,6 +17,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -26,7 +27,7 @@ use Symfony\Component\Security\Core\Security;
  */
 class DefaultOperationsListener
 {
-    public function __construct(private Security $security)
+    public function __construct(private readonly Security $security, private readonly Connection $connection)
     {
     }
 
@@ -80,14 +81,14 @@ class DefaultOperationsListener
                 'editheader' => [
                     'href' => 'act=edit',
                     'icon' => 'header.svg',
-                    'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_EDIT),
+                    'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_EDIT),
                 ],
             ];
         } else {
             $operations['edit'] = [
                 'href' => 'act=edit',
                 'icon' => 'edit.svg',
-                'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_EDIT),
+                'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_EDIT),
             ];
         }
 
@@ -96,15 +97,15 @@ class DefaultOperationsListener
                 'href' => 'act=paste&amp;mode=copy',
                 'icon' => 'copy.svg',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_COPY),
+                'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_COPY),
             ];
 
             if ($isTreeMode) {
-                // TODO: how to we check permissions for that?
                 $operations['copyChilds'] = [
                     'href' => 'act=paste&amp;mode=copy&amp;childs=1',
                     'icon' => 'copychilds.svg',
                     'attributes' => 'onclick="Backend.getScrollOffset()"',
+                    'button_callback' => $this->copyChildsButtonCallback(),
                 ];
             }
 
@@ -112,44 +113,71 @@ class DefaultOperationsListener
                 'href' => 'act=paste&amp;mode=cut',
                 'icon' => 'cut.svg',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_MOVE),
+                'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_MOVE),
             ];
         } else {
             $operations['copy'] = [
                 'href' => 'act=copy',
                 'icon' => 'copy.svg',
-                'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_COPY),
+                'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_COPY),
             ];
         }
 
-        $operations += [
+        return $operations + [
             'delete' => [
                 'href' => 'act=delete',
                 'icon' => 'delete.svg',
                 'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
-                'button_callback' => $this->generateCallback(ContaoCorePermissions::DC_ACTION_DELETE),
+                'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_DELETE),
             ],
             'show' => [
                 'href' => 'act=show',
                 'icon' => 'show.svg',
             ],
         ];
-
-        return $operations;
     }
 
-    private function generateCallback(string $attribute): \Closure
+    private function isGrantedButtonCallback(string $attribute): \Closure
     {
-        return function (DataContainerOperation $config) use ($attribute): void {
-            $subject = new DataContainerSubject($config->getDataContainer()->table, rawurldecode((string) $config->getRecord()['id']));
-
-            if (!$this->security->isGranted($attribute, $subject)) {
-                unset($config['route'], $config['href']);
-
-                if (isset($config['icon'])) {
-                    $config['icon'] = preg_replace('/(\.svg)$/i', '_.svg', $config['icon']);
-                }
+        return function (DataContainerOperation $operation) use ($attribute): void {
+            if (!$this->isGranted($attribute, $operation)) {
+                $this->disableOperation($operation);
             }
         };
+    }
+
+    private function copyChildsButtonCallback(): \Closure
+    {
+        return function (DataContainerOperation $operation): void {
+            if (!$this->isGranted(ContaoCorePermissions::DC_ACTION_COPY, $operation)) {
+                $this->disableOperation($operation);
+                return;
+            }
+
+            $childCount = $this->connection->fetchOne(
+                "SELECT COUNT(*) FROM {$operation->getDataContainer()->table} WHERE pid=?",
+                [(string) $operation->getRecord()['id']]
+            );
+
+            if ($childCount < 1) {
+                $this->disableOperation($operation);
+            }
+        };
+    }
+
+    private function isGranted(string $attribute, DataContainerOperation $operation): bool
+    {
+        $subject = new DataContainerSubject($operation->getDataContainer()->table, rawurldecode((string) $operation->getRecord()['id']));
+
+        return $this->security->isGranted($attribute, $subject);
+    }
+
+    private function disableOperation(DataContainerOperation $operation): void
+    {
+        unset($operation['route'], $operation['href']);
+
+        if (isset($operation['icon'])) {
+            $operation['icon'] = preg_replace('/(\.svg)$/i', '_.svg', $operation['icon']);
+        }
     }
 }
