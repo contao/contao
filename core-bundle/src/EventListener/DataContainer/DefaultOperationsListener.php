@@ -81,14 +81,14 @@ class DefaultOperationsListener
                 'editheader' => [
                     'href' => 'act=edit',
                     'icon' => 'header.svg',
-                    'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_EDIT, $table),
+                    'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_EDIT, $table),
                 ],
             ];
         } else {
             $operations['edit'] = [
                 'href' => 'act=edit',
                 'icon' => 'edit.svg',
-                'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_EDIT, $table),
+                'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_EDIT, $table),
             ];
         }
 
@@ -97,7 +97,7 @@ class DefaultOperationsListener
                 'href' => 'act=paste&amp;mode=copy',
                 'icon' => 'copy.svg',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_COPY, $table),
+                'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_COPY, $table),
             ];
 
             if ($isTreeMode) {
@@ -105,7 +105,7 @@ class DefaultOperationsListener
                     'href' => 'act=paste&amp;mode=copy&amp;childs=1',
                     'icon' => 'copychilds.svg',
                     'attributes' => 'onclick="Backend.getScrollOffset()"',
-                    'button_callback' => $this->copyChildsButtonCallback($table),
+                    'button_callback' => $this->copyChildsCallback($table),
                 ];
             }
 
@@ -113,23 +113,32 @@ class DefaultOperationsListener
                 'href' => 'act=paste&amp;mode=cut',
                 'icon' => 'cut.svg',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_MOVE, $table),
+                'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_MOVE, $table),
             ];
         } else {
             $operations['copy'] = [
                 'href' => 'act=copy',
                 'icon' => 'copy.svg',
-                'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_COPY, $table),
+                'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_COPY, $table),
+            ];
+        }
+
+        $operations['delete'] = [
+            'href' => 'act=delete',
+            'icon' => 'delete.svg',
+            'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
+            'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_DELETE, $table),
+        ];
+
+        if (null !== ($toggleField = $this->getToggleField($table))) {
+            $operations['toggle'] = [
+                'href' => 'act=toggle&amp;field='.$toggleField,
+                'icon' => 'visible.svg',
+                'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_EDIT, $table),
             ];
         }
 
         return $operations + [
-            'delete' => [
-                'href' => 'act=delete',
-                'icon' => 'delete.svg',
-                'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
-                'button_callback' => $this->isGrantedButtonCallback(ContaoCorePermissions::DC_ACTION_DELETE, $table),
-            ],
             'show' => [
                 'href' => 'act=show',
                 'icon' => 'show.svg',
@@ -137,7 +146,7 @@ class DefaultOperationsListener
         ];
     }
 
-    private function isGrantedButtonCallback(string $attribute, string $table): \Closure
+    private function isGrantedCallback(string $attribute, string $table): \Closure
     {
         return function (DataContainerOperation $operation) use ($attribute, $table): void {
             if (!$this->isGranted($attribute, $table, $operation)) {
@@ -146,7 +155,7 @@ class DefaultOperationsListener
         };
     }
 
-    private function copyChildsButtonCallback(string $table): \Closure
+    private function copyChildsCallback(string $table): \Closure
     {
         return function (DataContainerOperation $operation) use ($table): void {
             if (!$this->isGranted(ContaoCorePermissions::DC_ACTION_COPY, $table, $operation)) {
@@ -163,6 +172,29 @@ class DefaultOperationsListener
                 $this->disableOperation($operation);
             }
         };
+    }
+
+    /**
+     * Finds the one and only toggle field in a DCA. Returns null if multiple fields can be toggled.
+     */
+    private function getToggleField(string $table): string|null
+    {
+        $field = null;
+
+        foreach ($GLOBALS['TL_DCA'][$table]['fields'] as $name => $config) {
+            if (!($config['toggle'] ?? false) && !($config['reverseToggle'] ?? false)) {
+                continue;
+            }
+
+            // more than one toggle field exists
+            if (null !== $field) {
+                return null;
+            }
+
+            $field = $name;
+        }
+
+        return $field;
     }
 
     private function isGranted(string $attribute, string $table, DataContainerOperation $operation): bool
