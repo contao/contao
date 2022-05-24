@@ -198,21 +198,6 @@ final class ContaoCorePermissions
     public const DC_ACTION_PREFIX = self::DC_PREFIX.'action.';
 
     /**
-     * Prefix for all DCA view related permissions.
-     */
-    public const DC_VIEW_PREFIX = self::DC_PREFIX.'view.';
-
-    /**
-     * Prefix for global_operations.
-     */
-    public const DC_GLOBAL_OPERATION_PREFIX = self::DC_VIEW_PREFIX.'global_operation.';
-
-    /**
-     * Prefix for buttons.
-     */
-    public const DC_BUTTON_PREFIX = self::DC_VIEW_PREFIX.'button.';
-
-    /**
      * [Action] Create action DC permission.
      */
     public const DC_ACTION_CREATE = self::DC_ACTION_PREFIX.'create';

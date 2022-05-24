@@ -1000,20 +1000,11 @@ abstract class DataContainer extends Backend
 			return '';
 		}
 
-		$security = System::getContainer()->get('security.helper');
-		$subject = new DataContainerSubject($this->strTable);
-
 		$return = '';
 
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] as $k=>$v)
 		{
 			if (!($v['showOnSelect'] ?? null) && Input::get('act') == 'select')
-			{
-				continue;
-			}
-
-			// Permissions
-			if (!$security->isGranted(ContaoCorePermissions::DC_GLOBAL_OPERATION_PREFIX . $k, $subject))
 			{
 				continue;
 			}

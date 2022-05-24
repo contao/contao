@@ -25,7 +25,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
     public function __construct(
         FactoryInterface $menuFactory,
         RouterInterface $router,
-        TranslatorInterface|null $translator,
+        TranslatorInterface $translator,
         private Security $security,
     ) {
         parent::__construct($menuFactory, $router, $translator);

@@ -2005,18 +2005,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Button permissions
-		$security = System::getContainer()->get('security.helper');
-		$subject = new DataContainerSubject($this->strTable, $this->intId); // Edit view so we CAN provide an ID
-
-		foreach ($arrButtons as $k => $v)
-		{
-			if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
-			{
-				unset($arrButtons[$k]);
-			}
-		}
-
 		if (\count($arrButtons) < 3)
 		{
 			$strButtons = implode(' ', $arrButtons);
@@ -2513,18 +2501,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Button permissions
-			$security = System::getContainer()->get('security.helper');
-			$subject = new DataContainerSubject($this->strTable); // Edit all mode so we cannot provide an ID
-
-			foreach ($arrButtons as $k => $v)
-			{
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
-				{
-					unset($arrButtons[$k]);
-				}
-			}
-
 			if (\count($arrButtons) < 3)
 			{
 				$strButtons = implode(' ', $arrButtons);
@@ -2944,18 +2920,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$arrButtons = $callback($arrButtons, $this);
 					}
-				}
-			}
-
-			// Button permissions
-			$security = System::getContainer()->get('security.helper');
-			$subject = new DataContainerSubject($this->strTable); // Override all mode so we cannot provide an ID
-
-			foreach ($arrButtons as $k => $v)
-			{
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
-				{
-					unset($arrButtons[$k]);
 				}
 			}
 
@@ -3801,18 +3765,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$arrButtons = $callback($arrButtons, $this);
 					}
-				}
-			}
-
-			// Button permissions
-			$security = System::getContainer()->get('security.helper');
-			$subject = new DataContainerSubject($this->strTable); // Tree view so we cannot provide an ID
-
-			foreach ($arrButtons as $k => $v)
-			{
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
-				{
-					unset($arrButtons[$k]);
 				}
 			}
 
@@ -4703,18 +4655,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Button permissions
-			$security = System::getContainer()->get('security.helper');
-			$subject = new DataContainerSubject($this->strTable); // Parent select view so we cannot provide an ID
-
-			foreach ($arrButtons as $k => $v)
-			{
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
-				{
-					unset($arrButtons[$k]);
-				}
-			}
-
 			if (\count($arrButtons) < 3)
 			{
 				$strButtons = implode(' ', $arrButtons);
@@ -5088,18 +5028,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$arrButtons = $callback($arrButtons, $this);
 						}
-					}
-				}
-
-				// Button permissions
-				$security = System::getContainer()->get('security.helper');
-				$subject = new DataContainerSubject($this->strTable); // List select view so we cannot provide an ID
-
-				foreach ($arrButtons as $k => $v)
-				{
-					if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
-					{
-						unset($arrButtons[$k]);
 					}
 				}
 

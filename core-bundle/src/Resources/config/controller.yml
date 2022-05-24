@@ -55,13 +55,15 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\ContentElement\MarkdownController:
-        tags:
-            - { name: contao.content_element, category: texts }
+    Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
-    Contao\CoreBundle\Controller\ContentElement\TemplateController:
-        tags:
-            - { name: contao.content_element, category: includes }
+    Contao\CoreBundle\Controller\ContentElement\HtmlController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\TemplateController: ~
 
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
@@ -77,17 +79,11 @@ services:
             - { name: container.service_subscriber, id: contao.cron }
             - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
-    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController:
-        tags:
-            - { name: contao.frontend_module, category: miscellaneous }
+    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController: ~
 
-    Contao\CoreBundle\Controller\FrontendModule\TemplateController:
-        tags:
-            - { name: contao.frontend_module, category: miscellaneous }
+    Contao\CoreBundle\Controller\FrontendModule\TemplateController: ~
 
-    Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
-        tags:
-            - { name: contao.frontend_module, category: user }
+    Contao\CoreBundle\Controller\FrontendModule\TwoFactorController: ~
 
     Contao\CoreBundle\Controller\ImagesController:
         public: true

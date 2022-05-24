@@ -563,18 +563,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			// Button permissions
-			$security = System::getContainer()->get('security.helper');
-			$subject = new DataContainerSubject($this->strTable); // List view so we cannot provide an ID
-
-			foreach ($arrButtons as $k => $v)
-			{
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
-				{
-					unset($arrButtons[$k]);
-				}
-			}
-
 			if (\count($arrButtons) < 3)
 			{
 				$strButtons = implode(' ', $arrButtons);
@@ -1294,18 +1282,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				{
 					$arrButtons = $callback($arrButtons, $this);
 				}
-			}
-		}
-
-		// Button permissions
-		$security = System::getContainer()->get('security.helper');
-		$subject = new DataContainerSubject($this->strTable, $strFolder); // Move (upload) view so we CAN provide an ID
-
-		foreach ($arrButtons as $k => $v)
-		{
-			if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
-			{
-				unset($arrButtons[$k]);
 			}
 		}
 
