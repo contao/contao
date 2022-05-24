@@ -1,0 +1,12 @@
+{% use "@Contao/component/fruit.html.twig" %}
+
+{% block fruit_shake_component %}
+    <h2>Fruit shake</h2>
+    <b>Ingredients:</b>
+    <ul>
+        <li>{{ block('fruit_component') }}</li>
+        {%~ block other_ingredients -%}
+        <li>milk</li>
+        {% endblock %}
+    </ul>
+{% endblock %}

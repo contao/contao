@@ -21,6 +21,7 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
+use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
@@ -68,11 +69,12 @@ class ContaoExtensionTest extends TestCase
     {
         $tokenParsers = $this->getContaoExtension()->getTokenParsers();
 
-        $this->assertCount(3, $tokenParsers);
+        $this->assertCount(4, $tokenParsers);
 
         $this->assertInstanceOf(DynamicExtendsTokenParser::class, $tokenParsers[0]);
         $this->assertInstanceOf(DynamicIncludeTokenParser::class, $tokenParsers[1]);
-        $this->assertInstanceOf(AddTokenParser::class, $tokenParsers[2]);
+        $this->assertInstanceOf(DynamicUseTokenParser::class, $tokenParsers[2]);
+        $this->assertInstanceOf(AddTokenParser::class, $tokenParsers[3]);
     }
 
     public function testAddsTheFunctions(): void
