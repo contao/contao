@@ -91,7 +91,6 @@ abstract class ModuleNews extends Module
 		$objTemplate->archive = $objArticle->getRelated('pid');
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
-		$objTemplate->hasText = false;
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
 
