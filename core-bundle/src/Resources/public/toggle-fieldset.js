@@ -1,5 +1,5 @@
-window.addEventListener('DOMContentLoaded', function () {
-    const storeState = function (id, table, state) {
+window.addEventListener('DOMContentLoaded', function() {
+    const storeState = function(id, table, state) {
         fetch(window.location.href, {
             method: 'POST',
             headers: {
@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', function () {
         });
     };
 
-    const toggleState = function (el, id, table) {
+    const toggleState = function(el, id, table) {
         el.blur();
         Backend.getScrollOffset();
 
@@ -37,7 +37,7 @@ window.addEventListener('DOMContentLoaded', function () {
             }
 
             if (!collapse) {
-                if (typeof (form.checkValidity) == 'function') form.querySelector('button[type="submit"]').click();
+                if (typeof(form.checkValidity) == 'function') form.querySelector('button[type="submit"]').click();
             } else {
                 fs.classList.add('collapsed');
                 storeState(id, table, 0);
@@ -45,8 +45,9 @@ window.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    document.querySelectorAll('legend[data-toggle-fieldset]').forEach(function (el) {
+    document.querySelectorAll('legend[data-toggle-fieldset]').forEach(function(el) {
         const fs = el.parentNode;
+
         if (fs.querySelectorAll('label.error, label.mandatory').length) {
             fs.classList.remove('collapsed');
         } else if (fs.classList.contains('hide')) {
@@ -55,14 +56,14 @@ window.addEventListener('DOMContentLoaded', function () {
 
         const { id, table } = JSON.parse(el.getAttribute('data-toggle-fieldset'));
 
-        el.addEventListener('click', function (event) {
+        el.addEventListener('click', function(event) {
             event.preventDefault();
             toggleState(el, id, table);
         })
     });
 
-    AjaxRequest.toggleFieldset = function (el, id, table) {
+    AjaxRequest.toggleFieldset = function(el, id, table) {
         window.console && console.warn('Using AjaxRequest.toggleFieldset is deprecated and will be removed in Contao 6. Add the data-toggle-fieldset attribute instead.');
-        toggleState(el, id, table)
+        toggleState(el, id, table);
     };
 });
