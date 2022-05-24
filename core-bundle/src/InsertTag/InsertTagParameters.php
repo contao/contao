@@ -65,9 +65,6 @@ abstract class InsertTagParameters
         }
 
         if ($remainingParams) {
-            if ('' === $result) {
-                $result = '::';
-            }
             $result .= '?'.http_build_query($remainingParams, '', '&', PHP_QUERY_RFC3986);
         }
 

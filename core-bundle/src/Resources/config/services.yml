@@ -381,6 +381,9 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.insert_tag.resolver.link:
+        class: Contao\CoreBundle\InsertTag\Resolver\LinkInsertTag
+
     contao.intl.countries:
         class: Contao\CoreBundle\Intl\Countries
         public: true

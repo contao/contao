@@ -18,6 +18,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
@@ -169,6 +170,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             AsCronJob::class => 'contao.cronjob',
             AsHook::class => 'contao.hook',
             AsCallback::class => 'contao.callback',
+            AsInsertTag::class => 'contao.insert_tag',
         ];
 
         foreach ($attributesForAutoconfiguration as $attributeClass => $tag) {
@@ -183,6 +185,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                         }
 
                         $tagAttributes['method'] = $reflector->getName();
+                    }
+
+                    if ($attributeClass === AsInsertTag::class) {
+                        $tagAttributes['mode'] = $tagAttributes['mode']->value;
+                        $tagAttributes['type'] = $tagAttributes['type']->value;
+
+                        $method = $reflector instanceof \ReflectionClass
+                            ? $reflector->getMethod($tagAttributes['method'])
+                            : $reflector;
+
+                        // TODO: $this->validateInsertTagMethodSignature($method);
                     }
 
                     $definition->addTag($tag, $tagAttributes);

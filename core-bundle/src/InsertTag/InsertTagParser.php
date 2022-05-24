@@ -18,10 +18,32 @@ use Contao\StringUtil;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Service\ResetInterface;
 
+/**
+ * Parse and replace insert tags.
+ *
+ * Formal syntax:
+ *
+ *     insert tag = '{{', tag contents, '}}'
+ *     tag contents = name, parameter*, query?, flag*
+ *     name = [a-z\x80-\xFF], [a-z0-9_\x80-\xFF]*
+ *     parameter = '::', value
+ *     query = '?', value char *
+ *     flag = '|', value char *
+ *     value = (value char | insert tag)*
+ *     value char = [^{}|?]
+ */
 class InsertTagParser implements ResetInterface
 {
+    /** @var array<string,InsertTagSubscription> */
+    private array $subscriptions = [];
+
     public function __construct(private ContaoFramework $framework, private InsertTags|null $insertTags = null)
     {
+    }
+
+    public function addSubscription(InsertTagSubscription $subscription): void
+    {
+        $this->subscriptions[$subscription->name] = $subscription;
     }
 
     public function replace(string $input): string
@@ -79,6 +101,16 @@ class InsertTagParser implements ResetInterface
         }
 
         if (null !== $tag) {
+            $result = $this->renderSubscription($tag);
+
+            if ($result !== null) {
+                return $result;
+            }
+            try {
+
+            } catch (\Throwable) {
+
+            }
             // TODO: call tagged services
         }
 
@@ -94,6 +126,20 @@ class InsertTagParser implements ResetInterface
         }
 
         return $chunked[0][1];
+    }
+
+    private function renderSubscription(InsertTag $tag): string|null
+    {
+
+        if (!$subscription = $this->subscriptions[$tag->getName()] ?? null) {
+            return null;
+        }
+
+        if ($subscription->mode === ProcessingMode::resolved) {
+            $tag = $this->resolveNestedTags($tag);
+        }
+
+        return $subscription->service->{$subscription->method}($tag);
     }
 
     public function parse(string $input): ParsedSequence
@@ -138,15 +184,20 @@ class InsertTagParser implements ResetInterface
 
     public function parseTag(string $insertTag): InsertTag
     {
+        $flags = [];
+
         if (preg_match('/\|[^{}]*$/', $insertTag, $flags)) {
             $insertTag = substr($insertTag, 0, \strlen($insertTag) - \strlen((string) $flags[0]));
             $flags = explode('|', substr($flags[0], 1));
-        } else {
-            $flags = [];
         }
 
         $parameters = explode('::', $insertTag, 2);
         $name = array_shift($parameters);
+        $queryOnly = !$parameters && preg_match('/\?.+(?:=|&#61;)/s', $name);
+
+        if ($queryOnly) {
+            [$name, $parameters[0]] = preg_split('/(?=\?)/', $name, 2);
+        }
 
         if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', $name)) {
             throw new \InvalidArgumentException(sprintf('Invalid insert tag name "%s"', $name));
@@ -201,7 +252,13 @@ class InsertTagParser implements ResetInterface
                     $paramSequence[] = $sequenceItem;
                 }
             }
-            $parameters[array_key_last($parameters)] = new ParsedSequence($paramSequence);
+
+            if ($queryOnly) {
+                $parameters = [];
+            } else {
+                $parameters[array_key_last($parameters)] = new ParsedSequence($paramSequence);
+            }
+
             $parameters += $this->parseQuery(new ParsedSequence($querySequence));
         }
 
