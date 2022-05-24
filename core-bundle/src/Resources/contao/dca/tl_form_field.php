@@ -83,12 +83,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
-			'cut' => array
-			(
-				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
-			),
+			'cut',
 			'delete' => array
 			(
 				'href'                => 'act=delete',
@@ -103,11 +98,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 				'reverse'             => true,
 				'button_callback'     => array('tl_form_field', 'toggleIcon')
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'show'
 		)
 	),
 

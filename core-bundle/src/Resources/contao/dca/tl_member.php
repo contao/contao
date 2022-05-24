@@ -70,33 +70,11 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'operations' => array
 		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
-			),
-			'copy' => array
-			(
-				'href'                => 'act=copy',
-				'icon'                => 'copy.svg'
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
-			),
-			'toggle' => array
-			(
-				'href'                => 'act=toggle&amp;field=disable',
-				'icon'                => 'visible.svg',
-				'reverse'             => true
-			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			),
+			'edit',
+			'copy',
+			'delete',
+			'toggle',
+			'show',
 			'su' => array
 			(
 				'href'                => 'key=su',
@@ -336,7 +314,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'disable' => array
 		(
 			'exclude'                 => true,
-			'toggle'                  => true,
+			'reverseToggle'           => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'sql'                     => "char(1) NOT NULL default ''"

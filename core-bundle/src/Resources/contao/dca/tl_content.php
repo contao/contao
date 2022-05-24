@@ -88,12 +88,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				'attributes'          => 'onclick="Backend.getScrollOffset()"',
 				'button_callback'     => array('tl_content', 'disableButton')
 			),
-			'cut' => array
-			(
-				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"'
-			),
+			'cut',
 			'delete' => array
 			(
 				'href'                => 'act=delete',
@@ -107,11 +102,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 				'icon'                => 'visible.svg',
 				'button_callback'     => array('tl_content', 'toggleIcon')
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'show'
 		),
 	),
 

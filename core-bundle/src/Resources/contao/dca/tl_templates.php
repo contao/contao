@@ -77,12 +77,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 		),
 		'operations' => array
 		(
-			'edit' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['edit'],
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
-			),
+			'edit',
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['copy'],
@@ -97,13 +92,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'icon'                => 'cut.svg',
 				'attributes'          => 'onclick="Backend.getScrollOffset()"'
 			),
-			'delete' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['delete'],
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirmFile'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
-			),
+			'delete',
 			'source' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],

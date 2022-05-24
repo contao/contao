@@ -126,11 +126,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 				'button_callback'     => array('tl_article', 'toggleIcon'),
 				'showInHeader'        => true
 			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			)
+			'show'
 		)
 	),
 
