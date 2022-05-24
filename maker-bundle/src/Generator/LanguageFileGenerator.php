@@ -19,15 +19,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LanguageFileGenerator implements GeneratorInterface
 {
-    private FileManager $fileManager;
-    private XliffMerger $xliffMerger;
-    private string $projectDir;
-
-    public function __construct(FileManager $fileManager, XliffMerger $xliffMerger, string $projectDir)
+    public function __construct(private FileManager $fileManager, private XliffMerger $xliffMerger, private string $projectDir)
     {
-        $this->fileManager = $fileManager;
-        $this->xliffMerger = $xliffMerger;
-        $this->projectDir = $projectDir;
     }
 
     public function generate(array $options): string

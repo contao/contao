@@ -116,8 +116,7 @@ class MetadataTest extends TestCase
 
     public function testCreatesMetadataContainerFromContentModel(): void
     {
-        /** @var ContentModel $model */
-        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
+        $model = $this->mockClassWithProperties(ContentModel::class, except: ['getOverwriteMetadata']);
 
         $model->setRow([
             'id' => 100,
@@ -142,8 +141,7 @@ class MetadataTest extends TestCase
 
     public function testDoesNotCreateMetadataContainerFromContentModelIfOverwriteIsDisabled(): void
     {
-        /** @var ContentModel $model */
-        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
+        $model = $this->mockClassWithProperties(ContentModel::class, except: ['getOverwriteMetadata']);
 
         $model->setRow([
             'id' => 100,
@@ -157,8 +155,7 @@ class MetadataTest extends TestCase
 
     public function testCreatesMetadataContainerFromFilesModel(): void
     {
-        /** @var FilesModel $model */
-        $model = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
+        $model = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
 
         $model->setRow([
             'id' => 100,
@@ -202,10 +199,7 @@ class MetadataTest extends TestCase
             'get all metadata of first matching locale'
         );
 
-        $this->assertNull(
-            $model->getMetadata('es'),
-            'return null if no metadata is available for a locale'
-        );
+        $this->assertNull($model->getMetadata('es'), 'return null if no metadata is available for a locale');
     }
 
     public function testMergesMetadata(): void

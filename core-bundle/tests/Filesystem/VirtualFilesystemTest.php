@@ -12,13 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem;
 
+use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Symfony\Component\Uid\Uuid;
 
 class VirtualFilesystemTest extends TestCase
@@ -418,6 +422,153 @@ class VirtualFilesystemTest extends TestCase
         $filesystem->move($this->defaultUuid, 'to/path', ['some' => 'option']);
     }
 
+    public function testGetFilesystemItems(): void
+    {
+        $handlerInvocationCount = 0;
+
+        $mountManager = $this->createMock(MountManager::class);
+        $mountManager
+            ->method('fileExists')
+            ->willReturnCallback(static fn (string $path): bool => 'foo/file_a' === $path)
+        ;
+
+        $mountManager
+            ->method('directoryExists')
+            ->willReturnCallback(static fn (string $path): bool => 'foo/dir_a' === $path)
+        ;
+
+        $mountManager
+            ->method('getLastModified')
+            ->willReturnCallback(
+                static function () use (&$handlerInvocationCount): int {
+                    ++$handlerInvocationCount;
+
+                    return 54321;
+                }
+            )
+        ;
+
+        $mountManager
+            ->method('getFileSize')
+            ->willReturnCallback(
+                static function () use (&$handlerInvocationCount): int {
+                    ++$handlerInvocationCount;
+
+                    return 2048;
+                }
+            )
+        ;
+
+        $mountManager
+            ->method('getMimeType')
+            ->willReturnCallback(
+                static function () use (&$handlerInvocationCount): string {
+                    ++$handlerInvocationCount;
+
+                    return 'text/csv';
+                }
+            )
+        ;
+
+        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs
+            ->method('getSupportedFeatures')
+            ->willReturn(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE)
+        ;
+
+        $dbafs
+            ->method('getRecord')
+            ->willReturnCallback(
+                static function (string $path) use (&$handlerInvocationCount): ?FilesystemItem {
+                    $items = [
+                        'file_b' => new FilesystemItem(
+                            true,
+                            'foo/file_b',
+                            static function () use (&$handlerInvocationCount) {
+                                ++$handlerInvocationCount;
+
+                                return 12345;
+                            },
+                            static function () use (&$handlerInvocationCount) {
+                                ++$handlerInvocationCount;
+
+                                return 1024;
+                            },
+                            static function () use (&$handlerInvocationCount) {
+                                ++$handlerInvocationCount;
+
+                                return 'image/png';
+                            },
+                            static function () use (&$handlerInvocationCount) {
+                                ++$handlerInvocationCount;
+
+                                return ['extra' => 'data'];
+                            },
+                        ),
+                        'dir_b' => new FilesystemItem(false, 'foo/dir_b'),
+                    ];
+
+                    return $items[$path] ?? null;
+                }
+            )
+        ;
+
+        $dbafs
+            ->expects($this->once())
+            ->method('sync')
+            ->willReturn(new ChangeSet([], [], []))
+        ;
+
+        $dbafsManager = new DbafsManager();
+        $dbafsManager->register($dbafs, 'foo');
+
+        $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'foo');
+
+        // Read from the MountManager
+        $this->assertNull($filesystem->get('non-existing', VirtualFilesystemInterface::BYPASS_DBAFS));
+
+        $directoryA = $filesystem->get('dir_a', VirtualFilesystemInterface::BYPASS_DBAFS);
+        $fileA = $filesystem->get('file_a', VirtualFilesystemInterface::BYPASS_DBAFS);
+
+        $this->assertInstanceOf(FilesystemItem::class, $directoryA);
+        $this->assertFalse($directoryA->isFile());
+        $this->assertSame('dir_a', $directoryA->getPath());
+
+        $this->assertInstanceOf(FilesystemItem::class, $fileA);
+        $this->assertTrue($fileA->isFile());
+
+        $this->assertSame(0, $handlerInvocationCount);
+
+        $this->assertSame(54321, $fileA->getLastModified());
+        $this->assertSame(2048, $fileA->getFileSize());
+        $this->assertSame('text/csv', $fileA->getMimeType());
+
+        /** @phpstan-ignore-next-line */
+        $this->assertSame(3, $handlerInvocationCount);
+
+        // Read from the DbafsManager
+        $this->assertNull($filesystem->get('non-existing'));
+
+        $directoryB = $filesystem->get('dir_b', VirtualFilesystemInterface::FORCE_SYNC);
+        $fileB = $filesystem->get('file_b');
+
+        $this->assertInstanceOf(FilesystemItem::class, $directoryB);
+        $this->assertFalse($directoryB->isFile());
+        $this->assertSame('dir_b', $directoryB->getPath());
+
+        $this->assertInstanceOf(FilesystemItem::class, $fileB);
+        $this->assertTrue($fileB->isFile());
+
+        $this->assertSame(3, $handlerInvocationCount);
+
+        $this->assertSame(12345, $fileB->getLastModified());
+        $this->assertSame(1024, $fileB->getFileSize());
+        $this->assertSame('image/png', $fileB->getMimeType());
+        $this->assertSame(['extra' => 'data'], $fileB->getExtraMetadata());
+
+        $this->assertSame(7, $handlerInvocationCount);
+    }
+
     /**
      * @dataProvider provideMountManagerListings
      */
@@ -448,10 +599,7 @@ class VirtualFilesystemTest extends TestCase
         /** @var array<FilesystemItem> $listedContents */
         $listedContents = [...$filesystem->listContents('foo/bar', $deep, VirtualFilesystemInterface::BYPASS_DBAFS)];
 
-        $this->assertSame(
-            ['extra' => 'data'],
-            $listedContents[0]->getExtraMetadata()
-        );
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
 
         // Normalize listing for comparison
         $listing = array_map(
@@ -534,11 +682,7 @@ class VirtualFilesystemTest extends TestCase
         /** @var array<FilesystemItem> $listedContents */
         $listedContents = [...$filesystem->listContents('foo/bar', $deep)];
 
-        $this->assertSame(
-            ['extra' => 'data'],
-            $listedContents[0]->getExtraMetadata()
-        );
-
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
         $this->assertSame(1024, $listedContents[0]->getFileSize());
 
         // Normalize listing for comparison
@@ -631,13 +775,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetLastModified(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'lastModified',
-            123450,
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('lastModified', 123450, $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -645,13 +783,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetFileSize(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'fileSize',
-            1024,
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('fileSize', 1024, $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -659,13 +791,7 @@ class VirtualFilesystemTest extends TestCase
      */
     public function testGetMimeType(int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $this->doTestGetMetadata(
-            'mimeType',
-            'image/png',
-            $accessFlags,
-            $shouldSync,
-            $shouldReadFromDbafs
-        );
+        $this->doTestGetMetadata('mimeType', 'image/png', $accessFlags, $shouldSync, $shouldReadFromDbafs);
     }
 
     /**
@@ -808,10 +934,29 @@ class VirtualFilesystemTest extends TestCase
         ];
     }
 
-    /**
-     * @param mixed $value
-     */
-    private function doTestGetMetadata(string $property, $value, int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
+    public function testFailsWithNonUtf8Paths(): void
+    {
+        // Set a compatible codepage under Windows, so that dirname() calls
+        // used in the InMemoryFilesystemAdapter implementation do not alter
+        // our non-UTF-8 test paths.
+        if (\function_exists('sapi_windows_cp_set')) {
+            sapi_windows_cp_set(1252);
+        }
+
+        $filesystem = new VirtualFilesystem(
+            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+            $this->createMock(DbafsManager::class)
+        );
+
+        $filesystem->createDirectory("b\xE4r");
+
+        $this->expectException(VirtualFilesystemException::class);
+        $this->expectErrorMessage("The path \"b\xE4r\" is not supported, because it contains non-UTF-8 characters.");
+
+        iterator_to_array($filesystem->listContents('', true));
+    }
+
+    private function doTestGetMetadata(string $property, mixed $value, int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
         $method = sprintf('get%s', ucfirst($property));
 
@@ -853,10 +998,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame($value, $filesystem->$method('path2', $accessFlags));
     }
 
-    /**
-     * @param mixed $return
-     */
-    private function mockMountManagerWithCall(string $method, array $additionalArguments = [], $return = null): MountManager
+    private function mockMountManagerWithCall(string $method, array $additionalArguments = [], mixed $return = null): MountManager
     {
         $mountManager = $this->createMock(MountManager::class);
 

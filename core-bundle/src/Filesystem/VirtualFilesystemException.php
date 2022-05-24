@@ -17,24 +17,21 @@ namespace Contao\CoreBundle\Filesystem;
  */
 class VirtualFilesystemException extends \RuntimeException
 {
-    public const UNABLE_TO_CHECK_IF_FILE_EXISTS = 0;
-    public const UNABLE_TO_CHECK_IF_DIRECTORY_EXISTS = 1;
-    public const UNABLE_TO_READ = 2;
-    public const UNABLE_TO_WRITE = 3;
-    public const UNABLE_TO_DELETE = 4;
-    public const UNABLE_TO_DELETE_DIRECTORY = 5;
-    public const UNABLE_TO_CREATE_DIRECTORY = 6;
-    public const UNABLE_TO_COPY = 7;
-    public const UNABLE_TO_MOVE = 8;
-    public const UNABLE_TO_LIST_CONTENTS = 9;
-    public const UNABLE_TO_RETRIEVE_METADATA = 10;
+    final public const UNABLE_TO_CHECK_IF_FILE_EXISTS = 0;
+    final public const UNABLE_TO_CHECK_IF_DIRECTORY_EXISTS = 1;
+    final public const UNABLE_TO_READ = 2;
+    final public const UNABLE_TO_WRITE = 3;
+    final public const UNABLE_TO_DELETE = 4;
+    final public const UNABLE_TO_DELETE_DIRECTORY = 5;
+    final public const UNABLE_TO_CREATE_DIRECTORY = 6;
+    final public const UNABLE_TO_COPY = 7;
+    final public const UNABLE_TO_MOVE = 8;
+    final public const UNABLE_TO_LIST_CONTENTS = 9;
+    final public const UNABLE_TO_RETRIEVE_METADATA = 10;
+    final public const ENCOUNTERED_INVALID_PATH = 11;
 
-    private string $path;
-
-    private function __construct(string $path, string $message, int $code, \Throwable $previous)
+    private function __construct(private string $path, string $message, int $code, \Throwable|null $previous = null)
     {
-        $this->path = $path;
-
         parent::__construct($message, $code, $previous);
     }
 
@@ -47,7 +44,7 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $path,
-            "Unable to check if a file exists at '$path'.",
+            sprintf('Unable to check if a file exists at "%s".', $path),
             self::UNABLE_TO_CHECK_IF_FILE_EXISTS,
             $previous
         );
@@ -57,7 +54,7 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $path,
-            "Unable to check if a directory exists at '$path'.",
+            sprintf('Unable to check if a directory exists at "%s".', $path),
             self::UNABLE_TO_CHECK_IF_DIRECTORY_EXISTS,
             $previous
         );
@@ -67,7 +64,7 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $path,
-            "Unable to read from '$path'.",
+            sprintf('Unable to read from "%s".', $path),
             self::UNABLE_TO_READ,
             $previous
         );
@@ -77,7 +74,7 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $path,
-            "Unable to write to '$path'.",
+            sprintf('Unable to write to "%s".', $path),
             self::UNABLE_TO_WRITE,
             $previous
         );
@@ -87,7 +84,7 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $path,
-            "Unable to delete file at '$path'.",
+            sprintf('Unable to delete file at "%s".', $path),
             self::UNABLE_TO_DELETE,
             $previous
         );
@@ -97,7 +94,7 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $path,
-            "Unable to delete directory at '$path'.",
+            sprintf('Unable to delete directory at "%s".', $path),
             self::UNABLE_TO_DELETE_DIRECTORY,
             $previous
         );
@@ -107,7 +104,7 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $path,
-            "Unable to create directory at '$path'.",
+            sprintf('Unable to create directory at "%s".', $path),
             self::UNABLE_TO_CREATE_DIRECTORY,
             $previous
         );
@@ -117,7 +114,7 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $pathFrom,
-            "Unable to copy file from '$pathFrom' to '$pathTo'.",
+            sprintf('Unable to copy file from "%s" to "%s".', $pathFrom, $pathTo),
             self::UNABLE_TO_COPY,
             $previous
         );
@@ -127,7 +124,7 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $pathFrom,
-            "Unable to move file from '$pathFrom' to '$pathTo'.",
+            sprintf('Unable to move file from "%s" to "%s".', $pathFrom, $pathTo),
             self::UNABLE_TO_MOVE,
             $previous
         );
@@ -137,7 +134,7 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $path,
-            "Unable to list contents from '$path'.",
+            sprintf('Unable to list contents from "%s".', $path),
             self::UNABLE_TO_LIST_CONTENTS,
             $previous
         );
@@ -147,9 +144,18 @@ class VirtualFilesystemException extends \RuntimeException
     {
         return new self(
             $path,
-            "Unable to retrieve metadata from '$path'.",
+            sprintf('Unable to retrieve metadata from "%s".', $path),
             self::UNABLE_TO_RETRIEVE_METADATA,
             $previous
+        );
+    }
+
+    public static function encounteredInvalidPath(string $path): self
+    {
+        return new self(
+            $path,
+            sprintf('The path "%s" is not supported, because it contains non-UTF-8 characters.', $path),
+            self::ENCOUNTERED_INVALID_PATH
         );
     }
 }

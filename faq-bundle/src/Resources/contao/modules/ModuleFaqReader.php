@@ -20,8 +20,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property Comments $Comments
  * @property string   $com_template
  * @property array    $faq_categories
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleFaqReader extends Module
 {
@@ -47,21 +45,9 @@ class ModuleFaqReader extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
-		}
-
-		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
-		{
-			Input::setGet('items', Input::get('auto_item'));
-		}
-
-		// Return an empty string if "items" is not set (to combine list and reader on same page)
-		if (!Input::get('items'))
-		{
-			return '';
 		}
 
 		$this->faq_categories = StringUtil::deserialize($this->faq_categories);
@@ -87,15 +73,8 @@ class ModuleFaqReader extends Module
 			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['faqOverview'];
 		}
-		else
-		{
-			trigger_deprecation('contao/faq-bundle', '4.13', 'If you do not select an overview page in the FAQ reader module, the "go back" link will no longer be shown in Contao 5.0.');
 
-			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
-			$this->Template->referer = 'javascript:history.go(-1)';
-		}
-
-		$objFaq = FaqModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->faq_categories);
+		$objFaq = FaqModel::findPublishedByParentAndIdOrAlias(Input::get('auto_item'), $this->faq_categories);
 
 		if (null === $objFaq)
 		{
@@ -139,10 +118,6 @@ class ModuleFaqReader extends Module
 		}
 
 		$this->Template->question = $objFaq->question;
-
-		// Clean the RTE output
-		$objFaq->answer = StringUtil::toHtml5($objFaq->answer);
-
 		$this->Template->answer = StringUtil::encodeEmail($objFaq->answer);
 		$this->Template->addImage = false;
 		$this->Template->before = false;
@@ -248,5 +223,3 @@ class ModuleFaqReader extends Module
 		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);
 	}
 }
-
-class_alias(ModuleFaqReader::class, 'ModuleFaqReader');

@@ -17,7 +17,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\AddPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddSessionBagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
@@ -43,6 +42,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
+use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
@@ -55,8 +55,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoCoreBundle extends Bundle
 {
-    public const SCOPE_BACKEND = 'backend';
-    public const SCOPE_FRONTEND = 'frontend';
+    final public const SCOPE_BACKEND = 'backend';
+    final public const SCOPE_FRONTEND = 'frontend';
 
     public function getContainerExtension(): ContaoCoreExtension
     {
@@ -78,12 +78,12 @@ class ContaoCoreBundle extends Bundle
                 PreviewUrlCreateEvent::class => ContaoCoreEvents::PREVIEW_URL_CREATE,
                 PreviewUrlConvertEvent::class => ContaoCoreEvents::PREVIEW_URL_CONVERT,
                 RobotsTxtEvent::class => ContaoCoreEvents::ROBOTS_TXT,
+                SitemapEvent::class => ContaoCoreEvents::SITEMAP,
                 SlugValidCharactersEvent::class => ContaoCoreEvents::SLUG_VALID_CHARACTERS,
             ])
         );
 
         $container->addCompilerPass(new MakeServicesPublicPass());
-        $container->addCompilerPass(new AddPackagesPass());
         $container->addCompilerPass(new AddAssetsPackagesPass());
         $container->addCompilerPass(new AddSessionBagsPass());
         $container->addCompilerPass(new AddResourcesPathsPass());
@@ -129,7 +129,7 @@ class ContaoCoreBundle extends Bundle
     {
         try {
             $version = (string) InstalledVersions::getPrettyVersion('contao/core-bundle');
-        } catch (\OutOfBoundsException $e) {
+        } catch (\OutOfBoundsException) {
             $version = '';
         }
 

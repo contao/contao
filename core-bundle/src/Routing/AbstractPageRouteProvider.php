@@ -25,15 +25,8 @@ use Symfony\Component\Routing\Route;
 
 abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
-    protected ContaoFramework $framework;
-    protected CandidatesInterface $candidates;
-    protected PageRegistry $pageRegistry;
-
-    public function __construct(ContaoFramework $framework, CandidatesInterface $candidates, PageRegistry $pageRegistry)
+    public function __construct(protected ContaoFramework $framework, protected CandidatesInterface $candidates, protected PageRegistry $pageRegistry)
     {
-        $this->framework = $framework;
-        $this->candidates = $candidates;
-        $this->pageRegistry = $pageRegistry;
     }
 
     /**
@@ -89,11 +82,11 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $ids = [];
 
         foreach ($names as $name) {
-            if (0 !== strncmp($name, 'tl_page.', 8)) {
+            if (!str_starts_with($name, 'tl_page.')) {
                 continue;
             }
 
-            [, $id] = explode('.', $name);
+            [, $id] = explode('.', (string) $name);
 
             if (!preg_match('/^[1-9]\d*$/', $id)) {
                 continue;
@@ -184,16 +177,16 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $pathA = $a instanceof PageRoute && $a->getUrlSuffix() ? substr($a->getPath(), 0, -\strlen($a->getUrlSuffix())) : $a->getPath();
         $pathB = $b instanceof PageRoute && $b->getUrlSuffix() ? substr($b->getPath(), 0, -\strlen($b->getUrlSuffix())) : $b->getPath();
 
-        // Prioritize the default behaviour when `requireItem` is enabled
-        if ($pathA === $pathB && '{!parameters}' === substr($pathA, -13)) {
+        // Prioritize the default behaviour when "requireItem" is enabled
+        if ($pathA === $pathB && str_ends_with($pathA, '{!parameters}')) {
             $paramA = $a->getRequirement('parameters');
             $paramB = $b->getRequirement('parameters');
 
-            if ('/.+' === $paramA && '(/.+?)?' === $paramB) {
+            if ('/.+?' === $paramA && '(/.+?)?' === $paramB) {
                 return -1;
             }
 
-            if ('(/.+?)?' === $paramA && '/.+' === $paramB) {
+            if ('(/.+?)?' === $paramA && '/.+?' === $paramB) {
                 return 1;
             }
         }
@@ -234,7 +227,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         return array_flip($result);
     }
 
-    private function getLocalePriority(array $locales, array $notIn, array $languagePriority): ?int
+    private function getLocalePriority(array $locales, array $notIn, array $languagePriority): int|null
     {
         foreach (array_reverse($locales) as $locale) {
             if (isset($languagePriority[$locale]) && !\in_array($locale, $notIn, true)) {

@@ -20,35 +20,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle a regular front end page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageRegular extends Frontend
 {
 	/**
 	 * @var Template
-	 *
-	 * @todo Remove in Contao 5.0
 	 */
-	protected $Template;
+	public $Template;
 
 	/**
 	 * @var ResponseContext
 	 */
 	protected $responseContext;
-
-	/**
-	 * Generate a regular page
-	 *
-	 * @param PageModel $objPage
-	 * @param boolean   $blnCheckRequest
-	 */
-	public function generate($objPage, $blnCheckRequest=false)
-	{
-		$this->prepare($objPage);
-
-		$this->Template->output($blnCheckRequest);
-	}
 
 	/**
 	 * Return a response object
@@ -79,7 +62,6 @@ class PageRegular extends Frontend
 	 */
 	protected function prepare($objPage)
 	{
-		$GLOBALS['TL_KEYWORDS'] = '';
 		$GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($objPage->language);
 
 		$locale = LocaleUtil::formatAsLocale($objPage->language);
@@ -233,12 +215,12 @@ class PageRegular extends Frontend
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = $headBag->getMetaRobots();
+		$this->Template->robots = htmlspecialchars($headBag->getMetaRobots());
 
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
-			$this->Template->canonical = $headBag->getCanonicalUriForRequest($request);
+			$this->Template->canonical = htmlspecialchars($headBag->getCanonicalUriForRequest($request));
 		}
 
 		// Fall back to the default title tag
@@ -256,7 +238,7 @@ class PageRegular extends Frontend
 		$this->Template->class = trim($objLayout->cssClass . ' ' . $objPage->cssClass);
 
 		// Execute AFTER the modules have been generated and create footer scripts first
-		$this->createFooterScripts($objLayout, $objPage);
+		$this->createFooterScripts($objPage, $objLayout);
 		$this->createHeaderScripts($objPage, $objLayout);
 	}
 
@@ -482,7 +464,6 @@ class PageRegular extends Frontend
 	{
 		$strStyleSheets = '';
 		$strCcStyleSheets = '';
-		$arrStyleSheets = StringUtil::deserialize($objLayout->stylesheet);
 		$arrFramework = StringUtil::deserialize($objLayout->framework);
 
 		// Add the Contao CSS framework style sheets
@@ -503,67 +484,6 @@ class PageRegular extends Frontend
 			$GLOBALS['TL_USER_CSS'] = array();
 		}
 
-		// User style sheets
-		if (\is_array($arrStyleSheets) && isset($arrStyleSheets[0]))
-		{
-			$objStylesheets = StyleSheetModel::findByIds($arrStyleSheets);
-
-			if ($objStylesheets !== null)
-			{
-				while ($objStylesheets->next())
-				{
-					$media = implode(',', StringUtil::deserialize($objStylesheets->media));
-
-					// Overwrite the media type with a custom media query
-					if ($objStylesheets->mediaQuery)
-					{
-						$media = $objStylesheets->mediaQuery;
-					}
-
-					// Style sheets with a CC or a combination of font-face and media-type != all cannot be aggregated (see #5216)
-					if ($objStylesheets->cc || ($objStylesheets->hasFontFace && $media != 'all'))
-					{
-						$strStyleSheet = '';
-
-						// External style sheet
-						if ($objStylesheets->type == 'external')
-						{
-							$objFile = FilesModel::findByPk($objStylesheets->singleSRC);
-
-							if ($objFile !== null)
-							{
-								$strStyleSheet = Template::generateStyleTag(Controller::addFilesUrlTo($objFile->path), $media, null);
-							}
-						}
-						else
-						{
-							$strStyleSheet = Template::generateStyleTag(Controller::addAssetsUrlTo('assets/css/' . $objStylesheets->name . '.css'), $media, max($objStylesheets->tstamp, $objStylesheets->tstamp2, $objStylesheets->tstamp3));
-						}
-
-						if ($objStylesheets->cc)
-						{
-							$strStyleSheet = '<!--[' . $objStylesheets->cc . ']>' . $strStyleSheet . '<![endif]-->';
-						}
-
-						$strCcStyleSheets .= $strStyleSheet . "\n";
-					}
-					elseif ($objStylesheets->type == 'external')
-					{
-						$objFile = FilesModel::findByPk($objStylesheets->singleSRC);
-
-						if ($objFile !== null)
-						{
-							$GLOBALS['TL_USER_CSS'][] = $objFile->path . '|' . $media . '|static';
-						}
-					}
-					else
-					{
-						$GLOBALS['TL_USER_CSS'][] = 'assets/css/' . $objStylesheets->name . '.css|' . $media . '|static|' . max($objStylesheets->tstamp, $objStylesheets->tstamp2, $objStylesheets->tstamp3);
-					}
-				}
-			}
-		}
-
 		$arrExternal = StringUtil::deserialize($objLayout->external);
 
 		// External style sheets
@@ -575,24 +495,12 @@ class PageRegular extends Frontend
 
 			if ($objFiles !== null)
 			{
-				$arrFiles = array();
-
 				while ($objFiles->next())
 				{
 					if (file_exists($projectDir . '/' . $objFiles->path))
 					{
-						$arrFiles[] = $objFiles->path . '|static';
+						$GLOBALS['TL_USER_CSS'][] = $objFiles->path . '|static';
 					}
-				}
-
-				// Inject the external style sheets before or after the internal ones (see #6937)
-				if ($objLayout->loadingOrder == 'external_first')
-				{
-					array_splice($GLOBALS['TL_USER_CSS'], 0, 0, $arrFiles);
-				}
-				else
-				{
-					array_splice($GLOBALS['TL_USER_CSS'], \count($GLOBALS['TL_USER_CSS']), 0, $arrFiles);
 				}
 			}
 		}
@@ -636,12 +544,10 @@ class PageRegular extends Frontend
 	/**
 	 * Create all footer scripts
 	 *
-	 * @param LayoutModel $objLayout
 	 * @param PageModel   $objPage
-	 *
-	 * @todo Change the method signature to ($objPage, $objLayout) in Contao 5.0
+	 * @param LayoutModel $objLayout
 	 */
-	protected function createFooterScripts($objLayout, $objPage = null)
+	protected function createFooterScripts($objPage, $objLayout)
 	{
 		$strScripts = '';
 		$nonce = ContaoFramework::getNonce();
@@ -740,5 +646,3 @@ class PageRegular extends Frontend
 		};
 	}
 }
-
-class_alias(PageRegular::class, 'PageRegular');

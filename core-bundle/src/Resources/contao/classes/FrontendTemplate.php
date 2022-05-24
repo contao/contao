@@ -16,21 +16,18 @@ use Symfony\Component\HttpFoundation\Response;
  * Class FrontendTemplate
  *
  * @property integer $id
- * @property string  $keywords
  * @property string  $content
  * @property array   $sections
  * @property array   $positions
  * @property array   $matches
  * @property string  $tag
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FrontendTemplate extends Template
 {
 	use FrontendTemplateTrait;
 
 	/**
-	 * Unused $_GET check
+	 * Unused route parameters check
 	 * @var boolean
 	 */
 	protected $blnCheckRequest = false;
@@ -58,24 +55,9 @@ class FrontendTemplate extends Template
 	}
 
 	/**
-	 * Send the response to the client
-	 *
-	 * @param bool $blnCheckRequest If true, check for unused $_GET parameters
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use FrontendTemplate::getResponse() instead.
-	 */
-	public function output($blnCheckRequest=false)
-	{
-		$this->blnCheckRequest = $blnCheckRequest;
-
-		parent::output();
-	}
-
-	/**
 	 * Return a response object
 	 *
-	 * @param bool $blnCheckRequest      If true, check for unused $_GET parameters
+	 * @param bool $blnCheckRequest      If true, check for unused route parameters
 	 * @param bool $blnForceCacheHeaders
 	 *
 	 * @return Response The response object
@@ -97,23 +79,12 @@ class FrontendTemplate extends Template
 	/**
 	 * Compile the template
 	 *
-	 * @throws UnusedArgumentsException If there are unused $_GET parameters
+	 * @throws UnusedArgumentsException If there are unused route parameters
 	 *
 	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
 	protected function compile()
 	{
-		$this->keywords = '';
-
-		// Backwards compatibility
-		$arrKeywords = StringUtil::trimsplit(',', $GLOBALS['TL_KEYWORDS'] ?? '');
-
-		// Add the meta keywords
-		if (isset($arrKeywords[0]))
-		{
-			$this->keywords = str_replace(array("\n", "\r", '"'), array(' ', '', ''), implode(', ', array_unique($arrKeywords)));
-		}
-
 		// Parse the template
 		$this->strBuffer = $this->parse();
 
@@ -127,7 +98,6 @@ class FrontendTemplate extends Template
 			}
 		}
 
-		$this->strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($this->strBuffer);
 		$this->strBuffer = $this->replaceDynamicScriptTags($this->strBuffer); // see #4203
 
 		// HOOK: allow to modify the compiled markup (see #4291)
@@ -140,10 +110,10 @@ class FrontendTemplate extends Template
 			}
 		}
 
-		// Check whether all $_GET parameters have been used (see #4277)
-		if ($this->blnCheckRequest && Input::hasUnusedGet())
+		// Check whether all route parameters have been used (see #4277)
+		if ($this->blnCheckRequest && Input::getUnusedRouteParameters())
 		{
-			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedGet()));
+			throw new UnusedArgumentsException('Unused arguments: ' . implode(', ', Input::getUnusedRouteParameters()));
 		}
 
 		/** @var PageModel|null $objPage */
@@ -224,5 +194,3 @@ class FrontendTemplate extends Template
 		return $response;
 	}
 }
-
-class_alias(FrontendTemplate::class, 'FrontendTemplate');

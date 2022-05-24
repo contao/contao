@@ -31,11 +31,34 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
 class DbafsTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
+    private int $codePageBackup = 0;
+
+    protected function setUp(): void
+    {
+        if (\function_exists('sapi_windows_cp_get')) {
+            $this->codePageBackup = sapi_windows_cp_get();
+        }
+
+        parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        if (\function_exists('sapi_windows_cp_set')) {
+            sapi_windows_cp_set($this->codePageBackup);
+        }
+    }
+
     public function testResolvePaths(): void
     {
         $uuid1 = $this->generateUuid(1);
@@ -169,11 +192,7 @@ class DbafsTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAllAssociative')
-            ->with(
-                'SELECT * FROM tl_files WHERE path LIKE ? ORDER BY path',
-                ['foo/%'],
-                []
-            )
+            ->with('SELECT * FROM tl_files WHERE path LIKE ? ORDER BY path', ['foo/%'], [])
             ->willReturn([
                 ['id' => 1, 'uuid' => $this->generateUuid(1)->toBinary(), 'path' => 'foo/first', 'type' => 'file'],
                 ['id' => 2, 'uuid' => $this->generateUuid(2)->toBinary(), 'path' => 'foo/second', 'type' => 'file'],
@@ -209,9 +228,7 @@ class DbafsTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAssociative')
-            ->willReturn(
-                ['id' => 1, 'uuid' => $uuid->toBinary(), 'path' => 'some/path', 'type' => 'file'],
-            )
+            ->willReturn(['id' => 1, 'uuid' => $uuid->toBinary(), 'path' => 'some/path', 'type' => 'file'])
         ;
 
         $getColumn = function (string $name): Column {
@@ -411,7 +428,6 @@ class DbafsTest extends TestCase
         // that isn't part of the API. Normalizing paths is the first isolated
         // step when synchronizing, but we do not want to expose this functionality.
         $method = new \ReflectionMethod($dbafs, 'getNormalizedSearchPaths');
-        $method->setAccessible(true);
 
         [$searchPaths, $parentPaths] = $method->invoke($dbafs, ...$paths);
 
@@ -513,7 +529,7 @@ class DbafsTest extends TestCase
      *
      * @param string|array<int, string> $paths
      */
-    public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, $paths, ChangeSet $expected): void
+    public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, array|string $paths, ChangeSet $expected): void
     {
         /*
          * Demo file structure present in the database:
@@ -554,36 +570,18 @@ class DbafsTest extends TestCase
         ;
 
         $dbafs = $this->getDbafs($connection, $filesystem);
-
-        // Lower max file size, so that we can test the limit without excessive memory usage
-        $dbafs->setMaxFileSize(100);
-
         $changeSet = $dbafs->computeChangeSet(...((array) $paths));
 
-        $this->assertSame(
-            $expected->getItemsToCreate(),
-            $changeSet->getItemsToCreate(),
-            'items to create'
-        );
-
-        $this->assertSame(
-            $expected->getItemsToUpdate(),
-            $changeSet->getItemsToUpdate(),
-            'items to update'
-        );
-
-        $this->assertSame(
-            $expected->getItemsToDelete(),
-            $changeSet->getItemsToDelete(),
-            'items to delete'
-        );
+        $this->assertSame($expected->getItemsToCreate(), $changeSet->getItemsToCreate(), 'items to create');
+        $this->assertSame($expected->getItemsToUpdate(), $changeSet->getItemsToUpdate(), 'items to update');
+        $this->assertSame($expected->getItemsToDelete(), $changeSet->getItemsToDelete(), 'items to delete');
     }
 
     public function provideFilesystemsAndExpectedChangeSets(): \Generator
     {
         $getFilesystem = function (): VirtualFilesystemInterface {
             $filesystem = new VirtualFilesystem(
-                new MountManager(new InMemoryFilesystemAdapter()),
+                $this->getMountManagerWithRootAdapter(),
                 $this->createMock(DbafsManager::class)
             );
 
@@ -751,18 +749,14 @@ class DbafsTest extends TestCase
         ];
 
         $filesystem7 = $getFilesystem();
-        $filesystem7->write('large', str_pad('A', 100));
-        $filesystem7->write('too-large', str_pad('A', 101));
         $filesystem7->write('bar/'.Dbafs::FILE_MARKER_EXCLUDED, '');
         $filesystem7->write('foo/'.Dbafs::FILE_MARKER_PUBLIC, '');
 
-        yield 'large and ignored files' => [
+        yield 'ignored files' => [
             $filesystem7,
             '',
             new ChangeSet(
-                [
-                    ['hash' => '7866a94bb1745dee3a9601b4a5518b71', 'path' => 'large', 'type' => ChangeSet::TYPE_FILE],
-                ],
+                [],
                 [],
                 [
                     'bar' => ChangeSet::TYPE_DIRECTORY,
@@ -883,7 +877,7 @@ class DbafsTest extends TestCase
     public function testSyncWithLastModified(): void
     {
         $filesystem = new VirtualFilesystem(
-            new MountManager(new InMemoryFilesystemAdapter()),
+            $this->getMountManagerWithRootAdapter(),
             $this->createMock(DbafsManager::class)
         );
 
@@ -1154,14 +1148,11 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('delete')
-            ->with(
-                'tl_files',
-                ['path' => 'files/bar.file', 'type' => 'file']
-            )
+            ->with('tl_files', ['path' => 'files/bar.file', 'type' => 'file'])
         ;
 
         $filesystem = new VirtualFilesystem(
-            new MountManager(new InMemoryFilesystemAdapter()),
+            $this->getMountManagerWithRootAdapter(),
             $this->createMock(DbafsManager::class)
         );
 
@@ -1212,9 +1203,14 @@ class DbafsTest extends TestCase
     public function testSupportsLastModifiedWhenEnabled(): void
     {
         $dbafs = $this->getDbafs();
-        $dbafs->useLastModified(true);
+        $dbafs->useLastModified();
 
         $this->assertSame(DbafsInterface::FEATURE_LAST_MODIFIED, $dbafs->getSupportedFeatures());
+    }
+
+    private function getMountManagerWithRootAdapter(): MountManager
+    {
+        return (new MountManager())->mount(new InMemoryFilesystemAdapter());
     }
 
     private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null, EventDispatcherInterface $eventDispatcher = null): Dbafs

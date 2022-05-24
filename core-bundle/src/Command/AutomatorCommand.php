@@ -33,12 +33,9 @@ class AutomatorCommand extends Command
     protected static $defaultDescription = 'Runs automator tasks on the command line.';
 
     private array $commands = [];
-    private ContaoFramework $framework;
 
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
-
         parent::__construct();
     }
 
@@ -56,10 +53,10 @@ class AutomatorCommand extends Command
         } catch (InvalidArgumentException $e) {
             $output->writeln(sprintf('%s (see help contao:automator).', $e->getMessage()));
 
-            return 1;
+            return Command::FAILURE;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function runAutomator(InputInterface $input, OutputInterface $output): void

@@ -30,19 +30,12 @@ class InstallCommand extends Command
     protected static $defaultName = 'contao:install';
     protected static $defaultDescription = 'Installs the required Contao directories.';
 
-    private ?Filesystem $fs = null;
+    private Filesystem|null $fs = null;
     private array $rows = [];
-    private string $projectDir;
-    private string $uploadPath;
-    private string $imageDir;
-    private ?string $webDir;
+    private string|null $webDir = null;
 
-    public function __construct(string $projectDir, string $uploadPath, string $imageDir)
+    public function __construct(private string $projectDir, private string $uploadPath, private string $imageDir)
     {
-        $this->projectDir = $projectDir;
-        $this->uploadPath = $uploadPath;
-        $this->imageDir = $imageDir;
-
         parent::__construct();
     }
 
@@ -54,15 +47,7 @@ class InstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->fs = new Filesystem();
-        $this->webDir = $input->getArgument('target');
-
-        if (null === $this->webDir) {
-            if ($this->fs->exists($this->projectDir.'/web')) {
-                $this->webDir = 'web'; // backwards compatibility
-            } else {
-                $this->webDir = 'public';
-            }
-        }
+        $this->webDir = $input->getArgument('target') ?? 'public';
 
         $this->addEmptyDirs();
 
@@ -72,7 +57,7 @@ class InstallCommand extends Command
             $io->listing($this->rows);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function addEmptyDirs(): void

@@ -314,18 +314,6 @@
       <trans-unit id="tl_page.hide.1">
         <source>Hide the page in the navigation menu.</source>
       </trans-unit>
-      <trans-unit id="tl_page.guests.0">
-        <source>Show to guests only</source>
-      </trans-unit>
-      <trans-unit id="tl_page.guests.1">
-        <source>Hide the page if a member is logged in.</source>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.0">
-        <source>Tab index</source>
-      </trans-unit>
-      <trans-unit id="tl_page.tabindex.1">
-        <source>The position of the navigation item in the tabbing order.</source>
-      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
       </trans-unit>
@@ -487,6 +475,9 @@
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.1">
         <source>The following pages have a similar alias that may conflict with this page. If the URL is not resolved correctly, try changing the priority of the routes.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.relCanonical">
+        <source>Enable canonical URLs in the website root page to enable this configuration.</source>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

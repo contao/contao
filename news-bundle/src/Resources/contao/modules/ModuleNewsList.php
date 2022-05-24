@@ -19,8 +19,6 @@ use Contao\Model\Collection;
  * @property array  $news_archives
  * @property string $news_featured
  * @property string $news_order
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsList extends ModuleNews
 {
@@ -46,7 +44,7 @@ class ModuleNewsList extends ModuleNews
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -60,7 +58,7 @@ class ModuleNewsList extends ModuleNews
 		}
 
 		// Show the news reader if an item has been selected
-		if ($this->news_readerModule > 0 && (isset($_GET['items']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->news_readerModule > 0 && Input::get('auto_item') !== null)
 		{
 			return $this->getFrontendModule($this->news_readerModule, $this->strColumn);
 		}
@@ -255,5 +253,3 @@ class ModuleNewsList extends ModuleNews
 		return NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset, array('order'=>$order));
 	}
 }
-
-class_alias(ModuleNewsList::class, 'ModuleNewsList');

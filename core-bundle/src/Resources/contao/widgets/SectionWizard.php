@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Provide methods to handle sections of a page layout.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class SectionWizard extends Widget
 {
@@ -111,15 +109,15 @@ class SectionWizard extends Widget
 		{
 			$return .= '
     <tr>
-      <td><input type="text" name="' . $this->strId . '[' . $i . '][title]" id="' . $this->strId . '_title_' . $i . '" class="tl_text" value="' . StringUtil::specialchars($this->varValue[$i]['title'] ?? '') . '"></td>
-      <td><input type="text" name="' . $this->strId . '[' . $i . '][id]" id="' . $this->strId . '_id_' . $i . '" class="tl_text" value="' . StringUtil::specialchars($this->varValue[$i]['id'] ?? '') . '"></td>';
+      <td><input type="text" name="' . $this->strId . '[' . $i . '][title]" id="' . $this->strId . '_title_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['title'] ?? '') . '"></td>
+      <td><input type="text" name="' . $this->strId . '[' . $i . '][id]" id="' . $this->strId . '_id_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['id'] ?? '') . '"></td>';
 
 			$options = '';
 
 			// Add the template
 			foreach (Controller::getTemplateGroup('block_section') as $k=>$v)
 			{
-				$options .= '<option value="' . StringUtil::specialchars($k) . '"' . static::optionSelected($k, $this->varValue[$i]['template'] ?? null) . '>' . $v . '</option>';
+				$options .= '<option value="' . self::specialcharsValue($k) . '"' . static::optionSelected($k, $this->varValue[$i]['template'] ?? null) . '>' . $v . '</option>';
 			}
 
 			$return .= '
@@ -130,7 +128,7 @@ class SectionWizard extends Widget
 			// Add the positions
 			foreach (array('top', 'before', 'main', 'after', 'bottom', 'manual') as $v)
 			{
-				$options .= '<option value="' . StringUtil::specialchars($v) . '"' . static::optionSelected($v, $this->varValue[$i]['position'] ?? null) . '>' . $GLOBALS['TL_LANG']['SECTIONS'][$v] . '</option>';
+				$options .= '<option value="' . self::specialcharsValue($v) . '"' . static::optionSelected($v, $this->varValue[$i]['position'] ?? null) . '>' . $GLOBALS['TL_LANG']['SECTIONS'][$v] . '</option>';
 			}
 
 			$return .= '
@@ -156,9 +154,6 @@ class SectionWizard extends Widget
 
 		return $return . '
   </tbody>
-  </table>
-  <script>Backend.sectionWizard("ctrl_' . $this->strId . '")</script>';
+  </table>';
 	}
 }
-
-class_alias(SectionWizard::class, 'SectionWizard');

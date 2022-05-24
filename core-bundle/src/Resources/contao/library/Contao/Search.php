@@ -10,26 +10,12 @@
 
 namespace Contao;
 
-use Contao\Database\Result;
-
 /**
  * Creates and queries the search index
  *
- * The class takes the HTML markup of a page, exctracts the content and writes
+ * The class takes the HTML markup of a page, extracts the content and writes
  * it to the database (search index). It also provides a method to query the
- * seach index, returning the matching entries.
- *
- * Usage:
- *
- *     Search::indexPage($objPage->row());
- *     $result = Search::searchFor('keyword');
- *
- *     while ($result->next())
- *     {
- *         echo $result->url;
- *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * search index, returning the matching entries.
  */
 class Search
 {
@@ -51,7 +37,6 @@ class Search
 		$objDatabase = Database::getInstance();
 
 		$arrSet['tstamp'] = time();
-		$arrSet['url'] = $arrData['url'];
 		$arrSet['title'] = $arrData['title'];
 		$arrSet['protected'] = $arrData['protected'];
 		$arrSet['filesize'] = $arrData['filesize'] ?? null;
@@ -59,6 +44,9 @@ class Search
 		$arrSet['pid'] = $arrData['pid'];
 		$arrSet['language'] = $arrData['language'];
 		$arrSet['meta'] = json_encode((array) $arrData['meta']);
+
+		// Ensure that the URL only contains ASCII characters (see #4260)
+		$arrSet['url'] = preg_replace_callback('/[\x80-\xFF]+/', static fn ($match) => rawurlencode($match[0]), $arrData['url']);
 
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
@@ -173,7 +161,7 @@ class Search
 		$strBody = strip_tags($strBody);
 
 		// Put everything together
-		$arrSet['text'] = $arrData['title'] . ' ' . $arrData['description'] . ' ' . $strBody . ' ' . $arrData['keywords'];
+		$arrSet['text'] = $strBody . ' ' . $arrData['description'] . "\n" . $arrData['title'] . "\n" . $arrData['keywords'];
 		$arrSet['text'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($arrSet['text'])));
 
 		// Calculate the checksum
@@ -243,7 +231,7 @@ class Search
 		unset($arrSet);
 
 		// Split words
-		$arrWords = self::splitIntoWords(mb_strtolower($strText), $arrData['language']);
+		$arrWords = self::splitIntoWords($strText, $arrData['language']);
 		$arrIndex = array();
 
 		// Index words
@@ -278,7 +266,7 @@ class Search
 				VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
 				ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
 			")
-			->execute(array_map('strval', array_keys($arrIndex)));
+			->execute(...array_map('strval', array_keys($arrIndex)));
 
 		// Remove obsolete terms
 		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
@@ -289,7 +277,7 @@ class Search
 				FROM tl_search_term
 				WHERE term IN (" . implode(',', array_fill(0, \count($arrIndex), '?')) . ")
 			")
-			->execute(array_map('strval', array_keys($arrIndex)));
+			->execute(...array_map('strval', array_keys($arrIndex)));
 
 		$arrTermIds = array();
 
@@ -316,7 +304,7 @@ class Search
 
 		// Create the new index
 		$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
-					->execute($arrValues);
+					->execute(...$arrValues);
 
 		$row = $objDatabase->query("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")->fetchRow();
 
@@ -377,13 +365,24 @@ class Search
 		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
 		$iterator->setText($strText);
 
+		// As the search index is shared across all languages, we can not use
+		// locale specific rules here (like de-ASCII or tr-Lower).
+		if (\in_array('Latin-ASCII', \Transliterator::listIDs(), true))
+		{
+			$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
+		}
+		else
+		{
+			$transliterator = \Transliterator::create('Lower');
+		}
+
 		$words = array();
 
 		foreach ($iterator->getPartsIterator() as $part)
 		{
 			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE)
 			{
-				$words[] = $part;
+				$words[] = $transliterator->transliterate($part);
 			}
 		}
 
@@ -391,30 +390,39 @@ class Search
 	}
 
 	/**
-	 * Search the index and return the result object
+	 * Get different variants of the matched words that are present in the text,
+	 * e.g. with accents or diaeresis.
 	 *
-	 * @param string  $strKeywords  The keyword string
-	 * @param boolean $blnOrSearch  If true, the result can contain any keyword
-	 * @param array   $arrPid       An optional array of page IDs to limit the result to
-	 * @param integer $intRows      An optional maximum number of result rows
-	 * @param integer $intOffset    An optional result offset
-	 * @param boolean $blnFuzzy     If true, the search will be fuzzy
-	 * @param integer $intMinlength Ignore keywords deceeding the minimum length
-	 *
-	 * @return Result The database result object
-	 *
-	 * @throws \Exception If the cleaned keyword string is empty
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.
-	 *             Use the Search::query() method instead.
+	 * @return string[]
 	 */
-	public static function searchFor($strKeywords, $blnOrSearch=false, $arrPid=array(), $intRows=0, $intOffset=0, $blnFuzzy=false, $intMinlength=0)
+	public static function getMatchVariants(array $arrMatches, string $strText, string $strLocale): array
 	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Search::query()" instead.', __METHOD__);
+		$iterator = \IntlRuleBasedBreakIterator::createWordInstance($strLocale);
+		$iterator->setText($strText);
 
-		$objSearchResult = static::query((string) $strKeywords, (bool) $blnOrSearch, \is_array($arrPid) ? $arrPid : array(), (bool) $blnFuzzy, (int) $intMinlength);
+		// As the search index is shared across all languages, we can not use
+		// locale specific rules here (like de-ASCII or tr-Lower).
+		if (\in_array('Latin-ASCII', \Transliterator::listIDs(), true))
+		{
+			$transliterator = \Transliterator::createFromRules('::Latin-ASCII; ::Lower;');
+		}
+		else
+		{
+			$transliterator = \Transliterator::create('Lower');
+		}
 
-		return new Result($objSearchResult->getResults($intRows ?: PHP_INT_MAX, $intOffset), 'SELECT * FROM tl_search');
+		$arrMatches = array_map(static fn ($match) => $transliterator->transliterate($match), $arrMatches);
+		$variants = array();
+
+		foreach ($iterator->getPartsIterator() as $part)
+		{
+			if ($iterator->getRuleStatus() !== \IntlBreakIterator::WORD_NONE && !\in_array($part, $variants, true) && \in_array($transliterator->transliterate($part), $arrMatches, true))
+			{
+				$variants[] = $part;
+			}
+		}
+
+		return $variants;
 	}
 
 	/**
@@ -432,7 +440,6 @@ class Search
 	{
 		// Clean the keywords
 		$strKeywords = StringUtil::decodeEntities($strKeywords);
-		$strKeywords = mb_strtolower($strKeywords);
 
 		// Check keyword string
 		if (!\strlen($strKeywords))
@@ -442,7 +449,7 @@ class Search
 
 		// Split keywords
 		$arrChunks = array();
-		preg_match_all('/"[^"]+"|[+-]?[^ ]+\*?/', $strKeywords, $arrChunks);
+		preg_match_all('/"[^"]+"|\S+/', $strKeywords, $arrChunks);
 
 		$arrPhrases = array();
 		$arrPhrasesRegExp = array();
@@ -453,9 +460,32 @@ class Search
 
 		foreach (array_unique($arrChunks[0]) as $strKeyword)
 		{
-			if (substr($strKeyword, -1) == '*' && \strlen($strKeyword) > 1)
+			if (($strKeyword[0] === '*' || substr($strKeyword, -1) === '*') && \strlen($strKeyword) > 1)
 			{
-				$arrWildcards[] = str_replace('*', '%', $strKeyword);
+				$arrWildcardWords = self::splitIntoWords(trim($strKeyword, '*'), $GLOBALS['TL_LANGUAGE']);
+
+				foreach ($arrWildcardWords as $intIndex => $strWord)
+				{
+					if ($intIndex === 0 && $strKeyword[0] === '*')
+					{
+						$strWord = '%' . $strWord;
+					}
+
+					if ($intIndex === \count($arrWildcardWords) - 1 && substr($strKeyword, -1) === '*')
+					{
+						$strWord .= '%';
+					}
+
+					if ($strWord[0] === '%' || substr($strWord, -1) === '%')
+					{
+						$arrWildcards[] = $strWord;
+					}
+					else
+					{
+						$arrKeywords[] = $strWord;
+					}
+				}
+
 				continue;
 			}
 
@@ -489,14 +519,6 @@ class Search
 						{
 							$arrExcluded[] = $strWord;
 						}
-					}
-					break;
-
-				// Wildcards
-				case '*':
-					if (\strlen($strKeyword) > 1)
-					{
-						$arrWildcards[] = str_replace('*', '%', $strKeyword);
 					}
 					break;
 
@@ -698,7 +720,7 @@ class Search
 
 		// Return result
 		$objResultStmt = Database::getInstance()->prepare($strQuery);
-		$objResult = $objResultStmt->execute($arrValues);
+		$objResult = $objResultStmt->execute(...$arrValues);
 		$arrResult = $objResult->fetchAllAssoc();
 
 		return new SearchResult($arrResult, array_merge($arrKeywords, $arrIncluded), $arrWildcards, $arrPhrases);
@@ -749,26 +771,6 @@ class Search
 	}
 
 	/**
-	 * Return the object instance (Singleton)
-	 *
-	 * @return Search The object instance
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Search class is now static.
-	 */
-	public static function getInstance()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Search::getInstance()" has been deprecated and will no longer work in Contao 5.0. The "Contao\Search" class is now static.');
-
-		if (static::$objInstance === null)
-		{
-			static::$objInstance = new static();
-		}
-
-		return static::$objInstance;
-	}
-
-	/**
 	 * @param string $strUrlA
 	 * @param string $strUrlB
 	 *
@@ -802,5 +804,3 @@ class Search
 		return strcmp($strUrlA, $strUrlB);
 	}
 }
-
-class_alias(Search::class, 'Search');

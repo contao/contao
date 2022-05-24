@@ -14,8 +14,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 
 /**
  * Front end module "registration".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleRegistration extends Module
 {
@@ -41,7 +39,7 @@ class ModuleRegistration extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -82,6 +80,14 @@ class ModuleRegistration extends Module
 			}
 		}
 
+		$strFormId = 'tl_registration_' . $this->id;
+
+		// Remove expired registration (#3709)
+		if (Input::post('FORM_SUBMIT') == $strFormId && ($email = Input::post('email')) && ($member = MemberModel::findExpiredRegistrationByEmail($email)))
+		{
+			$member->delete();
+		}
+
 		// Activate account
 		if (strncmp(Input::get('token'), 'reg-', 4) === 0)
 		{
@@ -100,7 +106,6 @@ class ModuleRegistration extends Module
 
 		$objCaptcha = null;
 		$doNotSubmit = false;
-		$strFormId = 'tl_registration_' . $this->id;
 
 		// Predefine the group order (other groups will be appended automatically)
 		$arrGroups = array
@@ -159,7 +164,6 @@ class ModuleRegistration extends Module
 		$arrUser = array();
 		$arrFields = array();
 		$hasUpload = false;
-		$i = 0;
 
 		// Build the form
 		foreach ($this->editable as $field)
@@ -199,13 +203,6 @@ class ModuleRegistration extends Module
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
-
-			// Increase the row count if it's a password field
-			if ($objWidget instanceof FormPassword)
-			{
-				$objWidget->rowClassConfirm = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
-			}
 
 			// Validate input
 			if (Input::post('FORM_SUBMIT') == $strFormId)
@@ -285,12 +282,6 @@ class ModuleRegistration extends Module
 						$varValue = $objWidget->getEmptyValue();
 					}
 
-					// Encrypt the value (see #7815)
-					if ($arrData['eval']['encrypt'] ?? null)
-					{
-						$varValue = Encryption::encrypt($varValue);
-					}
-
 					// Set the new value
 					$arrUser[$field] = $varValue;
 				}
@@ -311,21 +302,17 @@ class ModuleRegistration extends Module
 			}
 
 			$arrFields[$arrData['eval']['feGroup']][$field] .= $temp;
-
-			++$i;
 		}
 
 		// Captcha
 		if (!$this->disableCaptcha)
 		{
-			$objCaptcha->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 			$strCaptcha = $objCaptcha->parse();
 
 			$this->Template->fields .= $strCaptcha;
 			$arrFields['captcha']['captcha'] = ($arrFields['captcha']['captcha'] ?? '') . $strCaptcha;
 		}
 
-		$this->Template->rowLast = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->hasError = $doNotSubmit;
 
@@ -357,7 +344,7 @@ class ModuleRegistration extends Module
 		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$this->Template->captcha = $arrFields['captcha']['captcha'];
+		$this->Template->captcha = $arrFields['captcha']['captcha'] ?? '';
 	}
 
 	/**
@@ -442,7 +429,7 @@ class ModuleRegistration extends Module
 		$objVersions = new Versions('tl_member', $objNewUser->id);
 		$objVersions->setUsername($objNewUser->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
 		$objVersions->initialize();
 
 		// Inform admin if no activation link is sent
@@ -660,5 +647,3 @@ class ModuleRegistration extends Module
 		System::getContainer()->get('monolog.logger.contao.access')->info('A new user (ID ' . $intId . ') has registered on the website');
 	}
 }
-
-class_alias(ModuleRegistration::class, 'ModuleRegistration');

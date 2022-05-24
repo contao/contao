@@ -20,8 +20,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Provide methods to handle Ajax requests.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Ajax extends Backend
 {
@@ -85,26 +83,9 @@ class Ajax extends Backend
 
 				throw new NoContentResponseException();
 
-			// Load a navigation menu group
-			case 'loadNavigation':
-				$bemod = $objSessionBag->get('backend_modules');
-				$bemod[Input::post('id')] = (int) Input::post('state');
-				$objSessionBag->set('backend_modules', $bemod);
-
-				$this->import(BackendUser::class, 'User');
-
-				$navigation = $this->User->navigation();
-
-				$objTemplate = new BackendTemplate('be_navigation');
-				$objTemplate->modules = $navigation[Input::post('id')]['modules'];
-
-				throw new ResponseException($objTemplate->getResponse());
-
 			// Toggle nodes of the file or page tree
 			case 'toggleStructure':
 			case 'toggleFileManager':
-			case 'togglePagetree':
-			case 'toggleFiletree':
 				$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
 				$this->strAjaxKey = str_replace('_' . $this->strAjaxId, '', Input::post('id'));
 
@@ -123,8 +104,6 @@ class Ajax extends Backend
 			// Load nodes of the file or page tree
 			case 'loadStructure':
 			case 'loadFileManager':
-			case 'loadPagetree':
-			case 'loadFiletree':
 				$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
 				$this->strAjaxKey = str_replace('_' . $this->strAjaxId, '', Input::post('id'));
 
@@ -199,86 +178,6 @@ class Ajax extends Backend
 			case 'loadFileManager':
 				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView(Input::post('folder', true), (int) Input::post('level'))));
 
-			// Load nodes of the page tree
-			case 'loadPagetree':
-				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=loadPagetree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
-				$varValue = null;
-				$strField = $dc->field = Input::post('name');
-
-				if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]))
-				{
-					throw new BadRequestHttpException('Invalid field name: ' . $strField);
-				}
-
-				// Call the load_callback
-				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] ?? null))
-				{
-					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
-					{
-						if (\is_array($callback))
-						{
-							$this->import($callback[0]);
-							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
-						}
-						elseif (\is_callable($callback))
-						{
-							$varValue = $callback($varValue, $dc);
-						}
-					}
-				}
-
-				/** @var PageSelector $strClass */
-				$strClass = $GLOBALS['BE_FFL']['pageSelector'] ?? null;
-
-				/** @var PageSelector $objWidget */
-				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
-
-				throw new ResponseException($this->convertToResponse($objWidget->generateAjax($this->strAjaxId, Input::post('field'), (int) Input::post('level'))));
-
-			// Load nodes of the file tree
-			case 'loadFiletree':
-				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=loadFiletree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
-				$varValue = null;
-				$strField = $dc->field = Input::post('name');
-
-				if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]))
-				{
-					throw new BadRequestHttpException('Invalid field name: ' . $strField);
-				}
-
-				// Call the load_callback
-				if (\is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] ?? null))
-				{
-					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback)
-					{
-						if (\is_array($callback))
-						{
-							$this->import($callback[0]);
-							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
-						}
-						elseif (\is_callable($callback))
-						{
-							$varValue = $callback($varValue, $dc);
-						}
-					}
-				}
-
-				/** @var FileSelector $strClass */
-				$strClass = $GLOBALS['BE_FFL']['fileSelector'] ?? null;
-
-				/** @var FileSelector $objWidget */
-				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->field, $varValue, $strField, $dc->table, $dc));
-
-				// Load a particular node
-				if (Input::post('folder', true))
-				{
-					throw new ResponseException($this->convertToResponse($objWidget->generateAjax(Input::post('folder', true), Input::post('field'), (int) Input::post('level'))));
-				}
-
-				throw new ResponseException($this->convertToResponse($objWidget->generate()));
-
 			// Reload the page/file picker
 			case 'reloadPagetree':
 			case 'reloadFiletree':
@@ -306,13 +205,21 @@ class Ajax extends Backend
 				// Load the value
 				if (Input::get('act') != 'overrideAll')
 				{
-					if (($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null) == 'File')
+					if (is_a($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null, DC_File::class, true))
 					{
 						$varValue = Config::get($strField);
 					}
 					elseif ($intId > 0 && $this->Database->tableExists($dc->table))
 					{
-						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+						$idField = 'id';
+
+						// ID is file path for DC_Folder
+						if ($dc instanceof DC_Folder)
+						{
+							$idField = 'path';
+						}
+
+						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
 												 ->execute($intId);
 
 						// The record does not exist
@@ -406,22 +313,6 @@ class Ajax extends Backend
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
 
-			// Feature/unfeature an element
-			case 'toggleFeatured':
-				trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=toggleFeatured) has been deprecated and will no longer work in Contao 5.0. Use the toggle operation instead.');
-
-				if (class_exists($dc->table, false))
-				{
-					$dca = new $dc->table();
-
-					if (method_exists($dca, 'toggleFeatured'))
-					{
-						$dca->toggleFeatured(Input::post('id'), Input::post('state') == 1, $dc);
-					}
-				}
-
-				throw new NoContentResponseException();
-
 			// Toggle subpalettes
 			case 'toggleSubpalette':
 				$this->import(BackendUser::class, 'User');
@@ -439,20 +330,41 @@ class Ajax extends Backend
 					if (Input::get('act') == 'editAll')
 					{
 						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
+
+						$objVersions = new Versions($dc->table, $this->strAjaxId);
+						$objVersions->initialize();
+
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
+
+						$objVersions->create();
 
 						if (Input::post('load'))
 						{
 							throw new ResponseException($this->convertToResponse($dc->editAll($this->strAjaxId, Input::post('id'))));
 						}
+
+						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+						{
+							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
+						}
 					}
 					else
 					{
+						$objVersions = new Versions($dc->table, $dc->id);
+						$objVersions->initialize();
+
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
+
+						$objVersions->create();
 
 						if (Input::post('load'))
 						{
 							throw new ResponseException($this->convertToResponse($dc->edit(false, Input::post('id'))));
+						}
+
+						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+						{
+							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 						}
 					}
 				}
@@ -514,5 +426,3 @@ class Ajax extends Backend
 		return new Response(Controller::replaceOldBePaths($str));
 	}
 }
-
-class_alias(Ajax::class, 'Ajax');

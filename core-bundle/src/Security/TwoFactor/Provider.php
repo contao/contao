@@ -19,14 +19,11 @@ use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface
 
 class Provider implements TwoFactorProviderInterface
 {
-    private Authenticator $authenticator;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.two_factor.provider" service instead
      */
-    public function __construct(Authenticator $authenticator)
+    public function __construct(private Authenticator $authenticator)
     {
-        $this->authenticator = $authenticator;
     }
 
     public function beginAuthentication(AuthenticationContextInterface $context): bool

@@ -37,7 +37,7 @@ class ContextFactoryTest extends TestCase
             'lazy1' => static fn (): string => 'evaluated',
             'lazy2' => static fn (int $n = 0): string => "evaluated: $n",
             'lazy3' => static fn (): array => [1, 2],
-            'lazy4' => \Closure::fromCallable(static fn (): string => 'evaluated Closure'),
+            'lazy4' => (static fn (): string => 'evaluated Closure')(...),
             'value' => 'strtolower', // do not confuse with callable
         ];
 
@@ -75,12 +75,30 @@ class ContextFactoryTest extends TestCase
 
                 OUTPUT;
 
-        $output = (new Environment(new ArrayLoader(['test.html.twig' => $content])))->render(
-            'test.html.twig',
-            (new ContextFactory())->fromContaoTemplate($template)
-        );
+        $context = (new ContextFactory())->fromContaoTemplate($template);
+
+        $this->assertSame($template, $context['Template']);
+
+        $output = (new Environment(new ArrayLoader(['test.html.twig' => $content])))->render('test.html.twig', $context);
 
         $this->assertSame($expectedOutput, $output);
+    }
+
+    public function testCreatesContextFromData(): void
+    {
+        $data = [
+            'foo' => 'a',
+            'bar' => static fn () => 'b',
+            'baz' => [
+                'foobar' => static fn () => 'c',
+            ],
+        ];
+
+        $context = (new ContextFactory())->fromData($data);
+
+        $this->assertSame('a', $context['foo']);
+        $this->assertSame('b', $context['bar']());
+        $this->assertSame('c', (string) $context['baz']['foobar']);
     }
 
     /**

@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Class FormFieldsetStart
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class FormFieldsetStart extends Widget
 {
@@ -67,5 +65,3 @@ class FormFieldsetStart extends Widget
 		);
 	}
 }
-
-class_alias(FormFieldsetStart::class, 'FormFieldsetStart');

@@ -27,11 +27,8 @@ use Imagine\Imagick\Imagine as ImagickImagine;
 
 class ImaginePreviewProvider implements PreviewProviderInterface
 {
-    private ImagineInterface $imagine;
-
-    public function __construct(ImagineInterface $imagine)
+    public function __construct(private ImagineInterface $imagine)
     {
-        $this->imagine = $imagine;
     }
 
     public function getFileHeaderSize(): int
@@ -109,12 +106,10 @@ class ImaginePreviewProvider implements PreviewProviderInterface
         //}
 
         if ($this->imagine instanceof ImagickImagine) {
-            /** @psalm-suppress UndefinedClass */
             return \in_array(strtoupper($format), \Imagick::queryFormats(strtoupper($format)), true);
         }
 
         if ($this->imagine instanceof GmagickImagine) {
-            /** @psalm-suppress UndefinedClass */
             return \in_array(strtoupper($format), (new \Gmagick())->queryformats(strtoupper($format)), true);
         }
 
@@ -122,18 +117,16 @@ class ImaginePreviewProvider implements PreviewProviderInterface
             return \function_exists('image'.$format);
         }
 
-        throw new \RuntimeException(sprintf('Unsupported Imagine implementation "%s"', \get_class($this->imagine)));
+        throw new \RuntimeException(sprintf('Unsupported Imagine implementation "%s"', $this->imagine::class));
     }
 
     private function openImagick(string $sourcePath, int $size, int $firstPage, int $lastPage): ImageInterface
     {
-        /** @psalm-suppress UndefinedClass */
         return $this->openMagick(\Imagick::class, $sourcePath, $size, $firstPage, $lastPage);
     }
 
     private function openGmagick(string $sourcePath, int $size, int $firstPage, int $lastPage): ImageInterface
     {
-        /** @psalm-suppress UndefinedClass */
         return $this->openMagick(\Gmagick::class, $sourcePath, $size, $firstPage, $lastPage);
     }
 

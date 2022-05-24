@@ -1,6 +1,5 @@
 # Do not merge the version specific files
 /CHANGELOG.md merge=ours
-/core-bundle/src/Resources/contao/config/constants.php merge=ours
 
 # Do not merge the .github folders
 /.github/ merge=ours

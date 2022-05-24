@@ -230,12 +230,6 @@
       <trans-unit id="tl_module.singleSRC.1">
         <source>Please select a file from the files directory.</source>
       </trans-unit>
-      <trans-unit id="tl_module.url.0">
-        <source>URL</source>
-      </trans-unit>
-      <trans-unit id="tl_module.url.1">
-        <source>Please enter the URL (http://…) of the Flash movie.</source>
-      </trans-unit>
       <trans-unit id="tl_module.fullsize.0">
         <source>Full-size view/new window</source>
       </trans-unit>
@@ -289,12 +283,6 @@
       </trans-unit>
       <trans-unit id="tl_module.groups.1">
         <source>These groups will be able to see the module.</source>
-      </trans-unit>
-      <trans-unit id="tl_module.guests.0">
-        <source>Show to guests only</source>
-      </trans-unit>
-      <trans-unit id="tl_module.guests.1">
-        <source>Hide the module if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_module.cssID.0">
         <source>CSS ID/class</source>

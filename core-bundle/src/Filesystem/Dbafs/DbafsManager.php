@@ -84,16 +84,16 @@ class DbafsManager
      *
      * The returned path will always be relative to the provided prefix:
      *
-     *     resolveUuid($uuid); // returns 'files/foo/bar'
-     *     resolveUuid($uuid, 'files/foo'); // returns 'bar'
+     *     resolveUuid($uuid); // returns "files/foo/bar"
+     *     resolveUuid($uuid, 'files/foo'); // returns "bar"
      *
      * @throws UnableToResolveUuidException
      */
     public function resolveUuid(Uuid $uuid, string $prefix = ''): string
     {
-        foreach ($this->getCandidatesForPrefix($prefix) as $dbafs) {
+        foreach ($this->getCandidatesForPrefix($prefix) as $dbafsPrefix => $dbafs) {
             if (null !== ($path = $dbafs->getPathFromUuid($uuid))) {
-                return Path::makeRelative($path, $prefix);
+                return Path::makeRelative(Path::join($dbafsPrefix, $path), $prefix);
             }
         }
 
@@ -104,7 +104,7 @@ class DbafsManager
      * Returns the last modified time or null if no DBAFS exists for the given
      * $path that supports the attribute and contains a matching record.
      */
-    public function getLastModified(string $path): ?int
+    public function getLastModified(string $path): int|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
@@ -124,7 +124,7 @@ class DbafsManager
      * Returns the file size or null if no DBAFS exists for the given $path
      * that supports the attribute and contains a matching record.
      */
-    public function getFileSize(string $path): ?int
+    public function getFileSize(string $path): int|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
@@ -144,7 +144,7 @@ class DbafsManager
      * Returns the mime type or null if no DBAFS exists for the given $path
      * that supports the attribute and contains a matching record.
      */
-    public function getMimeType(string $path): ?string
+    public function getMimeType(string $path): string|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
@@ -203,7 +203,7 @@ class DbafsManager
             try {
                 $dbafs->setExtraMetadata($resolvedPath, $metadata);
                 $success = true;
-            } catch (\InvalidArgumentException $e) {
+            } catch (\InvalidArgumentException) {
                 // ignore
             }
         }
@@ -276,7 +276,7 @@ class DbafsManager
         return $changeSet;
     }
 
-    private function getRecord(string $path): ?FilesystemItem
+    private function getRecord(string $path): FilesystemItem|null
     {
         $dbafsIterator = $this->getDbafsForPath($path);
 
@@ -288,13 +288,13 @@ class DbafsManager
     }
 
     /**
-     * @return \Generator<DbafsInterface>
+     * @return \Generator<string, DbafsInterface>
      */
     private function getCandidatesForPrefix(string $prefix): \Generator
     {
         foreach ($this->dbafs as $dbafsPrefix => $dbafs) {
             if (Path::isBasePath("/$prefix", "/$dbafsPrefix")) {
-                yield $dbafs;
+                yield $dbafsPrefix => $dbafs;
             }
         }
     }
@@ -315,9 +315,9 @@ class DbafsManager
      * Ensures that all DBAFS with a more specific prefix are also supporting
      * everything each less specific one does.
      *
-     * For example, a DBAFS with prefix 'files/media' must also support
-     * 'fileSize' if the DBAFS under 'files' does. It could, however, support
-     * additional properties like 'mimeType' even if the 'files' DBAFS does not.
+     * For example, a DBAFS with prefix "files/media" must also support
+     * "fileSize" if the DBAFS under "files" does. It could, however, support
+     * additional properties like "mimeType" even if the "files" DBAFS does not.
      */
     private function validateTransitiveProperties(): void
     {

@@ -29,12 +29,10 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemConfiguration
 {
-    private ContainerBuilder $container;
     private AdapterDefinitionFactory $adapterDefinitionFactory;
 
-    public function __construct(ContainerBuilder $container)
+    public function __construct(private ContainerBuilder $container)
     {
-        $this->container = $container;
         $this->adapterDefinitionFactory = new AdapterDefinitionFactory();
     }
 
@@ -46,9 +44,9 @@ class FilesystemConfiguration
     /**
      * Adds another new VirtualFilesystem service.
      *
-     * Setting the name to 'foo' will create a 'contao.filesystem.virtual.foo'
+     * Setting the name to "foo" will create a "contao.filesystem.virtual.foo"
      * service and additionally enable constructor injection with an argument
-     * 'VirtualFilesystemInterface $fooStorage' if autowiring is available.
+     * "VirtualFilesystemInterface $fooStorage" if autowiring is available.
      *
      * @return Definition the newly created definition
      */
@@ -60,7 +58,7 @@ class FilesystemConfiguration
 
         $definition = new Definition(VirtualFilesystem::class, [$prefix, $readonly]);
         $definition->setFactory(new Reference('contao.filesystem.virtual_factory'));
-        $definition->addTag('contao.virtual_filesystem', compact('name', 'prefix'));
+        $definition->addTag('contao.virtual_filesystem', ['name' => $name, 'prefix' => $prefix]);
 
         $this->container->setDefinition($id = "contao.filesystem.virtual.$name", $definition);
         $this->container->registerAliasForArgument($id, VirtualFilesystemInterface::class, "{$name}Storage");
@@ -78,7 +76,7 @@ class FilesystemConfiguration
      * @see https://github.com/thephpleague/flysystem-bundle#basic-usage
      *
      * The $mountPath must be a path relative to and inside the project root
-     * (e.g. 'files/foo' or 'assets/images').
+     * (e.g. "files/foo" or "assets/images").
      *
      * If you do not set a name, the id/alias for the adapter service will be
      * derived from the mount path.
@@ -117,7 +115,7 @@ class FilesystemConfiguration
      * mountAdapter() instead.
      *
      * The $mountPath must be a path relative to and inside the project root
-     * (e.g. 'files/foo' or 'assets/images'); the $filesystemPath can either
+     * (e.g. "files/foo" or "assets/images"); the $filesystemPath can either
      * be absolute or relative to the project root and may contain
      * placeholders (%name%).
      *
@@ -206,7 +204,7 @@ class FilesystemConfiguration
     /**
      * @return array{0: string, 1: string}|null
      */
-    private function getVirtualFilesystem(string $name): ?array
+    private function getVirtualFilesystem(string $name): array|null
     {
         foreach ($this->container->findTaggedServiceIds('contao.virtual_filesystem') as $id => $tags) {
             foreach ($tags as $tag) {

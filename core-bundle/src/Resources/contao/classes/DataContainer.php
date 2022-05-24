@@ -15,8 +15,8 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\Image\ResizeConfiguration;
-use Imagine\Gd\Imagine;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -30,8 +30,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $palette
  * @property object|null    $activeRecord
  * @property array          $rootIds
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 abstract class DataContainer extends Backend
 {
@@ -345,16 +343,10 @@ abstract class DataContainer extends Backend
 
 		$xlabel = '';
 
-		// Toggle line wrap (textarea)
-		if (($arrData['inputType'] ?? null) == 'textarea' && !isset($arrData['eval']['rte']))
-		{
-			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_' . $this->strInputName . '\')"');
-		}
-
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="contao/help.php?table=' . $this->strTable . '&amp;field=' . $this->strField . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -479,7 +471,7 @@ abstract class DataContainer extends Backend
 			$paletteFields = array_intersect($postPaletteFields, $newPaletteFields);
 
 			// Deprecated since Contao 4.2, to be removed in Contao 5.0
-			if (!isset($_POST[$this->strInputName]) && \in_array($this->strInputName, $paletteFields))
+			if (Input::post($this->strInputName) === null && \in_array($this->strInputName, $paletteFields))
 			{
 				trigger_deprecation('contao/core-bundle', '4.2', 'Using $_POST[\'FORM_FIELDS\'] has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.');
 			}
@@ -637,7 +629,7 @@ abstract class DataContainer extends Backend
 
 		$hasWizardClass = \in_array('wizard', $arrClasses);
 
-		if ($wizard)
+		if ($wizard && !($arrData['eval']['disabled'] ?? false) && !($arrData['eval']['readonly'] ?? false))
 		{
 			$objWidget->wizard = $wizard;
 
@@ -695,7 +687,7 @@ abstract class DataContainer extends Backend
 			$objTemplate = new BackendTemplate('be_' . $file);
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
 			$objTemplate->type = $type;
-			$objTemplate->fileBrowserTypes = $fileBrowserTypes;
+			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
 
 			// Deprecated since Contao 4.0, to be removed in Contao 5.0
@@ -729,26 +721,7 @@ abstract class DataContainer extends Backend
 
 			if ($objFile->isImage)
 			{
-				$blnCanResize = true;
-
-				if ($objFile->isSvgImage)
-				{
-					// SVG images with undefined sizes cannot be resized
-					if (!$objFile->viewWidth || !$objFile->viewHeight)
-					{
-						$blnCanResize= false;
-					}
-				}
-				elseif (System::getContainer()->get('contao.image.imagine') instanceof Imagine)
-				{
-					// Check the maximum width and height if the GDlib is used to resize images
-					if ($objFile->height > Config::get('gdMaxImgHeight') || $objFile->width > Config::get('gdMaxImgWidth'))
-					{
-						$blnCanResize = false;
-					}
-				}
-
-				if ($blnCanResize)
+				if (!$objFile->isSvgImage || ($objFile->viewWidth && $objFile->viewHeight))
 				{
 					$container = System::getContainer();
 					$projectDir = $container->getParameter('kernel.project_dir');
@@ -845,9 +818,9 @@ abstract class DataContainer extends Backend
 	protected function switchToEdit($id)
 	{
 		$arrKeys = array();
-		$arrUnset = array('act', 'id', 'table', 'mode', 'pid');
+		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
-		foreach (array_keys($_GET) as $strKey)
+		foreach (Input::getKeys() as $strKey)
 		{
 			if (!\in_array($strKey, $arrUnset))
 			{
@@ -858,6 +831,32 @@ abstract class DataContainer extends Backend
 		$strUrl = TL_SCRIPT . '?' . implode('&', $arrKeys);
 
 		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+	}
+
+	/**
+	 * @throws AccessDeniedException
+	 */
+	protected function denyAccessUnlessGranted($attribute, $subject): void
+	{
+		$security = System::getContainer()->get('security.helper');
+
+		if ($security->isGranted($attribute, $subject))
+		{
+			return;
+		}
+
+		$message = 'Access denied.';
+
+		if ($subject instanceof DataContainerSubject)
+		{
+			$message = sprintf('Access denied to %s [%s].', $subject, $attribute);
+		}
+
+		$exception = new AccessDeniedException($message);
+		$exception->setAttributes($attribute);
+		$exception->setSubject($subject);
+
+		throw $exception;
 	}
 
 	/**
@@ -994,6 +993,8 @@ abstract class DataContainer extends Backend
 
 				continue;
 			}
+
+			trigger_deprecation('contao/core-bundle', '4.13', 'The DCA "move" operation is deprecated and will be removed in Contao 5.');
 
 			$arrDirections = array('up', 'down');
 			$arrRootIds = \is_array($arrRootIds) ? $arrRootIds : array($arrRootIds);
@@ -1340,7 +1341,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Reset all filters
-		if (isset($_POST['filter_reset']) && Input::post('FORM_SUBMIT') == 'tl_filters')
+		if (Input::post('filter_reset') !== null && Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
 			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
@@ -1612,24 +1613,10 @@ abstract class DataContainer extends Backend
 	 * @param string $table
 	 *
 	 * @return string
-	 *
-	 * @todo Change the return type to ?string in Contao 5.0
 	 */
-	public static function getDriverForTable(string $table): string
+	public static function getDriverForTable(string $table): string|null
 	{
-		if (!isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer']))
-		{
-			return '';
-		}
-
-		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
-
-		if (false === strpos($dataContainer, '\\'))
-		{
-			$dataContainer = 'DC_' . $dataContainer;
-		}
-
-		return $dataContainer;
+		return $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? null;
 	}
 
 	/**
@@ -1649,12 +1636,6 @@ abstract class DataContainer extends Backend
 
 		foreach ($labelConfig['fields'] as $k=>$v)
 		{
-			// Decrypt the value
-			if ($GLOBALS['TL_DCA'][$table]['fields'][$v]['eval']['encrypt'] ?? null)
-			{
-				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
-			}
-
 			if (strpos($v, ':') !== false)
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
@@ -1696,7 +1677,7 @@ abstract class DataContainer extends Backend
 
 					foreach ($row_v as $option)
 					{
-						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?: $option;
+						$args_k[] = $GLOBALS['TL_DCA'][$table]['fields'][$v]['reference'][$option] ?? $option;
 					}
 
 					$args[$k] = implode(', ', $args_k);
@@ -1785,5 +1766,3 @@ abstract class DataContainer extends Backend
 		return $label;
 	}
 }
-
-class_alias(DataContainer::class, 'DataContainer');

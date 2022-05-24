@@ -172,8 +172,6 @@ use Contao\Model\Collection;
  * @method static integer countByPublished($val, array $opt=array())
  * @method static integer countByStart($val, array $opt=array())
  * @method static integer countByStop($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class NewsModel extends Model
 {
@@ -426,5 +424,3 @@ class NewsModel extends Model
 		return static::countBy($arrColumns, array($intFrom, $intTo), $arrOptions);
 	}
 }
-
-class_alias(NewsModel::class, 'NewsModel');

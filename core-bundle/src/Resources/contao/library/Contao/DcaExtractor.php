@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
-
 /**
  * Extracts DCA information and cache it
  *
@@ -27,8 +25,6 @@ use Symfony\Component\Config\Exception\FileLocatorFileNotFoundException;
  *     {
  *         print_r($user->getRelations());
  *     }
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class DcaExtractor extends Controller
 {
@@ -91,12 +87,6 @@ class DcaExtractor extends Controller
 	 * @var boolean
 	 */
 	protected $blnIsDbTable = false;
-
-	/**
-	 * database.sql file paths
-	 * @var array|null
-	 */
-	private static $arrDatabaseSqlFiles;
 
 	/**
 	 * Load or create the extract
@@ -366,7 +356,7 @@ class DcaExtractor extends Controller
 	}
 
 	/**
-	 * Create the extract from the DCA or the database.sql files
+	 * Create the extract from the DCA files
 	 */
 	protected function createExtract()
 	{
@@ -386,18 +376,17 @@ class DcaExtractor extends Controller
 		}
 
 		// Return if the DC type is "File"
-		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null) == 'File')
+		if (is_a(DataContainer::getDriverForTable($this->strTable), DC_File::class, true))
 		{
 			return;
 		}
 
 		// Return if the DC type is "Folder" and the DC is not database assisted
-		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dataContainer'] ?? null) == 'Folder' && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
+		if (is_a(DataContainer::getDriverForTable($this->strTable), DC_Folder::class, true) && empty($GLOBALS['TL_DCA'][$this->strTable]['config']['databaseAssisted']))
 		{
 			return;
 		}
 
-		$blnFromFile = false;
 		$arrRelations = array();
 
 		// Check whether there are fields (see #4826)
@@ -405,12 +394,6 @@ class DcaExtractor extends Controller
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $field=>$config)
 			{
-				// Check whether all fields have an SQL definition
-				if (!\array_key_exists('sql', $config) && isset($config['inputType']))
-				{
-					$blnFromFile = true;
-				}
-
 				// Check whether there is a relation (see #6524)
 				if (isset($config['relation']))
 				{
@@ -440,81 +423,6 @@ class DcaExtractor extends Controller
 
 		$sql = $GLOBALS['TL_DCA'][$this->strTable]['config']['sql'] ?? array();
 		$fields = $GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array();
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($blnFromFile && !empty($files = $this->getDatabaseSqlFiles()))
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using "database.sql" files has been deprecated and will no longer work in Contao 5.0. Use a DCA file instead.');
-
-			if (!isset(static::$arrSql[$this->strTable]))
-			{
-				$arrSql = array();
-
-				foreach ($files as $file)
-				{
-					$arrSql = array_merge_recursive($arrSql, SqlFileParser::parse($file));
-				}
-
-				static::$arrSql = $arrSql;
-			}
-
-			$arrTable = static::$arrSql[$this->strTable];
-			$engine = null;
-			$charset = null;
-
-			if (isset($arrTable['TABLE_OPTIONS']))
-			{
-				if (\is_array($arrTable['TABLE_OPTIONS']))
-				{
-					$arrTable['TABLE_OPTIONS'] = $arrTable['TABLE_OPTIONS'][0]; // see #324
-				}
-
-				$chunks = explode(' ', trim($arrTable['TABLE_OPTIONS']));
-
-				if (isset($chunks[0]))
-				{
-					$engine = $chunks[0];
-				}
-
-				if (isset($chunks[2]))
-				{
-					$charset = $chunks[2];
-				}
-			}
-
-			if ($engine)
-			{
-				$sql['engine'] = str_replace('ENGINE=', '', $engine);
-			}
-
-			if ($charset)
-			{
-				$sql['charset'] = str_replace('CHARSET=', '', $charset);
-			}
-
-			// Fields
-			if (isset($arrTable['TABLE_FIELDS']))
-			{
-				foreach ($arrTable['TABLE_FIELDS'] as $k=>$v)
-				{
-					$fields[$k]['sql'] = str_replace('`' . $k . '` ', '', $v);
-				}
-			}
-
-			// Keys
-			if (isset($arrTable['TABLE_CREATE_DEFINITIONS']))
-			{
-				foreach ($arrTable['TABLE_CREATE_DEFINITIONS'] as $strKey)
-				{
-					if (preg_match('/^([A-Z]+ )?KEY .+\(([^)]+)\)$/', $strKey, $arrMatches) && preg_match_all('/`([^`]+)`/', $arrMatches[2], $arrFields))
-					{
-						$type = trim($arrMatches[1]);
-						$field = implode(',', $arrFields[1]);
-						$sql['keys'][$field] = $type ? strtolower($type) : 'index';
-					}
-				}
-			}
-		}
 
 		// Relations
 		if (!empty($arrRelations))
@@ -564,6 +472,7 @@ class DcaExtractor extends Controller
 			'collate' => $sql['collate']
 		);
 
+		// Fields
 		$this->arrFields = array();
 		$this->arrOrderFields = array();
 
@@ -606,25 +515,4 @@ class DcaExtractor extends Controller
 		$this->arrUniqueFields = array_unique($this->arrUniqueFields);
 		$this->blnIsDbTable = true;
 	}
-
-	private function getDatabaseSqlFiles(): array
-	{
-		if (null !== self::$arrDatabaseSqlFiles)
-		{
-			return self::$arrDatabaseSqlFiles;
-		}
-
-		try
-		{
-			$files = System::getContainer()->get('contao.resource_locator')->locate('config/database.sql', null, false);
-		}
-		catch (FileLocatorFileNotFoundException $e)
-		{
-			$files = array();
-		}
-
-		return self::$arrDatabaseSqlFiles = $files;
-	}
 }
-
-class_alias(DcaExtractor::class, 'DcaExtractor');

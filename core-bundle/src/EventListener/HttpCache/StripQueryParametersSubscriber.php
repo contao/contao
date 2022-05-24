@@ -47,13 +47,10 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         //  Urchin Tracking Module (UTM) parameters
         'utm_[a-z]+',
     ];
-
-    private array $allowList;
     private array $removeFromDenyList = [];
 
-    public function __construct(array $allowList = [])
+    public function __construct(private array $allowList = [])
     {
-        $this->allowList = $allowList;
     }
 
     public function getAllowList(): array
@@ -100,11 +97,7 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
         );
 
         // Do not remove params that match the allow list
-        $removeParams = preg_grep(
-            '/^(?:'.implode(')$|^(?:', $allowList).')$/i',
-            $removeParams,
-            PREG_GREP_INVERT
-        );
+        $removeParams = preg_grep('/^(?:'.implode(')$|^(?:', $allowList).')$/i', $removeParams, PREG_GREP_INVERT);
 
         foreach ($removeParams as $name) {
             $request->query->remove($name);

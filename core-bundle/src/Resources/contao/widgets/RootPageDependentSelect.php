@@ -29,7 +29,7 @@ class RootPageDependentSelect extends SelectMenu
 		$rootPages = $framework->getAdapter(PageModel::class)->findByType('root', array('order' => 'sorting'));
 		$wizard = StringUtil::deserialize($this->wizard);
 
-		$this->blankOptionLabel = $translator->trans(sprintf('tl_module.%sBlankOptionLabel', $this->name), array(), 'contao_module');
+		$this->blankOptionLabel = $translator->trans(sprintf('tl_module.%sBlankOptionLabel', $this->name), array(), 'contao_tl_module');
 
 		foreach ($rootPages as $rootPage)
 		{
@@ -55,7 +55,7 @@ class RootPageDependentSelect extends SelectMenu
 
 	protected function isSelected($arrOption): string
 	{
-		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
+		if (empty($this->varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
 		{
 			return ' selected';
 		}
@@ -84,7 +84,7 @@ class RootPageDependentSelect extends SelectMenu
 
 				$options[] = sprintf(
 					'<option value="%s"%s>%s</option>',
-					StringUtil::specialchars($option['value']),
+					self::specialcharsValue($option['value']),
 					$this->isSelected($option),
 					$option['label']
 				);

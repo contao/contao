@@ -45,22 +45,21 @@ class ResizeImagesCommand extends Command
     protected static $defaultName = 'contao:resize-images';
     protected static $defaultDescription = 'Resizes deferred images that have not been processed yet.';
 
-    private ImageFactoryInterface $imageFactory;
-    private ?DeferredResizerInterface $resizer;
-    private string $targetDir;
-    private DeferredImageStorageInterface $storage;
+    private DeferredResizerInterface|null $resizer;
     private Filesystem $filesystem;
     private int $terminalWidth;
-    private ?SymfonyStyle $io = null;
-    private ?ConsoleSectionOutput $tableOutput = null;
-    private ?Table $table = null;
+    private SymfonyStyle|null $io = null;
+    private ConsoleSectionOutput|null $tableOutput = null;
+    private Table|null $table = null;
 
-    public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, DeferredImageStorageInterface $storage, Filesystem $filesystem = null)
-    {
-        $this->imageFactory = $imageFactory;
+    public function __construct(
+        private ImageFactoryInterface $imageFactory,
+        ResizerInterface $resizer,
+        private string $targetDir,
+        private DeferredImageStorageInterface $storage,
+        Filesystem $filesystem = null,
+    ) {
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;
-        $this->targetDir = $targetDir;
-        $this->storage = $storage;
         $this->filesystem = $filesystem ?? new Filesystem();
         $this->terminalWidth = (new Terminal())->getWidth();
 
@@ -72,7 +71,6 @@ class ResizeImagesCommand extends Command
         $this
             ->addOption('time-limit', 'l', InputOption::VALUE_OPTIONAL, 'Time limit in seconds', '0')
             ->addOption('concurrent', 'c', InputOption::VALUE_OPTIONAL, 'Run multiple processes concurrently with a value larger than 1 or pause between resizes to limit CPU utilization with values lower than 1.0', '1')
-            ->addOption('throttle', 't', InputOption::VALUE_OPTIONAL, '(Deprecated) Use the concurrent option instead', false)
             ->addOption('image', null, InputArgument::OPTIONAL, 'Image name to resize a single image')
             ->addOption('no-sub-process', null, InputOption::VALUE_NONE, 'Do not start a sub process per resize')
             ->addOption('preserve-missing', null, InputOption::VALUE_NONE, 'Do not delete deferred image references to images that no longer exist')
@@ -98,19 +96,6 @@ class ResizeImagesCommand extends Command
         $timeLimit = (float) $input->getOption('time-limit');
         $concurrent = (float) $input->getOption('concurrent');
 
-        if (false !== $input->getOption('throttle')) {
-            trigger_deprecation('contao/core-bundle', '4.9', 'Using the throttle option is deprecated and will no longer work in Contao 5.0. Use the concurrent option instead.', E_USER_DEPRECATED);
-            $this->io->warning('Using the throttle option is deprecated, use the concurrent option instead.');
-
-            $throttle = (float) $input->getOption('throttle');
-
-            if ($throttle < 0.001 || $throttle > 1) {
-                throw new InvalidArgumentException(sprintf('Throttle value "%s" is invalid.', $throttle));
-            }
-
-            $concurrent *= $throttle;
-        }
-
         if ($timeLimit < 0) {
             throw new InvalidArgumentException(sprintf('Time-limit value "%s" is invalid.', $timeLimit));
         }
@@ -132,7 +117,7 @@ class ResizeImagesCommand extends Command
     private function resizeImage(string $path, bool $preserveMissing, bool $quiet = false): int
     {
         if ($this->filesystem->exists(Path::join($this->targetDir, $path))) {
-            return 0;
+            return Command::SUCCESS;
         }
 
         try {
@@ -159,14 +144,14 @@ class ResizeImagesCommand extends Command
                 $this->io->writeln('Image "'.$path.'" does not exist anymore, deleted deferred image reference');
             }
 
-            return 1;
+            return Command::FAILURE;
         }
 
         if (!$quiet) {
             $this->io->writeln('Image "'.$path.'" resized successfully');
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess, bool $preserveMissing): int
@@ -237,11 +222,11 @@ class ResizeImagesCommand extends Command
             if (0 !== $failedCount && $count - $failedCount <= 0) {
                 $this->io->error('No image could be resized successfully.');
 
-                return 1;
+                return Command::FAILURE;
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function executeConcurrent(float $timeLimit, float $concurrent): int
@@ -331,10 +316,10 @@ class ResizeImagesCommand extends Command
         if (0 !== $failedCount && $count - $failedCount <= 0) {
             $this->io->error('No image could be resized successfully.');
 
-            return 1;
+            return Command::FAILURE;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function updateOutput(array $processes, array $counts, array $paths): void

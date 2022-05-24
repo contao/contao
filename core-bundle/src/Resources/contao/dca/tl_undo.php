@@ -13,6 +13,7 @@ use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\DataContainer;
+use Contao\DC_Table;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
@@ -22,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 	// Config
 	'config' => array
 	(
-		'dataContainer'               => 'Table',
+		'dataContainer'               => DC_Table::class,
 		'closed'                      => true,
 		'notEditable'                 => true,
 		'sql' => array
@@ -125,7 +126,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @internal
  */
 class tl_undo extends Backend
 {

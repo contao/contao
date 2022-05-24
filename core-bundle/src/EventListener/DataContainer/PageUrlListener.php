@@ -35,23 +35,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PageUrlListener
 {
-    private ContaoFramework $framework;
-    private Slug $slug;
-    private TranslatorInterface $translator;
-    private Connection $connection;
-    private PageRegistry $pageRegistry;
-    private UrlGeneratorInterface $urlGenerator;
-    private FinalMatcherInterface $routeMatcher;
-
-    public function __construct(ContaoFramework $framework, Slug $slug, TranslatorInterface $translator, Connection $connection, PageRegistry $pageRegistry, UrlGeneratorInterface $urlGenerator, FinalMatcherInterface $routeMatcher)
-    {
-        $this->framework = $framework;
-        $this->slug = $slug;
-        $this->translator = $translator;
-        $this->connection = $connection;
-        $this->pageRegistry = $pageRegistry;
-        $this->urlGenerator = $urlGenerator;
-        $this->routeMatcher = $routeMatcher;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Slug $slug,
+        private TranslatorInterface $translator,
+        private Connection $connection,
+        private PageRegistry $pageRegistry,
+        private UrlGeneratorInterface $urlGenerator,
+        private FinalMatcherInterface $routeMatcher,
+    ) {
     }
 
     /**
@@ -143,12 +135,8 @@ class PageUrlListener
 
     /**
      * @Callback(table="tl_page", target="fields.urlSuffix.save")
-     *
-     * @param mixed $value
-     *
-     * @return mixed
      */
-    public function validateUrlSuffix($value, DataContainer $dc)
+    public function validateUrlSuffix(mixed $value, DataContainer $dc): mixed
     {
         if ('root' !== $dc->activeRecord->type || $dc->activeRecord->urlSuffix === $value) {
             return $value;
@@ -201,8 +189,8 @@ class PageUrlListener
      */
     private function aliasExists(string $currentAlias, PageModel $currentPage, bool $throw = false): bool
     {
-        // We can safely modify the page model since `loadDetails` detaches it
-        // from the registry and calls `preventSaving()`
+        // We can safely modify the page model since loadDetails() detaches it
+        // from the registry and calls preventSaving()
         $currentPage->loadDetails();
         $currentPage->alias = $currentAlias;
 
@@ -215,7 +203,7 @@ class PageUrlListener
                 [RouteObjectInterface::ROUTE_OBJECT => $currentRoute],
                 UrlGeneratorInterface::ABSOLUTE_URL
             );
-        } catch (RouteParametersException $e) {
+        } catch (RouteParametersException) {
             // This route has mandatory parameters, only match exact path with placeholders
             $currentUrl = null;
         }
@@ -244,7 +232,7 @@ class PageUrlListener
 
             // Even if we cannot generate the path because of parameter requirements,
             // two pages can never have the same path AND the same requirements. This
-            // could be two regular pages with same alias and  `requireItem` enabled.
+            // could be two regular pages with same alias and "requireItem" enabled.
             if (
                 null === $currentUrl
                 && $currentRoute->getPath() === $aliasRoute->getPath()
@@ -268,7 +256,7 @@ class PageUrlListener
 
         try {
             $this->routeMatcher->finalMatch($routeCollection, $request);
-        } catch (ResourceNotFoundException $exception) {
+        } catch (ResourceNotFoundException) {
             return false;
         }
 

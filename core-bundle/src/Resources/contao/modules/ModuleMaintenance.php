@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Back end module "maintenance".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleMaintenance extends BackendModule
 {
@@ -58,5 +56,3 @@ class ModuleMaintenance extends BackendModule
 		}
 	}
 }
-
-class_alias(ModuleMaintenance::class, 'ModuleMaintenance');

@@ -128,50 +128,6 @@ class PageModelTest extends TestCase
 
     /**
      * @group legacy
-     */
-    public function testFindPublishedSubpagesWithoutGuestsByPid(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: %sfindPublishedSubpagesWithoutGuestsByPid() has been deprecated%s');
-
-        $databaseResultData = [
-            ['id' => '1', 'alias' => 'alias1', 'subpages' => '0'],
-            ['id' => '2', 'alias' => 'alias2', 'subpages' => '3'],
-            ['id' => '3', 'alias' => 'alias3', 'subpages' => '42'],
-        ];
-
-        $statement = $this->createMock(Statement::class);
-        $statement
-            ->method('execute')
-            ->willReturn(new Result($databaseResultData, ''))
-        ;
-
-        $database = $this->createMock(Database::class);
-        $database
-            ->expects($this->once())
-            ->method('prepare')
-            ->willReturn($statement)
-        ;
-
-        $this->mockDatabase($database);
-
-        $pages = PageModel::findPublishedSubpagesWithoutGuestsByPid(1);
-
-        $this->assertInstanceOf(Collection::class, $pages);
-        $this->assertCount(3, $pages);
-
-        $this->assertSame($databaseResultData[0]['id'], $pages->offsetGet(0)->id);
-        $this->assertSame($databaseResultData[0]['alias'], $pages->offsetGet(0)->alias);
-        $this->assertSame($databaseResultData[0]['subpages'], $pages->offsetGet(0)->subpages);
-        $this->assertSame($databaseResultData[1]['id'], $pages->offsetGet(1)->id);
-        $this->assertSame($databaseResultData[1]['alias'], $pages->offsetGet(1)->alias);
-        $this->assertSame($databaseResultData[1]['subpages'], $pages->offsetGet(1)->subpages);
-        $this->assertSame($databaseResultData[2]['id'], $pages->offsetGet(2)->id);
-        $this->assertSame($databaseResultData[2]['alias'], $pages->offsetGet(2)->alias);
-        $this->assertSame($databaseResultData[2]['subpages'], $pages->offsetGet(2)->subpages);
-    }
-
-    /**
-     * @group legacy
      * @dataProvider similarAliasProvider
      */
     public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
@@ -341,11 +297,9 @@ class PageModelTest extends TestCase
     }
 
     /**
-     * @param bool|string $expectedLayout
-     *
      * @dataProvider layoutInheritanceParentPagesProvider
      */
-    public function testInheritingLayoutFromParentsInLoadDetails(array $parents, $expectedLayout): void
+    public function testInheritingLayoutFromParentsInLoadDetails(array $parents, bool|string $expectedLayout): void
     {
         $page = new PageModel();
         $page->pid = 42;
@@ -421,7 +375,6 @@ class PageModelTest extends TestCase
     private function mockDatabase(Database $database): void
     {
         $property = (new \ReflectionClass($database))->getProperty('arrInstances');
-        $property->setAccessible(true);
         $property->setValue([md5(implode('', [])) => $database]);
 
         $this->assertSame($database, Database::getInstance());

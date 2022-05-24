@@ -30,7 +30,6 @@ use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException;
 use Imagine\Gd\Imagine;
-use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
@@ -59,7 +58,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
     public function prepend(ContainerBuilder $container): void
     {
         $configuration = new Configuration((string) $container->getParameter('kernel.project_dir'));
-        $config = $this->processConfiguration($configuration, $container->getExtensionConfig($this->getAlias()));
+
+        $config = $container->getExtensionConfig($this->getAlias());
+        $config = $container->getParameterBag()->resolveValue($config);
+        $config = $this->processConfiguration($configuration, $config);
 
         // Prepend the backend route prefix to make it available for third-party bundle configuration
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
@@ -99,8 +101,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('migrations.yml');
         $loader->load('services.yml');
 
-        // TODO: Replace "?? $config['web_dir']" with "?? Path::join($projectDir, 'public')" in Contao 5 (see #3535)
-        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? $config['web_dir']);
+        $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.upload_path', $config['upload_path']);
         $container->setParameter('contao.editable_files', $config['editable_files']);
         $container->setParameter('contao.preview_script', $config['preview_script']);
@@ -134,9 +135,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setImagineService($config, $container);
-        $this->overwriteImageTargetDir($config, $container);
-        $this->handleTokenCheckerConfig($config, $container);
-        $this->handleLegacyRouting($config, $configs, $container, $loader);
+        $this->handleTokenCheckerConfig($container);
         $this->handleBackup($config, $container);
         $this->handleFallbackPreviewProvider($config, $container);
 
@@ -190,6 +189,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                 }
             );
         }
+
+        if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
+            $loader->load('services_debug.yml');
+        }
     }
 
     public function configureFilesystem(FilesystemConfiguration $config): void
@@ -197,9 +200,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         // User uploads
         $filesStorageName = 'files';
 
-        // TODO: Deprecate the 'contao.upload_path' config key. In the next
-        // major version, $uploadPath can then be replaced with 'files' and the
-        // redundant 'files' attribute removed when mounting the local adapter.
+        // TODO: Deprecate the "contao.upload_path" config key. In the next
+        // major version, $uploadPath can then be replaced with "files" and the
+        // redundant "files" attribute removed when mounting the local adapter.
         $uploadPath = $config->getContainer()->getParameterBag()->resolveValue('%contao.upload_path%');
 
         $config
@@ -285,7 +288,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $imageSizes = [];
 
-        // Do not add a size with the special name '_defaults' but merge its values into all other definitions instead.
+        // Do not add a size with the special name "_defaults" but merge its values into all other definitions instead.
         foreach ($config['image']['sizes'] as $name => $value) {
             if ('_defaults' === $name) {
                 continue;
@@ -361,7 +364,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             // Will throw an exception if the PHP implementation is not available
             try {
                 new $class();
-            } catch (RuntimeException $e) {
+            } catch (RuntimeException) {
                 continue;
             }
 
@@ -371,24 +374,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         return Imagine::class; // see #616
     }
 
-    /**
-     * Reads the old contao.image.target_path parameter.
-     */
-    private function overwriteImageTargetDir(array $config, ContainerBuilder $container): void
-    {
-        if (!isset($config['image']['target_path'])) {
-            return;
-        }
-
-        $container->setParameter(
-            'contao.image.target_dir',
-            Path::join($container->getParameter('kernel.project_dir'), $config['image']['target_path'])
-        );
-
-        trigger_deprecation('contao/core-bundle', '4.4', 'Using the "contao.image.target_path" parameter has been deprecated and will no longer work in Contao 5.0. Use the "contao.image.target_dir" parameter instead.');
-    }
-
-    private function handleTokenCheckerConfig(array $config, ContainerBuilder $container): void
+    private function handleTokenCheckerConfig(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('contao.security.token_checker')) {
             return;
@@ -432,30 +418,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->removeDefinition('contao.image.fallback_preview_provider');
     }
 
-    private function handleLegacyRouting(array $mergedConfig, array $configs, ContainerBuilder $container, YamlFileLoader $loader): void
-    {
-        if (false === $mergedConfig['legacy_routing']) {
-            foreach ($configs as $config) {
-                if (isset($config['prepend_locale'])) {
-                    throw new InvalidConfigurationException('Setting contao.prepend_locale to "'.var_export($config['prepend_locale'], true).'" requires legacy routing.');
-                }
-
-                if (isset($config['url_suffix'])) {
-                    throw new InvalidConfigurationException('Setting contao.url_suffix to "'.$config['url_suffix'].'" requires legacy routing.');
-                }
-            }
-        }
-
-        $container->setParameter('contao.legacy_routing', $mergedConfig['legacy_routing']);
-        $container->setParameter('contao.prepend_locale', $mergedConfig['prepend_locale']);
-        $container->setParameter('contao.url_suffix', $mergedConfig['url_suffix']);
-
-        if ($mergedConfig['legacy_routing']) {
-            $loader->load('legacy_routing.yml');
-        }
-    }
-
-    private function getComposerPublicDir(string $projectDir): ?string
+    private function getComposerPublicDir(string $projectDir): string|null
     {
         $fs = new Filesystem();
 

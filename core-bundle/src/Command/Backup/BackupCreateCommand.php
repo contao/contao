@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -23,7 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class BackupCreateCommand extends AbstractBackupCommand
 {
     protected static $defaultName = 'contao:backup:create';
-    protected static $defaultDescription = 'Creates a new backup.';
+    protected static $defaultDescription = 'Creates a new database backup.';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -41,17 +42,17 @@ class BackupCreateCommand extends AbstractBackupCommand
                 $io->error($e->getMessage());
             }
 
-            return 1;
+            return Command::FAILURE;
         }
 
         if ($this->isJson($input)) {
             $io->writeln(json_encode($config->getBackup()->toArray()));
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $io->success(sprintf('Successfully created SQL dump "%s".', $config->getBackup()->getFilename()));
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

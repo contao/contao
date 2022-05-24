@@ -17,8 +17,6 @@ use Symfony\Component\Console\Output\NullOutput;
 
 /**
  * Provide methods to run automated jobs.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Automator extends System
 {
@@ -164,10 +162,6 @@ class Automator extends System
 			$objFolder->purge();
 		}
 
-		// Recreate the internal style sheets
-		$this->import(StyleSheets::class, 'StyleSheets');
-		$this->StyleSheets->updateStyleSheets();
-
 		// Also empty the shared cache so there are no links to deleted scripts
 		$this->purgePageCache();
 
@@ -204,23 +198,6 @@ class Automator extends System
 	}
 
 	/**
-	 * Purge the search cache
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0.
-	 */
-	public function purgeSearchCache()
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\Automator::purgeSearchCache()" has been deprecated and will no longer work in Contao 5.0.');
-
-		$strCacheDir = StringUtil::stripRootDir(System::getContainer()->getParameter('kernel.cache_dir'));
-
-		$objFolder = new Folder($strCacheDir . '/contao/search');
-		$objFolder->purge();
-
-		System::getContainer()->get('monolog.logger.contao.cron')->info('Purged the search cache');
-	}
-
-	/**
 	 * Purge the internal cache
 	 */
 	public function purgeInternalCache()
@@ -247,9 +224,14 @@ class Automator extends System
 
 	/**
 	 * Purge registrations that have not been activated within 24 hours
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 *             Use MemberModel::findExpiredRegistrations() instead.
 	 */
 	public function purgeRegistrations()
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use MemberModel::findExpiredRegistrations() instead.', __METHOD__);
+
 		$objMember = MemberModel::findExpiredRegistrations();
 
 		if ($objMember === null)
@@ -267,9 +249,14 @@ class Automator extends System
 
 	/**
 	 * Purge opt-in tokens
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 *             Use the "contao.opt_in" service instead.
 	 */
 	public function purgeOptInTokens()
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use the "contao.opt_in" service instead.', __METHOD__);
+
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optIn->purgeTokens();
 
@@ -403,53 +390,4 @@ class Automator extends System
 
 		System::getContainer()->get('monolog.logger.contao.cron')->info('Generated the internal cache');
 	}
-
-	/**
-	 * Rotate the log files
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use the logger service instead, which rotates its log files automatically.
-	 */
-	public function rotateLogs()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Automator::rotateLogs()" has been deprecated and will no longer work in Contao 5.0. Use the logger service instead, which rotates its log files automatically.');
-
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-		$arrFiles = preg_grep('/\.log$/', Folder::scan($projectDir . '/system/logs'));
-
-		foreach ($arrFiles as $strFile)
-		{
-			// Ignore Monolog log files (see #2579)
-			if (preg_match('/-\d{4}-\d{2}-\d{2}\.log$/', $strFile))
-			{
-				continue;
-			}
-
-			$objFile = new File('system/logs/' . $strFile . '.9');
-
-			// Delete the oldest file
-			if ($objFile->exists())
-			{
-				$objFile->delete();
-			}
-
-			// Rotate the files (e.g. error.log.4 becomes error.log.5)
-			for ($i=8; $i>0; $i--)
-			{
-				$strGzName = 'system/logs/' . $strFile . '.' . $i;
-
-				if (file_exists($projectDir . '/' . $strGzName))
-				{
-					$objFile = new File($strGzName);
-					$objFile->renameTo('system/logs/' . $strFile . '.' . ($i+1));
-				}
-			}
-
-			// Add .1 to the latest file
-			$objFile = new File('system/logs/' . $strFile);
-			$objFile->renameTo('system/logs/' . $strFile . '.1');
-		}
-	}
 }
-
-class_alias(Automator::class, 'Automator');

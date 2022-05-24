@@ -30,7 +30,7 @@ use Symfony\Component\VarDumper\VarDumper;
  *
  *     $template = new BackendTemplate();
  *     $template->name = 'Leo Feyer';
- *     $template->output();
+ *     $template->getResponse();
  *
  * @property string       $style
  * @property array|string $cssID
@@ -63,7 +63,8 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property array        $trustedDevices
  * @property string       $currentDevice
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0;
+ *             use Twig templates instead
  */
 abstract class Template extends Controller
 {
@@ -252,19 +253,6 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Print all template variables to the screen using print_r
-	 *
-	 * @deprecated Deprecated since Contao 4.3, to be removed in Contao 5.
-	 *             Use Template::dumpTemplateVars() instead.
-	 */
-	public function showTemplateVars()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::showTemplateVars()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::dumpTemplateVars()" instead.');
-
-		$this->dumpTemplateVars();
-	}
-
-	/**
 	 * Print all template variables to the screen using the Symfony VarDumper component
 	 */
 	public function dumpTemplateVars()
@@ -295,23 +283,6 @@ abstract class Template extends Controller
 		}
 
 		return $this->inherit();
-	}
-
-	/**
-	 * Parse the template file and print it to the screen
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Template::getResponse() instead.
-	 */
-	public function output()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::output()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::getResponse()" instead.');
-
-		$this->compile();
-
-		header('Content-Type: ' . $this->strContentType . '; charset=' . System::getContainer()->getParameter('kernel.charset'));
-
-		echo $this->strBuffer;
 	}
 
 	/**
@@ -515,16 +486,6 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Return the debug bar string
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	protected function getDebugBar()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::getDebugBar()" has been deprecated and will no longer work in Contao 5.0.');
-	}
-
-	/**
 	 * Minify the HTML markup preserving pre, script, style and textarea tags
 	 *
 	 * @param string $strHtml The HTML markup
@@ -685,10 +646,11 @@ abstract class Template extends Controller
 	 * @param string|null $hash           An optional integrity hash
 	 * @param string|null $crossorigin    An optional crossorigin attribute
 	 * @param string|null $referrerpolicy An optional referrerpolicy attribute
+	 * @param boolean     $defer          True to add the defer attribute
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null, $referrerpolicy=null)
+	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null, $referrerpolicy=null, $defer=false)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $src))
@@ -717,7 +679,7 @@ abstract class Template extends Controller
 			$src .= '?v=' . substr(md5($mtime), 0, 8);
 		}
 
-		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . ($referrerpolicy ? ' referrerpolicy="' . $referrerpolicy . '"' : '') . '></script>';
+		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . ($referrerpolicy ? ' referrerpolicy="' . $referrerpolicy . '"' : '') . ($defer ? ' defer' : '') . '></script>';
 	}
 
 	/**
@@ -745,33 +707,4 @@ abstract class Template extends Controller
 	{
 		return '<link type="application/' . $format . '+xml" rel="alternate" href="' . $href . '" title="' . StringUtil::specialchars($title) . '">';
 	}
-
-	/**
-	 * Flush the output buffers
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	public function flushAllData()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::flushAllData()" has been deprecated and will no longer work in Contao 5.0.');
-
-		if (\function_exists('fastcgi_finish_request'))
-		{
-			fastcgi_finish_request();
-		}
-		elseif (\PHP_SAPI !== 'cli')
-		{
-			$status = ob_get_status(true);
-			$level = \count($status);
-
-			while ($level-- > 0 && (!empty($status[$level]['del']) || (isset($status[$level]['flags']) && ($status[$level]['flags'] & PHP_OUTPUT_HANDLER_REMOVABLE) && ($status[$level]['flags'] & PHP_OUTPUT_HANDLER_FLUSHABLE))))
-			{
-				ob_end_flush();
-			}
-
-			flush();
-		}
-	}
 }
-
-class_alias(Template::class, 'Template');

@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\ManagerBundle\Tests\DependencyInjection;
+namespace Contao\ManagerBundle\Tests\DependencyInjection\Compiler;
 
 use Contao\ManagerBundle\DependencyInjection\Compiler\ContaoManagerPass;
 use Contao\TestCase\ContaoTestCase;

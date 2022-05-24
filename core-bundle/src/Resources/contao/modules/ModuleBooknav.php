@@ -14,8 +14,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 
 /**
  * Front end module "book navigation".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleBooknav extends Module
 {
@@ -47,7 +45,7 @@ class ModuleBooknav extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -201,13 +199,6 @@ class ModuleBooknav extends Module
 		{
 			$objPage->loadDetails();
 
-			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objPage->guests && !$objPage->protected && $isMember)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				continue;
-			}
-
 			// PageModel->groups is an array after calling loadDetails()
 			if (!$objPage->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups))
 			{
@@ -221,5 +212,3 @@ class ModuleBooknav extends Module
 		}
 	}
 }
-
-class_alias(ModuleBooknav::class, 'ModuleBooknav');

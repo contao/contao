@@ -8,15 +8,15 @@
   </tr>
   <tr>
     <?php foreach ($this->days as $day): ?>
-      <th class="label<?= $day['class'] ?>"><?= mb_substr($day['name'], 0, $this->substr) ?><span><?= mb_substr($day['name'], $this->substr) ?></span></th>
+      <th class="label<?= $day['class'] ?>"><?= $day['name'] ?></th>
     <?php endforeach; ?>
   </tr>
 </thead>
 <tbody>
-  <?php foreach ($this->weeks as $class => $week): ?>
-    <tr class="<?= $class ?>">
+  <?php foreach ($this->weeks as $week): ?>
+    <tr>
       <?php foreach ($week as $day): ?>
-        <td class="<?= $day['class'] ?>">
+        <td<?php if (!empty($day['class'])): ?> class="<?= $day['class'] ?>"<?php endif; ?>>
           <div class="header"><?= $day['label'] ?></div>
           <?php foreach ($day['events'] as $event): ?>
             <div class="event cal_<?= $event['parent'] ?><?= $event['class'] ?>">

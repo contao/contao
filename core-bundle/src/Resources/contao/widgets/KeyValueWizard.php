@@ -14,8 +14,6 @@ namespace Contao;
  * Provide methods to handle key value pairs.
  *
  * @property integer $maxlength
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class KeyValueWizard extends Widget
 {
@@ -128,8 +126,8 @@ class KeyValueWizard extends Widget
 		{
 			$return .= '
     <tr>
-      <td><input type="text" name="' . $this->strId . '[' . $i . '][key]" id="' . $this->strId . '_key_' . $i . '" class="tl_text" value="' . StringUtil::specialchars($this->varValue[$i]['key'] ?? '') . '"' . $this->getAttributes() . '></td>
-      <td><input type="text" name="' . $this->strId . '[' . $i . '][value]" id="' . $this->strId . '_value_' . $i . '" class="tl_text" value="' . StringUtil::specialchars($this->varValue[$i]['value'] ?? '') . '"' . $this->getAttributes() . '></td>';
+      <td><input type="text" name="' . $this->strId . '[' . $i . '][key]" id="' . $this->strId . '_key_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['key'] ?? '') . '"' . $this->getAttributes() . '></td>
+      <td><input type="text" name="' . $this->strId . '[' . $i . '][value]" id="' . $this->strId . '_value_' . $i . '" class="tl_text" value="' . self::specialcharsValue($this->varValue[$i]['value'] ?? '') . '"' . $this->getAttributes() . '></td>';
 
 			// Add row buttons
 			$return .= '
@@ -157,5 +155,3 @@ class KeyValueWizard extends Widget
   <script>Backend.keyValueWizard("ctrl_' . $this->strId . '")</script>';
 	}
 }
-
-class_alias(KeyValueWizard::class, 'KeyValueWizard');

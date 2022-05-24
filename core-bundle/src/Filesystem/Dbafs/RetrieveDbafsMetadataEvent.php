@@ -12,14 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
-use Contao\CoreBundle\Event\AbstractDbafsMetadataEvent;
-
 class RetrieveDbafsMetadataEvent extends AbstractDbafsMetadataEvent
 {
-    /**
-     * @param mixed $metadataValue
-     */
-    public function set(string $metadataKey, $metadataValue): void
+    public function set(string $metadataKey, mixed $metadataValue): void
     {
         $this->extraMetadata[$metadataKey] = $metadataValue;
     }

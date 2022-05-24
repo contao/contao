@@ -19,8 +19,6 @@ use Doctrine\DBAL\Types\Types;
 
 /**
  * Provide methods to handle versioning.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Versions extends Controller
 {
@@ -218,6 +216,8 @@ class Versions extends Controller
 			$strDescription = $data['subject'];
 		}
 
+		$strDescription = mb_substr($strDescription, 0, System::getContainer()->get('database_connection')->getSchemaManager()->listTableColumns('tl_version')['description']->getLength());
+
 		$intId = $this->Database->prepare("INSERT INTO tl_version (pid, tstamp, version, fromTable, username, userid, description, editUrl, active, data) VALUES (?, ?, IFNULL((SELECT MAX(version) FROM (SELECT version FROM tl_version WHERE pid=? AND fromTable=?) v), 0) + 1, ?, ?, ?, ?, ?, 1, ?)")
 								->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
 								->insertId;
@@ -338,25 +338,6 @@ class Versions extends Controller
 			}
 		}
 
-		// Trigger the deprecated onrestore_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback'] ?? null))
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "onrestore_callback" has been deprecated and will no longer work in Contao 5.0. Use the "onrestore_version_callback" instead.');
-
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onrestore_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->intPid, $this->strTable, $data, $intVersion);
-				}
-				elseif (\is_callable($callback))
-				{
-					$callback($this->intPid, $this->strTable, $data, $intVersion);
-				}
-			}
-		}
-
 		System::getContainer()->get('monolog.logger.contao.general')->info('Version ' . $intVersion . ' of record "' . $this->strTable . '.id=' . $this->intPid . '" has been restored' . $this->getParentEntries($this->strTable, $this->intPid));
 	}
 
@@ -467,13 +448,6 @@ class Versions extends Controller
 						else
 						{
 							$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
-						}
-
-						// Decrypt the values
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['encrypt'] ?? null)
-						{
-							$to[$k] = Encryption::decrypt($to[$k]);
-							$from[$k] = Encryption::decrypt($from[$k]);
 						}
 
 						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null) || \in_array($k, $arrOrderFields))
@@ -713,14 +687,10 @@ class Versions extends Controller
 			$arrVersions[] = $arrRow;
 		}
 
-		$intCount = -1;
 		$arrVersions = array_values($arrVersions);
 
-		// Add the "even" and "odd" classes
 		foreach ($arrVersions as $k=>$v)
 		{
-			$arrVersions[$k]['class'] = (++$intCount % 2 == 0) ? 'even' : 'odd';
-
 			try
 			{
 				// Mark deleted versions (see #4336)
@@ -732,14 +702,12 @@ class Versions extends Controller
 			catch (\Exception $e)
 			{
 				// Probably a disabled module
-				--$intCount;
 				unset($arrVersions[$k]);
 			}
 
 			// Skip deleted files (see #8480)
 			if (($v['fromTable'] ?? null) == 'tl_files' && ($arrVersions[$k]['deleted'] ?? null))
 			{
-				--$intCount;
 				unset($arrVersions[$k]);
 			}
 		}
@@ -759,32 +727,36 @@ class Versions extends Controller
 			return sprintf($this->strEditUrl, $this->intPid);
 		}
 
-		$strUrl = Environment::get('request');
+		$pairs = array();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		// Save the real edit URL if the visibility is toggled via Ajax
-		if (preg_match('/&(amp;)?state=/', $strUrl))
-		{
-			$strUrl = preg_replace
-			(
-				array('/&(amp;)?id=[^&]+/', '/(&(amp;)?)t(id=[^&]+)/', '/(&(amp;)?)state=[^&]*/'),
-				array('', '$1$3', '$1act=edit'),
-				$strUrl
-			);
-		}
+		parse_str($request->server->get('QUERY_STRING'), $pairs);
 
 		// Adjust the URL of the "personal data" module (see #7987)
-		if (preg_match('/do=login(&|$)/', $strUrl))
+		if (isset($pairs['do']) && $pairs['do'] == 'login')
 		{
-			$this->import(BackendUser::class, 'User');
-
-			$strUrl = preg_replace('/do=login(&|$)/', 'do=user$1', $strUrl);
-			$strUrl .= '&amp;act=edit&amp;id=' . $this->User->id . '&amp;rt=' . REQUEST_TOKEN;
+			$pairs['do'] = 'user';
+			$pairs['id'] = BackendUser::getInstance()->id;
+			$pairs['rt'] = REQUEST_TOKEN;
 		}
 
-		// Correct the URL in "edit|override multiple" mode (see #7745)
-		$strUrl = preg_replace('/act=(edit|override)All/', 'act=edit&id=' . $this->intPid, $strUrl);
+		if (isset($pairs['act']))
+		{
+			// Save the real edit URL if the visibility is toggled via Ajax
+			if ($pairs['act'] == 'toggle')
+			{
+				$pairs['act'] = 'edit';
+			}
 
-		return $strUrl;
+			// Correct the URL in "edit|override multiple" mode (see #7745)
+			if ($pairs['act'] == 'editAll' || $pairs['act'] == 'overrideAll')
+			{
+				$pairs['act'] = 'edit';
+				$pairs['id'] = $this->intPid;
+			}
+		}
+
+		return ltrim($request->getPathInfo(), '/') . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 	}
 
 	/**
@@ -856,5 +828,3 @@ class Versions extends Controller
 		return trim($buffer);
 	}
 }
-
-class_alias(Versions::class, 'Versions');

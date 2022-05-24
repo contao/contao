@@ -18,8 +18,6 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * Front end module "newsletter reader".
  *
  * @property array $nl_channels
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleNewsletterReader extends Module
 {
@@ -45,21 +43,9 @@ class ModuleNewsletterReader extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
-		}
-
-		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
-		{
-			Input::setGet('items', Input::get('auto_item'));
-		}
-
-		// Return an empty string if "items" is not set (to combine list and reader on same page)
-		if (!Input::get('items'))
-		{
-			return '';
 		}
 
 		$this->nl_channels = StringUtil::deserialize($this->nl_channels);
@@ -84,15 +70,8 @@ class ModuleNewsletterReader extends Module
 			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['nl_overview'];
 		}
-		else
-		{
-			trigger_deprecation('contao/newsletter-bundle', '4.13', 'If you do not select an overview page in the newsletter reader module, the "go back" link will no longer be shown in Contao 5.0.');
 
-			$this->Template->referer = 'javascript:history.go(-1)';
-			$this->Template->back = $GLOBALS['TL_LANG']['MSC']['goBack'];
-		}
-
-		$objNewsletter = NewsletterModel::findSentByParentAndIdOrAlias(Input::get('items'), $this->nl_channels);
+		$objNewsletter = NewsletterModel::findSentByParentAndIdOrAlias(Input::get('auto_item'), $this->nl_channels);
 
 		if (null === $objNewsletter)
 		{
@@ -148,5 +127,3 @@ class ModuleNewsletterReader extends Module
 		}
 	}
 }
-
-class_alias(ModuleNewsletterReader::class, 'ModuleNewsletterReader');

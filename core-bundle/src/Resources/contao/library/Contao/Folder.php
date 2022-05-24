@@ -30,8 +30,6 @@ namespace Contao;
  * @property string  $path     The folder path
  * @property string  $value    Alias of $path
  * @property integer $size     The folder size
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class Folder extends System
 {
@@ -197,19 +195,6 @@ class Folder extends System
 
 			Dbafs::updateFolderHashes($this->strFolder);
 		}
-	}
-
-	/**
-	 * Purge the folder
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use $this->purge() instead.
-	 */
-	public function clear()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Folder->clear()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Folder->purge()" instead.');
-
-		$this->purge();
 	}
 
 	/**
@@ -607,5 +592,3 @@ class Folder extends System
 		return $arrReturn;
 	}
 }
-
-class_alias(Folder::class, 'Folder');

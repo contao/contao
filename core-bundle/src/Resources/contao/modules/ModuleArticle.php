@@ -24,13 +24,10 @@ use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
  * @property string  $teaser
  * @property string  $teaserCssID
  * @property string  $classes
- * @property string  $keywords
  * @property boolean $printable
  * @property boolean $published
  * @property integer $start
  * @property integer $stop
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleArticle extends Module
 {
@@ -122,10 +119,7 @@ class ModuleArticle extends Module
 
 		// Add the modification date
 		$this->Template->timestamp = $this->tstamp;
-		$this->Template->date = Date::parse($objPage->datimFormat, $this->tstamp);
-
-		// Clean the RTE output
-		$this->teaser = StringUtil::toHtml5($this->teaser ?? '');
+		$this->Template->date = Date::parse($objPage->datimFormat ?? Config::get('datimFormat'), $this->tstamp);
 
 		// Show the teaser only
 		if ($this->multiMode && $this->showTeaser)
@@ -150,7 +144,7 @@ class ModuleArticle extends Module
 			$this->Template->teaserOnly = true;
 			$this->Template->headline = $this->headline;
 			$this->Template->href = $objPage->getFrontendUrl($href);
-			$this->Template->teaser = $this->teaser;
+			$this->Template->teaser = $this->teaser ?? '';
 			$this->Template->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline), true);
 			$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
 
@@ -205,12 +199,6 @@ class ModuleArticle extends Module
 
 		$this->Template->teaser = $this->teaser;
 		$this->Template->elements = $arrElements;
-
-		// Backwards compatibility
-		if ($this->keywords)
-		{
-			$GLOBALS['TL_KEYWORDS'] .= ($GLOBALS['TL_KEYWORDS'] ? ', ' : '') . $this->keywords;
-		}
 
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		if ($this->printable == 1)
@@ -310,5 +298,3 @@ class ModuleArticle extends Module
 		return array();
 	}
 }
-
-class_alias(ModuleArticle::class, 'ModuleArticle');

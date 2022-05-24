@@ -15,8 +15,6 @@ namespace Contao;
  *
  * @property integer $maxlength
  * @property array   $options
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class TrblField extends Widget
 {
@@ -94,7 +92,7 @@ class TrblField extends Widget
 	 */
 	protected function isSelected($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
+		if (empty($this->varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
 		{
 			return $this->optionSelected(1, 1);
 		}
@@ -120,7 +118,7 @@ class TrblField extends Widget
 		{
 			$arrUnits[] = sprintf(
 				'<option value="%s"%s>%s</option>',
-				StringUtil::specialchars($arrUnit['value']),
+				self::specialcharsValue($arrUnit['value']),
 				$this->isSelected($arrUnit),
 				$arrUnit['label']
 			);
@@ -143,7 +141,7 @@ class TrblField extends Widget
 				$this->strId . '_' . $strKey,
 				$strKey,
 				($this->strClass ? ' ' . $this->strClass : ''),
-				StringUtil::specialchars(@$this->varValue[$strKey]), // see #4979
+				self::specialcharsValue(@$this->varValue[$strKey]), // see #4979
 				$this->getAttributes()
 			);
 		}
@@ -158,5 +156,3 @@ class TrblField extends Widget
 		);
 	}
 }
-
-class_alias(TrblField::class, 'TrblField');

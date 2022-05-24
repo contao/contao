@@ -16,43 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Provide methods to handle an error 401 page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class PageError401 extends Frontend
 {
-	/**
-	 * Generate an error 401 page
-	 *
-	 * @param PageModel|integer|null $objRootPage
-	 */
-	public function generate($objRootPage=null)
-	{
-		if (is_numeric($objRootPage))
-		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError401::generate() has been deprecated and will no longer work in Contao 5.0.');
-		}
-
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		$obj401 = $this->prepare($objRootPage);
-		$objPage = $obj401->loadDetails();
-
-		// Reset inherited cache timeouts (see #231)
-		if (!$objPage->includeCache)
-		{
-			$objPage->cache = 0;
-			$objPage->clientCache = 0;
-		}
-
-		/** @var PageRegular $objHandler */
-		$objHandler = new $GLOBALS['TL_PTY']['regular']();
-
-		header('HTTP/1.1 401 Unauthorized');
-		$objHandler->generate($objPage);
-	}
-
 	/**
 	 * Return a response object
 	 *
@@ -133,7 +99,7 @@ class PageError401 extends Frontend
 			}
 
 			// Add the referer so the login module can redirect back
-			$url = $objNextPage->getAbsoluteUrl() . '?redirect=' . Environment::get('base') . Environment::get('request');
+			$url = $objNextPage->getAbsoluteUrl() . '?redirect=' . rawurlencode(Environment::get('base') . Environment::get('request'));
 
 			$this->redirect(System::getContainer()->get('uri_signer')->sign($url));
 		}
@@ -141,5 +107,3 @@ class PageError401 extends Frontend
 		return $obj401;
 	}
 }
-
-class_alias(PageError401::class, 'PageError401');

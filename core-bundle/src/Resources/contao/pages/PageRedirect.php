@@ -14,24 +14,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Provide methods to handle a redirect page.
- *
- * @author Leo Feyer <https://github.com/leofeyer>
- * @author Yanick Witschi <https://github.com/Toflar>
  */
 class PageRedirect extends Frontend
 {
-	/**
-	 * Redirect to an external page
-	 *
-	 * @param PageModel $objPage
-	 */
-	public function generate($objPage)
-	{
-		$this->prepare($objPage);
-
-		$this->redirect(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), $this->getRedirectStatusCode($objPage));
-	}
-
 	/**
 	 * Return a response object
 	 *
@@ -72,5 +57,3 @@ class PageRedirect extends Frontend
 		$container->get('translator')->setLocale($locale);
 	}
 }
-
-class_alias(PageRedirect::class, 'PageRedirect');

@@ -28,13 +28,8 @@ use Twig\Environment;
  */
 class LabelListener
 {
-    private ContaoFramework $framework;
-    private Environment $twig;
-
-    public function __construct(ContaoFramework $framework, Environment $twig)
+    public function __construct(private ContaoFramework $framework, private Environment $twig)
     {
-        $this->framework = $framework;
-        $this->twig = $twig;
     }
 
     public function __invoke(array $row, string $label, DataContainer $dc): string

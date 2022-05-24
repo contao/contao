@@ -21,14 +21,10 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
  */
 class RefererIdListener
 {
-    private TokenGeneratorInterface $tokenGenerator;
-    private ScopeMatcher $scopeMatcher;
-    private ?string $token = null;
+    private string|null $token = null;
 
-    public function __construct(TokenGeneratorInterface $tokenGenerator, ScopeMatcher $scopeMatcher)
+    public function __construct(private TokenGeneratorInterface $tokenGenerator, private ScopeMatcher $scopeMatcher)
     {
-        $this->tokenGenerator = $tokenGenerator;
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**

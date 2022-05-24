@@ -12,8 +12,6 @@ namespace Contao;
 
 /**
  * Front end module "HTML".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleHtml extends Module
 {
@@ -40,5 +38,3 @@ class ModuleHtml extends Module
 		}
 	}
 }
-
-class_alias(ModuleHtml::class, 'ModuleHtml');

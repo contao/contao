@@ -322,25 +322,6 @@ class PluginTest extends ContaoTestCase
         );
     }
 
-    /**
-     * @group legacy
-     */
-    public function testHandlesThePrependLocaleParameter(): void
-    {
-        $this->expectDeprecation('Since contao/manager-bundle 4.6: Defining the "prepend_locale" parameter in the parameters.yml file %s.');
-
-        $container = $this->getContainer();
-        $container->setParameter('prepend_locale', true);
-
-        $expect = [[
-            'prepend_locale' => '%prepend_locale%',
-        ]];
-
-        $extensionConfig = (new Plugin())->getExtensionConfig('contao', [], $container);
-
-        $this->assertSame($expect, $extensionConfig);
-    }
-
     public function testSetsTheAppSecret(): void
     {
         $container = $this->getContainer();
@@ -355,7 +336,7 @@ class PluginTest extends ContaoTestCase
     /**
      * @dataProvider getDatabaseParameters
      */
-    public function testSetsTheDatabaseUrl(?string $user, ?string $password, ?string $name, string $expected): void
+    public function testSetsTheDatabaseUrl(string|null $user, string|null $password, string|null $name, string $expected): void
     {
         $container = $this->getContainer();
         $container->setParameter('database_user', $user);
@@ -469,22 +450,20 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
-            [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'options' => [
-                                    \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
-                                ],
+        $expect = [
+            ...$extensionConfigs,
+            ...[[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [
+                                \PDO::MYSQL_ATTR_MULTI_STATEMENTS => false,
                             ],
                         ],
                     ],
                 ],
-            ]
-        );
+            ]],
+        ];
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
@@ -586,22 +565,20 @@ class PluginTest extends ContaoTestCase
             ],
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
-            [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'options' => [
-                                    $expectedOptionKey => "SET SESSION sql_mode=CONCAT(@@sql_mode, IF(INSTR(@@sql_mode, 'STRICT_'), '', ',TRADITIONAL'))",
-                                ],
+        $expect = [
+            ...$extensionConfigs,
+            ...[[
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'options' => [
+                                $expectedOptionKey => "SET SESSION sql_mode=CONCAT(@@sql_mode, IF(INSTR(@@sql_mode, 'STRICT_'), '', ',TRADITIONAL'))",
                             ],
                         ],
                     ],
                 ],
-            ]
-        );
+            ]],
+        ];
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
@@ -738,7 +715,7 @@ class PluginTest extends ContaoTestCase
     /**
      * @dataProvider getMailerParameters
      */
-    public function testSetsTheMailerDsn(string $transport, ?string $host, ?string $user, ?string $password, ?int $port, ?string $encryption, string $expected): void
+    public function testSetsTheMailerDsn(string $transport, string|null $host, string|null $user, string|null $password, int|null $port, string|null $encryption, string $expected): void
     {
         $container = $this->getContainer();
         $container->setParameter('mailer_transport', $transport);
@@ -983,6 +960,60 @@ class PluginTest extends ContaoTestCase
         yield['?host=localhost'];
 
         yield['foo://localhost'];
+    }
+
+    public function testUpdatesTheClickjackingPaths(): void
+    {
+        $extensionConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'ALLOW',
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+
+        $expectedConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'ALLOW',
+                    ],
+                ],
+            ],
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/.*' => 'SAMEORIGIN',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->assertSame($expectedConfigs, $extensionConfig);
+    }
+
+    public function testDoesNotOverrideDefaultClickjackingPath(): void
+    {
+        $extensionConfigs = [
+            [
+                'clickjacking' => [
+                    'paths' => [
+                        '^/foobar/' => 'DENY',
+                        '^/.*' => 'ALLOW',
+                    ],
+                ],
+            ],
+        ];
+
+        $container = $this->getContainer();
+        $extensionConfig = (new Plugin())->getExtensionConfig('nelmio_security', $extensionConfigs, $container);
+
+        $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
     public function testDoesNotAddDefaultDoctrineMappingIfEntityFolderDoesNotExists(): void

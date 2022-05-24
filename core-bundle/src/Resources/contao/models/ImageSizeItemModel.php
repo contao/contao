@@ -71,8 +71,6 @@ use Contao\Model\Collection;
  * @method static integer countByResizeMode($val, array $opt=array())
  * @method static integer countByZoom($val, array $opt=array())
  * @method static integer countByInvisible($val, array $opt=array())
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ImageSizeItemModel extends Model
 {
@@ -97,5 +95,3 @@ class ImageSizeItemModel extends Model
 		return static::findBy(array("$t.pid=? AND $t.invisible=''"), (int) $intPid, $arrOptions);
 	}
 }
-
-class_alias(ImageSizeItemModel::class, 'ImageSizeItemModel');

@@ -41,29 +41,24 @@ class PictureFactory implements PictureFactoryInterface
     ];
 
     private array $imageSizeItemsCache = [];
-    private PictureGeneratorInterface $pictureGenerator;
-    private ImageFactoryInterface $imageFactory;
-    private ContaoFramework $framework;
-    private bool $bypassCache;
-    private array $imagineOptions;
     private string $defaultDensities = '';
     private array $predefinedSizes = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.image.picture_factory" service instead
      */
-    public function __construct(PictureGeneratorInterface $pictureGenerator, ImageFactoryInterface $imageFactory, ContaoFramework $framework, bool $bypassCache, array $imagineOptions)
-    {
-        $this->pictureGenerator = $pictureGenerator;
-        $this->imageFactory = $imageFactory;
-        $this->framework = $framework;
-        $this->bypassCache = $bypassCache;
-        $this->imagineOptions = $imagineOptions;
+    public function __construct(
+        private PictureGeneratorInterface $pictureGenerator,
+        private ImageFactoryInterface $imageFactory,
+        private ContaoFramework $framework,
+        private bool $bypassCache,
+        private array $imagineOptions,
+    ) {
     }
 
-    public function setDefaultDensities($densities): self
+    public function setDefaultDensities(string $densities): static
     {
-        $this->defaultDensities = (string) $densities;
+        $this->defaultDensities = $densities;
 
         return $this;
     }
@@ -76,7 +71,7 @@ class PictureFactory implements PictureFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    public function create($path, $size = null, ResizeOptions $options = null): PictureInterface
+    public function create(ImageInterface|string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions $options = null): PictureInterface
     {
         $attributes = [];
 
@@ -96,6 +91,8 @@ class PictureFactory implements PictureFactoryInterface
             && !isset($this->predefinedSizes[$size[2]])
             && 1 === substr_count($size[2], '_')
         ) {
+            trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.0.', $size[2]);
+
             $image->setImportantPart($this->imageFactory->getImportantPartFromLegacyMode($image, $size[2]));
             $size[2] = ResizeConfiguration::MODE_CROP;
         }
@@ -125,11 +122,9 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * Creates a picture configuration.
      *
-     * @param int|array|null $size
-     *
      * @phpstan-return array{0:PictureConfiguration, 1:array<string, string>, 2:ResizeOptions}
      */
-    private function createConfig($size): array
+    private function createConfig(array|int|string|null $size): array
     {
         if (!\is_array($size)) {
             $size = [0, 0, $size];
@@ -145,7 +140,7 @@ class PictureFactory implements PictureFactoryInterface
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
                 $imageSizes = $imageSizeModel->findByPk($size[2]);
 
-                $config->setSize($this->createConfigItem(null !== $imageSizes ? $imageSizes->row() : null));
+                $config->setSize($this->createConfigItem($imageSizes?->row()));
 
                 if (null !== $imageSizes) {
                     $options->setSkipIfDimensionsMatch((bool) $imageSizes->skipIfDimensionsMatch);
@@ -164,7 +159,7 @@ class PictureFactory implements PictureFactoryInterface
                                 continue;
                             }
 
-                            $formats[$source] = array_unique(array_merge($formats[$source], $targets));
+                            $formats[$source] = array_unique([...$formats[$source], ...$targets]);
 
                             usort(
                                 $formats[$source],

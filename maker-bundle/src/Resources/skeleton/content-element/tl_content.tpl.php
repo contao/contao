@@ -8,6 +8,6 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['<?= $element_name ?>'] = '
     {type_legend},type,headline;
     {template_legend:hide},customTpl;
     {protected_legend:hide},protected;
-    {expert_legend:hide},guests,cssID;
+    {expert_legend:hide},cssID;
     {invisible_legend:hide},invisible,start,stop
 ';

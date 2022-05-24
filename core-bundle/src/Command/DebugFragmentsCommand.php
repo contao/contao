@@ -62,7 +62,7 @@ class DebugFragmentsCommand extends Command
         $io->title('Contao Fragments');
         $io->table(['Identifier', 'Controller', 'Renderer', 'Render Options', 'Fragment Options'], $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function generateArray(array $values): string
@@ -70,7 +70,7 @@ class DebugFragmentsCommand extends Command
         $length = array_reduce(
             array_keys($values),
             static function ($carry, $item): int {
-                $length = \strlen($item);
+                $length = \strlen((string) $item);
 
                 return max($carry, $length);
             },

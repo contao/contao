@@ -40,27 +40,17 @@ use Twig\Error\Error as TwigError;
  */
 class BackendPreviewSwitchController
 {
-    private FrontendPreviewAuthenticator $previewAuthenticator;
-    private TokenChecker $tokenChecker;
-    private Connection $connection;
-    private Security $security;
-    private TwigEnvironment $twig;
-    private ContaoCsrfTokenManager $tokenManager;
-    private RouterInterface $router;
-    private array $backendAttributes;
-    private string $backendBadgeTitle;
-
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager, array $attributes = [], string $badgeTitle = '')
-    {
-        $this->previewAuthenticator = $previewAuthenticator;
-        $this->tokenChecker = $tokenChecker;
-        $this->connection = $connection;
-        $this->security = $security;
-        $this->twig = $twig;
-        $this->router = $router;
-        $this->tokenManager = $tokenManager;
-        $this->backendAttributes = $attributes;
-        $this->backendBadgeTitle = $badgeTitle;
+    public function __construct(
+        private FrontendPreviewAuthenticator $previewAuthenticator,
+        private TokenChecker $tokenChecker,
+        private Connection $connection,
+        private Security $security,
+        private TwigEnvironment $twig,
+        private RouterInterface $router,
+        private ContaoCsrfTokenManager $tokenManager,
+        private array $backendAttributes = [],
+        private string $backendBadgeTitle = '',
+    ) {
     }
 
     /**
@@ -158,33 +148,33 @@ class BackendPreviewSwitchController
         }
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
-            $groups = array_map(
-                static fn ($groupId): string => '%"'.(int) $groupId.'"%',
-                $user->amg
-            );
-
+            $groups = array_map(static fn ($groupId): string => '%"'.(int) $groupId.'"%', $user->amg);
             $andWhereGroups = "AND (`groups` LIKE '".implode("' OR `groups` LIKE '", $groups)."')";
         }
 
         $time = Date::floorToMinute();
 
         // Get the active front end users
-        return $this->connection->fetchFirstColumn(
-            "
-                SELECT
-                    username
-                FROM
-                    tl_member
-                WHERE
-                    username LIKE ? $andWhereGroups
-                    AND login='1'
-                    AND disable!='1'
-                    AND (start='' OR start<='$time')
-                    AND (stop='' OR stop>'$time')
-                ORDER BY
-                    username
-            ",
-            [str_replace('%', '', $request->request->get('value')).'%']
-        );
+        $query = "
+            SELECT
+                username
+            FROM
+                tl_member
+            WHERE
+                username LIKE ? $andWhereGroups
+                AND login='1'
+                AND disable!='1'
+                AND (start='' OR start<='$time')
+                AND (stop='' OR stop>'$time')
+            ORDER BY
+                username
+        ";
+
+        $query = $this->connection->getDatabasePlatform()->modifyLimitQuery($query, 20);
+
+        return $this->connection
+            ->executeQuery($query, [str_replace('%', '', $request->request->get('value')).'%'])
+            ->fetchFirstColumn()
+        ;
     }
 }

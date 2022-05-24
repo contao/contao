@@ -15,8 +15,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "custom navigation".
- *
- * @author Leo Feyer <https://github.com/leofeyer>
  */
 class ModuleCustomnav extends Module
 {
@@ -42,7 +40,7 @@ class ModuleCustomnav extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -94,13 +92,6 @@ class ModuleCustomnav extends Module
 		{
 			$objModel->loadDetails();
 
-			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objModel->guests && !$objModel->protected && $isMember)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				continue;
-			}
-
 			// PageModel->groups is an array after calling loadDetails()
 			if (!$objModel->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objModel->groups))
 			{
@@ -141,8 +132,6 @@ class ModuleCustomnav extends Module
 						}
 						catch (ExceptionInterface $exception)
 						{
-							$container->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objModel->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;
@@ -167,16 +156,10 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
 					$arrRel = array();
-
-					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
-					{
-						$arrRel[] = 'nofollow';
-					}
 
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
@@ -210,16 +193,10 @@ class ModuleCustomnav extends Module
 					$row['link'] = $objModel->title;
 					$row['href'] = $href;
 					$row['rel'] = '';
-					$row['nofollow'] = (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0);
 					$row['target'] = '';
 					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
 
 					$arrRel = array();
-
-					if (strncmp($objModel->robots, 'noindex,nofollow', 16) === 0)
-					{
-						$arrRel[] = 'nofollow';
-					}
 
 					// Override the link target
 					if ($objModel->type == 'redirect' && $objModel->target)
@@ -241,14 +218,6 @@ class ModuleCustomnav extends Module
 			}
 		}
 
-		// Add classes first and last if there are items
-		if (!empty($items))
-		{
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$last = \count($items) - 1;
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
-		}
-
 		$objTemplate->items = $items;
 
 		$this->Template->request = Environment::get('indexFreeRequest');
@@ -257,5 +226,3 @@ class ModuleCustomnav extends Module
 		$this->Template->items = !empty($items) ? $objTemplate->parse() : '';
 	}
 }
-
-class_alias(ModuleCustomnav::class, 'ModuleCustomnav');

@@ -26,7 +26,7 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 	= '<a><abbr><acronym><address><area><article><aside><audio>'
 	. '<b><bdi><bdo><big><blockquote><br><button>'
 	. '<caption><cite><code><col><colgroup>'
-	. '<data><datalist><dd><del><dfn><div><dl><dt>'
+	. '<data><datalist><dd><del><details><dfn><div><dl><dt>'
 	. '<em>'
 	. '<fieldset><figcaption><figure><footer><form>'
 	. '<h1><h2><h3><h4><h5><h6><header><hgroup><hr>'
@@ -38,7 +38,7 @@ $GLOBALS['TL_CONFIG']['allowedTags']
 	. '<ol><optgroup><option><output>'
 	. '<p><picture><pre>'
 	. '<q>'
-	. '<s><samp><section><select><small><source><span><strong><style><sub><sup>'
+	. '<s><samp><section><select><small><source><span><strong><style><sub><summary><sup>'
 	. '<table><tbody><td><textarea><tfoot><th><thead><time><tr><tt>'
 	. '<u><ul>'
 	. '<var><video>'
@@ -60,6 +60,7 @@ $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
 	array('key' => 'th', 'value' => 'rowspan,colspan,width,height'),
 	array('key' => 'style', 'value' => 'media'),
 	array('key' => 'time', 'value' => 'datetime'),
+	array('key' => 'details', 'value' => 'open'),
 ));
 $GLOBALS['TL_CONFIG']['disableRefererCheck']   = false;
 $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = array();
@@ -67,10 +68,6 @@ $GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = array();
 // Database
 $GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8mb4';
 $GLOBALS['TL_CONFIG']['dbCollation'] = 'utf8mb4_unicode_ci';
-
-// Encryption
-$GLOBALS['TL_CONFIG']['encryptionMode']   = 'cfb';
-$GLOBALS['TL_CONFIG']['encryptionCipher'] = 'rijndael-256';
 
 // File uploads
 $GLOBALS['TL_CONFIG']['uploadTypes']
@@ -83,8 +80,6 @@ $GLOBALS['TL_CONFIG']['uploadTypes']
 $GLOBALS['TL_CONFIG']['maxFileSize']    = 2048000;
 $GLOBALS['TL_CONFIG']['imageWidth']     = 0;
 $GLOBALS['TL_CONFIG']['imageHeight']    = 0;
-$GLOBALS['TL_CONFIG']['gdMaxImgWidth']  = 3000;
-$GLOBALS['TL_CONFIG']['gdMaxImgHeight'] = 3000;
 
 // Timeout values
 $GLOBALS['TL_CONFIG']['undoPeriod']     = 2592000;
@@ -113,15 +108,12 @@ $GLOBALS['TL_CONFIG']['allowedDownload']
 	. 'zip,rar,7z,md';
 $GLOBALS['TL_CONFIG']['installPassword']      = '';
 $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
-$GLOBALS['TL_CONFIG']['fullscreen']           = false;
-$GLOBALS['TL_CONFIG']['disableInsertTags']    = false;
 $GLOBALS['TL_CONFIG']['rootFiles']            = array();
 $GLOBALS['TL_CONFIG']['doNotCollapse']        = false;
 $GLOBALS['TL_CONFIG']['exampleWebsite']       = '';
 $GLOBALS['TL_CONFIG']['minPasswordLength']    = 8;
 $GLOBALS['TL_CONFIG']['disableCron']          = false;
 $GLOBALS['TL_CONFIG']['coreOnlyMode']         = false;
-$GLOBALS['TL_CONFIG']['useAutoItem']          = true;
 $GLOBALS['TL_CONFIG']['privacyAnonymizeIp']   = true;
 $GLOBALS['TL_CONFIG']['privacyAnonymizeGA']   = true;
 $GLOBALS['TL_CONFIG']['bypassCache']          = false;

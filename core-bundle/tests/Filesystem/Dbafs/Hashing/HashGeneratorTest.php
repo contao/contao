@@ -26,7 +26,7 @@ class HashGeneratorTest extends TestCase
     public function testValidateHashFunctionExists(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches("/The 'foofoo' hash algorithm isn't available on this system. Try '.*' instead\\./");
+        $this->expectExceptionMessageMatches('/The "foofoo" hash algorithm is not available on this system. Try ".*" instead\./');
 
         new HashGenerator('foofoo');
     }
@@ -118,7 +118,7 @@ class HashGeneratorTest extends TestCase
     private function getDemoFilesystem(): VirtualFilesystemInterface
     {
         $filesystem = new VirtualFilesystem(
-            new MountManager(new InMemoryFilesystemAdapter()),
+            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
             $this->createMock(DbafsManager::class)
         );
 

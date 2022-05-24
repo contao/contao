@@ -20,9 +20,13 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
 use Contao\System;
+use Contao\TemplateLoader;
 use Doctrine\DBAL\Driver\Connection;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
@@ -44,7 +48,7 @@ class AbstractBackendControllerTest extends TestCase
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_LANGUAGE'], $GLOBALS['TL_MIME']);
 
         $this->restoreServerEnvGetPost();
-        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class, System::class, Config::class]);
+        $this->resetStaticProperties([ContaoEnvironment::class, BackendUser::class, Database::class, System::class, Config::class, TemplateLoader::class]);
 
         parent::tearDown();
     }
@@ -60,7 +64,10 @@ class AbstractBackendControllerTest extends TestCase
 
         // Legacy setup
         ContaoEnvironment::reset();
-        (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
+
+        $filesystem = new Filesystem();
+        $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
+        $filesystem->touch(Path::join($this->getTempDir(), 'be_main.html5'));
 
         $GLOBALS['TL_LANG']['MSC'] = [
             'version' => 'version',
@@ -71,8 +78,9 @@ class AbstractBackendControllerTest extends TestCase
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
 
-        $_SERVER['HTTP_USER_AGENT'] = 'Contao/Foo';
         $_SERVER['HTTP_HOST'] = 'localhost';
+
+        TemplateLoader::addFile('be_main', '');
 
         $expectedContext = [
             'version' => 'my version',
@@ -88,6 +96,7 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
+            'badgeTitle' => '',
             'foo' => 'bar',
         ];
 
@@ -114,11 +123,21 @@ class AbstractBackendControllerTest extends TestCase
         $twig
             ->expects($this->exactly(3))
             ->method('render')
-            ->willReturnMap([
-                ['@ContaoCore/Backend/be_menu.html.twig', [], '<menu>'],
-                ['@ContaoCore/Backend/be_header_menu.html.twig', [], '<header_menu>'],
-                ['custom_be.html.twig', $expectedContext, '<custom_be_main>'],
-            ])
+            ->willReturnCallback(
+                function (string $template, array $context) use ($expectedContext) {
+                    if ('custom_be.html.twig' === $template) {
+                        $this->assertSame($expectedContext, $context);
+                    }
+
+                    $map = [
+                        '@ContaoCore/Backend/be_menu.html.twig' => '<menu>',
+                        '@ContaoCore/Backend/be_header_menu.html.twig' => '<header_menu>',
+                        'custom_be.html.twig' => '<custom_be_main>',
+                    ];
+
+                    return $map[$template];
+                }
+            )
         ;
 
         $container->set('security.authorization_checker', $authorizationChecker);
@@ -130,6 +149,9 @@ class AbstractBackendControllerTest extends TestCase
         $container->set('router', $this->createMock(RouterInterface::class));
 
         $container->setParameter('contao.resources_paths', $this->getTempDir());
+
+        $container->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(server: $_SERVER));
 
         return $container;
     }

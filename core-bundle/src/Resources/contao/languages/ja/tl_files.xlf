@@ -171,6 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_files.syncResult">
         <source>&lt;strong&gt;Result:&lt;/strong&gt; %s added | %s modified | %4$s moved | %5$s deleted</source>
+        <target>&lt;strong&gt;結果:&lt;/strong&gt; %s個を追加 | %s個を修正 | %4$s個を移動 | %5$s個を削除</target>
       </trans-unit>
       <trans-unit id="tl_files.syncShowUnchanged">
         <source>Show unchanged</source>

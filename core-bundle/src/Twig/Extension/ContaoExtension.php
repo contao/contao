@@ -14,13 +14,18 @@ namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\InsertTag\ChunkedText;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
+use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
+use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
@@ -40,15 +45,10 @@ use Twig\TwigFunction;
  */
 final class ContaoExtension extends AbstractExtension
 {
-    private Environment $environment;
-    private TemplateHierarchyInterface $hierarchy;
     private array $contaoEscaperFilterRules = [];
 
-    public function __construct(Environment $environment, TemplateHierarchyInterface $hierarchy)
+    public function __construct(private Environment $environment, private TemplateHierarchyInterface $hierarchy)
     {
-        $this->environment = $environment;
-        $this->hierarchy = $hierarchy;
-
         $contaoEscaper = new ContaoEscaper();
 
         /** @var EscaperExtension $escaperExtension */
@@ -56,15 +56,22 @@ final class ContaoExtension extends AbstractExtension
         $escaperExtension->setEscaper('contao_html', [$contaoEscaper, 'escapeHtml']);
         $escaperExtension->setEscaper('contao_html_attr', [$contaoEscaper, 'escapeHtmlAttr']);
 
-        // Use our escaper on all templates in the `@Contao` and `@Contao_*` namespaces
+        // Use our escaper on all templates in the "@Contao" and "@Contao_*"
+        // namespaces, as well as the existing bundle templates we're already
+        // shipping.
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
+        $this->addContaoEscaperRule('%^@Contao(Core|Installation)/%');
+
+        // Mark classes as safe for HTML that already escape their output themselves
+        $escaperExtension->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
+        $escaperExtension->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
     }
 
     /**
      * Adds a Contao escaper rule.
      *
      * If a template name matches any of the defined rules, it will be processed
-     * with the 'contao_html' escaper strategy. Make sure your rule will only
+     * with the "contao_html" escaper strategy. Make sure your rule will only
      * match templates with input encoded contexts!
      */
     public function addContaoEscaperRule(string $regularExpression): void
@@ -79,7 +86,7 @@ final class ContaoExtension extends AbstractExtension
     public function getNodeVisitors(): array
     {
         return [
-            // Enables the 'contao_twig' escaper for Contao templates with
+            // Enables the "contao_twig" escaper for Contao templates with
             // input encoding
             new ContaoEscaperNodeVisitor(
                 fn () => $this->contaoEscaperFilterRules
@@ -87,16 +94,21 @@ final class ContaoExtension extends AbstractExtension
             // Allows rendering PHP templates with the legacy framework by
             // installing proxy nodes
             new PhpTemplateProxyNodeVisitor(self::class),
+            // Triggers PHP deprecations if deprecated constructs are found in
+            // the parsed templates.
+            new DeprecationsNodeVisitor(),
         ];
     }
 
     public function getTokenParsers(): array
     {
         return [
-            // Overwrite the parsers for the 'extends' and 'include' tags to
+            // Overwrite the parsers for the "extends" and "include" tags to
             // additionally support the Contao template hierarchy
             new DynamicExtendsTokenParser($this->hierarchy),
             new DynamicIncludeTokenParser($this->hierarchy),
+            // Add a parser for the Contao specific "add" tag
+            new AddTokenParser(self::class),
         ];
     }
 
@@ -105,7 +117,7 @@ final class ContaoExtension extends AbstractExtension
         $includeFunctionCallable = $this->getTwigIncludeFunction()->getCallable();
 
         return [
-            // Overwrite the 'include' function to additionally support the
+            // Overwrite the "include" function to additionally support the
             // Contao template hierarchy
             new TwigFunction(
                 'include',
@@ -116,6 +128,10 @@ final class ContaoExtension extends AbstractExtension
                     return $includeFunctionCallable(...$args);
                 },
                 ['needs_environment' => true, 'needs_context' => true, 'is_safe' => ['all']]
+            ),
+            new TwigFunction(
+                'attrs',
+                static fn (iterable|string|HtmlAttributes|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes),
             ),
             new TwigFunction(
                 'contao_figure',
@@ -144,11 +160,6 @@ final class ContaoExtension extends AbstractExtension
                 [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSection'],
                 ['needs_context' => true, 'is_safe' => ['html']]
             ),
-            new TwigFunction(
-                'render_contao_backend_template',
-                [LegacyTemplateFunctionsRuntime::class, 'renderContaoBackendTemplate'],
-                ['is_safe' => ['html']]
-            ),
         ];
     }
 
@@ -170,7 +181,7 @@ final class ContaoExtension extends AbstractExtension
         };
 
         return [
-            // Overwrite the 'escape'/'e' filter to additionally support chunked text
+            // Overwrite the "escape" filter to additionally support chunked text
             new TwigFilter(
                 'escape',
                 $escaperFilter,
@@ -189,6 +200,14 @@ final class ContaoExtension extends AbstractExtension
                 'insert_tag_raw',
                 [InsertTagRuntime::class, 'replaceInsertTagsChunkedRaw']
             ),
+            new TwigFilter(
+                'highlight',
+                [HighlighterRuntime::class, 'highlight'],
+            ),
+            new TwigFilter(
+                'highlight_auto',
+                [HighlighterRuntime::class, 'highlightAuto'],
+            ),
         ];
     }
 
@@ -203,8 +222,8 @@ final class ContaoExtension extends AbstractExtension
         $template = Path::getFilenameWithoutExtension($name);
 
         $partialTemplate = new class($template) extends Template {
-            use FrontendTemplateTrait;
             use BackendTemplateTrait;
+            use FrontendTemplateTrait;
 
             public function setBlocks(array $blocks): void
             {
@@ -216,7 +235,7 @@ final class ContaoExtension extends AbstractExtension
                 return $this->inherit();
             }
 
-            protected function renderTwigSurrogateIfExists(): ?string
+            protected function renderTwigSurrogateIfExists(): string|null
             {
                 return null;
             }
@@ -226,6 +245,34 @@ final class ContaoExtension extends AbstractExtension
         $partialTemplate->setBlocks($blocks);
 
         return $partialTemplate->parse();
+    }
+
+    /**
+     * @see \Contao\CoreBundle\Twig\ResponseContext\AddNode
+     * @see \Contao\CoreBundle\Twig\ResponseContext\AddTokenParser
+     *
+     * @internal
+     */
+    public function addDocumentContent(string|null $identifier, string $content, DocumentLocation $location): void
+    {
+        // TODO: This should make use of the response context in the future.
+        if (DocumentLocation::head === $location) {
+            if (null !== $identifier) {
+                $GLOBALS['TL_HEAD'][$identifier] = $content;
+            } else {
+                $GLOBALS['TL_HEAD'][] = $content;
+            }
+
+            return;
+        }
+
+        if (DocumentLocation::endOfBody === $location) {
+            if (null !== $identifier) {
+                $GLOBALS['TL_BODY'][$identifier] = $content;
+            } else {
+                $GLOBALS['TL_BODY'][] = $content;
+            }
+        }
     }
 
     private function getTwigIncludeFunction(): TwigFunction
