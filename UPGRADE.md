@@ -15,9 +15,9 @@ Twig-only templates:
 
 #### Category "texts"
 
-  - `code` (`ce_code` &rarr; `content_element/code`)
-  - `headline` (`ce_headline` &rarr; `content_element/headline`)
-  - `html` (`ce_html` &rarr; `content_element/html`)
+  - `code` (`ce_code` → `content_element/code`)
+  - `headline` (`ce_headline` → `content_element/headline`)
+  - `html` (`ce_html` → `content_element/html`)
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6.
 If you want to use them instead of the new ones, you can opt in on a per-element basis by adding the
@@ -106,15 +106,15 @@ The `Contao\Request` library has been removed. Use another library such as `symf
 
 The following resources have been renamed:
 
- - `ContentMedia` -> `ContentPlayer`
- - `FormCheckBox` -> `FormCheckbox`
- - `FormRadioButton` -> `FormRadio`
- - `FormSelectMenu` -> `FormSelect`
- - `FormTextField` -> `FormText`
- - `FormTextArea` -> `FormTextarea`
- - `FormFileUpload` -> `FormUpload`
- - `ModulePassword` -> `ModuleLostPassword`
- - `form_textfield` -> `form_text`
+ - `ContentMedia` → `ContentPlayer`
+ - `FormCheckBox` → `FormCheckbox`
+ - `FormRadioButton` → `FormRadio`
+ - `FormSelectMenu` → `FormSelect`
+ - `FormTextField` → `FormText`
+ - `FormTextArea` → `FormTextarea`
+ - `FormFileUpload` → `FormUpload`
+ - `ModulePassword` → `ModuleLostPassword`
+ - `form_textfield` → `form_text`
 
 ### CSS classes "first", "last", "even" and "odd"
 
@@ -213,7 +213,7 @@ listeners instead.
 
 ### Simple Token Parser
 
-Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are not supported anymore by the
+Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are no longer supported by the
 Simple Token Parser.
 
 ### $GLOBALS['TL_KEYWORDS']
