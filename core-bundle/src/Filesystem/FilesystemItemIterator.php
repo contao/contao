@@ -100,7 +100,7 @@ class FilesystemItemIterator implements \IteratorAggregate
     public function limit(int $numberOfElements): self
     {
         if ($numberOfElements < 0) {
-            return $this;
+            throw new \OutOfRangeException(sprintf('Illegal limit value "%d", must be greater or equal to zero.', $numberOfElements));
         }
 
         $listLimited = static function (iterable $listing) use ($numberOfElements): \Generator {
