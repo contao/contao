@@ -17,6 +17,7 @@ use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\FilesystemUtil;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\StringUtil;
 use Symfony\Component\Uid\Uuid;
 
 class FilesystemUtilTest extends TestCase
@@ -24,7 +25,7 @@ class FilesystemUtilTest extends TestCase
     /**
      * @dataProvider provideResources
      */
-    public function testListContentsFromMultiSRC(string|array $sources, array $expectedPaths): void
+    public function testListContentsFromSerialized(string|array $sources, array $expectedPaths): void
     {
         $storage = $this->createMock(VirtualFilesystemInterface::class);
         $storage
@@ -61,7 +62,7 @@ class FilesystemUtilTest extends TestCase
 
                 return $item->getPath();
             },
-            FilesystemUtil::listContentsFromMultiSRC($storage, $sources)->toArray()
+            FilesystemUtil::listContentsFromSerialized($storage, $sources)->toArray()
         );
 
         $this->assertSame($expectedPaths, $paths);
@@ -69,33 +70,43 @@ class FilesystemUtilTest extends TestCase
 
     public function provideResources(): \Generator
     {
-        $file1 = (new Uuid('d22b1ea8-dcab-4162-b690-30cb9206f694'))->toBinary();
-        $file2 = (new Uuid('b1817d6d-188a-4c99-9204-b1e33733d5a9'))->toBinary();
-        $file3 = (new Uuid('0af407bc-ced3-4688-9971-f30dca7005b6'))->toBinary();
-        $directory = (new Uuid('1fc6c283-c0c8-420e-b1c7-712d388a6b3a'))->toBinary();
+        $file1 = (new Uuid('d22b1ea8-dcab-4162-b690-30cb9206f694'));
+        $file2 = (new Uuid('b1817d6d-188a-4c99-9204-b1e33733d5a9'));
+        $file3 = (new Uuid('0af407bc-ced3-4688-9971-f30dca7005b6'));
+        $directory = (new Uuid('1fc6c283-c0c8-420e-b1c7-712d388a6b3a'));
 
-        yield 'single file' => [
-            $file1,
+        yield 'single file as RFC 4122' => [
+            $file1->toRfc4122(),
+            ['file1'],
+        ];
+
+        yield 'single file as Contao binary UUID (StringUtil::uuidToBin)' => [
+            StringUtil::uuidToBin($file1->toRfc4122()),
+            ['file1'],
+        ];
+
+        yield 'single file as binary UUID (uuid_parse)' => [
+            $file1->toBinary(),
             ['file1'],
         ];
 
         yield 'multiple files' => [
-            [$file1, $file2],
+            [$file1->toBinary(), $file2->toBinary()],
             ['file1', 'file2'],
         ];
 
         yield 'files and directories' => [
-            [$file1, $directory],
+            [$file1->toBinary(), $directory->toBinary()],
             ['file1', 'directory/file3', 'directory/file4'],
         ];
 
         yield 'duplicate files' => [
-            [$file1, $directory, $file1, $file3],
+            [$file1->toBinary(), $directory->toBinary(), $file1->toBinary(), $file3->toBinary()],
             ['file1', 'directory/file3', 'directory/file4'],
         ];
 
         yield 'unknown UUID amongst valid' => [
-            [$file1, (new Uuid('a1695de1-90a8-486c-9e2f-e0567cd9c6ab'))->toBinary()],
+            [$file1->toBinary(), (new Uuid('a1695de1-90a8-486c-9e2f-e0567cd9c6ab'))->toBinary()],
             ['file1'],
         ];
 
@@ -107,6 +118,17 @@ class FilesystemUtilTest extends TestCase
         yield 'no files' => [
             [],
             [],
+        ];
+
+        yield 'mixed' => [
+            [
+                $file1->toRfc4122(),
+                $directory->toRfc4122(),
+                StringUtil::uuidToBin($file1->toRfc4122()),
+                StringUtil::uuidToBin($file2->toRfc4122()),
+                $file3->toBinary(),
+            ],
+            ['file1', 'directory/file3', 'directory/file4', 'file2'],
         ];
     }
 

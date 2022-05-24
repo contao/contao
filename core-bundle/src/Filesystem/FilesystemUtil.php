@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Filesystem;
 
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\StringUtil;
+use Contao\Validator;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -32,7 +33,7 @@ class FilesystemUtil
      *
      * @param string|array<string|null> $sources
      */
-    public static function listContentsFromMultiSRC(VirtualFilesystemInterface $storage, string|array $sources): FilesystemItemIterator
+    public static function listContentsFromSerialized(VirtualFilesystemInterface $storage, string|array $sources): FilesystemItemIterator
     {
         $uuids = array_filter(StringUtil::deserialize($sources, true));
 
@@ -90,8 +91,18 @@ class FilesystemUtil
         };
 
         foreach ($uuids as $uuid) {
+            if (!\is_string($uuid)) {
+                continue;
+            }
+
+            if (Validator::isBinaryUuid($uuid)) {
+                $uuid = StringUtil::binToUuid($uuid);
+            }
+
             try {
-                if (null === $uuid || null === ($item = $storage->get(Uuid::fromBinary($uuid)))) {
+                $uuidObject = Uuid::isValid($uuid) ? Uuid::fromString($uuid) : Uuid::fromBinary($uuid);
+
+                if (null === ($item = $storage->get($uuidObject))) {
                     continue;
                 }
             } catch (\InvalidArgumentException|UnableToResolveUuidException) {
