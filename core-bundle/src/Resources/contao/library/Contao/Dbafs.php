@@ -97,7 +97,7 @@ class Dbafs
 		{
 			$strPath .= '/' . array_shift($arrChunks);
 
-			// Skip paths outside the upload_path
+			// Skip paths outside the upload_path (see #4718)
 			if ($strPath === $uploadPath || !Path::isBasePath($uploadPath, $strPath))
 			{
 				continue;
@@ -468,7 +468,7 @@ class Dbafs
 			{
 				$strPath .= '/' . array_shift($arrChunks);
 
-				// Skip paths outside the upload_path
+				// Skip paths outside the upload_path (see #4718)
 				if ($strPath === $uploadPath || !Path::isBasePath($uploadPath, $strPath))
 				{
 					continue;
