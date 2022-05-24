@@ -443,7 +443,7 @@ class tl_user_group extends Backend
 						continue;
 					}
 
-					if (($vv['exclude'] ?? null) || ($vv['orig_exclude'] ?? null))
+					if ($vv['exclude'] ?? null)
 					{
 						$arrReturn[$k][StringUtil::specialchars($k . '::' . $kk)] = isset($vv['label'][0]) ? $vv['label'][0] . ' <span style="color:#999;padding-left:3px">[' . $kk . ']</span>' : $kk;
 					}

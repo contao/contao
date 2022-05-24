@@ -51,7 +51,16 @@ class TableAccessVoter implements CacheableVoterInterface
                 continue;
             }
 
-            if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $subject->table)) {
+            $hasNotExcluded = false;
+
+            foreach (($GLOBALS['TL_DCA'][$subject->table]['fields'] ?? []) as $config) {
+                if (!($config['exclude'] ?? false)) {
+                    $hasNotExcluded = true;
+                    break;
+                }
+            }
+
+            if (!$hasNotExcluded && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $subject->table)) {
                 return self::ACCESS_DENIED;
             }
         }
