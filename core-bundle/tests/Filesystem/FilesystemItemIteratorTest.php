@@ -128,6 +128,29 @@ class FilesystemItemIteratorTest extends TestCase
         $this->assertFalse($iterator->all(static fn (FilesystemItem $f): bool => str_starts_with($f->getPath(), 'foo')));
     }
 
+    public function testLimit(): void
+    {
+        $iterator = new FilesystemItemIterator([
+            new FilesystemItem(true, 'file1'),
+            new FilesystemItem(true, 'file2'),
+            new FilesystemItem(true, 'file3'),
+        ]);
+
+        $this->assertSameItems(['file1', 'file2'], $iterator->limit(2)->toArray());
+        $this->assertSameItems(['file1', 'file2', 'file3'], $iterator->limit(4)->toArray());
+        $this->assertSameItems([], $iterator->limit(0)->toArray());
+    }
+
+    public function testLimitThrowsOutOfRangeException(): void
+    {
+        $iterator = new FilesystemItemIterator([]);
+
+        $this->expectException(\OutOfRangeException::class);
+        $this->expectDeprecationMessage('Illegal limit value "-1", must be greater or equal to zero.');
+
+        $iterator->limit(-1);
+    }
+
     /**
      * @dataProvider provideInvalidItems
      */
