@@ -118,7 +118,8 @@ class FilesystemUtil
             }
 
             // If the item is a directory, yield its files instead
-            $listDirectory = $storage->listContents($item->getPath())
+            $listDirectory = $storage
+                ->listContents($item->getPath())
                 ->files()
                 ->filter(static fn (FilesystemItem $item): bool => $track($item))
             ;
