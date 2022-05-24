@@ -46,9 +46,9 @@ class ContaoMailerTest extends TestCase
         $availableTransports = new AvailableTransports();
         $availableTransports->addTransport(new TransportConfig('foobar', 'Lorem Ipsum <foo@example.org>'));
 
-        $contaoMailer = new ContaoMailer($mailer, $availableTransports, $requestStack);
-
         $email = new Email();
+
+        $contaoMailer = new ContaoMailer($mailer, $availableTransports, $requestStack);
         $contaoMailer->send($email);
 
         $this->assertTrue($email->getHeaders()->has('X-Transport'));
@@ -63,9 +63,9 @@ class ContaoMailerTest extends TestCase
         $availableTransports = new AvailableTransports();
         $availableTransports->addTransport(new TransportConfig('foobar', 'Lorem Ipsum <foo@example.org>'));
 
-        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack());
-
         $email = new Email(new Headers(new UnstructuredHeader('X-Transport', 'foobar')));
+
+        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack());
         $contaoMailer->send($email);
 
         $from = $email->getFrom();
@@ -85,12 +85,11 @@ class ContaoMailerTest extends TestCase
         $availableTransports = new AvailableTransports();
         $availableTransports->addTransport(new TransportConfig('foobar', 'Lorem Ipsum <foo@example.org>'));
 
-        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack());
-
         $email = new Email(new Headers(new UnstructuredHeader('X-Transport', 'foobar')));
         $email->returnPath('return-path@example.com');
         $email->sender('sender@example.com');
 
+        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack());
         $contaoMailer->send($email);
 
         $from = $email->getFrom();
@@ -111,7 +110,6 @@ class ContaoMailerTest extends TestCase
         $availableTransports->addTransport(new TransportConfig('foobar', 'Lorem Ipsum <foo@example.org>'));
 
         $email = new Email(new Headers(new UnstructuredHeader('X-Transport', 'foobar')));
-
         $envelope = new Envelope(Address::create('envelope-sender@example.com'), [Address::create('envelope-recipient@example.com')]);
 
         $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack());
