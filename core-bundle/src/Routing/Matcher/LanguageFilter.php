@@ -42,7 +42,7 @@ class LanguageFilter implements RouteFilterInterface
                 continue;
             }
 
-            if ('.fallback' !== substr($name, -9) && ('' !== $pageModel->urlPrefix || '.root' !== substr($name, -5))) {
+            if ('.fallback' !== substr($name, -9) && ('' !== $pageModel->urlPrefix || '.root' !== substr($name, -5) || '/' === $route->getPath())) {
                 continue;
             }
 
