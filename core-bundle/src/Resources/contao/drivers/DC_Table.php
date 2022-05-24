@@ -2341,6 +2341,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$class = 'tl_box';
 				$formFields = array();
+				$excludedFields = array();
 
 				// Get the field values
 				$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
@@ -2353,8 +2354,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				foreach ($this->strPalette as $v)
 				{
 					// Check whether field is excluded
-					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v))
+					if (isset($excludedFields[$v]) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v)))
 					{
+						$excludedFields[$v] = true;
+
 						continue;
 					}
 
@@ -2776,6 +2779,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$class = 'tl_tbox';
 			$formFields = array();
+			$excludedFields = array();
 
 			// Save record
 			if (Input::post('FORM_SUBMIT') == $this->strTable)
@@ -2811,8 +2815,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					foreach ($fields as $v)
 					{
 						// Check whether field is excluded
-						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v))
+						if (isset($excludedFields[$v]) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v)))
 						{
+							$excludedFields[$v] = true;
+
 							continue;
 						}
 
@@ -2883,7 +2889,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($fields as $v)
 			{
 				// Check whether field is excluded
-				if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v))
+				if (isset($excludedFields[$v]) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v)))
 				{
 					continue;
 				}
