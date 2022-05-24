@@ -47,7 +47,6 @@ final class DynamicUseTokenParser extends AbstractTokenParser
         if ($stream->nextIf('with')) {
             while (true) {
                 $name = $stream->expect(Token::NAME_TYPE)->getValue();
-
                 $alias = $name;
 
                 if ($stream->nextIf('as')) {
