@@ -86,8 +86,8 @@ class Dbafs
 		}
 
 		$arrPaths    = array();
-		$arrChunks   = explode('/', $strResource);
-		$strPath     = array_shift($arrChunks);
+		$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)));
+		$strPath     = $uploadPath;
 		$arrPids     = array($strPath => null);
 		$arrUpdate   = array($strResource);
 		$objDatabase = Database::getInstance();
@@ -96,13 +96,6 @@ class Dbafs
 		while (\count($arrChunks))
 		{
 			$strPath .= '/' . array_shift($arrChunks);
-
-			// Skip paths outside the upload_path (see #4718)
-			if ($strPath === $uploadPath || !Path::isBasePath($uploadPath, $strPath))
-			{
-				continue;
-			}
-
 			$arrPaths[] = $strPath;
 		}
 
@@ -454,8 +447,8 @@ class Dbafs
 			self::validateUtf8Path($strResource);
 
 			$strResource = Path::normalize($strResource);
-			$arrChunks   = explode('/', $strResource);
-			$strPath     = array_shift($arrChunks);
+			$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)));
+			$strPath     = $uploadPath;
 
 			// Do not check files
 			if (is_file($projectDir . '/' . $strResource))
@@ -467,13 +460,6 @@ class Dbafs
 			while (\count($arrChunks))
 			{
 				$strPath .= '/' . array_shift($arrChunks);
-
-				// Skip paths outside the upload_path (see #4718)
-				if ($strPath === $uploadPath || !Path::isBasePath($uploadPath, $strPath))
-				{
-					continue;
-				}
-
 				$arrPaths[] = $strPath;
 			}
 
