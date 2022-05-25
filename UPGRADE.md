@@ -15,9 +15,15 @@ Twig-only templates:
 
 #### Category "texts"
 
-  - `code` (`ce_code` → `content_element/code`)
-  - `headline` (`ce_headline` → `content_element/headline`)
-  - `html` (`ce_html` → `content_element/html`)
+- `code` (`ce_code` → `content_element/code`)
+- `headline` (`ce_headline` → `content_element/headline`)
+- `html` (`ce_html` → `content_element/html`)
+- `list` (`ce_list` → `content_element/list`)
+
+#### Category "media"
+
+- `image` (`ce_image` → `content_element/image`)
+- `gallery` (`ce_gallery` → `content_element/gallery`)
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6.
 If you want to use them instead of the new ones, you can opt in on a per-element basis by adding the
@@ -28,6 +34,9 @@ respective lines to your `contao/config/config.php`:
 $GLOBALS['TL_CTE']['texts']['code'] = \Contao\ContentCode::class;
 $GLOBALS['TL_CTE']['texts']['headline'] = \Contao\ContentHeadline::class;
 $GLOBALS['TL_CTE']['texts']['html'] = \Contao\ContentHtml::class;
+$GLOBALS['TL_CTE']['texts']['list'] = \Contao\ContentList::class;
+$GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
+$GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
 ```
 
 ### Show to guests only
