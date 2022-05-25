@@ -75,6 +75,18 @@ class Config
 	 */
 	protected $strRootDir;
 
+	private static $arrDeprecatedMap = array
+	(
+	);
+
+	private static $arrDeprecated = array
+	(
+	);
+
+	private static $arrToBeRemoved = array
+	(
+	);
+
 	/**
 	 * Prevent direct instantiation (Singleton)
 	 */
@@ -363,6 +375,16 @@ class Config
 	 */
 	public static function get($strKey)
 	{
+		if ($newKey = self::getNewKey($strKey))
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
+		}
+
+		if (isset(self::$arrToBeRemoved[$strKey]))
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" has been deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
+		}
+
 		return $GLOBALS['TL_CONFIG'][$strKey] ?? null;
 	}
 
@@ -374,7 +396,31 @@ class Config
 	 */
 	public static function set($strKey, $varValue)
 	{
+		if ($newKey = self::getNewKey($strKey))
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
+		}
+
+		if (isset(self::$arrToBeRemoved[$strKey]))
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" has been deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
+		}
+
 		$GLOBALS['TL_CONFIG'][$strKey] = $varValue;
+	}
+
+	/**
+	 * Return the new key if the existing one is deprecated
+	 *
+	 * @internal
+	 *
+	 * @param string $strKey The short key
+	 *
+	 * @return string|null
+	 */
+	public static function getNewKey($strKey)
+	{
+		return self::$arrDeprecated[$strKey] ?? self::$arrDeprecatedMap[$strKey] ?? null;
 	}
 
 	/**
@@ -451,6 +497,14 @@ class Config
 			foreach ($params as $key=>$value)
 			{
 				$GLOBALS['TL_CONFIG'][$key] = $value;
+			}
+		}
+
+		foreach (self::$arrDeprecatedMap as $strKey=>$strParam)
+		{
+			if ($container->hasParameter($strParam))
+			{
+				$GLOBALS['TL_CONFIG'][$strKey] = $container->getParameter($strParam);
 			}
 		}
 
