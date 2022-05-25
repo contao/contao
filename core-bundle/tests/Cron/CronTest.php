@@ -193,7 +193,7 @@ class CronTest extends TestCase
 
         $entity
             ->method('getLastRun')
-            ->willReturn((new \DateTime())->modify('-1 minute'))
+            ->willReturn((new \DateTime())->modify('+2 hours'))
         ;
 
         $entity
