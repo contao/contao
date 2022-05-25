@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		),
 		'url' => array
 		(
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "varchar(2048) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'addedOn' => array
 		(
