@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
@@ -115,8 +114,8 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             return;
         }
 
-        $config = $this->framework->getAdapter(Config::class);
-        $timeout = (int) $config->get('sessionTimeout');
+        // TODO: where should we get this value from?
+        $timeout = (int) \ini_get('session.gc_maxlifetime');
 
         if ($timeout > 0 && time() - $this->session->getMetadataBag()->getLastUsed() < $timeout) {
             return;

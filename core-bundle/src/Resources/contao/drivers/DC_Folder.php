@@ -234,14 +234,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.editableFileTypes for DC_Folder is deprecated and will no longer work in Contao 5.0.');
 		}
 
-		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? $container->getParameter('contao.editable_files')));
+		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? $container->getParameter('contao.editable_files')));
 
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath']))
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.uploadPath for DC_Folder is deprecated and will no longer work in Contao 5.0.');
 		}
 
-		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? $GLOBALS['TL_CONFIG']['uploadPath'] ?? $container->getParameter('contao.upload_path');
+		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? $container->getParameter('contao.upload_path');
 
 		// Get all filemounts (root folders)
 		if (\is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root'] ?? null))
@@ -367,12 +367,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$for = preg_quote($for);
 			}
 
-			$strPattern = "CAST(name AS CHAR) REGEXP ?";
-
-			if (substr(Config::get('dbCollation'), -3) == '_ci')
-			{
-				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
-			}
+			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{
@@ -2840,12 +2835,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$searchValue = preg_quote($searchValue);
 			}
 
-			$strPattern = "CAST(name AS CHAR) REGEXP ?";
-
-			if (substr(Config::get('dbCollation'), -3) == '_ci')
-			{
-				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
-			}
+			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{

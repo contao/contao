@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\User;
 
 use Contao\BackendUser;
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
@@ -76,17 +75,8 @@ class ContaoUserProviderTest extends TestCase
 
         $userAdapter = $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]);
 
-        $configAdapter = $this->mockAdapter(['get']);
-        $configAdapter
-            ->expects($this->once())
-            ->method('get')
-            ->with('sessionTimeout')
-            ->willReturn(3600)
-        ;
-
         $adapters = [
             BackendUser::class => $userAdapter,
-            Config::class => $configAdapter,
         ];
 
         $framework = $this->mockContaoFramework($adapters);
@@ -95,7 +85,7 @@ class ContaoUserProviderTest extends TestCase
         $metadata
             ->expects($this->once())
             ->method('getLastUsed')
-            ->willReturn(time() - 1800)
+            ->willReturn(time() - ((int) \ini_get('session.gc_maxlifetime') / 2))
         ;
 
         $session = $this->createMock(SessionInterface::class);
@@ -129,17 +119,8 @@ class ContaoUserProviderTest extends TestCase
 
         $userAdapter = $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]);
 
-        $configAdapter = $this->mockAdapter(['get']);
-        $configAdapter
-            ->expects($this->once())
-            ->method('get')
-            ->with('sessionTimeout')
-            ->willReturn(3600)
-        ;
-
         $adapters = [
             BackendUser::class => $userAdapter,
-            Config::class => $configAdapter,
         ];
 
         $framework = $this->mockContaoFramework($adapters);
