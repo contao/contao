@@ -35,6 +35,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         private ContaoFramework $framework,
         private SessionInterface $session,
         private string $userClass,
+        private array|null $sessionStorageOptions = null,
         private LoggerInterface|null $logger = null,
     ) {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
@@ -114,8 +115,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             return;
         }
 
-        // TODO: where should we get this value from?
-        $timeout = (int) \ini_get('session.gc_maxlifetime');
+        $timeout = (int) ($this->sessionStorageOptions['gc_maxlifetime'] ?? \ini_get('session.gc_maxlifetime'));
 
         if ($timeout > 0 && time() - $this->session->getMetadataBag()->getLastUsed() < $timeout) {
             return;

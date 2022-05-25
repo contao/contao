@@ -85,7 +85,7 @@ class ContaoUserProviderTest extends TestCase
         $metadata
             ->expects($this->once())
             ->method('getLastUsed')
-            ->willReturn(time() - ((int) \ini_get('session.gc_maxlifetime') / 2))
+            ->willReturn(time() - 1800)
         ;
 
         $session = $this->createMock(SessionInterface::class);
@@ -107,7 +107,7 @@ class ContaoUserProviderTest extends TestCase
             ->method('info')
         ;
 
-        $userProvider = new ContaoUserProvider($framework, $session, BackendUser::class, $logger);
+        $userProvider = new ContaoUserProvider($framework, $session, BackendUser::class, ['gc_maxlifetime' => 3600], $logger);
 
         $this->assertSame($user, $userProvider->refreshUser($user));
     }
@@ -152,7 +152,7 @@ class ContaoUserProviderTest extends TestCase
             ->with('User "foobar" has been logged out automatically due to inactivity')
         ;
 
-        $userProvider = new ContaoUserProvider($framework, $session, BackendUser::class, $logger);
+        $userProvider = new ContaoUserProvider($framework, $session, BackendUser::class, ['gc_maxlifetime' => 3600], $logger);
 
         $this->expectException(UsernameNotFoundException::class);
         $this->expectExceptionMessage('User "foobar" has been logged out automatically due to inactivity.');
@@ -264,6 +264,6 @@ class ContaoUserProviderTest extends TestCase
         $session = $this->createMock(SessionInterface::class);
         $logger = $this->createMock(LoggerInterface::class);
 
-        return new ContaoUserProvider($framework, $session, $userClass, $logger);
+        return new ContaoUserProvider($framework, $session, $userClass, ['gc_maxlifetime' => 3600], $logger);
     }
 }

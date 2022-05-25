@@ -769,6 +769,7 @@ services:
             - '@contao.framework'
             - '@session'
             - Contao\BackendUser
+            - '%session.storage.options%'
             - '@?logger'
 
     contao.security.default_data_container_voter:
