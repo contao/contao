@@ -353,24 +353,12 @@ class Ajax extends Backend
 
 				// Set the new value
 				$varValue = Input::post('value', true);
-
-				switch ($this->strAction)
+				$strKey = match ($this->strAction)
 				{
-					case 'reloadPicker':
-						$strKey = 'picker';
-						break;
-
-					case 'reloadPagetree':
-						trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=reloadPagetree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
-						$strKey = 'pageTree';
-						break;
-
-					default:
-						trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=reloadFiletree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
-						$strKey = 'fileTree';
-				}
+					'reloadPicker' => 'picker',
+					'reloadPagetree' => 'pageTree',
+					'reloadFiletree' => 'fileTree',
+				};
 
 				// Convert the selected values
 				if ($varValue)
