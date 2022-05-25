@@ -429,55 +429,8 @@ abstract class DataContainer extends Backend
 		// Validate the field
 		if (Input::post('FORM_SUBMIT') == $this->strTable)
 		{
-			$suffix = $this->getFormFieldSuffix();
-			$key = (Input::get('act') == 'editAll') ? 'FORM_FIELDS_' . $suffix : 'FORM_FIELDS';
-
-			// Calculate the current palette
-			$postPaletteFields = implode(',', Input::post($key));
-			$postPaletteFields = array_unique(StringUtil::trimsplit('[,;]', $postPaletteFields));
-
-			// Compile the palette if there is none
-			if ($strPalette === null)
-			{
-				$newPaletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
-			}
-			else
-			{
-				// Use the given palette ($strPalette is an array in editAll mode)
-				$newPaletteFields = \is_array($strPalette) ? $strPalette : StringUtil::trimsplit('[,;]', $strPalette);
-
-				// Recompile the palette if the current field is a selector field and the value has changed
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']) && $this->varValue != Input::post($this->strInputName) && \in_array($this->strField, $GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
-				{
-					$newPaletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
-				}
-			}
-
-			// Adjust the names in editAll mode
-			if (Input::get('act') == 'editAll')
-			{
-				foreach ($newPaletteFields as $k=>$v)
-				{
-					$newPaletteFields[$k] = $v . '_' . $suffix;
-				}
-
-				if ($this->User->isAdmin)
-				{
-					$newPaletteFields['pid'] = 'pid_' . $suffix;
-					$newPaletteFields['sorting'] = 'sorting_' . $suffix;
-				}
-			}
-
-			$paletteFields = array_intersect($postPaletteFields, $newPaletteFields);
-
-			// Deprecated since Contao 4.2, to be removed in Contao 5.0
-			if (Input::post($this->strInputName) === null && \in_array($this->strInputName, $paletteFields))
-			{
-				trigger_deprecation('contao/core-bundle', '4.2', 'Using $_POST[\'FORM_FIELDS\'] has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.');
-			}
-
 			// Validate and save the field
-			if ($objWidget->submitInput() && (\in_array($this->strInputName, $paletteFields) || Input::get('act') == 'overrideAll'))
+			if ($objWidget->submitInput() && (Input::post($this->strInputName) !== null || Input::get('act') == 'overrideAll'))
 			{
 				$objWidget->validate();
 
@@ -689,9 +642,6 @@ abstract class DataContainer extends Backend
 			$objTemplate->type = $type;
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
-
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$objTemplate->language = Backend::getTinyMceLanguage();
 
 			$updateMode = $objTemplate->parse();
 
@@ -992,29 +942,6 @@ abstract class DataContainer extends Backend
 				}
 
 				continue;
-			}
-
-			trigger_deprecation('contao/core-bundle', '4.13', 'The DCA "move" operation is deprecated and will be removed in Contao 5.');
-
-			$arrDirections = array('up', 'down');
-			$arrRootIds = \is_array($arrRootIds) ? $arrRootIds : array($arrRootIds);
-
-			foreach ($arrDirections as $dir)
-			{
-				$label = !empty($GLOBALS['TL_LANG'][$strTable][$dir][0]) ? $GLOBALS['TL_LANG'][$strTable][$dir][0] : $dir;
-				$title = !empty($GLOBALS['TL_LANG'][$strTable][$dir][1]) ? $GLOBALS['TL_LANG'][$strTable][$dir][1] : $dir;
-
-				$label = Image::getHtml($dir . '.svg', $label);
-				$href = !empty($v['href']) ? $v['href'] : '&amp;act=move';
-
-				if ($dir == 'up')
-				{
-					$return .= ((is_numeric($strPrevious) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $arrRow['id']) . '&amp;sid=' . (int) $strPrevious . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml('up_.svg')) . ' ';
-				}
-				else
-				{
-					$return .= ((is_numeric($strNext) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $arrRow['id']) . '&amp;sid=' . (int) $strNext . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml('down_.svg')) . ' ';
-				}
 			}
 		}
 
