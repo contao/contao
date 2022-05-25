@@ -62,6 +62,14 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\ImagesController:
+        arguments:
+            - '@security.helper'
+            - '@contao.filesystem.virtual.files'
+            - '@contao.image.studio'
+
+    Contao\CoreBundle\Controller\ContentElement\ListController: ~
+
     Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TemplateController: ~

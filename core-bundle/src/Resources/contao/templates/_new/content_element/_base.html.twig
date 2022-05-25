@@ -1,3 +1,5 @@
+{% use "@Contao/component/_headline.html.twig" %}
+
 {% if not searchable|default(true) %}
 <!-- indexer::stop -->
 {%- endif %}
@@ -12,11 +14,9 @@
     {# Wrapper element around headline and content #}
     <{% block wrapper_tag %}div{% endblock %}{% block attributes %}{{ attributes }}{% endblock %}>
         {% block inner %}
-            {% block headline %}
-                {% if headline.text %}
-                    {% include "@Contao/component/_headline.html.twig" with headline|merge({as_editor_view}) only %}
-                {% endif %}
-            {% endblock %}
+            {% if headline.text %}
+                {{ block('headline_component') }}
+            {% endif %}
 
             {% block content %}{% endblock %}
         {% endblock %}
