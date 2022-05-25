@@ -353,12 +353,20 @@ class Ajax extends Backend
 
 				// Set the new value
 				$varValue = Input::post('value', true);
-				$strKey = match ($this->strAction)
+
+				switch ($this->strAction)
 				{
-					'reloadPicker' => 'picker',
-					'reloadPagetree' => 'pageTree',
-					'reloadFiletree' => 'fileTree',
-				};
+					case 'reloadPicker':
+						$strKey = 'picker';
+						break;
+
+					case 'reloadPagetree':
+						$strKey = 'pageTree';
+						break;
+
+					default:
+						$strKey = 'fileTree';
+				}
 
 				// Convert the selected values
 				if ($varValue)
