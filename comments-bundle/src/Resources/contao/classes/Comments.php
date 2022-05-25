@@ -559,7 +559,7 @@ class Comments extends Frontend
 
 		$time = time();
 
-		// Make sure the request URL does not contain non-ascii characters (see #4708)
+		// Ensure that the URL only contains ASCII characters (see #4708)
 		$request = (string) (new Uri(Environment::get('request')));
 
 		// Prepare the record
