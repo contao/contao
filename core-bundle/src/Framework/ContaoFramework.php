@@ -16,7 +16,6 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Environment;
 use Contao\Input;
@@ -53,7 +52,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     public function __construct(
         private RequestStack $requestStack,
         private ScopeMatcher $scopeMatcher,
-        private TokenChecker $tokenChecker,
         private UrlGeneratorInterface $urlGenerator,
         private string $projectDir,
         private int $errorLevel,
@@ -161,27 +159,11 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
             \define('TL_MODE', $this->getMode());
         }
 
-        \define('TL_START', microtime(true));
         \define('TL_ROOT', $this->projectDir);
-        \define('TL_REFERER_ID', $this->getRefererId());
 
         if (!\defined('TL_SCRIPT')) {
             \define('TL_SCRIPT', $this->getRoute());
         }
-
-        // Define the login status constants (see #4099, #5279)
-        if ('FE' === $this->getMode() && ($session = $this->getSession()) && $this->request->hasPreviousSession()) {
-            $session->start();
-
-            \define('BE_USER_LOGGED_IN', $this->tokenChecker->isPreviewMode());
-            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
-        } else {
-            \define('BE_USER_LOGGED_IN', false);
-            \define('FE_USER_LOGGED_IN', false);
-        }
-
-        // Define the relative path to the installation (see #5339)
-        \define('TL_PATH', $this->getPath());
     }
 
     private function getMode(): string|null
@@ -205,11 +187,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         return null;
     }
 
-    private function getRefererId(): string|null
-    {
-        return $this->request?->attributes->get('_contao_referer_id', '');
-    }
-
     private function getRoute(): string|null
     {
         if (null === $this->request) {
@@ -217,11 +194,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         }
 
         return substr($this->request->getBaseUrl().$this->request->getPathInfo(), \strlen($this->request->getBasePath().'/'));
-    }
-
-    private function getPath(): string|null
-    {
-        return $this->request?->getBasePath();
     }
 
     private function initializeFramework(): void

@@ -258,7 +258,6 @@ services:
         arguments:
             - '@request_stack'
             - '@contao.routing.scope_matcher'
-            - '@contao.security.token_checker'
             - '@router'
             - '%kernel.project_dir%'
             - '%contao.error_level%'

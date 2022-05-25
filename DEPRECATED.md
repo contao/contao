@@ -1,25 +1,5 @@
 # Deprecated features
 
-## BE_USER_LOGGED_IN
-
-The constant `BE_USER_LOGGED_IN` has been deprecated and will be removed in
-Contao 5.0. It was historically used to preview unpublished elements in the
-front end. Use the token checker service to check the separate cases instead:
-
-```php
-$hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
-$showUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
-```
-
-## FE_USER_LOGGED_IN
-
-The constant `FE_USER_LOGGED_IN` has been deprecated and will be removed in
-Contao 5.0. Use the token checker service instead:
-
-```php
-$hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
-```
-
 ## kernel.packages
 
 The `kernel.packages` parameter has been deprecated in Contao 4.5 and will be
@@ -233,8 +213,8 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 
 ## Constants
 
-The constants `TL_ROOT`, `TL_MODE`, `TL_START`, `TL_SCRIPT` and `TL_REFERER_ID`
-have been deprecated and will be removed in Contao 5.0.
+The constants `TL_ROOT`, `TL_MODE` and `TL_SCRIPT` have been deprecated and will
+be removed in Contao 5.0.
 
 Use the `kernel.project_dir` instead of `TL_ROOT`:
 
@@ -267,12 +247,6 @@ class Test {
 }
 ```
 
-Use the kernel start time instead of `TL_START`:
-
-```php
-$startTime = System::getContainer()->get('kernel')->getStartTime();
-```
-
 Use the request stack to get the route instead of using `TL_SCRIPT`:
 
 ```php
@@ -281,12 +255,6 @@ $route = System::getContainer()->get('request_stack')->getCurrentRequest()->get(
 if ('contao_backend' === $route) {
     // Do something
 }
-```
-
-Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
-
-```php
-$refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 ```
 
 ## PHP entry points
