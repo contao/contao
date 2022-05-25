@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
@@ -71,6 +72,7 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['translator'] = TranslatorInterface::class;
         $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
         $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
+        $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
 
         return $services;
     }
@@ -89,6 +91,7 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $template->enforceTwoFactor = $this->pageModel->enforceTwoFactor;
         $template->targetPath = $return;
+        $template->requestToken = htmlspecialchars($this->container->get('contao.csrf.token_manager')->getDefaultTokenValue());
 
         $translator = $this->container->get('translator');
 

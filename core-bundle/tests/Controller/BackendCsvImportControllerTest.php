@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -101,6 +102,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
+            $this->createMock(ContaoCsrfTokenManager::class),
             $this->getFixturesDir()
         );
 
@@ -154,6 +156,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
+            $this->createMock(ContaoCsrfTokenManager::class),
             $this->getFixturesDir()
         );
 
@@ -211,6 +214,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $this->createMock(TranslatorInterface::class),
+            $this->createMock(ContaoCsrfTokenManager::class),
             $this->getFixturesDir()
         );
 
@@ -242,6 +246,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $translator,
+            $this->createMock(ContaoCsrfTokenManager::class),
             $this->getFixturesDir()
         );
 
@@ -260,6 +265,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
+            $this->createMock(ContaoCsrfTokenManager::class),
             $this->getFixturesDir()
         );
 
@@ -290,6 +296,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $translator,
+            $this->createMock(ContaoCsrfTokenManager::class),
             $this->getFixturesDir()
         );
 
@@ -321,6 +328,7 @@ class BackendCsvImportControllerTest extends TestCase
             $connection,
             $requestStack,
             $translator,
+            $this->createMock(ContaoCsrfTokenManager::class),
             $this->getFixturesDir()
         );
 
@@ -372,6 +380,7 @@ class BackendCsvImportControllerTest extends TestCase
             $this->createMock(Connection::class),
             $requestStack,
             $translator,
+            $this->createMock(ContaoCsrfTokenManager::class),
             $this->getFixturesDir()
         );
     }

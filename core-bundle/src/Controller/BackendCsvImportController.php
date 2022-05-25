@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Controller;
 
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
@@ -42,6 +43,7 @@ class BackendCsvImportController
         private Connection $connection,
         private RequestStack $requestStack,
         private TranslatorInterface $translator,
+        private ContaoCsrfTokenManager $csrfTokenManager,
         private string $projectDir,
     ) {
     }
@@ -145,6 +147,7 @@ class BackendCsvImportController
         $template->separatorHelp = $this->translator->trans('MSC.separator.1', [], 'contao_default');
         $template->sourceLabel = $this->translator->trans('MSC.source.0', [], 'contao_default');
         $template->sourceLabelHelp = $this->translator->trans('MSC.source.1', [], 'contao_default');
+        $template->requestToken = htmlspecialchars($this->csrfTokenManager->getDefaultTokenValue());
 
         return $template;
     }

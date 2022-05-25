@@ -74,6 +74,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
 		$template->memberWidget = $memberWidget;
+		$template->requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
 
 		if (!$this->isActive())
 		{

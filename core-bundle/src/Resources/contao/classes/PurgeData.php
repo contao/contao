@@ -141,6 +141,7 @@ class PurgeData extends Backend implements MaintenanceModuleInterface
 		$objTemplate->description = $GLOBALS['TL_LANG']['tl_maintenance']['description'];
 		$objTemplate->submit = StringUtil::specialchars($GLOBALS['TL_LANG']['tl_maintenance']['clearCache']);
 		$objTemplate->help = (Config::get('showHelp') && $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1]) ? $GLOBALS['TL_LANG']['tl_maintenance']['cacheTables'][1] : '';
+		$objTemplate->requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
 
 		return $objTemplate->parse();
 	}

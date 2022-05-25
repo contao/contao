@@ -157,6 +157,7 @@ class BackendConfirm extends Backend
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['invalidToken']);
 		$objTemplate->host = Backend::getDecodedHostname();
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
+		$objTemplate->requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
 
 		return $objTemplate->getResponse();
 	}
