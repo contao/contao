@@ -121,3 +121,8 @@ services:
         class: Contao\CoreBundle\Migration\Version500\GuestsMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_500.member_country_uppercase:
+        class: Contao\CoreBundle\Migration\Version500\MemberCountryUppercaseMigration
+        arguments:
+            - '@database_connection'
