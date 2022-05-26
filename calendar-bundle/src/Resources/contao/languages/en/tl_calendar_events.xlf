@@ -161,6 +161,12 @@
       <trans-unit id="tl_calendar_events.external.1">
         <source>By clicking the "read more …" button, visitors will be redirected to custom URL.</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.linkText.0">
+        <source>Link text</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.linkText.1">
+        <source>Here you can override the default "read more…" link text.</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
       </trans-unit>
