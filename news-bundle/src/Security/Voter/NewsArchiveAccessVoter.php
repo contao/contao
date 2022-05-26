@@ -27,21 +27,21 @@ class NewsArchiveAccessVoter extends Voter
 
     protected function supports(string $attribute, $subject)
     {
-        return $subject instanceof DataContainerSubject &&
-            'tl_news_archive' === $subject->table &&
-            str_starts_with($attribute, ContaoCorePermissions::DC_ACTION_PREFIX);
+        return $subject instanceof DataContainerSubject
+            && 'tl_news_archive' === $subject->table
+            && str_starts_with($attribute, ContaoCorePermissions::DC_ACTION_PREFIX);
     }
 
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token)
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         return match ($attribute) {
             ContaoCorePermissions::DC_ACTION_CREATE => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES),
-            ContaoCorePermissions::DC_ACTION_COPY => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES) &&
-                $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id),
+            ContaoCorePermissions::DC_ACTION_COPY => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES)
+                && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id),
             ContaoCorePermissions::DC_ACTION_EDIT,
             ContaoCorePermissions::DC_ACTION_VIEW => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id),
-            ContaoCorePermissions::DC_ACTION_DELETE => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id) &&
-                $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
+            ContaoCorePermissions::DC_ACTION_DELETE => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id)
+                && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
             default => false,
         };
     }
