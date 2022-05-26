@@ -213,38 +213,13 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 
 ## Constants
 
-The constants `TL_ROOT`, `TL_MODE` and `TL_SCRIPT` have been deprecated and will
-be removed in Contao 5.0.
+The constants `TL_ROOT` and `TL_SCRIPT` have been deprecated and will be removed
+in Contao 5.0.
 
 Use the `kernel.project_dir` instead of `TL_ROOT`:
 
 ```php
 $rootDir = System::getContainer()->getParameter('kernel.project_dir');
-```
-
-Use the `ScopeMatcher` service instead of using `TL_MODE`:
-
-```php
-use Contao\CoreBundle\Routing\ScopeMatcher;
-use Symfony\Component\HttpFoundation\RequestStack;
-
-class Test {
-    private $requestStack;
-    private $scopeMatcher;
-
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
-    }
-
-    public function isBackend() {
-        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
-    }
-
-    public function isFrontend() {
-        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
-    }
-}
 ```
 
 Use the request stack to get the route instead of using `TL_SCRIPT`:

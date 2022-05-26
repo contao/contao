@@ -4,7 +4,8 @@
 
 ### Constants
 
-The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START` and `TL_REFERER_ID` have been removed.
+The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`,
+`TL_REFERER_ID` and `TL_MODE` have been removed.
 
 `BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
 token checker service to check the separate cases instead:
@@ -30,6 +31,31 @@ Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
 
 ```php
 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+```
+
+Use the `ScopeMatcher` service instead of using `TL_MODE`:
+
+```php
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
+
+class Test {
+    private $requestStack;
+    private $scopeMatcher;
+
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
+        $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
+    }
+
+    public function isBackend() {
+        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+    }
+
+    public function isFrontend() {
+        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
+    }
+}
 ```
 
 ### TL_CRON

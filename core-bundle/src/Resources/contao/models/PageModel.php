@@ -1015,11 +1015,17 @@ class PageModel extends Model
 		}
 
 		// No root page found
-		elseif (TL_MODE == 'FE' && $this->type != 'root')
+		elseif ($this->type != 'root')
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
-			throw new NoRootPageFoundException('No root page found');
+			if ($isFrontend)
+			{
+				System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
+
+				throw new NoRootPageFoundException('No root page found');
+			}
 		}
 
 		$this->trail = array_reverse($trail);

@@ -63,9 +63,10 @@ abstract class Controller extends System
 	public static function getTemplate($strTemplate)
 	{
 		$strTemplate = basename($strTemplate);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		// Check for a theme folder
-		if (\defined('TL_MODE') && TL_MODE == 'FE')
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
 			/** @var PageModel|null $objPage */
 			global $objPage;
@@ -726,9 +727,10 @@ abstract class Controller extends System
 	public static function isVisibleElement(Model $objElement)
 	{
 		$blnReturn = true;
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		// Only apply the restrictions in the front end
-		if (TL_MODE == 'FE' && $objElement->protected)
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request) && $objElement->protected)
 		{
 			$groups = StringUtil::deserialize($objElement->groups, true);
 			$security = System::getContainer()->get('security.helper');

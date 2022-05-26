@@ -837,9 +837,11 @@ class Newsletter extends Backend
 	public function updateAccount()
 	{
 		$intUser = Input::get('id');
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
 		// Front end call
-		if (TL_MODE == 'FE')
+		if ($isFrontend)
 		{
 			$this->import(FrontendUser::class, 'User');
 			$intUser = $this->User->id;
@@ -852,7 +854,7 @@ class Newsletter extends Backend
 		}
 
 		// Edit account
-		if (TL_MODE == 'FE' || Input::get('act') == 'edit')
+		if ($isFrontend || Input::get('act') == 'edit')
 		{
 			$objUser = $this->Database->prepare("SELECT email, disable FROM tl_member WHERE id=?")
 									  ->limit(1)
@@ -899,7 +901,7 @@ class Newsletter extends Backend
 							   ->execute($strNewsletters, $intUser);
 
 				// Update the front end user object
-				if (TL_MODE == 'FE')
+				if ($isFrontend)
 				{
 					$this->User->newsletter = $strNewsletters;
 				}
@@ -971,10 +973,11 @@ class Newsletter extends Backend
 			return array();
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$arrNewsletters = array();
 
 		// Return all channels if $objModule is null (see #5874)
-		if ($objModule === null || TL_MODE == 'BE')
+		if ($objModule === null || ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request)))
 		{
 			while ($objNewsletter->next())
 			{

@@ -31,8 +31,9 @@ class Message
 	 * @param string $strMessage The error message
 	 * @param string $strScope   An optional message scope
 	 */
-	public static function addError($strMessage, $strScope=TL_MODE)
+	public static function addError($strMessage, $strScope=null)
 	{
+		$strScope ??= self::getMode();
 		static::add($strMessage, 'TL_ERROR', $strScope);
 	}
 
@@ -42,8 +43,9 @@ class Message
 	 * @param string $strMessage The confirmation message
 	 * @param string $strScope   An optional message scope
 	 */
-	public static function addConfirmation($strMessage, $strScope=TL_MODE)
+	public static function addConfirmation($strMessage, $strScope=null)
 	{
+		$strScope ??= self::getMode();
 		static::add($strMessage, 'TL_CONFIRM', $strScope);
 	}
 
@@ -53,8 +55,9 @@ class Message
 	 * @param string $strMessage The new message
 	 * @param string $strScope   An optional message scope
 	 */
-	public static function addNew($strMessage, $strScope=TL_MODE)
+	public static function addNew($strMessage, $strScope=null)
 	{
+		$strScope ??= self::getMode();
 		static::add($strMessage, 'TL_NEW', $strScope);
 	}
 
@@ -64,8 +67,9 @@ class Message
 	 * @param string $strMessage The info message
 	 * @param string $strScope   An optional message scope
 	 */
-	public static function addInfo($strMessage, $strScope=TL_MODE)
+	public static function addInfo($strMessage, $strScope=null)
 	{
+		$strScope ??= self::getMode();
 		static::add($strMessage, 'TL_INFO', $strScope);
 	}
 
@@ -75,8 +79,9 @@ class Message
 	 * @param string $strMessage The preformatted message
 	 * @param string $strScope   An optional message scope
 	 */
-	public static function addRaw($strMessage, $strScope=TL_MODE)
+	public static function addRaw($strMessage, $strScope=null)
 	{
+		$strScope ??= self::getMode();
 		static::add($strMessage, 'TL_RAW', $strScope);
 	}
 
@@ -89,8 +94,10 @@ class Message
 	 *
 	 * @throws \Exception If $strType is not a valid message type
 	 */
-	public static function add($strMessage, $strType, $strScope=TL_MODE)
+	public static function add($strMessage, $strType, $strScope=null)
 	{
+		$strScope ??= self::getMode();
+
 		if (!$strMessage)
 		{
 			return;
@@ -111,8 +118,9 @@ class Message
 	 *
 	 * @return string The messages HTML markup
 	 */
-	public static function generate($strScope=TL_MODE)
+	public static function generate($strScope=null)
 	{
+		$strScope ??= self::getMode();
 		$strMessages = static::generateUnwrapped($strScope);
 
 		if ($strMessages)
@@ -131,8 +139,9 @@ class Message
 	 *
 	 * @return string The messages HTML markup
 	 */
-	public static function generateUnwrapped($strScope=TL_MODE, $blnRaw=false)
+	public static function generateUnwrapped($strScope=null, $blnRaw=false)
 	{
+		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -204,8 +213,9 @@ class Message
 	 *
 	 * @return boolean True if there are error messages
 	 */
-	public static function hasError($strScope=TL_MODE)
+	public static function hasError($strScope=null)
 	{
+		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -223,8 +233,9 @@ class Message
 	 *
 	 * @return boolean True if there are confirmation messages
 	 */
-	public static function hasConfirmation($strScope=TL_MODE)
+	public static function hasConfirmation($strScope=null)
 	{
+		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -242,8 +253,9 @@ class Message
 	 *
 	 * @return boolean True if there are new messages
 	 */
-	public static function hasNew($strScope=TL_MODE)
+	public static function hasNew($strScope=null)
 	{
+		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -261,8 +273,9 @@ class Message
 	 *
 	 * @return boolean True if there are info messages
 	 */
-	public static function hasInfo($strScope=TL_MODE)
+	public static function hasInfo($strScope=null)
 	{
+		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -280,8 +293,9 @@ class Message
 	 *
 	 * @return boolean True if there are raw messages
 	 */
-	public static function hasRaw($strScope=TL_MODE)
+	public static function hasRaw($strScope=null)
 	{
+		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -299,8 +313,10 @@ class Message
 	 *
 	 * @return boolean True if there are messages
 	 */
-	public static function hasMessages($strScope=TL_MODE)
+	public static function hasMessages($strScope=null)
 	{
+		$strScope ??= self::getMode();
+
 		return static::hasError($strScope) || static::hasConfirmation($strScope) || static::hasNew($strScope) || static::hasInfo($strScope) || static::hasRaw($strScope);
 	}
 
@@ -312,8 +328,34 @@ class Message
 	 *
 	 * @return string The flash bag key
 	 */
-	protected static function getFlashBagKey($strType, $strScope=TL_MODE)
+	protected static function getFlashBagKey($strType, $strScope=null)
 	{
+		$strScope ??= self::getMode();
+
 		return 'contao.' . $strScope . '.' . strtolower(str_replace('TL_', '', $strType));
+	}
+
+	private static function getMode(): string
+	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if (!$request)
+		{
+			return '';
+		}
+
+		$matcher = System::getContainer()->get('contao.routing.scope_matcher');
+
+		if ($matcher->isBackendRequest($request))
+		{
+			return 'BE';
+		}
+
+		if ($matcher->isFrontendRequest($request))
+		{
+			return 'FE';
+		}
+
+		return '';
 	}
 }
