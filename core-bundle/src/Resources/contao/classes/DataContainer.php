@@ -430,50 +430,37 @@ abstract class DataContainer extends Backend
 		if (Input::post('FORM_SUBMIT') == $this->strTable)
 		{
 			$suffix = $this->getFormFieldSuffix();
-			$key = (Input::get('act') == 'editAll') ? 'FORM_FIELDS_' . $suffix : 'FORM_FIELDS';
-
-			// Calculate the current palette
-			$postPaletteFields = implode(',', Input::post($key));
-			$postPaletteFields = array_unique(StringUtil::trimsplit('[,;]', $postPaletteFields));
 
 			// Compile the palette if there is none
 			if ($strPalette === null)
 			{
-				$newPaletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
+				$paletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
 			}
 			else
 			{
 				// Use the given palette ($strPalette is an array in editAll mode)
-				$newPaletteFields = \is_array($strPalette) ? $strPalette : StringUtil::trimsplit('[,;]', $strPalette);
+				$paletteFields = \is_array($strPalette) ? $strPalette : StringUtil::trimsplit('[,;]', $strPalette);
 
 				// Recompile the palette if the current field is a selector field and the value has changed
 				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']) && $this->varValue != Input::post($this->strInputName) && \in_array($this->strField, $GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
 				{
-					$newPaletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
+					$paletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
 				}
 			}
 
 			// Adjust the names in editAll mode
 			if (Input::get('act') == 'editAll')
 			{
-				foreach ($newPaletteFields as $k=>$v)
+				foreach ($paletteFields as $k=>$v)
 				{
-					$newPaletteFields[$k] = $v . '_' . $suffix;
+					$paletteFields[$k] = $v . '_' . $suffix;
 				}
 
 				if ($this->User->isAdmin)
 				{
-					$newPaletteFields['pid'] = 'pid_' . $suffix;
-					$newPaletteFields['sorting'] = 'sorting_' . $suffix;
+					$paletteFields[] = 'pid_' . $suffix;
+					$paletteFields[] = 'sorting_' . $suffix;
 				}
-			}
-
-			$paletteFields = array_intersect($postPaletteFields, $newPaletteFields);
-
-			// Deprecated since Contao 4.2, to be removed in Contao 5.0
-			if (Input::post($this->strInputName) === null && \in_array($this->strInputName, $paletteFields))
-			{
-				trigger_deprecation('contao/core-bundle', '4.2', 'Using $_POST[\'FORM_FIELDS\'] has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.');
 			}
 
 			// Validate and save the field
