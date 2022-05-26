@@ -97,6 +97,27 @@ class FilesystemItemIterator implements \IteratorAggregate
         return true;
     }
 
+    public function limit(int $numberOfElements): self
+    {
+        if ($numberOfElements < 0) {
+            throw new \OutOfRangeException(sprintf('Illegal limit value "%d", must be greater or equal to zero.', $numberOfElements));
+        }
+
+        $listLimited = static function (iterable $listing) use ($numberOfElements): \Generator {
+            $count = 0;
+
+            foreach ($listing as $item) {
+                if (++$count > $numberOfElements) {
+                    return;
+                }
+
+                yield $item;
+            }
+        };
+
+        return new self($listLimited($this->listing));
+    }
+
     /**
      * @return \Traversable<FilesystemItem>
      */

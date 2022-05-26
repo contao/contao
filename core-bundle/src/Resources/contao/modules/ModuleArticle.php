@@ -200,17 +200,7 @@ class ModuleArticle extends Module
 		$this->Template->teaser = $this->teaser;
 		$this->Template->elements = $arrElements;
 
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($this->printable == 1)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.');
-
-			$this->Template->printable = !empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']);
-			$this->Template->pdfButton = $this->Template->printable;
-		}
-
-		// New structure
-		elseif ($this->printable)
+		if ($this->printable)
 		{
 			$options = StringUtil::deserialize($this->printable);
 

@@ -40,6 +40,7 @@
       $objCombiner->add('bundles/contaocore/limit-height.min.js');
       $objCombiner->add('bundles/contaocore/tips.min.js');
       $objCombiner->add('bundles/contaocore/sectionwizard.min.js');
+      $objCombiner->add('bundles/contaocore/toggle-fieldset.min.js');
       $objCombiner->add('system/themes/'.$this->theme.'/hover.min.js');
       echo $objCombiner->getCombinedFile();
     ?>"></script>

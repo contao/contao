@@ -266,7 +266,6 @@ class ModuleEventlist extends Events
 		$strDate = '';
 		$strEvents = '';
 		$eventCount = 0;
-		$headerCount = 0;
 
 		$uuids = array();
 
@@ -285,13 +284,6 @@ class ModuleEventlist extends Events
 		for ($i=$offset; $i<$limit; $i++)
 		{
 			$event = $arrEvents[$i];
-			$blnIsLastEvent = false;
-
-			// Last event on the current day
-			if (($i+1) == $limit || !isset($arrEvents[($i+1)]['firstDate']) || $event['firstDate'] != $arrEvents[($i+1)]['firstDate'])
-			{
-				$blnIsLastEvent = true;
-			}
 
 			$objTemplate = new FrontendTemplate($this->cal_template ?: 'event_list');
 			$objTemplate->setData($event);
@@ -306,7 +298,6 @@ class ModuleEventlist extends Events
 			// Day header
 			if ($strDate != $event['firstDate'])
 			{
-				$headerCount = 0;
 				$objTemplate->header = true;
 				$strDate = $event['firstDate'];
 			}
@@ -407,7 +398,6 @@ class ModuleEventlist extends Events
 			$strEvents .= $objTemplate->parse();
 
 			++$eventCount;
-			++$headerCount;
 		}
 
 		// No events found

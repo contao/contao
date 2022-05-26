@@ -46,7 +46,6 @@ use Contao\FormExplanation;
 use Contao\FormFieldModel;
 use Contao\FormFieldsetStart;
 use Contao\FormFieldsetStop;
-use Contao\FormFile;
 use Contao\FormHidden;
 use Contao\FormHtml;
 use Contao\FormModel;
@@ -57,6 +56,7 @@ use Contao\FormSelect;
 use Contao\FormSubmit;
 use Contao\FormText;
 use Contao\FormTextarea;
+use Contao\FormUpload;
 use Contao\ImageSize;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
@@ -364,7 +364,7 @@ $GLOBALS['TL_FFL'] = array
 	'select'        => FormSelect::class,
 	'radio'         => FormRadio::class,
 	'checkbox'      => FormCheckbox::class,
-	'upload'        => FormFile::class,
+	'upload'        => FormUpload::class,
 	'range'         => FormRange::class,
 	'hidden'        => FormHidden::class,
 	'captcha'       => FormCaptcha::class,
