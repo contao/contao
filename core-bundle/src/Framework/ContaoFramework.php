@@ -159,8 +159,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
             \define('TL_MODE', $this->getMode());
         }
 
-        \define('TL_ROOT', $this->projectDir);
-
         if (!\defined('TL_SCRIPT')) {
             \define('TL_SCRIPT', $this->getRoute());
         }

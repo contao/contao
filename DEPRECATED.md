@@ -213,14 +213,8 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 
 ## Constants
 
-The constants `TL_ROOT`, `TL_MODE` and `TL_SCRIPT` have been deprecated and will
-be removed in Contao 5.0.
-
-Use the `kernel.project_dir` instead of `TL_ROOT`:
-
-```php
-$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-```
+The constants `TL_MODE` and `TL_SCRIPT` have been deprecated and will be removed
+in Contao 5.0.
 
 Use the `ScopeMatcher` service instead of using `TL_MODE`:
 
