@@ -213,8 +213,8 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 
 ## Constants
 
-The constants `TL_ROOT`, `TL_MODE` and `TL_SCRIPT` have been deprecated and will
-be removed in Contao 5.0.
+The constants `TL_ROOT` and `TL_MODE` have been deprecated and will be removed
+in Contao 5.0.
 
 Use the `kernel.project_dir` instead of `TL_ROOT`:
 
@@ -244,16 +244,6 @@ class Test {
     public function isFrontend() {
         return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
     }
-}
-```
-
-Use the request stack to get the route instead of using `TL_SCRIPT`:
-
-```php
-$route = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
-
-if ('contao_backend' === $route) {
-    // Do something
 }
 ```
 

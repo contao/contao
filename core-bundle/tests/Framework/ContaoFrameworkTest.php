@@ -64,10 +64,8 @@ class ContaoFrameworkTest extends TestCase
 
         $this->assertTrue(\defined('TL_MODE'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertSame('FE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('index.html', TL_SCRIPT);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
     }
 
@@ -89,10 +87,8 @@ class ContaoFrameworkTest extends TestCase
 
         $this->assertTrue(\defined('TL_MODE'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertSame('BE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('contao/login', TL_SCRIPT);
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
 
@@ -108,10 +104,8 @@ class ContaoFrameworkTest extends TestCase
 
         $this->assertTrue(\defined('TL_MODE'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertNull(TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertNull(TL_SCRIPT);
     }
 
     /**
@@ -126,10 +120,8 @@ class ContaoFrameworkTest extends TestCase
 
         $this->assertTrue(\defined('TL_MODE'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertSame('FE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertNull(TL_SCRIPT);
     }
 
     /**
@@ -148,10 +140,8 @@ class ContaoFrameworkTest extends TestCase
 
         $this->assertTrue(\defined('TL_MODE'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertSame('FE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('index.php/index.html', TL_SCRIPT);
     }
 
     /**
@@ -170,10 +160,8 @@ class ContaoFrameworkTest extends TestCase
 
         $this->assertTrue(\defined('TL_MODE'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertNull(TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('contao/login', TL_SCRIPT);
     }
 
     /**
@@ -205,10 +193,8 @@ class ContaoFrameworkTest extends TestCase
 
         $this->assertTrue(\defined('TL_MODE'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertSame('FE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('index.html', TL_SCRIPT);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
     }
 

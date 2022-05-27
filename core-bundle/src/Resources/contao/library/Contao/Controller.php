@@ -1085,7 +1085,7 @@ abstract class Controller extends System
 			$uri = '?' . http_build_query($pairs, '', '&amp;', PHP_QUERY_RFC3986);
 		}
 
-		return TL_SCRIPT . $uri;
+		return substr($request->getBaseUrl() . $request->getPathInfo(), \strlen($request->getBasePath() . '/')) . $uri;
 	}
 
 	/**
