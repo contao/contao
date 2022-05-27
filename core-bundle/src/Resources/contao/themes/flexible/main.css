@@ -107,7 +107,7 @@ body:not(.fullscreen) #header .inner {
 #tmenu a,#tmenu .profile button,#tmenu .burger button {
 	transition:background-color .3s ease;
 }
-#tmenu a:hover,#tmenu a.hover,#tmenu li:hover .profile button,#tmenu .active .profile,#tmenu .burger button:hover {
+#tmenu a:hover,#tmenu a.hover,#tmenu li:hover .profile button,#tmenu .active .profile button,#tmenu .burger button:hover {
 	background-color:#e87600;
 }
 #tmenu ul.menu_level_1 {
