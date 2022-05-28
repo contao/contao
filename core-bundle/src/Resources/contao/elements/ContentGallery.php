@@ -161,7 +161,6 @@ class ContentGallery extends ContentElement
 				break;
 
 			case 'custom':
-				$images = ArrayUtil::sortByOrderField($images, $this->orderSRC);
 				break;
 
 			case 'random':

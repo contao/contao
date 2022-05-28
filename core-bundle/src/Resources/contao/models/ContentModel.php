@@ -62,7 +62,6 @@ use Contao\Model\Collection;
  * @property string            $rel
  * @property string|boolean    $useImage
  * @property string|array|null $multiSRC
- * @property string|array|null $orderSRC
  * @property string|boolean    $useHomeDir
  * @property string|integer    $perRow
  * @property string|integer    $perPage
@@ -156,7 +155,6 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByRel($val, array $opt=array())
  * @method static ContentModel|null findOneByUseImage($val, array $opt=array())
  * @method static ContentModel|null findOneByMultiSRC($val, array $opt=array())
- * @method static ContentModel|null findOneByOrderSRC($val, array $opt=array())
  * @method static ContentModel|null findOneByUseHomeDir($val, array $opt=array())
  * @method static ContentModel|null findOneByPerRow($val, array $opt=array())
  * @method static ContentModel|null findOneByPerPage($val, array $opt=array())
@@ -243,7 +241,6 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByRel($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByUseImage($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByMultiSRC($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByOrderSRC($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByUseHomeDir($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPerRow($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPerPage($val, array $opt=array())
@@ -334,7 +331,6 @@ use Contao\Model\Collection;
  * @method static integer countByRel($val, array $opt=array())
  * @method static integer countByUseImage($val, array $opt=array())
  * @method static integer countByMultiSRC($val, array $opt=array())
- * @method static integer countByOrderSRC($val, array $opt=array())
  * @method static integer countByUseHomeDir($val, array $opt=array())
  * @method static integer countByPerRow($val, array $opt=array())
  * @method static integer countByPerPage($val, array $opt=array())
