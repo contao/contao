@@ -2141,7 +2141,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (!$this->ptable)
 				{
-					$this->redirect(TL_SCRIPT . '?do=' . Input::get('do'));
+					$this->redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do'));
 				}
 				// TODO: try to abstract this
 				elseif ($this->ptable == 'tl_page' && $this->strTable == 'tl_article')
@@ -2157,7 +2157,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				Message::reset();
 
-				$strUrl = TL_SCRIPT . '?do=' . Input::get('do');
+				$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do');
 
 				if (Input::get('table') !== null)
 				{
@@ -2188,7 +2188,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				Message::reset();
 
-				$strUrl = TL_SCRIPT . '?do=' . Input::get('do');
+				$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do');
 
 				if (Input::get('table') !== null)
 				{

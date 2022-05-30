@@ -828,7 +828,7 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		$strUrl = TL_SCRIPT . '?' . implode('&', $arrKeys);
+		$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?' . implode('&', $arrKeys);
 
 		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
 	}

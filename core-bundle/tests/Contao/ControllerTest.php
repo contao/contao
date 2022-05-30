@@ -67,13 +67,8 @@ class ControllerTest extends TestCase
         $this->assertSame('margin:40px 10% -2px -50%;', Controller::generateMargin($margins));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testAddToUrlWithoutQueryString(): void
     {
-        \define('TL_SCRIPT', '');
-
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'cri');
 
@@ -109,13 +104,8 @@ class ControllerTest extends TestCase
         $this->assertSame('?act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testAddToUrlWithQueryString(): void
     {
-        \define('TL_SCRIPT', '');
-
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'cri');
         $request->server->set('QUERY_STRING', 'do=page&id=4');
