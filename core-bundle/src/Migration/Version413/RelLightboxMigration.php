@@ -81,8 +81,8 @@ class RelLightboxMigration extends AbstractMigration
     private function getTargets(): array
     {
         $this->framework->initialize();
-        $schemaManager = $this->connection->createSchemaManager();
 
+        $schemaManager = $this->connection->createSchemaManager();
         $targets = [];
 
         foreach ($schemaManager->listTableNames() as $tableName) {
