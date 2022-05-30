@@ -464,7 +464,7 @@ abstract class DataContainer extends Backend
 			}
 
 			// Validate and save the field
-			if ($objWidget->submitInput() && (\in_array($this->strInputName, $paletteFields) || Input::get('act') == 'overrideAll'))
+			if ($objWidget->submitInput() && Input::post($this->strInputName) !== null)
 			{
 				$objWidget->validate();
 
