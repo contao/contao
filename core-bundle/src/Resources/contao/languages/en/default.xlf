@@ -1311,7 +1311,7 @@
         <source>Save and close</source>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
-        <source>Save and edit</source>
+        <source>Save and edit child elements</source>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
