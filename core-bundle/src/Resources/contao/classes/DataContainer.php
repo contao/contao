@@ -426,88 +426,50 @@ abstract class DataContainer extends Backend
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
 
-		// Validate the field
-		if (Input::post('FORM_SUBMIT') == $this->strTable)
+		// Validate and save the field
+		if ((Input::post('FORM_SUBMIT') == $this->strTable) && $objWidget->submitInput() && Input::post($this->strInputName) !== null)
 		{
-			$suffix = $this->getFormFieldSuffix();
+			$objWidget->validate();
 
-			// Compile the palette if there is none
-			if ($strPalette === null)
+			if ($objWidget->hasErrors())
 			{
-				$paletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
-			}
-			else
-			{
-				// Use the given palette ($strPalette is an array in editAll mode)
-				$paletteFields = \is_array($strPalette) ? $strPalette : StringUtil::trimsplit('[,;]', $strPalette);
-
-				// Recompile the palette if the current field is a selector field and the value has changed
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']) && $this->varValue != Input::post($this->strInputName) && \in_array($this->strField, $GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
+				// Skip mandatory fields on auto-submit (see #4077)
+				if (!$objWidget->mandatory || $objWidget->value || Input::post('SUBMIT_TYPE') != 'auto')
 				{
-					$paletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
+					$this->noReload = true;
 				}
 			}
-
-			// Adjust the names in editAll mode
-			if (Input::get('act') == 'editAll')
+			// The return value of submitInput() might have changed, therefore check it again here (see #2383)
+			elseif ($objWidget->submitInput())
 			{
-				foreach ($paletteFields as $k=>$v)
+				$varValue = $objWidget->value;
+
+				// Sort array by key (fix for JavaScript wizards)
+				if (\is_array($varValue))
 				{
-					$paletteFields[$k] = $v . '_' . $suffix;
+					ksort($varValue);
+					$varValue = serialize($varValue);
 				}
 
-				if ($this->User->isAdmin)
+				// Convert file paths in src attributes (see #5965)
+				if ($varValue && isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
 				{
-					$paletteFields[] = 'pid_' . $suffix;
-					$paletteFields[] = 'sorting_' . $suffix;
+					$varValue = StringUtil::srcToInsertTag($varValue);
 				}
-			}
 
-			// Validate and save the field
-			if ($objWidget->submitInput() && Input::post($this->strInputName) !== null)
-			{
-				$objWidget->validate();
-
-				if ($objWidget->hasErrors())
+				// Save the current value
+				try
 				{
-					// Skip mandatory fields on auto-submit (see #4077)
-					if (!$objWidget->mandatory || $objWidget->value || Input::post('SUBMIT_TYPE') != 'auto')
-					{
-						$this->noReload = true;
-					}
+					$this->save($varValue);
 				}
-				// The return value of submitInput() might have changed, therefore check it again here (see #2383)
-				elseif ($objWidget->submitInput())
+				catch (ResponseException $e)
 				{
-					$varValue = $objWidget->value;
-
-					// Sort array by key (fix for JavaScript wizards)
-					if (\is_array($varValue))
-					{
-						ksort($varValue);
-						$varValue = serialize($varValue);
-					}
-
-					// Convert file paths in src attributes (see #5965)
-					if ($varValue && isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
-					{
-						$varValue = StringUtil::srcToInsertTag($varValue);
-					}
-
-					// Save the current value
-					try
-					{
-						$this->save($varValue);
-					}
-					catch (ResponseException $e)
-					{
-						throw $e;
-					}
-					catch (\Exception $e)
-					{
-						$this->noReload = true;
-						$objWidget->addError($e->getMessage());
-					}
+					throw $e;
+				}
+				catch (\Exception $e)
+				{
+					$this->noReload = true;
+					$objWidget->addError($e->getMessage());
 				}
 			}
 		}
