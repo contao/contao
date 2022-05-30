@@ -63,7 +63,7 @@ class Environment
 		{
 			$arrChunks = preg_split('/([A-Z][a-z]*)/', $strKey, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 			$strServerKey = strtoupper(implode('_', $arrChunks));
-			static::$arrCache[$strKey] = $_SERVER[$strServerKey];
+			static::$arrCache[$strKey] = $_SERVER[$strServerKey] ?? null;
 		}
 
 		return static::$arrCache[$strKey];

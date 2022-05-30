@@ -361,14 +361,10 @@ class Ajax extends Backend
 						break;
 
 					case 'reloadPagetree':
-						trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=reloadPagetree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
 						$strKey = 'pageTree';
 						break;
 
 					default:
-						trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=reloadFiletree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
 						$strKey = 'fileTree';
 				}
 
