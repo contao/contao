@@ -1105,7 +1105,6 @@ abstract class Controller extends System
 	public static function redirect($strLocation, $intStatus=303)
 	{
 		$strLocation = str_replace('&amp;', '&', $strLocation);
-		$strLocation = static::replaceOldBePaths($strLocation);
 
 		// Make the location an absolute URL
 		if (!preg_match('@^https?://@i', $strLocation))
@@ -1120,48 +1119,6 @@ abstract class Controller extends System
 		}
 
 		throw new RedirectResponseException($strLocation, $intStatus);
-	}
-
-	/**
-	 * Replace the old back end paths
-	 *
-	 * @param string $strContext The context
-	 *
-	 * @return string The modified context
-	 */
-	protected static function replaceOldBePaths($strContext)
-	{
-		$arrCache = &self::$arrOldBePathCache;
-
-		$arrMapper = array
-		(
-			'contao/confirm.php'   => 'contao_backend_confirm',
-			'contao/help.php'      => 'contao_backend_help',
-			'contao/index.php'     => 'contao_backend_login',
-			'contao/main.php'      => 'contao_backend',
-			'contao/password.php'  => 'contao_backend_password',
-			'contao/popup.php'     => 'contao_backend_popup',
-			'contao/preview.php'   => 'contao_backend_preview',
-		);
-
-		$replace = static function ($matches) use ($arrMapper, &$arrCache)
-		{
-			$key = $matches[0];
-
-			if (!isset($arrCache[$key]))
-			{
-				trigger_deprecation('contao/core-bundle', '4.0', 'Using old backend paths has been deprecated in Contao 4.0 and will be removed in Contao 5. Use the backend routes instead.');
-
-				$router = System::getContainer()->get('router');
-				$arrCache[$key] = substr($router->generate($arrMapper[$key]), \strlen(Environment::get('path')) + 1);
-			}
-
-			return $arrCache[$key];
-		};
-
-		$regex = '(' . implode('|', array_map('preg_quote', array_keys($arrMapper))) . ')';
-
-		return preg_replace_callback($regex, $replace, $strContext);
 	}
 
 	/**

@@ -639,9 +639,6 @@ abstract class DataContainer extends Backend
 			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
 
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$objTemplate->language = Backend::getTinyMceLanguage();
-
 			$updateMode = $objTemplate->parse();
 
 			unset($file, $type, $pickerBuilder, $fileBrowserTypes, $fileBrowserType);
@@ -941,29 +938,6 @@ abstract class DataContainer extends Backend
 				}
 
 				continue;
-			}
-
-			trigger_deprecation('contao/core-bundle', '4.13', 'The DCA "move" operation is deprecated and will be removed in Contao 5.');
-
-			$arrDirections = array('up', 'down');
-			$arrRootIds = \is_array($arrRootIds) ? $arrRootIds : array($arrRootIds);
-
-			foreach ($arrDirections as $dir)
-			{
-				$label = !empty($GLOBALS['TL_LANG'][$strTable][$dir][0]) ? $GLOBALS['TL_LANG'][$strTable][$dir][0] : $dir;
-				$title = !empty($GLOBALS['TL_LANG'][$strTable][$dir][1]) ? $GLOBALS['TL_LANG'][$strTable][$dir][1] : $dir;
-
-				$label = Image::getHtml($dir . '.svg', $label);
-				$href = !empty($v['href']) ? $v['href'] : '&amp;act=move';
-
-				if ($dir == 'up')
-				{
-					$return .= ((is_numeric($strPrevious) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $arrRow['id']) . '&amp;sid=' . (int) $strPrevious . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml('up_.svg')) . ' ';
-				}
-				else
-				{
-					$return .= ((is_numeric($strNext) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $arrRow['id']) . '&amp;sid=' . (int) $strNext . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml('down_.svg')) . ' ';
-				}
 			}
 		}
 

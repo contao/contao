@@ -6158,12 +6158,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$this->root = $objIds->fetchEach('id');
 				}
-
-				if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste']))
-				{
-					trigger_deprecation('contao/core-bundle', '4.13', 'Implicitly setting "TL_DCA.%s.list.sorting.rootPaste" to true by leaving "TL_DCA.%s.list.sorting.root" empty has been deprecated and will no longer work in Contao 5.0. Set "rootPaste" to true instead.', $table, $table);
-					$this->rootPaste = true;
-				}
 			}
 
 			// Get root records from global configuration file
