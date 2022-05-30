@@ -19,7 +19,6 @@ use Contao\CoreBundle\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
@@ -64,20 +63,11 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('TL_PATH'));
         $this->assertSame('FE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('', TL_REFERER_ID);
         $this->assertSame('index.html', TL_SCRIPT);
-        $this->assertFalse(BE_USER_LOGGED_IN);
-        $this->assertFalse(FE_USER_LOGGED_IN);
-        $this->assertSame('', TL_PATH);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
     }
 
@@ -98,20 +88,11 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('TL_PATH'));
         $this->assertSame('BE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('foobar', TL_REFERER_ID);
         $this->assertSame('contao/login', TL_SCRIPT);
-        $this->assertFalse(BE_USER_LOGGED_IN);
-        $this->assertFalse(FE_USER_LOGGED_IN);
-        $this->assertSame('', TL_PATH);
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
 
@@ -126,20 +107,11 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('TL_PATH'));
         $this->assertNull(TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertNull(TL_REFERER_ID);
         $this->assertNull(TL_SCRIPT);
-        $this->assertFalse(BE_USER_LOGGED_IN);
-        $this->assertFalse(FE_USER_LOGGED_IN);
-        $this->assertNull(TL_PATH);
     }
 
     /**
@@ -153,20 +125,11 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize(true);
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('TL_PATH'));
         $this->assertSame('FE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertNull(TL_REFERER_ID);
         $this->assertNull(TL_SCRIPT);
-        $this->assertFalse(BE_USER_LOGGED_IN);
-        $this->assertFalse(FE_USER_LOGGED_IN);
-        $this->assertNull(TL_PATH);
     }
 
     /**
@@ -184,20 +147,11 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize(true);
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('TL_PATH'));
         $this->assertSame('FE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('', TL_REFERER_ID);
         $this->assertSame('index.php/index.html', TL_SCRIPT);
-        $this->assertFalse(BE_USER_LOGGED_IN);
-        $this->assertFalse(FE_USER_LOGGED_IN);
-        $this->assertSame('/contao4/public', TL_PATH);
     }
 
     /**
@@ -215,20 +169,11 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('TL_PATH'));
         $this->assertNull(TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('foobar', TL_REFERER_ID);
         $this->assertSame('contao/login', TL_SCRIPT);
-        $this->assertFalse(BE_USER_LOGGED_IN);
-        $this->assertFalse(FE_USER_LOGGED_IN);
-        $this->assertSame('', TL_PATH);
     }
 
     /**
@@ -254,38 +199,16 @@ class ContaoFrameworkTest extends TestCase
         $request->cookies->set($session->getName(), 'foobar');
         $request->setSession($session);
 
-        $tokenChecker = $this->createMock(TokenChecker::class);
-        $tokenChecker
-            ->expects($this->once())
-            ->method('isPreviewMode')
-            ->willReturn(true)
-        ;
-
-        $tokenChecker
-            ->expects($this->once())
-            ->method('hasFrontendUser')
-            ->willReturn(true)
-        ;
-
-        $framework = $this->getFramework($request, null, $tokenChecker);
+        $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_START'));
         $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_REFERER_ID'));
         $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertTrue(\defined('BE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('FE_USER_LOGGED_IN'));
-        $this->assertTrue(\defined('TL_PATH'));
         $this->assertSame('FE', TL_MODE);
         $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('', TL_REFERER_ID);
         $this->assertSame('index.html', TL_SCRIPT);
-        $this->assertTrue(BE_USER_LOGGED_IN);
-        $this->assertTrue(FE_USER_LOGGED_IN);
-        $this->assertSame('', TL_PATH);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
     }
 
@@ -297,13 +220,13 @@ class ContaoFrameworkTest extends TestCase
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('isBackendRequest')
             ->willReturn(false)
         ;
 
         $scopeMatcher
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('isFrontendRequest')
             ->willReturn(false)
         ;
@@ -368,7 +291,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = new ContaoFramework(
             $requestStack,
             $this->mockScopeMatcher(),
-            $this->createMock(TokenChecker::class),
             $urlGenerator,
             $this->getTempDir(),
             error_reporting()
@@ -407,7 +329,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = new ContaoFramework(
             $requestStack,
             $this->mockScopeMatcher(),
-            $this->createMock(TokenChecker::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting()
@@ -641,7 +562,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertCount(0, $registry);
     }
 
-    private function getFramework(Request $request = null, ScopeMatcher $scopeMatcher = null, TokenChecker $tokenChecker = null): ContaoFramework
+    private function getFramework(Request $request = null, ScopeMatcher $scopeMatcher = null): ContaoFramework
     {
         $requestStack = new RequestStack();
 
@@ -652,7 +573,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = new ContaoFramework(
             $requestStack,
             $scopeMatcher ?? $this->mockScopeMatcher(),
-            $tokenChecker ?? $this->createMock(TokenChecker::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting()

@@ -2,6 +2,36 @@
 
 ## Version 4.* to 5.0
 
+### Constants
+
+The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START` and `TL_REFERER_ID` have been removed.
+
+`BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
+token checker service to check the separate cases instead:
+
+```php
+$hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+$showUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+```
+
+Use the token checker service instead of `FE_USER_LOGGED_IN`:
+
+```php
+$hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+```
+
+Use the kernel start time instead of `TL_START`:
+
+```php
+$startTime = System::getContainer()->get('kernel')->getStartTime();
+```
+
+Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
+
+```php
+$refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+```
+
 ### TL_CRON
 
 Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob`
