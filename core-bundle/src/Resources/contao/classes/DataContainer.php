@@ -426,54 +426,50 @@ abstract class DataContainer extends Backend
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
 
-		// Validate the field
-		if (Input::post('FORM_SUBMIT') == $this->strTable)
+		// Validate and save the field
+		if (Input::post('FORM_SUBMIT') == $this->strTable && $objWidget->submitInput() && Input::post($this->strInputName) !== null)
 		{
-			// Validate and save the field
-			if ($objWidget->submitInput() && (Input::post($this->strInputName) !== null || Input::get('act') == 'overrideAll'))
+			$objWidget->validate();
+
+			if ($objWidget->hasErrors())
 			{
-				$objWidget->validate();
-
-				if ($objWidget->hasErrors())
+				// Skip mandatory fields on auto-submit (see #4077)
+				if (!$objWidget->mandatory || $objWidget->value || Input::post('SUBMIT_TYPE') != 'auto')
 				{
-					// Skip mandatory fields on auto-submit (see #4077)
-					if (!$objWidget->mandatory || $objWidget->value || Input::post('SUBMIT_TYPE') != 'auto')
-					{
-						$this->noReload = true;
-					}
+					$this->noReload = true;
 				}
-				// The return value of submitInput() might have changed, therefore check it again here (see #2383)
-				elseif ($objWidget->submitInput())
+			}
+			// The return value of submitInput() might have changed, therefore check it again here (see #2383)
+			elseif ($objWidget->submitInput())
+			{
+				$varValue = $objWidget->value;
+
+				// Sort array by key (fix for JavaScript wizards)
+				if (\is_array($varValue))
 				{
-					$varValue = $objWidget->value;
+					ksort($varValue);
+					$varValue = serialize($varValue);
+				}
 
-					// Sort array by key (fix for JavaScript wizards)
-					if (\is_array($varValue))
-					{
-						ksort($varValue);
-						$varValue = serialize($varValue);
-					}
+				// Convert file paths in src attributes (see #5965)
+				if ($varValue && isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
+				{
+					$varValue = StringUtil::srcToInsertTag($varValue);
+				}
 
-					// Convert file paths in src attributes (see #5965)
-					if ($varValue && isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
-					{
-						$varValue = StringUtil::srcToInsertTag($varValue);
-					}
-
-					// Save the current value
-					try
-					{
-						$this->save($varValue);
-					}
-					catch (ResponseException $e)
-					{
-						throw $e;
-					}
-					catch (\Exception $e)
-					{
-						$this->noReload = true;
-						$objWidget->addError($e->getMessage());
-					}
+				// Save the current value
+				try
+				{
+					$this->save($varValue);
+				}
+				catch (ResponseException $e)
+				{
+					throw $e;
+				}
+				catch (\Exception $e)
+				{
+					$this->noReload = true;
+					$objWidget->addError($e->getMessage());
 				}
 			}
 		}
@@ -778,7 +774,7 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		$strUrl = TL_SCRIPT . '?' . implode('&', $arrKeys);
+		$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?' . implode('&', $arrKeys);
 
 		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
 	}
