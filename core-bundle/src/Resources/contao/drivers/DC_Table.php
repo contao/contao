@@ -4171,7 +4171,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
 		$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
 		$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
-		$labelEditHeader = $GLOBALS['TL_LANG'][$this->ptable]['editmeta'] ?? $GLOBALS['TL_LANG'][$this->strTable]['editheader'] ?? $GLOBALS['TL_LANG']['DCA']['editheader'];
+		$labelEditHeader = $GLOBALS['TL_LANG'][$this->ptable]['edit'] ?? $GLOBALS['TL_LANG'][$this->ptable]['editmeta'] ?? $GLOBALS['TL_LANG'][$this->strTable]['editheader'] ?? $GLOBALS['TL_LANG']['DCA']['editheader'];
 
 		$security = System::getContainer()->get('security.helper');
 		$subject = new DataContainerSubject($this->strTable);
@@ -4214,7 +4214,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Header
 			$imagePasteNew = Image::getHtml('new.svg', $labelPasteNew[0]);
 			$imagePasteAfter = Image::getHtml('pasteafter.svg', $labelPasteAfter[0]);
-			$imageEditHeader = Image::getHtml('header.svg', sprintf(\is_array($labelEditHeader) ? $labelEditHeader[0] : $labelEditHeader, $objParent->id));
+			$imageEditHeader = Image::getHtml('edit.svg', sprintf(\is_array($labelEditHeader) ? $labelEditHeader[0] : $labelEditHeader, $objParent->id));
 
 			$security = System::getContainer()->get('security.helper');
 			$subject = new DataContainerSubject($this->strTable);
