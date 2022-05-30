@@ -12,9 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag\Resolver;
 
+use _PHPStan_43cb6abb8\Symfony\Component\Console\Exception\LogicException;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\Exception\InvalidInsertTagException;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -23,6 +27,11 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 class LinkInsertTag
 {
+
+    public function __construct(private ContaoFramework $framework, private TokenChecker $tokenChecker)
+    {
+    }
+
     #[AsInsertTag('link', type: OutputType::html)]
     #[AsInsertTag('link_open', type: OutputType::html)]
     #[AsInsertTag('link_title', type: OutputType::text)]
@@ -32,12 +41,9 @@ class LinkInsertTag
     {
         $strTarget = null;
         $strClass = '';
-        $container = System::getContainer();
-        $blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
 
         if (!$insertTag->getParameters()->has(0)) {
-            // TODO: throw custom exception
-            return $insertTag->serialize();
+            throw new InvalidInsertTagException('Missing parameters for link insert tag.');
         }
 
         $urlParam = $insertTag->getParameters()->get(0);
@@ -54,17 +60,17 @@ class LinkInsertTag
         else
         {
             // User login page
-            if ($urlParam == 'login')
+            if ($urlParam === 'login')
             {
-                if (!$blnFeUserLoggedIn)
+                if (!$this->tokenChecker->hasFrontendUser())
                 {
-                    break;
+                    return '';
                 }
 
-                $urlParam = FrontendUser::getInstance()->loginPage;
+                $urlParam = $this->framework->createInstance(FrontendUser::class)->loginPage;
             }
 
-            $objNextPage = PageModel::findByIdOrAlias($urlParam);
+            $objNextPage = $this->framework->getAdapter(PageModel::class)->findByIdOrAlias($urlParam);
 
             if ($objNextPage === null)
             {
@@ -96,11 +102,11 @@ class LinkInsertTag
                     case 'forward':
                         if ($objNextPage->jumpTo)
                         {
-                            $objNext = PageModel::findPublishedById($objNextPage->jumpTo);
+                            $objNext = $this->framework->getAdapter(PageModel::class)->findPublishedById($objNextPage->jumpTo);
                         }
                         else
                         {
-                            $objNext = PageModel::findFirstPublishedRegularByPid($objNextPage->id);
+                            $objNext = $this->framework->getAdapter(PageModel::class)->findFirstPublishedRegularByPid($objNextPage->id);
                         }
 
                         if ($objNext instanceof PageModel)
@@ -143,26 +149,22 @@ class LinkInsertTag
         switch ($insertTag->getName())
         {
             case 'link':
-                $arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName);
-                break;
+                return sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName);
 
             case 'link_open':
-                $arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget);
-                break;
+                return sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget);
 
             case 'link_url':
-                $arrCache[$strTag] = $strUrl ?: './';
-                break;
+                return $strUrl ?: './';
 
             case 'link_title':
-                $arrCache[$strTag] = StringUtil::specialcharsAttribute($strTitle);
-                break;
+                return StringUtil::specialcharsAttribute($strTitle);
 
             case 'link_name':
-                $arrCache[$strTag] = StringUtil::specialcharsAttribute($strName);
-                break;
+                return StringUtil::specialcharsAttribute($strName);
         }
-        break;
+
+        throw new InvalidInsertTagException();
     }
 
     #[AsInsertTag('link_close', type: OutputType::html)]

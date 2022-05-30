@@ -383,6 +383,9 @@ services:
 
     contao.insert_tag.resolver.link:
         class: Contao\CoreBundle\InsertTag\Resolver\LinkInsertTag
+        arguments:
+            - '@contao.framework'
+            - '@contao.security.token_checker'
 
     contao.intl.countries:
         class: Contao\CoreBundle\Intl\Countries
