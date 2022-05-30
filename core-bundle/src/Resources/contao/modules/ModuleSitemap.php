@@ -67,8 +67,11 @@ class ModuleSitemap extends Module
 		{
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
-			$lang = $objRootPage->rootLanguage;
-			$host = $objRootPage->domain;
+			if ($objRootPage !== null)
+			{
+				$lang = $objRootPage->rootLanguage;
+				$host = $objRootPage->domain;
+			}
 		}
 
 		$this->showLevel = 0;
