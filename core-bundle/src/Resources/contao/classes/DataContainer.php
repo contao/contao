@@ -427,7 +427,7 @@ abstract class DataContainer extends Backend
 		$objWidget->currentRecord = $this->intId;
 
 		// Validate and save the field
-		if ((Input::post('FORM_SUBMIT') == $this->strTable) && $objWidget->submitInput() && Input::post($this->strInputName) !== null)
+		if (Input::post('FORM_SUBMIT') == $this->strTable && $objWidget->submitInput() && Input::post($this->strInputName) !== null)
 		{
 			$objWidget->validate();
 
