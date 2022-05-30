@@ -1484,7 +1484,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$class = 'tl_box';
 
 				$return .= '
-  <input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">
 </div>';
 			}
 		}
@@ -1780,7 +1779,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				// Close box
 				$return .= '
-  <input type="hidden" name="FORM_FIELDS_' . $strHash . '[]" value="' . StringUtil::specialchars(implode(',', $formFields)) . '">
 </div>';
 
 				// Always create a new version if something has changed, even if the form has errors (see #237)

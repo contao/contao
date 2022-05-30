@@ -2,6 +2,19 @@
 
 ## Version 4.* to 5.0
 
+## FORM_FIELDS
+
+It is no longer possible to use the `FORM_FIELDS` mechanism to determine which form fields have been
+submitted. Make sure to always submit at least an empty string in your widget:
+
+```html
+<!-- Wrong: the input will only be submitted if checked -->
+<input type="checkbox" name="foo" value="bar">
+
+<!-- Right: the input will always be submitted -->
+<input type="hidden" name="foo" value=""><input type="checkbox" name="foo" value="bar">
+```
+
 ### Constants
 
 The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`, `TL_REFERER_ID` and `TL_SCRIPT` have

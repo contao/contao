@@ -1879,7 +1879,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 									$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
 								}
 
-								return $arrAjax[$thisId] . '<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">';
+								return $arrAjax[$thisId];
 							}
 
 							if (\count($arrAjax) > 1)
@@ -2057,8 +2057,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . $strVersionField . '
-<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">' . $return;
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . $strVersionField . $return;
 
 		// Reload the page to prevent _POST variables from being sent twice
 		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
@@ -2358,7 +2357,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if ($blnAjax && Environment::get('isAjaxRequest'))
 						{
-							return $strAjax . '<input type="hidden" name="FORM_FIELDS_' . $id . '[]" value="' . StringUtil::specialchars(implode(',', $formFields)) . '">';
+							return $strAjax;
 						}
 
 						$blnAjax = false;
@@ -2428,7 +2427,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				// Close box
 				$return .= '
-  <input type="hidden" name="FORM_FIELDS_' . $this->intId . '[]" value="' . StringUtil::specialchars(implode(',', $formFields)) . '">
 </div>';
 
 				// Always create a new version if something has changed, even if the form has errors (see #237)
@@ -2898,7 +2896,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// Close box
 			$return .= '
-<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars(implode(',', $formFields)) . '">
 </div>';
 
 			// Submit buttons
