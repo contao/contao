@@ -445,7 +445,6 @@ services:
         arguments:
             - '@security.http_utils'
             - '@contao.routing.scope_matcher'
-            - '@contao.framework'
             - '@security.helper'
             - '@logger'
         tags:
