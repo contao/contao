@@ -4,8 +4,8 @@
 
 ### Constants
 
-The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`,
-`TL_REFERER_ID` and `TL_SCRIPT` have been removed.
+The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`, `TL_REFERER_ID` and `TL_SCRIPT` have
+been removed.
 
 `BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
 token checker service to check the separate cases instead:
