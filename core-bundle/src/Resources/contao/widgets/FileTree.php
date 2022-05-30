@@ -65,14 +65,11 @@ class FileTree extends Widget
 		$this->import(Database::class, 'Database');
 		parent::__construct($arrAttributes);
 
-		if ($this->isSortable && !$this->filesOnly && !$this->orderField && ($this->isGallery || $this->isDownloads))
-		{
-			throw new \RuntimeException('A file tree in gallery or downloads mode needs an "orderField" to be sortable');
-		}
-
 		// Prepare the order field
 		if ($this->orderField)
 		{
+			trigger_deprecation('contao/core-bundle', '4.13', 'Using "orderField" for the file tree has been deprecated and will no longer work in Contao 5.0. Use "isSortable" instead.');
+
 			$this->strOrderId = $this->orderField . str_replace($this->strField, '', $this->strId);
 			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
 
