@@ -55,7 +55,7 @@ body:not(.fullscreen) #header .inner {
 #tmenu li {
 	position:relative;
 }
-#tmenu a,#tmenu .h2 {
+#tmenu a,#tmenu .profile button {
 	padding:13px 12px;
 	display:inline-block;
 }
@@ -89,23 +89,25 @@ body:not(.fullscreen) #header .inner {
 	margin-bottom:-1px;
 	vertical-align:middle;
 }
-#tmenu .h2 {
-	padding-right:26px;
+#tmenu .profile button {
+	position: relative;
 	cursor:pointer;
-	background:url("icons/chevron-down.svg") right 9px top 14px no-repeat;
 	font-size:.875rem;
 	font-weight:400;
 	color:#fff;
+	border:none;
+	padding-right:26px;
+	background:url("icons/chevron-down.svg") right 9px top 14px no-repeat;
 }
 @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
-	#tmenu .h2 {
+	#tmenu .profile button {
 		font-weight:300;
 	}
 }
-#tmenu a,#tmenu .h2,#tmenu .burger button {
+#tmenu a,#tmenu .profile button,#tmenu .burger button {
 	transition:background-color .3s ease;
 }
-#tmenu a:hover,#tmenu a.hover,#tmenu li:hover .h2,#tmenu .active .h2,#tmenu .burger button:hover {
+#tmenu a:hover,#tmenu a.hover,#tmenu li:hover .profile button,#tmenu .active .profile button,#tmenu .burger button:hover {
 	background-color:#e87600;
 }
 #tmenu ul.menu_level_1 {
@@ -2209,15 +2211,17 @@ fieldset.collapsed > legend {
 		transform:translateX(240px);
 	}
 	#left {
+		visibility: hidden;
 		position:absolute;
 		top:40px;
 		width:240px;
-		transition:transform .2s ease;
+		transition:transform .2s ease, visibility .2s ease;
 		-webkit-transform:translateX(-240px);
 		transform:translateX(-240px);
-		will-change:transform;
+		will-change:transform, visibility;
 	}
 	.show-navigation #left {
+		visibility: visible;
 		-webkit-transform:none;
 		transform:none;
 	}
@@ -2261,7 +2265,7 @@ fieldset.collapsed > legend {
 	#tmenu .icon-preview {
 		background:url("icons/preview.svg") center center no-repeat;
 	}
-	#tmenu .h2 {
+	#tmenu .profile button {
 		width:16px;
 		margin:0 0 -2px;
 		padding-right:12px;
