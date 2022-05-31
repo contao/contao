@@ -52,7 +52,7 @@
                             break;
 
                         case 'delete':
-                            bt.addEventListener('click', function() {
+                            bt.addEventListener('click', () => {
                                 Backend.getScrollOffset();
                                 if (tbody.children.length > 1) {
                                     tr.remove();
@@ -68,6 +68,40 @@
                                 }
                                 makeSortable(tbody);
                             });
+                            break;
+
+                        default:
+                            if (bt.classList.contains('drag-handle')) {
+                                bt.addEventListener('keydown', (event) => {
+                                    if (event.code === 'ArrowUp' || event.keyCode === 38) {
+                                        event.preventDefault();
+                                        let previous = tr.previousSibling;
+                                        while (previous && previous.tagName !== 'TR') {
+                                            previous = previous.previousSibling;
+                                        }
+                                        if (previous) {
+                                            previous.insertAdjacentElement('beforebegin', tr);
+                                        } else {
+                                            tbody.insertAdjacentElement('beforeend', tr);
+                                        }
+                                        bt.focus();
+                                        makeSortable(tbody);
+                                    } else if (event.code === 'ArrowDown' || event.keyCode === 40) {
+                                        event.preventDefault();
+                                        let next = tr.nextSibling;
+                                        while (next && next.tagName !== 'TR') {
+                                            next = next.nextSibling;
+                                        }
+                                        if (next) {
+                                            next.insertAdjacentElement('afterend', tr);
+                                        } else {
+                                            tbody.insertAdjacentElement('afterbegin', tr);
+                                        }
+                                        bt.focus();
+                                        makeSortable(tbody);
+                                    }
+                                });
+                            }
                             break;
                     }
                 });
