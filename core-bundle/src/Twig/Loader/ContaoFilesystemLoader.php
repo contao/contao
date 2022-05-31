@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
-use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Psr\Cache\CacheItemPoolInterface;
@@ -57,13 +56,13 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     /**
      * @var array<string,array<string,string>>|null
      */
-    private ?array $inheritanceChains = null;
+    private array|null $inheritanceChains = null;
 
     public function __construct(
         private CacheItemPoolInterface $cachePool,
         private TemplateLocator $templateLocator,
         private ThemeNamespace $themeNamespace,
-        string $rootPath = null
+        string $rootPath = null,
     ) {
         parent::__construct([], $rootPath);
 
@@ -174,7 +173,11 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
     {
         $templateName = $this->getThemeTemplateName($name) ?? $name;
 
-        return parent::getCacheKey($templateName);
+        // We prefix the cache key to make sure templates from the default
+        // Symfony loader won't be reused. Otherwise, we cannot reliably
+        // differentiate when to apply our input encoding tolerant escaper
+        // filters (see #4623).
+        return 'c'.parent::getCacheKey($templateName);
     }
 
     /**
@@ -382,7 +385,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
      * Returns the template name of a theme specific variant of the given name
      * or null if not applicable.
      */
-    private function getThemeTemplateName(string $name): ?string
+    private function getThemeTemplateName(string $name): string|null
     {
         $parts = ContaoTwigUtil::parseContaoName($name);
 
@@ -409,12 +412,7 @@ class ContaoFilesystemLoader extends FilesystemLoader implements TemplateHierarc
             return $this->currentThemeSlug = false;
         }
 
-        // TODO: remove try/catch block in Contao 5.0
-        try {
-            $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
-        } catch (InvalidThemePathException) {
-            $slug = false;
-        }
+        $slug = $this->themeNamespace->generateSlug(Path::makeRelative($path, 'templates'));
 
         return $this->currentThemeSlug = $slug;
     }

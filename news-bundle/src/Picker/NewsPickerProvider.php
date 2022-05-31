@@ -31,7 +31,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     /**
      * @internal Do not inherit from this class; decorate the "contao_news.picker.news_provider" service instead
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, private Security $security)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface|null $translator, private Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);
     }
@@ -101,7 +101,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return '{{news_url::%s}}';
     }
 
-    private function getNewsArchiveId(int|string $id): ?int
+    private function getNewsArchiveId(int|string $id): int|null
     {
         $newsAdapter = $this->framework->getAdapter(NewsModel::class);
 

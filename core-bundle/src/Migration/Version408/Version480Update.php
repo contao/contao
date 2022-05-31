@@ -37,7 +37,7 @@ class Version480Update extends AbstractMigration
         private Connection $connection,
         private Filesystem $filesystem,
         private ContaoFramework $framework,
-        private string $projectDir
+        private string $projectDir,
     ) {
     }
 

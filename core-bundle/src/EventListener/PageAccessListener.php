@@ -62,7 +62,7 @@ class PageAccessListener
         }
     }
 
-    private function getPageModel(Request $request): ?PageModel
+    private function getPageModel(Request $request): PageModel|null
     {
         if (!$request->attributes->has('pageModel')) {
             return null;

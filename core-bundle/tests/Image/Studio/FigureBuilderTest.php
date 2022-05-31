@@ -523,7 +523,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideMetadataAutoFetchCases
      */
-    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, ?string $locale, array $expectedMetadata): void
+    public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata): void
     {
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class)));
@@ -542,9 +542,7 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FilesModel $filesModel */
-        $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
-
+        $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
@@ -674,9 +672,7 @@ class FigureBuilderTest extends TestCase
 
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        /** @var FilesModel $filesModel */
-        $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
-
+        $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->setRow([
             'type' => 'file',
             'path' => $relativeFilePath,
@@ -707,7 +703,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideUuidMetadataAutoFetchCases
      */
-    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(FilesModel|ImageInterface|string|null $resource, ?Metadata $metadataToSet, ?string $locale, array $expectedMetadata): void
+    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(FilesModel|ImageInterface|string|null $resource, Metadata|null $metadataToSet, string|null $locale, array $expectedMetadata): void
     {
         System::setContainer($this->getContainerWithContaoConfiguration());
 
@@ -755,10 +751,8 @@ class FigureBuilderTest extends TestCase
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
-        $getFilesModel = static function (array $metaData, ?string $uuid) use ($relativeFilePath) {
-            /** @var FilesModel $filesModel */
-            $filesModel = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
-
+        $getFilesModel = function (array $metaData, ?string $uuid) use ($relativeFilePath) {
+            $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
             $filesModel->setRow([
                 'type' => 'file',
                 'path' => $relativeFilePath,
@@ -997,7 +991,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @dataProvider provideLightboxFallbackResources
      */
-    public function testLightboxResourceFallback(?Metadata $metadata, ?string $expectedFilePath, ?string $expectedUrl): void
+    public function testLightboxResourceFallback(Metadata|null $metadata, string|null $expectedFilePath, string|null $expectedUrl): void
     {
         $studio = $this->mockStudioForLightbox($expectedFilePath, $expectedUrl);
 
@@ -1223,7 +1217,7 @@ class FigureBuilderTest extends TestCase
     /**
      * @return Studio&MockObject
      */
-    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, ?string $expectedUrl, string $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
+    private function mockStudioForLightbox(ImageInterface|string|null $expectedResource, string|null $expectedUrl, string $expectedSizeConfiguration = null, string $expectedGroupIdentifier = null, ResizeOptions $resizeOptions = null): Studio
     {
         $lightbox = $this->createMock(LightboxResult::class);
 

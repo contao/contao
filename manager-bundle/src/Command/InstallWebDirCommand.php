@@ -30,8 +30,8 @@ class InstallWebDirCommand extends Command
     protected static $defaultName = 'contao:install-web-dir';
     protected static $defaultDescription = 'Installs the files in the public directory.';
 
-    private ?Filesystem $fs = null;
-    private ?SymfonyStyle $io = null;
+    private Filesystem|null $fs = null;
+    private SymfonyStyle|null $io = null;
 
     public function __construct(private string $projectDir)
     {
@@ -55,7 +55,7 @@ class InstallWebDirCommand extends Command
         $this->addFiles($path);
         $this->purgeOldFiles($path);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**

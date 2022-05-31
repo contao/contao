@@ -41,7 +41,7 @@ class UserPasswordCommand extends Command
     public function __construct(
         private ContaoFramework $framework,
         private Connection $connection,
-        private PasswordHasherFactoryInterface $passwordHasherFactory
+        private PasswordHasherFactoryInterface $passwordHasherFactory,
     ) {
         parent::__construct();
     }
@@ -78,7 +78,7 @@ class UserPasswordCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (null === $input->getArgument('username') || null === $input->getOption('password')) {
-            return 1;
+            return Command::FAILURE;
         }
 
         $this->framework->initialize();
@@ -111,7 +111,7 @@ class UserPasswordCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->success('The password has been changed successfully.');
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**

@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Mailer;
 
 final class TransportConfig
 {
-    public function __construct(private string $name, private ?string $from = null)
+    public function __construct(private string $name, private string|null $from = null)
     {
     }
 
@@ -23,7 +23,7 @@ final class TransportConfig
         return $this->name;
     }
 
-    public function getFrom(): ?string
+    public function getFrom(): string|null
     {
         return $this->from;
     }

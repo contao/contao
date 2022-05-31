@@ -26,20 +26,7 @@ class ContentList extends ContentElement
 	 */
 	protected function compile()
 	{
-		$arrItems = array();
-		$items = StringUtil::deserialize($this->listitems, true);
-		$limit = \count($items) - 1;
-
-		for ($i=0, $c=\count($items); $i<$c; $i++)
-		{
-			$arrItems[] = array
-			(
-				'class' => (($i == 0) ? 'first' : (($i == $limit) ? 'last' : '')),
-				'content' => $items[$i]
-			);
-		}
-
-		$this->Template->items = $arrItems;
+		$this->Template->items = StringUtil::deserialize($this->listitems, true);
 		$this->Template->tag = ($this->listtype == 'ordered') ? 'ol' : 'ul';
 	}
 }

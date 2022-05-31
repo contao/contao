@@ -60,7 +60,7 @@ class PreviewUrlConvertListener
         }
     }
 
-    private function getParams(Request $request): ?string
+    private function getParams(Request $request): string|null
     {
         if (!$request->query->has('article')) {
             return null;

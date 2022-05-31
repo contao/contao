@@ -37,7 +37,7 @@ class PickerBuilder implements PickerBuilderInterface
         $this->providers[$provider->getName()] = $provider;
     }
 
-    public function create(PickerConfig $config): ?Picker
+    public function create(PickerConfig $config): Picker|null
     {
         $providers = $this->providers;
 
@@ -57,7 +57,7 @@ class PickerBuilder implements PickerBuilderInterface
         return new Picker($this->menuFactory, $providers, $config);
     }
 
-    public function createFromData(string $data): ?Picker
+    public function createFromData(string $data): Picker|null
     {
         try {
             $config = PickerConfig::urlDecode($data);
@@ -93,6 +93,6 @@ class PickerBuilder implements PickerBuilderInterface
             return '';
         }
 
-        return $this->router->generate('contao_backend_picker', compact('context', 'extras', 'value'));
+        return $this->router->generate('contao_backend_picker', ['context' => $context, 'extras' => $extras, 'value' => $value]);
     }
 }

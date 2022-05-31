@@ -33,7 +33,7 @@ class Resizer extends DeferredResizer
         }
     }
 
-    public function resizeDeferredImage(DeferredImageInterface $image, bool $blocking = true): ?ImageInterface
+    public function resizeDeferredImage(DeferredImageInterface $image, bool $blocking = true): ImageInterface|null
     {
         try {
             return parent::resizeDeferredImage($image, $blocking);

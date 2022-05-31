@@ -113,7 +113,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
     /**
      * @dataProvider getAuthenticationScenarios
      */
-    public function testProcessesAuthentication(?string $username, string $authenticateMethod): void
+    public function testProcessesAuthentication(string|null $username, string $authenticateMethod): void
     {
         $frontendPreviewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
         $frontendPreviewAuthenticator

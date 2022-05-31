@@ -43,7 +43,7 @@ class PreviewUrlConvertListener
         $event->setUrl($this->framework->getAdapter(News::class)->generateNewsUrl($news, false, true));
     }
 
-    private function getNewsModel(Request $request): ?NewsModel
+    private function getNewsModel(Request $request): NewsModel|null
     {
         if (!$request->query->has('news')) {
             return null;

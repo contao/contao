@@ -30,7 +30,7 @@ class BackupManager
         private DumperInterface $dumper,
         private VirtualFilesystemInterface $backupsStorage,
         private array $tablesToIgnore,
-        private RetentionPolicyInterface $retentionPolicy
+        private RetentionPolicyInterface $retentionPolicy,
     ) {
     }
 
@@ -64,7 +64,7 @@ class BackupManager
         return $config->withTablesToIgnore($this->tablesToIgnore);
     }
 
-    public function getLatestBackup(): ?Backup
+    public function getLatestBackup(): Backup|null
     {
         return $this->listBackups()[0] ?? null;
     }
@@ -122,7 +122,7 @@ class BackupManager
         return $this->backupsStorage->readStream($backup->getFilename());
     }
 
-    public function getBackupByName(string $fileName): ?Backup
+    public function getBackupByName(string $fileName): Backup|null
     {
         if (!$this->backupsStorage->fileExists($fileName)) {
             return null;

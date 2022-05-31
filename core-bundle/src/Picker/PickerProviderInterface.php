@@ -24,7 +24,7 @@ interface PickerProviderInterface
     /**
      * Returns the URL to the picker based on the current value.
      */
-    public function getUrl(PickerConfig $config): ?string;
+    public function getUrl(PickerConfig $config): string|null;
 
     /**
      * Creates the menu item for this picker.

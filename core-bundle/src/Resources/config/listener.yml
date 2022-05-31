@@ -184,6 +184,8 @@ services:
 
     contao.listener.dbafs_metadata:
         class: Contao\CoreBundle\EventListener\DbafsMetadataSubscriber
+        arguments:
+            - '@request_stack'
         tags:
             - kernel.event_subscriber
 
@@ -514,30 +516,6 @@ services:
         class: Contao\CoreBundle\EventListener\Widget\RootPageDependentSelectListener
         arguments:
             - '@database_connection'
+            - '@router'
             - '@translator'
             - '@contao.csrf.token_manager'
-
-    # Backwards compatibility
-    Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener:
-        alias: contao.listener.data_container.content_composition
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.listener.data_container.content_composition" instead.
-
-    Contao\CoreBundle\EventListener\DataContainer\PageTypeOptionsListener:
-        alias: contao.listener.data_container.page_type_options
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.listener.data_container.page_type_options" instead.
-
-    Contao\CoreBundle\EventListener\DataContainer\PageUrlListener:
-        alias: contao.listener.data_container.page_url
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.listener.data_container.page_url" instead.

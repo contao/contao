@@ -16,7 +16,6 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Environment;
 use Contao\Input;
@@ -45,7 +44,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     private static bool $initialized = false;
     private static string $nonce = '';
 
-    private ?Request $request = null;
+    private Request|null $request = null;
     private bool $isFrontend = false;
     private array $adapterCache = [];
     private array $hookListeners = [];
@@ -53,10 +52,9 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     public function __construct(
         private RequestStack $requestStack,
         private ScopeMatcher $scopeMatcher,
-        private TokenChecker $tokenChecker,
         private UrlGeneratorInterface $urlGenerator,
         private string $projectDir,
-        private int $errorLevel
+        private int $errorLevel,
     ) {
     }
 
@@ -72,8 +70,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         Controller::resetControllerCache();
         Environment::reset();
-        Input::resetCache();
-        Input::resetUnusedGet();
+        Input::setUnusedRouteParameters([]);
         InsertTags::reset();
         PageModel::reset();
         Registry::getInstance()->reset();
@@ -162,30 +159,14 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
             \define('TL_MODE', $this->getMode());
         }
 
-        \define('TL_START', microtime(true));
         \define('TL_ROOT', $this->projectDir);
-        \define('TL_REFERER_ID', $this->getRefererId());
 
         if (!\defined('TL_SCRIPT')) {
             \define('TL_SCRIPT', $this->getRoute());
         }
-
-        // Define the login status constants (see #4099, #5279)
-        if ('FE' === $this->getMode() && ($session = $this->getSession()) && $this->request->hasPreviousSession()) {
-            $session->start();
-
-            \define('BE_USER_LOGGED_IN', $this->tokenChecker->isPreviewMode());
-            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
-        } else {
-            \define('BE_USER_LOGGED_IN', false);
-            \define('FE_USER_LOGGED_IN', false);
-        }
-
-        // Define the relative path to the installation (see #5339)
-        \define('TL_PATH', $this->getPath());
     }
 
-    private function getMode(): ?string
+    private function getMode(): string|null
     {
         if (true === $this->isFrontend) {
             return 'FE';
@@ -206,16 +187,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         return null;
     }
 
-    private function getRefererId(): ?string
-    {
-        if (null === $this->request) {
-            return null;
-        }
-
-        return $this->request->attributes->get('_contao_referer_id', '');
-    }
-
-    private function getRoute(): ?string
+    private function getRoute(): string|null
     {
         if (null === $this->request) {
             return null;
@@ -224,21 +196,11 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         return substr($this->request->getBaseUrl().$this->request->getPathInfo(), \strlen($this->request->getBasePath().'/'));
     }
 
-    private function getPath(): ?string
-    {
-        if (null === $this->request) {
-            return null;
-        }
-
-        return $this->request->getBasePath();
-    }
-
     private function initializeFramework(): void
     {
         // Set the error_reporting level
         error_reporting($this->errorLevel);
 
-        $this->includeHelpers();
         $this->includeBasicClasses();
 
         // Set the container
@@ -263,12 +225,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         $this->setTimezone();
         $this->triggerInitializeSystemHook();
         $this->handleRequestToken();
-    }
-
-    private function includeHelpers(): void
-    {
-        require __DIR__.'/../Resources/contao/helper/functions.php';
-        require __DIR__.'/../Resources/contao/config/constants.php';
     }
 
     /**
@@ -362,7 +318,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         }
     }
 
-    private function getSession(): ?SessionInterface
+    private function getSession(): SessionInterface|null
     {
         if (null === $this->request || !$this->request->hasSession()) {
             return null;

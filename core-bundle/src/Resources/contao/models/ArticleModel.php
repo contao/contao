@@ -30,7 +30,6 @@ use Contao\Model\Collection;
  * @property string         $customTpl
  * @property string|boolean $protected
  * @property string|null    $groups
- * @property string|boolean $guests
  * @property string|array   $cssID
  * @property string|boolean $published
  * @property string|integer $start
@@ -54,7 +53,6 @@ use Contao\Model\Collection;
  * @method static ArticleModel|null findOneByCustomTpl($val, array $opt=array())
  * @method static ArticleModel|null findOneByProtected($val, array $opt=array())
  * @method static ArticleModel|null findOneByGroups($val, array $opt=array())
- * @method static ArticleModel|null findOneByGuests($val, array $opt=array())
  * @method static ArticleModel|null findOneByCssID($val, array $opt=array())
  * @method static ArticleModel|null findOneBySpace($val, array $opt=array())
  * @method static ArticleModel|null findOneByPublished($val, array $opt=array())
@@ -75,7 +73,6 @@ use Contao\Model\Collection;
  * @method static Collection|ArticleModel[]|ArticleModel|null findByCustomTpl($val, array $opt=array())
  * @method static Collection|ArticleModel[]|ArticleModel|null findByProtected($val, array $opt=array())
  * @method static Collection|ArticleModel[]|ArticleModel|null findByGroups($val, array $opt=array())
- * @method static Collection|ArticleModel[]|ArticleModel|null findByGuests($val, array $opt=array())
  * @method static Collection|ArticleModel[]|ArticleModel|null findByCssID($val, array $opt=array())
  * @method static Collection|ArticleModel[]|ArticleModel|null findBySpace($val, array $opt=array())
  * @method static Collection|ArticleModel[]|ArticleModel|null findByPublished($val, array $opt=array())
@@ -100,7 +97,6 @@ use Contao\Model\Collection;
  * @method static integer countByCustomTpl($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
- * @method static integer countByGuests($val, array $opt=array())
  * @method static integer countByCssID($val, array $opt=array())
  * @method static integer countBySpace($val, array $opt=array())
  * @method static integer countByPublished($val, array $opt=array())

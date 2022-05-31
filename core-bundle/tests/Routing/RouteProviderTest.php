@@ -612,7 +612,7 @@ class RouteProviderTest extends TestCase
     /**
      * @dataProvider getPageRoutes
      */
-    public function testAddsRoutesForAPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale, ?string $scheme): void
+    public function testAddsRoutesForAPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale, string|null $scheme): void
     {
         $pageModel = $this->mockPage($language, $alias, true, $domain, $scheme, $urlSuffix);
         $pageModel->urlPrefix = $prependLocale ? $language : '';

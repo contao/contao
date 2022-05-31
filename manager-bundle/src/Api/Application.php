@@ -30,8 +30,8 @@ class Application extends BaseApplication
     final public const VERSION = '2';
 
     private string $projectDir;
-    private ?PluginLoader $pluginLoader = null;
-    private ?ManagerConfig $managerConfig = null;
+    private PluginLoader|null $pluginLoader = null;
+    private ManagerConfig|null $managerConfig = null;
 
     public function __construct(string $projectDir)
     {

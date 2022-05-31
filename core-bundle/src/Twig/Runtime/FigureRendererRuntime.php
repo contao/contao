@@ -40,7 +40,7 @@ final class FigureRendererRuntime implements RuntimeExtensionInterface
      * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
      */
-    public function render(FilesModel|ImageInterface|int|string $from, int|string|array|PictureConfiguration|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): ?string
+    public function render(FilesModel|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string|null
     {
         return $this->figureRenderer->render($from, $size, $configuration, $template);
     }

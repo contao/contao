@@ -130,12 +130,12 @@ class ContaoEscaperTest extends TestCase
         $this->invokeEscapeHtmlAttr('foo', 'ISO-8859-1');
     }
 
-    private function invokeEscapeHtml(int|string $input, ?string $charset): string
+    private function invokeEscapeHtml(int|string $input, string|null $charset): string
     {
         return (new ContaoEscaper())->escapeHtml($this->createMock(Environment::class), $input, $charset);
     }
 
-    private function invokeEscapeHtmlAttr(int|string $input, ?string $charset): string
+    private function invokeEscapeHtmlAttr(int|string $input, string|null $charset): string
     {
         return (new ContaoEscaper())->escapeHtmlAttr($this->createMock(Environment::class), $input, $charset);
     }

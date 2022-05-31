@@ -218,13 +218,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
-				$countries = System::getContainer()->get('contao.intl.countries')->getCountries();
-
-				// Convert to lower case for backwards compatibility, to be changed in Contao 5.0
-				return array_combine(array_map('strtolower', array_keys($countries)), $countries);
-			},
+			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.countries')->getCountries(),
 			'sql'                     => "varchar(2) NOT NULL default ''"
 		),
 		'phone' => array
@@ -519,7 +513,9 @@ class tl_member extends Backend
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
 
-		return '<a href="contao/preview.php?user=' . rawurlencode($row['username']) . '" title="' . StringUtil::specialchars($title) . '" target="_blank">' . Image::getHtml($icon, $label) . '</a> ';
+		$url = System::getContainer()->get('router')->generate('contao_backend_preview', array('user'=>$row['username']));
+
+		return '<a href="' . StringUtil::specialcharsUrl($url) . '" title="' . StringUtil::specialchars($title) . '" target="_blank">' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**

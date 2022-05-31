@@ -300,7 +300,7 @@ class DcaSchemaProvider
     /**
      * Returns the index length if the index needs to be shortened.
      */
-    private function getIndexLength(Table $table, string $column): ?int
+    private function getIndexLength(Table $table, string $column): int|null
     {
         $col = $table->getColumn($column);
 
@@ -403,7 +403,7 @@ class DcaSchemaProvider
     /**
      * Returns the binary collation depending on the charset.
      */
-    private function getBinaryCollation(Table $table): ?string
+    private function getBinaryCollation(Table $table): string|null
     {
         if (!$table->hasOption('charset')) {
             return null;

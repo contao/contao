@@ -22,26 +22,23 @@ use Symfony\Component\HttpKernel\Fragment\FragmentHandler as BaseFragmentHandler
 
 class FragmentHandler extends BaseFragmentHandler
 {
-    private ContainerInterface $renderers;
     private array $initialized = [];
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.fragment.handler" service instead
      */
     public function __construct(
-        ContainerInterface $renderers,
+        private ContainerInterface $renderers,
         private BaseFragmentHandler $fragmentHandler,
         RequestStack $requestStack,
         private FragmentRegistryInterface $fragmentRegistry,
         private ContainerInterface $preHandlers,
-        bool $debug = false
+        bool $debug = false,
     ) {
-        $this->renderers = $renderers;
-
         parent::__construct($requestStack, [], $debug);
     }
 
-    public function render($uri, string $renderer = 'inline', array $options = []): ?string
+    public function render($uri, string $renderer = 'inline', array $options = []): string|null
     {
         if (!$uri instanceof FragmentReference) {
             return $this->fragmentHandler->render($uri, $renderer, $options);
@@ -57,6 +54,10 @@ class FragmentHandler extends BaseFragmentHandler
 
         $renderer = $config->getRenderer();
 
+        if ('inline' !== $renderer && $this->containsNonScalars($uri->attributes)) {
+            $renderer = 'forward';
+        }
+
         if (!isset($this->initialized[$renderer]) && $this->renderers->has($renderer)) {
             $this->addRenderer($this->renderers->get($renderer));
             $this->initialized[$renderer] = true;
@@ -65,7 +66,7 @@ class FragmentHandler extends BaseFragmentHandler
         return parent::render($uri, $renderer, $config->getOptions());
     }
 
-    protected function deliver(Response $response): ?string
+    protected function deliver(Response $response): string|null
     {
         try {
             return parent::deliver($response);
@@ -93,5 +94,20 @@ class FragmentHandler extends BaseFragmentHandler
     private function hasGlobalPageObject(): bool
     {
         return isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel;
+    }
+
+    private function containsNonScalars(array $values): bool
+    {
+        foreach ($values as $value) {
+            if (\is_array($value)) {
+                return $this->containsNonScalars($value);
+            }
+
+            if (!\is_scalar($value) && null !== $value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

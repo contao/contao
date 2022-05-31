@@ -8,7 +8,7 @@
   <table class="single_record">
   <tbody>
     <?php foreach ($this->record as $col): ?>
-      <tr class="<?= $col['class'] ?>">
+      <tr>
         <td class="label"><?= $col['label'] ?></td>
         <td class="value"><?= $col['content'] ?></td>
       </tr>

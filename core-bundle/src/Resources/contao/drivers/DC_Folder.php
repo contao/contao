@@ -127,22 +127,23 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	{
 		parent::__construct();
 
-		$objSession = System::getContainer()->get('session');
+		$container = System::getContainer();
+		$objSession = $container->get('session');
 
 		// Check the request token (see #4007)
-		if (isset($_GET['act']))
+		if (Input::get('act') !== null)
 		{
-			if (!isset($_GET['rt']) || !RequestToken::validate(Input::get('rt')))
+			if (Input::get('rt') === null || !RequestToken::validate(Input::get('rt')))
 			{
 				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));
-				$this->redirect('contao/confirm.php');
+				$this->redirect($container->get('router')->generate('contao_backend_confirm'));
 			}
 		}
 
 		$this->intId = Input::get('id', true);
 
 		// Clear the clipboard
-		if (isset($_GET['clipboard']))
+		if (Input::get('clipboard') !== null)
 		{
 			$objSession->set('CLIPBOARD', array());
 			$this->redirect($this->getReferer());
@@ -151,7 +152,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Check whether the table is defined
 		if (!$strTable || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
+			$container->get('monolog.logger.contao.error')->error('Could not load data container configuration for "' . $strTable . '"');
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -178,22 +179,22 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$session['CURRENT']['IDS'] = $ids;
 			$objSession->replace($session);
 
-			if (isset($_POST['edit']))
+			if (Input::post('edit') !== null)
 			{
 				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('request')));
 			}
-			elseif (isset($_POST['delete']))
+			elseif (Input::post('delete') !== null)
 			{
 				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('request')));
 			}
-			elseif (isset($_POST['cut']) || isset($_POST['copy']))
+			elseif (Input::post('cut') !== null || Input::post('copy') !== null)
 			{
 				$arrClipboard = $objSession->get('CLIPBOARD');
 
 				$arrClipboard[$strTable] = array
 				(
 					'id' => $ids,
-					'mode' => (isset($_POST['cut']) ? 'cutAll' : 'copyAll')
+					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll')
 				);
 
 				$objSession->set('CLIPBOARD', $arrClipboard);
@@ -203,7 +204,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->strTable = $strTable;
 		$this->blnIsDbAssisted = $GLOBALS['TL_DCA'][$strTable]['config']['databaseAssisted'] ?? false;
-		$this->strRootDir = System::getContainer()->getParameter('kernel.project_dir');
+		$this->strRootDir = $container->getParameter('kernel.project_dir');
 
 		// Check for valid file types
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['validFileTypes'] ?? null)
@@ -233,14 +234,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.editableFileTypes for DC_Folder is deprecated and will no longer work in Contao 5.0.');
 		}
 
-		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')));
+		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? $container->getParameter('contao.editable_files')));
 
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath']))
 		{
 			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.uploadPath for DC_Folder is deprecated and will no longer work in Contao 5.0.');
 		}
 
-		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? $GLOBALS['TL_CONFIG']['uploadPath'] ?? System::getContainer()->getParameter('contao.upload_path');
+		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? $GLOBALS['TL_CONFIG']['uploadPath'] ?? $container->getParameter('contao.upload_path');
 
 		// Get all filemounts (root folders)
 		if (\is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root'] ?? null))
@@ -489,10 +490,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$icon = !empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] : 'filemounts.svg';
 		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
 
+		$security = System::getContainer()->get('security.helper');
+		$subject = new DataContainerSubject($this->strTable);
+
 		// Build the tree
 		$return = $this->panel() . Message::generate() . '
 <div id="tl_buttons">' . ((Input::get('act') == 'select') ? '
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '') . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)) ? '
+<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '') . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_ACTION_CREATE, $subject)) ? '
 <a href="' . $this->addToUrl($hrfNew) . '" class="' . $clsNew . '" title="' . StringUtil::specialchars($ttlNew) . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $lblNew . '</a>
 <a href="' . $this->addToUrl('&amp;act=paste&amp;mode=move') . '" class="header_new" title="' . StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]) . '" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG'][$this->strTable]['move'][0] . '</a>  ' : '') . ($blnClipboard ? '
 <a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons()) . '
@@ -650,7 +654,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -704,7 +708,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new InternalServerErrorException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_MOVE, new DataContainerSubject($this->strTable, $source));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_MOVE, new DataContainerSubject($this->strTable, $source));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -861,7 +865,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new InternalServerErrorException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -1021,7 +1025,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('File or folder "' . $source . '" is not mounted or cannot be found.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_DELETE, new DataContainerSubject($this->strTable, $source));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_DELETE, new DataContainerSubject($this->strTable, $source));
 
 		// Call the ondelete_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['ondelete_callback'] ?? null))
@@ -1162,7 +1166,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// See #4086
 		if (!class_exists($class))
 		{
-			$class = 'DropZone';
+			$class = DropZone::class;
 		}
 
 		/** @var FileUpload $objUploader */
@@ -1245,7 +1249,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 
 				// Do not purge the html folder (see #2898)
-				if (isset($_POST['uploadNback']) && !$objUploader->hasResized())
+				if (Input::post('uploadNback') !== null && !$objUploader->hasResized())
 				{
 					Message::reset();
 					$this->redirect($this->getReferer());
@@ -1342,7 +1346,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('File or folder "' . $this->intId . '" is not mounted or cannot be found.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$objModel = null;
 		$objVersions = null;
@@ -1600,7 +1604,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Redirect
-			if (isset($_POST['saveNclose']))
+			if (Input::post('saveNclose') !== null)
 			{
 				Message::reset();
 				$this->redirect($this->getReferer());
@@ -1672,7 +1676,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				try
 				{
-					$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $id));
+					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $id));
 				}
 				catch (AccessDeniedException)
 				{
@@ -1889,7 +1893,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Reload the page to prevent _POST variables from being sent twice
 			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
 			{
-				if (isset($_POST['saveNclose']))
+				if (Input::post('saveNclose') !== null)
 				{
 					$this->redirect($this->getReferer());
 				}
@@ -1917,7 +1921,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			$blnIsError = ($_POST && empty($_POST['all_fields']));
+			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
 
 			// Return the select menu
 			$return .= '
@@ -1973,7 +1977,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DCA_EDIT, new DataContainerSubject($this->strTable, $this->intId));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $this->intId));
 
 		$objFile = new File($this->intId);
 
@@ -2058,7 +2062,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$this->purgeCache($objFile->path);
 			}
 
-			if (isset($_POST['saveNclose']))
+			if (Input::post('saveNclose') !== null)
 			{
 				$this->redirect($this->getReferer());
 			}
@@ -2684,12 +2688,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				else
 				{
 					$return .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . md5($currentEncoded) . '" class="tl_tree_checkbox" value="' . $currentEncoded . '">' : $this->generateButtons(array('id'=>$currentEncoded, 'fileNameEncoded'=>$strFolderNameEncoded, 'type'=>'folder'), $this->strTable);
-				}
-
-				// Add upload button if it is missing for backwards compatibility
-				if (!isset($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['upload']) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
-				{
-					$return .= $uploadButton;
 				}
 
 				if ($this->strPickerFieldType)

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle;
 
-use Contao\Backend;
 use Contao\Config;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -35,7 +34,7 @@ class InstallTool
         private Connection $connection,
         private string $projectDir,
         private LoggerInterface $logger,
-        private MigrationCollection $migrations
+        private MigrationCollection $migrations,
     ) {
     }
 
@@ -80,7 +79,7 @@ class InstallTool
         $this->connection = $connection;
     }
 
-    public function canConnectToDatabase(?string $name): bool
+    public function canConnectToDatabase(string|null $name): bool
     {
         // Return if there is a working database connection already
         try {
@@ -88,7 +87,7 @@ class InstallTool
             $this->connection->executeQuery('SHOW TABLES');
 
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception) {
         }
 
         if (null === $name) {
@@ -273,16 +272,6 @@ class InstallTool
         }
     }
 
-    public function handleRunOnce(): void
-    {
-        // Wait for the tables to be created (see #5061)
-        if (!$this->hasTable('tl_log')) {
-            return;
-        }
-
-        Backend::handleRunOnce();
-    }
-
     /**
      * Returns the available SQL templates.
      *
@@ -302,6 +291,8 @@ class InstallTool
         foreach ($finder as $file) {
             $templates[] = $file->getRelativePathname();
         }
+
+        natcasesort($templates);
 
         return $templates;
     }
@@ -340,9 +331,20 @@ class InstallTool
 
     public function persistAdminUser(string $username, string $name, string $email, string $password, string $language): void
     {
-        $statement = $this->connection->prepare("
-            INSERT INTO
-                tl_user
+        $replace = [
+            '#' => '&#35;',
+            '<' => '&#60;',
+            '>' => '&#62;',
+            '(' => '&#40;',
+            ')' => '&#41;',
+            '\\' => '&#92;',
+            '=' => '&#61;',
+        ];
+
+        $this->connection->executeStatement(
+            "
+                INSERT INTO
+                    tl_user
                     (
                         tstamp,
                         name,
@@ -360,26 +362,16 @@ class InstallTool
                     )
                  VALUES
                     (:time, :name, :email, :username, :password, :language, 'flexible', 1, 1, 1, 1, 1, :time)
-        ");
-
-        $replace = [
-            '#' => '&#35;',
-            '<' => '&#60;',
-            '>' => '&#62;',
-            '(' => '&#40;',
-            ')' => '&#41;',
-            '\\' => '&#92;',
-            '=' => '&#61;',
-        ];
-
-        $statement->executeStatement([
-            ':time' => time(),
-            ':name' => strtr($name, $replace),
-            ':email' => $email,
-            ':username' => strtr($username, $replace),
-            ':password' => password_hash($password, PASSWORD_DEFAULT),
-            ':language' => $language,
-        ]);
+            ",
+            [
+                'time' => time(),
+                'name' => strtr($name, $replace),
+                'email' => $email,
+                'username' => strtr($username, $replace),
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'language' => $language,
+            ],
+        );
     }
 
     public function getConfig(string $key): mixed

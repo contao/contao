@@ -29,7 +29,7 @@ class RouteLoader implements RouteLoaderInterface
         private LoaderInterface $loader,
         private PluginLoader $pluginLoader,
         private KernelInterface $kernel,
-        private string $projectDir
+        private string $projectDir,
     ) {
     }
 
@@ -71,7 +71,7 @@ class RouteLoader implements RouteLoaderInterface
         return $collection;
     }
 
-    private function getConfigFile(): ?string
+    private function getConfigFile(): string|null
     {
         foreach (['routes.yaml', 'routes.yml'] as $file) {
             $path = Path::join($this->projectDir, 'config', $file);

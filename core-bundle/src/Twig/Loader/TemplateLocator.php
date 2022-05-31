@@ -25,7 +25,7 @@ use Symfony\Component\Finder\Finder;
  */
 class TemplateLocator
 {
-    final public const FILE_MARKER_NAMESPACE_ROOT = '.root';
+    final public const FILE_MARKER_NAMESPACE_ROOT = '.twig-root';
 
     private Filesystem $filesystem;
 
@@ -38,7 +38,7 @@ class TemplateLocator
         private array $bundles,
         private array $bundlesMetadata,
         private ThemeNamespace $themeNamespace,
-        private Connection $connection
+        private Connection $connection,
     ) {
         $this->filesystem = new Filesystem();
     }
@@ -94,10 +94,6 @@ class TemplateLocator
             $add('App', $path);
         }
 
-        if (is_dir($path = Path::join($this->projectDir, 'app/Resources/contao/templates'))) {
-            $add('App', $path);
-        }
-
         foreach (array_reverse($this->bundles) as $name => $class) {
             if (ContaoModuleBundle::class === $class && is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'templates'))) {
                 $add($name, $path);
@@ -141,7 +137,7 @@ class TemplateLocator
     }
 
     /**
-     * Return a list of all sub directories in $path that are not inside a
+     * Return a list of all subdirectories in $path that are not inside a
      * directory containing a namespace root marker file.
      */
     private function expandSubdirectories(string $path): array

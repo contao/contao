@@ -23,7 +23,7 @@ class AccessDecisionManager implements AccessDecisionManagerInterface
         private AccessDecisionManagerInterface $inner,
         private AccessDecisionManagerInterface $contaoAccessDecisionManager,
         private ScopeMatcher $scopeMatcher,
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
     ) {
     }
 

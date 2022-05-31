@@ -26,7 +26,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     /**
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public function __construct(iterable|string|self|null $attributes = null)
+    public function __construct(self|iterable|string|null $attributes = null)
     {
         $this->mergeWith($attributes);
     }
@@ -47,7 +47,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public function mergeWith(iterable|string|self|null $attributes = null): self
+    public function mergeWith(self|iterable|string|null $attributes = null): self
     {
         if (empty($attributes)) {
             return $this;
@@ -85,9 +85,15 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      * Sets a property and validates the name. If the given $value is false the
      * property will be unset instead. All values will be coerced to strings,
      * whereby null and true will result in an empty string.
+     *
+     * If a falsy $condition is specified, the method is a no-op.
      */
-    public function set(string $name, string|int|bool|\Stringable|null $value = true): self
+    public function set(string $name, \Stringable|bool|int|string|null $value = true, \Stringable|bool|int|string|null $condition = true): self
     {
+        if (!$condition || ($condition instanceof \Stringable && !(string) $condition)) {
+            return $this;
+        }
+
         $name = strtolower($name);
 
         if (1 !== preg_match('/^[a-z](?:[_-]?[a-z0-9])*$/', $name)) {
@@ -111,7 +117,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return $this;
     }
 
-    public function setIfExists(string $name, string|int|bool|\Stringable|null $value): self
+    /**
+     * Set the property $name to $value if the value is truthy.
+     */
+    public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
     {
         if (!empty($value)) {
             $this->set($name, $value);
@@ -120,9 +129,18 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         return $this;
     }
 
-    public function unset(string $key): self
+    /**
+     * Unset the property $name.
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     */
+    public function unset(string $name, \Stringable|bool|int|string|null $condition = true): self
     {
-        unset($this->attributes[$key]);
+        if (!$condition || ($condition instanceof \Stringable && !(string) $condition)) {
+            return $this;
+        }
+
+        unset($this->attributes[$name]);
 
         return $this;
     }

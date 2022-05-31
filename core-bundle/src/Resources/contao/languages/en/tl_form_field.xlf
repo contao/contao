@@ -248,12 +248,6 @@
       <trans-unit id="tl_form_field.accesskey.1">
         <source>A form field can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.tabindex.0">
-        <source>Tab index</source>
-      </trans-unit>
-      <trans-unit id="tl_form_field.tabindex.1">
-        <source>The position of the form field in the tabbing order.</source>
-      </trans-unit>
       <trans-unit id="tl_form_field.fSize.0">
         <source>Field size</source>
       </trans-unit>

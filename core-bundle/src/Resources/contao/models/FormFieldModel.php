@@ -46,7 +46,6 @@ use Contao\Model\Collection;
  * @property string            $class
  * @property string            $value
  * @property string|boolean    $accesskey
- * @property string|integer    $tabindex
  * @property string|integer    $fSize
  * @property string            $customTpl
  * @property string            $slabel
@@ -88,7 +87,6 @@ use Contao\Model\Collection;
  * @method static FormFieldModel|null findOneByClass($val, array $opt=array())
  * @method static FormFieldModel|null findOneByValue($val, array $opt=array())
  * @method static FormFieldModel|null findOneByAccesskey($val, array $opt=array())
- * @method static FormFieldModel|null findOneByTabindex($val, array $opt=array())
  * @method static FormFieldModel|null findOneByFSize($val, array $opt=array())
  * @method static FormFieldModel|null findOneByCustomTpl($val, array $opt=array())
  * @method static FormFieldModel|null findOneByAddSubmit($val, array $opt=array())
@@ -127,7 +125,6 @@ use Contao\Model\Collection;
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByClass($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByValue($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByAccesskey($val, array $opt=array())
- * @method static Collection|FormFieldModel[]|FormFieldModel|null findByTabindex($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByFSize($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByCustomTpl($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByAddSubmit($val, array $opt=array())
@@ -170,7 +167,6 @@ use Contao\Model\Collection;
  * @method static integer countByClass($val, array $opt=array())
  * @method static integer countByValue($val, array $opt=array())
  * @method static integer countByAccesskey($val, array $opt=array())
- * @method static integer countByTabindex($val, array $opt=array())
  * @method static integer countByFSize($val, array $opt=array())
  * @method static integer countByCustomTpl($val, array $opt=array())
  * @method static integer countByAddSubmit($val, array $opt=array())

@@ -1,5 +1,5 @@
 
-<div class="<?= $this->class ?>">
+<div class="search_default">
 
   <?php if ($this->hasImage): ?>
     <?php $this->insert('image', (array) $this->image) ?>

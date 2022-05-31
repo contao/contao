@@ -20,7 +20,7 @@ class MethodDefinitionTest extends TestCase
     /**
      * @dataProvider getReturnValues
      */
-    public function testSetsTheCorrectMethodBody(?string $returnType, string $body): void
+    public function testSetsTheCorrectMethodBody(string|null $returnType, string $body): void
     {
         $hookDefinition = new MethodDefinition($returnType, []);
 

@@ -58,7 +58,7 @@ class FilesystemConfiguration
 
         $definition = new Definition(VirtualFilesystem::class, [$prefix, $readonly]);
         $definition->setFactory(new Reference('contao.filesystem.virtual_factory'));
-        $definition->addTag('contao.virtual_filesystem', compact('name', 'prefix'));
+        $definition->addTag('contao.virtual_filesystem', ['name' => $name, 'prefix' => $prefix]);
 
         $this->container->setDefinition($id = "contao.filesystem.virtual.$name", $definition);
         $this->container->registerAliasForArgument($id, VirtualFilesystemInterface::class, "{$name}Storage");
@@ -204,7 +204,7 @@ class FilesystemConfiguration
     /**
      * @return array{0: string, 1: string}|null
      */
-    private function getVirtualFilesystem(string $name): ?array
+    private function getVirtualFilesystem(string $name): array|null
     {
         foreach ($this->container->findTaggedServiceIds('contao.virtual_filesystem') as $id => $tags) {
             foreach ($tags as $tag) {

@@ -47,7 +47,7 @@ class CrawlCommand extends Command
     protected static $defaultName = 'contao:crawl';
     protected static $defaultDescription = 'Crawls the Contao root pages with the desired subscribers.';
 
-    private ?Escargot $escargot = null;
+    private Escargot|null $escargot = null;
 
     public function __construct(private Factory $escargotFactory, private Filesystem $filesystem)
     {
@@ -67,7 +67,7 @@ class CrawlCommand extends Command
             ->addOption('concurrency', 'c', InputOption::VALUE_REQUIRED, 'The number of concurrent requests that are going to be executed', '10')
             ->addOption('delay', null, InputOption::VALUE_REQUIRED, 'The number of microseconds to wait between requests (0 = throttling is disabled)', '0')
             ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, 'The maximum number of requests to execute (0 = no limit)', '0')
-            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', '0')
+            ->addOption('max-depth', null, InputOption::VALUE_REQUIRED, 'The maximum depth to crawl for (0 = no limit)', '10')
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
             ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
             ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', Path::join(getcwd(), 'crawl_debug_log.csv'))
@@ -94,14 +94,14 @@ class CrawlCommand extends Command
             } else {
                 $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers);
             }
-        } catch (InvalidJobIdException $e) {
+        } catch (InvalidJobIdException) {
             $io->error('Could not find the given job ID.');
 
-            return 1;
+            return Command::FAILURE;
         } catch (InvalidArgumentException $e) {
             $io->error($e->getMessage());
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $logOutput = $output instanceof ConsoleOutput ? $output->section() : $output;
@@ -143,7 +143,7 @@ class CrawlCommand extends Command
             }
         }
 
-        return (int) $errored;
+        return $errored ? Command::FAILURE : Command::SUCCESS;
     }
 
     private function createLogger(OutputInterface $output, InputInterface $input): LoggerInterface
@@ -189,7 +189,7 @@ class CrawlCommand extends Command
         return new class($progressBar) implements SubscriberInterface, EscargotAwareInterface, FinishedCrawlingSubscriberInterface {
             use EscargotAwareTrait;
 
-            public function __construct(private ?ProgressBar $progressBar)
+            public function __construct(private ProgressBar|null $progressBar)
             {
             }
 

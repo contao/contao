@@ -37,10 +37,10 @@ class RegisterFragmentsPass implements CompilerPassInterface
     use PriorityTaggedServiceTrait;
 
     public function __construct(
-        private ?string $tag,
-        private ?string $globalsKey = null,
-        private ?string $proxyClass = null,
-        private ?string $templateOptionsListener = null
+        private string|null $tag,
+        private string|null $globalsKey = null,
+        private string|null $proxyClass = null,
+        private string|null $templateOptionsListener = null,
     ) {
     }
 
@@ -92,9 +92,9 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
                 $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
 
-                if (!empty($attributes['template'])) {
-                    $templates[$attributes['type']] = $attributes['template'];
-                }
+                $attributes['template'] ??= substr($tag, 7).'/'.$attributes['type'];
+
+                $templates[$attributes['type']] = $attributes['template'];
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
                     $preHandlers[$identifier] = new Reference($serviceId);
@@ -109,10 +109,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);
-
-                if (null !== $command) {
-                    $command->addMethodCall('add', [$identifier, $config, $attributes]);
-                }
+                $command?->addMethodCall('add', [$identifier, $config, $attributes]);
 
                 $childDefinition->setTags($definition->getTags());
                 $container->setDefinition($serviceId, $childDefinition);

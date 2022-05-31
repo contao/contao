@@ -36,7 +36,7 @@ class DebugContaoTwigCommand extends Command
         private TemplateHierarchyInterface $hierarchy,
         private ContaoFilesystemLoaderWarmer $cacheWarmer,
         private ThemeNamespace $themeNamespace,
-        private string $projectDir
+        private string $projectDir,
     ) {
         parent::__construct();
     }
@@ -82,10 +82,10 @@ class DebugContaoTwigCommand extends Command
         $io->title('Template hierarchy');
         $io->table(['Identifier', 'Effective logical name', 'Path'], $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
-    private function getThemeSlug(InputInterface $input): ?string
+    private function getThemeSlug(InputInterface $input): string|null
     {
         if (null === ($pathOrSlug = $input->getOption('theme'))) {
             return null;

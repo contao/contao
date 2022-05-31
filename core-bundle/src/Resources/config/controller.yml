@@ -11,6 +11,15 @@ services:
             tags:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
+        Contao\CoreBundle\Controller\AbstractFragmentController:
+            tags:
+                - { name: container.service_subscriber, id: contao.twig.filesystem_loader }
+                - { name: container.service_subscriber, id: contao.twig.interop.context_factory }
+
+        Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController:
+            tags:
+                - { name: container.service_subscriber, id: contao.csrf.token_manager }
+
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\BackendController: ~
 
@@ -46,13 +55,15 @@ services:
         tags:
             - controller.service_arguments
 
-    Contao\CoreBundle\Controller\ContentElement\MarkdownController:
-        tags:
-            - { name: contao.content_element, category: texts }
+    Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
-    Contao\CoreBundle\Controller\ContentElement\TemplateController:
-        tags:
-            - { name: contao.content_element, category: includes }
+    Contao\CoreBundle\Controller\ContentElement\HtmlController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\TemplateController: ~
 
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
@@ -68,17 +79,11 @@ services:
             - { name: container.service_subscriber, id: contao.cron }
             - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
-    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController:
-        tags:
-            - { name: contao.frontend_module, category: miscellaneous }
+    Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController: ~
 
-    Contao\CoreBundle\Controller\FrontendModule\TemplateController:
-        tags:
-            - { name: contao.frontend_module, category: miscellaneous }
+    Contao\CoreBundle\Controller\FrontendModule\TemplateController: ~
 
-    Contao\CoreBundle\Controller\FrontendModule\TwoFactorController:
-        tags:
-            - { name: contao.frontend_module, category: user }
+    Contao\CoreBundle\Controller\FrontendModule\TwoFactorController: ~
 
     Contao\CoreBundle\Controller\ImagesController:
         public: true
@@ -126,28 +131,3 @@ services:
             - '@contao.routing.page_registry'
         tags:
             - controller.service_arguments
-
-    # Backwards compatibility
-    contao.controller.backend_csv_import:
-        alias: Contao\CoreBundle\Controller\BackendCsvImportController
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.9
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\BackendCsvImportController" instead.
-
-    contao.controller.images:
-        alias: Contao\CoreBundle\Controller\ImagesController
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.9
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\ImagesController" instead.
-
-    contao.controller.insert_tags:
-        alias: Contao\CoreBundle\Controller\InsertTagsController
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.9
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "Contao\CoreBundle\Controller\InsertTagsController" instead.

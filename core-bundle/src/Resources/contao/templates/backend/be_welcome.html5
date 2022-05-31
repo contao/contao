@@ -29,7 +29,7 @@
       </thead>
       <tbody>
         <?php foreach ($this->versions as $version): ?>
-          <tr class="<?= $version['class'] ?> click2edit hover-row">
+          <tr class="click2edit hover-row">
             <td><?= $version['date'] ?></td>
             <td><?= $version['username'] ?: '-' ?></td>
             <td><?= $version['shortTable'] ?></td>

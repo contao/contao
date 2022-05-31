@@ -18,11 +18,14 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
+use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Path;
@@ -55,20 +58,23 @@ class ContaoExtensionTest extends TestCase
     {
         $nodeVisitors = $this->getContaoExtension()->getNodeVisitors();
 
-        $this->assertCount(2, $nodeVisitors);
+        $this->assertCount(3, $nodeVisitors);
 
         $this->assertInstanceOf(ContaoEscaperNodeVisitor::class, $nodeVisitors[0]);
         $this->assertInstanceOf(PhpTemplateProxyNodeVisitor::class, $nodeVisitors[1]);
+        $this->assertInstanceOf(DeprecationsNodeVisitor::class, $nodeVisitors[2]);
     }
 
     public function testAddsTheTokenParsers(): void
     {
         $tokenParsers = $this->getContaoExtension()->getTokenParsers();
 
-        $this->assertCount(2, $tokenParsers);
+        $this->assertCount(4, $tokenParsers);
 
         $this->assertInstanceOf(DynamicExtendsTokenParser::class, $tokenParsers[0]);
         $this->assertInstanceOf(DynamicIncludeTokenParser::class, $tokenParsers[1]);
+        $this->assertInstanceOf(DynamicUseTokenParser::class, $tokenParsers[2]);
+        $this->assertInstanceOf(AddTokenParser::class, $tokenParsers[3]);
     }
 
     public function testAddsTheFunctions(): void
@@ -82,7 +88,6 @@ class ContaoExtensionTest extends TestCase
             'add_schema_org' => [],
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
-            'render_contao_backend_template' => ['html'],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
@@ -104,13 +109,15 @@ class ContaoExtensionTest extends TestCase
     {
         $filters = $this->getContaoExtension()->getFilters();
 
-        $this->assertCount(4, $filters);
+        $this->assertCount(6, $filters);
 
         $expectedFilters = [
             'escape',
             'e',
             'insert_tag',
             'insert_tag_raw',
+            'highlight',
+            'highlight_auto',
         ];
 
         foreach ($filters as $filter) {
@@ -307,6 +314,37 @@ class ContaoExtensionTest extends TestCase
         $this->assertSame($expected, $output);
 
         unset($GLOBALS['TL_LANG']);
+    }
+
+    /**
+     * @dataProvider provideTemplateNames
+     */
+    public function testDefaultEscaperRules(string $templateName): void
+    {
+        $extension = $this->getContaoExtension();
+
+        $property = new \ReflectionProperty(ContaoExtension::class, 'contaoEscaperFilterRules');
+        $rules = $property->getValue($extension);
+
+        $this->assertCount(2, $rules);
+
+        foreach ($rules as $rule) {
+            if (1 === preg_match($rule, $templateName)) {
+                return;
+            }
+        }
+
+        $this->fail(sprintf('No escaper rule matched template "%s".', $templateName));
+    }
+
+    public function provideTemplateNames(): \Generator
+    {
+        yield '@Contao namespace' => ['@Contao/foo.html.twig'];
+        yield '@Contao namespace with folder' => ['@Contao/foo/bar.html.twig'];
+        yield '@Contao_* namespace' => ['@Contao_Global/foo.html.twig'];
+        yield '@Contao_* namespace with folder' => ['@Contao_Global/foo/bar.html.twig'];
+        yield 'core-bundle template' => ['@ContaoCore/Image/Studio/figure.html.twig'];
+        yield 'installation-bundle template' => ['@ContaoInstallation/database.html.twig'];
     }
 
     /**

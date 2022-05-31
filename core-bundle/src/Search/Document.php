@@ -21,8 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Document
 {
-    private ?Crawler $crawler = null;
-    private ?array $jsonLds = null;
+    private Crawler|null $crawler = null;
+    private array|null $jsonLds = null;
 
     /**
      * The key is the header name in lowercase letters and the value is again
@@ -34,7 +34,7 @@ class Document
         private UriInterface $uri,
         private int $statusCode,
         private array $headers,
-        private string $body = ''
+        private string $body = '',
     ) {
         $this->headers = array_change_key_case($headers);
     }
@@ -64,7 +64,7 @@ class Document
         return $this->crawler ??= new Crawler($this->body);
     }
 
-    public function extractCanonicalUri(): ?UriInterface
+    public function extractCanonicalUri(): UriInterface|null
     {
         foreach ($this->getHeaders() as $key => $values) {
             if ('link' === $key) {

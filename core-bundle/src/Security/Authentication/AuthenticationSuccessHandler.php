@@ -36,7 +36,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 {
     use TargetPathTrait;
 
-    private ?User $user = null;
+    private User|null $user = null;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.authentication_success_handler" service instead
@@ -45,7 +45,7 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         private ContaoFramework $framework,
         private TrustedDeviceManagerInterface $trustedDeviceManager,
         private FirewallMap $firewallMap,
-        private ?LoggerInterface $logger = null
+        private LoggerInterface|null $logger = null,
     ) {
     }
 
@@ -96,12 +96,10 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
 
         $response = new RedirectResponse($this->determineTargetUrl($request));
 
-        if (null !== $this->logger) {
-            $this->logger->info(
-                sprintf('User "%s" has logged in', $this->user->username),
-                ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)]
-            );
-        }
+        $this->logger?->info(
+            sprintf('User "%s" has logged in', $this->user->username),
+            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)]
+        );
 
         $this->triggerPostLoginHook();
 

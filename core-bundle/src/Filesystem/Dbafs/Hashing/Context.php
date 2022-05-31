@@ -17,13 +17,13 @@ namespace Contao\CoreBundle\Filesystem\Dbafs\Hashing;
  */
 final class Context
 {
-    private ?int $newLastModified;
+    private int|null $newLastModified;
     private bool|string|null $result = false;
 
     /**
      * @internal
      */
-    public function __construct(private ?string $oldHash = null, private ?int $oldLastModified = null)
+    public function __construct(private string|null $oldHash = null, private int|null $oldLastModified = null)
     {
         $this->newLastModified = $oldLastModified;
     }
@@ -47,12 +47,12 @@ final class Context
         $this->result = $hash;
     }
 
-    public function getLastModified(): ?int
+    public function getLastModified(): int|null
     {
         return $this->newLastModified ?? $this->oldLastModified;
     }
 
-    public function updateLastModified(?int $lastModified): void
+    public function updateLastModified(int|null $lastModified): void
     {
         $this->newLastModified = $lastModified;
     }

@@ -54,7 +54,7 @@ class FilesyncCommand extends Command
 
         (new SymfonyStyle($input, $output))->success("Synchronization complete in {$timeTotal}s.");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function renderStats(ChangeSet $changeSet, OutputInterface $output): void

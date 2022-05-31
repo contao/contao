@@ -121,9 +121,6 @@ class ModuleArticle extends Module
 		$this->Template->timestamp = $this->tstamp;
 		$this->Template->date = Date::parse($objPage->datimFormat ?? Config::get('datimFormat'), $this->tstamp);
 
-		// Clean the RTE output
-		$this->teaser = StringUtil::toHtml5($this->teaser ?? '');
-
 		// Show the teaser only
 		if ($this->multiMode && $this->showTeaser)
 		{
@@ -147,7 +144,7 @@ class ModuleArticle extends Module
 			$this->Template->teaserOnly = true;
 			$this->Template->headline = $this->headline;
 			$this->Template->href = $objPage->getFrontendUrl($href);
-			$this->Template->teaser = $this->teaser;
+			$this->Template->teaser = $this->teaser ?? '';
 			$this->Template->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $this->headline), true);
 			$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
 
@@ -203,17 +200,7 @@ class ModuleArticle extends Module
 		$this->Template->teaser = $this->teaser;
 		$this->Template->elements = $arrElements;
 
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($this->printable == 1)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.');
-
-			$this->Template->printable = !empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']);
-			$this->Template->pdfButton = $this->Template->printable;
-		}
-
-		// New structure
-		elseif ($this->printable)
+		if ($this->printable)
 		{
 			$options = StringUtil::deserialize($this->printable);
 

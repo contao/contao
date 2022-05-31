@@ -16,7 +16,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class PreviewUrlCreateEvent extends Event
 {
-    private ?string $query = null;
+    private string|null $query = null;
 
     public function __construct(private string $key, private int|string $id)
     {
@@ -32,7 +32,7 @@ class PreviewUrlCreateEvent extends Event
         return $this->key;
     }
 
-    public function getQuery(): ?string
+    public function getQuery(): string|null
     {
         return $this->query;
     }

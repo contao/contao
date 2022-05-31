@@ -291,7 +291,7 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         $event = $this->getResponseEvent(new ConflictHttpException(), $this->getRequest('frontend'));
 
-        $listener = $this->getListener(false);
+        $listener = $this->getListener();
         $listener($event);
 
         $this->assertTrue($event->hasResponse());

@@ -206,7 +206,7 @@ class Route404Provider extends AbstractPageRouteProvider
         return $routes;
     }
 
-    private function addLocaleRedirectRoute(PageRoute $route, ?Request $request, array &$routes): void
+    private function addLocaleRedirectRoute(PageRoute $route, Request|null $request, array &$routes): void
     {
         $length = \strlen($route->getUrlPrefix());
 

@@ -1,25 +1,5 @@
 # Deprecated features
 
-## BE_USER_LOGGED_IN
-
-The constant `BE_USER_LOGGED_IN` has been deprecated and will be removed in
-Contao 5.0. It was historically used to preview unpublished elements in the
-front end. Use the token checker service to check the separate cases instead:
-
-```php
-$hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
-$showUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
-```
-
-## FE_USER_LOGGED_IN
-
-The constant `FE_USER_LOGGED_IN` has been deprecated and will be removed in
-Contao 5.0. Use the token checker service instead:
-
-```php
-$hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
-```
-
 ## kernel.packages
 
 The `kernel.packages` parameter has been deprecated in Contao 4.5 and will be
@@ -182,11 +162,6 @@ and will no longer work in Contao 5.0. Use `$this->pages` instead.
 The constants `TL_SCRIPT_URL` and `TL_PLUGINS_URL` have been deprecated in
 Contao 4.0 and will be removed in Contao 5.0. Use `TL_ASSETS_URL` instead.
 
-## UnresolvableDependenciesException
-
-The `UnresolvableDependenciesException` class has been deprecated in Contao 4.0
-and will be removed in Contao 5.0.
-
 ## $this->language in TinyMCE config files
 
 Using `$this->language` in TinyMCE configuration files has been deprecated in
@@ -195,24 +170,6 @@ Contao 4.0 and will no longer work in Contao 5.0. Use the static method
 
 ```php
 $locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
-```
-
-## $GLOBALS['TL_LANG']['LNG']
-
-Using the globals `$GLOBALS['TL_LANG']['LNG']` has been deprecated in Contao
-4.12 and will no longer work in Contao 5.0. Use the locales service instead:
-
-```php
-$locales = System::getContainer()->get('contao.intl.locales')->getLocales();
-```
-
-## $GLOBALS['TL_LANG']['CNT']
-
-Using the globals `$GLOBALS['TL_LANG']['CNT']` has been deprecated in Contao
-4.12 and will no longer work in Contao 5.0. Use the countries service instead:
-
-```php
-$countries = System::getContainer()->get('contao.intl.countries')->getCountries();
 ```
 
 ## Request.Mixed (JavaScript)
@@ -240,16 +197,6 @@ $session = System::getContainer()->get('session');
 The `Widget::addSubmit()` method has been deprecated in Contao 4.0 and will be
 removed in Contao 5.0. It already does not add a submit button anymore.
 
-## Content elements
-
-For reasons of backwards compatibility, it is currently not required to set the
-`tl_content.ptable` column; it will treat an empty column like it had been set
-to `tl_article`.
-
-This behavior has been deprecated in Contao 4.0 and will no longer be supported
-in Contao 5.0. If you have developed an extension which creates content
-elements, make sure to always set the `ptable` column.
-
 ## Contao class loader
 
 Even though we are still using the Contao class loader, it has been deprecated
@@ -266,8 +213,8 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 
 ## Constants
 
-The constants `TL_ROOT`, `TL_MODE`, `TL_START`, `TL_SCRIPT` and `TL_REFERER_ID`
-have been deprecated and will be removed in Contao 5.0.
+The constants `TL_ROOT`, `TL_MODE` and `TL_SCRIPT` have been deprecated and will
+be removed in Contao 5.0.
 
 Use the `kernel.project_dir` instead of `TL_ROOT`:
 
@@ -300,12 +247,6 @@ class Test {
 }
 ```
 
-Use the kernel start time instead of `TL_START`:
-
-```php
-$startTime = System::getContainer()->get('kernel')->getStartTime();
-```
-
 Use the request stack to get the route instead of using `TL_SCRIPT`:
 
 ```php
@@ -314,12 +255,6 @@ $route = System::getContainer()->get('request_stack')->getCurrentRequest()->get(
 if ('contao_backend' === $route) {
     // Do something
 }
-```
-
-Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
-
-```php
-$refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
 ```
 
 ## PHP entry points

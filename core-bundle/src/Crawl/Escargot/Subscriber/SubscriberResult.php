@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Crawl\Escargot\Subscriber;
 
 class SubscriberResult
 {
-    private ?string $warning = null;
+    private string|null $warning = null;
 
     /**
      * Mixed custom info. Must be serializable, so
@@ -36,12 +36,12 @@ class SubscriberResult
         return $this->summary;
     }
 
-    public function getWarning(): ?string
+    public function getWarning(): string|null
     {
         return $this->warning;
     }
 
-    public function setWarning(?string $warning): self
+    public function setWarning(string|null $warning): self
     {
         $this->warning = $warning;
 

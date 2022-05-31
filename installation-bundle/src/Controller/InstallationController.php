@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\InstallationBundle\Controller;
 
-use Contao\Environment;
 use Contao\InstallationBundle\Config\ParameterDumper;
 use Contao\InstallationBundle\Database\ConnectionFactory;
 use Contao\InstallationBundle\Event\ContaoInstallationEvents;
@@ -108,7 +107,7 @@ class InstallationController implements ContainerAwareInterface
         return $this->render('main.html.twig', $this->context);
     }
 
-    private function initializeApplication(): ?Response
+    private function initializeApplication(): Response|null
     {
         $event = new InitializeApplicationEvent();
 
@@ -333,10 +332,8 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to adjust the database tables.
      */
-    private function adjustDatabaseTables(): ?RedirectResponse
+    private function adjustDatabaseTables(): RedirectResponse|null
     {
-        $this->container->get('contao_installation.install_tool')->handleRunOnce();
-
         $installer = $this->container->get('contao_installation.database.installer');
 
         $this->context['sql_form'] = $installer->getCommands();
@@ -365,7 +362,7 @@ class InstallationController implements ContainerAwareInterface
     /**
      * Renders a form to import the example website.
      */
-    private function importExampleWebsite(): ?RedirectResponse
+    private function importExampleWebsite(): RedirectResponse|null
     {
         $installTool = $this->container->get('contao_installation.install_tool');
         $templates = $installTool->getTemplates();
@@ -400,7 +397,8 @@ class InstallationController implements ContainerAwareInterface
             $installTool->persistConfig('exampleWebsite', null);
             $installTool->logException($e);
 
-            for ($rootException = $e; null !== $rootException->getPrevious(); $rootException = $rootException->getPrevious());
+            for ($rootException = $e; null !== $rootException->getPrevious(); $rootException = $rootException->getPrevious()) {
+            }
 
             $this->context['import_error'] = $this->trans('import_exception')."\n".$rootException->getMessage();
 
@@ -412,7 +410,7 @@ class InstallationController implements ContainerAwareInterface
         return $this->getRedirectResponse();
     }
 
-    private function createAdminUser(): ?RedirectResponse
+    private function createAdminUser(): RedirectResponse|null
     {
         $installTool = $this->container->get('contao_installation.install_tool');
 
@@ -544,11 +542,6 @@ class InstallationController implements ContainerAwareInterface
             $context['language'] = $this->container->get('translator')->getLocale();
         }
 
-        // Backwards compatibility
-        if (!isset($context['ua'])) {
-            $context['ua'] = $this->getUserAgentString();
-        }
-
         if (!isset($context['path'])) {
             $request = $this->container->get('request_stack')->getCurrentRequest();
 
@@ -574,21 +567,12 @@ class InstallationController implements ContainerAwareInterface
         return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
     }
 
-    private function getContainerParameter(string $name): string|bool|null
+    private function getContainerParameter(string $name): bool|string|null
     {
         if ($this->container->hasParameter($name)) {
             return $this->container->getParameter($name);
         }
 
         return null;
-    }
-
-    private function getUserAgentString(): string
-    {
-        if (!$this->container->has('contao.framework') || !$this->container->get('contao.framework')->isInitialized()) {
-            return '';
-        }
-
-        return Environment::get('agent')->class;
     }
 }

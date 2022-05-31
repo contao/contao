@@ -42,7 +42,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
         private string $secret,
         string $providerKey,
         array $options = [],
-        LoggerInterface $logger = null
+        LoggerInterface $logger = null,
     ) {
         parent::__construct($userProviders, $secret, $providerKey, $options, $logger);
     }
@@ -140,7 +140,7 @@ class ExpiringTokenBasedRememberMeServices extends AbstractRememberMeServices
     /**
      * @param array<RememberMe> $rows
      */
-    private function findValidToken(array $rows, string $cookieValue): ?RememberMe
+    private function findValidToken(array $rows, string $cookieValue): RememberMe|null
     {
         $lastException = null;
 

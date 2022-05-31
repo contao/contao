@@ -33,7 +33,7 @@ final class ContaoEscaper
      *
      * @see twig_escape_filter
      */
-    public function escapeHtml(Environment $environment, mixed $string, ?string $charset): string
+    public function escapeHtml(Environment $environment, mixed $string, string|null $charset): string
     {
         if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
             throw new RuntimeError(sprintf('The "contao_html" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
@@ -53,7 +53,7 @@ final class ContaoEscaper
      *
      * @see twig_escape_filter
      */
-    public function escapeHtmlAttr(Environment $environment, mixed $string, ?string $charset): string
+    public function escapeHtmlAttr(Environment $environment, mixed $string, string|null $charset): string
     {
         if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
             throw new RuntimeError(sprintf('The "contao_html_attr" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
@@ -81,7 +81,7 @@ final class ContaoEscaper
 
                 // The following replaces characters undefined in HTML with the
                 // hex entity for the Unicode replacement character.
-                if (($ord <= 0x1f && "\t" !== $chr && "\n" !== $chr && "\r" !== $chr) || ($ord >= 0x7f && $ord <= 0x9f)) {
+                if (($ord <= 0x1F && "\t" !== $chr && "\n" !== $chr && "\r" !== $chr) || ($ord >= 0x7F && $ord <= 0x9F)) {
                     return '&#xFFFD;';
                 }
 

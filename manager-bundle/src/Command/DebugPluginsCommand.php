@@ -42,7 +42,7 @@ class DebugPluginsCommand extends Command
     protected static $defaultName = 'debug:plugins';
     protected static $defaultDescription = 'Displays the Contao Manager plugin configurations.';
 
-    private ?SymfonyStyle $io = null;
+    private SymfonyStyle|null $io = null;
 
     public function __construct(private ContaoKernel $kernel)
     {
@@ -106,7 +106,7 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function listBundles(): int
@@ -136,7 +136,7 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function showPlugin(string $name, InputInterface $input): int
@@ -204,10 +204,10 @@ class DebugPluginsCommand extends Command
         $this->io->title($title);
         $this->io->table($headers, $rows);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
-    private function findPlugin(string $name): ?array
+    private function findPlugin(string $name): array|null
     {
         $plugins = $this->kernel->getPluginLoader()->getInstances();
 

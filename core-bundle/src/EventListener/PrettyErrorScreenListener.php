@@ -46,7 +46,7 @@ class PrettyErrorScreenListener
         private ContaoFramework $framework,
         private Security $security,
         private PageRegistry $pageRegistry,
-        private HttpKernelInterface $httpKernel
+        private HttpKernelInterface $httpKernel,
     ) {
     }
 

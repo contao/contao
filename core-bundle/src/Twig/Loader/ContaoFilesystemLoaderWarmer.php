@@ -30,7 +30,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
         private string $projectDir,
         private string $cacheDir,
         private string $environment,
-        private ?Filesystem $filesystem = null
+        private Filesystem|null $filesystem = null,
     ) {
     }
 
@@ -111,7 +111,7 @@ class ContaoFilesystemLoaderWarmer implements CacheWarmerInterface
 
         foreach ($mappings as $path => $namespace) {
             $data['namespaces'][] = ['namespace' => 'Contao', 'path' => $path];
-            $data['namespaces'][] = compact('namespace', 'path');
+            $data['namespaces'][] = ['namespace' => $namespace, 'path' => $path];
         }
 
         if (null === $this->filesystem) {

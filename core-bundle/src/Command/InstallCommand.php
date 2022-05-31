@@ -30,9 +30,9 @@ class InstallCommand extends Command
     protected static $defaultName = 'contao:install';
     protected static $defaultDescription = 'Installs the required Contao directories.';
 
-    private ?Filesystem $fs = null;
+    private Filesystem|null $fs = null;
     private array $rows = [];
-    private ?string $webDir = null;
+    private string|null $webDir = null;
 
     public function __construct(private string $projectDir, private string $uploadPath, private string $imageDir)
     {
@@ -57,7 +57,7 @@ class InstallCommand extends Command
             $io->listing($this->rows);
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function addEmptyDirs(): void

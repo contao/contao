@@ -22,6 +22,7 @@ use Contao\System;
 use Psr\Log\NullLogger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class StringUtilTest extends TestCase
@@ -265,9 +266,10 @@ class StringUtilTest extends TestCase
      */
     public function testRevertInputEncoding(string $source, string $expected = null): void
     {
-        Input::setGet('value', $source);
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(['value' => $source]));
+
         $inputEncoded = Input::get('value');
-        Input::setGet('value', null);
 
         // Test input encoding round trip
         $this->assertSame($expected ?? $source, StringUtil::revertInputEncoding($inputEncoded));
@@ -282,7 +284,7 @@ class StringUtilTest extends TestCase
         yield ['I <3 Contao'];
         yield ['Remove unexpected <span>HTML tags'];
         yield ['Keep non-HTML <tags> intact'];
-        yield ['Basic [&] entities [nbsp]', "Basic & entities \u{A0}"];
+        yield ['Basic &amp; entities &nbsp;', "Basic & entities \u{A0}"];
         yield ["Cont\xE4o invalid UTF-8", "Cont\u{FFFD}o invalid UTF-8"];
     }
 
@@ -387,26 +389,5 @@ class StringUtilTest extends TestCase
             'foobar',
             'UTF-8',
         ];
-    }
-
-    /**
-     * @group legacy
-     *
-     * @dataProvider invalidEncodingsProvider
-     */
-    public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues(array|object $value): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.');
-
-        /** @phpstan-ignore-next-line */
-        $result = StringUtil::convertEncoding($value, 'UTF-8');
-
-        $this->assertSame('', $result);
-    }
-
-    public function invalidEncodingsProvider(): \Generator
-    {
-        yield 'Array' => [[]];
-        yield 'Non-stringable object' => [new \stdClass()];
     }
 }

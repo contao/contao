@@ -58,7 +58,7 @@ use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
  */
 class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPluginInterface, ExtensionPluginInterface, DependentPluginInterface, ApiPluginInterface
 {
-    private static ?string $autoloadModules = null;
+    private static string|null $autoloadModules = null;
 
     /**
      * Sets the path to enable autoloading of legacy Contao modules.
@@ -131,7 +131,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         );
     }
 
-    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): ?RouteCollection
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): RouteCollection|null
     {
         if ('dev' !== $kernel->getEnvironment()) {
             return null;

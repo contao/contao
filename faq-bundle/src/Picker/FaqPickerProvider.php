@@ -31,7 +31,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
     /**
      * @internal Do not inherit from this class; decorate the "contao_faq.picker.faq_provider" service instead
      */
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator, private Security $security)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface|null $translator, private Security $security)
     {
         parent::__construct($menuFactory, $router, $translator);
     }
@@ -101,7 +101,7 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
         return '{{faq_url::%s}}';
     }
 
-    private function getFaqCategoryId(int|string $id): ?int
+    private function getFaqCategoryId(int|string $id): int|null
     {
         $faqAdapter = $this->framework->getAdapter(FaqModel::class);
 

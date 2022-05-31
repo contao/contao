@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Picker;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DataContainer;
 use Contao\DcaLoader;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
@@ -30,7 +31,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         private FactoryInterface $menuFactory,
         private RouterInterface $router,
         private TranslatorInterface $translator,
-        private Connection $connection
+        private Connection $connection,
     ) {
     }
 
@@ -111,8 +112,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         $this->framework->initialize();
         $this->framework->createInstance(DcaLoader::class, [$table])->load();
 
-        return isset($GLOBALS['TL_DCA'][$table]['config']['dataContainer'])
-            && $this->getDataContainer() === $GLOBALS['TL_DCA'][$table]['config']['dataContainer']
+        return $this->getDataContainer() === DataContainer::getDriverForTable($table)
             && 0 !== \count($this->getModulesForTable($table));
     }
 
@@ -154,7 +154,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return $attributes;
     }
 
-    public function convertDcaValue(PickerConfig $config, mixed $value): string|int
+    public function convertDcaValue(PickerConfig $config, mixed $value): int|string
     {
         return (int) $value;
     }
@@ -230,14 +230,8 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
             $data = $qb->executeQuery()->fetchAssociative();
         }
 
-        if ($dynamicPtable) {
-            if (!empty($data['ptable'])) {
-                $ptable = $data['ptable'];
-            }
-
-            if (!$ptable) {
-                $ptable = 'tl_article'; // backwards compatibility
-            }
+        if ($dynamicPtable && !empty($data['ptable'])) {
+            $ptable = $data['ptable'];
         }
 
         if (false === $data) {
@@ -248,7 +242,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
     }
 
     /**
-     * Returns the DataContainer name supported by this picker (e.g. "Table" for DC_Table).
+     * Returns the DataContainer fully qualified class name (FQCN) supported by this picker (e.g. "Contao\DC_Table" for DC_Table).
      */
     abstract protected function getDataContainer(): string;
 }

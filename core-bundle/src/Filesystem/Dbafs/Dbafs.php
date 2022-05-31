@@ -45,7 +45,6 @@ class Dbafs implements DbafsInterface, ResetInterface
     private const PATH_SUFFIX_SHALLOW_DIRECTORY = '//';
 
     private string $dbPathPrefix = '';
-    private int $maxFileSize = 2147483647; // 2 GiB - 1 byte (see #4208)
     private int $bulkInsertSize = 100;
     private bool $useLastModified = true;
 
@@ -73,18 +72,13 @@ class Dbafs implements DbafsInterface, ResetInterface
         private Connection $connection,
         private EventDispatcherInterface $eventDispatcher,
         private VirtualFilesystemInterface $filesystem,
-        private string $table
+        private string $table,
     ) {
     }
 
     public function setDatabasePathPrefix(string $prefix): void
     {
         $this->dbPathPrefix = Path::canonicalize($prefix);
-    }
-
-    public function setMaxFileSize(int $bytes): void
-    {
-        $this->maxFileSize = $bytes;
     }
 
     public function setBulkInsertSize(int $chunkSize): void
@@ -97,7 +91,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->useLastModified = $enable;
     }
 
-    public function getPathFromUuid(Uuid $uuid): ?string
+    public function getPathFromUuid(Uuid $uuid): string|null
     {
         $uuidBytes = $uuid->toBinary();
 
@@ -108,7 +102,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         return $this->pathByUuid[$uuidBytes];
     }
 
-    public function getPathFromId(int $id): ?string
+    public function getPathFromId(int $id): string|null
     {
         if (!\array_key_exists($id, $this->pathById)) {
             $this->loadRecordById($id);
@@ -117,7 +111,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         return $this->pathById[$id];
     }
 
-    public function getRecord(string $path): ?FilesystemItem
+    public function getRecord(string $path): FilesystemItem|null
     {
         if (!\array_key_exists($path, $this->records)) {
             $this->loadRecordByPath($path);
@@ -726,11 +720,6 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 // Ignore dot files
                 if (str_starts_with(basename($path), '.')) {
-                    continue;
-                }
-
-                // Ignore files that are too big
-                if ($item->getFileSize() > $this->maxFileSize) {
                     continue;
                 }
 

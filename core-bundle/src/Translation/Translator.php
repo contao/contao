@@ -32,7 +32,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface, LocaleA
     public function __construct(
         private LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator,
         private ContaoFramework $framework,
-        private ResourceFinder $resourceFinder
+        private ResourceFinder $resourceFinder,
     ) {
         $this->catalogues = new \SplObjectStorage();
     }

@@ -23,14 +23,12 @@ class LogoutHandler implements LogoutHandlerInterface
     /**
      * @internal Do not inherit from this class; decorate the "contao_manager.security.logout_handler" service instead
      */
-    public function __construct(private ?JwtManager $jwtManager = null)
+    public function __construct(private JwtManager|null $jwtManager = null)
     {
     }
 
     public function logout(Request $request, Response $response, TokenInterface $token): void
     {
-        if (null !== $this->jwtManager) {
-            $this->jwtManager->clearResponseCookie($response);
-        }
+        $this->jwtManager?->clearResponseCookie($response);
     }
 }
