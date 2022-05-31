@@ -1,4 +1,4 @@
-name: Assign PR
+name: PR
 
 on:
     pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
     assign-pr:
-        name: Assign PR
+        name: Assign
         runs-on: ubuntu-latest
         steps:
             - name: Assign the PR

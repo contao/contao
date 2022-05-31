@@ -1,4 +1,4 @@
-name: Thank You
+name: PR
 
 on:
     pull_request:
