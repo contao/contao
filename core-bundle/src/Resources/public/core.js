@@ -812,15 +812,6 @@ var Backend =
 	},
 
 	/**
-	 * Toggle the synchronization results
-	 */
-	toggleUnchanged: function() {
-		$$('#result-list .tl_confirm').each(function(el) {
-			el.toggleClass('hidden');
-		});
-	},
-
-	/**
 	 * Make parent view items sortable
 	 *
 	 * @param {object} ul The DOM element
@@ -1920,24 +1911,6 @@ var Backend =
 	},
 
 	/**
-	 * Try to focus the first input field in the main section.
-	 *
-	 * @author Yanick Witschi
-	 */
-	autoFocusFirstInputField: function() {
-		var edit = document.id('main').getElement('.tl_formbody_edit');
-		if (!edit) return;
-
-		var inputs = edit
-			.getElements('input, textarea')
-			.filter(function(item) {
-				return !item.get('disabled') && !item.get('readonly') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image' && (!item.get('autocomplete') || item.get('autocomplete') === 'off' || !item.get('value'));
-			});
-
-		if (inputs[0]) inputs[0].focus();
-	},
-
-	/**
 	 * Allow to mark the important part of an image
 	 *
 	 * @param {object} el The DOM element
@@ -2246,7 +2219,6 @@ window.addEvent('domready', function() {
 	Backend.tableWizardSetWidth();
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
-	Backend.autoFocusFirstInputField();
 
 	// Chosen
 	if (Elements.chosen != undefined) {

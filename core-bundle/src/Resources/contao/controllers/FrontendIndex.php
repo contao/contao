@@ -11,9 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -58,29 +56,6 @@ class FrontendIndex extends Frontend
 		else
 		{
 			list($GLOBALS['TL_ADMIN_NAME'], $GLOBALS['TL_ADMIN_EMAIL']) = StringUtil::splitFriendlyEmail(Config::get('adminEmail'));
-		}
-
-		// Authenticate the user if the page is protected
-		if ($objPage->protected)
-		{
-			$security = System::getContainer()->get('security.helper');
-
-			if (!$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups))
-			{
-				if (($token = $security->getToken()) === null || System::getContainer()->get('security.authentication.trust_resolver')->isAnonymous($token))
-				{
-					throw new InsufficientAuthenticationException('Not authenticated: ' . Environment::get('uri'));
-				}
-
-				$user = $security->getUser();
-
-				if ($user instanceof FrontendUser)
-				{
-					System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $objPage->id . '" can only be accessed by groups "' . implode(', ', $objPage->groups) . '" (current user groups: ' . implode(', ', StringUtil::deserialize($user->groups, true)) . ')');
-				}
-
-				throw new AccessDeniedException('Access denied: ' . Environment::get('uri'));
-			}
 		}
 
 		// Backup some globals (see #7659)

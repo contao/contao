@@ -1,0 +1,15 @@
+name: PR
+
+on:
+    pull_request:
+        types: [opened]
+
+jobs:
+    assign-pr:
+        name: Assign
+        runs-on: ubuntu-latest
+        steps:
+            - name: Assign the PR
+              uses: toshimaru/auto-author-assign@v1.4.0
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
