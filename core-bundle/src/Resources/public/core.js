@@ -1757,20 +1757,6 @@ var Backend =
 	},
 
 	/**
-	 * Toggle the "add language" button
-	 *
-	 * @param {object} el The DOM element
-	 */
-	toggleAddLanguageButton: function(el) {
-		var inp = el.getParent('div').getElement('input[type="button"]');
-		if (el.value != '') {
-			inp.removeProperty('disabled');
-		} else {
-			inp.setProperty('disabled', true);
-		}
-	},
-
-	/**
 	 * Update the "edit module" links in the module wizard
 	 *
 	 * @param {object} el The DOM element
