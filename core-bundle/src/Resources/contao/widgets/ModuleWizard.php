@@ -191,7 +191,7 @@ class ModuleWizard extends Widget
 
 			$return .= '
   <tr>
-    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()" onchange="Backend.updateModuleLink(this)">' . $options . '</select></td>';
+    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()">' . $options . '</select></td>';
 
 			$options = '<option value="">-</option>';
 
@@ -233,7 +233,6 @@ class ModuleWizard extends Widget
 
 		return $return . '
   </tbody>
-  </table>
-  <script>Backend.moduleWizard("ctrl_' . $this->strId . '")</script>';
+  </table>';
 	}
 }
