@@ -13,5 +13,5 @@ jobs:
             - name: Add the comment
               uses: wow-actions/auto-comment@v1
               with:
-                  pullRequestClosed: Thank you @{{ author }}.
                   GITHUB_TOKEN: ${{ secrets.COMMENT_TOKEN }}
+                  pullRequestClosed: Thank you @{{ author }}.
