@@ -529,17 +529,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true),
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'isSortable' => true, 'files'=>true),
 			'sql'                     => "blob NULL",
 			'load_callback' => array
 			(
 				array('tl_content', 'setMultiSrcFlags')
 			)
-		),
-		'orderSRC' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
-			'sql'                     => "blob NULL"
 		),
 		'useHomeDir' => array
 		(

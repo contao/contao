@@ -126,3 +126,8 @@ services:
         class: Contao\CoreBundle\Migration\Version500\MemberCountryUppercaseMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_500.order_field:
+        class: Contao\CoreBundle\Migration\Version500\OrderFieldMigration
+        arguments:
+            - '@database_connection'

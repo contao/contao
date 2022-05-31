@@ -342,10 +342,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$data = array();
 		$row = $objRow->row();
 
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
 		// Get all fields
 		$fields = array_keys($row);
 		$allowedFields = array('id', 'pid', 'sorting', 'tstamp');
@@ -394,7 +390,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$row[$i] = implode(', ', $temp);
 			}
-			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'fileTree' || \in_array($i, $arrOrder))
+			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'fileTree')
 			{
 				if (\is_array($value))
 				{

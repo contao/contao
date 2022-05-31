@@ -919,6 +919,13 @@ var Backend =
 			for (i=0; i<lis.length; i++) {
 				els.push(lis[i].get('data-id'));
 			}
+			if (oid === val) {
+				$(val).value.split(',').forEach(function(j) {
+					if (els.indexOf(j) === -1) {
+						els.push(j);
+					}
+				});
+			}
 			$(oid).value = els.join(',');
 		});
 		$(id).getElements('.gimage').each(function(el) {

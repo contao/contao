@@ -55,7 +55,6 @@ use Contao\Model\Collection;
  * @property string|boolean    $useCaption
  * @property string|boolean    $fullsize
  * @property string|array|null $multiSRC
- * @property string|array|null $orderSRC
  * @property string|null       $html
  * @property string|integer    $rss_cache
  * @property string|null       $rss_feed
@@ -125,7 +124,6 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByUseCaption($val, array $opt=array())
  * @method static ModuleModel|null findOneByFullsize($val, array $opt=array())
  * @method static ModuleModel|null findOneByMultiSRC($val, array $opt=array())
- * @method static ModuleModel|null findOneByOrderSRC($val, array $opt=array())
  * @method static ModuleModel|null findOneByHtml($val, array $opt=array())
  * @method static ModuleModel|null findOneByRss_cache($val, array $opt=array())
  * @method static ModuleModel|null findOneByRss_feed($val, array $opt=array())
@@ -188,7 +186,6 @@ use Contao\Model\Collection;
  * @method static Collection|ModuleModel[]|ModuleModel|null findByUseCaption($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByFullsize($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByMultiSRC($val, array $opt=array())
- * @method static Collection|ModuleModel[]|ModuleModel|null findByOrderSRC($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByHtml($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_cache($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_feed($val, array $opt=array())
@@ -255,7 +252,6 @@ use Contao\Model\Collection;
  * @method static integer countByUseCaption($val, array $opt=array())
  * @method static integer countByFullsize($val, array $opt=array())
  * @method static integer countByMultiSRC($val, array $opt=array())
- * @method static integer countByOrderSRC($val, array $opt=array())
  * @method static integer countByHtml($val, array $opt=array())
  * @method static integer countByRss_cache($val, array $opt=array())
  * @method static integer countByRss_feed($val, array $opt=array())
