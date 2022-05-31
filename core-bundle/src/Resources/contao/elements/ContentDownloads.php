@@ -306,7 +306,6 @@ class ContentDownloads extends ContentDownload
 				break;
 
 			case 'custom':
-				$files = ArrayUtil::sortByOrderField($files, $this->orderSRC);
 				break;
 
 			case 'random':

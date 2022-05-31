@@ -97,20 +97,6 @@ $data = [
 
 More information: https://github.com/contao/image/blob/master/README.md
 
-## FORM_FIELDS
-
-Using the `FORM_FIELDS` mechanism to determine which form fields have been
-submitted has been deprecated in Contao 4.0 and will no longer work in Contao
-5.0. Make sure to always submit at least an empty string in your widget.
-
-```html
-<!-- Wrong: the input will only be submitted if checked -->
-<input type="checkbox" name="foo" value="bar">
-
-<!-- Right: the input will always be submitted -->
-<input type="hidden" name="foo" value=""><input type="checkbox" name="foo" value="bar">
-```
-
 ## Page handler without getResponse()
 
 Using a custom page handler without a `getResponse()` method has been
@@ -213,8 +199,8 @@ You can use the static helper methods such as `System::loadLanguageFile()` or
 
 ## Constants
 
-The constants `TL_ROOT`, `TL_MODE` and `TL_SCRIPT` have been deprecated and will
-be removed in Contao 5.0.
+The constants `TL_ROOT` and `TL_MODE` have been deprecated and will be removed
+in Contao 5.0.
 
 Use the `kernel.project_dir` instead of `TL_ROOT`:
 
@@ -244,16 +230,6 @@ class Test {
     public function isFrontend() {
         return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
     }
-}
-```
-
-Use the request stack to get the route instead of using `TL_SCRIPT`:
-
-```php
-$route = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
-
-if ('contao_backend' === $route) {
-    // Do something
 }
 ```
 

@@ -466,42 +466,6 @@ class StringUtil
 	}
 
 	/**
-	 * Convert a string to HTML5
-	 *
-	 * @param string $strString The XHTML string
-	 *
-	 * @return string The HTML5 string
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
-	 */
-	public static function toHtml5($strString)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'The "StringUtil::toHtml5()" method has been deprecated and will no longer work in Contao 5.0.');
-
-		$arrPregReplace = array
-		(
-			'/<(br|hr|img)([^>]*) \/>/i'                  => '<$1$2>',             // Close stand-alone tags
-			'/ (cellpadding|cellspacing|border)="[^"]*"/' => '',                   // Remove deprecated attributes
-			'/ rel="lightbox(\[([^\]]+)\])?"/'            => ' data-lightbox="$2"' // see #4073
-		);
-
-		$arrStrReplace = array
-		(
-			'<u>'                                              => '<span style="text-decoration:underline">',
-			'</u>'                                             => '</span>',
-			' target="_self"'                                  => '',
-			' onclick="window.open(this.href); return false"'  => ' target="_blank"',
-			' onclick="window.open(this.href);return false"'   => ' target="_blank"',
-			' onclick="window.open(this.href); return false;"' => ' target="_blank"'
-		);
-
-		$strString = preg_replace(array_keys($arrPregReplace), $arrPregReplace, $strString);
-		$strString = str_ireplace(array_keys($arrStrReplace), $arrStrReplace, $strString);
-
-		return $strString;
-	}
-
-	/**
 	 * Convert a UUID string to binary data
 	 *
 	 * @param string $uuid The UUID string

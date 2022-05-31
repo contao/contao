@@ -17,7 +17,6 @@ use Contao\Image\ResizeConfiguration;
 /**
  * Provide methods to handle input field "file tree".
  *
- * @property string  $orderField
  * @property boolean $isSortable
  * @property boolean $multiple
  * @property boolean $isGallery
@@ -44,18 +43,6 @@ class FileTree extends Widget
 	protected $strTemplate = 'be_widget';
 
 	/**
-	 * Order ID
-	 * @var string
-	 */
-	protected $strOrderId;
-
-	/**
-	 * Order name
-	 * @var string
-	 */
-	protected $strOrderName;
-
-	/**
 	 * Load the database object
 	 *
 	 * @param array $arrAttributes
@@ -64,26 +51,6 @@ class FileTree extends Widget
 	{
 		$this->import(Database::class, 'Database');
 		parent::__construct($arrAttributes);
-
-		if ($this->isSortable && !$this->filesOnly && !$this->orderField && ($this->isGallery || $this->isDownloads))
-		{
-			throw new \RuntimeException('A file tree in gallery or downloads mode needs an "orderField" to be sortable');
-		}
-
-		// Prepare the order field
-		if ($this->orderField)
-		{
-			$this->strOrderId = $this->orderField . str_replace($this->strField, '', $this->strId);
-			$this->strOrderName = $this->orderField . str_replace($this->strField, '', $this->strName);
-
-			// Retrieve the order value
-			$objRow = $this->Database->prepare("SELECT " . Database::quoteIdentifier($this->orderField) . " FROM " . $this->strTable . " WHERE id=?")
-									 ->limit(1)
-									 ->execute($this->activeRecord->id);
-
-			$tmp = StringUtil::deserialize($objRow->{$this->orderField});
-			$this->{$this->orderField} = (!empty($tmp) && \is_array($tmp)) ? array_filter($tmp) : array();
-		}
 	}
 
 	public function __set($strKey, $varValue)
@@ -110,26 +77,6 @@ class FileTree extends Widget
 		if ($this->hasErrors())
 		{
 			return '';
-		}
-
-		// Store the order value
-		if ($this->orderField)
-		{
-			$arrNew = array();
-
-			if ($order = Input::post($this->strOrderName))
-			{
-				$arrNew = array_map('\Contao\StringUtil::uuidToBin', explode(',', $order));
-			}
-
-			// Only proceed if the value has changed
-			if ($arrNew !== $this->{$this->orderField})
-			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=?, " . Database::quoteIdentifier($this->orderField) . "=? WHERE id=?")
-							   ->execute(time(), serialize($arrNew), $this->activeRecord->id);
-
-				$this->objDca->createNewVersion = true; // see #6285
-			}
 		}
 
 		// Return the value as usual
@@ -232,7 +179,6 @@ class FileTree extends Widget
 	{
 		$arrSet = array();
 		$arrValues = array();
-		$blnHasOrder = $this->orderField && \is_array($this->{$this->orderField});
 
 		// $this->varValue can be an array, so use empty() here
 		if (!empty($this->varValue))
@@ -347,23 +293,15 @@ class FileTree extends Widget
 					}
 				}
 			}
-
-			// Apply a custom sort order
-			if ($blnHasOrder)
-			{
-				$arrValues = ArrayUtil::sortByOrderField($arrValues, $this->{$this->orderField}, null, true);
-			}
 		}
 
 		// Convert the binary UUIDs
 		$strSet = implode(',', array_map('\Contao\StringUtil::binToUuid', $arrSet));
-		$strOrder = $blnHasOrder ? implode(',', array_map('\Contao\StringUtil::binToUuid', $this->{$this->orderField})) : '';
 
-		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $strSet . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . '>' . ($blnHasOrder ? '
-  <input type="hidden" name="' . $this->strOrderName . '" id="ctrl_' . $this->strOrderId . '" value="' . $strOrder . '">' : '') . '
-  <div class="selector_container">' . ((($blnHasOrder || $this->isSortable) && \count($arrValues) > 1) ? '
+		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $strSet . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . '>
+  <div class="selector_container">' . (($this->isSortable && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . trim(($blnHasOrder || $this->isSortable ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : '')) . '">';
+    <ul id="sort_' . $this->strId . '" class="' . trim(($this->isSortable ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : '')) . '">';
 
 		foreach ($arrValues as $k=>$v)
 		{
@@ -404,8 +342,8 @@ class FileTree extends Widget
           }
         });
       });
-    </script>' . ($blnHasOrder || $this->isSortable ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . ($blnHasOrder ? $this->strOrderId : $this->strId) . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>' . ($this->isSortable ? '
+    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strId . '", "ctrl_' . $this->strId . '")</script>' : '');
 		}
 
 		$return = '<div>' . $return . '</div></div>';

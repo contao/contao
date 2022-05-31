@@ -22,7 +22,6 @@ namespace Contao;
  *         $folder->purge();
  *     }
  *
- * @property string  $hash     The MD5 hash
  * @property string  $name     The folder name
  * @property string  $basename Alias of $name
  * @property string  $dirname  The path of the parent folder
@@ -121,9 +120,6 @@ class Folder extends System
 	{
 		switch ($strKey)
 		{
-			case 'hash':
-				return $this->getHash();
-
 			case 'name':
 			case 'basename':
 				if (!isset($this->arrPathinfo[$strKey]))
@@ -442,39 +438,6 @@ class Folder extends System
 	}
 
 	/**
-	 * Return the MD5 hash of the folder
-	 *
-	 * @return string The MD5 has
-	 *
-	 * @deprecated Use Dbafs::getFolderHash() instead
-	 */
-	protected function getHash()
-	{
-		trigger_deprecation('contao/core-bundle', '4.4', 'Using "Contao\Folder::getHash()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Dbafs::getFolderHash()" instead.');
-
-		$arrFiles = array();
-
-		/** @var \SplFileInfo[] $it */
-		$it = new \RecursiveIteratorIterator(
-			new \RecursiveDirectoryIterator(
-				$this->strRootDir . '/' . $this->strFolder,
-				\FilesystemIterator::UNIX_PATHS|\FilesystemIterator::FOLLOW_SYMLINKS|\FilesystemIterator::SKIP_DOTS
-			),
-			\RecursiveIteratorIterator::SELF_FIRST
-		);
-
-		foreach ($it as $i)
-		{
-			if (strncmp($i->getFilename(), '.', 1) !== 0)
-			{
-				$arrFiles[] = substr($i->getPathname(), \strlen($this->strRootDir . '/' . $this->strFolder . '/'));
-			}
-		}
-
-		return md5(implode('-', $arrFiles));
-	}
-
-	/**
 	 * Return the size of the folder
 	 *
 	 * @return integer The folder size in bytes
@@ -503,18 +466,6 @@ class Folder extends System
 		}
 
 		return $intSize;
-	}
-
-	/**
-	 * Check if the folder should be synchronized with the database
-	 *
-	 * @return bool True if the folder needs to be synchronized with the database
-	 *
-	 * @deprecated Use Dbafs::shouldBeSynchronized() instead
-	 */
-	public function shouldBeSynchronized()
-	{
-		return Dbafs::shouldBeSynchronized($this->strFolder);
 	}
 
 	/**

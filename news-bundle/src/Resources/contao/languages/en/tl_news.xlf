@@ -116,6 +116,12 @@
       <trans-unit id="tl_news.external.1">
         <source>By clicking the "read more …" button, visitors will be redirected to a custom URL.</source>
       </trans-unit>
+      <trans-unit id="tl_news.linkText.0">
+        <source>Link text</source>
+      </trans-unit>
+      <trans-unit id="tl_news.linkText.1">
+        <source>Here you can override the default "read more…" link text.</source>
+      </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
       </trans-unit>
