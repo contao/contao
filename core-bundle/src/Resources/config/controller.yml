@@ -59,9 +59,7 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\HtmlController: ~
 
-    Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController:
-        arguments:
-            - '@contao.insert_tag.parser'
+    Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
 
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
