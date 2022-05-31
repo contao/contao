@@ -87,6 +87,8 @@ services:
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController: ~
 
+    Contao\CoreBundle\Controller\FrontendModule\UnfilteredHtmlController: ~
+
     Contao\CoreBundle\Controller\ImagesController:
         public: true
         arguments:
