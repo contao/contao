@@ -19,30 +19,42 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Security;
 
-class NewsArchiveAccessVoter extends Voter
+class NewsArchiveAccessVoter implements VoterInterface, CacheableVoterInterface
 {
     public function __construct(private Security $security)
     {
     }
 
-    protected function supports(string $attribute, $subject)
+    public function supportsAttribute(string $attribute): bool
     {
-        return str_starts_with($attribute, ContaoCorePermissions::DC_PREFIX)
-            && ($subject instanceof CreateAction || $subject instanceof ReadAction || $subject instanceof UpdateAction || $subject instanceof DeleteAction)
-            && 'tl_news_archive' === $subject->getDataSource();
+        return $attribute === ContaoCorePermissions::DC_PREFIX.'tl_news_archive';
     }
 
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
+    public function vote(TokenInterface $token, $subject, array $attributes)
     {
-        return match (true) {
-            $subject instanceof CreateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES),
-            $subject instanceof ReadAction,
-            $subject instanceof UpdateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId()),
-            $subject instanceof DeleteAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId()) && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
-            default => false,
-        };
+        foreach ($attributes as $attribute) {
+            if (!$this->supportsAttribute($attribute)) {
+                continue;
+            }
+
+            return match (true) {
+                $subject instanceof CreateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES),
+                $subject instanceof ReadAction,
+                    $subject instanceof UpdateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId()),
+                $subject instanceof DeleteAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId()) && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
+                default => false,
+            };
+        }
+
+        return self::ACCESS_ABSTAIN;
+    }
+
+    public function supportsType(string $subjectType): bool
+    {
+        return \in_array($subjectType, [CreateAction::class, ReadAction::class, UpdateAction::class, DeleteAction::class], true);
     }
 }
