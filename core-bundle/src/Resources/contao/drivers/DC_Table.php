@@ -3224,14 +3224,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$sValues = array();
 			$subpalettes = array();
 
-			$row = $this->loadActiveRecord();
+			$this->loadActiveRecord();
 
 			// Get selector values from DB
-			if (null !== $row)
+			if (null !== $this->activeRecord)
 			{
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name)
 				{
-					$trigger = $row[$name];
+					$trigger = $this->activeRecord->{$name};
 
 					// Overwrite the trigger
 					if (Input::post('FORM_SUBMIT') == $this->strTable)
