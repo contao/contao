@@ -23,4 +23,9 @@ trait CurrentTrait
     {
         return $this->current['id'] ? (string) $this->current['id'] : null;
     }
+
+    public function getCurrentPid(): ?string
+    {
+        return $this->current['pid'] ? (string) $this->current['pid'] : null;
+    }
 }

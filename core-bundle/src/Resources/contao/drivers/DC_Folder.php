@@ -639,16 +639,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->import(Files::class, 'Files');
 		$strFolder = Input::get('pid', true);
+		$id = $strFolder . '/__new__';
 
 		if (!$strFolder || !file_exists($this->strRootDir . '/' . $strFolder) || !$this->isMounted($strFolder))
 		{
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_CREATE, new DataContainerSubject($this->strTable, null, array('pid' => $strFolder)));
-
-
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->intId, $fields)); // TODO "create can also depend on WHERE you want to create"
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, ['id' => $id, 'pid' => $strFolder]));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -657,8 +655,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$arrClipboard[$this->strTable] = array();
 		$objSession->set('CLIPBOARD', $arrClipboard);
 
-		$this->Files->mkdir($strFolder . '/__new__');
-		$this->redirect(html_entity_decode($this->switchToEdit($strFolder . '/__new__')));
+		$this->Files->mkdir($id);
+		$this->redirect(html_entity_decode($this->switchToEdit($id)));
 	}
 
 	/**

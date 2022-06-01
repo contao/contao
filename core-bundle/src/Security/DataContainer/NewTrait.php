@@ -23,4 +23,9 @@ trait NewTrait
     {
         return $this->new['id'] ? (string) $this->new['id'] : null;
     }
+
+    public function getNewPid(): ?string
+    {
+        return $this->new['pid'] ? (string) $this->new['pid'] : null;
+    }
 }

@@ -18,7 +18,7 @@ class CreateAction extends AbstractAction
 
     public function __construct(
         private string $dataSource,
-        private ?array $new,
+        private ?array $new = null,
     ) {
         parent::__construct($dataSource);
     }
