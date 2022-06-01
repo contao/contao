@@ -59,13 +59,13 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\HtmlController: ~
 
-    Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
-
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
     Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TemplateController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
 
     Contao\CoreBundle\Controller\FaviconController:
         arguments:

@@ -610,7 +610,7 @@ class tl_user extends Backend
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeImport']);
 		}
 
-		if ($objResult->showUnfilteredHtmlWarning > 0)
+		if ($objResult->showUnfilteredHtmlWarning)
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userUnfilteredHtml']);
 		}

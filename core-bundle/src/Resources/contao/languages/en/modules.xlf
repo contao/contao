@@ -291,7 +291,7 @@
         <source>Unfiltered HTML</source>
       </trans-unit>
       <trans-unit id="FMD.unfiltered_html.1">
-        <source>Allows you to add custom HTML code</source>
+        <source>Allows you to add custom, unfiltered HTML code</source>
       </trans-unit>
       <trans-unit id="FMD.template.0">
         <source>Custom template</source>
