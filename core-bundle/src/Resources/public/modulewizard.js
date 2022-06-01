@@ -71,13 +71,11 @@
                         case 'enable':
                             bt.addEventListener('click', function() {
                                 Backend.getScrollOffset();
-                                const cbx = bt.nextElementSibling;
+                                const cbx = bt.previousElementSibling;
                                 if (cbx.checked) {
                                     cbx.checked = '';
-                                    bt.querySelector('img').src = Backend.themePath + 'icons/invisible.svg';
                                 } else {
                                     cbx.checked = 'checked';
-                                    bt.querySelector('img').src = Backend.themePath + 'icons/visible.svg';
                                 }
                             });
                             break;
