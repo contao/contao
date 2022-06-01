@@ -292,7 +292,6 @@ abstract class Events extends Module
 		$arrEvent['begin'] = $intStart;
 		$arrEvent['end'] = $intEnd;
 		$arrEvent['details'] = '';
-		$arrEvent['hasDetails'] = false;
 		$arrEvent['hasTeaser'] = false;
 
 		// Override the link target

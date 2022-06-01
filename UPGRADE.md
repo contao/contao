@@ -2,6 +2,60 @@
 
 ## Version 4.* to 5.0
 
+## FORM_FIELDS
+
+It is no longer possible to use the `FORM_FIELDS` mechanism to determine which form fields have been
+submitted. Make sure to always submit at least an empty string in your widget:
+
+```html
+<!-- Wrong: the input will only be submitted if checked -->
+<input type="checkbox" name="foo" value="bar">
+
+<!-- Right: the input will always be submitted -->
+<input type="hidden" name="foo" value=""><input type="checkbox" name="foo" value="bar">
+```
+
+### Constants
+
+The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`, `TL_REFERER_ID` and `TL_SCRIPT` have
+been removed.
+
+`BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
+token checker service to check the separate cases instead:
+
+```php
+$hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+$showUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+```
+
+Use the token checker service instead of `FE_USER_LOGGED_IN`:
+
+```php
+$hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+```
+
+Use the kernel start time instead of `TL_START`:
+
+```php
+$startTime = System::getContainer()->get('kernel')->getStartTime();
+```
+
+Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
+
+```php
+$refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+```
+
+Use the request stack to get the route instead of using `TL_SCRIPT`:
+
+```php
+$route = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
+
+if ('contao_backend' === $route) {
+    // Do something
+}
+```
+
 ### TL_CRON
 
 Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob`
@@ -15,9 +69,9 @@ Twig-only templates:
 
 #### Category "texts"
 
-  - `code` (`ce_code` &rarr; `content_element/code`)
-  - `headline` (`ce_headline` &rarr; `content_element/headline`)
-  - `html` (`ce_html` &rarr; `content_element/html`)
+  - `code` (`ce_code` → `content_element/code`)
+  - `headline` (`ce_headline` → `content_element/headline`)
+  - `html` (`ce_html` → `content_element/html`)
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6.
 If you want to use them instead of the new ones, you can opt in on a per-element basis by adding the
@@ -106,15 +160,15 @@ The `Contao\Request` library has been removed. Use another library such as `symf
 
 The following resources have been renamed:
 
- - `ContentMedia` -> `ContentPlayer`
- - `FormCheckBox` -> `FormCheckbox`
- - `FormRadioButton` -> `FormRadio`
- - `FormSelectMenu` -> `FormSelect`
- - `FormTextField` -> `FormText`
- - `FormTextArea` -> `FormTextarea`
- - `FormFileUpload` -> `FormUpload`
- - `ModulePassword` -> `ModuleLostPassword`
- - `form_textfield` -> `form_text`
+ - `ContentMedia` → `ContentPlayer`
+ - `FormCheckBox` → `FormCheckbox`
+ - `FormRadioButton` → `FormRadio`
+ - `FormSelectMenu` → `FormSelect`
+ - `FormTextField` → `FormText`
+ - `FormTextArea` → `FormTextarea`
+ - `FormFileUpload` → `FormUpload`
+ - `ModulePassword` → `ModuleLostPassword`
+ - `form_textfield` → `form_text`
 
 ### CSS classes "first", "last", "even" and "odd"
 
@@ -213,7 +267,7 @@ listeners instead.
 
 ### Simple Token Parser
 
-Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are not supported anymore by the
+Tokens which are not valid PHP variable names (e.g. `##0foobar##`) are no longer supported by the
 Simple Token Parser.
 
 ### $GLOBALS['TL_KEYWORDS']

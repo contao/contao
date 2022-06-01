@@ -448,16 +448,11 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true, 'mandatory'=>true),
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'isSortable'=>true, 'files'=>true, 'mandatory'=>true),
 			'load_callback' => array
 			(
 				array('tl_module', 'setMultiSrcFlags')
 			),
-			'sql'                     => "blob NULL"
-		),
-		'orderSRC' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
 			'sql'                     => "blob NULL"
 		),
 		'html' => array

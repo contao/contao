@@ -692,7 +692,7 @@ class File extends System
 		}
 
 		// Reset the object AFTER the database has been updated
-		if ($return != false)
+		if ($return)
 		{
 			$this->strFile = $strNewName;
 			$this->arrImageSize = array();

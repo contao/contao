@@ -164,7 +164,7 @@ class ContentDownload extends ContentElement
 				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
 			}
 
-			$builder->enableLightbox(true)->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxSize($lightboxSize);
+			$builder->enableLightbox()->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxSize($lightboxSize);
 		}
 		else
 		{

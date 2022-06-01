@@ -423,6 +423,6 @@ class Ajax extends Backend
 	 */
 	protected function convertToResponse($str)
 	{
-		return new Response(Controller::replaceOldBePaths($str));
+		return new Response($str);
 	}
 }

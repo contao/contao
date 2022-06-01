@@ -10,12 +10,10 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
-use Contao\Input;
 use Contao\News;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\PageModel;
@@ -35,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_news_archive', 'checkPermission'),
+			array('tl_news_archive', 'adjustDca'),
 			array('tl_news_archive', 'generateFeed')
 		),
 		'oncreate_callback' => array
@@ -270,11 +268,9 @@ class tl_news_archive extends Backend
 	}
 
 	/**
-	 * Check permissions to edit table tl_news_archive
-	 *
-	 * @throws AccessDeniedException
+	 * Set root IDs and unset allowComments field if no comments bundle available.
 	 */
-	public function checkPermission()
+	public function adjustDca()
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -300,72 +296,6 @@ class tl_news_archive extends Backend
 		}
 
 		$GLOBALS['TL_DCA']['tl_news_archive']['list']['sorting']['root'] = $root;
-		$security = System::getContainer()->get('security.helper');
-
-		// Check permissions to add archives
-		if (!$security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES))
-		{
-			$GLOBALS['TL_DCA']['tl_news_archive']['config']['closed'] = true;
-			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notCreatable'] = true;
-			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notCopyable'] = true;
-		}
-
-		// Check permissions to delete calendars
-		if (!$security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES))
-		{
-			$GLOBALS['TL_DCA']['tl_news_archive']['config']['notDeletable'] = true;
-		}
-
-		$objSession = System::getContainer()->get('session');
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'select':
-				// Allow
-				break;
-
-			case 'create':
-				if (!$security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES))
-				{
-					throw new AccessDeniedException('Not enough permissions to create news archives.');
-				}
-				break;
-
-			case 'edit':
-			case 'copy':
-			case 'delete':
-			case 'show':
-				if (!in_array(Input::get('id'), $root) || (Input::get('act') == 'delete' && !$security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES)))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news archive ID ' . Input::get('id') . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'copyAll':
-				$session = $objSession->all();
-
-				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES))
-				{
-					$session['CURRENT']['IDS'] = array();
-				}
-				else
-				{
-					$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $root);
-				}
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' news archives.');
-				}
-				break;
-		}
 	}
 
 	/**
