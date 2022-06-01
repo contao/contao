@@ -17,7 +17,6 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
-use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Util\SymlinkUtil;
@@ -646,7 +645,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted or is not a directory.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, ['id' => $id, 'pid' => $strFolder]));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('id' => $id, 'pid' => $strFolder)));
 
 		$objSession = System::getContainer()->get('session');
 
@@ -700,9 +699,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new InternalServerErrorException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		// Move permission = READ && access to the
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_MOVE, new DataContainerSubject($this->strTable, $source)); // TODO: FIXME
-
 		$objSession = System::getContainer()->get('session');
 
 		// Empty clipboard
@@ -722,6 +718,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 		else
 		{
+			$this->denyAccessUnlessGranted(
+				ContaoCorePermissions::DC_PREFIX . $this->strTable,
+				new UpdateAction($this->strTable, array('id' => $source, 'pid' => \dirname($source)), array('id' => $source, 'pid' => $strFolder))
+			);
+
 			$this->Files->rename($source, $destination);
 
 			// Update the database AFTER the file has been moved
@@ -858,7 +859,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new InternalServerErrorException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination))); // TODO: FIXME
+		$this->denyAccessUnlessGranted(
+			ContaoCorePermissions::DC_PREFIX . $this->strTable,
+			new UpdateAction($this->strTable, array('id' => $source, 'pid' => \dirname($source)), array('id' => $source, 'pid' => $strFolder))
+		);
 
 		$objSession = System::getContainer()->get('session');
 
@@ -1018,7 +1022,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('File or folder "' . $source . '" is not mounted or cannot be found.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable, $source));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable, array('id' => $source)));
 
 		// Call the ondelete_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['ondelete_callback'] ?? null))
@@ -1339,7 +1343,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('File or folder "' . $this->intId . '" is not mounted or cannot be found.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $this->intId, []));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $this->intId)));
 
 		$objModel = null;
 		$objVersions = null;
@@ -1668,7 +1672,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				try
 				{
-					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $this->intId, $fields));
+					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $this->intId)));
 				}
 				catch (AccessDeniedException)
 				{
@@ -1968,7 +1972,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $this->intId, []));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $this->intId)));
 
 		$objFile = new File($this->intId);
 
