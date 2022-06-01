@@ -15,7 +15,7 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
+use Contao\CoreBundle\Security\DataContainer\AbstractAction;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -847,7 +847,7 @@ abstract class DataContainer extends Backend
 
 		$message = 'Access denied.';
 
-		if ($subject instanceof DataContainerSubject)
+		if ($subject instanceof AbstractAction)
 		{
 			$message = sprintf('Access denied to %s [%s].', $subject, $attribute);
 		}
@@ -1765,4 +1765,6 @@ abstract class DataContainer extends Backend
 
 		return $label;
 	}
+
+
 }
