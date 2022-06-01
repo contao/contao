@@ -327,7 +327,7 @@ abstract class Controller extends System
 			// Show a particular article only
 			if ($objPage->type == 'regular' && Input::get('articles'))
 			{
-				list($strSection, $strArticle) = explode(':', Input::get('articles'));
+				list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
 
 				if ($strArticle === null)
 				{
