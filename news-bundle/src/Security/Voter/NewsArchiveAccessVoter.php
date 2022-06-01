@@ -39,7 +39,7 @@ class NewsArchiveAccessVoter extends Voter
     {
         return match (true) {
             $subject instanceof CreateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES),
-            $subject instanceof ReadAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId()),
+            $subject instanceof ReadAction,
             $subject instanceof UpdateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId()),
             $subject instanceof DeleteAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId()) && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
             default => false,

@@ -3917,10 +3917,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('request')));
 		}
 
-		$row = $this->loadActiveRecord($id);
+		$this->loadActiveRecord($id);
+		$objRow = $this->activeRecord;
 
 		// Return if there is no result
-		if (null === $row)
+		if (null === $objRow)
 		{
 			$objSessionBag->replace($session);
 
@@ -3934,7 +3935,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add the ID to the list of current IDs
 		if ($this->strTable == $table)
 		{
-			$this->current[] = $objRow->id;
+			$this->current[] = $this->activeRecord->id;
 		}
 
 		// Check whether there are child records
