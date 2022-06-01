@@ -861,7 +861,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->denyAccessUnlessGranted(
 			ContaoCorePermissions::DC_PREFIX . $this->strTable,
-			new UpdateAction($this->strTable, array('id' => $source, 'pid' => \dirname($source)), array('id' => $source, 'pid' => $strFolder))
+			new CreateAction($this->strTable, array('id' => $source, 'pid' => $strFolder))
 		);
 
 		$objSession = System::getContainer()->get('session');

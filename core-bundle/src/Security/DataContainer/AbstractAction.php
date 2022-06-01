@@ -15,23 +15,27 @@ namespace Contao\CoreBundle\Security\DataContainer;
 abstract class AbstractAction
 {
     /**
-     * This allows for performance optimizations when voting on many IDs so voters are given
+     * This allows for performance optimizations when voting on many data sets so voters are given
      * the chance to preload voting information all at once.
      * Intended usage:.
      *
-     * $allIds = [1, 42, 135, 18];
+     * $allRecords = [
+     *    ['id' => 1, 'pid' => 3, 'type' => 'foo'],
+     *    ['id' => 42, 'pid' => 4, 'type' => 'bar'],
+     *    ['id' => 18, 'pid' => 4, 'type' => 'baz'],
+     * ];
      *
-     * foreach ($allIds as $id) {
-     *     $action = new ReadAction('<table>', $id);
-     *     $action->preloadIds = $allIds;
+     * foreach ($allRecords as $record) {
+     *     $action = new ReadAction('<table>', $record);
+     *     $action->preloadHints = $allRecords;
      *
      *     $this->denyAccessUnlessGranted('contao_dc.<table>', $action);
      * }
      *
-     * This ensures, every ID is checked individually for maximum security but it also allows voters to optimize
+     * This ensures, every record is checked individually for maximum security, but it also allows voters to optimize
      * for performance (entirely optional though).
      */
-    public array $preloadIds = [];
+    public array $preloadHints = [];
 
     public function __construct(
         private string $dataSource,

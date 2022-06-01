@@ -16,6 +16,7 @@ use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\AbstractAction;
+use Contao\Database\Result;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
@@ -28,7 +29,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $field
  * @property string         $inputName
  * @property string         $palette
- * @property object|null    $activeRecord
+ * @property Result|null    $activeRecord
  * @property array          $rootIds
  */
 abstract class DataContainer extends Backend
@@ -214,7 +215,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Active record
-	 * @var Model|FilesModel
+	 * @var Result|null
 	 */
 	protected $objActiveRecord;
 
@@ -1687,5 +1688,23 @@ abstract class DataContainer extends Backend
 		}
 
 		return $label;
+	}
+
+	protected function loadActiveRecord($id = null): void
+	{
+		$this->id = $id ?: $this->intId;
+
+		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+			->limit(1)
+			->execute($this->id);
+
+		if ($objRow->numRows < 1)
+		{
+			$this->objActiveRecord = null;
+
+			return;
+		}
+
+		$this->objActiveRecord = $objRow;
 	}
 }
