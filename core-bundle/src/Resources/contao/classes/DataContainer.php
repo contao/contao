@@ -1688,6 +1688,4 @@ abstract class DataContainer extends Backend
 
 		return $label;
 	}
-
-
 }
