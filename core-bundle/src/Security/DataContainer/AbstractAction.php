@@ -27,7 +27,7 @@ abstract class AbstractAction
      *
      * foreach ($allRecords as $record) {
      *     $action = new ReadAction('<table>', $record);
-     *     $action->preloadHints = $allRecords;
+     *     $action->setPreloadHints($allRecords);
      *
      *     $this->denyAccessUnlessGranted('contao_dc.<table>', $action);
      * }
@@ -35,7 +35,7 @@ abstract class AbstractAction
      * This ensures, every record is checked individually for maximum security, but it also allows voters to optimize
      * for performance (entirely optional though).
      */
-    public array $preloadHints = [];
+    private ?array $preloadHints = null;
 
     public function __construct(
         private string $dataSource,
@@ -45,6 +45,21 @@ abstract class AbstractAction
     public function __toString(): string
     {
         return sprintf('[Subject: %s]', implode('; ', $this->getSubjectInfo()));
+    }
+
+    public function getPreloadHints(): ?array
+    {
+        return $this->preloadHints;
+    }
+
+    public function setPreloadHints(array $preloadHints): self
+    {
+        if (null !== $this->preloadHints) {
+            throw new \InvalidArgumentException('Cannot override configured preload hints.');
+        }
+        $this->preloadHints = $preloadHints;
+
+        return $this;
     }
 
     public function getDataSource(): string
