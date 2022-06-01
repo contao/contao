@@ -325,7 +325,7 @@ class ModuleRegistration extends Module
 		$this->Template->loginDetails = $GLOBALS['TL_LANG']['tl_member']['loginDetails'];
 		$this->Template->addressDetails = $GLOBALS['TL_LANG']['tl_member']['addressDetails'];
 		$this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];
-		$this->Template->personalData = $GLOBALS['TL_LANG']['tl_member']['personalData'];
+		$this->Template->personalDetails = $GLOBALS['TL_LANG']['tl_member']['personalDetails'];
 		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['MSC']['securityQuestion'];
 
 		// Add the groups
