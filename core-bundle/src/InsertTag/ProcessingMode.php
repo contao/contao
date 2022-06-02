@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
-enum ProcessingMode: string
+enum ProcessingMode
 {
-    case resolved = 'resolved';
-    case parsed = 'parsed';
-    case wrappedResolved = 'wrappedResolved';
-    case wrappedParsed = 'wrappedParsed';
+    case resolved;
+    case parsed;
+    case wrappedResolved;
+    case wrappedParsed;
 }

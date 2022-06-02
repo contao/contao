@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
-use Contao\CoreBundle\InsertTag\OutputType;
-use Contao\CoreBundle\InsertTag\ProcessingMode;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -49,8 +47,8 @@ class AddInsertTagsPass implements CompilerPassInterface
                         new Reference($serviceId),
                         $method,
                         $attributes['name'],
-                        ProcessingMode::from($attributes['mode']),
-                        OutputType::from($attributes['type']),
+                        unserialize($attributes['mode'], ['allowed_classes' => false]),
+                        unserialize($attributes['type'], ['allowed_classes' => false]),
                     ],
                 );
             }

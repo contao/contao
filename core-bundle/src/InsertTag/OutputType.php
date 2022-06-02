@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
-enum OutputType: string
+enum OutputType
 {
-    case text = 'text';
-    case html = 'html';
-    case js = 'js';
-    case css = 'css';
-    case url = 'url';
+    case text;
+    case html;
+    case js;
+    case css;
+    case url;
 }
