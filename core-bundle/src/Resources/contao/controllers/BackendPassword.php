@@ -123,7 +123,6 @@ class BackendPassword extends Backend
 		$objTemplate->explain = $GLOBALS['TL_LANG']['MSC']['pw_change'];
 		$objTemplate->submitButton = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['continue']);
 		$objTemplate->password = $GLOBALS['TL_LANG']['MSC']['password'][0];
-		$objTemplate->requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
 
 		return $objTemplate->getResponse();
 	}

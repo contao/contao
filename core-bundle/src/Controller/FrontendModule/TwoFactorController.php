@@ -91,7 +91,6 @@ class TwoFactorController extends AbstractFrontendModuleController
 
         $template->enforceTwoFactor = $this->pageModel->enforceTwoFactor;
         $template->targetPath = $return;
-        $template->requestToken = htmlspecialchars($this->container->get('contao.csrf.token_manager')->getDefaultTokenValue());
 
         $translator = $this->container->get('translator');
 

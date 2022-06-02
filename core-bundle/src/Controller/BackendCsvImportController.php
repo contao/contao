@@ -147,7 +147,6 @@ class BackendCsvImportController
         $template->separatorHelp = $this->translator->trans('MSC.separator.1', [], 'contao_default');
         $template->sourceLabel = $this->translator->trans('MSC.source.0', [], 'contao_default');
         $template->sourceLabelHelp = $this->translator->trans('MSC.source.1', [], 'contao_default');
-        $template->requestToken = htmlspecialchars($this->csrfTokenManager->getDefaultTokenValue());
 
         return $template;
     }
