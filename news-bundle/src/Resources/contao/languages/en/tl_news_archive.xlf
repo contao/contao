@@ -119,11 +119,8 @@
       <trans-unit id="tl_news_archive.edit">
         <source>Edit news archive ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news_archive.editheader">
-        <source>Edit the settings of news archive ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_news_archive.editmeta">
-        <source>Edit the news archive settings</source>
+      <trans-unit id="tl_news_archive.children">
+        <source>Edit the news items of news archive ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy">
         <source>Duplicate news archive ID %s</source>

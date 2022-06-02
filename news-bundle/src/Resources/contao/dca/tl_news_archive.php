@@ -96,14 +96,14 @@ $GLOBALS['TL_DCA']['tl_news_archive'] = array
 		(
 			'edit' => array
 			(
-				'href'                => 'table=tl_news',
-				'icon'                => 'edit.svg'
-			),
-			'editheader' => array
-			(
 				'href'                => 'act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_news_archive', 'editHeader')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_news',
+				'icon'                => 'children.svg'
 			),
 			'copy' => array
 			(

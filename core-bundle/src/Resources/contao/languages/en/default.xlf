@@ -1317,7 +1317,7 @@
         <source>Save and close</source>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
-        <source>Save and edit</source>
+        <source>Save and edit child elements</source>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
@@ -2183,11 +2183,8 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.editheader.0">
-        <source>Edit the element settings</source>
-      </trans-unit>
-      <trans-unit id="DCA.editheader.1">
-        <source>Edit the settings of element ID %s</source>
+      <trans-unit id="DCA.children">
+        <source>Edit the child elements of element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
