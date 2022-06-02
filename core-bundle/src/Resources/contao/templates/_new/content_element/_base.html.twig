@@ -1,6 +1,6 @@
 {% use "@Contao/component/_headline.html.twig" %}
 
-{% if not searchable|default(true) %}
+{% if searchable is defined and not searchable %}
 <!-- indexer::stop -->
 {%- endif %}
 
@@ -23,6 +23,6 @@
     </{{ block('wrapper_tag') }}>
 {% endblock %}
 
-{% if not searchable|default(true) -%}
+{% if searchable is defined and not searchable -%}
 <!-- indexer::continue -->
 {% endif %}

@@ -61,6 +61,11 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\HyperlinkController:
+        arguments:
+            - '@contao.image.studio'
+            - '@contao.insert_tag.parser'
+
     Contao\CoreBundle\Controller\ContentElement\ImagesController:
         arguments:
             - '@security.helper'
@@ -72,6 +77,8 @@ services:
     Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
 
     Contao\CoreBundle\Controller\ContentElement\TemplateController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\ToplinkController: ~
 
     Contao\CoreBundle\Controller\FaviconController:
         arguments:

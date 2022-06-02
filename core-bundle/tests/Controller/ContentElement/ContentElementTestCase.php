@@ -225,6 +225,18 @@ class ContentElementTestCase extends TestCase
 
         // Symfony extensions
         $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnCallback(
+                static fn (string $id, array $parameters = [], string $domain = null, string $locale = null): string => sprintf(
+                    'translated(%s%s%s)',
+                    null !== $domain ? "$domain:" : '',
+                    $id,
+                    !empty($parameters) ? '['.implode(', ', $parameters).']' : ''
+                )
+            )
+        ;
+
         $environment->addExtension(new TranslationExtension($translator));
 
         // Runtime loaders
@@ -287,9 +299,27 @@ class ContentElementTestCase extends TestCase
                         'src' => 'files/image3.jpg',
                     ]),
                 ],
+                [
+                    self::FILE_IMAGE1 => 'files/image1.jpg',
+                    self::FILE_IMAGE2 => 'files/image2.jpg',
+                    self::FILE_IMAGE3 => 'files/image3.jpg',
+                ]
             ))
         ;
 
         return $studio;
+    }
+
+    protected function getDefaultInsertTagParser(): InsertTagParser
+    {
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->method('replace')
+            ->willReturnCallback(
+                static fn (string $input): string => str_replace('{{demo}}', 'demo', $input)
+            )
+        ;
+
+        return $insertTagParser;
     }
 }
