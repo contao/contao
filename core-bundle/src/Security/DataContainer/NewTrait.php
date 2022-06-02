@@ -21,11 +21,11 @@ trait NewTrait
 
     public function getNewId(): ?string
     {
-        return $this->new['id'] ? (string) $this->new['id'] : null;
+        return isset($this->new['id']) ? (string) $this->new['id'] : null;
     }
 
     public function getNewPid(): ?string
     {
-        return $this->new['pid'] ? (string) $this->new['pid'] : null;
+        return isset($this->new['pid']) ? (string) $this->new['pid'] : null;
     }
 }

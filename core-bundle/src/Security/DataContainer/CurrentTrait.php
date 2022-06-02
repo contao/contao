@@ -21,11 +21,11 @@ trait CurrentTrait
 
     public function getCurrentId(): ?string
     {
-        return $this->current['id'] ? (string) $this->current['id'] : null;
+        return isset($this->current['id']) ? (string) $this->current['id'] : null;
     }
 
     public function getCurrentPid(): ?string
     {
-        return $this->current['pid'] ? (string) $this->current['pid'] : null;
+        return isset($this->current['pid']) ? (string) $this->current['pid'] : null;
     }
 }
