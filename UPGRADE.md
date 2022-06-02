@@ -17,8 +17,8 @@ submitted. Make sure to always submit at least an empty string in your widget:
 
 ### Constants
 
-The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`, `TL_REFERER_ID` and `TL_SCRIPT` have
-been removed.
+The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`,
+`TL_REFERER_ID`, `TL_SCRIPT` and `REQUEST_TOKEN` have been removed.
 
 `BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
 token checker service to check the separate cases instead:
@@ -54,6 +54,12 @@ $route = System::getContainer()->get('request_stack')->getCurrentRequest()->get(
 if ('contao_backend' === $route) {
     // Do something
 }
+```
+
+Use the `contao.csrf.token_manager` service instead of `REQUEST_TOKEN`:
+
+```php
+$requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 ```
 
 ### TL_CRON
@@ -243,16 +249,6 @@ The following global functions have been removed:
 
 Most of them have alternatives in either `StringUtil`, `ArrayUtil` or may have PHP native alternatives such as
 the `mb_*` functions. For advanced UTF-8 handling, use `symfony/string`.
-
-### Constants
-
-The constant `REQUEST_TOKEN` has been removed.
-
-Use the `contao.csrf.token_manager` service instead of `REQUEST_TOKEN`:
-
-```php
-$requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
-```
 
 ### eval->orderField in PageTree and Picker widgets
 
