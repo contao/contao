@@ -56,10 +56,15 @@ if ('contao_backend' === $route) {
 }
 ```
 
-Use the `contao.csrf.token_manager` service instead of `REQUEST_TOKEN`:
+Use the `contao.csrf.token_manager` service or the `requestToken` variable in
+template code instead of `REQUEST_TOKEN`:
 
 ```php
 $requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+```
+
+```php
+<?= $this->requestToken ?>
 ```
 
 ### TL_CRON
