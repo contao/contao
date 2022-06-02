@@ -30,7 +30,6 @@ services:
             - '@database_connection'
             - '@request_stack'
             - '@translator'
-            - '@contao.csrf.token_manager'
             - '%kernel.project_dir%'
 
     Contao\CoreBundle\Controller\BackendPreviewController:
