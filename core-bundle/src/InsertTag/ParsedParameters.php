@@ -12,35 +12,34 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
+/**
+ * @method list<ParsedSequence> all(string|null $name = null)
+ * @method ParsedSequence|null  get(int|string $key)
+ */
 final class ParsedParameters extends InsertTagParameters
 {
     /**
-     * @param array<array-key,self|array|ParsedSequence> $parameters
+     * @param list<ParsedSequence> $parameters
      */
     public function __construct(array $parameters)
     {
-        foreach ($parameters as $key => $value) {
-            if (\is_array($value)) {
-                $parameters[$key] = new self($value);
+        foreach ($parameters as $parameter) {
+            if (!$parameter instanceof ParsedSequence) {
+                throw new \TypeError(sprintf('%s(): Argument #1 ($parameters) must be of type list<%s>, list<%s> given', __METHOD__, ParsedSequence::class, get_debug_type($parameter)));
             }
         }
 
-        parent::__construct($parameters);
+        parent::__construct(array_values($parameters));
     }
 
     public function hasInsertTags(): bool
     {
-        foreach ($this->keys() as $key) {
-            if ($this->get($key)->hasInsertTags()) {
+        foreach ($this->all() as $sequence) {
+            if ($sequence->hasInsertTags()) {
                 return true;
             }
         }
 
         return false;
-    }
-
-    public function get(int|string $key): ParsedSequence|self
-    {
-        return parent::get($key);
     }
 }

@@ -12,102 +12,104 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
-use Symfony\Component\Uid\Uuid;
-
 abstract class InsertTagParameters
 {
     /**
-     * @param array<array-key,float|int|string|array|self|ParsedSequence> $parameters
+     * @param list<ParsedSequence|string> $parameters
      */
-    public function __construct(private array $parameters = [])
+    public function __construct(private array $parameters)
     {
     }
 
     abstract public function hasInsertTags(): bool;
 
-    /**
-     * @param array-key $key
-     */
-    public function get(int|string $key): ParsedSequence|self|array|float|int|string
+    public function get(int|string $key): ParsedSequence|float|int|string|null
     {
-        return $this->parameters[$key] ?? throw new \InvalidArgumentException(sprintf('Parameter "%s" does not exist', $key));
+        if (\is_int($key)) {
+            return $this->toValue($this->parameters[$key] ?? null);
+        }
+
+        return $this->all($key)[0] ?? null;
     }
 
     /**
-     * @param array-key $key
+     * @return list<ParsedSequence|float|int|string>
      */
-    public function has(int|string $key): bool
+    public function all(string|null $name = null): array
     {
-        return isset($this->parameters[$key]);
-    }
+        if (null === $name) {
+            return array_map($this->toValue(...), $this->parameters);
+        }
 
-    /**
-     * @return list<array-key>
-     */
-    public function keys(): array
-    {
-        return array_keys($this->parameters);
+        return $this->getNamed($name);
     }
 
     public function serialize(): string
     {
-        $result = '';
-        $nestedTags = [];
-        $remainingParams = $this->prepareForSerialization($this->parameters, $nestedTags);
-
-        for ($i = 0; isset($remainingParams[$i]); ++$i) {
-            if ($remainingParams[$i] instanceof self) {
-                break;
-            }
-
-            $result .= '::'.$remainingParams[$i];
-            unset($remainingParams[$i]);
+        if (!\count($this->parameters)) {
+            return '';
         }
 
-        if ($remainingParams) {
-            $result .= '?'.http_build_query($remainingParams, '', '&', PHP_QUERY_RFC3986);
-        }
+        return '::'.implode(
+            '::',
+            array_map(
+                static function ($value) {
+                    if (\is_string($value)) {
+                        return $value;
+                    }
 
-        return str_replace(
-            array_keys($nestedTags),
-            $nestedTags,
-            $result,
+                    $return = '';
+
+                    foreach ($value as $item) {
+                        $return .= \is_string($item) ? $item : $item->serialize();
+                    }
+
+                    return $return;
+                },
+                $this->parameters,
+            ),
         );
     }
 
-    /**
-     * @param-out array<string,InsertTag> $nestedTags
-     */
-    private function prepareForSerialization(array $parameters, array &$nestedTags): array
+    private function getNamed(string $key): array
     {
-        foreach ($parameters as $key => $value) {
-            if ($value instanceof self) {
-                $value = $value->parameters;
+        $values = [];
+
+        foreach ($this->parameters as $parameter) {
+            if (
+                \is_string($parameter)
+                && str_starts_with($parameter, $key.'=')
+            ) {
+                $values[] = $this->toValue(substr($parameter, \strlen($key) + 1));
+            } elseif (
+                $parameter instanceof ParsedSequence
+                && $parameter->count()
+                && \is_string($parameter->get(0))
+                && str_starts_with($parameter->get(0), $key.'=')
+            ) {
+                $value = iterator_to_array($parameter);
+                $value[0] = substr($value[0], \strlen($key) + 1);
+                $values[] = new ParsedSequence($value);
             }
-
-            if (\is_array($value)) {
-                $parameters[$key] = $this->prepareForSerialization($value, $nestedTags);
-
-                continue;
-            }
-
-            if ($value instanceof ParsedSequence) {
-                $parameters[$key] = '';
-
-                foreach ($value as $item) {
-                    if (!\is_string($item)) {
-                        $nestedTags[Uuid::v4()->toBase32()] = $item->serialize();
-                        $item = array_key_last($nestedTags);
-                    }
-                    $parameters[$key] .= $item;
-                }
-
-                continue;
-            }
-
-            $parameters[$key] = (string) $value;
         }
 
-        return $parameters;
+        return $values;
+    }
+
+    private function toValue(ParsedSequence|string|null $value): ParsedSequence|float|int|string|null
+    {
+        if (!\is_string($value)) {
+            return $value;
+        }
+
+        if ((string) (int) $value === $value) {
+            return (int) $value;
+        }
+
+        if ((string) (float) $value === $value) {
+            return (float) $value;
+        }
+
+        return $value;
     }
 }

@@ -34,7 +34,9 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class InsertTagParser implements ResetInterface
 {
-    /** @var array<string,InsertTagSubscription> */
+    /**
+     * @var array<string,InsertTagSubscription>
+     */
     private array $subscriptions = [];
 
     public function __construct(private ContaoFramework $framework, private InsertTags|null $insertTags = null)
@@ -49,27 +51,21 @@ class InsertTagParser implements ResetInterface
     public function replace(string $input): string
     {
         $return = '';
-        $failed = false;
 
         foreach ($this->parse($input) as $item) {
             if (\is_string($item)) {
-                $return .= (string) $this->callLegacyClass($item, true);
+                $return .= $item;
             } else {
                 try {
-                    $return .= $this->render($item);
+                    $return .= $this->renderSubscription($item) ?? $item->serialize();
                 } catch (\Throwable) {
                     // TODO: Throw and catch specific exceptions that are caused by legacy insert tags
-                    $failed = true;
                     $return .= $item->serialize();
                 }
             }
         }
 
-        if ($failed) {
-            $return = (string) $this->callLegacyClass($return, true);
-        }
-
-        return $return;
+        return (string) $this->callLegacyClass($return, true);
     }
 
     public function replaceChunked(string $input): ChunkedText
@@ -79,7 +75,22 @@ class InsertTagParser implements ResetInterface
 
     public function replaceInline(string $input): string
     {
-        return (string) $this->replaceInlineChunked($input);
+        $return = '';
+
+        foreach ($this->parse($input) as $item) {
+            if (\is_string($item)) {
+                $return .= $item;
+            } else {
+                try {
+                    $return .= $this->renderSubscription($item) ?? $item->serialize();
+                } catch (\Throwable) {
+                    // TODO: Throw and catch specific exceptions that are caused by legacy insert tags
+                    $return .= $item->serialize();
+                }
+            }
+        }
+
+        return (string) $this->callLegacyClass($return, false);
     }
 
     public function replaceInlineChunked(string $input): ChunkedText
@@ -103,15 +114,9 @@ class InsertTagParser implements ResetInterface
         if (null !== $tag) {
             $result = $this->renderSubscription($tag);
 
-            if ($result !== null) {
+            if (null !== $result) {
                 return $result;
             }
-            try {
-
-            } catch (\Throwable) {
-
-            }
-            // TODO: call tagged services
         }
 
         // Fallback to old implementation
@@ -130,12 +135,11 @@ class InsertTagParser implements ResetInterface
 
     private function renderSubscription(InsertTag $tag): string|null
     {
-
         if (!$subscription = $this->subscriptions[$tag->getName()] ?? null) {
             return null;
         }
 
-        if ($subscription->mode === ProcessingMode::resolved) {
+        if (ProcessingMode::resolved === $subscription->mode) {
             $tag = $this->resolveNestedTags($tag);
         }
 
@@ -236,7 +240,10 @@ class InsertTagParser implements ResetInterface
                 $parameterMatches[0][$index] = substr($parameterMatch, 2);
             }
 
+            /** @var array<int,ParsedSequence> $parameters */
             $parameters = array_map($this->parse(...), $parameterMatches[0]);
+
+            /* Discarded idea of query parameters in insert tags
 
             $paramSequence = [];
             $querySequence = [];
@@ -260,6 +267,7 @@ class InsertTagParser implements ResetInterface
             }
 
             $parameters += $this->parseQuery(new ParsedSequence($querySequence));
+            */
         }
 
         if (strtolower($name) !== $name) {
@@ -301,15 +309,7 @@ class InsertTagParser implements ResetInterface
     {
         $resolvedParameters = [];
 
-        foreach ($parameters->keys() as $key) {
-            $parameter = $parameters->get($key);
-
-            if (!$parameter instanceof ParsedSequence) {
-                $resolvedParameters[$key] = $this->resolveParameters($parameter);
-
-                continue;
-            }
-
+        foreach ($parameters->all() as $parameter) {
             $value = '';
 
             foreach ($parameter as $item) {
@@ -322,13 +322,7 @@ class InsertTagParser implements ResetInterface
                 $value = $this->render($value);
             }
 
-            if ((string) (int) $value === $value) {
-                $value = (int) $value;
-            } elseif ((string) (float) $value === $value) {
-                $value = (float) $value;
-            }
-
-            $resolvedParameters[$key] = $value;
+            $resolvedParameters[] = $value;
         }
 
         return new ResolvedParameters($resolvedParameters);

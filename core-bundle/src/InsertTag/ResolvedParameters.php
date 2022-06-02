@@ -12,38 +12,28 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
+/**
+ * @method list<float|int|string> all(string|null $name = null)
+ * @method float|int|string|null  get(int|string $key)
+ */
 final class ResolvedParameters extends InsertTagParameters
 {
     /**
-     * @param array<array-key,self|float|int|string> $parameters
+     * @param list<string> $parameters
      */
     public function __construct(array $parameters)
     {
-        parent::__construct($parameters);
+        foreach ($parameters as $parameter) {
+            if (!\is_string($parameter)) {
+                throw new \TypeError(sprintf('%s(): Argument #1 ($parameters) must be of type list<%s>, list<%s> given', __METHOD__, 'string', get_debug_type($parameter)));
+            }
+        }
+
+        parent::__construct(array_values($parameters));
     }
 
     public function hasInsertTags(): bool
     {
         return false;
-    }
-
-    public function get(int|string $key): self|float|int|string
-    {
-        return parent::get($key);
-    }
-
-    public function toArray(): array
-    {
-        $parameters = [];
-
-        foreach ($this->keys() as $key) {
-            if (($value = $this->get($key)) instanceof self) {
-                $value = $value->toArray();
-            }
-
-            $parameters[$key] = $value;
-        }
-
-        return $parameters;
     }
 }

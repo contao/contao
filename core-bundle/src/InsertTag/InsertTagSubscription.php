@@ -20,7 +20,6 @@ final class InsertTagSubscription
         public readonly string $name,
         public readonly ProcessingMode $mode,
         public readonly OutputType $type,
-    )
-    {
+    ) {
     }
 }

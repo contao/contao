@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag\Resolver;
 
-use _PHPStan_43cb6abb8\Symfony\Component\Console\Exception\LogicException;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\Exception\InvalidInsertTagException;
@@ -22,12 +21,10 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\System;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 class LinkInsertTag
 {
-
     public function __construct(private ContaoFramework $framework, private TokenChecker $tokenChecker)
     {
     }
@@ -42,28 +39,24 @@ class LinkInsertTag
         $strTarget = null;
         $strClass = '';
 
-        if (!$insertTag->getParameters()->has(0)) {
+        if (null === $insertTag->getParameters()->get(0)) {
             throw new InvalidInsertTagException('Missing parameters for link insert tag.');
         }
 
         $urlParam = $insertTag->getParameters()->get(0);
 
         // External links
-        if (strncmp($urlParam, 'http://', 7) === 0 || strncmp($urlParam, 'https://', 8) === 0)
-        {
+        if (str_starts_with($urlParam, 'http://') || str_starts_with($urlParam, 'https://')) {
             $strUrl = StringUtil::specialcharsUrl($urlParam);
             $strTitle = $urlParam;
-            $strName = str_replace(array('http://', 'https://'), '', $strUrl);
+            $strName = str_replace(['http://', 'https://'], '', $strUrl);
         }
 
         // Regular link
-        else
-        {
+        else {
             // User login page
-            if ($urlParam === 'login')
-            {
-                if (!$this->tokenChecker->hasFrontendUser())
-                {
+            if ('login' === $urlParam) {
+                if (!$this->tokenChecker->hasFrontendUser()) {
                     return '';
                 }
 
@@ -72,11 +65,9 @@ class LinkInsertTag
 
             $objNextPage = $this->framework->getAdapter(PageModel::class)->findByIdOrAlias($urlParam);
 
-            if ($objNextPage === null)
-            {
+            if (null === $objNextPage) {
                 // Prevent broken markup with link_open and link_close (see #92)
-                if ($insertTag->getName() === 'link_open')
-                {
+                if ('link_open' === $insertTag->getName()) {
                     return '<a>';
                 }
 
@@ -86,49 +77,36 @@ class LinkInsertTag
             $strUrl = '';
 
             // Do not generate URL for insert tags that don't need it
-            if (\in_array($insertTag->getName(), array('link', 'link_open', 'link_url'), true))
-            {
-                switch ($objNextPage->type)
-                {
+            if (\in_array($insertTag->getName(), ['link', 'link_open', 'link_url'], true)) {
+                switch ($objNextPage->type) {
                     case 'redirect':
                         $strUrl = $objNextPage->url;
 
-                        if (strncasecmp($strUrl, 'mailto:', 7) === 0)
-                        {
+                        if (0 === strncasecmp($strUrl, 'mailto:', 7)) {
                             $strUrl = StringUtil::encodeEmail($strUrl);
                         }
                         break;
 
                     case 'forward':
-                        if ($objNextPage->jumpTo)
-                        {
+                        if ($objNextPage->jumpTo) {
                             $objNext = $this->framework->getAdapter(PageModel::class)->findPublishedById($objNextPage->jumpTo);
-                        }
-                        else
-                        {
+                        } else {
                             $objNext = $this->framework->getAdapter(PageModel::class)->findFirstPublishedRegularByPid($objNextPage->id);
                         }
 
-                        if ($objNext instanceof PageModel)
-                        {
-                            try
-                            {
-                                $strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
-                            }
-                            catch (ExceptionInterface $exception)
-                            {
+                        if ($objNext instanceof PageModel) {
+                            try {
+                                $strUrl = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true) ? $objNext->getAbsoluteUrl() : $objNext->getFrontendUrl();
+                            } catch (ExceptionInterface) {
                             }
                             break;
                         }
                     // no break
 
                     default:
-                        try
-                        {
-                            $strUrl = \in_array('absolute', \array_slice($elements, 2), true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
-                        }
-                        catch (ExceptionInterface $exception)
-                        {
+                        try {
+                            $strUrl = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true) ? $objNextPage->getAbsoluteUrl() : $objNextPage->getFrontendUrl();
+                        } catch (ExceptionInterface) {
                         }
                         break;
                 }
@@ -140,14 +118,12 @@ class LinkInsertTag
             $strTitle = $objNextPage->pageTitle ?: $objNextPage->title;
         }
 
-        if (!$strTarget && \in_array('blank', \array_slice($elements, 2), true))
-        {
+        if (!$strTarget && \in_array('blank', \array_slice($insertTag->getParameters()->all(), 1), true)) {
             $strTarget = ' target="_blank" rel="noreferrer noopener"';
         }
 
         // Replace the tag
-        switch ($insertTag->getName())
-        {
+        switch ($insertTag->getName()) {
             case 'link':
                 return sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName);
 

@@ -27,7 +27,6 @@ class AsInsertTag
         public OutputType $type = OutputType::text,
         public int $priority = 0,
         public string|null $method = null,
-    )
-    {
+    ) {
     }
 }

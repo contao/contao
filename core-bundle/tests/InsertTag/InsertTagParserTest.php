@@ -67,25 +67,25 @@ class InsertTagParserTest extends TestCase
     {
         $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
 
-        $insertTag = $insertTagParser->parseTag('insert_tag::first::second?foo=bar&baz[]=1&baz[]=1.23|flag1|flag2');
+        $insertTag = $insertTagParser->parseTag('insert_tag::first::second::foo=bar::baz[]=1::baz[]=1.23|flag1|flag2');
 
         $this->assertInstanceOf(ResolvedInsertTag::class, $insertTag);
         $this->assertSame('insert_tag', $insertTag->getName());
-        $this->assertSame([0, 1, 'foo', 'baz'], $insertTag->getParameters()->keys());
         $this->assertSame('first', $insertTag->getParameters()->get(0));
         $this->assertSame('second', $insertTag->getParameters()->get(1));
         $this->assertSame('bar', $insertTag->getParameters()->get('foo'));
-        $this->assertSame(1, $insertTag->getParameters()->get('baz')->get(0));
-        $this->assertSame(1.23, $insertTag->getParameters()->get('baz')->get(1));
+        $this->assertSame(1, $insertTag->getParameters()->get('baz[]'));
+        $this->assertSame(1, $insertTag->getParameters()->all('baz[]')[0]);
+        $this->assertSame(1.23, $insertTag->getParameters()->all('baz[]')[1]);
         $this->assertSame('flag1', $insertTag->getFlags()[0]->getName());
         $this->assertSame('flag2', $insertTag->getFlags()[1]->getName());
 
-        $insertTag = $insertTagParser->parseTag('insert_tag::param?foo={{bar::param|flag1}}|flag2');
+        $insertTag = $insertTagParser->parseTag('insert_tag::param::foo={{bar::param|flag1}}|flag2');
 
         $this->assertInstanceOf(ParsedInsertTag::class, $insertTag);
         $this->assertSame('insert_tag', $insertTag->getName());
-        $this->assertSame([0, 'foo'], $insertTag->getParameters()->keys());
         $this->assertSame('param', $insertTag->getParameters()->get(0)->get(0));
+        $this->assertSame('bar', $insertTag->getParameters()->get(1)->get(1)->getName());
         $this->assertSame('bar', $insertTag->getParameters()->get('foo')->get(0)->getName());
         $this->assertSame('flag1', $insertTag->getParameters()->get('foo')->get(0)->getFlags()[0]->getName());
         $this->assertSame('flag2', $insertTag->getFlags()[0]->getName());

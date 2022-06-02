@@ -12,11 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
-use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ProcessingMode;
-use Cron\CronExpression;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -38,7 +36,7 @@ class AddInsertTagsPass implements CompilerPassInterface
 
         foreach ($serviceIds as $serviceId => $tags) {
             foreach ($tags as $attributes) {
-                if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', $attributes['name'] ?? '')) {
+                if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', (string) ($attributes['name'] ?? ''))) {
                     throw new InvalidDefinitionException(sprintf('Invalid insert tag name "%s"', $attributes['name'] ?? ''));
                 }
 
@@ -87,7 +85,7 @@ class AddInsertTagsPass implements CompilerPassInterface
             throw new InvalidDefinitionException($invalid);
         }
 
-        if ((string) $ref->getReturnType() !== 'string') {
+        if ('string' !== (string) $ref->getReturnType()) {
             $invalid .= sprintf('The "%s::%s" method exists but has an invalid return type. Expected "string", got "%s".', $class, $method, (string) $ref->getReturnType());
 
             throw new InvalidDefinitionException($invalid);
