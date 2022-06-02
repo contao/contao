@@ -1335,21 +1335,21 @@ abstract class DataContainer extends Backend
 
 	public function addPtableTags($strTable, $intId, &$tags)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']))
+		$ptable = $GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] == 5 ? $strTable : ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null);
+
+		if (!$ptable)
 		{
 			$tags[] = 'contao.db.' . $strTable;
 
 			return;
 		}
 
-		$ptable = $GLOBALS['TL_DCA'][$strTable]['config']['ptable'];
-
 		Controller::loadDataContainer($ptable);
 
 		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
 								 ->execute($intId);
 
-		if (!$objPid->numRows)
+		if (!$objPid->numRows || $objPid->pid == '0')
 		{
 			return;
 		}
@@ -1361,12 +1361,19 @@ abstract class DataContainer extends Backend
 
 	public function addCtableTags($strTable, $intId, &$tags)
 	{
-		if (empty($GLOBALS['TL_DCA'][$strTable]['config']['ctable']))
+		$ctables = $GLOBALS['TL_DCA'][$strTable]['config']['ctable'] ?? array();
+
+		if ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] == 5)
+		{
+			$ctables[] = $strTable;
+		}
+
+		if (!$ctables)
 		{
 			return;
 		}
 
-		foreach ($GLOBALS['TL_DCA'][$strTable]['config']['ctable'] as $ctable)
+		foreach ($ctables as $ctable)
 		{
 			Controller::loadDataContainer($ctable);
 
