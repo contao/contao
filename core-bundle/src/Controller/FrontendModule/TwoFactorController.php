@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\FrontendModule;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
