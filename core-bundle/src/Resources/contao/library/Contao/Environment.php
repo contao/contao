@@ -273,6 +273,11 @@ class Environment
 	 */
 	protected static function httpUserAgent()
 	{
+		if (!isset($_SERVER['HTTP_USER_AGENT']))
+		{
+			return '';
+		}
+
 		$ua = strip_tags($_SERVER['HTTP_USER_AGENT']);
 		$ua = preg_replace('/javascript|vbscri?pt|script|applet|alert|document|write|cookie/i', '', $ua);
 
