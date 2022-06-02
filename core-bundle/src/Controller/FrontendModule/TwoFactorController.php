@@ -72,7 +72,6 @@ class TwoFactorController extends AbstractFrontendModuleController
         $services['translator'] = TranslatorInterface::class;
         $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
         $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
-        $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
 
         return $services;
     }
