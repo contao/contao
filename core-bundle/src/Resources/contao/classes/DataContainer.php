@@ -1349,7 +1349,7 @@ abstract class DataContainer extends Backend
 		$objPid = $this->Database->prepare('SELECT pid FROM ' . Database::quoteIdentifier($strTable) . ' WHERE id=?')
 								 ->execute($intId);
 
-		if (!$objPid->numRows || $objPid->pid == '0')
+		if (!$objPid->numRows || $objPid->pid == 0)
 		{
 			return;
 		}
