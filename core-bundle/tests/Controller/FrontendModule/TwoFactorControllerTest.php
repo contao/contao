@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 use Contao\BackendUser;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
@@ -488,7 +487,6 @@ class TwoFactorControllerTest extends TestCase
         $container->set('contao.security.two_factor.backup_code_manager', $this->createMock(BackupCodeManager::class));
         $container->set('security.helper', $security);
         $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
-        $container->set('contao.csrf.token_manager', $this->createMock(ContaoCsrfTokenManager::class));
 
         System::setContainer($container);
 
