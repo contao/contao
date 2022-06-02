@@ -66,6 +66,8 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\TemplateController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
+
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
@@ -85,6 +87,8 @@ services:
     Contao\CoreBundle\Controller\FrontendModule\TemplateController: ~
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController: ~
+
+    Contao\CoreBundle\Controller\FrontendModule\UnfilteredHtmlController: ~
 
     Contao\CoreBundle\Controller\ImagesController:
         public: true

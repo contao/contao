@@ -2,6 +2,60 @@
 
 ## Version 4.* to 5.0
 
+## FORM_FIELDS
+
+It is no longer possible to use the `FORM_FIELDS` mechanism to determine which form fields have been
+submitted. Make sure to always submit at least an empty string in your widget:
+
+```html
+<!-- Wrong: the input will only be submitted if checked -->
+<input type="checkbox" name="foo" value="bar">
+
+<!-- Right: the input will always be submitted -->
+<input type="hidden" name="foo" value=""><input type="checkbox" name="foo" value="bar">
+```
+
+### Constants
+
+The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`, `TL_REFERER_ID` and `TL_SCRIPT` have
+been removed.
+
+`BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
+token checker service to check the separate cases instead:
+
+```php
+$hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+$showUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+```
+
+Use the token checker service instead of `FE_USER_LOGGED_IN`:
+
+```php
+$hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+```
+
+Use the kernel start time instead of `TL_START`:
+
+```php
+$startTime = System::getContainer()->get('kernel')->getStartTime();
+```
+
+Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
+
+```php
+$refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+```
+
+Use the request stack to get the route instead of using `TL_SCRIPT`:
+
+```php
+$route = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
+
+if ('contao_backend' === $route) {
+    // Do something
+}
+```
+
 ### TL_CRON
 
 Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob`

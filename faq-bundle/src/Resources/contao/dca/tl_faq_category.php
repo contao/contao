@@ -80,14 +80,14 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		(
 			'edit' => array
 			(
-				'href'                => 'table=tl_faq',
-				'icon'                => 'edit.svg'
-			),
-			'editheader' => array
-			(
 				'href'                => 'act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_faq_category', 'editHeader')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_faq',
+				'icon'                => 'children.svg'
 			),
 			'copy' => array
 			(

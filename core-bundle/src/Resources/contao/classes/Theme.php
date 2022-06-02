@@ -515,10 +515,6 @@ class Theme extends Backend
 					continue;
 				}
 
-				// Get the order fields
-				$objDcaExtractor = DcaExtractor::getInstance($table);
-				$arrOrder = $objDcaExtractor->getOrderFields();
-
 				// Loop through the rows
 				for ($j=0; $j<$rows->length; $j++)
 				{
@@ -633,7 +629,7 @@ class Theme extends Backend
 						}
 
 						// Replace the file paths in multiSRC fields with their tl_files ID
-						elseif (($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] ?? null) == 'fileTree' || \in_array($name, $arrOrder))
+						elseif (($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] ?? null) == 'fileTree')
 						{
 							$tmp = StringUtil::deserialize($value);
 
@@ -855,12 +851,8 @@ class Theme extends Backend
 		// Load the DCA
 		$this->loadDataContainer('tl_theme');
 
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_theme');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
 		// Add the row
-		$this->addDataRow($xml, $table, $objTheme->row(), $arrOrder);
+		$this->addDataRow($xml, $table, $objTheme->row());
 	}
 
 	/**
@@ -880,10 +872,6 @@ class Theme extends Backend
 		// Load the DCA
 		$this->loadDataContainer('tl_module');
 
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_module');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
 		// Get all modules
 		$objModule = $this->Database->prepare("SELECT * FROM tl_module WHERE pid=? ORDER BY name")
 									->execute($objTheme->id);
@@ -891,7 +879,7 @@ class Theme extends Backend
 		// Add the rows
 		while ($objModule->next())
 		{
-			$this->addDataRow($xml, $table, $objModule->row(), $arrOrder);
+			$this->addDataRow($xml, $table, $objModule->row());
 		}
 	}
 
@@ -912,10 +900,6 @@ class Theme extends Backend
 		// Load the DCA
 		$this->loadDataContainer('tl_layout');
 
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_layout');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
 		// Get all layouts
 		$objLayout = $this->Database->prepare("SELECT * FROM tl_layout WHERE pid=? ORDER BY name")
 									->execute($objTheme->id);
@@ -923,7 +907,7 @@ class Theme extends Backend
 		// Add the rows
 		while ($objLayout->next())
 		{
-			$this->addDataRow($xml, $table, $objLayout->row(), $arrOrder);
+			$this->addDataRow($xml, $table, $objLayout->row());
 		}
 	}
 
@@ -983,10 +967,6 @@ class Theme extends Backend
 		// Load the DCA
 		$this->loadDataContainer('tl_files');
 
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_files');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
 		// Add the folders
 		$arrFolders = StringUtil::deserialize($objTheme->folders);
 
@@ -998,7 +978,7 @@ class Theme extends Backend
 			{
 				foreach ($this->eliminateNestedPaths($objFolders->fetchEach('path')) as $strFolder)
 				{
-					$this->addFolderToArchive($objArchive, $strFolder, $xml, $table, $arrOrder);
+					$this->addFolderToArchive($objArchive, $strFolder, $xml, $table);
 				}
 			}
 		}
@@ -1009,9 +989,8 @@ class Theme extends Backend
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $table
 	 * @param array                $arrRow
-	 * @param array                $arrOrder
 	 */
-	protected function addDataRow(\DOMDocument $xml, \DOMElement $table, array $arrRow, array $arrOrder=array())
+	protected function addDataRow(\DOMDocument $xml, \DOMElement $table, array $arrRow)
 	{
 		$t = $table->getAttribute('name');
 
@@ -1045,7 +1024,7 @@ class Theme extends Backend
 			}
 
 			// Replace the IDs of multiSRC fields with their paths (see #4952)
-			elseif (($GLOBALS['TL_DCA'][$t]['fields'][$k]['inputType'] ?? null) == 'fileTree' || \in_array($k, $arrOrder))
+			elseif (($GLOBALS['TL_DCA'][$t]['fields'][$k]['inputType'] ?? null) == 'fileTree')
 			{
 				$arrFiles = StringUtil::deserialize($v);
 
@@ -1083,11 +1062,10 @@ class Theme extends Backend
 	 * @param string               $strFolder
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $table
-	 * @param array                $arrOrder
 	 *
 	 * @throws \Exception If the folder path is insecure
 	 */
-	protected function addFolderToArchive(ZipWriter $objArchive, $strFolder, \DOMDocument $xml, \DOMElement $table, array $arrOrder=array())
+	protected function addFolderToArchive(ZipWriter $objArchive, $strFolder, \DOMDocument $xml, \DOMElement $table)
 	{
 		$strUploadPath = System::getContainer()->getParameter('contao.upload_path');
 
@@ -1128,7 +1106,7 @@ class Theme extends Backend
 
 			if (is_dir($this->strRootDir . '/' . $strFolder . '/' . $strFile))
 			{
-				$this->addFolderToArchive($objArchive, $strFolder . '/' . $strFile, $xml, $table, $arrOrder);
+				$this->addFolderToArchive($objArchive, $strFolder . '/' . $strFile, $xml, $table);
 			}
 			else
 			{
@@ -1154,7 +1132,7 @@ class Theme extends Backend
 				$arrRow['hash'] = $objFile->hash;
 
 				// Add the row
-				$this->addDataRow($xml, $table, $arrRow, $arrOrder);
+				$this->addDataRow($xml, $table, $arrRow);
 			}
 		}
 	}

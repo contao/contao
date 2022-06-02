@@ -146,8 +146,8 @@
       <trans-unit id="tl_article.edit">
         <source>Edit article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.editheader">
-        <source>Edit the settings of article ID %s</source>
+      <trans-unit id="tl_article.children">
+        <source>Edit the content elements of article ID %s</source>
       </trans-unit>
       <trans-unit id="tl_article.copy">
         <source>Duplicate article ID %s</source>

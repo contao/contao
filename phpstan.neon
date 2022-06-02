@@ -16,9 +16,6 @@ parameters:
         - %currentWorkingDirectory%/core-bundle/src
         - %currentWorkingDirectory%/core-bundle/tests
 
-    dynamicConstantNames:
-        - BE_USER_LOGGED_IN
-
     universalObjectCratesClasses:
         - Contao\Model
         - Contao\Template
