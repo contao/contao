@@ -158,10 +158,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         if (!\defined('TL_MODE')) {
             \define('TL_MODE', $this->getMode());
         }
-
-        if (!\defined('TL_SCRIPT')) {
-            \define('TL_SCRIPT', $this->getRoute());
-        }
     }
 
     private function getMode(): string|null
@@ -183,15 +179,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         }
 
         return null;
-    }
-
-    private function getRoute(): string|null
-    {
-        if (null === $this->request) {
-            return null;
-        }
-
-        return substr($this->request->getBaseUrl().$this->request->getPathInfo(), \strlen($this->request->getBasePath().'/'));
     }
 
     private function initializeFramework(): void

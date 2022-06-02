@@ -60,7 +60,6 @@ use Contao\Model\Collection;
  * @property string  $rel
  * @property boolean $useImage
  * @property string  $multiSRC
- * @property string  $orderSRC
  * @property boolean $useHomeDir
  * @property integer $perRow
  * @property integer $perPage

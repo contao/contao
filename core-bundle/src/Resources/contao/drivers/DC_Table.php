@@ -342,10 +342,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$data = array();
 		$row = $objRow->row();
 
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
 		// Get all fields
 		$fields = array_keys($row);
 		$allowedFields = array('id', 'pid', 'sorting', 'tstamp');
@@ -394,7 +390,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$row[$i] = implode(', ', $temp);
 			}
-			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'fileTree' || \in_array($i, $arrOrder))
+			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'fileTree')
 			{
 				if (\is_array($value))
 				{
@@ -1879,7 +1875,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 									$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
 								}
 
-								return $arrAjax[$thisId] . '<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">';
+								return $arrAjax[$thisId];
 							}
 
 							if (\count($arrAjax) > 1)
@@ -2057,8 +2053,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . $strVersionField . '
-<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">' . $return;
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . $strVersionField . $return;
 
 		// Reload the page to prevent _POST variables from being sent twice
 		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
@@ -2141,7 +2136,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (!$this->ptable)
 				{
-					$this->redirect(TL_SCRIPT . '?do=' . Input::get('do'));
+					$this->redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do'));
 				}
 				// TODO: try to abstract this
 				elseif ($this->ptable == 'tl_page' && $this->strTable == 'tl_article')
@@ -2157,7 +2152,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				Message::reset();
 
-				$strUrl = TL_SCRIPT . '?do=' . Input::get('do');
+				$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do');
 
 				if (Input::get('table') !== null)
 				{
@@ -2188,7 +2183,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				Message::reset();
 
-				$strUrl = TL_SCRIPT . '?do=' . Input::get('do');
+				$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do');
 
 				if (Input::get('table') !== null)
 				{
@@ -2358,7 +2353,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if ($blnAjax && Environment::get('isAjaxRequest'))
 						{
-							return $strAjax . '<input type="hidden" name="FORM_FIELDS_' . $id . '[]" value="' . StringUtil::specialchars(implode(',', $formFields)) . '">';
+							return $strAjax;
 						}
 
 						$blnAjax = false;
@@ -2428,7 +2423,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				// Close box
 				$return .= '
-  <input type="hidden" name="FORM_FIELDS_' . $this->intId . '[]" value="' . StringUtil::specialchars(implode(',', $formFields)) . '">
 </div>';
 
 				// Always create a new version if something has changed, even if the form has errors (see #237)
@@ -2898,7 +2892,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// Close box
 			$return .= '
-<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars(implode(',', $formFields)) . '">
 </div>';
 
 			// Submit buttons
@@ -6160,12 +6153,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				if ($objIds->numRows > 0)
 				{
 					$this->root = $objIds->fetchEach('id');
-				}
-
-				if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste']))
-				{
-					trigger_deprecation('contao/core-bundle', '4.13', 'Implicitly setting "TL_DCA.%s.list.sorting.rootPaste" to true by leaving "TL_DCA.%s.list.sorting.root" empty has been deprecated and will no longer work in Contao 5.0. Set "rootPaste" to true instead.', $table, $table);
-					$this->rootPaste = true;
 				}
 			}
 

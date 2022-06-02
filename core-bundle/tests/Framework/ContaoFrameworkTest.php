@@ -63,9 +63,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertSame('FE', TL_MODE);
-        $this->assertSame('index.html', TL_SCRIPT);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
     }
 
@@ -86,9 +84,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertSame('BE', TL_MODE);
-        $this->assertSame('contao/login', TL_SCRIPT);
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
 
@@ -103,9 +99,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertNull(TL_MODE);
-        $this->assertNull(TL_SCRIPT);
     }
 
     /**
@@ -119,9 +113,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize(true);
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertSame('FE', TL_MODE);
-        $this->assertNull(TL_SCRIPT);
     }
 
     /**
@@ -139,9 +131,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize(true);
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertSame('FE', TL_MODE);
-        $this->assertSame('index.php/index.html', TL_SCRIPT);
     }
 
     /**
@@ -159,9 +149,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertNull(TL_MODE);
-        $this->assertSame('contao/login', TL_SCRIPT);
     }
 
     /**
@@ -192,9 +180,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
         $this->assertSame('FE', TL_MODE);
-        $this->assertSame('index.html', TL_SCRIPT);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
     }
 

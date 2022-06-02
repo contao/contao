@@ -267,7 +267,7 @@ services:
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:
-            - '%contao.image.target_dir%'
+            - '%kernel.project_dir%/var/deferred-images'
             - '@?filesystem'
 
     contao.image.factory:
