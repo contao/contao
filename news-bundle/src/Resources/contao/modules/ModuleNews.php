@@ -17,7 +17,6 @@ use Contao\Model\Collection;
  * Parent class for news modules.
  *
  * @property string $news_template
- * @property mixed  $news_metaFields
  */
 abstract class ModuleNews extends Module
 {
@@ -137,15 +136,27 @@ abstract class ModuleNews extends Module
 			};
 		}
 
-		$arrMeta = $this->getMetaFields($objArticle);
+		/** @var PageModel $objPage */
+		global $objPage;
+
+		$objTemplate->date = Date::parse($objPage->datimFormat, $objArticle->date);
+
+		/** @var UserModel $objAuthor */
+		if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
+		{
+			$objTemplate->author = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
+		}
+
+		if (!$objArticle->noComments && $objArticle->source == 'default' && isset(System::getContainer()->getParameter('kernel.bundles')['ContaoCommentsBundle']))
+		{
+			$intTotal = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
+
+			$objTemplate->numberOfComments = $intTotal;
+			$objTemplate->commentCount = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
+		}
 
 		// Add the meta information
-		$objTemplate->date = $arrMeta['date'] ?? null;
-		$objTemplate->hasMetaFields = !empty($arrMeta);
-		$objTemplate->numberOfComments = $arrMeta['ccount'] ?? null;
-		$objTemplate->commentCount = $arrMeta['comments'] ?? null;
 		$objTemplate->timestamp = $objArticle->date;
-		$objTemplate->author = $arrMeta['author'] ?? null;
 		$objTemplate->datetime = date('Y-m-d\TH:i:sP', $objArticle->date);
 		$objTemplate->addImage = false;
 		$objTemplate->addBefore = false;
@@ -276,67 +287,6 @@ abstract class ModuleNews extends Module
 		}
 
 		return $arrArticles;
-	}
-
-	/**
-	 * Return the meta fields of a news article as array
-	 *
-	 * @param NewsModel $objArticle
-	 *
-	 * @return array
-	 */
-	protected function getMetaFields($objArticle)
-	{
-		$meta = StringUtil::deserialize($this->news_metaFields);
-
-		if (!\is_array($meta))
-		{
-			return array();
-		}
-
-		/** @var PageModel $objPage */
-		global $objPage;
-
-		$return = array();
-
-		foreach ($meta as $field)
-		{
-			switch ($field)
-			{
-				case 'date':
-					$return['date'] = Date::parse($objPage->datimFormat, $objArticle->date);
-					break;
-
-				case 'author':
-					/** @var UserModel $objAuthor */
-					if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
-					{
-						$return['author'] = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
-						$return['authorModel'] = $objAuthor;
-					}
-					break;
-
-				case 'comments':
-					if ($objArticle->noComments || $objArticle->source != 'default')
-					{
-						break;
-					}
-
-					$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-					if (!isset($bundles['ContaoCommentsBundle']))
-					{
-						break;
-					}
-
-					$intTotal = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
-					$return['ccount'] = $intTotal;
-					$return['comments'] = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
-					break;
-			}
-		}
-
-		return $return;
 	}
 
 	/**
