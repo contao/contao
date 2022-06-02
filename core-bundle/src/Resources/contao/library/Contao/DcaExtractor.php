@@ -53,12 +53,6 @@ class DcaExtractor extends Controller
 	protected $arrFields = array();
 
 	/**
-	 * Order fields
-	 * @var array
-	 */
-	protected $arrOrderFields = array();
-
-	/**
 	 * Unique fields
 	 * @var array
 	 */
@@ -181,26 +175,6 @@ class DcaExtractor extends Controller
 	public function hasFields()
 	{
 		return !empty($this->arrFields);
-	}
-
-	/**
-	 * Return the order fields as array
-	 *
-	 * @return array The order fields array
-	 */
-	public function getOrderFields()
-	{
-		return $this->arrOrderFields;
-	}
-
-	/**
-	 * Return true if there are order fields
-	 *
-	 * @return boolean True if there are order fields
-	 */
-	public function hasOrderFields()
-	{
-		return !empty($this->arrOrderFields);
 	}
 
 	/**
@@ -474,7 +448,6 @@ class DcaExtractor extends Controller
 
 		// Fields
 		$this->arrFields = array();
-		$this->arrOrderFields = array();
 
 		// Fields
 		foreach ($fields as $field=>$config)
@@ -482,12 +455,6 @@ class DcaExtractor extends Controller
 			if (isset($config['sql']))
 			{
 				$this->arrFields[$field] = $config['sql'];
-			}
-
-			// Only add order fields of binary fields (see #7785)
-			if (isset($config['inputType'], $config['eval']['orderField']) && $config['inputType'] == 'fileTree')
-			{
-				$this->arrOrderFields[] = $config['eval']['orderField'];
 			}
 
 			if (isset($config['eval']['unique']) && $config['eval']['unique'])

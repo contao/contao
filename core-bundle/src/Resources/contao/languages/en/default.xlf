@@ -293,6 +293,12 @@
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
       </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code.</source>
+      </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
       </trans-unit>
@@ -1984,6 +1990,12 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module "Listing" and its "list_*" fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupUnfilteredHtml">
+        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userUnfilteredHtml">
+        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>

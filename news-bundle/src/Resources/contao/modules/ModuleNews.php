@@ -86,7 +86,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->subHeadline = $objArticle->subheadline;
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
 		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
-		$objTemplate->more = $this->generateLink($GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
+		$objTemplate->more = $this->generateLink($objArticle->linkText ?: $GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
 		$objTemplate->link = News::generateNewsUrl($objArticle, $blnAddArchive);
 		$objTemplate->archive = $objArticle->getRelated('pid');
 		$objTemplate->count = $intCount; // see #5708

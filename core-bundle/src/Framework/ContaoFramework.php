@@ -151,19 +151,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     private function setConstants(): void
     {
         \define('TL_ROOT', $this->projectDir);
-
-        if (!\defined('TL_SCRIPT')) {
-            \define('TL_SCRIPT', $this->getRoute());
-        }
-    }
-
-    private function getRoute(): string|null
-    {
-        if (null === $this->request) {
-            return null;
-        }
-
-        return substr($this->request->getBaseUrl().$this->request->getPathInfo(), \strlen($this->request->getBasePath().'/'));
     }
 
     private function initializeFramework(): void
