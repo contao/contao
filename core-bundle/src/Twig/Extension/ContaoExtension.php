@@ -17,6 +17,7 @@ use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
+use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
@@ -103,10 +104,11 @@ final class ContaoExtension extends AbstractExtension
     public function getTokenParsers(): array
     {
         return [
-            // Overwrite the parsers for the "extends" and "include" tags to
-            // additionally support the Contao template hierarchy
+            // Overwrite the parsers for the "extends", "include" and "use"
+            // tags to additionally support the Contao template hierarchy
             new DynamicExtendsTokenParser($this->hierarchy),
             new DynamicIncludeTokenParser($this->hierarchy),
+            new DynamicUseTokenParser($this->hierarchy),
             // Add a parser for the Contao specific "add" tag
             new AddTokenParser(self::class),
         ];

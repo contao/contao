@@ -16,7 +16,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 
 /**
- * Front end module "news reader".
+ * Front end module "newsreader".
  *
  * @property Comments $Comments
  * @property string   $com_template
@@ -57,7 +57,7 @@ class ModuleNewsReader extends ModuleNews
 
 		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
-			throw new InternalServerErrorException('The news reader ID ' . $this->id . ' has no archives specified.');
+			throw new InternalServerErrorException('The newsreader ID ' . $this->id . ' has no archives specified.');
 		}
 
 		return parent::generate();

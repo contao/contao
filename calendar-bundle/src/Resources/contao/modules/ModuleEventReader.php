@@ -238,7 +238,6 @@ class ModuleEventReader extends Events
 		$objTemplate->calendar = $objEvent->getRelated('pid');
 		$objTemplate->count = 0; // see #74
 		$objTemplate->details = '';
-		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
 

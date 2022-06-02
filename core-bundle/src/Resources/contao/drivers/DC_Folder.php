@@ -229,19 +229,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.editableFileTypes for DC_Folder is deprecated and will no longer work in Contao 5.0.');
-		}
-
-		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? $container->getParameter('contao.editable_files')));
-
-		if (!isset($GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Not specifying config.uploadPath for DC_Folder is deprecated and will no longer work in Contao 5.0.');
-		}
-
-		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? $GLOBALS['TL_CONFIG']['uploadPath'] ?? $container->getParameter('contao.upload_path');
+		$this->arrEditableFileTypes = StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$this->strTable]['config']['editableFileTypes'] ?? throw new \InvalidArgumentException(sprintf('Missing config.editableFileTypes setting for DC_Folder "%s"', $this->strTable))));
+		$this->strUploadPath = $GLOBALS['TL_DCA'][$this->strTable]['config']['uploadPath'] ?? throw new \InvalidArgumentException(sprintf('Missing config.uploadPath setting for DC_Folder "%s"', $this->strTable));
 
 		// Get all filemounts (root folders)
 		if (\is_array($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root'] ?? null))
@@ -496,7 +485,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Build the tree
 		$return = $this->panel() . Message::generate() . '
 <div id="tl_buttons">' . ((Input::get('act') == 'select') ? '
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '') . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_VIEW_CREATE, $subject)) ? '
+<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '') . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_ACTION_CREATE, $subject)) ? '
 <a href="' . $this->addToUrl($hrfNew) . '" class="' . $clsNew . '" title="' . StringUtil::specialchars($ttlNew) . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $lblNew . '</a>
 <a href="' . $this->addToUrl('&amp;act=paste&amp;mode=move') . '" class="header_new" title="' . StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]) . '" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG'][$this->strTable]['move'][0] . '</a>  ' : '') . ($blnClipboard ? '
 <a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons()) . '
@@ -560,18 +549,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					{
 						$arrButtons = $callback($arrButtons, $this);
 					}
-				}
-			}
-
-			// Button permissions
-			$security = System::getContainer()->get('security.helper');
-			$subject = new DataContainerSubject($this->strTable); // List view so we cannot provide an ID
-
-			foreach ($arrButtons as $k => $v)
-			{
-				if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
-				{
-					unset($arrButtons[$k]);
 				}
 			}
 
@@ -1297,18 +1274,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		// Button permissions
-		$security = System::getContainer()->get('security.helper');
-		$subject = new DataContainerSubject($this->strTable, $strFolder); // Move (upload) view so we CAN provide an ID
-
-		foreach ($arrButtons as $k => $v)
-		{
-			if (!$security->isGranted(ContaoCorePermissions::DC_BUTTON_PREFIX . $k, $subject))
-			{
-				unset($arrButtons[$k]);
-			}
-		}
-
 		if (\count($arrButtons) < 3)
 		{
 			$strButtons = implode(' ', $arrButtons);
@@ -1508,7 +1473,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$class = 'tl_box';
 
 				$return .= '
-  <input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">
 </div>';
 			}
 		}
@@ -1804,7 +1768,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				// Close box
 				$return .= '
-  <input type="hidden" name="FORM_FIELDS_' . $strHash . '[]" value="' . StringUtil::specialchars(implode(',', $formFields)) . '">
 </div>';
 
 				// Always create a new version if something has changed, even if the form has errors (see #237)

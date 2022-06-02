@@ -17,6 +17,7 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
+use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
 use Contao\FrontendUser;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -32,6 +33,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
+ *
+ * @FrontendModule(category="user")
  */
 class TwoFactorController extends AbstractFrontendModuleController
 {

@@ -97,21 +97,35 @@ services:
             - !service_closure '@doctrine.orm.entity_manager'
             - '@?logger'
 
-    contao.cron.legacy:
-        class: Contao\CoreBundle\Cron\LegacyCron
-        arguments:
-            - '@contao.framework'
-
     contao.cron.purge_expired_data:
         class: Contao\CoreBundle\Cron\PurgeExpiredDataCron
         arguments:
             - '@contao.framework'
             - '@database_connection'
 
+    contao.cron.purge_opt_in_tokens:
+        class: Contao\CoreBundle\Cron\PurgeOptInTokensCron
+        arguments:
+            - '@contao.opt_in'
+            - '@?monolog.logger.contao.cron'
+
     contao.cron.purge_preview_links:
         class: Contao\CoreBundle\Cron\PurgePreviewLinksCron
         arguments:
             - '@database_connection'
+
+    contao.cron.purge_registrations:
+        class: Contao\CoreBundle\Cron\PurgeRegistrationsCron
+        arguments:
+            - '@contao.framework'
+            - '@?monolog.logger.contao.cron'
+
+    contao.cron.purge_temp_folder:
+        class: Contao\CoreBundle\Cron\PurgeTempFolderCron
+        arguments:
+            - '@filesystem'
+            - '%kernel.project_dir%'
+            - '@monolog.logger.contao.cron'
 
     contao.csrf.token_manager:
         class: Contao\CoreBundle\Csrf\ContaoCsrfTokenManager
@@ -244,7 +258,6 @@ services:
         arguments:
             - '@request_stack'
             - '@contao.routing.scope_matcher'
-            - '@contao.security.token_checker'
             - '@router'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
@@ -254,7 +267,7 @@ services:
     contao.image.deferred_image_storage:
         class: Contao\Image\DeferredImageStorageFilesystem
         arguments:
-            - '%contao.image.target_dir%'
+            - '%kernel.project_dir%/var/deferred-images'
             - '@?filesystem'
 
     contao.image.factory:

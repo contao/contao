@@ -382,47 +382,6 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle the visibility of a fieldset
-	 *
-	 * @param {object} el    The DOM element
-	 * @param {string} id    The ID of the target element
-	 * @param {string} table The table name
-	 *
-	 * @returns {boolean}
-	 */
-	toggleFieldset: function(el, id, table) {
-		el.blur();
-		Backend.getScrollOffset();
-
-		var fs = $('pal_' + id);
-
-		if (fs.hasClass('collapsed')) {
-			fs.removeClass('collapsed');
-			new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
-		} else {
-			var form = fs.getParent('form'),
-				inp = fs.getElements('[required]'),
-				collapse = true;
-
-			for (var i=0; i<inp.length; i++) {
-				if (!inp[i].get('value')) {
-					collapse = false;
-					break;
-				}
-			}
-
-			if (!collapse) {
-				if (typeof(form.checkValidity) == 'function') form.getElement('button[type="submit"]').click();
-			} else {
-				fs.addClass('collapsed');
-				new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
-			}
-		}
-
-		return false;
-	},
-
-	/**
 	 * Toggle a group of a multi-checkbox field
 	 *
 	 * @param {object} el The DOM element
@@ -853,28 +812,6 @@ var Backend =
 	},
 
 	/**
-	 * Toggle the synchronization results
-	 */
-	toggleUnchanged: function() {
-		$$('#result-list .tl_confirm').each(function(el) {
-			el.toggleClass('hidden');
-		});
-	},
-
-	/**
-	 * Collapse all palettes
-	 */
-	collapsePalettes: function() {
-		$$('fieldset.hide').each(function(el) {
-			el.addClass('collapsed');
-		});
-		$$('label.error, label.mandatory').each(function(el) {
-			var fs = el.getParent('fieldset');
-			fs && fs.removeClass('collapsed');
-		});
-	},
-
-	/**
 	 * Make parent view items sortable
 	 *
 	 * @param {object} ul The DOM element
@@ -981,6 +918,13 @@ var Backend =
 				i;
 			for (i=0; i<lis.length; i++) {
 				els.push(lis[i].get('data-id'));
+			}
+			if (oid === val) {
+				$(val).value.split(',').forEach(function(j) {
+					if (els.indexOf(j) === -1) {
+						els.push(j);
+					}
+				});
 			}
 			$(oid).value = els.join(',');
 		});
@@ -1813,121 +1757,6 @@ var Backend =
 	},
 
 	/**
-	 * Toggle the "add language" button
-	 *
-	 * @param {object} el The DOM element
-	 */
-	toggleAddLanguageButton: function(el) {
-		var inp = el.getParent('div').getElement('input[type="button"]');
-		if (el.value != '') {
-			inp.removeProperty('disabled');
-		} else {
-			inp.setProperty('disabled', true);
-		}
-	},
-
-	/**
-	 * Section wizard
-	 *
-	 * @param {string} id The ID of the target element
-	 */
-	sectionWizard: function(id) {
-		var table = $(id),
-			tbody = table.getElement('tbody'),
-			makeSortable = function(tbody) {
-				var rows = tbody.getChildren(),
-					childs, i, j;
-
-				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						childs[j].getElements('input').each(function(input) {
-							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']')
-						});
-						childs[j].getElements('select').each(function(select) {
-							select.name = select.name.replace(/\[[0-9]+]/g, '[' + i + ']');
-						});
-					}
-				}
-
-				new Sortables(tbody, {
-					constrain: true,
-					opacity: 0.6,
-					handle: '.drag-handle',
-					onComplete: function() {
-						makeSortable(tbody);
-					}
-				});
-			},
-			addEventsTo = function(tr) {
-				var command, next, ntr, childs, selects, nselects, i, j;
-				tr.getElements('button').each(function(bt) {
-					if (bt.hasEvent('click')) return;
-					command = bt.getProperty('data-command');
-
-					switch (command) {
-						case 'copy':
-							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
-								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									selects = childs[i].getElements('select');
-									nselects = next.getElements('select');
-									for (j=0; j<selects.length; j++) {
-										nselects[j].value = selects[j].value;
-									}
-								}
-								ntr.inject(tr, 'after');
-								addEventsTo(ntr);
-								makeSortable(tbody);
-							});
-							break;
-						case 'delete':
-							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
-								if (tbody.getChildren().length > 1) {
-									tr.destroy();
-								}
-								makeSortable(tbody);
-							});
-							break;
-						case null:
-							bt.addEvent('keydown', function(e) {
-								if (e.event.keyCode == 38) {
-									e.preventDefault();
-									if (ntr = tr.getPrevious('tr')) {
-										tr.inject(ntr, 'before');
-									} else {
-										tr.inject(tbody, 'bottom');
-									}
-									bt.focus();
-									makeSortable(tbody);
-								} else if (e.event.keyCode == 40) {
-									e.preventDefault();
-									if (ntr = tr.getNext('tr')) {
-										tr.inject(ntr, 'after');
-									} else {
-										tr.inject(tbody, 'top');
-									}
-									bt.focus();
-									makeSortable(tbody);
-								}
-							});
-							break;
-					}
-				});
-			};
-
-		makeSortable(tbody);
-
-		tbody.getChildren().each(function(tr) {
-			addEventsTo(tr);
-		});
-	},
-
-	/**
 	 * Update the "edit module" links in the module wizard
 	 *
 	 * @param {object} el The DOM element
@@ -2065,24 +1894,6 @@ var Backend =
 				start = this;
 			});
 		});
-	},
-
-	/**
-	 * Try to focus the first input field in the main section.
-	 *
-	 * @author Yanick Witschi
-	 */
-	autoFocusFirstInputField: function() {
-		var edit = document.id('main').getElement('.tl_formbody_edit');
-		if (!edit) return;
-
-		var inputs = edit
-			.getElements('input, textarea')
-			.filter(function(item) {
-				return !item.get('disabled') && !item.get('readonly') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image' && (!item.get('autocomplete') || item.get('autocomplete') === 'off' || !item.get('value'));
-			});
-
-		if (inputs[0]) inputs[0].focus();
 	},
 
 	/**
@@ -2391,11 +2202,9 @@ window.addEvent('domready', function() {
 		$(document.body).addClass('touch');
 	}
 
-	Backend.collapsePalettes();
 	Backend.tableWizardSetWidth();
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
-	Backend.autoFocusFirstInputField();
 
 	// Chosen
 	if (Elements.chosen != undefined) {

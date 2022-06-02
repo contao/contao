@@ -58,7 +58,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property boolean $useCaption
  * @property boolean $fullsize
  * @property string  $multiSRC
- * @property string  $orderSRC
  * @property string  $html
  * @property integer $rss_cache
  * @property string  $rss_feed

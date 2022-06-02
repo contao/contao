@@ -70,13 +70,13 @@ class Dbafs
 		// Return the model if it exists already
 		if ($objModel !== null)
 		{
-			$objFile = ($objModel->type == 'folder') ? new Folder($objModel->path) : new File($objModel->path);
+			$strHash = ($objModel->type == 'folder') ? static::getFolderHash($objModel->path) : (new File($objModel->path))->hash;
 
 			// Update the timestamp and file hash (see #4818, #7828)
-			if ($objModel->hash != $objFile->hash)
+			if ($objModel->hash != $strHash)
 			{
 				$objModel->tstamp = time();
-				$objModel->hash   = $objFile->hash;
+				$objModel->hash   = $strHash;
 				$objModel->save();
 			}
 

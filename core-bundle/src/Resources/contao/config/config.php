@@ -18,12 +18,9 @@ use Contao\ContentAccordionStart;
 use Contao\ContentAccordionStop;
 use Contao\ContentAlias;
 use Contao\ContentArticle;
-use Contao\ContentCode;
 use Contao\ContentDownload;
 use Contao\ContentDownloads;
 use Contao\ContentGallery;
-use Contao\ContentHeadline;
-use Contao\ContentHtml;
 use Contao\ContentHyperlink;
 use Contao\ContentImage;
 use Contao\ContentList;
@@ -49,7 +46,6 @@ use Contao\FormExplanation;
 use Contao\FormFieldModel;
 use Contao\FormFieldsetStart;
 use Contao\FormFieldsetStop;
-use Contao\FormFile;
 use Contao\FormHidden;
 use Contao\FormHtml;
 use Contao\FormModel;
@@ -60,6 +56,7 @@ use Contao\FormSelect;
 use Contao\FormSubmit;
 use Contao\FormText;
 use Contao\FormTextarea;
+use Contao\FormUpload;
 use Contao\ImageSize;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
@@ -280,12 +277,9 @@ $GLOBALS['TL_CTE'] = array
 (
 	'texts' => array
 	(
-		'headline'        => ContentHeadline::class,
 		'text'            => ContentText::class,
-		'html'            => ContentHtml::class,
 		'list'            => ContentList::class,
 		'table'           => ContentTable::class,
-		'code'            => ContentCode::class,
 	),
 	'accordion' => array
 	(
@@ -370,7 +364,7 @@ $GLOBALS['TL_FFL'] = array
 	'select'        => FormSelect::class,
 	'radio'         => FormRadio::class,
 	'checkbox'      => FormCheckbox::class,
-	'upload'        => FormFile::class,
+	'upload'        => FormUpload::class,
 	'range'         => FormRange::class,
 	'hidden'        => FormHidden::class,
 	'captcha'       => FormCaptcha::class,
@@ -465,22 +459,6 @@ $GLOBALS['TL_PURGE'] = array
 			'callback' => array(Automator::class, 'generateSymlinks')
 		)
 	)
-);
-
-// Backwards compatibility
-// Cron jobs
-$GLOBALS['TL_CRON'] = array
-(
-	'monthly' => array(),
-	'weekly' => array(),
-	'daily' => array
-	(
-		'purgeTempFolder' => array(Automator::class, 'purgeTempFolder'),
-		'purgeRegistrations' => array(Automator::class, 'purgeRegistrations'),
-		'purgeOptInTokens' => array(Automator::class, 'purgeOptInTokens')
-	),
-	'hourly' => array(),
-	'minutely' => array()
 );
 
 // Hooks

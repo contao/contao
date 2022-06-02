@@ -20,6 +20,12 @@
         "source": "https://github.com/contao/core-bundle",
         "docs": "https://docs.contao.org"
     },
+    "funding": [
+        {
+            "type": "other",
+            "url": "https://to.contao.org/donate"
+        }
+    ],
     "require": {
         "php": "^8.1",
         "ext-dom": "*",
@@ -135,7 +141,7 @@
         "symfony/yaml": "^5.4",
         "terminal42/escargot": "^1.4.1",
         "terminal42/service-annotation-bundle": "^1.1",
-        "twig/twig": "^3.0",
+        "twig/twig": "^3.1",
         "ua-parser/uap-php": "^3.9",
         "webignition/robots-txt-file": "^3.0",
         "wikimedia/less.php": "^1.7"
