@@ -70,7 +70,7 @@ final class ContaoExtension extends AbstractExtension
 
         $this->environment->addGlobal(
             'request_token',
-            new class($tokenManager) {
+            new class($tokenManager) implements \Stringable {
                 public function __construct(private ContaoCsrfTokenManager $tokenManager)
                 {
                 }
