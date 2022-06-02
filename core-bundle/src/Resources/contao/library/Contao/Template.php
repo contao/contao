@@ -157,7 +157,7 @@ abstract class Template extends Controller
 			return $this->arrData[$strKey];
 		}
 
-		if ($strKey === 'requestToken' && !array_key_exists($strKey, $this->arrData))
+		if ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData))
 		{
 			return htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
 		}
@@ -194,7 +194,7 @@ abstract class Template extends Controller
 	 */
 	public function __isset($strKey)
 	{
-		return isset($this->arrData[$strKey]) || ($strKey === 'requestToken' && !array_key_exists($strKey, $this->arrData));
+		return isset($this->arrData[$strKey]) || ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData));
 	}
 
 	/**
