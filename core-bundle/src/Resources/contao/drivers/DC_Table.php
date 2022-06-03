@@ -98,6 +98,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected $intPreserveRecord;
 
 	/**
+	 * Data of fields to be committed
+	 * @var array
+	 */
+	protected $arrCommit = array();
+
+	/**
 	 * Initialize the object
 	 *
 	 * @param string $strTable
@@ -1940,6 +1946,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$class = 'tl_box';
 				$return .= "\n" . '</fieldset>';
 			}
+
+			$this->commit();
 		}
 
 		// Versions overview
@@ -2421,6 +2429,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$blnAjax ? $strAjax .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
 				}
 
+				$this->commit();
+
 				// Close box
 				$return .= '
 </div>';
@@ -2674,8 +2684,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$this->objActiveRecord = $objRow;
-		$this->values[] = $this->intId;
-		$this->procedure[] = 'id=?';
+		$this->procedure = array('id=?');
+		$this->values = array($this->intId);
 		$this->blnCreateNewVersion = false;
 
 		$objVersions = new Versions($this->strTable, $this->intId);
@@ -2814,6 +2824,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Store value
 						$this->row();
 					}
+
+					$this->commit();
 
 					// Always create a new version if something has changed, even if the form has errors (see #237)
 					if ($this->noReload && $this->blnCreateNewVersion)
@@ -3063,12 +3075,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$varValue = $objDate->tstamp;
 		}
 
-		// Make sure unique fields are unique
-		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
-		{
-			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
-		}
-
 		// Handle multi-select fields in "override all" mode
 		if ($this->objActiveRecord !== null && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
 		{
@@ -3144,26 +3150,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		// Make sure unique fields are unique
+		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+		{
+			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
+		}
+
 		// Save the value if there was no error
 		if ((\is_array($varValue) || (string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue !== $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 		{
 			$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
-			$arrTypes = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
-
-			// If the field is a fallback field, empty all other columns (see #6498)
-			if ($varValue && ($arrData['eval']['fallback'] ?? null))
-			{
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
-				{
-					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
-								   ->query('', array($varEmpty, $this->activeRecord->pid), $arrTypes);
-				}
-				else
-				{
-					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
-								   ->query('', array($varEmpty), $arrTypes);
-				}
-			}
 
 			// Set the correct empty value (see #6284, #6373)
 			if (!\is_array($varValue) && (string) $varValue === '')
@@ -3171,25 +3167,103 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$varValue = $varEmpty;
 			}
 
-			$arrValues = $this->values;
-			array_unshift($arrValues, $varValue);
+			$this->arrCommit[$this->strField] = $varValue;
+			$this->varValue = StringUtil::deserialize($varValue);
 
-			$objUpdateStmt = $this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE " . implode(' AND ', $this->procedure))
-											->query('', $arrValues, $arrTypes);
-
-			if ($objUpdateStmt->affectedRows)
+			if (\is_object($this->objActiveRecord))
 			{
-				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
-				{
-					$this->blnCreateNewVersion = true;
-				}
+				$this->objActiveRecord->{$this->strField} = $this->varValue;
+			}
+		}
+	}
 
-				$this->varValue = StringUtil::deserialize($varValue);
+	protected function commit()
+	{
+		if ($this->noReload || Input::post('FORM_SUBMIT') != $this->strTable || empty($this->arrCommit))
+		{
+			return;
+		}
 
-				if (\is_object($this->objActiveRecord))
+		$arrValues = $this->arrCommit;
+
+		// Call oncommit_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncommit_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncommit_callback'] as $callback)
+			{
+				try
 				{
-					$this->objActiveRecord->{$this->strField} = $this->varValue;
+					if (\is_array($callback))
+					{
+						$this->import($callback[0]);
+						$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $this);
+					}
+					elseif (\is_callable($callback))
+					{
+						$callback($arrValues, $this);
+					}
 				}
+				catch (\Exception $e)
+				{
+					$this->noReload = true;
+					Message::addError($e->getMessage());
+
+					return;
+				}
+			}
+		}
+
+		$arrTypes = array();
+		$blnCreateNewVersion = false;
+
+		foreach ($arrValues as $strField => $varValue)
+		{
+			$this->strField = $strField;
+			$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
+
+			// If the field is a fallback field, empty all other columns (see #6498)
+			if ($varValue && ($arrData['eval']['fallback'] ?? null))
+			{
+				$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
+				$arrType = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
+
+				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
+				{
+					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
+						->query('', array($varEmpty, $this->activeRecord->pid), $arrType);
+				}
+				else
+				{
+					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
+						->query('', array($varEmpty), $arrType);
+				}
+			}
+
+			$arrTypes[] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null;
+
+			if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
+			{
+				$blnCreateNewVersion = true;
+			}
+
+			$this->varValue = StringUtil::deserialize($varValue);
+
+			if (\is_object($this->objActiveRecord))
+			{
+				$this->objActiveRecord->{$this->strField} = $this->varValue;
+			}
+		}
+
+		$objUpdateStmt = $this->Database
+			->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
+			->set($arrValues)
+			->query('', array_merge(array_values($arrValues), $this->values), $arrTypes);
+
+		if ($objUpdateStmt->affectedRows)
+		{
+			if ($blnCreateNewVersion)
+			{
+				$this->blnCreateNewVersion = true;
 			}
 		}
 	}
