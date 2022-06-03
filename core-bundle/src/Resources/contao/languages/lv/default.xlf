@@ -192,6 +192,9 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Lapa ar URL &quot;%s&quot; jau pastāv!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>Šis URL sufikss novedīs pie URL dublēšanās (piemēram, %s)!</target>
@@ -345,6 +348,9 @@
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Veidnes ceļš &quot;%s&quot; nedrīkst saturēt šādas rakstzīmes: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1311,8 +1317,8 @@
         <target>Paraksts</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Licence</target>
+        <source>License URL</source>
+        <target>Licences URL</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>

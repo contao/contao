@@ -75,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.formatsNotSupported">
         <source>The following formats are not supported on your server: %s</source>
+        <target>De volgende formats worden niet ondersteund op uw server: %s</target>
       </trans-unit>
       <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
         <source>Use original image if dimensions match</source>
