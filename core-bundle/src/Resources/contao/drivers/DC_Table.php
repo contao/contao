@@ -98,10 +98,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected $intPreserveRecord;
 
 	/**
-	 * Data of fields to be committed
+	 * Data of fields to be submitted
 	 * @var array
 	 */
-	protected $arrCommit = array();
+	protected $arrSubmit = array();
 
 	/**
 	 * Initialize the object
@@ -1794,6 +1794,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$objVersions->initialize();
+		$intLatestVersion = $objVersions->getLatestVersion();
 
 		// Build an array from boxes and rows
 		$this->strPalette = $this->getPalette();
@@ -1947,58 +1948,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$return .= "\n" . '</fieldset>';
 			}
 
-			$this->commit();
-		}
-
-		$intLatestVersion = $objVersions->getLatestVersion();
-
-		// Always create a new version if something has changed, even if the form has errors (see #237)
-		if ($this->noReload && $this->blnCreateNewVersion && Input::post('FORM_SUBMIT') == $this->strTable)
-		{
-			$objVersions->create();
+			$this->submit();
 		}
 
 		// Reload the page to prevent _POST variables from being sent twice
 		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
 		{
-			$arrValues = $this->values;
-			array_unshift($arrValues, time());
-
-			// Trigger the onsubmit_callback
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
-			{
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
-				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$callback($this);
-					}
-				}
-			}
-
-			// Set the current timestamp before adding a new version
-			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
-			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-					->execute($this->ptable, time(), $this->intId);
-			}
-			else
-			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-					->execute(time(), $this->intId);
-			}
-
-			// Save the current version
-			if ($this->blnCreateNewVersion)
-			{
-				$objVersions->create();
-			}
-
 			// Show a warning if the record has been saved by another user (see #8412)
 			if ($intLatestVersion !== null && Input::post('VERSION_NUMBER') !== null && $intLatestVersion > Input::post('VERSION_NUMBER'))
 			{
@@ -2017,8 +1972,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				throw new ResponseException($objTemplate->getResponse());
 			}
-
-			$this->invalidateCacheTags();
 
 			// Redirect
 			if (Input::post('saveNclose') !== null)
@@ -2432,60 +2385,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$blnAjax ? $strAjax .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
 				}
 
-				$this->commit();
-
 				// Close box
 				$return .= '
 </div>';
 
-				// Always create a new version if something has changed, even if the form has errors (see #237)
-				// TODO: this case should never happen anymore, because $this->blnCreateNewVersion will only be true
-				// TODO: if the record was saved successfully (and never has $this->noReload)
-				if ($this->noReload && $this->blnCreateNewVersion && Input::post('FORM_SUBMIT') == $this->strTable)
-				{
-					$objVersions->create();
-				}
-
 				// Save record
-				if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
-				{
-					// Call the onsubmit_callback
-					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
-					{
-						foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
-						{
-							if (\is_array($callback))
-							{
-								$this->import($callback[0]);
-								$this->{$callback[0]}->{$callback[1]}($this);
-							}
-							elseif (\is_callable($callback))
-							{
-								$callback($this);
-							}
-						}
-					}
-
-					// Set the current timestamp before adding a new version
-					if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
-					{
-						$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-									   ->execute($this->ptable, time(), $this->intId);
-					}
-					else
-					{
-						$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-									   ->execute(time(), $this->intId);
-					}
-
-					// Create a new version
-					if ($this->blnCreateNewVersion)
-					{
-						$objVersions->create();
-					}
-
-					$this->invalidateCacheTags();
-				}
+				$this->submit();
 			}
 
 			// Submit buttons
@@ -2830,54 +2735,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->row();
 					}
 
-					$this->commit();
-
-					// Always create a new version if something has changed, even if the form has errors (see #237)
-					if ($this->noReload && $this->blnCreateNewVersion)
-					{
-						$objVersions->create();
-					}
-
-					// Post-processing
-					if (!$this->noReload)
-					{
-						// Call the onsubmit_callback
-						if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
-						{
-							foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
-							{
-								if (\is_array($callback))
-								{
-									$this->import($callback[0]);
-									$this->{$callback[0]}->{$callback[1]}($this);
-								}
-								elseif (\is_callable($callback))
-								{
-									$callback($this);
-								}
-							}
-						}
-
-						$this->invalidateCacheTags();
-
-						// Set the current timestamp before adding a new version
-						if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
-						{
-							$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-										   ->execute($this->ptable, time(), $this->intId);
-						}
-						else
-						{
-							$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-										   ->execute(time(), $this->intId);
-						}
-
-						// Create a new version
-						if ($this->blnCreateNewVersion)
-						{
-							$objVersions->create();
-						}
-					}
+					$this->submit();
 				}
 			}
 
@@ -3162,17 +3020,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Save the value if there was no error
-		if ((\is_array($varValue) || (string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue !== $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
+		if ((\is_array($varValue) || (string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue != $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 		{
-			$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
-
 			// Set the correct empty value (see #6284, #6373)
 			if (!\is_array($varValue) && (string) $varValue === '')
 			{
-				$varValue = $varEmpty;
+				$varValue = Widget::getEmptyValueByFieldType($arrData['sql'] ?? array());
 			}
 
-			$this->arrCommit[$this->strField] = $varValue;
+			$this->arrSubmit[$this->strField] = $varValue;
 			$this->varValue = StringUtil::deserialize($varValue);
 
 			if (\is_object($this->objActiveRecord))
@@ -3182,19 +3038,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 	}
 
-	protected function commit()
+	protected function submit()
 	{
-		if ($this->noReload || Input::post('FORM_SUBMIT') != $this->strTable || empty($this->arrCommit))
+		if ($this->noReload || Input::post('FORM_SUBMIT') != $this->strTable || empty($this->arrSubmit))
 		{
 			return;
 		}
 
-		$arrValues = $this->arrCommit;
+		$arrValues = $this->arrSubmit;
 
-		// Call oncommit_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncommit_callback'] ?? null))
+		// Call onbeforesubmit_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] ?? null))
 		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncommit_callback'] as $callback)
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] as $callback)
 			{
 				try
 				{
@@ -3205,11 +3061,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 					elseif (\is_callable($callback))
 					{
-						$callback($arrValues, $this);
+						$arrValues = $callback($arrValues, $this);
 					}
 				}
 				catch (\Exception $e)
 				{
+					$this->arrSubmit = [];
 					$this->noReload = true;
 					Message::addError($e->getMessage());
 
@@ -3259,18 +3116,48 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$arrValues['tstamp'] = time();
+
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+		{
+			$arrValues['ptable'] = $this->ptable;
+		}
+
 		$objUpdateStmt = $this->Database
 			->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
 			->set($arrValues)
 			->query('', array_merge(array_values($arrValues), $this->values), $arrTypes);
 
-		if ($objUpdateStmt->affectedRows)
+		if ($objUpdateStmt->affectedRows && $blnCreateNewVersion)
 		{
-			if ($blnCreateNewVersion)
+			$this->blnCreateNewVersion = true;
+		}
+
+		// Trigger the onsubmit_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
 			{
-				$this->blnCreateNewVersion = true;
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$callback($this);
+				}
 			}
 		}
+
+		// Save the current version
+		if ($this->blnCreateNewVersion)
+		{
+			$objVersions = new Versions($this->strTable, $this->intId);
+			$objVersions->create();
+		}
+
+		$this->invalidateCacheTags();
 	}
 
 	/**
