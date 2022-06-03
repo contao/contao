@@ -68,7 +68,7 @@ class ContentImage extends ContentElement
 
 		if (null !== $figure)
 		{
-			$figure->applyLegacyTemplateData($this->Template, null);
+			$figure->applyLegacyTemplateData($this->Template);
 		}
 	}
 }
