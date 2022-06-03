@@ -317,6 +317,9 @@
         <source>Please assign all modules to a column!</source>
         <target>Назначьте все модули в колонку!</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>

@@ -475,6 +475,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
         <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Lūdzu, izvēlieties lapu, uz kuru biedri tiks novirzīti pēc pieprasījuma pabeigšanas.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>

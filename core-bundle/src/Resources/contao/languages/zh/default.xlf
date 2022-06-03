@@ -316,6 +316,9 @@
         <source>Please assign all modules to a column!</source>
         <target>请将所有模块分配给一列</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>请把%d和%d加起来</target>
