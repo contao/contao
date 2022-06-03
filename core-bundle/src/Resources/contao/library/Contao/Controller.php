@@ -304,7 +304,7 @@ abstract class Controller extends System
 			// Show a particular article only
 			if ($objPage->type == 'regular' && Input::get('articles'))
 			{
-				list($strSection, $strArticle) = explode(':', Input::get('articles'));
+				list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
 
 				if ($strArticle === null)
 				{
@@ -1322,7 +1322,7 @@ abstract class Controller extends System
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
 		}
-		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		while ($intId && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
