@@ -1950,118 +1950,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->commit();
 		}
 
-		// Versions overview
-		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'] ?? null))
-		{
-			$version = $objVersions->renderDropdown();
-		}
-		else
-		{
-			$version = '';
-		}
-
-		// Submit buttons
-		$arrButtons = array();
-		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
-
-		if (!Input::get('nb'))
-		{
-			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
-
-			if (!Input::get('nc'))
-			{
-				if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
-				{
-					$arrButtons['saveNcreate'] = '<button type="submit" name="saveNcreate" id="saveNcreate" class="tl_submit" accesskey="n">' . $GLOBALS['TL_LANG']['MSC']['saveNcreate'] . '</button>';
-
-					if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
-					{
-						$arrButtons['saveNduplicate'] = '<button type="submit" name="saveNduplicate" id="saveNduplicate" class="tl_submit" accesskey="d">' . $GLOBALS['TL_LANG']['MSC']['saveNduplicate'] . '</button>';
-					}
-				}
-
-				if ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null)
-				{
-					$arrButtons['saveNedit'] = '<button type="submit" name="saveNedit" id="saveNedit" class="tl_submit" accesskey="e">' . $GLOBALS['TL_LANG']['MSC']['saveNedit'] . '</button>';
-				}
-
-				if ($this->ptable || ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
-				{
-					$arrButtons['saveNback'] = '<button type="submit" name="saveNback" id="saveNback" class="tl_submit" accesskey="g">' . $GLOBALS['TL_LANG']['MSC']['saveNback'] . '</button>';
-				}
-			}
-		}
-
-		// Call the buttons_callback (see #4691)
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$this->import($callback[0]);
-					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$arrButtons = $callback($arrButtons, $this);
-				}
-			}
-		}
-
-		if (\count($arrButtons) < 3)
-		{
-			$strButtons = implode(' ', $arrButtons);
-		}
-		else
-		{
-			$strButtons = array_shift($arrButtons) . ' ';
-			$strButtons .= '<div class="split-button">';
-			$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-			foreach ($arrButtons as $strButton)
-			{
-				$strButtons .= '<li>' . $strButton . '</li>';
-			}
-
-			$strButtons .= '</ul></div>';
-		}
-
-		// Add the buttons and end the form
-		$return .= '
-</div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
-  ' . $strButtons . '
-</div>
-</div>
-</form>';
+		$intLatestVersion = $objVersions->getLatestVersion();
 
 		// Always create a new version if something has changed, even if the form has errors (see #237)
 		if ($this->noReload && $this->blnCreateNewVersion && Input::post('FORM_SUBMIT') == $this->strTable)
 		{
 			$objVersions->create();
 		}
-
-		$strVersionField = '';
-
-		// Store the current version number (see #8412)
-		if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-		{
-			$strVersionField = '
-<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
-		}
-
-		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = $version . Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
-<div id="tl_buttons">' . (Input::get('nb') ? '&nbsp;' : '
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>') . '
-</div>
-<form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
-<div class="tl_formbody_edit">
-<input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . $strVersionField . $return;
 
 		// Reload the page to prevent _POST variables from being sent twice
 		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
@@ -2090,12 +1985,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
 			{
 				$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-							   ->execute($this->ptable, time(), $this->intId);
+					->execute($this->ptable, time(), $this->intId);
 			}
 			else
 			{
 				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-							   ->execute(time(), $this->intId);
+					->execute(time(), $this->intId);
 			}
 
 			// Save the current version
@@ -2222,7 +2117,115 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->reload();
 		}
 
+		// Versions overview
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['enableVersioning'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['hideVersionMenu'] ?? null))
+		{
+			$version = $objVersions->renderDropdown();
+		}
+		else
+		{
+			$version = '';
+		}
+
+		// Submit buttons
+		$arrButtons = array();
+		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
+
+		if (!Input::get('nb'))
+		{
+			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
+
+			if (!Input::get('nc'))
+			{
+				if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
+				{
+					$arrButtons['saveNcreate'] = '<button type="submit" name="saveNcreate" id="saveNcreate" class="tl_submit" accesskey="n">' . $GLOBALS['TL_LANG']['MSC']['saveNcreate'] . '</button>';
+
+					if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
+					{
+						$arrButtons['saveNduplicate'] = '<button type="submit" name="saveNduplicate" id="saveNduplicate" class="tl_submit" accesskey="d">' . $GLOBALS['TL_LANG']['MSC']['saveNduplicate'] . '</button>';
+					}
+				}
+
+				if ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null)
+				{
+					$arrButtons['saveNedit'] = '<button type="submit" name="saveNedit" id="saveNedit" class="tl_submit" accesskey="e">' . $GLOBALS['TL_LANG']['MSC']['saveNedit'] . '</button>';
+				}
+
+				if ($this->ptable || ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
+				{
+					$arrButtons['saveNback'] = '<button type="submit" name="saveNback" id="saveNback" class="tl_submit" accesskey="g">' . $GLOBALS['TL_LANG']['MSC']['saveNback'] . '</button>';
+				}
+			}
+		}
+
+		// Call the buttons_callback (see #4691)
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$this->import($callback[0]);
+					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$arrButtons = $callback($arrButtons, $this);
+				}
+			}
+		}
+
+		if (\count($arrButtons) < 3)
+		{
+			$strButtons = implode(' ', $arrButtons);
+		}
+		else
+		{
+			$strButtons = array_shift($arrButtons) . ' ';
+			$strButtons .= '<div class="split-button">';
+			$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+			foreach ($arrButtons as $strButton)
+			{
+				$strButtons .= '<li>' . $strButton . '</li>';
+			}
+
+			$strButtons .= '</ul></div>';
+		}
+
+		// Add the buttons and end the form
+		$return .= '
+</div>
+<div class="tl_formbody_submit">
+<div class="tl_submit_container">
+  ' . $strButtons . '
+</div>
+</div>
+</form>';
+
+		$strVersionField = '';
+
+		// Store the current version number (see #8412)
+		if ($intLatestVersion !== null)
+		{
+			$strVersionField = '
+<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
+		}
+
+		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
+		$return = $version . Message::generate() . ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
+<div id="tl_buttons">' . (Input::get('nb') ? '&nbsp;' : '
+<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>') . '
+</div>
+<form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
+<div class="tl_formbody_edit">
+<input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . $strVersionField . $return;
+
 		// Set the focus if there is an error
+		// TODO: might need to focus on the main page error
 		if ($this->noReload)
 		{
 			$return .= '
@@ -2436,6 +2439,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 				// Always create a new version if something has changed, even if the form has errors (see #237)
+				// TODO: this case should never happen anymore, because $this->blnCreateNewVersion will only be true
+				// TODO: if the record was saved successfully (and never has $this->noReload)
 				if ($this->noReload && $this->blnCreateNewVersion && Input::post('FORM_SUBMIT') == $this->strTable)
 				{
 					$objVersions->create();
