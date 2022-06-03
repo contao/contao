@@ -44,7 +44,7 @@ class ContentAccordion extends ContentElement
 
 			if (null !== $figure)
 			{
-				$figure->applyLegacyTemplateData($this->Template, $this->floating);
+				$figure->applyLegacyTemplateData($this->Template, null, $this->floating);
 			}
 		}
 

@@ -204,7 +204,7 @@ abstract class ModuleNews extends Module
 						->build();
 				}
 
-				$figure->applyLegacyTemplateData($objTemplate, $objArticle->floating);
+				$figure->applyLegacyTemplateData($objTemplate, null, $objArticle->floating);
 			}
 		}
 

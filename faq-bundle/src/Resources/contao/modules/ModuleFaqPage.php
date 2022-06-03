@@ -107,7 +107,7 @@ class ModuleFaqPage extends Module
 
 				if (null !== $figure)
 				{
-					$figure->applyLegacyTemplateData($objTemp, $objFaq->floating);
+					$figure->applyLegacyTemplateData($objTemp, null, $objFaq->floating);
 				}
 			}
 
