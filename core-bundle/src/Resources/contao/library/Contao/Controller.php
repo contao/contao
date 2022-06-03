@@ -1047,9 +1047,13 @@ abstract class Controller extends System
 	 * @param string $strType   Either "margin" or "padding"
 	 *
 	 * @return string The CSS markup
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	public static function generateMargin($arrValues, $strType='margin')
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using Contao\Controller::generateMargin is deprecated since Contao 4.13 and will be removed in Contao 5.');
+
 		// Initialize an empty array (see #5217)
 		if (!\is_array($arrValues))
 		{
