@@ -1770,7 +1770,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return = '';
 		$this->values[] = $this->intId;
 		$this->procedure[] = 'id=?';
-
+		$this->arrSubmit = [];
 		$this->blnCreateNewVersion = false;
 		$objVersions = new Versions($this->strTable, $this->intId);
 
@@ -2167,8 +2167,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = $version . Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
+		$return = $version . ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . '
 <div id="tl_buttons">' . (Input::get('nb') ? '&nbsp;' : '
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>') . '
 </div>
@@ -2178,13 +2178,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . $strVersionField . $return;
 
 		// Set the focus if there is an error
-		// TODO: might need to focus on the main page error
 		if ($this->noReload)
 		{
 			$return .= '
 <script>
   window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
+    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
+    if (error) Backend.vScrollTo((error.getPosition().y - 20));
   });
 </script>';
 		}
@@ -2238,14 +2238,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$class = 'tl_tbox';
 
+			if (Input::post('FORM_SUBMIT') == $this->strTable)
+			{
+				$this->Database->beginTransaction();
+			}
+
+			$blnNoReload = false;
+
 			// Walk through each record
 			foreach ($ids as $id)
 			{
 				$this->intId = $id;
 				$this->procedure = array('id=?');
 				$this->values = array($this->intId);
+				$this->arrSubmit = [];
 				$this->blnCreateNewVersion = false;
 				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
+
+				// Reset the "noReload" state but remember it for the final handling
+				$blnNoReload = $blnNoReload || $this->noReload;
+				$this->noReload = false;
 
 				$objVersions = new Versions($this->strTable, $this->intId);
 				$objVersions->initialize();
@@ -2291,11 +2303,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Begin current row
 				$strAjax = '';
 				$blnAjax = false;
-				$return .= '
-<div class="' . $class . ' cf">';
-
-				$class = 'tl_box';
-				$formFields = array();
+				$box = '';
 
 				// Get the field values
 				$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
@@ -2321,7 +2329,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 
 						$blnAjax = false;
-						$return .= "\n  " . '</div>';
+						$box .= "\n  " . '</div>';
 
 						continue;
 					}
@@ -2330,7 +2338,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
-						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
+						$box .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
 
 						continue;
 					}
@@ -2342,7 +2350,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$this->strField = $v;
 					$this->strInputName = $v . '_' . $this->intId;
-					$formFields[] = $v . '_' . $this->intId;
 
 					// Set the default value and try to load the current value from DB (see #5252)
 					if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array()))
@@ -2382,15 +2389,40 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $strAjax .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
+					$blnAjax ? $strAjax .= $this->row($this->strPalette) : $box .= $this->row($this->strPalette);
 				}
-
-				// Close box
-				$return .= '
-</div>';
 
 				// Save record
 				$this->submit();
+
+				$return .= ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . '
+<div class="' . $class . ' cf">' . $box . '
+</div>';
+
+				$class = 'tl_box';
+			}
+
+			$this->noReload = $blnNoReload || $this->noReload;
+
+			// Reload the page to prevent _POST variables from being sent twice
+			if (Input::post('FORM_SUBMIT') == $this->strTable)
+			{
+				if ($this->noReload)
+				{
+					$this->Database->rollbackTransaction();
+				}
+				else
+				{
+					$this->Database->commitTransaction();
+
+					if (Input::post('saveNclose') !== null)
+					{
+						$this->redirect($this->getReferer());
+					}
+
+					$this->reload();
+				}
 			}
 
 			// Submit buttons
@@ -2439,8 +2471,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . $return . '
 </div>
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
@@ -2455,20 +2486,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$return .= '
 <script>
   window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
+    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
+    if (error) Backend.vScrollTo((error.getPosition().y - 20));
   });
 </script>';
-			}
-
-			// Reload the page to prevent _POST variables from being sent twice
-			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
-			{
-				if (Input::post('saveNclose') !== null)
-				{
-					$this->redirect($this->getReferer());
-				}
-
-				$this->reload();
 			}
 		}
 
@@ -2683,11 +2704,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($fields) && \is_array($fields) && Input::get('fields'))
 		{
 			$class = 'tl_tbox';
-			$formFields = array();
 
 			// Save record
 			if (Input::post('FORM_SUBMIT') == $this->strTable)
 			{
+				$this->Database->beginTransaction();
+
 				foreach ($ids as $id)
 				{
 					try
@@ -2702,6 +2724,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->intId = $id;
 					$this->procedure = array('id=?');
 					$this->values = array($this->intId);
+					$this->arrSubmit = [];
 					$this->blnCreateNewVersion = false;
 
 					// Get the field values
@@ -2737,6 +2760,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$this->submit();
 				}
+
+				// Reload the page to prevent _POST variables from being sent twice
+				if ($this->noReload)
+				{
+					$this->Database->rollbackTransaction();
+				}
+				else
+				{
+					$this->Database->commitTransaction();
+
+					if (Input::post('saveNclose') !== null)
+					{
+						$this->redirect($this->getReferer());
+					}
+
+					$this->reload();
+				}
 			}
 
 			// Begin current row
@@ -2750,8 +2790,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					continue;
 				}
-
-				$formFields[] = $v;
 
 				$this->intId = 0;
 				$this->procedure = array('id=?');
@@ -2814,8 +2852,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">' . $return . '
 </div>
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
@@ -2830,20 +2867,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$return .= '
 <script>
   window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
+    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
+    if (error) Backend.vScrollTo((error.getPosition().y - 20));
   });
 </script>';
-			}
-
-			// Reload the page to prevent _POST variables from being sent twice
-			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
-			{
-				if (Input::post('saveNclose') !== null)
-				{
-					$this->redirect($this->getReferer());
-				}
-
-				$this->reload();
 			}
 		}
 
@@ -2909,7 +2936,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Return
-		return '
+		return ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . '
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>' . $return;
@@ -3062,6 +3090,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					elseif (\is_callable($callback))
 					{
 						$arrValues = $callback($arrValues, $this);
+					}
+
+					if (!\is_array($arrValues)) {
+						throw new \RuntimeException('onbeforesubmit_callback must return the values!');
 					}
 				}
 				catch (\Exception $e)
