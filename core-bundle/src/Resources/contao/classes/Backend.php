@@ -691,12 +691,14 @@ abstract class Backend extends Controller
 		}
 
 		$allTables = array_merge(
-			...array_map(
-				static function ($module)
-				{
-					return (array) ($module['tables'] ?? array());
-				},
-				array_merge(...array_values($GLOBALS['BE_MOD']))
+			...array_values(
+				array_map(
+					static function ($module)
+					{
+						return (array) ($module['tables'] ?? array());
+					},
+					array_merge(...array_values($GLOBALS['BE_MOD']))
+				)
 			)
 		);
 
