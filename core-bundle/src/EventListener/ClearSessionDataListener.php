@@ -45,6 +45,7 @@ class ClearSessionDataListener
             $this->clearLoginData($request->getSession());
         }
 
+        $request->getSession()->remove('CURRENT_ID');
         $this->clearLegacyAttributeBags('FE_DATA');
         $this->clearLegacyAttributeBags('BE_DATA');
         $this->clearLegacyFormData();
