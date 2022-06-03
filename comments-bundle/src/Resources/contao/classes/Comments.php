@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Nyholm\Psr7\Uri;
 
 /**
  * Class Comments
@@ -547,6 +548,9 @@ class Comments extends Frontend
 
 		$time = time();
 
+		// Ensure that the URL only contains ASCII characters (see #4708)
+		$request = (string) (new Uri(Environment::get('request')));
+
 		// Prepare the record
 		$arrSet = array
 		(
@@ -555,7 +559,7 @@ class Comments extends Frontend
 			'parent'       => $objComment->parent,
 			'name'         => $objComment->name,
 			'email'        => $objComment->email,
-			'url'          => Environment::get('request'),
+			'url'          => $request,
 			'addedOn'      => $time,
 			'active'       => '',
 			'tokenRemove'  => 'cor-' . bin2hex(random_bytes(10))
@@ -565,7 +569,7 @@ class Comments extends Frontend
 		$objNotify = new CommentsNotifyModel();
 		$objNotify->setRow($arrSet)->save();
 
-		$strUrl = Idna::decode(Environment::get('base')) . Environment::get('request');
+		$strUrl = Idna::decode(Environment::get('base')) . $request;
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
 		$optIn = System::getContainer()->get('contao.opt_in');

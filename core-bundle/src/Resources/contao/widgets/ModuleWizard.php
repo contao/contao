@@ -219,7 +219,7 @@ class ModuleWizard extends Widget
 				}
 				elseif ($button == 'enable')
 				{
-					$return .= ' <button type="button" data-command="enable" class="mw_enable" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '">' . Image::getHtml((($this->varValue[$i]['enable'] ?? null) ? 'visible.svg' : 'invisible.svg')) . '</button><input name="' . $this->strId . '[' . $i . '][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" onfocus="Backend.getScrollOffset()"' . (($this->varValue[$i]['enable'] ?? null) ? ' checked' : '') . '>';
+					$return .= ' <button type="button" data-command="enable" class="mw_enable" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '">' . Image::getHtml((($this->varValue[$i]['enable'] ?? null) ? 'visible.svg' : 'invisible.svg')) . '</button><input name="' . $this->strId . '[' . $i . '][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" tabindex="-1" onfocus="Backend.getScrollOffset()"' . (($this->varValue[$i]['enable'] ?? null) ? ' checked' : '') . '>';
 				}
 				else
 				{

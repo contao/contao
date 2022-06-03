@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Error\Error as TwigError;
 
@@ -45,12 +46,13 @@ class BackendPreviewSwitchController
     private Connection $connection;
     private Security $security;
     private TwigEnvironment $twig;
-    private ContaoCsrfTokenManager $tokenManager;
     private RouterInterface $router;
+    private ContaoCsrfTokenManager $tokenManager;
+    private TranslatorInterface $translator;
     private array $backendAttributes;
     private string $backendBadgeTitle;
 
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager, array $attributes = [], string $badgeTitle = '')
+    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager, TranslatorInterface $translator, array $attributes = [], string $badgeTitle = '')
     {
         $this->previewAuthenticator = $previewAuthenticator;
         $this->tokenChecker = $tokenChecker;
@@ -59,6 +61,7 @@ class BackendPreviewSwitchController
         $this->twig = $twig;
         $this->router = $router;
         $this->tokenManager = $tokenManager;
+        $this->translator = $translator;
         $this->backendAttributes = $attributes;
         $this->backendBadgeTitle = $badgeTitle;
     }
@@ -79,9 +82,7 @@ class BackendPreviewSwitchController
         }
 
         if ('tl_switch' === $request->request->get('FORM_SUBMIT')) {
-            $this->authenticatePreview($request);
-
-            return new Response('', Response::HTTP_NO_CONTENT);
+            return $this->authenticatePreview($request);
         }
 
         if ('datalist_members' === $request->request->get('FORM_SUBMIT')) {
@@ -132,7 +133,7 @@ class BackendPreviewSwitchController
         }
     }
 
-    private function authenticatePreview(Request $request): void
+    private function authenticatePreview(Request $request): Response
     {
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
 
@@ -143,10 +144,16 @@ class BackendPreviewSwitchController
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
 
         if ($frontendUsername) {
-            $this->previewAuthenticator->authenticateFrontendUser((string) $frontendUsername, $showUnpublished);
+            if (!$this->previewAuthenticator->authenticateFrontendUser((string) $frontendUsername, $showUnpublished)) {
+                $message = $this->translator->trans('ERR.previewSwitchInvalidUsername', [$frontendUsername], 'contao_default');
+
+                return new Response($message, Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
         } else {
             $this->previewAuthenticator->authenticateFrontendGuest($showUnpublished);
         }
+
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     private function getMembersDataList(BackendUser $user, Request $request): array
