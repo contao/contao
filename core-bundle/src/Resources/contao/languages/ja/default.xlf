@@ -317,6 +317,10 @@
         <source>Please assign all modules to a column!</source>
         <target>列にすべてのモジュールを割り当ててください!</target>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>不明なユーザー名: %s</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>
