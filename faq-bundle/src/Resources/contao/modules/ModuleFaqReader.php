@@ -136,7 +136,7 @@ class ModuleFaqReader extends Module
 
 			if (null !== $figure)
 			{
-				$figure->applyLegacyTemplateData($this->Template, $objFaq->imagemargin, $objFaq->floating);
+				$figure->applyLegacyTemplateData($this->Template, $objFaq->floating);
 			}
 		}
 

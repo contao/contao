@@ -115,7 +115,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'addImage'                    => 'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta',
+		'addImage'                    => 'singleSRC,size,floating,fullsize,overwriteMeta',
 		'addEnclosure'                => 'enclosure',
 		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption'
 	),
@@ -276,15 +276,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'imagemargin' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imagemargin'],
-			'exclude'                 => true,
-			'inputType'               => 'trbl',
-			'options'                 => array('px', '%', 'em', 'rem'),
-			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
 		'imageUrl' => array
 		(
