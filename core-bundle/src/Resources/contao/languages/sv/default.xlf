@@ -193,6 +193,9 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>En sida med URL &quot;%s&quot; finns redan!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>URL-suffixet leder till dubbla webbadresser (t.ex. %s)!</target>
@@ -348,6 +351,9 @@
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Mallsökvägen &quot;%s&quot; får inte innehålla följande tecken: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1318,8 +1324,8 @@
         <target>Rubrik</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Licens</target>
+        <source>License URL</source>
+        <target>Licens-URL</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1582,8 +1588,8 @@
         <target>Backend snabbtangenter</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Läs mer om att påskynda ditt arbetsflöde genom att använda &lt;a href=&quot;https://docs.contao.org/manual/en/administration-area/back-end-keyboard-shortcuts/&quot; title=&quot;Keyboard shortcuts overview&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;kortkommandon&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Lär dig mer om att påskynda ditt arbetsflöde genom att använda &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;kortkommandon&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2755,6 +2761,7 @@
       </trans-unit>
       <trans-unit id="MSC.manual">
         <source>Manual</source>
+        <target>Handbok</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

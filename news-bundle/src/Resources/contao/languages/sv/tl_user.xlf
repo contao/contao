@@ -10,12 +10,12 @@
         <target>Ange vilka nyhetsarkiv som användaren ska ha tillgång till.</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
-        <source>News permissions</source>
-        <target>Nyhetsrättigheter</target>
+        <source>News archive permissions</source>
+        <target>Nyhetsarkivbehörigheter</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news permissions.</source>
-        <target>Här kan du definiera användarens behörigheter vid hantering av nyheter.</target>
+        <source>Here you can define the news archive permissions.</source>
+        <target>Här kan du definiera nyhetsarkivets behörigheter.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>

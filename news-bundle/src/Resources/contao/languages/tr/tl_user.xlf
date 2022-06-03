@@ -10,12 +10,10 @@
         <target>Burada bir veya birden fazla haber arşivi için erişim izni verebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
-        <source>News permissions</source>
-        <target>Haber izinleri</target>
+        <source>News archive permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news permissions.</source>
-        <target>Burada haber izinlerini tanımlayabilirsiniz.</target>
+        <source>Here you can define the news archive permissions.</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>

@@ -193,6 +193,9 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Stránka s adresou &quot;%s&quot; již existuje!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>Tato adresová přípona povede k duplicitním adresám (např. %s)!</target>
@@ -348,6 +351,9 @@
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Cesta k předloze &quot;%s&quot; nemůže obsahovat následující znaky: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1317,8 +1323,7 @@
         <target>Titulek</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Licence</target>
+        <source>License URL</source>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>

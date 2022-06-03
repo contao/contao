@@ -193,6 +193,9 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>&quot;%s&quot;というURLのページは既に存在します!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>このURLサフィックスは重複したURL(例: %s)につながります。</target>
@@ -348,6 +351,10 @@
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>テンプレートのパス: &quot;%s&quot;に以下の文字を含めてはなりません: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>不明なユーザー名: %s</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1318,8 +1325,8 @@
         <target>キャプション</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>ライセンス</target>
+        <source>License URL</source>
+        <target>ライセンスのURL</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>

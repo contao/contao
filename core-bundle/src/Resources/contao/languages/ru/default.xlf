@@ -193,6 +193,9 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Страница с URL-адресом &quot;%s&quot; уже существует!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>Этот суффикс URL приведет к дублированию URL (наприм.: %s)!</target>
@@ -348,6 +351,9 @@
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Путь к шаблону &quot;%s&quot; не должен содержать следующие символы: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1318,8 +1324,8 @@
         <target>Подпись</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Лицензия</target>
+        <source>License URL</source>
+        <target>URL лицензии</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
