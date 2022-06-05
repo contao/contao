@@ -2,7 +2,17 @@
 
 ## Version 4.* to 5.0
 
-## FORM_FIELDS
+### CURRENT_ID
+
+The constant `CURRENT_ID` as well as the session variable `CURRENT_ID` has been
+removed. Use `DataContainer::$currentPid` instead to determine the ID of the
+current parent record.
+
+```php
+$intCurrentParentRecordId = $dc->currentPid;
+```
+
+### FORM_FIELDS
 
 It is no longer possible to use the `FORM_FIELDS` mechanism to determine which form fields have been
 submitted. Make sure to always submit at least an empty string in your widget:

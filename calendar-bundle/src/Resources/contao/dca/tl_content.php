@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Calendar;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
 use Contao\Input;
 use Contao\System;
 
@@ -42,8 +43,10 @@ class tl_content_calendar extends Backend
 
 	/**
 	 * Check permissions to edit table tl_content
+	 *
+	 * @param DataContainer $dc
 	 */
-	public function checkPermission()
+	public function checkPermission(DataContainer $dc)
 	{
 		if ($this->User->isAdmin)
 		{
@@ -68,7 +71,7 @@ class tl_content_calendar extends Backend
 			case 'create':
 			case 'select':
 				// Check access to the news item
-				$this->checkAccessToElement(CURRENT_ID, $root, true);
+				$this->checkAccessToElement($dc->currentPid, $root, true);
 				break;
 
 			case 'editAll':
@@ -83,7 +86,7 @@ class tl_content_calendar extends Backend
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_calendar_events' AND pid=?")
-										 ->execute(CURRENT_ID);
+										 ->execute($dc->currentPid);
 
 				$objSession = System::getContainer()->get('session');
 

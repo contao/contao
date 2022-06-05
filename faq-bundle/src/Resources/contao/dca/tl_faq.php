@@ -375,8 +375,10 @@ class tl_faq extends Backend
 
 	/**
 	 * Check permissions to edit table tl_faq
+	 *
+	 * @param DataContainer $dc
 	 */
-	public function checkPermission()
+	public function checkPermission(DataContainer $dc)
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -402,15 +404,15 @@ class tl_faq extends Backend
 			$root = $this->User->faqs;
 		}
 
-		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
 		switch (Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
-				// Check CURRENT_ID here (see #247)
-				if (!in_array(CURRENT_ID, $root))
+				// Check currentPid here (see #247)
+				if (!in_array($dc->currentPid, $root))
 				{
 					throw new AccessDeniedException('Not enough permissions to access FAQ category ID ' . $id . '.');
 				}
