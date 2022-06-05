@@ -3,8 +3,12 @@
 ## CURRENT_ID
 
 The constant `CURRENT_ID` as well as the session variable `CURRENT_ID` has been
-deprecated and will be removed in Contao 5.0. Use the current request to
-determine the ID of the current or the parent record.
+deprecated and will be removed in Contao 5.0. Use `DataContainer::$currentPid`
+instead to determine the ID of the current parent record.
+
+```php
+$intCurrentParentRecordId = $dc->currentPid;
+```
 
 ## FE_USER_LOGGED_IN
 
