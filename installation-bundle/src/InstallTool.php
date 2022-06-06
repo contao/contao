@@ -319,7 +319,7 @@ class InstallTool
     public function hasAdminUser(): bool
     {
         try {
-            if ($this->connection->fetchOne("SELECT COUNT(*) FROM tl_user WHERE `admin` = 1") > 0) {
+            if ($this->connection->fetchOne('SELECT COUNT(*) FROM tl_user WHERE `admin` = 1') > 0) {
                 return true;
             }
         } catch (Exception) {

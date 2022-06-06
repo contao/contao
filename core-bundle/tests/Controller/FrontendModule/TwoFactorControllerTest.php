@@ -177,7 +177,7 @@ class TwoFactorControllerTest extends TestCase
         $response = $controller($request, $module, 'main', null, $page);
 
         $this->assertNull($user->backupCodes);
-        $this->assertSame(false, $user->useTwoFactor);
+        $this->assertFalse($user->useTwoFactor);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://localhost.wip/foobar', $response->getTargetUrl());
     }
