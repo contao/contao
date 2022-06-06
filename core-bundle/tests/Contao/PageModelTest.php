@@ -299,7 +299,7 @@ class PageModelTest extends TestCase
     /**
      * @dataProvider layoutInheritanceParentPagesProvider
      */
-    public function testInheritingLayoutFromParentsInLoadDetails(array $parents, bool|string $expectedLayout): void
+    public function testInheritingLayoutFromParentsInLoadDetails(array $parents, int $expectedLayout): void
     {
         $page = new PageModel();
         $page->pid = 42;
@@ -338,37 +338,37 @@ class PageModelTest extends TestCase
         yield 'no parent with an inheritable layout' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => '1', 'subpageLayout' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '', 'layout' => 1, 'subpageLayout' => 2]],
                 [['id' => '3', 'pid' => '0']],
             ],
-            false,
+            0,
         ];
 
         yield 'inherit layout from parent page' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpageLayout' => '']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => 1, 'subpageLayout' => 0]],
                 [['id' => '3', 'pid' => '0']],
             ],
-            '1',
+            1,
         ];
 
         yield 'inherit subpages layout from parent page' => [
             [
                 [['id' => '1', 'pid' => '2']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '1', 'subpageLayout' => '2']],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => 1, 'subpageLayout' => 2]],
                 [['id' => '3', 'pid' => '0']],
             ],
-            '2',
+            2,
         ];
 
         yield 'multiple parents with layouts' => [
             [
-                [['id' => '1', 'pid' => '2', 'includeLayout' => '', 'layout' => '1', 'subpageLayout' => '1']],
-                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => '2', 'subpageLayout' => '3']],
-                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => '4', 'subpageLayout' => '']],
+                [['id' => '1', 'pid' => '2', 'includeLayout' => '', 'layout' => 1, 'subpageLayout' => 1]],
+                [['id' => '2', 'pid' => '3', 'includeLayout' => '1', 'layout' => 2, 'subpageLayout' => 3]],
+                [['id' => '3', 'pid' => '0', 'includeLayout' => '1', 'layout' => 4, 'subpageLayout' => 0]],
             ],
-            '3',
+            3,
         ];
     }
 

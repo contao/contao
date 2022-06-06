@@ -190,6 +190,7 @@ services:
 
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\SchemaProvider
+        public: true
         arguments:
             - '@doctrine.orm.default_entity_manager'
 

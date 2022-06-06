@@ -15,6 +15,8 @@ use Contao\Database\Statement;
 use Contao\Model\Collection;
 use Contao\Model\QueryBuilder;
 use Contao\Model\Registry;
+use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Reads objects from and writes them to the database
@@ -95,6 +97,11 @@ abstract class Model
 	 * @var boolean
 	 */
 	protected $blnPreventSaving = false;
+
+	/**
+	 * @var array<string,array<string,string>>
+	 */
+	private static $arrColumnCastingTypes = array();
 
 	/**
 	 * Load the relations and optionally process a result set
@@ -220,6 +227,8 @@ abstract class Model
 		$this->markModified($strKey);
 		$this->arrData[$strKey] = $varValue;
 
+		$this->validateColumnValueType($strKey, $varValue);
+
 		unset($this->arrRelated[$strKey]);
 	}
 
@@ -340,7 +349,7 @@ abstract class Model
 			}
 		}
 
-		$this->arrData = $arrData;
+		$this->arrData = $this->convertToPhpValues($arrData);
 
 		return $this;
 	}
@@ -363,11 +372,91 @@ abstract class Model
 
 			if (!isset($this->arrModified[$k]))
 			{
-				$this->arrData[$k] = $v;
+				$this->arrData[$k] = $this->convertToPhpValue($k, $v);
 			}
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @internal
+	 *
+	 * @return array<string,array<string,string>>
+	 */
+	public static function getColumnCastingTypes(): array
+	{
+		try
+		{
+			$schema = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema();
+		}
+		catch (\Throwable)
+		{
+			return array();
+		}
+
+		$types = array();
+
+		foreach ($schema->getTables() as $table)
+		{
+			foreach ($table->getColumns() as $column)
+			{
+				if (
+					\in_array(
+						$column->getType()->getName(),
+						array(Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN),
+						true,
+					)
+				) {
+					$types[$table->getName()][$column->getName()] = $column->getType()->getName();
+				}
+			}
+		}
+
+		return $types;
+	}
+
+	protected function convertToPhpValues(array $arrData): array
+	{
+		foreach ($arrData as $strKey => $varValue)
+		{
+			$arrData[$strKey] = $this->convertToPhpValue($strKey, $varValue);
+		}
+
+		return $arrData;
+	}
+
+	protected function convertToPhpValue(string $strKey, mixed $varValue): mixed
+	{
+		if (!self::$arrColumnCastingTypes)
+		{
+			$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column_casting_types.php');
+
+			if (!System::getContainer()->getParameter('kernel.debug') && file_exists($path))
+			{
+				self::$arrColumnCastingTypes = include $path;
+			}
+			else
+			{
+				self::$arrColumnCastingTypes = self::getColumnCastingTypes();
+			}
+		}
+
+		return match (self::$arrColumnCastingTypes[strtolower(static::$strTable)][strtolower($strKey)] ?? null)
+		{
+			Types::INTEGER, Types::SMALLINT => (int) $varValue,
+			Types::FLOAT => (float) $varValue,
+			Types::BOOLEAN => (bool) $varValue,
+			default => $varValue,
+		};
+	}
+
+	protected function validateColumnValueType(string $strKey, mixed $varValue): void
+	{
+		if ($varValue !== ($varNewValue = $this->convertToPhpValue($strKey, $varValue)))
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6.0. Use type %s instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+		}
 	}
 
 	/**
