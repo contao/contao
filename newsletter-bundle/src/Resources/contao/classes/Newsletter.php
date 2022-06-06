@@ -169,7 +169,7 @@ class Newsletter extends Backend
 				// Update status
 				if ($intStart == 0)
 				{
-					$this->Database->prepare("UPDATE tl_newsletter SET sent='1', date=? WHERE id=?")
+					$this->Database->prepare("UPDATE tl_newsletter SET sent=1, date=? WHERE id=?")
 								   ->execute(time(), $objNewsletter->id);
 
 					$objSession->set('rejected_recipients', array());
@@ -710,7 +710,7 @@ class Newsletter extends Backend
 				continue;
 			}
 
-			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='1' WHERE pid=? AND email=?")
+			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=1 WHERE pid=? AND email=?")
 						   ->execute($intNewsletter, $objUser->email);
 		}
 	}
@@ -737,7 +737,7 @@ class Newsletter extends Backend
 		if ($objUser->numRows)
 		{
 			$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=?, active=? WHERE email=?")
-						   ->execute(time(), ($blnDisabled ? '' : '1'), $objUser->email);
+						   ->execute(time(), ($blnDisabled ? 0 : 1), $objUser->email);
 		}
 
 		return $blnDisabled;

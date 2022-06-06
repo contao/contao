@@ -142,11 +142,11 @@ class ControllerTest extends TestCase
         yield 'Published' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '',
+                'hide' => 0,
+                'protected' => 0,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => 1,
             ]),
             'regular.svg',
         ];
@@ -154,11 +154,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '',
+                'hide' => 0,
+                'protected' => 0,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => 0,
             ]),
             'regular_1.svg',
         ];
@@ -166,11 +166,11 @@ class ControllerTest extends TestCase
         yield 'Hidden in menu' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '1',
-                'protected' => '',
+                'hide' => 1,
+                'protected' => 0,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => 1,
             ]),
             'regular_2.svg',
         ];
@@ -178,11 +178,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished and hidden from menu' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '1',
-                'protected' => '',
+                'hide' => 1,
+                'protected' => 0,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => 0,
             ]),
             'regular_3.svg',
         ];
@@ -190,11 +190,11 @@ class ControllerTest extends TestCase
         yield 'Protected' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '1',
+                'hide' => 0,
+                'protected' => 1,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => 1,
             ]),
             'regular_4.svg',
         ];
@@ -202,11 +202,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished and protected' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '1',
+                'hide' => 0,
+                'protected' => 1,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => 0,
             ]),
             'regular_5.svg',
         ];
@@ -214,11 +214,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished and protected and hidden from menu' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '1',
-                'protected' => '1',
+                'hide' => 1,
+                'protected' => 1,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => 0,
             ]),
             'regular_7.svg',
         ];
@@ -226,11 +226,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished by stop date' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '',
+                'hide' => 0,
+                'protected' => 0,
                 'start' => '',
                 'stop' => '100',
-                'published' => '1',
+                'published' => 1,
             ]),
             'regular_1.svg',
         ];
@@ -238,11 +238,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished by start date' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => '',
-                'protected' => '',
+                'hide' => 0,
+                'protected' => 0,
                 'start' => PHP_INT_MAX,
                 'stop' => '',
-                'published' => '1',
+                'published' => 1,
             ]),
             'regular_1.svg',
         ];
@@ -250,11 +250,11 @@ class ControllerTest extends TestCase
         yield 'Root page' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '',
-                'protected' => '',
+                'hide' => 0,
+                'protected' => 0,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => 1,
             ]),
             'root.svg',
         ];
@@ -262,11 +262,11 @@ class ControllerTest extends TestCase
         yield 'Unpublished root page' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '',
-                'protected' => '',
+                'hide' => 0,
+                'protected' => 0,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => 0,
             ]),
             'root_1.svg',
         ];
@@ -274,11 +274,11 @@ class ControllerTest extends TestCase
         yield 'Hidden root page' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '1',
-                'protected' => '',
+                'hide' => 1,
+                'protected' => 0,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => 1,
             ]),
             'root.svg',
         ];
@@ -286,11 +286,11 @@ class ControllerTest extends TestCase
         yield 'Protected root page' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '',
-                'protected' => '1',
+                'hide' => 0,
+                'protected' => 1,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => 1,
             ]),
             'root.svg',
         ];
@@ -298,12 +298,12 @@ class ControllerTest extends TestCase
         yield 'Root in maintenance mode' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '',
-                'protected' => '',
-                'maintenanceMode' => '1',
+                'hide' => 0,
+                'protected' => 0,
+                'maintenanceMode' => 1,
                 'start' => '',
                 'stop' => '',
-                'published' => '1',
+                'published' => 1,
             ]),
             'root_2.svg',
         ];
@@ -311,12 +311,12 @@ class ControllerTest extends TestCase
         yield 'Unpublished root in maintenance mode' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'root',
-                'hide' => '',
-                'protected' => '',
-                'maintenanceMode' => '1',
+                'hide' => 0,
+                'protected' => 0,
+                'maintenanceMode' => 1,
                 'start' => '',
                 'stop' => '',
-                'published' => '',
+                'published' => 0,
             ]),
             'root_1.svg',
         ];

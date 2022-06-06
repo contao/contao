@@ -19,10 +19,10 @@ tl_page:
       type: root
       language: de
       dns: domain3.local
-      fallback: ''
-      includeLayout: '1'
+      fallback: 0
+      includeLayout: 1
       layout: 1
-      published: ''
+      published: 0
 
     - id: 2
       pid: 0
@@ -34,10 +34,10 @@ tl_page:
       type: root
       language: de
       dns: domain1.local
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 3
       pid: 0
@@ -49,10 +49,10 @@ tl_page:
       type: root
       language: fr_CH
       dns: domain1.local
-      fallback: ''
-      includeLayout: '1'
+      fallback: 0
+      includeLayout: 1
       layout: 1
-      published: ''
+      published: 0
 
     - id: 6
       pid: 0
@@ -64,10 +64,10 @@ tl_page:
       type: root
       language: de
       dns: domain7.local
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 7
       pid: 0
@@ -79,10 +79,10 @@ tl_page:
       type: root
       language: fr_CH
       dns: domain7.local
-      fallback: ''
-      includeLayout: ''
+      fallback: 0
+      includeLayout: 0
       layout: 0
-      published: ''
+      published: 0
 
     - id: 22
       pid: 1
@@ -91,7 +91,7 @@ tl_page:
       title: Index3
       alias: index
       urlSuffix: .html
-      published: ''
+      published: 0
 
     - id: 23
       pid: 2
@@ -100,7 +100,7 @@ tl_page:
       title: Index1 - de
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 25
       pid: 6
@@ -109,7 +109,7 @@ tl_page:
       title: Index7
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 29
       pid: 3
@@ -118,7 +118,7 @@ tl_page:
       title: Index1 - fr-CH
       alias: index
       type: regular
-      published: ''
+      published: 0
 
     - id: 33
       pid: 7
@@ -127,7 +127,7 @@ tl_page:
       title: Index7
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 129
       pid: 0
@@ -139,10 +139,10 @@ tl_page:
       type: root
       language: de
       dns: domain8.local
-      fallback: '1'
-      includeLayout: ''
+      fallback: 1
+      includeLayout: 0
       layout: 0
-      published: ''
+      published: 0
 
     - id: 137
       pid: 0
@@ -154,10 +154,10 @@ tl_page:
       type: root
       language: de
       dns: domain4.local
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: ''
+      published: 0
 
     - id: 142
       pid: 0
@@ -169,10 +169,10 @@ tl_page:
       type: root
       language: de
       dns: domain10.local
-      fallback: ''
-      includeLayout: '1'
+      fallback: 0
+      includeLayout: 1
       layout: 1
-      published: ''
+      published: 0
 
     - id: 170
       pid: 142
@@ -181,7 +181,7 @@ tl_page:
       title: Index10
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 190
       pid: 0
@@ -193,10 +193,10 @@ tl_page:
       type: root
       language: de
       dns: domain9.local
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 193
       pid: 190
@@ -205,7 +205,7 @@ tl_page:
       title: Index9
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 249
       pid: 0
@@ -217,10 +217,10 @@ tl_page:
       type: root
       language: de
       dns: domain6.local
-      fallback: '1'
-      includeLayout: ''
+      fallback: 1
+      includeLayout: 0
       layout: 0
-      published: '1'
+      published: 1
 
     - id: 251
       pid: 0
@@ -232,10 +232,10 @@ tl_page:
       type: root
       language: de
       dns: domain10.local
-      fallback: '1'
-      includeLayout: ''
+      fallback: 1
+      includeLayout: 0
       layout: 0
-      published: '1'
+      published: 1
 
     - id: 254
       pid: 0
@@ -247,10 +247,10 @@ tl_page:
       type: root
       language: de
       dns: domain2.local
-      fallback: '1'
-      includeLayout: ''
+      fallback: 1
+      includeLayout: 0
       layout: 0
-      published: '1'
+      published: 1
 
     - id: 257
       pid: 0
@@ -262,10 +262,10 @@ tl_page:
       type: root
       language: de
       dns: domain5.local
-      fallback: '1'
-      includeLayout: ''
+      fallback: 1
+      includeLayout: 0
       layout: 0
-      published: '1'
+      published: 1
 
 tl_theme:
     - id: 1

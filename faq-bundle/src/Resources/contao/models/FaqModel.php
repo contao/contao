@@ -157,7 +157,7 @@ class FaqModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.published='1'";
+			$arrColumns[] = "$t.published=1";
 		}
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
@@ -178,7 +178,7 @@ class FaqModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.published='1'";
+			$arrColumns[] = "$t.published=1";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -209,7 +209,7 @@ class FaqModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.published='1'";
+			$arrColumns[] = "$t.published=1";
 		}
 
 		if (!isset($arrOptions['order']))

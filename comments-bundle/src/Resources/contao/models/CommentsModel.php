@@ -119,7 +119,7 @@ class CommentsModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.published='1'";
+			$arrColumns[] = "$t.published=1";
 		}
 
 		$arrOptions['limit']  = $intLimit;
@@ -149,7 +149,7 @@ class CommentsModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.published='1'";
+			$arrColumns[] = "$t.published=1";
 		}
 
 		return static::countBy($arrColumns, array($strSource, (int) $intParent));

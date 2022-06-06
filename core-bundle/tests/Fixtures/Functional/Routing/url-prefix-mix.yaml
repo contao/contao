@@ -10,10 +10,10 @@ tl_page:
       type: root
       language: en
       dns: example.local
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 2
       pid: 1
@@ -22,7 +22,7 @@ tl_page:
       title: English site
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 3
       pid: 1
@@ -31,7 +31,7 @@ tl_page:
       title: English 404
       alias: error404
       type: error_404
-      published: '1'
+      published: 1
 
     - id: 4
       pid: 0
@@ -44,10 +44,10 @@ tl_page:
       type: root
       language: nl
       dns: example.local
-      fallback: ''
-      includeLayout: '1'
+      fallback: 0
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 5
       pid: 4
@@ -56,7 +56,7 @@ tl_page:
       title: Dutch site
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 6
       pid: 4
@@ -65,4 +65,4 @@ tl_page:
       title: Dutch 404
       alias: error404
       type: error_404
-      published: '1'
+      published: 1

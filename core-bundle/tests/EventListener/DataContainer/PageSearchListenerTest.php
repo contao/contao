@@ -109,7 +109,7 @@ class PageSearchListenerTest extends TestCase
             [
                 'id' => 17,
                 'activeRecord' => (object) [
-                    'noSearch' => '',
+                    'noSearch' => 0,
                 ],
             ]
         );
@@ -141,7 +141,7 @@ class PageSearchListenerTest extends TestCase
             [
                 'id' => 17,
                 'activeRecord' => (object) [
-                    'noSearch' => '1',
+                    'noSearch' => 1,
                 ],
             ]
         );
@@ -173,7 +173,7 @@ class PageSearchListenerTest extends TestCase
             [
                 'id' => 17,
                 'activeRecord' => (object) [
-                    'noSearch' => '1',
+                    'noSearch' => 1,
                 ],
             ]
         );

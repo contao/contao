@@ -227,7 +227,7 @@ class BackendAccessVoterTest extends TestCase
         ;
 
         $page = [
-            'includeChmod' => '1',
+            'includeChmod' => 1,
             'chmod' => ['w1'],
             'cuser' => 0,
             'cgroup' => 0,
@@ -252,7 +252,7 @@ class BackendAccessVoterTest extends TestCase
             ->expects($this->once())
             ->method('row')
             ->willReturn([
-                'includeChmod' => '1',
+                'includeChmod' => 1,
                 'chmod' => ['w1'],
                 'cuser' => 0,
                 'cgroup' => 0,
@@ -278,7 +278,7 @@ class BackendAccessVoterTest extends TestCase
             ->expects($this->once())
             ->method('row')
             ->willReturn([
-                'includeChmod' => '1',
+                'includeChmod' => 1,
                 'chmod' => ['w1'],
                 'cuser' => 0,
                 'cgroup' => 0,
@@ -315,7 +315,7 @@ class BackendAccessVoterTest extends TestCase
             ->expects($this->once())
             ->method('row')
             ->willReturn([
-                'includeChmod' => '1',
+                'includeChmod' => 1,
                 'chmod' => ['w1'],
                 'cuser' => 0,
                 'cgroup' => 0,
@@ -376,7 +376,7 @@ class BackendAccessVoterTest extends TestCase
         ;
 
         $page = [
-            'includeChmod' => '1',
+            'includeChmod' => 1,
             'chmod' => $chmod,
             'cuser' => $cuser,
             'cgroup' => $cgroup,
