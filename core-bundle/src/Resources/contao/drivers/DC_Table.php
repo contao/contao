@@ -234,7 +234,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	{
 		if (!empty($this->arrSubmit))
 		{
-			throw new \RuntimeException(__CLASS__.' must call the submit() method to store data in Contao 5.');
+			throw new \RuntimeException(__CLASS__ . ' must call the submit() method to store data in Contao 5.');
 		}
 	}
 
