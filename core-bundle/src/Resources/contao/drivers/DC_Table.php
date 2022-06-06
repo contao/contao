@@ -2626,43 +2626,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->varValue = $objRow->{$this->strField};
 
 		$this->save($this->varValue ? '' : '1');
-
-		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$callback($this);
-				}
-			}
-		}
-
-		// Set the current timestamp before adding a new version
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
-		{
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-						   ->execute($this->ptable, time(), $this->intId);
-		}
-		else
-		{
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-						   ->execute(time(), $this->intId);
-		}
-
-		// Save the current version
-		if ($this->blnCreateNewVersion)
-		{
-			$objVersions->create();
-		}
-
-		$this->invalidateCacheTags();
+		$this->submit();
 
 		$this->redirect($this->getReferer());
 	}
