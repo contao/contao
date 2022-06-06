@@ -35,21 +35,21 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  *         echo $user->name;
  *     }
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string|null       $username
  * @property string            $name
  * @property string            $email
  * @property string            $language
  * @property string            $backendTheme
  * @property string            $uploader
- * @property string|boolean    $showHelp
- * @property string|boolean    $thumbnails
- * @property string|boolean    $useRTE
- * @property string|boolean    $useCE
+ * @property boolean           $showHelp
+ * @property boolean           $thumbnails
+ * @property boolean           $useRTE
+ * @property boolean           $useCE
  * @property string            $password
- * @property string|boolean    $pwChange
- * @property string|boolean    $admin
+ * @property boolean           $pwChange
+ * @property boolean           $admin
  * @property string|array|null $groups
  * @property string            $inherit
  * @property string|array|null $modules
@@ -64,22 +64,22 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string|array|null $forms
  * @property string|array|null $formp
  * @property string|array|null $amg
- * @property string|boolean    $disable
- * @property string|integer    $start
- * @property string|integer    $stop
+ * @property boolean           $disable
+ * @property integer           $start
+ * @property integer           $stop
  * @property string|array|null $session
- * @property string|integer    $dateAdded
+ * @property integer           $dateAdded
  * @property string|null       $secret
- * @property string|boolean    $useTwoFactor
- * @property string|integer    $lastLogin
- * @property string|integer    $currentLogin
- * @property string|integer    $loginAttempts
- * @property string|integer    $locked
+ * @property boolean           $useTwoFactor
+ * @property integer           $lastLogin
+ * @property integer           $currentLogin
+ * @property integer           $loginAttempts
+ * @property integer           $locked
  * @property string|null       $backupCodes
- * @property string|integer    $trustedTokenVersion
+ * @property integer           $trustedTokenVersion
  * @property string            $firstname
  * @property string            $lastname
- * @property string|integer    $dateOfBirth
+ * @property integer           $dateOfBirth
  * @property string            $gender
  * @property string            $company
  * @property string            $street
@@ -91,8 +91,8 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string            $mobile
  * @property string            $fax
  * @property string            $website
- * @property string|boolean    $login
- * @property string|boolean    $assignDir
+ * @property boolean           $login
+ * @property boolean           $assignDir
  * @property string            $homeDir
  *
  * @property object $objImport

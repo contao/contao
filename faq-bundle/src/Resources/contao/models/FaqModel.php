@@ -16,32 +16,32 @@ use Contao\Model\Collection;
 /**
  * Reads and writes FAQs
  *
- * @property string|integer $id
- * @property string|integer $pid
- * @property string|integer $sorting
- * @property string|integer $tstamp
- * @property string         $question
- * @property string         $alias
- * @property string|integer $author
- * @property string|null    $answer
- * @property string         $pageTitle
- * @property string         $robots
- * @property string|null    $description
- * @property string|boolean $addImage
- * @property string|boolean $overwriteMeta
- * @property string|null    $singleSRC
- * @property string         $alt
- * @property string         $imageTitle
- * @property string|integer $size
- * @property string|array   $imagemargin
- * @property string         $imageUrl
- * @property string|boolean $fullsize
- * @property string         $caption
- * @property string         $floating
- * @property string|boolean $addEnclosure
- * @property string|null    $enclosure
- * @property string|boolean $noComments
- * @property string|boolean $published
+ * @property integer      $id
+ * @property integer      $pid
+ * @property integer      $sorting
+ * @property integer      $tstamp
+ * @property string       $question
+ * @property string       $alias
+ * @property integer      $author
+ * @property string|null  $answer
+ * @property string       $pageTitle
+ * @property string       $robots
+ * @property string|null  $description
+ * @property boolean      $addImage
+ * @property boolean      $overwriteMeta
+ * @property string|null  $singleSRC
+ * @property string       $alt
+ * @property string       $imageTitle
+ * @property integer      $size
+ * @property string|array $imagemargin
+ * @property string       $imageUrl
+ * @property boolean      $fullsize
+ * @property string       $caption
+ * @property string       $floating
+ * @property boolean      $addEnclosure
+ * @property string|null  $enclosure
+ * @property boolean      $noComments
+ * @property boolean      $published
  *
  * @method static FaqModel|null findById($id, $opt=array())
  * @method static FaqModel|null findByPk($id, array $opt=array())

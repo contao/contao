@@ -16,24 +16,24 @@ use Contao\Model\Collection;
 /**
  * Reads and writes content elements
  *
- * @property string|integer    $id
- * @property string|integer    $pid
+ * @property integer           $id
+ * @property integer           $pid
  * @property string            $ptable
- * @property string|integer    $sorting
- * @property string|integer    $tstamp
+ * @property integer           $sorting
+ * @property integer           $tstamp
  * @property string            $type
  * @property string            $headline
  * @property string|null       $text
- * @property string|boolean    $addImage
- * @property string|boolean    $inline
- * @property string|boolean    $overwriteMeta
+ * @property boolean           $addImage
+ * @property boolean           $inline
+ * @property boolean           $overwriteMeta
  * @property string|null       $singleSRC
  * @property string            $alt
  * @property string            $imageTitle
- * @property string|integer    $size
+ * @property integer           $size
  * @property string|array      $imagemargin
  * @property string            $imageUrl
- * @property string|boolean    $fullsize
+ * @property boolean           $fullsize
  * @property string            $caption
  * @property string            $floating
  * @property string|null       $html
@@ -42,11 +42,11 @@ use Contao\Model\Collection;
  * @property string|array|null $listitems
  * @property string|array|null $tableitems
  * @property string            $summary
- * @property string|boolean    $thead
- * @property string|boolean    $tfoot
- * @property string|boolean    $tleft
- * @property string|boolean    $sortable
- * @property string|integer    $sortIndex
+ * @property boolean           $thead
+ * @property boolean           $tfoot
+ * @property boolean           $tleft
+ * @property boolean           $sortable
+ * @property integer           $sortIndex
  * @property string            $sortOrder
  * @property string            $mooHeadline
  * @property string            $mooStyle
@@ -55,20 +55,20 @@ use Contao\Model\Collection;
  * @property string            $markdownSource
  * @property string|null       $code
  * @property string            $url
- * @property string|boolean    $target
- * @property string|boolean    $overwriteLink
+ * @property boolean           $target
+ * @property boolean           $overwriteLink
  * @property string            $titleText
  * @property string            $linkTitle
  * @property string            $embed
  * @property string            $rel
- * @property string|boolean    $useImage
+ * @property boolean           $useImage
  * @property string|array|null $multiSRC
- * @property string|boolean    $useHomeDir
- * @property string|integer    $perRow
- * @property string|integer    $perPage
- * @property string|integer    $numberOfItems
+ * @property boolean           $useHomeDir
+ * @property integer           $perRow
+ * @property integer           $perPage
+ * @property integer           $numberOfItems
  * @property string            $sortBy
- * @property string|boolean    $metaIgnore
+ * @property boolean           $metaIgnore
  * @property string            $galleryTpl
  * @property string            $customTpl
  * @property string|null       $playerSRC
@@ -77,35 +77,35 @@ use Contao\Model\Collection;
  * @property string|null       $posterSRC
  * @property string|array      $playerSize
  * @property string|array|null $playerOptions
- * @property string|integer    $playerStart
- * @property string|integer    $playerStop
+ * @property integer           $playerStart
+ * @property integer           $playerStop
  * @property string            $playerCaption
  * @property string            $playerAspect
- * @property string|boolean    $splashImage
+ * @property boolean           $splashImage
  * @property string            $playerPreload
  * @property string            $playerColor
  * @property string|array|null $youtubeOptions
  * @property string|array|null $vimeoOptions
- * @property string|integer    $sliderDelay
- * @property string|integer    $sliderSpeed
- * @property string|integer    $sliderStartSlide
- * @property string|boolean    $sliderContinuous
- * @property string|integer    $cteAlias
- * @property string|integer    $articleAlias
- * @property string|integer    $article
- * @property string|integer    $form
- * @property string|integer    $module
- * @property string|boolean    $protected
+ * @property integer           $sliderDelay
+ * @property integer           $sliderSpeed
+ * @property integer           $sliderStartSlide
+ * @property boolean           $sliderContinuous
+ * @property integer           $cteAlias
+ * @property integer           $articleAlias
+ * @property integer           $article
+ * @property integer           $form
+ * @property integer           $module
+ * @property boolean           $protected
  * @property string|array|null $groups
  * @property string|array      $cssID
- * @property string|boolean    $invisible
- * @property string|integer    $start
- * @property string|integer    $stop
- * @property string|boolean    $showPreview
+ * @property boolean           $invisible
+ * @property integer           $start
+ * @property integer           $stop
+ * @property boolean           $showPreview
  *
- * @property string         $typePrefix
- * @property array          $classes
- * @property string|integer $origId
+ * @property string  $typePrefix
+ * @property array   $classes
+ * @property integer $origId
  *
  * @method static ContentModel|null findById($id, array $opt=array())
  * @method static ContentModel|null findByPk($id, array $opt=array())

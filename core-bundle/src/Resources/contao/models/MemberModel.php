@@ -16,11 +16,11 @@ use Contao\Model\Registry;
 /**
  * Reads and writes members
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string            $firstname
  * @property string            $lastname
- * @property string|integer    $dateOfBirth
+ * @property integer           $dateOfBirth
  * @property string            $gender
  * @property string            $company
  * @property string            $street
@@ -35,24 +35,24 @@ use Contao\Model\Registry;
  * @property string            $website
  * @property string            $language
  * @property string|array|null $groups
- * @property string|boolean    $login
+ * @property boolean           $login
  * @property string|null       $username
  * @property string            $password
- * @property string|boolean    $assignDir
+ * @property boolean           $assignDir
  * @property string|null       $homeDir
- * @property string|boolean    $disable
- * @property string|integer    $start
- * @property string|integer    $stop
- * @property string|integer    $dateAdded
- * @property string|integer    $lastLogin
- * @property string|integer    $currentLogin
- * @property string|integer    $loginAttempts
- * @property string|integer    $locked
+ * @property boolean           $disable
+ * @property integer           $start
+ * @property integer           $stop
+ * @property integer           $dateAdded
+ * @property integer           $lastLogin
+ * @property integer           $currentLogin
+ * @property integer           $loginAttempts
+ * @property integer           $locked
  * @property string|array|null $session
  * @property string|null       $secret
- * @property string|boolean    $useTwoFactor
+ * @property boolean           $useTwoFactor
  * @property string|null       $backupCodes
- * @property string|integer    $trustedTokenVersion
+ * @property integer           $trustedTokenVersion
  *
  * @method static MemberModel|null findById($id, array $opt=array())
  * @method static MemberModel|null findByPk($id, array $opt=array())

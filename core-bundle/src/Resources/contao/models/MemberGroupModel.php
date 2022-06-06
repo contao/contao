@@ -15,14 +15,14 @@ use Contao\Model\Collection;
 /**
  * Reads and writes member groups
  *
- * @property string|integer $id
- * @property string|integer $tstamp
- * @property string         $name
- * @property string|boolean $redirect
- * @property string|integer $jumpTo
- * @property string|boolean $disable
- * @property string|integer $start
- * @property string|integer $stop
+ * @property integer $id
+ * @property integer $tstamp
+ * @property string  $name
+ * @property boolean $redirect
+ * @property integer $jumpTo
+ * @property boolean $disable
+ * @property integer $start
+ * @property integer $stop
  *
  * @method static MemberGroupModel|null findById($id, array $opt=array())
  * @method static MemberGroupModel|null findByPk($id, array $opt=array())

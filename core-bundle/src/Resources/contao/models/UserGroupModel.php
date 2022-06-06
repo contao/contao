@@ -15,8 +15,8 @@ use Contao\Model\Collection;
 /**
  * Reads and writes user groups
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string            $name
  * @property string|array|null $modules
  * @property string|array|null $themes
@@ -31,9 +31,9 @@ use Contao\Model\Collection;
  * @property string|array|null $formp
  * @property string|array|null $amg
  * @property string|array|null $alexf
- * @property string|boolean    $disable
- * @property string|integer    $start
- * @property string|integer    $stop
+ * @property boolean           $disable
+ * @property integer           $start
+ * @property integer           $stop
  *
  * @method static UserGroupModel|null findById($id, array $opt=array())
  * @method static UserGroupModel|null findByPk($id, array $opt=array())
