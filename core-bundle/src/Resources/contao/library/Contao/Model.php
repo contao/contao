@@ -101,7 +101,7 @@ abstract class Model
 	/**
 	 * @var array<string,array<string,string>>
 	 */
-	private static $arrColumnCastingTypes = array();
+	private static $arrColumnCastTypes = array();
 
 	/**
 	 * Load the relations and optionally process a result set
@@ -227,9 +227,12 @@ abstract class Model
 		$this->markModified($strKey);
 		$this->arrData[$strKey] = $varValue;
 
-		$this->validateColumnValueType($strKey, $varValue);
-
 		unset($this->arrRelated[$strKey]);
+
+		if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6.0. Use type %s instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+		}
 	}
 
 	/**
@@ -349,7 +352,12 @@ abstract class Model
 			}
 		}
 
-		$this->arrData = $this->convertToPhpValues($arrData);
+		foreach ($arrData as $strKey => $varValue)
+		{
+			$arrData[$strKey] = static::convertToPhpValue($strKey, $varValue);
+		}
+
+		$this->arrData = $arrData;
 
 		return $this;
 	}
@@ -372,7 +380,7 @@ abstract class Model
 
 			if (!isset($this->arrModified[$k]))
 			{
-				$this->arrData[$k] = $this->convertToPhpValue($k, $v);
+				$this->arrData[$k] = static::convertToPhpValue($k, $v);
 			}
 		}
 
@@ -384,18 +392,18 @@ abstract class Model
 	 *
 	 * @return array<string,array<string,string>>
 	 */
-	public static function getColumnCastingTypes(): array
+	public static function getColumnCastTypes(): array
 	{
+		$types = array();
+
 		try
 		{
 			$schema = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema();
 		}
 		catch (\Throwable)
 		{
-			return array();
+			return $types;
 		}
-
-		$types = array();
 
 		foreach ($schema->getTables() as $table)
 		{
@@ -416,47 +424,38 @@ abstract class Model
 		return $types;
 	}
 
-	protected function convertToPhpValues(array $arrData): array
+	/**
+	 * Convert a value from the database to the correct PHP type as defined in
+	 * the schema for the given column.
+	 *
+	 * @param string $strKey   The column name
+	 * @param mixed  $varValue The value as it was retrieved from the database
+	 *
+	 * @return mixed The value cast to the corresponding PHP type
+	 */
+	protected static function convertToPhpValue(string $strKey, mixed $varValue): mixed
 	{
-		foreach ($arrData as $strKey => $varValue)
+		if (!self::$arrColumnCastTypes)
 		{
-			$arrData[$strKey] = $this->convertToPhpValue($strKey, $varValue);
-		}
-
-		return $arrData;
-	}
-
-	protected function convertToPhpValue(string $strKey, mixed $varValue): mixed
-	{
-		if (!self::$arrColumnCastingTypes)
-		{
-			$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column_casting_types.php');
+			$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column_cast_types.php');
 
 			if (!System::getContainer()->getParameter('kernel.debug') && file_exists($path))
 			{
-				self::$arrColumnCastingTypes = include $path;
+				self::$arrColumnCastTypes = include $path;
 			}
 			else
 			{
-				self::$arrColumnCastingTypes = self::getColumnCastingTypes();
+				self::$arrColumnCastTypes = self::getColumnCastTypes();
 			}
 		}
 
-		return match (self::$arrColumnCastingTypes[strtolower(static::$strTable)][strtolower($strKey)] ?? null)
+		return match (self::$arrColumnCastTypes[strtolower(static::$strTable)][strtolower($strKey)] ?? null)
 		{
 			Types::INTEGER, Types::SMALLINT => (int) $varValue,
 			Types::FLOAT => (float) $varValue,
 			Types::BOOLEAN => (bool) $varValue,
 			default => $varValue,
 		};
-	}
-
-	protected function validateColumnValueType(string $strKey, mixed $varValue): void
-	{
-		if ($varValue !== ($varNewValue = $this->convertToPhpValue($strKey, $varValue)))
-		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6.0. Use type %s instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
-		}
 	}
 
 	/**

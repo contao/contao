@@ -62,7 +62,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->generateLanguageCache($cacheDir);
         $this->generateDcaExtracts($cacheDir);
         $this->generateTemplateMapper($cacheDir);
-        $this->generateColumnCastingTypes($cacheDir);
+        $this->generateColumnCastTypes($cacheDir);
 
         return [];
     }
@@ -201,11 +201,11 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         );
     }
 
-    private function generateColumnCastingTypes(string $cacheDir): void
+    private function generateColumnCastTypes(string $cacheDir): void
     {
         $this->filesystem->dumpFile(
-            Path::join($cacheDir, 'contao/config/column_casting_types.php'),
-            sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastingTypes(), true))
+            Path::join($cacheDir, 'contao/config/column_cast_types.php'),
+            sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypes(), true))
         );
     }
 
