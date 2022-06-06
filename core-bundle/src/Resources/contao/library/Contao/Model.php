@@ -428,12 +428,14 @@ abstract class Model
 	 * Convert a value from the database to the correct PHP type as defined in
 	 * the schema for the given column.
 	 *
+	 * @internal
+	 *
 	 * @param string $strKey   The column name
 	 * @param mixed  $varValue The value as it was retrieved from the database
 	 *
 	 * @return mixed The value cast to the corresponding PHP type
 	 */
-	protected static function convertToPhpValue(string $strKey, mixed $varValue): mixed
+	public static function convertToPhpValue(string $strKey, mixed $varValue): mixed
 	{
 		if (!self::$arrColumnCastTypes)
 		{

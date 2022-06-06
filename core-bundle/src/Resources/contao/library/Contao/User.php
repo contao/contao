@@ -329,7 +329,13 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		if ($objResult->numRows > 0)
 		{
-			$this->arrData = $objResult->row();
+			$strModelClass = Model::getClassFromTable($this->strTable);
+			$this->arrData = array();
+
+			foreach ($objResult->row() as $strKey => $varData)
+			{
+				$this->arrData[$strKey] = $strModelClass::convertToPhpValue($strKey, $varData);
+			}
 
 			return true;
 		}
