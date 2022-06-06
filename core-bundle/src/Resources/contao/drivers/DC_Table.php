@@ -1770,7 +1770,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return = '';
 		$this->values[] = $this->intId;
 		$this->procedure[] = 'id=?';
-		$this->arrSubmit = [];
+		$this->arrSubmit = array();
 		$this->blnCreateNewVersion = false;
 		$objVersions = new Versions($this->strTable, $this->intId);
 
@@ -2251,7 +2251,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->intId = $id;
 				$this->procedure = array('id=?');
 				$this->values = array($this->intId);
-				$this->arrSubmit = [];
+				$this->arrSubmit = array();
 				$this->blnCreateNewVersion = false;
 				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
 
@@ -2724,7 +2724,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->intId = $id;
 					$this->procedure = array('id=?');
 					$this->values = array($this->intId);
-					$this->arrSubmit = [];
+					$this->arrSubmit = array();
 					$this->blnCreateNewVersion = false;
 
 					// Get the field values
@@ -3074,6 +3074,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$arrValues = $this->arrSubmit;
+		$this->arrSubmit = array();
 
 		// Call onbeforesubmit_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] ?? null))
@@ -3092,13 +3093,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$arrValues = $callback($arrValues, $this);
 					}
 
-					if (!\is_array($arrValues)) {
+					if (!\is_array($arrValues))
+					{
 						throw new \RuntimeException('onbeforesubmit_callback must return the values!');
 					}
 				}
 				catch (\Exception $e)
 				{
-					$this->arrSubmit = [];
 					$this->noReload = true;
 					Message::addError($e->getMessage());
 
@@ -3108,7 +3109,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$arrTypes = array();
-		$blnCreateNewVersion = false;
+		$blnVersionize = false;
 
 		foreach ($arrValues as $strField => $varValue)
 		{
@@ -3137,7 +3138,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
 			{
-				$blnCreateNewVersion = true;
+				$blnVersionize = true;
 			}
 
 			$this->varValue = StringUtil::deserialize($varValue);
@@ -3182,7 +3183,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Save the current version
 		if ($this->blnCreateNewVersion)
 		{
 			$objVersions = new Versions($this->strTable, $this->intId);
