@@ -3113,21 +3113,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		$arrValues['tstamp'] = time();
-
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+		if (!empty($arrValues))
 		{
-			$arrValues['ptable'] = $this->ptable;
-		}
+			$arrValues['tstamp'] = time();
 
-		$objUpdateStmt = $this->Database
-			->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
-			->set($arrValues)
-			->query('', array_merge(array_values($arrValues), $this->values), $arrTypes);
+			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+			{
+				$arrValues['ptable'] = $this->ptable;
+			}
 
-		if ($objUpdateStmt->affectedRows && $blnCreateNewVersion)
-		{
-			$this->blnCreateNewVersion = true;
+			$objUpdateStmt = $this->Database
+				->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
+				->set($arrValues)
+				->query('', array_merge(array_values($arrValues), $this->values), $arrTypes);
+
+			if ($objUpdateStmt->affectedRows && $blnVersionize)
+			{
+				$this->blnCreateNewVersion = true;
+			}
 		}
 
 		// Trigger the onsubmit_callback
@@ -3151,9 +3154,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$objVersions = new Versions($this->strTable, $this->intId);
 			$objVersions->create();
-		}
 
-		$this->invalidateCacheTags();
+			$this->invalidateCacheTags();
+		}
 	}
 
 	/**
