@@ -149,7 +149,6 @@ class SearchIndexSubscriberTest extends TestCase
      */
     public function testNeedsContent(ResponseInterface $response, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri $crawlUri = null): void
     {
-        $crawlUri = $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0);
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -184,7 +183,7 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
 
         $decision = $subscriber->needsContent(
-            $crawlUri,
+            $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
             $response,
             $this->createMock(ChunkInterface::class)
         );
@@ -234,7 +233,6 @@ class SearchIndexSubscriberTest extends TestCase
      */
     public function testOnLastChunk(?IndexerException $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = [], CrawlUri $crawlUri = null): void
     {
-        $crawlUri = $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0);
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
@@ -276,7 +274,7 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
 
         $subscriber->onLastChunk(
-            $crawlUri,
+            $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
             $this->getResponse(true),
             $this->createMock(ChunkInterface::class)
         );
