@@ -2251,166 +2251,178 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->Database->beginTransaction();
 			}
 
-			$blnNoReload = false;
-
-			// Walk through each record
-			foreach ($ids as $id)
+			try
 			{
-				$this->intId = $id;
-				$this->procedure = array('id=?');
-				$this->values = array($this->intId);
-				$this->arrSubmit = array();
-				$this->blnCreateNewVersion = false;
-				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
+				$blnNoReload = false;
 
-				// Reset the "noReload" state but remember it for the final handling
-				$blnNoReload = $blnNoReload || $this->noReload;
-				$this->noReload = false;
-
-				$objVersions = new Versions($this->strTable, $this->intId);
-				$objVersions->initialize();
-
-				// Add meta fields if the current user is an administrator
-				if ($this->User->isAdmin)
+				// Walk through each record
+				foreach ($ids as $id)
 				{
-					if ($this->Database->fieldExists('sorting', $this->strTable))
-					{
-						array_unshift($this->strPalette, 'sorting');
-					}
+					$this->intId = $id;
+					$this->procedure = array('id=?');
+					$this->values = array($this->intId);
+					$this->arrSubmit = array();
+					$this->blnCreateNewVersion = false;
+					$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
 
-					if ($this->Database->fieldExists('pid', $this->strTable))
-					{
-						array_unshift($this->strPalette, 'pid');
-					}
+					// Reset the "noReload" state but remember it for the final handling
+					$blnNoReload = $blnNoReload || $this->noReload;
+					$this->noReload = false;
 
-					// Ensure a minimum configuration
-					foreach (array('pid', 'sorting') as $f)
+					$objVersions = new Versions($this->strTable, $this->intId);
+					$objVersions->initialize();
+
+					// Add meta fields if the current user is an administrator
+					if ($this->User->isAdmin)
 					{
-						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label']))
+						if ($this->Database->fieldExists('sorting', $this->strTable))
 						{
-							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] = &$GLOBALS['TL_LANG']['MSC'][$f];
+							array_unshift($this->strPalette, 'sorting');
 						}
 
-						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['inputType']))
+						if ($this->Database->fieldExists('pid', $this->strTable))
 						{
-							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['inputType'] = 'text';
+							array_unshift($this->strPalette, 'pid');
 						}
 
-						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['tl_class']))
+						// Ensure a minimum configuration
+						foreach (array('pid', 'sorting') as $f)
 						{
-							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['tl_class'] = 'w50';
-						}
-
-						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp']))
-						{
-							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp'] = 'natural';
-						}
-					}
-				}
-
-				// Begin current row
-				$strAjax = '';
-				$blnAjax = false;
-				$box = '';
-
-				// Get the field values
-				$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-										 ->limit(1)
-										 ->execute($this->intId);
-
-				// Store the active record
-				$this->objActiveRecord = $objRow;
-
-				foreach ($this->strPalette as $v)
-				{
-					// Check whether field is excluded
-					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null)
-					{
-						continue;
-					}
-
-					if ($v == '[EOF]')
-					{
-						if ($blnAjax && Environment::get('isAjaxRequest'))
-						{
-							return $strAjax;
-						}
-
-						$blnAjax = false;
-						$box .= "\n  " . '</div>';
-
-						continue;
-					}
-
-					if (preg_match('/^\[.*]$/', $v))
-					{
-						$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
-						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
-						$box .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
-
-						continue;
-					}
-
-					if (!\in_array($v, $fields))
-					{
-						continue;
-					}
-
-					$this->strField = $v;
-					$this->strInputName = $v . '_' . $this->intId;
-
-					// Set the default value and try to load the current value from DB (see #5252)
-					if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array()))
-					{
-						$this->varValue = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default'];
-					}
-
-					if ($objRow->$v !== false)
-					{
-						$this->varValue = $objRow->$v;
-					}
-
-					// Convert CSV fields (see #2890)
-					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] ?? null) && isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['csv']))
-					{
-						$this->varValue = StringUtil::trimsplit($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['csv'], $this->varValue);
-					}
-
-					// Call load_callback
-					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] ?? null))
-					{
-						foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] as $callback)
-						{
-							if (\is_array($callback))
+							if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label']))
 							{
-								$this->import($callback[0]);
-								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
+								$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] = &$GLOBALS['TL_LANG']['MSC'][$f];
 							}
-							elseif (\is_callable($callback))
+
+							if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['inputType']))
 							{
-								$this->varValue = $callback($this->varValue, $this);
+								$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['inputType'] = 'text';
+							}
+
+							if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['tl_class']))
+							{
+								$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['tl_class'] = 'w50';
+							}
+
+							if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp']))
+							{
+								$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp'] = 'natural';
 							}
 						}
 					}
 
-					// Re-set the current value
-					$this->objActiveRecord->{$this->strField} = $this->varValue;
+					// Begin current row
+					$strAjax = '';
+					$blnAjax = false;
+					$box = '';
 
-					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $strAjax .= $this->row($this->strPalette) : $box .= $this->row($this->strPalette);
-				}
+					// Get the field values
+					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+											 ->limit(1)
+											 ->execute($this->intId);
 
-				// Save record
-				$this->submit();
+					// Store the active record
+					$this->objActiveRecord = $objRow;
 
-				$return .= Message::generateUnwrapped() . '
+					foreach ($this->strPalette as $v)
+					{
+						// Check whether field is excluded
+						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null)
+						{
+							continue;
+						}
+
+						if ($v == '[EOF]')
+						{
+							if ($blnAjax && Environment::get('isAjaxRequest'))
+							{
+								return $strAjax;
+							}
+
+							$blnAjax = false;
+							$box .= "\n  " . '</div>';
+
+							continue;
+						}
+
+						if (preg_match('/^\[.*]$/', $v))
+						{
+							$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
+							$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
+							$box .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
+
+							continue;
+						}
+
+						if (!\in_array($v, $fields))
+						{
+							continue;
+						}
+
+						$this->strField = $v;
+						$this->strInputName = $v . '_' . $this->intId;
+
+						// Set the default value and try to load the current value from DB (see #5252)
+						if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array()))
+						{
+							$this->varValue = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default'];
+						}
+
+						if ($objRow->$v !== false)
+						{
+							$this->varValue = $objRow->$v;
+						}
+
+						// Convert CSV fields (see #2890)
+						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] ?? null) && isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['csv']))
+						{
+							$this->varValue = StringUtil::trimsplit($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['csv'], $this->varValue);
+						}
+
+						// Call load_callback
+						if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] ?? null))
+						{
+							foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] as $callback)
+							{
+								if (\is_array($callback))
+								{
+									$this->import($callback[0]);
+									$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
+								}
+								elseif (\is_callable($callback))
+								{
+									$this->varValue = $callback($this->varValue, $this);
+								}
+							}
+						}
+
+						// Re-set the current value
+						$this->objActiveRecord->{$this->strField} = $this->varValue;
+
+						// Build the row and pass the current palette string (thanks to Tristan Lins)
+						$blnAjax ? $strAjax .= $this->row($this->strPalette) : $box .= $this->row($this->strPalette);
+					}
+
+					// Save record
+					$this->submit();
+
+					$return .= Message::generateUnwrapped() . '
 <div class="' . $class . ' cf">' . $box . '
 </div>';
 
-				$class = 'tl_box';
-			}
+					$class = 'tl_box';
+				}
 
-			$this->noReload = $blnNoReload || $this->noReload;
+				$this->noReload = $blnNoReload || $this->noReload;
+			}
+			catch (\Throwable $e)
+			{
+				if (Input::post('FORM_SUBMIT') == $this->strTable)
+				{
+					$this->Database->rollbackTransaction();
+				}
+
+				throw $e;
+			}
 
 			// Reload the page to prevent _POST variables from being sent twice
 			if (Input::post('FORM_SUBMIT') == $this->strTable)
@@ -2682,55 +2694,64 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$this->Database->beginTransaction();
 
-				foreach ($ids as $id)
+				try
 				{
-					try
+					foreach ($ids as $id)
 					{
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $id));
-					}
-					catch (AccessDeniedException)
-					{
-						continue;
-					}
-
-					$this->intId = $id;
-					$this->procedure = array('id=?');
-					$this->values = array($this->intId);
-					$this->arrSubmit = array();
-					$this->blnCreateNewVersion = false;
-
-					// Get the field values
-					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-											 ->limit(1)
-											 ->execute($this->intId);
-
-					// Store the active record
-					$this->objActiveRecord = $objRow;
-
-					$objVersions = new Versions($this->strTable, $this->intId);
-					$objVersions->initialize();
-
-					// Store all fields
-					foreach ($fields as $v)
-					{
-						// Check whether field is excluded
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null)
+						try
+						{
+							$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $id));
+						}
+						catch (AccessDeniedException)
 						{
 							continue;
 						}
 
-						$this->strField = $v;
-						$this->strInputName = $v;
-						$this->varValue = '';
+						$this->intId = $id;
+						$this->procedure = array('id=?');
+						$this->values = array($this->intId);
+						$this->arrSubmit = array();
+						$this->blnCreateNewVersion = false;
 
-						// Make sure the new value is applied
-						$GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['eval']['alwaysSave'] = true;
+						// Get the field values
+						$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+												 ->limit(1)
+												 ->execute($this->intId);
 
-						// Store value
-						$this->row();
+						// Store the active record
+						$this->objActiveRecord = $objRow;
+
+						$objVersions = new Versions($this->strTable, $this->intId);
+						$objVersions->initialize();
+
+						// Store all fields
+						foreach ($fields as $v)
+						{
+							// Check whether field is excluded
+							if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null)
+							{
+								continue;
+							}
+
+							$this->strField = $v;
+							$this->strInputName = $v;
+							$this->varValue = '';
+
+							// Make sure the new value is applied
+							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['eval']['alwaysSave'] = true;
+
+							// Store value
+							$this->row();
+						}
+
+						$this->submit();
 					}
+				}
+				catch (\Throwable $e)
+				{
+					$this->Database->rollbackTransaction();
 
-					$this->submit();
+					throw $e;
 				}
 
 				// Reload the page to prevent _POST variables from being sent twice
