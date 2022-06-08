@@ -1,9 +1,7 @@
 
 <div class="layout_short arc_<?= $this->archive->id ?> block<?= $this->class ?>">
 
-  <?php if ($this->hasMetaFields): ?>
-    <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?></p>
-  <?php endif; ?>
+  <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?></p>
 
   <h2><?= $this->linkHeadline ?></h2>
 

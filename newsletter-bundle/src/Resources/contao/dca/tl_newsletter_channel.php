@@ -81,14 +81,14 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		(
 			'edit' => array
 			(
-				'href'                => 'table=tl_newsletter',
-				'icon'                => 'edit.svg'
-			),
-			'editheader' => array
-			(
 				'href'                => 'act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_newsletter_channel', 'editHeader')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_newsletter',
+				'icon'                => 'children.svg'
 			),
 			'copy' => array
 			(

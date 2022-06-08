@@ -18,7 +18,6 @@ use Contao\CoreBundle\Fixtures\Adapter\LegacyClass;
 use Contao\CoreBundle\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
@@ -62,8 +61,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertSame('FE', TL_MODE);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
     }
 
@@ -83,8 +80,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertSame('BE', TL_MODE);
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
 
@@ -97,9 +92,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->getFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
-
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertNull(TL_MODE);
     }
 
     /**
@@ -110,10 +102,7 @@ class ContaoFrameworkTest extends TestCase
     {
         $framework = $this->getFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize(true);
-
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertSame('FE', TL_MODE);
+        $framework->initialize();
     }
 
     /**
@@ -128,10 +117,7 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize(true);
-
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertSame('FE', TL_MODE);
+        $framework->initialize();
     }
 
     /**
@@ -147,9 +133,6 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
-
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertNull(TL_MODE);
     }
 
     /**
@@ -179,8 +162,6 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertSame('FE', TL_MODE);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
     }
 
@@ -190,26 +171,9 @@ class ContaoFrameworkTest extends TestCase
      */
     public function testDoesNotInitializeTheFrameworkTwice(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isBackendRequest')
-            ->willReturn(false)
-        ;
-
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isFrontendRequest')
-            ->willReturn(false)
-        ;
-
-        $framework = $this->getFramework(Request::create('/index.html'), $scopeMatcher);
+        $framework = $this->getFramework(Request::create('/index.html'));
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
-
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertNull(TL_MODE);
-
         $framework->initialize();
 
         $this->addToAssertionCount(1); // does not throw an exception
@@ -262,7 +226,6 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = new ContaoFramework(
             $requestStack,
-            $this->mockScopeMatcher(),
             $urlGenerator,
             $this->getTempDir(),
             error_reporting()
@@ -300,7 +263,6 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = new ContaoFramework(
             $requestStack,
-            $this->mockScopeMatcher(),
             $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting()
@@ -534,7 +496,7 @@ class ContaoFrameworkTest extends TestCase
         $this->assertCount(0, $registry);
     }
 
-    private function getFramework(Request $request = null, ScopeMatcher $scopeMatcher = null): ContaoFramework
+    private function getFramework(Request $request = null): ContaoFramework
     {
         $requestStack = new RequestStack();
 
@@ -544,7 +506,6 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = new ContaoFramework(
             $requestStack,
-            $scopeMatcher ?? $this->mockScopeMatcher(),
             $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting()

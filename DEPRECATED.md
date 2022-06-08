@@ -197,35 +197,6 @@ has been deprecated in Contao 4.0 and will no longer work in Contao 5.0.
 You can use the static helper methods such as `System::loadLanguageFile()` or
 `Controller::loadDataContainer()` instead.
 
-## Constants
-
-The constant `TL_MODE` has been deprecated and will be removed in Contao 5.0.
-
-Use the `ScopeMatcher` service instead of using `TL_MODE`:
-
-```php
-use Contao\CoreBundle\Routing\ScopeMatcher;
-use Symfony\Component\HttpFoundation\RequestStack;
-
-class Test {
-    private $requestStack;
-    private $scopeMatcher;
-
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
-    }
-
-    public function isBackend() {
-        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
-    }
-
-    public function isFrontend() {
-        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
-    }
-}
-```
-
 ## PHP entry points
 
 Contao 4 only uses a single PHP entry point, namely the `index.php` or

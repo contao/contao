@@ -20,6 +20,7 @@ use Contao\MemberGroupModel;
 use Contao\MemberModel;
 use Contao\StringUtil;
 use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
 
 $GLOBALS['TL_DCA']['tl_member'] = array
 (
@@ -411,7 +412,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 );
 
 // Filter disabled groups in the front end (see #6757)
-if (defined('TL_MODE') && TL_MODE == 'FE')
+if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))
 {
 	$GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] = array('tl_member', 'getActiveGroups');
 }

@@ -17,7 +17,9 @@ use Contao\ModuleCalendar;
 use Contao\ModuleEventlist;
 use Contao\ModuleEventMenu;
 use Contao\ModuleEventReader;
+use Contao\System;
 use Contao\TableWizard;
+use Symfony\Component\HttpFoundation\Request;
 
 // Back end modules
 $GLOBALS['BE_MOD']['content']['calendar'] = array
@@ -37,7 +39,7 @@ $GLOBALS['FE_MOD']['events'] = array
 );
 
 // Style sheet
-if (defined('TL_MODE') && TL_MODE == 'BE')
+if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))
 {
 	$GLOBALS['TL_CSS'][] = 'bundles/contaocalendar/calendar.min.css|static';
 }
