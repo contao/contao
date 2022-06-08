@@ -29,11 +29,14 @@ use Contao\System;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class FigureTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME']);
@@ -321,6 +324,7 @@ class FigureTest extends TestCase
 
     /**
      * @dataProvider provideLegacyTemplateDataScenarios
+     * @group legacy
      */
     public function testGetLegacyTemplateData(array $preconditions, array $buildAttributes, \Closure $assert): void
     {
@@ -338,6 +342,10 @@ class FigureTest extends TestCase
             ['jpg', 'svg'],
             $this->getFixturesDir()
         );
+
+        if (null !== $marginProperty) {
+            $this->expectDeprecation('Since contao/core-bundle 4.13: Using Contao\Controller::generateMargin is deprecated%s');
+        }
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
         $container->set('contao.image.factory', $imageFactory);
