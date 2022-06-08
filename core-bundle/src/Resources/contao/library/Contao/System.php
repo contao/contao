@@ -348,7 +348,7 @@ abstract class System
 			{
 				$session = $session[$ref];
 			}
-			elseif (\is_array($session) && $isBackend)
+			elseif ($isBackend && \is_array($session))
 			{
 				$session = end($session);
 			}

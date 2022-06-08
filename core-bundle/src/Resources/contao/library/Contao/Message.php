@@ -33,8 +33,7 @@ class Message
 	 */
 	public static function addError($strMessage, $strScope=null)
 	{
-		$strScope ??= self::getMode();
-		static::add($strMessage, 'TL_ERROR', $strScope);
+		static::add($strMessage, 'TL_ERROR', $strScope ?? self::getMode());
 	}
 
 	/**
@@ -45,8 +44,7 @@ class Message
 	 */
 	public static function addConfirmation($strMessage, $strScope=null)
 	{
-		$strScope ??= self::getMode();
-		static::add($strMessage, 'TL_CONFIRM', $strScope);
+		static::add($strMessage, 'TL_CONFIRM', $strScope ?? self::getMode());
 	}
 
 	/**
@@ -57,8 +55,7 @@ class Message
 	 */
 	public static function addNew($strMessage, $strScope=null)
 	{
-		$strScope ??= self::getMode();
-		static::add($strMessage, 'TL_NEW', $strScope);
+		static::add($strMessage, 'TL_NEW', $strScope ?? self::getMode());
 	}
 
 	/**
@@ -69,8 +66,7 @@ class Message
 	 */
 	public static function addInfo($strMessage, $strScope=null)
 	{
-		$strScope ??= self::getMode();
-		static::add($strMessage, 'TL_INFO', $strScope);
+		static::add($strMessage, 'TL_INFO', $strScope ?? self::getMode());
 	}
 
 	/**
@@ -81,8 +77,7 @@ class Message
 	 */
 	public static function addRaw($strMessage, $strScope=null)
 	{
-		$strScope ??= self::getMode();
-		static::add($strMessage, 'TL_RAW', $strScope);
+		static::add($strMessage, 'TL_RAW', $strScope ?? self::getMode());
 	}
 
 	/**
@@ -96,8 +91,6 @@ class Message
 	 */
 	public static function add($strMessage, $strType, $strScope=null)
 	{
-		$strScope ??= self::getMode();
-
 		if (!$strMessage)
 		{
 			return;
@@ -108,7 +101,7 @@ class Message
 			throw new \Exception("Invalid message type $strType");
 		}
 
-		System::getContainer()->get('session')->getFlashBag()->add(static::getFlashBagKey($strType, $strScope), $strMessage);
+		System::getContainer()->get('session')->getFlashBag()->add(static::getFlashBagKey($strType, $strScope ?? self::getMode()), $strMessage);
 	}
 
 	/**
@@ -120,8 +113,7 @@ class Message
 	 */
 	public static function generate($strScope=null)
 	{
-		$strScope ??= self::getMode();
-		$strMessages = static::generateUnwrapped($strScope);
+		$strMessages = static::generateUnwrapped($strScope ?? self::getMode());
 
 		if ($strMessages)
 		{
@@ -215,7 +207,6 @@ class Message
 	 */
 	public static function hasError($strScope=null)
 	{
-		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -223,7 +214,7 @@ class Message
 			return false;
 		}
 
-		return $session->getFlashBag()->has(static::getFlashBagKey('error', $strScope));
+		return $session->getFlashBag()->has(static::getFlashBagKey('error', $strScope ?? self::getMode()));
 	}
 
 	/**
@@ -235,7 +226,6 @@ class Message
 	 */
 	public static function hasConfirmation($strScope=null)
 	{
-		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -243,7 +233,7 @@ class Message
 			return false;
 		}
 
-		return $session->getFlashBag()->has(static::getFlashBagKey('confirm', $strScope));
+		return $session->getFlashBag()->has(static::getFlashBagKey('confirm', $strScope ?? self::getMode()));
 	}
 
 	/**
@@ -255,7 +245,6 @@ class Message
 	 */
 	public static function hasNew($strScope=null)
 	{
-		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -263,7 +252,7 @@ class Message
 			return false;
 		}
 
-		return $session->getFlashBag()->has(static::getFlashBagKey('new', $strScope));
+		return $session->getFlashBag()->has(static::getFlashBagKey('new', $strScope ?? self::getMode()));
 	}
 
 	/**
@@ -275,7 +264,6 @@ class Message
 	 */
 	public static function hasInfo($strScope=null)
 	{
-		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -283,7 +271,7 @@ class Message
 			return false;
 		}
 
-		return $session->getFlashBag()->has(static::getFlashBagKey('info', $strScope));
+		return $session->getFlashBag()->has(static::getFlashBagKey('info', $strScope ?? self::getMode()));
 	}
 
 	/**
@@ -295,7 +283,6 @@ class Message
 	 */
 	public static function hasRaw($strScope=null)
 	{
-		$strScope ??= self::getMode();
 		$session = System::getContainer()->get('session');
 
 		if (!$session->isStarted())
@@ -303,7 +290,7 @@ class Message
 			return false;
 		}
 
-		return $session->getFlashBag()->has(static::getFlashBagKey('raw', $strScope));
+		return $session->getFlashBag()->has(static::getFlashBagKey('raw', $strScope ?? self::getMode()));
 	}
 
 	/**
@@ -330,9 +317,7 @@ class Message
 	 */
 	protected static function getFlashBagKey($strType, $strScope=null)
 	{
-		$strScope ??= self::getMode();
-
-		return 'contao.' . $strScope . '.' . strtolower(str_replace('TL_', '', $strType));
+		return 'contao.' . ($strScope ?? self::getMode()) . '.' . strtolower(str_replace('TL_', '', $strType));
 	}
 
 	private static function getMode(): string
