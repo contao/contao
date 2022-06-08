@@ -337,6 +337,9 @@ abstract class System
 		$key = Input::get('popup') ? 'popupReferer' : 'referer';
 		$session = $objSession->get($key);
 		$return = null;
+		$request = static::getContainer()->get('request_stack')->getCurrentRequest();
+		$isBackend = $request && static::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+		$isFrontend = $request && static::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
 		if (null !== $session)
 		{
@@ -345,7 +348,7 @@ abstract class System
 			{
 				$session = $session[$ref];
 			}
-			elseif (\defined('TL_MODE') && TL_MODE == 'BE' && \is_array($session))
+			elseif ($isBackend && \is_array($session))
 			{
 				$session = end($session);
 			}
@@ -389,7 +392,7 @@ abstract class System
 		}
 
 		// Fallback to the generic referer in the front end
-		if (!$return && \defined('TL_MODE') && TL_MODE == 'FE')
+		if (!$return && $isFrontend)
 		{
 			$return = Environment::get('httpReferer');
 		}
@@ -397,7 +400,7 @@ abstract class System
 		// Fallback to the current URL if there is no referer
 		if (!$return)
 		{
-			if (\defined('TL_MODE') && TL_MODE == 'BE')
+			if ($isBackend)
 			{
 				$return = static::getContainer()->get('router')->generate('contao_backend');
 			}

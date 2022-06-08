@@ -17,8 +17,14 @@ submitted. Make sure to always submit at least an empty string in your widget:
 
 ### Constants
 
-The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`, `TL_REFERER_ID` and `TL_SCRIPT` have
-been removed.
+The constants `TL_ROOT`, `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`,
+`TL_REFERER_ID`, `TL_SCRIPT` and `TL_MODE`  have been removed.
+
+Use the `kernel.project_dir` instead of `TL_ROOT`:
+
+```php
+$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+```
 
 `BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
 token checker service to check the separate cases instead:
@@ -53,6 +59,31 @@ $route = System::getContainer()->get('request_stack')->getCurrentRequest()->get(
 
 if ('contao_backend' === $route) {
     // Do something
+}
+```
+
+Use the `ScopeMatcher` service instead of using `TL_MODE`:
+
+```php
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
+
+class Test {
+    private $requestStack;
+    private $scopeMatcher;
+
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
+        $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
+    }
+
+    public function isBackend() {
+        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+    }
+
+    public function isFrontend() {
+        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
+    }
 }
 ```
 

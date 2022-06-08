@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Nyholm\Psr7\Uri;
+
 /**
  * Creates and queries the search index
  *
@@ -46,7 +48,7 @@ class Search
 		$arrSet['meta'] = json_encode((array) $arrData['meta']);
 
 		// Ensure that the URL only contains ASCII characters (see #4260)
-		$arrSet['url'] = preg_replace_callback('/[\x80-\xFF]+/', static fn ($match) => rawurlencode($match[0]), $arrData['url']);
+		$arrSet['url'] = (string) (new Uri($arrData['url']));
 
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
