@@ -2,7 +2,12 @@
 
 ## Version 4.* to 5.0
 
-## FORM_FIELDS
+### RequestToken class
+
+The `RequestToken` class as well as the `disableRefererCheck` and `requestTokenWhitelist`
+settings have been removed.
+
+### FORM_FIELDS
 
 It is no longer possible to use the `FORM_FIELDS` mechanism to determine which form fields have been
 submitted. Make sure to always submit at least an empty string in your widget:
@@ -62,17 +67,6 @@ if ('contao_backend' === $route) {
 }
 ```
 
-Use the `contao.csrf.token_manager` service or the `requestToken` variable in
-template code instead of `REQUEST_TOKEN`:
-
-```php
-$requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
-```
-
-```php
-<?= $this->requestToken ?>
-```
-
 Use the `ScopeMatcher` service instead of using `TL_MODE`:
 
 ```php
@@ -96,6 +90,17 @@ class Test {
         return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
     }
 }
+```
+
+Use the `contao.csrf.token_manager` service or the `requestToken` variable in your
+template instead of `REQUEST_TOKEN`:
+
+```php
+$requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+```
+
+```php
+<input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
 ```
 
 ### TL_CRON
