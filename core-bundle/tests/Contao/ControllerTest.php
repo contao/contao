@@ -95,7 +95,7 @@ class ControllerTest extends TestCase
      */
     public function testGeneratesTheMargin(): void
     {
-        $this->expectDeprecation('%sUsing Contao\Controller::generateMargin is deprecated%s');
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Using Contao\Controller::generateMargin is deprecated%s');
 
         $margins = [
             'top' => '40px',

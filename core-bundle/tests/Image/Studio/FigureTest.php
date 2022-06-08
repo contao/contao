@@ -344,7 +344,7 @@ class FigureTest extends TestCase
         );
 
         if (null !== $marginProperty) {
-            $this->expectDeprecation('%sUsing Contao\Controller::generateMargin is deprecated%s');
+            $this->expectDeprecation('Since contao/core-bundle 4.13: Using Contao\Controller::generateMargin is deprecated%s');
         }
 
         $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
