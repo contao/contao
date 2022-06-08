@@ -194,7 +194,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $plugin->registerContainerConfiguration($loader, []);
 
-        $this->assertContains('config_prod.yml', $files);
+        $this->assertContains('config_prod.yaml', $files);
     }
 
     public function testRegisterContainerConfigurationInDev(): void
@@ -222,7 +222,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $plugin->registerContainerConfiguration($loader, []);
 
-        $this->assertContains('config_dev.yml', $files);
+        $this->assertContains('config_dev.yaml', $files);
     }
 
     public function testGetRouteCollectionInProd(): void

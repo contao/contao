@@ -121,9 +121,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $loader->load(
             static function (ContainerBuilder $container) use ($loader): void {
                 if ('dev' === $container->getParameter('kernel.environment')) {
-                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_dev.yml');
+                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_dev.yaml');
                 } else {
-                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_prod.yml');
+                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_prod.yaml');
                 }
 
                 $container->setParameter('container.dumper.inline_class_loader', true);
@@ -454,7 +454,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Dynamically adds a default mailer to the config, if no mailer is defined.
      *
-     * We cannot add a default mailer configuration to the skeleton config.yml,
+     * We cannot add a default mailer configuration to the skeleton config.yaml,
      * since different types of configurations are not allowed.
      *
      * For example, if the Manager Bundle defined
@@ -463,14 +463,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *         mailer:
      *             dsn: '%env(MAILER_DSN)%'
      *
-     * in the skeleton config.yml and the user adds
+     * in the skeleton config.yaml and the user adds
      *
      *     framework:
      *         mailer:
      *             transports:
      *                 foobar: 'smtps://smtp.example.com'
      *
-     * to their config.yml, the merged configuration will lead to an error, since
+     * to their config.yaml, the merged configuration will lead to an error, since
      * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
      * Thus, the default mailer configuration needs to be added dynamically if
      * not already present.
