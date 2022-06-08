@@ -3061,8 +3061,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 	protected function submit()
 	{
-		if ($this->noReload || Input::post('FORM_SUBMIT') != $this->strTable || empty($this->arrSubmit))
+		if (empty($this->arrSubmit) || Input::post('FORM_SUBMIT') != $this->strTable)
 		{
+			return;
+		}
+
+		if ($this->noReload)
+		{
+			// Data should not be submitted due to validation errors
+			$this->arrSubmit = array();
+
 			return;
 		}
 
