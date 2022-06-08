@@ -63,10 +63,10 @@ your application routes.
 
 ```yml
 ContaoCoreBundle:
-    resource: "@ContaoCoreBundle/Resources/config/routes.yml"
+    resource: "@ContaoCoreBundle/Resources/config/routes.yaml"
 ```
 
-Edit your `config/security.yml` file and merge all the `providers`, `encoders`,
+Edit your `config/security.yaml` file and merge all the `providers`, `encoders`,
 `firewalls` and `access_control` sections:
 
 ```yml

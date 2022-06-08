@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -438,5 +439,37 @@ class TemplateTest extends TestCase
             '[{][}]<script>[{][}]</script>[{][}]<script>[{][}]</script>[{][}]',
             '&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;',
         ];
+    }
+
+    public function testUsesGlobalRequestToken(): void
+    {
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->expects($this->exactly(2))
+            ->method('getDefaultTokenValue')
+            ->willReturn('tokenValue"<')
+        ;
+
+        System::getContainer()->set('contao.csrf.token_manager', $tokenManager);
+
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?php var_export(isset($this->requestToken)) ?>, <?php var_export($this->requestToken) ?>',
+        );
+
+        $this->assertSame("true, 'tokenValue&quot;&lt;'", (new FrontendTemplate('test_template'))->parse());
+        $this->assertSame("true, 'tokenValue&quot;&lt;'", (new BackendTemplate('test_template'))->parse());
+
+        $template = new FrontendTemplate('test_template');
+        $template->setData(['requestToken' => 'custom"<']);
+        $this->assertSame("true, 'custom\"<'", $template->parse());
+
+        $template = new FrontendTemplate('test_template');
+        $template->setData(['requestToken' => ['foo', 'bar']]);
+        $this->assertSame("true, array (\n  0 => 'foo',\n  1 => 'bar',\n)", $template->parse());
+
+        $template = new FrontendTemplate('test_template');
+        $template->setData(['requestToken' => null]);
+        $this->assertSame('false, NULL', $template->parse());
     }
 }

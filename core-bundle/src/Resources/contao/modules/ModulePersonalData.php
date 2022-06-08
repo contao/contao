@@ -380,6 +380,5 @@ class ModulePersonalData extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['saveData']);
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }

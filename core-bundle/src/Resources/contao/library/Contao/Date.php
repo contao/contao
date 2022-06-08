@@ -466,15 +466,9 @@ class Date
 	 */
 	public static function getNumericDateFormat()
 	{
-		if (TL_MODE == 'FE')
+		if (($format = ($GLOBALS['objPage'] ?? null)?->dateFormat) && static::isNumericFormat($format))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			if ($objPage->dateFormat && static::isNumericFormat($objPage->dateFormat))
-			{
-				return $objPage->dateFormat;
-			}
+			return $format;
 		}
 
 		return Config::get('dateFormat');
@@ -487,15 +481,9 @@ class Date
 	 */
 	public static function getNumericTimeFormat()
 	{
-		if (TL_MODE == 'FE')
+		if (($format = ($GLOBALS['objPage'] ?? null)?->timeFormat) && static::isNumericFormat($format))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			if ($objPage->timeFormat && static::isNumericFormat($objPage->timeFormat))
-			{
-				return $objPage->timeFormat;
-			}
+			return $format;
 		}
 
 		return Config::get('timeFormat');
@@ -508,15 +496,9 @@ class Date
 	 */
 	public static function getNumericDatimFormat()
 	{
-		if (TL_MODE == 'FE')
+		if (($format = ($GLOBALS['objPage'] ?? null)?->datimFormat) && static::isNumericFormat($format))
 		{
-			/** @var PageModel $objPage */
-			global $objPage;
-
-			if ($objPage->datimFormat && static::isNumericFormat($objPage->datimFormat))
-			{
-				return $objPage->datimFormat;
-			}
+			return $format;
 		}
 
 		return Config::get('datimFormat');

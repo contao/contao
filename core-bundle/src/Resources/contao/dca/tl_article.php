@@ -88,15 +88,15 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'edit' => array
 			(
-				'href'                => 'table=tl_content',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_article', 'editArticle')
-			),
-			'editheader' => array
-			(
 				'href'                => 'act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_article', 'editHeader')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_content',
+				'icon'                => 'children.svg',
+				'button_callback'     => array('tl_article', 'editArticle')
 			),
 			'copy' => array
 			(

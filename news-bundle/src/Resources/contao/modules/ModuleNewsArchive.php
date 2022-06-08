@@ -58,7 +58,7 @@ class ModuleNewsArchive extends ModuleNews
 			return '';
 		}
 
-		// Show the news reader if an item has been selected
+		// Show the newsreader if an item has been selected
 		if ($this->news_readerModule > 0 && Input::get('auto_item') !== null)
 		{
 			return $this->getFrontendModule($this->news_readerModule, $this->strColumn);
@@ -93,9 +93,9 @@ class ModuleNewsArchive extends ModuleNews
 		$intBegin = 0;
 		$intEnd = 0;
 
-		$intYear = Input::get('year');
-		$intMonth = Input::get('month');
-		$intDay = Input::get('day');
+		$intYear = (int) Input::get('year');
+		$intMonth = (int) Input::get('month');
+		$intDay = (int) Input::get('day');
 
 		// Jump to the current period
 		if (Input::get('year') === null && Input::get('month') === null && Input::get('day') === null && $this->news_jumpToCurrent != 'all_items')

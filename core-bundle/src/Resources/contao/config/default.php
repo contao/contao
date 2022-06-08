@@ -62,8 +62,6 @@ $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
 	array('key' => 'time', 'value' => 'datetime'),
 	array('key' => 'details', 'value' => 'open'),
 ));
-$GLOBALS['TL_CONFIG']['disableRefererCheck']   = false;
-$GLOBALS['TL_CONFIG']['requestTokenWhitelist'] = array();
 
 // Database
 $GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8mb4';

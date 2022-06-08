@@ -95,11 +95,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('commands.yml');
-        $loader->load('controller.yml');
-        $loader->load('listener.yml');
-        $loader->load('migrations.yml');
-        $loader->load('services.yml');
+        $loader->load('commands.yaml');
+        $loader->load('controller.yaml');
+        $loader->load('listener.yaml');
+        $loader->load('migrations.yaml');
+        $loader->load('services.yaml');
 
         $container->setParameter('contao.web_dir', $this->getComposerPublicDir($projectDir) ?? Path::join($projectDir, 'public'));
         $container->setParameter('contao.upload_path', $config['upload_path']);
@@ -191,7 +191,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         if ($container->hasParameter('kernel.debug') && $container->getParameter('kernel.debug')) {
-            $loader->load('services_debug.yml');
+            $loader->load('services_debug.yaml');
         }
     }
 

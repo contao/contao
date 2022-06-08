@@ -197,7 +197,7 @@ abstract class Backend extends Controller
 		// Unset the "no back button" flag
 		$arrUnset[] = 'nb';
 
-		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
+		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), $blnAddRef, $arrUnset);
 	}
 
 	/**
@@ -469,7 +469,7 @@ abstract class Backend extends Controller
 								'table' => $table,
 								'id' => $objRow->id,
 								'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
-								'rt' => REQUEST_TOKEN,
+								'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
 							));
 
 							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);

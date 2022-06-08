@@ -71,12 +71,6 @@
       <trans-unit id="tl_settings.allowedAttributesWarning">
         <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
       </trans-unit>
-      <trans-unit id="tl_settings.disableRefererCheck.0">
-        <source>Disable request tokens</source>
-      </trans-unit>
-      <trans-unit id="tl_settings.disableRefererCheck.1">
-        <source>Do not check the request token when a form is submitted (insecure!).</source>
-      </trans-unit>
       <trans-unit id="tl_settings.allowedDownload.0">
         <source>Download file types</source>
       </trans-unit>
