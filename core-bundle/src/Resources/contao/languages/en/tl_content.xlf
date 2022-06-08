@@ -677,9 +677,6 @@
       <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_content.editheader">
-        <source>Edit the article settings</source>
-      </trans-unit>
       <trans-unit id="tl_content.toggle">
         <source>Hide/unhide content element ID %s</source>
       </trans-unit>
@@ -697,9 +694,6 @@
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
-      </trans-unit>
-      <trans-unit id="tl_content.editarticle">
-        <source>Edit article ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.list.1">
         <source>Import list items from a CSV file</source>

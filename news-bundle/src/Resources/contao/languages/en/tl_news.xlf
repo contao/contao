@@ -218,6 +218,9 @@
       <trans-unit id="tl_news.edit">
         <source>Edit news item ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_news.children">
+        <source>Edit the content elements of news item ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_news.copy">
         <source>Duplicate news item ID %s</source>
       </trans-unit>
@@ -233,14 +236,8 @@
       <trans-unit id="tl_news.feature">
         <source>Feature/unfeature news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.editheader">
-        <source>Edit the settings of news item ID %s</source>
-      </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
-      </trans-unit>
-      <trans-unit id="tl_news.editmeta">
-        <source>Edit the news item settings</source>
       </trans-unit>
     </body>
   </file>

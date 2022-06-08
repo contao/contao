@@ -106,6 +106,7 @@ services:
         class: Contao\CoreBundle\Migration\Version413\RelLightboxMigration
         arguments:
             - '@database_connection'
+            - '@contao.framework'
 
     contao.migration.version_500.basic_entities:
         class: Contao\CoreBundle\Migration\Version500\BasicEntitiesMigration

@@ -278,6 +278,9 @@
       <trans-unit id="tl_calendar_events.edit">
         <source>Edit event ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.children">
+        <source>Edit the content elements of event ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.copy">
         <source>Duplicate event ID %s</source>
       </trans-unit>
@@ -293,14 +296,8 @@
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.editheader">
-        <source>Edit the settings of event ID %s</source>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.editmeta">
-        <source>Edit the event settings</source>
       </trans-unit>
     </body>
   </file>

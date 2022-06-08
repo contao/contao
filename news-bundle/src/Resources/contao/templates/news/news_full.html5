@@ -3,9 +3,7 @@
 
   <h1><?= $this->newsHeadline ?></h1>
 
-  <?php if ($this->hasMetaFields): ?>
-    <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?> <?= $this->commentCount ?></p>
-  <?php endif; ?>
+  <p class="info"><time datetime="<?= $this->datetime ?>"><?= $this->date ?></time> <?= $this->author ?></p>
 
   <?php if ($this->hasSubHeadline): ?>
     <h2><?= $this->subHeadline ?></h2>
