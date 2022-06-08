@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	'subpalettes' => array
 	(
 		'addTime'                     => 'startTime,endTime',
-		'addImage'                    => 'singleSRC,size,floating,fullsize,overwriteMeta',
+		'addImage'                    => 'singleSRC,fullsize,size,floating,overwriteMeta',
 		'recurring'                   => 'repeatEach,recurrences',
 		'addEnclosure'                => 'enclosure',
 		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption'
@@ -377,7 +377,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
 			'options_callback' => static function ()
 			{
 				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
@@ -398,7 +398,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['fullsize'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'caption' => array

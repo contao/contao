@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'addImage'                    => 'singleSRC,size,floating,fullsize,overwriteMeta',
+		'addImage'                    => 'singleSRC,fullsize,size,floating,overwriteMeta',
 		'sortable'                    => 'sortIndex,sortOrder',
 		'useImage'                    => 'singleSRC,size,overwriteMeta',
 		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption',
@@ -276,7 +276,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(128) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'imageUrl' => array
@@ -291,7 +291,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'caption' => array
@@ -1075,6 +1075,10 @@ class tl_content extends Backend
 		{
 			case 'hyperlink':
 				unset($GLOBALS['TL_DCA']['tl_content']['fields']['imageUrl']);
+				break;
+
+			case 'image':
+				$GLOBALS['TL_DCA']['tl_content']['fields']['fullsize']['eval']['tl_class'] .= ' m12';
 				break;
 
 			case 'download':
