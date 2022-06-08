@@ -95,7 +95,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         $this->request = $this->requestStack->getMainRequest();
 
-        $this->setConstants();
         $this->initializeFramework();
     }
 
@@ -143,14 +142,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         }
 
         return self::$nonce;
-    }
-
-    /**
-     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
-     */
-    private function setConstants(): void
-    {
-        \define('TL_ROOT', $this->projectDir);
     }
 
     private function initializeFramework(): void

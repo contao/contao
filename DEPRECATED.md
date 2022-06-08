@@ -197,16 +197,6 @@ has been deprecated in Contao 4.0 and will no longer work in Contao 5.0.
 You can use the static helper methods such as `System::loadLanguageFile()` or
 `Controller::loadDataContainer()` instead.
 
-## Constants
-
-The constant `TL_ROOT` has been deprecated and will be removed in Contao 5.0.
-
-Use the `kernel.project_dir` instead of `TL_ROOT`:
-
-```php
-$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-```
-
 ## PHP entry points
 
 Contao 4 only uses a single PHP entry point, namely the `index.php` or
