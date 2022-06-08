@@ -142,6 +142,8 @@ class ResizeImagesCommand extends Command
                 }
 
                 $this->io->writeln('Image "'.$path.'" does not exist anymore, deleted deferred image reference');
+
+                return 0;
             }
 
             return Command::FAILURE;

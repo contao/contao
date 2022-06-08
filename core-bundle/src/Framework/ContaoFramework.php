@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Framework;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Environment;
 use Contao\Input;
@@ -44,13 +43,11 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     private static string $nonce = '';
 
     private Request|null $request = null;
-    private bool $isFrontend = false;
     private array $adapterCache = [];
     private array $hookListeners = [];
 
     public function __construct(
         private RequestStack $requestStack,
-        private ScopeMatcher $scopeMatcher,
         private UrlGeneratorInterface $urlGenerator,
         private string $projectDir,
         private int $errorLevel,
@@ -60,7 +57,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     public function reset(): void
     {
         $this->adapterCache = [];
-        $this->isFrontend = false;
         self::$nonce = '';
 
         if (!$this->isInitialized()) {
@@ -83,7 +79,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     /**
      * @throws \LogicException
      */
-    public function initialize(bool $isFrontend = false): void
+    public function initialize(): void
     {
         if ($this->isInitialized()) {
             return;
@@ -96,10 +92,8 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
             throw new \LogicException('The service container has not been set.');
         }
 
-        $this->isFrontend = $isFrontend;
         $this->request = $this->requestStack->getMainRequest();
 
-        $this->setConstants();
         $this->initializeFramework();
     }
 
@@ -147,39 +141,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         }
 
         return self::$nonce;
-    }
-
-    /**
-     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
-     */
-    private function setConstants(): void
-    {
-        if (!\defined('TL_MODE')) {
-            \define('TL_MODE', $this->getMode());
-        }
-
-        \define('TL_ROOT', $this->projectDir);
-    }
-
-    private function getMode(): string|null
-    {
-        if (true === $this->isFrontend) {
-            return 'FE';
-        }
-
-        if (null === $this->request) {
-            return null;
-        }
-
-        if ($this->scopeMatcher->isBackendRequest($this->request)) {
-            return 'BE';
-        }
-
-        if ($this->scopeMatcher->isFrontendRequest($this->request)) {
-            return 'FE';
-        }
-
-        return null;
     }
 
     private function initializeFramework(): void

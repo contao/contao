@@ -213,7 +213,9 @@ class Input
 			return null;
 		}
 
-		$varValue = static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll, !\defined('TL_MODE') || TL_MODE != 'BE');
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+		$varValue = static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::encodeLessThanSign : InputEncodingMode::encodeAll, !$isBackend);
 
 		return $varValue;
 	}
@@ -255,7 +257,10 @@ class Input
 			return null;
 		}
 
-		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::sanitizeHtml : InputEncodingMode::encodeAll, !\defined('TL_MODE') || TL_MODE != 'BE', true);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+
+		return static::encodeInputRecursive($varValue, $blnDecodeEntities ? InputEncodingMode::sanitizeHtml : InputEncodingMode::encodeAll, !$isBackend);
 	}
 
 	/**
@@ -274,7 +279,10 @@ class Input
 			return null;
 		}
 
-		return static::encodeInputRecursive($varValue, InputEncodingMode::encodeNone, !\defined('TL_MODE') || TL_MODE != 'BE');
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+
+		return static::encodeInputRecursive($varValue, InputEncodingMode::encodeNone, !$isBackend);
 	}
 
 	/**

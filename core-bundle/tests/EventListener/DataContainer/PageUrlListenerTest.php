@@ -254,9 +254,12 @@ class PageUrlListenerTest extends TestCase
         );
 
         $pageRegistry = $this->mockPageRegistry(array_fill(0, \count($pages) + 1, true), [$currentRoute, ...$aliasRoutes]);
-        $urlPrefix = $activeRecord['urlPrefix'] ? $activeRecord['urlPrefix'].'/' : '';
-        $url = '/'.$urlPrefix.$value.$activeRecord['urlSuffix'];
-        $translator = $this->mockTranslator('ERR.pageUrlExists', $expectExists ? $url : null);
+
+        if ($expectExists) {
+            $translator = $this->mockTranslator('ERR.pageUrlNameExists', [$pages[0]['title'], $pages[0]['id']]);
+        } else {
+            $translator = $this->mockTranslator();
+        }
 
         $listener = new PageUrlListener(
             $framework,
@@ -1011,7 +1014,7 @@ class PageUrlListenerTest extends TestCase
 
     public function testThrowsExceptionOnDuplicateUrlPrefixInDomain(): void
     {
-        $translator = $this->mockTranslator('ERR.urlPrefixExists', 'en');
+        $translator = $this->mockTranslator('ERR.urlPrefixExists', ['en']);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -1124,7 +1127,7 @@ class PageUrlListenerTest extends TestCase
         ;
 
         // Expects exception
-        $translator = $this->mockTranslator('ERR.pageUrlPrefix', '/de/bar/foo.html');
+        $translator = $this->mockTranslator('ERR.pageUrlPrefix', ['/de/bar/foo.html']);
 
         $listener = new PageUrlListener(
             $framework,
@@ -1463,7 +1466,7 @@ class PageUrlListenerTest extends TestCase
             ->willReturn(null, null, [$pageAdapter->findWithDetails(4)])
         ;
 
-        $translator = $this->mockTranslator('ERR.pageUrlSuffix', '/de/bar/foo.html');
+        $translator = $this->mockTranslator('ERR.pageUrlSuffix', ['/de/bar/foo.html']);
 
         $listener = new PageUrlListener(
             $framework,
@@ -1663,11 +1666,11 @@ class PageUrlListenerTest extends TestCase
     /**
      * @return TranslatorInterface&MockObject
      */
-    private function mockTranslator(string $messageKey = null, string $argument = null): TranslatorInterface
+    private function mockTranslator(string $messageKey = null, array $arguments = []): TranslatorInterface
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
-        if (null === $messageKey || null === $argument) {
+        if (null === $messageKey) {
             $translator
                 ->expects($this->never())
                 ->method('trans')
@@ -1679,12 +1682,12 @@ class PageUrlListenerTest extends TestCase
         $translator
             ->expects($this->once())
             ->method('trans')
-            ->with($messageKey, [$argument], 'contao_default')
-            ->willReturn($argument)
+            ->with($messageKey, $arguments, 'contao_default')
+            ->willReturn($messageKey)
         ;
 
         $this->expectException(\RuntimeException::class);
-        $this->expectExceptionMessage($argument);
+        $this->expectExceptionMessage($messageKey);
 
         return $translator;
     }

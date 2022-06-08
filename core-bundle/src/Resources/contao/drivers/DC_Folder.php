@@ -1216,6 +1216,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				Dbafs::updateFolderHashes($strFolder);
 			}
 
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$strMode = ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request)) ? 'BE' : 'FE';
+
 			// Redirect or reload
 			if (!$objUploader->hasError())
 			{
@@ -1226,7 +1229,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					if ($objSession->isStarted())
 					{
 						// Get the info messages only
-						$arrMessages = $objSession->getFlashBag()->get('contao.' . TL_MODE . '.info');
+						$arrMessages = $objSession->getFlashBag()->get('contao.' . $strMode . '.info');
 						Message::reset();
 
 						if (!empty($arrMessages))
@@ -1249,7 +1252,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			elseif ($blnIsAjax)
 			{
-				throw new ResponseException(new Response(Message::generateUnwrapped(TL_MODE, true), 500));
+				throw new ResponseException(new Response(Message::generateUnwrapped($strMode, true), 500));
 			}
 		}
 
@@ -2731,7 +2734,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$thumbnail .= ')</span>';
 
 			// Generate the thumbnail
-			if ($objFile->isImage && (!$objFile->isSvgImage || $objFile->viewHeight > 0) && Config::get('thumbnails'))
+			if ($objFile->isImage && (!$objFile->isSvgImage || $objFile->viewHeight > 0) && Config::get('thumbnails') && \in_array($objFile->extension, System::getContainer()->getParameter('contao.image.valid_extensions')))
 			{
 				try
 				{

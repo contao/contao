@@ -257,7 +257,6 @@ services:
         public: true
         arguments:
             - '@request_stack'
-            - '@contao.routing.scope_matcher'
             - '@router'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
