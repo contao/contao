@@ -37,7 +37,7 @@ class InputEnhancer implements RouteEnhancerInterface
             return $defaults;
         }
 
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $input = $this->framework->getAdapter(Input::class);
 

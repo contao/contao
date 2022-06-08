@@ -29,18 +29,18 @@ var AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
-		el.blur();
-
 		var item = $(id),
 			parent = $(el).getParent('li');
 
 		if (item) {
 			if (parent.hasClass('collapsed')) {
 				parent.removeClass('collapsed');
+				$(el).setAttribute('aria-expanded', 'true');
 				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				parent.addClass('collapsed');
+				$(el).setAttribute('aria-expanded', 'false');
 				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
@@ -1754,20 +1754,6 @@ var Backend =
 		container.getChildren().each(function(span) {
 			addEventsTo(span);
 		});
-	},
-
-	/**
-	 * Toggle the "add language" button
-	 *
-	 * @param {object} el The DOM element
-	 */
-	toggleAddLanguageButton: function(el) {
-		var inp = el.getParent('div').getElement('input[type="button"]');
-		if (el.value != '') {
-			inp.removeProperty('disabled');
-		} else {
-			inp.setProperty('disabled', true);
-		}
 	},
 
 	/**

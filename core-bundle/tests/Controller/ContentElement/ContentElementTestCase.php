@@ -17,6 +17,7 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -184,7 +185,7 @@ class ContentElementTestCase extends TestCase
         $environment = new Environment($contaoFilesystemLoader);
 
         // Contao extension
-        $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader));
+        $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader, $this->createMock(ContaoCsrfTokenManager::class)));
 
         // Runtime loaders
         $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));

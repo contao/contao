@@ -104,8 +104,6 @@ class Config
 	(
 		'dbCharset'             => true,
 		'dbCollation'           => true,
-		'disableRefererCheck'   => true,
-		'requestTokenWhitelist' => true,
 		'sessionTimeout'        => true,
 		'rootFiles'             => true,
 		'exampleWebsite'        => true,

@@ -257,7 +257,6 @@ services:
         public: true
         arguments:
             - '@request_stack'
-            - '@contao.routing.scope_matcher'
             - '@router'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
@@ -954,6 +953,7 @@ services:
         arguments:
             - '@twig'
             - '@contao.twig.filesystem_loader'
+            - '@contao.csrf.token_manager'
 
     contao.twig.fail_tolerant_filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\FailTolerantFilesystemLoader

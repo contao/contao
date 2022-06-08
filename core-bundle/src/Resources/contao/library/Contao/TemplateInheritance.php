@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides the template inheritance logic
@@ -314,7 +315,7 @@ trait TemplateInheritance
 		{
 			$tpl = new static($name);
 		}
-		elseif (TL_MODE == 'BE')
+		elseif (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))
 		{
 			$tpl = new BackendTemplate($name);
 		}
