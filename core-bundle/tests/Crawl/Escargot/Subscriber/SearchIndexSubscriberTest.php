@@ -103,6 +103,13 @@ class SearchIndexSubscriberTest extends TestCase
             (new CrawlUri(new Uri('https://original.contao.org'), 0, true))->addTag(RobotsSubscriber::TAG_NOFOLLOW),
         ];
 
+        yield 'Test skips URIs where the original URI was marked "noindex" in the robots.txt' => [
+            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_NOINDEX),
+            SubscriberInterface::DECISION_NEGATIVE,
+            LogLevel::DEBUG,
+            'Do not request because it was marked "noindex" in the robots.txt.',
+        ];
+
         yield 'Test skips URIs that were disallowed by the robots.txt content' => [
             (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_DISALLOWED_ROBOTS_TXT),
             SubscriberInterface::DECISION_NEGATIVE,
@@ -140,8 +147,9 @@ class SearchIndexSubscriberTest extends TestCase
     /**
      * @dataProvider needsContentProvider
      */
-    public function testNeedsContent(ResponseInterface $response, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = ''): void
+    public function testNeedsContent(ResponseInterface $response, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri $crawlUri = null): void
     {
+        $crawlUri = $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0);
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -176,7 +184,7 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
 
         $decision = $subscriber->needsContent(
-            new CrawlUri(new Uri('https://contao.org'), 0),
+            $crawlUri,
             $response,
             $this->createMock(ChunkInterface::class)
         );
@@ -211,13 +219,22 @@ class SearchIndexSubscriberTest extends TestCase
             LogLevel::DEBUG,
             'Did not index because it was not part of the base URI collection.',
         ];
+
+        yield 'Test skips URIs where the "X-Robots-Tag" header contains "noindex"' => [
+            $this->getResponse(true),
+            SubscriberInterface::DECISION_NEGATIVE,
+            LogLevel::DEBUG,
+            'Do not request because it was marked "noindex" in the "X-Robots-Tag" header.',
+            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_NOINDEX),
+        ];
     }
 
     /**
      * @dataProvider onLastChunkProvider
      */
-    public function testOnLastChunk(?IndexerException $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    public function testOnLastChunk(?IndexerException $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = [], CrawlUri $crawlUri = null): void
     {
+        $crawlUri = $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0);
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->once())
@@ -240,7 +257,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         if (null === $indexerException) {
             $indexer
-                ->expects($this->once())
+                ->expects($expectedStats === ['ok' => 0, 'warning' => 0, 'error' => 0] ? $this->never() : $this->once())
                 ->method('index')
             ;
         } else {
@@ -259,7 +276,7 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber->setLogger(new SubscriberLogger($logger, \get_class($subscriber)));
 
         $subscriber->onLastChunk(
-            new CrawlUri(new Uri('https://contao.org'), 0),
+            $crawlUri,
             $this->getResponse(true),
             $this->createMock(ChunkInterface::class)
         );
@@ -277,6 +294,15 @@ class SearchIndexSubscriberTest extends TestCase
 
     public function onLastChunkProvider(): \Generator
     {
+        yield 'Test skips URIs where the "X-Robots-Tag" header contains "noindex"' => [
+            null,
+            LogLevel::DEBUG,
+            'Do not request because it was marked "noindex" in the <meta name="robots"> HTML tag.',
+            ['ok' => 0, 'warning' => 0, 'error' => 0],
+            [],
+            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_NOINDEX),
+        ];
+
         yield 'Successful index' => [
             null,
             LogLevel::INFO,
