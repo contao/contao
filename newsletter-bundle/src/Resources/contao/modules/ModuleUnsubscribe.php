@@ -145,7 +145,6 @@ class ModuleUnsubscribe extends Module
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 
 	/**

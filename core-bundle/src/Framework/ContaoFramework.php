@@ -21,7 +21,6 @@ use Contao\Input;
 use Contao\InsertTags;
 use Contao\Model\Registry;
 use Contao\PageModel;
-use Contao\RequestToken;
 use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -172,7 +171,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         $this->setTimezone();
         $this->triggerInitializeSystemHook();
-        $this->handleRequestToken();
     }
 
     /**
@@ -246,16 +244,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
             foreach ($GLOBALS['TL_HOOKS']['initializeSystem'] as $callback) {
                 System::importStatic($callback[0])->{$callback[1]}();
             }
-        }
-    }
-
-    private function handleRequestToken(): void
-    {
-        $requestToken = $this->getAdapter(RequestToken::class);
-
-        // Deprecated since Contao 4.0, to be removed in Contao 5.0
-        if (!\defined('REQUEST_TOKEN')) {
-            \define('REQUEST_TOKEN', 'cli' === \PHP_SAPI ? null : $requestToken->get());
         }
     }
 

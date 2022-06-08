@@ -29,7 +29,7 @@
       <div class="tl_formbody_edit">
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="act" value="crawl">
-        <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
+        <input type="hidden" name="rt" value="<?= $this->requestToken ?>">
         <div class="tl_tbox">
           <div>
             <?= $this->subscribersWidget->parse() ?>
