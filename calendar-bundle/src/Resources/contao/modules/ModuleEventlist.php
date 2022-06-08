@@ -370,7 +370,7 @@ class ModuleEventlist extends Events
 							->build();
 					}
 
-					$figure->applyLegacyTemplateData($objTemplate, $eventModel->imagemargin, $eventModel->floating);
+					$figure->applyLegacyTemplateData($objTemplate, null, $eventModel->floating);
 				}
 			}
 

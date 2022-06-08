@@ -975,62 +975,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Compile the margin format definition based on an array of values
-	 *
-	 * @param array  $arrValues An array of four values and a unit
-	 * @param string $strType   Either "margin" or "padding"
-	 *
-	 * @return string The CSS markup
-	 */
-	public static function generateMargin($arrValues, $strType='margin')
-	{
-		// Initialize an empty array (see #5217)
-		if (!\is_array($arrValues))
-		{
-			$arrValues = array('top'=>'', 'right'=>'', 'bottom'=>'', 'left'=>'', 'unit'=>'');
-		}
-
-		$top = $arrValues['top'];
-		$right = $arrValues['right'];
-		$bottom = $arrValues['bottom'];
-		$left = $arrValues['left'];
-
-		// Try to shorten the definition
-		if ($top && $right  && $bottom  && $left)
-		{
-			if ($top == $right && $top == $bottom && $top == $left)
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ';';
-			}
-
-			if ($top == $bottom && $right == $left)
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
-			}
-
-			if ($top != $bottom && $right == $left)
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ';';
-			}
-
-			return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
-		}
-
-		$return = array();
-		$arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
-
-		foreach ($arrDir as $k=>$v)
-		{
-			if ($v)
-			{
-				$return[] = $strType . '-' . $k . ':' . $v . $arrValues['unit'] . ';';
-			}
-		}
-
-		return implode('', $return);
-	}
-
-	/**
 	 * Add a request string to the current URL
 	 *
 	 * @param string  $strRequest The string to be added
