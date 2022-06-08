@@ -136,7 +136,7 @@ class PrettyErrorScreenListener
         $processing = true;
 
         try {
-            $this->framework->initialize(true);
+            $this->framework->initialize();
 
             $request = $event->getRequest();
             $pageModel = $request->attributes->get('pageModel');

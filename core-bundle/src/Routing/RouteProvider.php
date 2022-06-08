@@ -25,7 +25,7 @@ class RouteProvider extends AbstractPageRouteProvider
 {
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pathInfo = rawurldecode($request->getPathInfo());
 
@@ -55,7 +55,7 @@ class RouteProvider extends AbstractPageRouteProvider
 
     public function getRouteByName($name): Route
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $ids = $this->getPageIdsFromNames([$name]);
 
@@ -83,7 +83,7 @@ class RouteProvider extends AbstractPageRouteProvider
 
     public function getRoutesByNames($names): array
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
