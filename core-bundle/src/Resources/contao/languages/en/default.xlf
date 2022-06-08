@@ -6,7 +6,7 @@
         <source>An error occurred!</source>
       </trans-unit>
       <trans-unit id="ERR.submit">
-        <source>Data could not be saved because an error occurred!</source>
+        <source>The data could not be saved because an error occurred!</source>
       </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>

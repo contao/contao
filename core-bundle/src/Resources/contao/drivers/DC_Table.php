@@ -3097,7 +3097,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if (!\is_array($arrValues))
 					{
-						throw new \RuntimeException('onbeforesubmit_callback must return the values!');
+						throw new \RuntimeException('The onbeforesubmit_callback must return the values!');
 					}
 				}
 				catch (\Exception $e)
@@ -3126,12 +3126,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
+					$this->Database
+						->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
 						->query('', array($varEmpty, $this->activeRecord->pid), $arrType);
 				}
 				else
 				{
-					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
+					$this->Database
+						->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
 						->query('', array($varEmpty), $arrType);
 				}
 			}
