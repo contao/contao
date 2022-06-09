@@ -354,7 +354,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$for = preg_quote($for);
+				$for = preg_quote($for, null);
 			}
 
 			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
@@ -1704,7 +1704,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <div class="' . $class . '">';
 
 				$class = 'tl_box';
-				$formFields = array();
 				$strHash = md5($id);
 
 				foreach ($this->strPalette as $v)
@@ -1722,7 +1721,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 					$this->strField = $v;
 					$this->strInputName = $v . '_' . $strHash;
-					$formFields[] = $v . '_' . $strHash;
 
 					// Load the current value
 					if ($v == 'name')
@@ -2823,7 +2821,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$searchValue = preg_quote($searchValue);
+				$searchValue = preg_quote($searchValue, null);
 			}
 
 			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";

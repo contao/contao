@@ -68,7 +68,7 @@ class Installer extends Controller
 					{
 						$return['ALTER_ADD'][] = 'ALTER TABLE `' . $k . '` ADD ' . $vv . ';';
 					}
-					elseif ($sql_current[$k]['TABLE_FIELDS'][$kk] != $vv && $sql_current[$k]['TABLE_FIELDS'][$kk] != $vv)
+					elseif ($sql_current[$k]['TABLE_FIELDS'][$kk] != $vv)
 					{
 						$return['ALTER_CHANGE'][] = 'ALTER TABLE `' . $k . '` CHANGE `' . $kk . '` ' . $vv . ';';
 					}
