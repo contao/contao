@@ -215,7 +215,12 @@ The following resources have been renamed:
  - `FormTextArea` → `FormTextarea`
  - `FormFileUpload` → `FormUpload`
  - `ModulePassword` → `ModuleLostPassword`
+
+ - `cal_default` → `calendar_default`
+ - `com_default` → `comment_default`
  - `form_textfield` → `form_text`
+ - `nav_default` → `navigation_default`
+ - `nl_default` → `newsletter_default`
 
 ### CSS classes "first", "last", "even" and "odd"
 

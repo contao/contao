@@ -24,7 +24,7 @@ class ModuleUnsubscribe extends Module
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'nl_default';
+	protected $strTemplate = 'newsletter_default';
 
 	/**
 	 * Display a wildcard in the back end

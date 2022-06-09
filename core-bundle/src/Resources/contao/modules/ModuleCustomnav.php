@@ -77,7 +77,7 @@ class ModuleCustomnav extends Module
 			return;
 		}
 
-		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
+		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'navigtation_default');
 		$objTemplate->type = static::class;
 		$objTemplate->cssID = $this->cssID; // see #4897 and 6129
 		$objTemplate->level = 'level_1';

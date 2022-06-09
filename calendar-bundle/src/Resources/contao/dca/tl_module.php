@@ -125,7 +125,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{
-		return Controller::getTemplateGroup('cal_');
+		return Controller::getTemplateGroup('calendar_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"

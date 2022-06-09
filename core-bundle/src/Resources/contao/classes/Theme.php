@@ -1172,7 +1172,7 @@ class Theme extends Backend
 		// Add all template files to the archive (see #7048)
 		foreach (Folder::scan($this->strRootDir . '/' . $strFolder) as $strFile)
 		{
-			if (preg_match('/\.(html5|sql)$/', $strFile) && strncmp($strFile, 'be_', 3) !== 0 && strncmp($strFile, 'nl_', 3) !== 0)
+			if (preg_match('/\.(html5|sql)$/', $strFile) && !preg_match('/^(be|nl|newsletter)_/', $strFile))
 			{
 				$objArchive->addFile($strFolder . '/' . $strFile);
 			}

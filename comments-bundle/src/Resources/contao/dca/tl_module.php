@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_template'] = array
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{
-		return Controller::getTemplateGroup('com_');
+		return Controller::getTemplateGroup('comment_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"

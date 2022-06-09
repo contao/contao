@@ -136,7 +136,7 @@ class ModuleCalendar extends Events
 		$intYear = date('Y', $this->Date->tstamp);
 		$intMonth = date('m', $this->Date->tstamp);
 
-		$objTemplate = new FrontendTemplate($this->cal_ctemplate ?: 'cal_default');
+		$objTemplate = new FrontendTemplate($this->cal_ctemplate ?: 'calendar_default');
 		$objTemplate->intYear = $intYear;
 		$objTemplate->intMonth = $intMonth;
 

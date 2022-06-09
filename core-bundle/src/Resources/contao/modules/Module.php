@@ -287,7 +287,7 @@ abstract class Module extends Frontend
 		$isMember = $security->isGranted('ROLE_MEMBER');
 		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
 
-		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
+		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'navigation_default');
 		$objTemplate->pid = $pid;
 		$objTemplate->type = static::class;
 		$objTemplate->cssID = $this->cssID; // see #4897
