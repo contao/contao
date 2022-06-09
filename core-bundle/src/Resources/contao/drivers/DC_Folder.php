@@ -357,12 +357,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$for = preg_quote($for);
 			}
 
-			$strPattern = "CAST(name AS CHAR) REGEXP ?";
-
-			if (substr(Config::get('dbCollation'), -3) == '_ci')
-			{
-				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
-			}
+			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{
@@ -2831,12 +2826,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$searchValue = preg_quote($searchValue);
 			}
 
-			$strPattern = "CAST(name AS CHAR) REGEXP ?";
-
-			if (substr(Config::get('dbCollation'), -3) == '_ci')
-			{
-				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
-			}
+			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['foreignKey']))
 			{

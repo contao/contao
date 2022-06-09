@@ -42,7 +42,6 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 		'closed'                      => true,
 		'onload_callback' => array
 		(
-			array('tl_templates', 'adjustSettings'),
 			array('tl_templates', 'addBreadcrumb'),
 		)
 	),
@@ -156,16 +155,6 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
  */
 class tl_templates extends Backend
 {
-	/**
-	 * Adjust some global settings in the template editor
-	 */
-	public function adjustSettings()
-	{
-		// Backwards compatibility
-		$GLOBALS['TL_CONFIG']['uploadPath'] = $GLOBALS['TL_DCA']['tl_templates']['config']['uploadPath'];
-		$GLOBALS['TL_CONFIG']['editableFiles'] = $GLOBALS['TL_DCA']['tl_templates']['config']['editableFileTypes'];
-	}
-
 	/**
 	 * Add the breadcrumb menu
 	 *
@@ -583,7 +572,7 @@ class tl_templates extends Backend
 	{
 		/** @var DC_Folder $dc */
 		$dc = (func_num_args() <= 12 ? null : func_get_arg(12));
-		$arrEditableFileTypes = $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_templates']['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')));
+		$arrEditableFileTypes = $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_templates']['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')));
 
 		return in_array(Path::getExtension($row['id'], true), $arrEditableFileTypes) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 	}
