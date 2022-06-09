@@ -8,7 +8,8 @@
     {# Wrapper attributes: add the user defined id/classes, also add the template name (e.g. "content_element/text") as a class #}
     {% set attributes = attrs(attributes|default)
         .setIfExists('id', element_html_id)
-        .addClass(element_css_classes, template)
+        .addClass(element_css_classes)
+        .addClass(template)
     %}
 
     {# Wrapper element around headline and content #}

@@ -17,7 +17,11 @@
             {% block code %}
                 {# @var \Contao\CoreBundle\Twig\Runtime\HighlightResult highlighted #}
                 {% set highlighted = code|highlight(language) %}
-                <pre><code{% block code_attributes %}{{ attrs(code_attributes|default).addClass('hljs', highlighted.language) }}{% endblock %}>
+                {% set code_attributes = attrs(code_attributes|default)
+                    .addClass('hljs')
+                    .addClass(highlighted.language)
+                %}
+                <pre><code{% block code_attributes %}{{ code_attributes }}{% endblock %}>
                     {{- highlighted.value|raw -}}
                 </code></pre>
             {% endblock %}
