@@ -240,13 +240,11 @@
                 const formData = new FormData(form);
 
                 request('POST', form.action, formData, function () {
-                    if (422 === this.status) {
-                        if (userField) {
-                            userField.setCustomValidity(this.responseText || 'An unknown error occurred.');
-                            userField.reportValidity();
-                        }
-                    } else {
+                    if (422 !== this.status) {
                         location.reload();
+                    } else if (userField) {
+                        userField.setCustomValidity(this.responseText || 'An unknown error occurred.');
+                        userField.reportValidity();
                     }
                 });
             });
