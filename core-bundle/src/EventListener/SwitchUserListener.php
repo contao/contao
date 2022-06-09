@@ -54,16 +54,12 @@ class SwitchUserListener
         }
 
         $sourceUser = $token->getUsername();
-        $targetUser = $event->getTargetUser();
-
-        if ($targetUser instanceof UserInterface) {
-            $targetUser = $targetUser->getUsername();
-        }
+        $targetUser = $event->getTargetUser()->getUsername();
 
         $originalUser = null;
 
         if ($token instanceof SwitchUserToken) {
-            $originalUser = $token->getOriginalToken()->getUser()->getUsername();
+            $originalUser = $token->getOriginalToken()->getUsername();
         }
 
         if ($originalUser === $targetUser) {
