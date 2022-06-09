@@ -179,7 +179,7 @@ final class MessageCatalogue implements MessageCatalogueInterface
         }
 
         if (\is_array($item)) {
-            return $id;
+            return null;
         }
 
         return (string) $item;
