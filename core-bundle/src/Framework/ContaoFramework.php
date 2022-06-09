@@ -28,7 +28,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -252,15 +251,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         if (\function_exists('ini_set')) {
             ini_set($key, $value);
         }
-    }
-
-    private function getSession(): SessionInterface|null
-    {
-        if (null === $this->request || !$this->request->hasSession()) {
-            return null;
-        }
-
-        return $this->request->getSession();
     }
 
     private function registerHookListeners(): void

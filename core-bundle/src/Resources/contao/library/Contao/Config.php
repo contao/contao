@@ -77,41 +77,14 @@ class Config
 
 	private static $arrDeprecatedMap = array
 	(
-		'dbHost'           => 'database_host',
-		'dbPort'           => 'database_port',
-		'dbUser'           => 'database_user',
-		'dbPass'           => 'database_password',
-		'dbDatabase'       => 'database_name',
-		'smtpHost'         => 'mailer_host',
-		'smtpUser'         => 'mailer_user',
-		'smtpPass'         => 'mailer_password',
-		'smtpPort'         => 'mailer_port',
-		'smtpEnc'          => 'mailer_encryption',
-		'uploadPath'       => 'contao.upload_path',
-		'editableFiles'    => 'contao.editable_files',
-		'characterSet'     => 'kernel.charset',
-		'enableSearch'     => 'contao.search.default_indexer.enable',
-		'indexProtected'   => 'contao.search.index_protected',
 	);
 
 	private static $arrDeprecated = array
 	(
-		'validImageTypes' => 'contao.image.valid_extensions',
-		'jpgQuality'      => 'contao.image.imagine_options[jpeg_quality]',
 	);
 
 	private static $arrToBeRemoved = array
 	(
-		'dbCharset'             => true,
-		'dbCollation'           => true,
-		'sessionTimeout'        => true,
-		'rootFiles'             => true,
-		'exampleWebsite'        => true,
-		'coreOnlyMode'          => true,
-		'privacyAnonymizeIp'    => true,
-		'privacyAnonymizeGA'    => true,
-		'bypassCache'           => true,
-		'sslProxyDomain'        => true,
 	);
 
 	/**
@@ -404,12 +377,12 @@ class Config
 	{
 		if ($newKey = self::getNewKey($strKey))
 		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
 		}
 
 		if (isset(self::$arrToBeRemoved[$strKey]))
 		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s(\'%s\')" has been deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" has been deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
 		}
 
 		return $GLOBALS['TL_CONFIG'][$strKey] ?? null;
@@ -425,12 +398,12 @@ class Config
 	{
 		if ($newKey = self::getNewKey($strKey))
 		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
 		}
 
 		if (isset(self::$arrToBeRemoved[$strKey]))
 		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Using "%s(\'%s\')" has been deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" has been deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
 		}
 
 		$GLOBALS['TL_CONFIG'][$strKey] = $varValue;
@@ -542,16 +515,6 @@ class Config
 		{
 			$GLOBALS['TL_CONFIG']['addLanguageToUrl'] = $objPage->urlPrefix !== '';
 			$GLOBALS['TL_CONFIG']['urlSuffix'] = $objPage->urlSuffix;
-		}
-
-		if ($container->hasParameter('contao.image.valid_extensions'))
-		{
-			$GLOBALS['TL_CONFIG']['validImageTypes'] = implode(',', $container->getParameter('contao.image.valid_extensions'));
-		}
-
-		if ($container->hasParameter('contao.image.imagine_options'))
-		{
-			$GLOBALS['TL_CONFIG']['jpgQuality'] = $container->getParameter('contao.image.imagine_options')['jpeg_quality'];
 		}
 	}
 

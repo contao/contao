@@ -25,7 +25,7 @@ class NewsArchiveAccessVoter extends Voter
     {
     }
 
-    protected function supports(string $attribute, $subject)
+    protected function supports(string $attribute, $subject): bool
     {
         return $subject instanceof DataContainerSubject
             && 'tl_news_archive' === $subject->table
