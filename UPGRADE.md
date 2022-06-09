@@ -19,6 +19,8 @@ Twig-only templates:
 - `headline` (`ce_headline` → `content_element/headline`)
 - `html` (`ce_html` → `content_element/html`)
 - `list` (`ce_list` → `content_element/list`)
+- `text` (`ce_text` → `content_element/text`)
+- `table` (`ce_table` → `content_element/table`)
 
 #### Category "links"
 
@@ -40,6 +42,8 @@ $GLOBALS['TL_CTE']['texts']['code'] = \Contao\ContentCode::class;
 $GLOBALS['TL_CTE']['texts']['headline'] = \Contao\ContentHeadline::class;
 $GLOBALS['TL_CTE']['texts']['html'] = \Contao\ContentHtml::class;
 $GLOBALS['TL_CTE']['texts']['list'] = \Contao\ContentList::class;
+$GLOBALS['TL_CTE']['texts']['text'] = \Contao\ContentText::class;
+$GLOBALS['TL_CTE']['texts']['table'] = \Contao\ContentTable::class;
 $GLOBALS['TL_CTE']['links']['hyperlink'] = \Contao\ContentHyperlink::class;
 $GLOBALS['TL_CTE']['links']['toplink'] = \Contao\ContentToplink::class;
 $GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
