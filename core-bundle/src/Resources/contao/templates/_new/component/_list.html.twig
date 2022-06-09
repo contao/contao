@@ -100,7 +100,7 @@
                     document.querySelectorAll('*[data-list-random]').forEach(list => {
                         {# Shuffle order of children by appending them at a random position. #}
                         for (let i = list.children.length; i >= 0; i--) {
-                            list.appendChild(list.children[Math.random() * i | 0]);
+                            list.appendChild(list.children[Math.floor(Math.random() * i)]);
                         }
 
                         list.dataset.listRandom = 'ready';
