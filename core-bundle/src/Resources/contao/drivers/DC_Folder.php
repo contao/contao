@@ -2325,12 +2325,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$varValue = $objDate->tstamp;
 			}
 
-			// Make sure unique fields are unique
-			if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
-			{
-				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
-			}
-
 			// Handle multi-select fields in "override all" mode
 			if ($this->objActiveRecord !== null && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
 			{
@@ -2387,6 +2381,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$varValue = $callback($varValue, $this);
 					}
 				}
+			}
+
+			// Make sure unique fields are unique
+			if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+			{
+				throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 			}
 
 			// Save the value if there was no error
