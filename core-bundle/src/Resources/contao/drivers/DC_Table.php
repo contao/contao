@@ -2328,11 +2328,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Begin current row
 				$strAjax = '';
 				$blnAjax = false;
+
 				$return .= '
 <div class="' . $class . ' cf">';
 
 				$class = 'tl_box';
-				$formFields = array();
 
 				// Get the field values
 				$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
@@ -2379,7 +2379,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$this->strField = $v;
 					$this->strInputName = $v . '_' . $this->intId;
-					$formFields[] = $v . '_' . $this->intId;
 
 					// Set the default value and try to load the current value from DB (see #5252)
 					if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array()))
@@ -2764,7 +2763,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($fields) && \is_array($fields) && Input::get('fields'))
 		{
 			$class = 'tl_tbox';
-			$formFields = array();
 
 			// Save record
 			if (Input::post('FORM_SUBMIT') == $this->strTable)
@@ -2876,8 +2874,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					continue;
 				}
-
-				$formFields[] = $v;
 
 				$this->intId = 0;
 				$this->procedure = array('id=?');
@@ -5117,7 +5113,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$searchValue = preg_quote($searchValue);
+				$searchValue = preg_quote($searchValue, null);
 			}
 
 			$strReplacePrefix = '';
