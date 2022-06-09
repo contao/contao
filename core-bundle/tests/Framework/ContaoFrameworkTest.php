@@ -18,16 +18,16 @@ use Contao\CoreBundle\Fixtures\Adapter\LegacyClass;
 use Contao\CoreBundle\Fixtures\Adapter\LegacySingletonClass;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\Input;
 use Contao\Model\Registry;
 use Contao\PageModel;
-use Contao\RequestToken;
+use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -41,17 +41,15 @@ class ContaoFrameworkTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HOOKS']);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_LANGUAGE']);
+
+        $this->resetStaticProperties([System::class, ContaoFramework::class, Registry::class]);
 
         ini_restore('intl.default_locale');
 
         parent::tearDown();
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testInitializesTheFrameworkWithAFrontEndRequest(): void
     {
         $request = Request::create('/index.html');
@@ -62,19 +60,9 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertSame('FE', TL_MODE);
-        $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('index.html', TL_SCRIPT);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testInitializesTheFrameworkWithABackEndRequest(): void
     {
         $request = Request::create('/contao/login');
@@ -87,55 +75,23 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertSame('BE', TL_MODE);
-        $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('contao/login', TL_SCRIPT);
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testInitializesTheFrameworkWithoutARequest(): void
     {
         $framework = $this->getFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
-
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertNull(TL_MODE);
-        $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertNull(TL_SCRIPT);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testInitializesTheFrameworkWithoutARequestInFrontendMode(): void
     {
         $framework = $this->getFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize(true);
-
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertSame('FE', TL_MODE);
-        $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertNull(TL_SCRIPT);
+        $framework->initialize();
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testInitializesTheFrameworkWithAnInsecurePath(): void
     {
         $request = Request::create('/contao4/public/index.php/index.html');
@@ -144,20 +100,9 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize(true);
-
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertSame('FE', TL_MODE);
-        $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('index.php/index.html', TL_SCRIPT);
+        $framework->initialize();
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testInitializesTheFrameworkWithoutAScope(): void
     {
         $request = Request::create('/contao/login');
@@ -167,19 +112,8 @@ class ContaoFrameworkTest extends TestCase
         $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
-
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertNull(TL_MODE);
-        $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('contao/login', TL_SCRIPT);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testInitializesTheFrameworkInPreviewMode(): void
     {
         $beBag = new ArrayAttributeBag();
@@ -203,50 +137,19 @@ class ContaoFrameworkTest extends TestCase
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
 
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertTrue(\defined('TL_ROOT'));
-        $this->assertTrue(\defined('TL_SCRIPT'));
-        $this->assertSame('FE', TL_MODE);
-        $this->assertSame($this->getTempDir(), TL_ROOT);
-        $this->assertSame('index.html', TL_SCRIPT);
         $this->assertSame('en', $GLOBALS['TL_LANGUAGE']);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDoesNotInitializeTheFrameworkTwice(): void
     {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isBackendRequest')
-            ->willReturn(false)
-        ;
-
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isFrontendRequest')
-            ->willReturn(false)
-        ;
-
-        $framework = $this->getFramework(Request::create('/index.html'), $scopeMatcher);
+        $framework = $this->getFramework(Request::create('/index.html'));
         $framework->setContainer($this->getContainerWithContaoConfiguration());
         $framework->initialize();
-
-        $this->assertTrue(\defined('TL_MODE'));
-        $this->assertNull(TL_MODE);
-
         $framework->initialize();
 
         $this->addToAssertionCount(1); // does not throw an exception
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testOverridesTheErrorLevel(): void
     {
         $request = Request::create('/contao/login');
@@ -268,10 +171,6 @@ class ContaoFrameworkTest extends TestCase
         error_reporting($errorReporting);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testRedirectsToTheInstallToolIfTheInstallationIsIncomplete(): void
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
@@ -290,7 +189,6 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = new ContaoFramework(
             $requestStack,
-            $this->mockScopeMatcher(),
             $urlGenerator,
             $this->getTempDir(),
             error_reporting()
@@ -300,7 +198,6 @@ class ContaoFrameworkTest extends TestCase
 
         $adapters = [
             Config::class => $this->mockConfigAdapter(false),
-            RequestToken::class => $this->mockRequestTokenAdapter(),
         ];
 
         $ref = new \ReflectionObject($framework);
@@ -314,9 +211,6 @@ class ContaoFrameworkTest extends TestCase
 
     /**
      * @dataProvider getInstallRoutes
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
      */
     public function testAllowsTheInstallationToBeIncompleteInTheInstallTool(string $route): void
     {
@@ -328,7 +222,6 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = new ContaoFramework(
             $requestStack,
-            $this->mockScopeMatcher(),
             $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting()
@@ -338,7 +231,6 @@ class ContaoFrameworkTest extends TestCase
 
         $adapters = [
             Config::class => $this->mockConfigAdapter(false),
-            RequestToken::class => $this->mockRequestTokenAdapter(),
         ];
 
         $ref = new \ReflectionObject($framework);
@@ -356,10 +248,6 @@ class ContaoFrameworkTest extends TestCase
         yield 'contao_install_redirect' => ['contao_install_redirect'];
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testFailsIfTheContainerIsNotSet(): void
     {
         $framework = $this->getFramework();
@@ -526,10 +414,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertNotSame($adapter, $framework->getAdapter(Input::class));
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
     public function testDelegatesTheResetCalls(): void
     {
         $framework = $this->getFramework();
@@ -537,7 +421,7 @@ class ContaoFrameworkTest extends TestCase
         $framework->initialize();
 
         Environment::set('scriptFilename', 'bar');
-        Input::setUnusedGet('foo', 'bar');
+        Input::setUnusedRouteParameters(['foo']);
 
         $model = $this
             ->getMockBuilder(PageModel::class)
@@ -557,12 +441,20 @@ class ContaoFrameworkTest extends TestCase
 
         $framework->reset();
 
+        $requestStack = new RequestStack();
+        $requestStack->push(Request::create('/index.html'));
+
+        $container = new ContainerBuilder();
+        $container->set('request_stack', $requestStack);
+
+        System::setContainer($container);
+
         $this->assertNotSame('bar', Environment::get('scriptFilename'));
         $this->assertEmpty(Input::getUnusedRouteParameters());
         $this->assertCount(0, $registry);
     }
 
-    private function getFramework(Request $request = null, ScopeMatcher $scopeMatcher = null): ContaoFramework
+    private function getFramework(Request $request = null): ContaoFramework
     {
         $requestStack = new RequestStack();
 
@@ -572,7 +464,6 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = new ContaoFramework(
             $requestStack,
-            $scopeMatcher ?? $this->mockScopeMatcher(),
             $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting()
@@ -580,7 +471,6 @@ class ContaoFrameworkTest extends TestCase
 
         $adapters = [
             Config::class => $this->mockConfigAdapter(),
-            RequestToken::class => $this->mockRequestTokenAdapter(),
         ];
 
         $ref = new \ReflectionObject($framework);
@@ -612,28 +502,9 @@ class ContaoFrameworkTest extends TestCase
         $config
             ->method('get')
             ->with('timeZone')
-            ->willReturn('Europe/Berlin')
+            ->willReturn(\ini_get('date.timezone'))
         ;
 
         return $config;
-    }
-
-    /**
-     * @return Adapter<RequestToken>&MockObject
-     */
-    private function mockRequestTokenAdapter(bool $valid = true): Adapter
-    {
-        $adapter = $this->mockAdapter(['get', 'validate']);
-        $adapter
-            ->method('get')
-            ->willReturn('foobar')
-        ;
-
-        $adapter
-            ->method('validate')
-            ->willReturn($valid)
-        ;
-
-        return $adapter;
     }
 }

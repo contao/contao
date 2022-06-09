@@ -29,18 +29,18 @@ var AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
-		el.blur();
-
 		var item = $(id),
 			parent = $(el).getParent('li');
 
 		if (item) {
 			if (parent.hasClass('collapsed')) {
 				parent.removeClass('collapsed');
+				$(el).setAttribute('aria-expanded', 'true');
 				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				parent.addClass('collapsed');
+				$(el).setAttribute('aria-expanded', 'false');
 				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
@@ -812,15 +812,6 @@ var Backend =
 	},
 
 	/**
-	 * Toggle the synchronization results
-	 */
-	toggleUnchanged: function() {
-		$$('#result-list .tl_confirm').each(function(el) {
-			el.toggleClass('hidden');
-		});
-	},
-
-	/**
 	 * Make parent view items sortable
 	 *
 	 * @param {object} ul The DOM element
@@ -927,6 +918,13 @@ var Backend =
 				i;
 			for (i=0; i<lis.length; i++) {
 				els.push(lis[i].get('data-id'));
+			}
+			if (oid === val) {
+				$(val).value.split(',').forEach(function(j) {
+					if (els.indexOf(j) === -1) {
+						els.push(j);
+					}
+				});
 			}
 			$(oid).value = els.join(',');
 		});
@@ -1759,20 +1757,6 @@ var Backend =
 	},
 
 	/**
-	 * Toggle the "add language" button
-	 *
-	 * @param {object} el The DOM element
-	 */
-	toggleAddLanguageButton: function(el) {
-		var inp = el.getParent('div').getElement('input[type="button"]');
-		if (el.value != '') {
-			inp.removeProperty('disabled');
-		} else {
-			inp.setProperty('disabled', true);
-		}
-	},
-
-	/**
 	 * Update the "edit module" links in the module wizard
 	 *
 	 * @param {object} el The DOM element
@@ -1910,24 +1894,6 @@ var Backend =
 				start = this;
 			});
 		});
-	},
-
-	/**
-	 * Try to focus the first input field in the main section.
-	 *
-	 * @author Yanick Witschi
-	 */
-	autoFocusFirstInputField: function() {
-		var edit = document.id('main').getElement('.tl_formbody_edit');
-		if (!edit) return;
-
-		var inputs = edit
-			.getElements('input, textarea')
-			.filter(function(item) {
-				return !item.get('disabled') && !item.get('readonly') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image' && (!item.get('autocomplete') || item.get('autocomplete') === 'off' || !item.get('value'));
-			});
-
-		if (inputs[0]) inputs[0].focus();
 	},
 
 	/**
@@ -2239,7 +2205,6 @@ window.addEvent('domready', function() {
 	Backend.tableWizardSetWidth();
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
-	Backend.autoFocusFirstInputField();
 
 	// Chosen
 	if (Elements.chosen != undefined) {

@@ -338,9 +338,6 @@
       <trans-unit id="tl_form_field.delete">
         <source>Delete form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.editheader">
-        <source>Edit the form settings</source>
-      </trans-unit>
       <trans-unit id="tl_form_field.toggle">
         <source>Hide/unhide form field ID %s</source>
       </trans-unit>

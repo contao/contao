@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
@@ -22,10 +21,7 @@ use Contao\Environment;
 use Contao\PageModel;
 use Contao\System;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\RouterInterface;
 
 class ControllerTest extends TestCase
 {
@@ -54,26 +50,8 @@ class ControllerTest extends TestCase
         parent::tearDown();
     }
 
-    public function testGeneratesTheMargin(): void
-    {
-        $margins = [
-            'top' => '40px',
-            'right' => '10%',
-            'bottom' => '-2px',
-            'left' => '-50%',
-            'unit' => '',
-        ];
-
-        $this->assertSame('margin:40px 10% -2px -50%;', Controller::generateMargin($margins));
-    }
-
-    /**
-     * @runInSeparateProcess
-     */
     public function testAddToUrlWithoutQueryString(): void
     {
-        \define('TL_SCRIPT', '');
-
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'cri');
 
@@ -109,13 +87,8 @@ class ControllerTest extends TestCase
         $this->assertSame('?act=edit&amp;foo=%2B&amp;bar=%20&amp;ref=cri', Controller::addToUrl('act=edit&amp;foo=%2B&amp;bar=%20', false));
     }
 
-    /**
-     * @runInSeparateProcess
-     */
     public function testAddToUrlWithQueryString(): void
     {
-        \define('TL_SCRIPT', '');
-
         $request = new Request();
         $request->attributes->set('_contao_referer_id', 'cri');
         $request->server->set('QUERY_STRING', 'do=page&id=4');
@@ -347,118 +320,5 @@ class ControllerTest extends TestCase
             ]),
             'root_1.svg',
         ];
-    }
-
-    /**
-     * @dataProvider redirectProvider
-     *
-     * @group legacy
-     */
-    public function testReplacesOldBePathsInRedirect(string $location, array $routes, string $expected): void
-    {
-        if (\count($routes)) {
-            $this->expectDeprecation('Since contao/core-bundle 4.0: Using old backend paths has been deprecated %s.');
-        }
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->exactly(\count($routes)))
-            ->method('generate')
-            ->withConsecutive(...array_map(static fn ($route) => [$route], $routes))
-            ->willReturnOnConsecutiveCalls(...array_map(static fn ($route) => '/'.$route, $routes))
-        ;
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('router', $router);
-
-        $container->set('request_stack', $stack = new RequestStack());
-        $stack->push(new Request());
-
-        System::setContainer($container);
-
-        try {
-            Controller::redirect($location);
-        } catch (RedirectResponseException $exception) {
-            /** @var RedirectResponse $response */
-            $response = $exception->getResponse();
-
-            $this->assertInstanceOf(RedirectResponse::class, $response);
-            $this->assertSame($expected, $response->getTargetUrl());
-        }
-
-        Controller::resetControllerCache();
-    }
-
-    public function redirectProvider(): \Generator
-    {
-        yield 'Never calls the router without old backend path' => [
-            'https://example.com',
-            [],
-            'https://example.com',
-        ];
-
-        yield 'Replaces multiple paths (not really expected)' => [
-            'https://example.com/contao/main.php?contao/password.php=foo',
-            ['contao_backend', 'contao_backend_password'],
-            'https://example.com/contao_backend?contao_backend_password=foo',
-        ];
-
-        $pathMap = [
-            'contao/confirm.php' => 'contao_backend_confirm',
-            'contao/help.php' => 'contao_backend_help',
-            'contao/index.php' => 'contao_backend_login',
-            'contao/main.php' => 'contao_backend',
-            'contao/password.php' => 'contao_backend_password',
-            'contao/popup.php' => 'contao_backend_popup',
-            'contao/preview.php' => 'contao_backend_preview',
-        ];
-
-        foreach ($pathMap as $old => $new) {
-            yield 'Replaces '.$old.' with '.$new.' route' => [
-                "https://example.com/$old?foo=bar",
-                [$new],
-                "https://example.com/$new?foo=bar",
-            ];
-        }
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testCachesOldBackendPaths(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.0: Using old backend paths has been deprecated %s.');
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->exactly(2))
-            ->method('generate')
-            ->withConsecutive(['contao_backend'], ['contao_backend_password'])
-            ->willReturn('/contao', '/contao/password')
-        ;
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('router', $router);
-        System::setContainer($container);
-
-        Environment::reset();
-        Environment::set('path', '');
-        Environment::set('base', '');
-
-        $ref = new \ReflectionClass(Controller::class);
-        $method = $ref->getMethod('replaceOldBePaths');
-
-        $this->assertSame(
-            $method->invoke(null, 'This is a template with link to <a href="/contao/main.php">backend main</a> and <a href="/contao/main.php?do=articles">articles</a>'),
-            'This is a template with link to <a href="/contao">backend main</a> and <a href="/contao?do=articles">articles</a>'
-        );
-
-        $this->assertSame(
-            $method->invoke(null, 'Link to <a href="/contao/main.php">backend main</a> and <a href="/contao/password.php?x=y">password</a>'),
-            'Link to <a href="/contao">backend main</a> and <a href="/contao/password?x=y">password</a>'
-        );
-
-        Environment::reset();
-        Controller::resetControllerCache();
     }
 }

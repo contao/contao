@@ -97,20 +97,6 @@ $data = [
 
 More information: https://github.com/contao/image/blob/master/README.md
 
-## FORM_FIELDS
-
-Using the `FORM_FIELDS` mechanism to determine which form fields have been
-submitted has been deprecated in Contao 4.0 and will no longer work in Contao
-5.0. Make sure to always submit at least an empty string in your widget.
-
-```html
-<!-- Wrong: the input will only be submitted if checked -->
-<input type="checkbox" name="foo" value="bar">
-
-<!-- Right: the input will always be submitted -->
-<input type="hidden" name="foo" value=""><input type="checkbox" name="foo" value="bar">
-```
-
 ## Page handler without getResponse()
 
 Using a custom page handler without a `getResponse()` method has been
@@ -210,52 +196,6 @@ has been deprecated in Contao 4.0 and will no longer work in Contao 5.0.
 
 You can use the static helper methods such as `System::loadLanguageFile()` or
 `Controller::loadDataContainer()` instead.
-
-## Constants
-
-The constants `TL_ROOT`, `TL_MODE` and `TL_SCRIPT` have been deprecated and will
-be removed in Contao 5.0.
-
-Use the `kernel.project_dir` instead of `TL_ROOT`:
-
-```php
-$rootDir = System::getContainer()->getParameter('kernel.project_dir');
-```
-
-Use the `ScopeMatcher` service instead of using `TL_MODE`:
-
-```php
-use Contao\CoreBundle\Routing\ScopeMatcher;
-use Symfony\Component\HttpFoundation\RequestStack;
-
-class Test {
-    private $requestStack;
-    private $scopeMatcher;
-
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
-    }
-
-    public function isBackend() {
-        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
-    }
-
-    public function isFrontend() {
-        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
-    }
-}
-```
-
-Use the request stack to get the route instead of using `TL_SCRIPT`:
-
-```php
-$route = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
-
-if ('contao_backend' === $route) {
-    // Do something
-}
-```
 
 ## PHP entry points
 

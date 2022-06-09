@@ -61,7 +61,7 @@ class BackendConfirm extends Backend
 
 		// Prepare the URL
 		$url = preg_replace('/[?&]rt=[^&]*/', '', $objSession->get('INVALID_TOKEN_URL'));
-		$objTemplate->href = StringUtil::ampersand($url . ((strpos($url, '?') !== false) ? '&rt=' : '?rt=') . REQUEST_TOKEN);
+		$objTemplate->href = StringUtil::ampersand($url . ((strpos($url, '?') !== false) ? '&rt=' : '?rt=') . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()));
 
 		$vars = array();
 		list(, $request) = explode('?', $url, 2);

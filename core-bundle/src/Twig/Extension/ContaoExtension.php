@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
@@ -48,7 +49,7 @@ final class ContaoExtension extends AbstractExtension
 {
     private array $contaoEscaperFilterRules = [];
 
-    public function __construct(private Environment $environment, private TemplateHierarchyInterface $hierarchy)
+    public function __construct(private Environment $environment, private TemplateHierarchyInterface $hierarchy, ContaoCsrfTokenManager $tokenManager)
     {
         $contaoEscaper = new ContaoEscaper();
 
@@ -66,6 +67,20 @@ final class ContaoExtension extends AbstractExtension
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperExtension->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
         $escaperExtension->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
+
+        $this->environment->addGlobal(
+            'request_token',
+            new class($tokenManager) implements \Stringable {
+                public function __construct(private ContaoCsrfTokenManager $tokenManager)
+                {
+                }
+
+                public function __toString(): string
+                {
+                    return $this->tokenManager->getDefaultTokenValue();
+                }
+            }
+        );
     }
 
     /**

@@ -158,7 +158,7 @@ class ModuleBreadcrumb extends Module
 				'data'     => $pages[0]->row(),
 			);
 
-			list($strSection, $strArticle) = explode(':', Input::get('articles'));
+			list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
 
 			if ($strArticle === null)
 			{

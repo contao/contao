@@ -170,8 +170,8 @@
       <trans-unit id="tl_member.account_legend">
         <source>Account settings</source>
       </trans-unit>
-      <trans-unit id="tl_member.personalData">
-        <source>Personal data</source>
+      <trans-unit id="tl_member.personalDetails">
+        <source>Personal details</source>
       </trans-unit>
       <trans-unit id="tl_member.addressDetails">
         <source>Address details</source>

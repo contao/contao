@@ -2,9 +2,34 @@
 
 ## Version 4.* to 5.0
 
+### RequestToken class
+
+The `RequestToken` class as well as the `disableRefererCheck` and `requestTokenWhitelist`
+settings have been removed.
+
+### FORM_FIELDS
+
+It is no longer possible to use the `FORM_FIELDS` mechanism to determine which form fields have been
+submitted. Make sure to always submit at least an empty string in your widget:
+
+```html
+<!-- Wrong: the input will only be submitted if checked -->
+<input type="checkbox" name="foo" value="bar">
+
+<!-- Right: the input will always be submitted -->
+<input type="hidden" name="foo" value=""><input type="checkbox" name="foo" value="bar">
+```
+
 ### Constants
 
-The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START` and `TL_REFERER_ID` have been removed.
+The constants `TL_ROOT`, `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`,
+`TL_REFERER_ID`, `TL_SCRIPT`, `TL_MODE` and `REQUEST_TOKEN`  have been removed.
+
+Use the `kernel.project_dir` instead of `TL_ROOT`:
+
+```php
+$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+```
 
 `BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
 token checker service to check the separate cases instead:
@@ -30,6 +55,52 @@ Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
 
 ```php
 $refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+```
+
+Use the request stack to get the route instead of using `TL_SCRIPT`:
+
+```php
+$route = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
+
+if ('contao_backend' === $route) {
+    // Do something
+}
+```
+
+Use the `ScopeMatcher` service instead of using `TL_MODE`:
+
+```php
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
+
+class Test {
+    private $requestStack;
+    private $scopeMatcher;
+
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
+        $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
+    }
+
+    public function isBackend() {
+        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+    }
+
+    public function isFrontend() {
+        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
+    }
+}
+```
+
+Use the `contao.csrf.token_manager` service or the `requestToken` variable in your
+template instead of `REQUEST_TOKEN`:
+
+```php
+$requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+```
+
+```php
+<input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
 ```
 
 ### TL_CRON

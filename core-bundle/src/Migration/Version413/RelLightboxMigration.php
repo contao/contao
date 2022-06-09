@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Migration\Version413;
 
+use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
@@ -21,17 +23,7 @@ use Doctrine\DBAL\Connection;
  */
 class RelLightboxMigration extends AbstractMigration
 {
-    private static array $targets = [
-        'tl_article.teaser',
-        'tl_calendar_events.teaser',
-        'tl_comments.comment',
-        'tl_content.text',
-        'tl_faq.answer',
-        'tl_form_field.text',
-        'tl_news.teaser',
-    ];
-
-    public function __construct(private Connection $connection)
+    public function __construct(private Connection $connection, private ContaoFramework $framework)
     {
     }
 
@@ -83,6 +75,25 @@ class RelLightboxMigration extends AbstractMigration
 
     private function getTargets(): array
     {
-        return array_map(static fn (string $target) => explode('.', $target), self::$targets);
+        $this->framework->initialize();
+
+        $schemaManager = $this->connection->createSchemaManager();
+        $targets = [];
+
+        foreach ($schemaManager->listTableNames() as $tableName) {
+            try {
+                Controller::loadDataContainer($tableName);
+            } catch (\Throwable) {
+                continue;
+            }
+
+            foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
+                if (str_starts_with($fieldConfig['eval']['rte'] ?? '', 'tiny')) {
+                    $targets[] = [$tableName, strtolower($fieldName)];
+                }
+            }
+        }
+
+        return $targets;
     }
 }

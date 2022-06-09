@@ -29,7 +29,7 @@
     <main id="main">
       <form method="post">
         <div class="formbody">
-          <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+          <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
           <?php if ($this->staticFrom): ?>
             <span class="static-version"><?= $this->staticFrom ?></span>
           <?php else: ?>
