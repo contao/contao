@@ -297,7 +297,10 @@ abstract class Template extends Controller
 	 */
 	public function getResponse()
 	{
-		$this->compile();
+		if (!$this->strBuffer)
+		{
+			$this->strBuffer = $this->parse();
+		}
 
 		$response = new Response($this->strBuffer);
 		$response->headers->set('Content-Type', $this->strContentType);
@@ -475,19 +478,6 @@ abstract class Template extends Controller
 	public function param($strKey)
 	{
 		return System::getContainer()->getParameter($strKey);
-	}
-
-	/**
-	 * Compile the template
-	 *
-	 * @internal
-	 */
-	protected function compile()
-	{
-		if (!$this->strBuffer)
-		{
-			$this->strBuffer = $this->parse();
-		}
 	}
 
 	/**
