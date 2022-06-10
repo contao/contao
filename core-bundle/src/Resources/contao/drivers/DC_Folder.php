@@ -1676,7 +1676,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				try
 				{
-					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $this->intId)));
+					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, array('id' => $id)));
 				}
 				catch (AccessDeniedException)
 				{
