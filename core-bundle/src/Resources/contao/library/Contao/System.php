@@ -61,13 +61,6 @@ abstract class System
 	private static $removedServiceIds;
 
 	/**
-	 * Cache
-	 * @var array
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	protected $arrCache = array();
-
-	/**
 	 * Default libraries
 	 * @var array
 	 */
