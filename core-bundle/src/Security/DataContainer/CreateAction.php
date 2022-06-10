@@ -17,7 +17,7 @@ class CreateAction extends AbstractAction
     use NewTrait;
 
     public function __construct(
-        private string $dataSource,
+        string $dataSource,
         private ?array $new = null,
     ) {
         parent::__construct($dataSource);

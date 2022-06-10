@@ -17,7 +17,7 @@ class ReadAction extends AbstractAction
     use CurrentTrait;
 
     public function __construct(
-        private string $dataSource,
+        string $dataSource,
         private array $current,
     ) {
         parent::__construct($dataSource);
