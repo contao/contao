@@ -16,14 +16,11 @@ class DeleteAction extends AbstractAction
 {
     use CurrentTrait;
 
-    private array $current = [];
-
     public function __construct(
         private string $dataSource,
-        private string $currentId,
+        private array $current,
     ) {
         parent::__construct($dataSource);
-        $this->current['id'] = $this->currentId;
     }
 
     protected function getSubjectInfo(): array
