@@ -1419,12 +1419,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
-		if (!$this->intId)
+		$this->loadActiveRecord();
+
+		if (null === $this->activeRecord)
 		{
 			$this->redirect($this->getReferer());
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable, $this->intId));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable,(array) $this->activeRecord));
 
 		$delete = array();
 
