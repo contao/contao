@@ -1963,7 +1963,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->denyAccessUnlessGranted(
 				ContaoCorePermissions::DC_PREFIX . $this->strTable,
-				new UpdateAction($this->strTable, (array) $this->activeRecord, $this->arrSubmit) // TODO: double check this
+				new UpdateAction($this->strTable, (array) $this->activeRecord, array_merge((array) $this->activeRecord, $this->arrSubmit))
 			);
 
 			$this->submit();
@@ -2409,7 +2409,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$this->denyAccessUnlessGranted(
 						ContaoCorePermissions::DC_PREFIX . $this->strTable,
-						new UpdateAction($this->strTable, (array) $this->activeRecord, $this->arrSubmit) // TODO: double check this
+						new UpdateAction($this->strTable, (array) $this->activeRecord, array_merge((array) $this->activeRecord, $this->arrSubmit))
 					);
 
 					// Save record
@@ -2654,7 +2654,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->denyAccessUnlessGranted(
 			ContaoCorePermissions::DC_PREFIX . $this->strTable,
-			new UpdateAction($this->strTable, (array) $this->activeRecord, $this->arrSubmit) // TODO: double check this
+			new UpdateAction($this->strTable, (array) $this->activeRecord, array_merge((array) $this->activeRecord, $this->arrSubmit))
 		);
 
 		$this->submit();
@@ -2745,7 +2745,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$this->denyAccessUnlessGranted(
 								ContaoCorePermissions::DC_PREFIX . $this->strTable,
-								new UpdateAction($this->strTable, (array) $this->activeRecord, $this->arrSubmit) // TODO: double check this
+								new UpdateAction($this->strTable, (array) $this->activeRecord, array_merge((array) $this->activeRecord, $this->arrSubmit))
 							);
 						}
 						catch (AccessDeniedException)
@@ -3061,10 +3061,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->arrSubmit[$this->strField] = $varValue;
 			$this->varValue = StringUtil::deserialize($varValue);
 
-			if (\is_object($this->objActiveRecord))
-			{
-				$this->objActiveRecord->{$this->strField} = $this->varValue;
-			}
+			// Do not set the new value on activeRecord. The activeRecord always contains the pre-submit data.
 		}
 	}
 
