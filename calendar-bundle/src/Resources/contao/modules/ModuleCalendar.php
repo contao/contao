@@ -133,8 +133,8 @@ class ModuleCalendar extends Events
 		}
 
 		// Store year and month
-		$intYear = date('Y', $this->Date->tstamp);
-		$intMonth = date('m', $this->Date->tstamp);
+		$intYear = (int) date('Y', $this->Date->tstamp);
+		$intMonth = (int) date('m', $this->Date->tstamp);
 
 		$objTemplate = new FrontendTemplate($this->cal_ctemplate ?: 'cal_default');
 		$objTemplate->intYear = $intYear;
@@ -222,8 +222,8 @@ class ModuleCalendar extends Events
 	 */
 	protected function compileWeeks()
 	{
-		$intDaysInMonth = date('t', $this->Date->monthBegin);
-		$intFirstDayOffset = date('w', $this->Date->monthBegin) - $this->cal_startDay;
+		$intDaysInMonth = (int) date('t', $this->Date->monthBegin);
+		$intFirstDayOffset = (int) date('w', $this->Date->monthBegin) - $this->cal_startDay;
 
 		if ($intFirstDayOffset < 0)
 		{
