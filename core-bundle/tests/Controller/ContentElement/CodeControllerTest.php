@@ -28,7 +28,9 @@ class CodeControllerTest extends ContentElementTestCase
                 'headline' => ['unit' => 'h1', 'value' => 'Some Code'],
                 'cssID' => serialize(['my-id', 'my-class']),
             ],
-            responseContextData: $responseContextData
+            null,
+            false,
+            $responseContextData
         );
 
         $expectedOutput = <<<'HTML'
@@ -64,8 +66,9 @@ class CodeControllerTest extends ContentElementTestCase
                 'headline' => ['unit' => 'h1', 'value' => 'Some Code'],
                 'cssID' => serialize(['my-id', 'my-class']),
             ],
-            asEditorView: true,
-            responseContextData: $responseContextData
+            null,
+            true,
+            $responseContextData
         );
 
         $expectedOutput = <<<'HTML'
