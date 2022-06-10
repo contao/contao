@@ -395,17 +395,9 @@ abstract class Model
 	public static function getColumnCastTypes(): array
 	{
 		$types = array();
+		$tables = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema()->getTables();
 
-		try
-		{
-			$schema = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema();
-		}
-		catch (\Throwable)
-		{
-			return $types;
-		}
-
-		foreach ($schema->getTables() as $table)
+		foreach ($tables as $table)
 		{
 			foreach ($table->getColumns() as $column)
 			{
