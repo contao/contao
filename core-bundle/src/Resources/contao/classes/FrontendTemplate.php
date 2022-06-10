@@ -81,7 +81,7 @@ class FrontendTemplate extends Template
 	 *
 	 * @throws UnusedArgumentsException If there are unused route parameters
 	 *
-	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
+	 * @internal
 	 */
 	protected function compile()
 	{

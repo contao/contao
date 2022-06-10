@@ -64,7 +64,7 @@ class BackendTemplate extends Template
 	/**
 	 * Compile the template
 	 *
-	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
+	 * @internal
 	 */
 	protected function compile()
 	{

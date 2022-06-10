@@ -10,13 +10,10 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 /**
  * Authenticates and initializes user objects
@@ -258,62 +255,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	}
 
 	/**
-	 * Authenticate a user
-	 *
-	 * @return boolean True if the user could be authenticated
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	public function authenticate()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::authenticate()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		return false;
-	}
-
-	/**
-	 * Try to login the current user
-	 *
-	 * @return boolean True if the user could be logged in
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	public function login()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::login()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		return false;
-	}
-
-	/**
-	 * Check the account status and return true if it is active
-	 *
-	 * @return boolean True if the account is active
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	protected function checkAccountStatus()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::checkAccountStatus()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		try
-		{
-			$userChecker = System::getContainer()->get('contao.security.user_checker');
-			$userChecker->checkPreAuth($this);
-			$userChecker->checkPostAuth($this);
-		}
-		catch (AuthenticationException $exception)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Find a user in the database
 	 *
 	 * @param string $strColumn The field name
@@ -348,64 +289,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
 					   ->set($arrSet)
 					   ->execute($this->id);
-	}
-
-	/**
-	 * Regenerate the session ID
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony authentication instead.
-	 */
-	protected function regenerateSessionId()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::regenerateSessionId()" has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.');
-
-		$container = System::getContainer();
-		$strategy = $container->getParameter('security.authentication.session_strategy.strategy');
-
-		// Regenerate the session ID to harden against session fixation attacks
-		switch ($strategy)
-		{
-			case SessionAuthenticationStrategy::NONE:
-				break;
-
-			case SessionAuthenticationStrategy::MIGRATE:
-				$container->get('session')->migrate(); // do not destroy the old session
-				break;
-
-			case SessionAuthenticationStrategy::INVALIDATE:
-				$container->get('session')->invalidate();
-				break;
-
-			default:
-				throw new \RuntimeException(sprintf('Invalid session authentication strategy "%s"', $strategy));
-		}
-	}
-
-	/**
-	 * Generate a session
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony authentication instead.
-	 */
-	protected function generateSession()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::generateSession()" has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.');
-	}
-
-	/**
-	 * Remove the authentication cookie and destroy the current session
-	 *
-	 * @throws RedirectResponseException
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony authentication instead.
-	 */
-	public function logout()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::logout()" has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.');
-
-		throw new RedirectResponseException(System::getContainer()->get('security.logout_url_generator')->getLogoutUrl());
 	}
 
 	/**

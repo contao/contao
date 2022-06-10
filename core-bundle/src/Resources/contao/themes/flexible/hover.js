@@ -15,42 +15,6 @@ var Theme = {
 	isWebkit: (Browser.chrome || Browser.safari || navigator.userAgent.match(/(?:webkit|khtml)/i)),
 
 	/**
-	 * Colorize a table row when hovering over it
-	 *
-	 * @param {object} el    The DOM element
-	 * @param {int}    state The current state
-	 *
-	 * @deprecated The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5.
-	 *             Assign the CSS class "hover-row" instead.
-	 */
-	hoverRow: function(el, state) {
-		var items = $(el).getChildren();
-		for (var i=0; i<items.length; i++) {
-			if (items[i].nodeName.toLowerCase() == 'td') {
-				items[i].setStyle('background-color', (state ? '#fffce1' : ''));
-			}
-		}
-		window.console && console.warn('The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-row" instead.');
-	},
-
-	/**
-	 * Colorize a layer when hovering over it
-	 *
-	 * @param {object} el    The DOM element
-	 * @param {int}    state The current state
-	 *
-	 * @deprecated The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5.
-	 *             Assign the CSS class "hover-div" instead.
-	 */
-	hoverDiv: function(el, state) {
-		if (!state) {
-			el.removeAttribute('data-visited');
-		}
-		$(el).setStyle('background-color', (state ? '#fffce1' : ''));
-		window.console && console.warn('The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-div" instead.');
-	},
-
-	/**
 	 * Stop the propagation of click events of certain elements
 	 */
 	stopClickPropagation: function() {

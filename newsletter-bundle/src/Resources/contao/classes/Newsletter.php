@@ -413,9 +413,6 @@ class Newsletter extends Backend
 			$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 			$objTemplate->recipient = $arrRecipient['email'];
 
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$objTemplate->css = $css;
-
 			// Parse template
 			$objEmail->html = $objTemplate->parse();
 			$objEmail->imageDir = System::getContainer()->getParameter('kernel.project_dir') . '/';

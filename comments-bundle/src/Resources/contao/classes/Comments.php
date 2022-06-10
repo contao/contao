@@ -270,7 +270,6 @@ class Comments extends Frontend
 
 		$objTemplate->fields = $arrWidgets;
 		$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['com_submit'];
-		$objTemplate->messages = ''; // Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;
 
