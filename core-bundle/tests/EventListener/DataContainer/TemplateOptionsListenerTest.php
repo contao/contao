@@ -180,7 +180,7 @@ class TemplateOptionsListenerTest extends TestCase
         $dc->table = $table;
 
         if (!empty($activeRecord)) {
-            $dc->activeRecord = $this->mockClassWithProperties(Result::class, $activeRecord);
+            $dc->activeRecord = (object) $activeRecord;
         }
 
         return $dc;
