@@ -18,6 +18,7 @@ use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
+use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\ResizeConfiguration;
@@ -857,7 +858,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->denyAccessUnlessGranted(
 			ContaoCorePermissions::DC_PREFIX . $this->strTable,
-			new CreateAction($this->strTable, array('id' => $source, 'pid' => $strFolder))
+			new ReadAction($this->strTable, array('id' => $source))
+		);
+		$this->denyAccessUnlessGranted(
+			ContaoCorePermissions::DC_PREFIX . $this->strTable,
+			new CreateAction($this->strTable, array('id' => $destination, 'pid' => $strFolder))
 		);
 
 		$objSession = System::getContainer()->get('session');

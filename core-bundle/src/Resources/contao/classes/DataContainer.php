@@ -1692,11 +1692,11 @@ abstract class DataContainer extends Backend
 
 	protected function loadActiveRecord($id = null): void
 	{
-		$this->id = $id ?: $this->intId;
+		$this->intId = $id ?: $this->intId;
 
 		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
 			->limit(1)
-			->execute($this->id);
+			->execute($this->intId);
 
 		if ($objRow->numRows < 1)
 		{
