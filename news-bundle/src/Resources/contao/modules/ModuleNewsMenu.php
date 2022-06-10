@@ -245,8 +245,8 @@ class ModuleNewsMenu extends ModuleNews
 			throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
 		}
 
-		$intYear = date('Y', $this->Date->tstamp);
-		$intMonth = date('m', $this->Date->tstamp);
+		$intYear = (int) date('Y', $this->Date->tstamp);
+		$intMonth = (int) date('m', $this->Date->tstamp);
 
 		$this->Template->intYear = $intYear;
 		$this->Template->intMonth = $intMonth;
@@ -313,8 +313,8 @@ class ModuleNewsMenu extends ModuleNews
 	 */
 	protected function compileWeeks($arrData)
 	{
-		$intDaysInMonth = date('t', $this->Date->monthBegin);
-		$intFirstDayOffset = date('w', $this->Date->monthBegin) - $this->news_startDay;
+		$intDaysInMonth = (int) date('t', $this->Date->monthBegin);
+		$intFirstDayOffset = (int) date('w', $this->Date->monthBegin) - $this->news_startDay;
 
 		if ($intFirstDayOffset < 0)
 		{
