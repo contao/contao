@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\DataContainer;
 
-abstract class AbstractAction
+abstract class AbstractAction implements \Stringable
 {
     /**
      * This allows for performance optimizations when voting on many data sets so voters are given

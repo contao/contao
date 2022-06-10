@@ -97,7 +97,7 @@ class ContentCompositionListener
 
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
-        $pageModel->setRow($dc->activeRecord instanceof Result ? $dc->activeRecord->row() : (array) $dc->activeRecord);
+        $pageModel->setRow((array) $dc->activeRecord);
 
         if (
             empty($pageModel->title)
