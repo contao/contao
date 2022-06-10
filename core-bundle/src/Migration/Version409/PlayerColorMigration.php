@@ -41,11 +41,7 @@ class PlayerColorMigration extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_content');
 
-        if (!isset($columns['playercolor'])) {
-            return false;
-        }
-
-        if ($columns['playercolor']->getLength() <= 6) {
+        if (!isset($columns['playercolor']) || $columns['playercolor']->getLength() <= 6) {
             return false;
         }
 
@@ -65,15 +61,13 @@ class PlayerColorMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection
-            ->executeStatement("
-                UPDATE tl_content
-                SET playerColor = ''
-                WHERE
-                    CHAR_LENGTH(playerColor) > 6
-                    AND playerColor LIKE 'com_%'
-            ")
-        ;
+        $this->connection->executeStatement("
+            UPDATE tl_content
+            SET playerColor = ''
+            WHERE
+                CHAR_LENGTH(playerColor) > 6
+                AND playerColor LIKE 'com_%'
+        ");
 
         return $this->createResult(true);
     }
