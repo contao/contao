@@ -1030,7 +1030,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['ondelete_callback'] as $callback)
 			{
-				if (\is_array($callback))
+				if new UpdateAction($this->strTable, $objCTable->row()(\is_array($callback))
 				{
 					$this->import($callback[0]);
 					$this->{$callback[0]}->{$callback[1]}($source, $this);

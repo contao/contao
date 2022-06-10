@@ -1063,7 +1063,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$this->denyAccessUnlessGranted(
 							ContaoCorePermissions::DC_PREFIX . $this->strTable,
-							new UpdateAction($this->strTable, $objCTable->row(), $copy[$v])
+							new UpdateAction($this->strTable, $objCTable->row(), $copy[$v][$objCTable->id])
 						);
 					}
 					catch (AccessDeniedException)
