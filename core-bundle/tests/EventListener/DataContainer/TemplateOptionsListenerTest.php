@@ -19,7 +19,6 @@ use Contao\CoreBundle\Fixtures\Contao\LegacyElement;
 use Contao\CoreBundle\Fixtures\Contao\LegacyModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\ModuleProxy;
 use PHPUnit\Framework\MockObject\MockObject;
