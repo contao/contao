@@ -439,7 +439,7 @@ abstract class Model
 	{
 		if (!self::$arrColumnCastTypes)
 		{
-			$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column_cast_types.php');
+			$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column-types.php');
 
 			if (!System::getContainer()->getParameter('kernel.debug') && file_exists($path))
 			{

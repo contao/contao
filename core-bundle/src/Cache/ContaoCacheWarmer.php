@@ -204,7 +204,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
     private function generateColumnCastTypes(string $cacheDir): void
     {
         $this->filesystem->dumpFile(
-            Path::join($cacheDir, 'contao/config/column_cast_types.php'),
+            Path::join($cacheDir, 'contao/config/column-types.php'),
             sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypes(), true))
         );
     }
