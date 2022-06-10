@@ -1426,7 +1426,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect($this->getReferer());
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable,(array) $this->activeRecord));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable, (array) $this->activeRecord));
 
 		$delete = array();
 

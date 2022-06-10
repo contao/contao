@@ -19,7 +19,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
-use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\LayoutModel;
