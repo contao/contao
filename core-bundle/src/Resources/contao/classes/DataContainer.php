@@ -16,21 +16,20 @@ use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\AbstractAction;
-use Contao\Database\Result;
 use Contao\Image\ResizeConfiguration;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provide methods to handle data container arrays.
  *
- * @property string|integer        $id
- * @property string                $table
- * @property mixed                 $value
- * @property string                $field
- * @property string                $inputName
- * @property string                $palette
- * @property Result|\stdClass|null $activeRecord
- * @property array                 $rootIds
+ * @property string|integer $id
+ * @property string         $table
+ * @property mixed          $value
+ * @property string         $field
+ * @property string         $inputName
+ * @property string         $palette
+ * @property \stdClass|null $activeRecord
+ * @property array          $rootIds
  */
 abstract class DataContainer extends Backend
 {
@@ -215,7 +214,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Active record
-	 * @var Result|\stdClass|null
+	 * @var \stdClass|null
 	 */
 	protected $objActiveRecord;
 
@@ -254,6 +253,12 @@ abstract class DataContainer extends Backend
 	 * @var boolean
 	 */
 	protected $blnCreateNewVersion = false;
+
+	/**
+	 * Active record cache
+	 * @var array
+	 */
+	protected $arrActiveRecordCache = array();
 
 	/**
 	 * Set an object property
@@ -1690,21 +1695,49 @@ abstract class DataContainer extends Backend
 		return $label;
 	}
 
-	protected function loadActiveRecord($id = null): void
+	protected function preloadActiveRecords(array $ids): void
+	{
+		if (\count($ids) === 1)
+		{
+			$rows = array($this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+				->limit(1)
+				->execute($ids[0])
+				->fetchAssoc());
+		}
+		else
+		{
+			$rows = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id IN (?)")
+				->execute($ids)
+				->fetchAllAssoc();
+		}
+
+		foreach ($rows as $row)
+		{
+			if (!\is_array($row))
+			{
+				continue;
+			}
+
+			$this->arrActiveRecordCache[$row['id']] = (object) $row;
+		}
+	}
+
+	protected function loadActiveRecord($id = null, bool $noCache = false): void
 	{
 		$this->intId = $id ?: $this->intId;
 
-		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-			->limit(1)
-			->execute($this->intId);
+		if ($noCache || !isset($this->arrActiveRecordCache[$this->intId]))
+		{
+			$this->preloadActiveRecords(array($this->intId));
+		}
 
-		if ($objRow->numRows < 1)
+		if (!isset($this->arrActiveRecordCache[$this->intId]))
 		{
 			$this->objActiveRecord = null;
 
 			return;
 		}
 
-		$this->objActiveRecord = $objRow;
+		$this->objActiveRecord = $this->arrActiveRecordCache[$this->intId];
 	}
 }

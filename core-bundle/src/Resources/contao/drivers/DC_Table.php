@@ -346,7 +346,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$data = array();
-		$row =  $this->activeRecord->row();
+		$row = (array) $this->activeRecord;
 
 		$this->denyAccessUnlessGranted(
 			ContaoCorePermissions::DC_PREFIX . $this->strTable,
@@ -523,11 +523,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
-					$data = $this->{$callback[0]}->{$callback[1]}($data, $this->activeRecord->row(), $this);
+					$data = $this->{$callback[0]}->{$callback[1]}($data, (array) $this->activeRecord, $this);
 				}
 				elseif (\is_callable($callback))
 				{
-					$data = $callback($data, $this->activeRecord->row(), $this);
+					$data = $callback($data, (array) $this->activeRecord, $this);
 				}
 			}
 		}
@@ -733,7 +733,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->denyAccessUnlessGranted(
 			ContaoCorePermissions::DC_PREFIX . $this->strTable,
-			new UpdateAction($this->strTable, $this->activeRecord->row(), array_merge($this->activeRecord->row(), $this->set))
+			new UpdateAction($this->strTable, (array) $this->activeRecord, array_merge((array) $this->activeRecord, $this->set))
 		);
 
 		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
@@ -835,7 +835,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Copy the values if the record contains data
 		if (null !== $this->activeRecord)
 		{
-			foreach ($this->activeRecord->row() as $k=>$v)
+			foreach ((array) $this->activeRecord as $k=>$v)
 			{
 				if (\array_key_exists($k, $GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array()))
 				{
@@ -1614,13 +1614,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($objDelete->numRows && !($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null) && \strlen($v))
 			{
-				foreach ($objDelete->fetchAllAssoc() as $row)
+				$rows = $objDelete->fetchAllAssoc();
+				$this->preloadActiveRecords(array_map(static function ($row) { return $row['id']; }, $rows));
+
+				foreach ($rows as $row)
 				{
 					$this->loadActiveRecord($row['id']);
 
 					$this->denyAccessUnlessGranted(
 						ContaoCorePermissions::DC_PREFIX . $this->strTable,
-						new DeleteAction($this->strTable, $this->activeRecord->row())
+						new DeleteAction($this->strTable, (array) $this->activeRecord)
 					);
 
 					$delete[$v][] = $row['id'];
@@ -1958,7 +1961,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->denyAccessUnlessGranted(
 				ContaoCorePermissions::DC_PREFIX . $this->strTable,
-				new UpdateAction($this->strTable, $this->activeRecord->row(), $this->arrSubmit) // TODO: double check this
+				new UpdateAction($this->strTable, (array) $this->activeRecord, $this->arrSubmit) // TODO: double check this
 			);
 
 			$this->submit();
@@ -2404,7 +2407,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$this->denyAccessUnlessGranted(
 						ContaoCorePermissions::DC_PREFIX . $this->strTable,
-						new UpdateAction($this->strTable, $this->activeRecord->row(), $this->arrSubmit) // TODO: double check this
+						new UpdateAction($this->strTable, (array) $this->activeRecord, $this->arrSubmit) // TODO: double check this
 					);
 
 					// Save record
@@ -2649,7 +2652,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->denyAccessUnlessGranted(
 			ContaoCorePermissions::DC_PREFIX . $this->strTable,
-			new UpdateAction($this->strTable, $this->activeRecord->row(), $this->arrSubmit) // TODO: double check this
+			new UpdateAction($this->strTable, (array) $this->activeRecord, $this->arrSubmit) // TODO: double check this
 		);
 
 		$this->submit();
@@ -2702,6 +2705,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				try
 				{
+					$this->preloadActiveRecords($ids);
+
 					foreach ($ids as $id)
 					{
 						$this->loadActiveRecord($id);
@@ -2738,7 +2743,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$this->denyAccessUnlessGranted(
 								ContaoCorePermissions::DC_PREFIX . $this->strTable,
-								new UpdateAction($this->strTable, $this->activeRecord->row(), $this->arrSubmit) // TODO: double check this
+								new UpdateAction($this->strTable, (array) $this->activeRecord, $this->arrSubmit) // TODO: double check this
 							);
 						}
 						catch (AccessDeniedException)
