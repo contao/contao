@@ -37,7 +37,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         parent::__construct($kernel, $cacheDir);
 
-        $stripCookies = new StripCookiesSubscriber($this->readEnvCsv('COOKIE_ALLOW_LIST', 'COOKIE_WHITELIST'));
+        $stripCookies = new StripCookiesSubscriber($this->readEnvCsv('COOKIE_ALLOW_LIST'));
         $stripCookies->removeFromDenyList($this->readEnvCsv('COOKIE_REMOVE_FROM_DENY_LIST'));
 
         $stripQueryParams = new StripQueryParametersSubscriber($this->readEnvCsv('QUERY_PARAMS_ALLOW_LIST'));
@@ -87,14 +87,8 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         ]);
     }
 
-    private function readEnvCsv(string $key, string $oldName = ''): array
+    private function readEnvCsv(string $key): array
     {
-        if ('' !== $oldName && isset($_SERVER[$oldName])) {
-            trigger_deprecation('contao/manager-bundle', '4.10', sprintf('Using the "%s" environment variable has been deprecated. Use "%s" instead.', $oldName, $key));
-
-            $key = $oldName;
-        }
-
         return array_filter(explode(',', (string) ($_SERVER[$key] ?? '')));
     }
 }

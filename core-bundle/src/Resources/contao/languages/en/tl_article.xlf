@@ -102,7 +102,7 @@
         <source>Title and author</source>
       </trans-unit>
       <trans-unit id="tl_article.layout_legend">
-        <source>Sections</source>
+        <source>Section</source>
       </trans-unit>
       <trans-unit id="tl_article.syndication_legend">
         <source>Syndication</source>

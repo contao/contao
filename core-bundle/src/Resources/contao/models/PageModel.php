@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -1015,11 +1014,17 @@ class PageModel extends Model
 		}
 
 		// No root page found
-		elseif (TL_MODE == 'FE' && $this->type != 'root')
+		elseif ($this->type != 'root')
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
-			throw new NoRootPageFoundException('No root page found');
+			if ($isFrontend)
+			{
+				System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
+
+				throw new NoRootPageFoundException('No root page found');
+			}
 		}
 
 		$this->trail = array_reverse($trail);
@@ -1068,30 +1073,17 @@ class PageModel extends Model
 	/**
 	 * Generate a front end URL
 	 *
-	 * @param string $strParams    An optional string of URL parameters
-	 * @param string $strForceLang Force a certain language
+	 * @param string $strParams An optional string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
 	 * @throws ResourceNotFoundException
 	 *
 	 * @return string A URL that can be used in the front end
 	 */
-	public function getFrontendUrl($strParams=null, $strForceLang=null)
+	public function getFrontendUrl($strParams=null)
 	{
 		$page = $this;
 		$page->loadDetails();
-
-		if ($strForceLang !== null)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\PageModel::getFrontendUrl()" with $strForceLang has been deprecated and will no longer work in Contao 5.0.');
-
-			$strForceLang = LocaleUtil::formatAsLanguageTag($strForceLang);
-
-			$page = $page->cloneOriginal();
-			$page->preventSaving(false);
-			$page->language = $strForceLang;
-			$page->rootLanguage = $strForceLang;
-		}
 
 		$objRouter = System::getContainer()->get('router');
 
@@ -1117,7 +1109,7 @@ class PageModel extends Model
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
 
-		return $this->applyLegacyLogic($strUrl, $strParams);
+		return $strUrl;
 	}
 
 	/**
@@ -1152,7 +1144,7 @@ class PageModel extends Model
 			throw $e;
 		}
 
-		return $this->applyLegacyLogic($strUrl, $strParams);
+		return $strUrl;
 	}
 
 	/**
@@ -1202,7 +1194,7 @@ class PageModel extends Model
 
 		$context->setBaseUrl($baseUrl);
 
-		return $this->applyLegacyLogic($strUrl, $strParams);
+		return $strUrl;
 	}
 
 	/**
@@ -1220,46 +1212,6 @@ class PageModel extends Model
 		}
 
 		return $slugOptions;
-	}
-
-	/**
-	 * Modifies a URL from the URL generator.
-	 *
-	 * @param string      $strUrl
-	 * @param string|null $strParams
-	 *
-	 * @return string
-	 */
-	private function applyLegacyLogic($strUrl, $strParams)
-	{
-		// Decode sprintf placeholders
-		if ($strParams !== null && strpos($strParams, '%') !== false)
-		{
-			trigger_deprecation('contao/core-bundle', '4.2', 'Using sprintf placeholders in URLs has been deprecated and will no longer work in Contao 5.0.');
-
-			$arrMatches = array();
-			preg_match_all('/%([sducoxXbgGeEfF])/', $strParams, $arrMatches);
-
-			foreach (array_unique($arrMatches[1]) as $v)
-			{
-				$strUrl = str_replace('%25' . $v, '%' . $v, $strUrl);
-			}
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && \is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "generateFrontendUrl" hook has been deprecated and will no longer work in Contao 5.0.');
-
-			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
-			{
-				$strUrl = System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams ?? '', $strUrl);
-			}
-
-			return $strUrl;
-		}
-
-		return $strUrl;
 	}
 
 	private static function stripPrefixesAndSuffixes(string $alias, string $urlPrefix, string $urlSuffix): string

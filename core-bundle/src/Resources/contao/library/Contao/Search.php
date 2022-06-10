@@ -498,7 +498,7 @@ class Search
 					if ($strKeyword = trim(substr($strKeyword, 1, -1)))
 					{
 						$arrPhrases[] = $strKeyword;
-						$arrPhrasesRegExp[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword));
+						$arrPhrasesRegExp[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword, null));
 					}
 					break;
 
@@ -760,16 +760,6 @@ class Search
 
 		// Remove obsolete terms
 		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
-	}
-
-	/**
-	 * Prevent cloning of the object (Singleton)
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Search class is now static.
-	 */
-	final public function __clone()
-	{
 	}
 
 	/**

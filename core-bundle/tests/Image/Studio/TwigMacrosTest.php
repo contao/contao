@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
@@ -579,7 +580,7 @@ class TwigMacrosTest extends TestCase
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))]);
+        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class))]);
 
         $responseContextAccessor ??= $this->createMock(ResponseContextAccessor::class);
 

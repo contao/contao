@@ -57,10 +57,8 @@ class PageRegular extends Frontend
 	 * Generate a regular page
 	 *
 	 * @param PageModel $objPage
-	 *
-	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
-	protected function prepare($objPage)
+	private function prepare($objPage)
 	{
 		$GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($objPage->language);
 

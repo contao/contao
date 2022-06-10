@@ -157,7 +157,7 @@ class ModuleSearch extends Module
 			$query_endtime = microtime(true);
 
 			// Sort out protected pages
-			if (Config::get('indexProtected'))
+			if (System::getContainer()->getParameter('contao.search.index_protected'))
 			{
 				$objResult->applyFilter(static function ($v)
 				{

@@ -128,10 +128,6 @@ class BackendAccessVoterTest extends TestCase
     public function testDeniesAccessIfUserCannotEditFieldsOfTable(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['alexf' => ['tl_bar::foo']]);
-        $user
-            ->expects($this->never())
-            ->method('canEditFieldsOf')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -146,10 +142,6 @@ class BackendAccessVoterTest extends TestCase
     public function testDeniesAccessToEditFieldsOfTableIfSubjectIsNotAString(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['alexf' => ['tl_foobar::foo']]);
-        $user
-            ->expects($this->never())
-            ->method('canEditFieldsOf')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -164,10 +156,6 @@ class BackendAccessVoterTest extends TestCase
     public function testGrantsAccessToEditFieldsOfTableIfUserIsAdmin(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['alexf' => [], 'isAdmin' => true]);
-        $user
-            ->expects($this->never())
-            ->method('canEditFieldsOf')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -182,10 +170,6 @@ class BackendAccessVoterTest extends TestCase
     public function testGrantsAccessToEditFieldsOfTable(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['alexf' => ['tl_foobar::foo']]);
-        $user
-            ->expects($this->never())
-            ->method('canEditFieldsOf')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -200,10 +184,6 @@ class BackendAccessVoterTest extends TestCase
     public function testGrantsAccessToEditFieldsOfTableInAttribute(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['alexf' => ['tl_foobar::foo']]);
-        $user
-            ->expects($this->never())
-            ->method('canEditFieldsOf')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -218,10 +198,6 @@ class BackendAccessVoterTest extends TestCase
     public function testGrantsAccessToPageIfUserIsAdmin(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['isAdmin' => true]);
-        $user
-            ->expects($this->never())
-            ->method('isAllowed')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -242,10 +218,6 @@ class BackendAccessVoterTest extends TestCase
     public function testGrantsAccessToPageFromArray(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'groups' => [1]]);
-        $user
-            ->expects($this->never())
-            ->method('isAllowed')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -267,10 +239,6 @@ class BackendAccessVoterTest extends TestCase
     public function testGrantsAccessToPageFromModel(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'groups' => [1]]);
-        $user
-            ->expects($this->never())
-            ->method('isAllowed')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -297,10 +265,6 @@ class BackendAccessVoterTest extends TestCase
     public function testGrantsAccessToPageFromId(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'groups' => [1]]);
-        $user
-            ->expects($this->never())
-            ->method('isAllowed')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -338,10 +302,6 @@ class BackendAccessVoterTest extends TestCase
     public function testGrantsAccessToPageFromIdInAttribute(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'groups' => [1]]);
-        $user
-            ->expects($this->never())
-            ->method('isAllowed')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -379,10 +339,6 @@ class BackendAccessVoterTest extends TestCase
     public function testDeniesAccessToPageIfIdCannotBeFound(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'groups' => [1]]);
-        $user
-            ->expects($this->never())
-            ->method('isAllowed')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token
@@ -411,10 +367,6 @@ class BackendAccessVoterTest extends TestCase
     public function testPageAndArticlePermissions(string $attribute, array $chmod, int $cuser, int $cgroup, int $expected): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'groups' => [1]]);
-        $user
-            ->expects($this->never())
-            ->method('isAllowed')
-        ;
 
         $token = $this->createMock(TokenInterface::class);
         $token

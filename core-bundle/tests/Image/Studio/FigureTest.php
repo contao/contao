@@ -528,7 +528,7 @@ class FigureTest extends TestCase
             [false, 'above', ['top' => '1', 'right' => '2', 'bottom' => '3', 'left' => '4', 'unit' => 'em']],
             function (array $data): void {
                 $this->assertTrue($data['addBefore']);
-                $this->assertSame('margin:1em 2em 3em 4em;', $data['margin']);
+                $this->assertArrayNotHasKey('margin', $data);
             },
         ];
 
@@ -537,7 +537,7 @@ class FigureTest extends TestCase
             [false, 'above', 'a:5:{s:3:"top";s:1:"1";s:5:"right";s:1:"2";s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:4:"unit";s:2:"em";}'],
             function (array $data): void {
                 $this->assertTrue($data['addBefore']);
-                $this->assertSame('margin:1em 2em 3em 4em;', $data['margin']);
+                $this->assertArrayNotHasKey('margin', $data);
             },
         ];
 

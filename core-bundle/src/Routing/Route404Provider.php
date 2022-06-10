@@ -38,7 +38,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $collection = new RouteCollection();
         $routes = array_merge($this->getNotFoundRoutes(), $this->getLocaleFallbackRoutes($request));
@@ -54,7 +54,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     public function getRouteByName($name): Route
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $ids = $this->getPageIdsFromNames([$name]);
 
@@ -86,7 +86,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     public function getRoutesByNames($names): array
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
@@ -119,7 +119,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     private function getNotFoundRoutes(): array
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findByType('error_404');
