@@ -66,6 +66,8 @@ class FrontendTemplate extends Template
 	{
 		$this->blnCheckRequest = $blnCheckRequest;
 
+		$this->compile();
+
 		$response = parent::getResponse();
 
 		if ($blnForceCacheHeaders || 0 === strncmp('fe_', $this->strTemplate, 3))
@@ -80,10 +82,8 @@ class FrontendTemplate extends Template
 	 * Compile the template
 	 *
 	 * @throws UnusedArgumentsException If there are unused route parameters
-	 *
-	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
-	protected function compile()
+	private function compile()
 	{
 		// Parse the template
 		$this->strBuffer = $this->parse();
@@ -134,8 +134,6 @@ class FrontendTemplate extends Template
 			},
 			$this->strBuffer
 		);
-
-		parent::compile();
 	}
 
 	/**

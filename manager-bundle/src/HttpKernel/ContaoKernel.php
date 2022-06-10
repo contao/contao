@@ -73,14 +73,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         return self::$projectDir;
     }
 
-    /**
-     * @deprecated since Symfony 4.2, use getProjectDir() instead
-     */
-    public function getRootDir(): string
-    {
-        return Path::join($this->getProjectDir(), 'app');
-    }
-
     public function getCacheDir(): string
     {
         return Path::join($this->getProjectDir(), 'var/cache', $this->getEnvironment());

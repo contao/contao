@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### Logout module
+
+The deprecated logout module has been removed. Use the logout page instead.
+
 ### RequestToken class
 
 The `RequestToken` class as well as the `disableRefererCheck` and `requestTokenWhitelist`

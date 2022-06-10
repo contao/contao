@@ -129,9 +129,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * @internal the addHeadlineToTemplate() method is considered internal in
-     * Contao 5 and won't be accessible anymore in Contao 6. Headline data is
-     * always added to the context of modern fragment templates.
+     * @internal The addHeadlineToTemplate() method is considered internal in
+     *           Contao 5 and won't be accessible anymore in Contao 6. Headline
+     *           data is always added to the context of modern fragment
+     *           templates.
      */
     protected function addHeadlineToTemplate(Template $template, array|string|null $headline): void
     {
@@ -143,9 +144,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * @internal the addCssAttributesToTemplate() method is considered internal
-     * in Contao 5 and won't be accessible anymore in Contao 6. Attributes data
-     * is always added to the context of modern fragment templates.
+     * @internal The addCssAttributesToTemplate() method is considered internal
+     *           in Contao 5 and won't be accessible anymore in Contao 6.
+     *           Attributes data is always added to the context of modern
+     *           fragment templates.
      */
     protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array $classes = null): void
     {
@@ -161,9 +163,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * @internal the addPropertiesToTemplate() method is considered internal in
-     * Contao 5 and won't be accessible anymore in Contao 6. Custom properties
-     * are always added to the context of modern fragment templates.
+     * @internal The addPropertiesToTemplate() method is considered internal in
+     *           Contao 5 and won't be accessible anymore in Contao 6. Custom
+     *           properties are always added to the context of modern fragment
+     *           templates.
      */
     protected function addPropertiesToTemplate(Template $template, array $properties): void
     {
@@ -175,9 +178,10 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * @internal the addSectionToTemplate() method is considered internal in
-     * Contao 5 and won't be accessible anymore in Contao 6. Section data is
-     * always added to the context of modern fragment templates.
+     * @internal The addSectionToTemplate() method is considered internal in
+     *           Contao 5 and won't be accessible anymore in Contao 6. Section
+     *           data is always added to the context of modern fragment
+     *           templates.
      */
     protected function addSectionToTemplate(Template $template, string $section): void
     {
@@ -189,9 +193,9 @@ abstract class AbstractFragmentController extends AbstractController implements 
     /**
      * Returns the type from the class name.
      *
-     * @internal the getType() method is considered internal in Contao 5 and
-     * won't be accessible anymore in Contao 6. Retrieve the type from the
-     * fragment options instead.
+     * @internal The getType() method is considered internal in Contao 5 and
+     *           won't be accessible anymore in Contao 6. Retrieve the type
+     *           from the fragment options instead.
      */
     protected function getType(): string
     {
