@@ -82,8 +82,6 @@ class FrontendTemplate extends Template
 	 * Compile the template
 	 *
 	 * @throws UnusedArgumentsException If there are unused route parameters
-	 *
-	 * @internal
 	 */
 	private function compile()
 	{
