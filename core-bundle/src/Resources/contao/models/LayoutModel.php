@@ -28,10 +28,10 @@ use Contao\Model\Collection;
  * @property string|array|null $sections
  * @property string|array      $framework
  * @property string|array|null $external
- * @property boolean           $combineScripts
+ * @property string|boolean    $combineScripts
  * @property string|array|null $modules
  * @property string            $template
- * @property boolean           $minifyMarkup
+ * @property string|boolean    $minifyMarkup
  * @property integer           $lightboxSize
  * @property string            $defaultImageDensities
  * @property string            $viewport
@@ -39,15 +39,15 @@ use Contao\Model\Collection;
  * @property string            $cssClass
  * @property string            $onload
  * @property string|null       $head
- * @property boolean           $addJQuery
+ * @property string|boolean    $addJQuery
  * @property string|array|null $jquery
- * @property boolean           $addMooTools
+ * @property string|boolean    $addMooTools
  * @property string|array|null $mootools
  * @property string|array|null $analytics
  * @property string|array|null $externalJs
  * @property string|array|null $scripts
  * @property string|null       $script
- * @property boolean           $static
+ * @property string|boolean    $static
  * @property string|array      $width
  * @property string|array      $align
  *

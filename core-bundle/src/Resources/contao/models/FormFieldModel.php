@@ -25,7 +25,7 @@ use Contao\Model\Collection;
  * @property string|null       $text
  * @property string|null       $html
  * @property string|array|null $options
- * @property boolean           $mandatory
+ * @property string|boolean    $mandatory
  * @property string            $rgxp
  * @property string            $placeholder
  * @property string            $customRgxp
@@ -36,22 +36,22 @@ use Contao\Model\Collection;
  * @property integer           $maxval
  * @property integer           $step
  * @property string|array      $size
- * @property boolean           $multiple
+ * @property string|boolean    $multiple
  * @property integer           $mSize
  * @property string            $extensions
- * @property boolean           $storeFile
+ * @property string|boolean    $storeFile
  * @property string|null       $uploadFolder
- * @property boolean           $useHomeDir
- * @property boolean           $doNotOverwrite
+ * @property string|boolean    $useHomeDir
+ * @property string|boolean    $doNotOverwrite
  * @property string            $class
  * @property string            $value
- * @property boolean           $accesskey
+ * @property string|boolean    $accesskey
  * @property integer           $fSize
  * @property string            $customTpl
  * @property string            $slabel
- * @property boolean           $imageSubmit
+ * @property string|boolean    $imageSubmit
  * @property string|null       $singleSRC
- * @property boolean           $invisible
+ * @property string|boolean    $invisible
  *
  * @method static FormFieldModel|null findById($id, array $opt=array())
  * @method static FormFieldModel|null findByPk($id, array $opt=array())

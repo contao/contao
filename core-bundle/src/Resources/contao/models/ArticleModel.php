@@ -15,25 +15,25 @@ use Contao\Model\Collection;
 /**
  * Reads and writes articles
  *
- * @property integer      $id
- * @property integer      $pid
- * @property integer      $sorting
- * @property integer      $tstamp
- * @property string       $title
- * @property string       $alias
- * @property integer      $author
- * @property string       $inColumn
- * @property boolean      $showTeaser
- * @property string       $teaserCssID
- * @property string|null  $teaser
- * @property string       $printable
- * @property string       $customTpl
- * @property boolean      $protected
- * @property string|null  $groups
- * @property string|array $cssID
- * @property boolean      $published
- * @property integer      $start
- * @property integer      $stop
+ * @property integer        $id
+ * @property integer        $pid
+ * @property integer        $sorting
+ * @property integer        $tstamp
+ * @property string         $title
+ * @property string         $alias
+ * @property integer        $author
+ * @property string         $inColumn
+ * @property string|boolean $showTeaser
+ * @property string         $teaserCssID
+ * @property string|null    $teaser
+ * @property string         $printable
+ * @property string         $customTpl
+ * @property string|boolean $protected
+ * @property string|null    $groups
+ * @property string|array   $cssID
+ * @property string|boolean $published
+ * @property integer        $start
+ * @property integer        $stop
  *
  * @method static ArticleModel|null findById($id, array $opt=array())
  * @method static ArticleModel|null findByPk($id, array $opt=array())

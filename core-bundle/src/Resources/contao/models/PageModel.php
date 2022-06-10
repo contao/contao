@@ -36,15 +36,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|null       $description
  * @property string            $redirect
  * @property integer           $jumpTo
- * @property boolean           $redirectBack
+ * @property string|boolean    $redirectBack
  * @property string            $url
- * @property boolean           $target
+ * @property string|boolean    $target
  * @property string            $dns
  * @property string            $staticFiles
  * @property string            $staticPlugins
- * @property boolean           $fallback
- * @property boolean           $disableLanguageRedirect
- * @property boolean           $maintenanceMode
+ * @property string|boolean    $fallback
+ * @property string|boolean    $disableLanguageRedirect
+ * @property string|boolean    $maintenanceMode
  * @property string|null       $favicon
  * @property string|null       $robotsTxt
  * @property string            $mailerTransport
@@ -56,62 +56,62 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string            $timeFormat
  * @property string            $datimFormat
  * @property string            $validAliasCharacters
- * @property boolean           $useFolderUrl
+ * @property string|boolean    $useFolderUrl
  * @property string            $urlPrefix
  * @property string            $urlSuffix
- * @property boolean           $useSSL
- * @property boolean           $autoforward
- * @property boolean           $protected
+ * @property string|boolean    $useSSL
+ * @property string|boolean    $autoforward
+ * @property string|boolean    $protected
  * @property string|array|null $groups
- * @property boolean           $includeLayout
+ * @property string|boolean    $includeLayout
  * @property integer           $layout
  * @property integer           $subpageLayout
- * @property boolean           $includeCache
+ * @property string|boolean    $includeCache
  * @property integer           $cache
- * @property boolean           $alwaysLoadFromCache
+ * @property string|boolean    $alwaysLoadFromCache
  * @property integer           $clientCache
- * @property boolean           $includeChmod
+ * @property string|boolean    $includeChmod
  * @property integer           $cuser
  * @property integer           $cgroup
  * @property string            $chmod
- * @property boolean           $noSearch
- * @property boolean           $requireItem
+ * @property string|boolean    $noSearch
+ * @property string|boolean    $requireItem
  * @property string            $cssClass
  * @property string            $sitemap
- * @property boolean           $hide
+ * @property string|boolean    $hide
  * @property string            $accesskey
- * @property boolean           $published
+ * @property string|boolean    $published
  * @property integer           $start
  * @property integer           $stop
- * @property boolean           $enforceTwoFactor
+ * @property string|boolean    $enforceTwoFactor
  * @property integer           $twoFactorJumpTo
  *
- * @property array   $trail
- * @property string  $mainAlias
- * @property string  $mainTitle
- * @property string  $mainPageTitle
- * @property string  $parentAlias
- * @property string  $parentTitle
- * @property string  $parentPageTitle
- * @property string  $folderUrl
- * @property boolean $isPublic
- * @property integer $rootId
- * @property string  $rootAlias
- * @property string  $rootTitle
- * @property string  $rootPageTitle
- * @property integer $rootSorting
- * @property string  $domain
- * @property string  $rootLanguage
- * @property boolean $rootIsPublic
- * @property boolean $rootIsFallback
- * @property boolean $rootUseSSL
- * @property string  $rootFallbackLanguage
- * @property boolean $minifyMarkup
- * @property integer $layoutId
- * @property boolean $hasJQuery
- * @property boolean $hasMooTools
- * @property string  $template
- * @property string  $templateGroup
+ * @property array          $trail
+ * @property string         $mainAlias
+ * @property string         $mainTitle
+ * @property string         $mainPageTitle
+ * @property string         $parentAlias
+ * @property string         $parentTitle
+ * @property string         $parentPageTitle
+ * @property string         $folderUrl
+ * @property string|boolean $isPublic
+ * @property integer        $rootId
+ * @property string         $rootAlias
+ * @property string         $rootTitle
+ * @property string         $rootPageTitle
+ * @property integer        $rootSorting
+ * @property string         $domain
+ * @property string         $rootLanguage
+ * @property string|boolean $rootIsPublic
+ * @property string|boolean $rootIsFallback
+ * @property string|boolean $rootUseSSL
+ * @property string         $rootFallbackLanguage
+ * @property string|boolean $minifyMarkup
+ * @property integer        $layoutId
+ * @property string|boolean $hasJQuery
+ * @property string|boolean $hasMooTools
+ * @property string         $template
+ * @property string         $templateGroup
  *
  * @method static PageModel|null findById($id, array $opt=array())
  * @method static PageModel|null findByPk($id, array $opt=array())

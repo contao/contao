@@ -31,7 +31,7 @@ use Contao\Model\Collection;
  * @property string|array|null $formp
  * @property string|array|null $amg
  * @property string|array|null $alexf
- * @property boolean           $disable
+ * @property string|boolean    $disable
  * @property integer           $start
  * @property integer           $stop
  *

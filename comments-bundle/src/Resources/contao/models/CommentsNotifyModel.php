@@ -15,16 +15,16 @@ use Contao\Model\Collection;
 /**
  * Reads and writes comments subscriptions
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $source
- * @property integer $parent
- * @property string  $name
- * @property string  $email
- * @property string  $url
- * @property integer $addedOn
- * @property boolean $active
- * @property string  $tokenRemove
+ * @property integer        $id
+ * @property integer        $tstamp
+ * @property string         $source
+ * @property integer        $parent
+ * @property string         $name
+ * @property string         $email
+ * @property string         $url
+ * @property integer        $addedOn
+ * @property string|boolean $active
+ * @property string         $tokenRemove
  *
  * @method static CommentsNotifyModel|null findById($id, array $opt=array())
  * @method static CommentsNotifyModel|null findByPk($id, array $opt=array())

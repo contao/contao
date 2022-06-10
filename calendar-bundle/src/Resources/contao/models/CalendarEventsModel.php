@@ -22,7 +22,7 @@ use Contao\Model\Collection;
  * @property string            $title
  * @property string            $alias
  * @property integer           $author
- * @property boolean           $addTime
+ * @property string|boolean    $addTime
  * @property integer|null      $startTime
  * @property integer|null      $endTime
  * @property integer|null      $startDate
@@ -33,32 +33,32 @@ use Contao\Model\Collection;
  * @property string            $location
  * @property string            $address
  * @property string|null       $teaser
- * @property boolean           $addImage
- * @property boolean           $overwriteMeta
+ * @property string|boolean    $addImage
+ * @property string|boolean    $overwriteMeta
  * @property string|null       $singleSRC
  * @property string            $alt
  * @property string            $imageTitle
  * @property integer           $size
  * @property string|array      $imagemargin
  * @property string            $imageUrl
- * @property boolean           $fullsize
+ * @property string|boolean    $fullsize
  * @property string            $caption
  * @property string            $floating
- * @property boolean           $recurring
+ * @property string|boolean    $recurring
  * @property string            $repeatEach
  * @property integer           $repeatEnd
  * @property integer           $recurrences
- * @property boolean           $addEnclosure
+ * @property string|boolean    $addEnclosure
  * @property string|array|null $enclosure
  * @property string            $source
  * @property integer           $jumpTo
  * @property integer           $articleId
  * @property string            $url
- * @property boolean           $target
+ * @property string|boolean    $target
  * @property string            $cssClass
- * @property boolean           $noComments
- * @property boolean           $featured
- * @property boolean           $published
+ * @property string|boolean    $noComments
+ * @property string|boolean    $featured
+ * @property string|boolean    $published
  * @property integer           $start
  * @property integer           $stop
  *

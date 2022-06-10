@@ -19,16 +19,16 @@ use Contao\Model\Collection;
  * @property integer           $tstamp
  * @property string            $title
  * @property integer           $jumpTo
- * @property boolean           $protected
+ * @property string|boolean    $protected
  * @property string|array|null $groups
- * @property boolean           $allowComments
+ * @property string|boolean    $allowComments
  * @property string            $notify
  * @property string            $sortOrder
  * @property integer           $perPage
- * @property boolean           $moderate
- * @property boolean           $bbcode
- * @property boolean           $requireLogin
- * @property boolean           $disableCaptcha
+ * @property string|boolean    $moderate
+ * @property string|boolean    $bbcode
+ * @property string|boolean    $requireLogin
+ * @property string|boolean    $disableCaptcha
  *
  * @method static CalendarModel|null findById($id, array $opt=array())
  * @method static CalendarModel|null findByPk($id, array $opt=array())

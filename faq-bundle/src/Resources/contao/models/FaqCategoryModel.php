@@ -15,19 +15,19 @@ use Contao\Model\Collection;
 /**
  * Reads and writes FAQ categories
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $title
- * @property string  $headline
- * @property integer $jumpTo
- * @property boolean $allowComments
- * @property string  $notify
- * @property string  $sortOrder
- * @property integer $perPage
- * @property boolean $moderate
- * @property boolean $bbcode
- * @property boolean $requireLogin
- * @property boolean $disableCaptcha
+ * @property integer        $id
+ * @property integer        $tstamp
+ * @property string         $title
+ * @property string         $headline
+ * @property integer        $jumpTo
+ * @property string|boolean $allowComments
+ * @property string         $notify
+ * @property string         $sortOrder
+ * @property integer        $perPage
+ * @property string|boolean $moderate
+ * @property string|boolean $bbcode
+ * @property string|boolean $requireLogin
+ * @property string|boolean $disableCaptcha
  *
  * @method static FaqCategoryModel|null findById($id, array $opt=array())
  * @method static FaqCategoryModel|null findByPk($id, array $opt=array())

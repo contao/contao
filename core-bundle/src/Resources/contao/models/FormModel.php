@@ -15,25 +15,25 @@ use Contao\Model\Collection;
 /**
  * Reads and writes forms
  *
- * @property integer $id
- * @property integer $tstamp
- * @property string  $title
- * @property string  $alias
- * @property integer $jumpTo
- * @property boolean $sendViaEmail
- * @property string  $mailerTransport
- * @property string  $recipient
- * @property string  $subject
- * @property string  $format
- * @property boolean $skipEmpty
- * @property boolean $storeValues
- * @property string  $targetTable
- * @property string  $customTpl
- * @property string  $method
- * @property boolean $novalidate
- * @property string  $attributes
- * @property string  $formID
- * @property boolean $allowTags
+ * @property integer        $id
+ * @property integer        $tstamp
+ * @property string         $title
+ * @property string         $alias
+ * @property integer        $jumpTo
+ * @property string|boolean $sendViaEmail
+ * @property string         $mailerTransport
+ * @property string         $recipient
+ * @property string         $subject
+ * @property string         $format
+ * @property string|boolean $skipEmpty
+ * @property string|boolean $storeValues
+ * @property string         $targetTable
+ * @property string         $customTpl
+ * @property string         $method
+ * @property string|boolean $novalidate
+ * @property string         $attributes
+ * @property string         $formID
+ * @property string|boolean $allowTags
  *
  * @method static FormModel|null findById($id, array $opt=array())
  * @method static FormModel|null findByPk($id, array $opt=array())

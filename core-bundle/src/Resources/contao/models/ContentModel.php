@@ -24,16 +24,16 @@ use Contao\Model\Collection;
  * @property string            $type
  * @property string            $headline
  * @property string|null       $text
- * @property boolean           $addImage
- * @property boolean           $inline
- * @property boolean           $overwriteMeta
+ * @property string|boolean    $addImage
+ * @property string|boolean    $inline
+ * @property string|boolean    $overwriteMeta
  * @property string|null       $singleSRC
  * @property string            $alt
  * @property string            $imageTitle
  * @property integer           $size
  * @property string|array      $imagemargin
  * @property string            $imageUrl
- * @property boolean           $fullsize
+ * @property string|boolean    $fullsize
  * @property string            $caption
  * @property string            $floating
  * @property string|null       $html
@@ -42,10 +42,10 @@ use Contao\Model\Collection;
  * @property string|array|null $listitems
  * @property string|array|null $tableitems
  * @property string            $summary
- * @property boolean           $thead
- * @property boolean           $tfoot
- * @property boolean           $tleft
- * @property boolean           $sortable
+ * @property string|boolean    $thead
+ * @property string|boolean    $tfoot
+ * @property string|boolean    $tleft
+ * @property string|boolean    $sortable
  * @property integer           $sortIndex
  * @property string            $sortOrder
  * @property string            $mooHeadline
@@ -55,20 +55,20 @@ use Contao\Model\Collection;
  * @property string            $markdownSource
  * @property string|null       $code
  * @property string            $url
- * @property boolean           $target
- * @property boolean           $overwriteLink
+ * @property string|boolean    $target
+ * @property string|boolean    $overwriteLink
  * @property string            $titleText
  * @property string            $linkTitle
  * @property string            $embed
  * @property string            $rel
- * @property boolean           $useImage
+ * @property string|boolean    $useImage
  * @property string|array|null $multiSRC
- * @property boolean           $useHomeDir
+ * @property string|boolean    $useHomeDir
  * @property integer           $perRow
  * @property integer           $perPage
  * @property integer           $numberOfItems
  * @property string            $sortBy
- * @property boolean           $metaIgnore
+ * @property string|boolean    $metaIgnore
  * @property string            $galleryTpl
  * @property string            $customTpl
  * @property string|null       $playerSRC
@@ -81,7 +81,7 @@ use Contao\Model\Collection;
  * @property integer           $playerStop
  * @property string            $playerCaption
  * @property string            $playerAspect
- * @property boolean           $splashImage
+ * @property string|boolean    $splashImage
  * @property string            $playerPreload
  * @property string            $playerColor
  * @property string|array|null $youtubeOptions
@@ -89,19 +89,19 @@ use Contao\Model\Collection;
  * @property integer           $sliderDelay
  * @property integer           $sliderSpeed
  * @property integer           $sliderStartSlide
- * @property boolean           $sliderContinuous
+ * @property string|boolean    $sliderContinuous
  * @property integer           $cteAlias
  * @property integer           $articleAlias
  * @property integer           $article
  * @property integer           $form
  * @property integer           $module
- * @property boolean           $protected
+ * @property string|boolean    $protected
  * @property string|array|null $groups
  * @property string|array      $cssID
- * @property boolean           $invisible
+ * @property string|boolean    $invisible
  * @property integer           $start
  * @property integer           $stop
- * @property boolean           $showPreview
+ * @property string|boolean    $showPreview
  *
  * @property string  $typePrefix
  * @property array   $classes
