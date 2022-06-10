@@ -81,14 +81,14 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		(
 			'edit' => array
 			(
-				'href'                => 'table=tl_form_field',
-				'icon'                => 'edit.svg'
-			),
-			'editheader' => array
-			(
 				'href'                => 'act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_form', 'editHeader')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_form_field',
+				'icon'                => 'children.svg'
 			),
 			'copy' => array
 			(

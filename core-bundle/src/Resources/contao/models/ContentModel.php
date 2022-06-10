@@ -31,12 +31,12 @@ use Contao\Model\Collection;
  * @property string            $alt
  * @property string            $imageTitle
  * @property string|integer    $size
- * @property string|array      $imagemargin
  * @property string            $imageUrl
  * @property string|boolean    $fullsize
  * @property string            $caption
  * @property string            $floating
  * @property string|null       $html
+ * @property string|null       $unfilteredHtml
  * @property string            $listtype
  * @property string|array|null $listitems
  * @property string|array|null $tableitems
@@ -124,12 +124,12 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByAlt($val, array $opt=array())
  * @method static ContentModel|null findOneByImageTitle($val, array $opt=array())
  * @method static ContentModel|null findOneBySize($val, array $opt=array())
- * @method static ContentModel|null findOneByImagemargin($val, array $opt=array())
  * @method static ContentModel|null findOneByImageUrl($val, array $opt=array())
  * @method static ContentModel|null findOneByFullsize($val, array $opt=array())
  * @method static ContentModel|null findOneByCaption($val, array $opt=array())
  * @method static ContentModel|null findOneByFloating($val, array $opt=array())
  * @method static ContentModel|null findOneByHtml($val, array $opt=array())
+ * @method static ContentModel|null findOneByUnfilteredHtml($val, array $opt=array())
  * @method static ContentModel|null findOneByListtype($val, array $opt=array())
  * @method static ContentModel|null findOneByListitems($val, array $opt=array())
  * @method static ContentModel|null findOneByTableitems($val, array $opt=array())
@@ -210,12 +210,12 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByAlt($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByImageTitle($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBySize($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByImagemargin($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByImageUrl($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByFullsize($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByCaption($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByFloating($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByHtml($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByUnfilteredHtml($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByListtype($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByListitems($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByTableitems($val, array $opt=array())
@@ -300,12 +300,12 @@ use Contao\Model\Collection;
  * @method static integer countByAlt($val, array $opt=array())
  * @method static integer countByImageTitle($val, array $opt=array())
  * @method static integer countBySize($val, array $opt=array())
- * @method static integer countByImagemargin($val, array $opt=array())
  * @method static integer countByImageUrl($val, array $opt=array())
  * @method static integer countByFullsize($val, array $opt=array())
  * @method static integer countByCaption($val, array $opt=array())
  * @method static integer countByFloating($val, array $opt=array())
  * @method static integer countByHtml($val, array $opt=array())
+ * @method static integer countByUnfilteredHtml($val, array $opt=array())
  * @method static integer countByListtype($val, array $opt=array())
  * @method static integer countByListitems($val, array $opt=array())
  * @method static integer countByTableitems($val, array $opt=array())

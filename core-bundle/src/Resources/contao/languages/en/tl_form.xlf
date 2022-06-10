@@ -176,8 +176,8 @@
       <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form.editheader">
-        <source>Edit the settings of form ID %s</source>
+      <trans-unit id="tl_form.children">
+        <source>Edit the form fields of form ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>

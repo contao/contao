@@ -39,7 +39,6 @@ use Contao\Model\Collection;
  * @property string              $alt
  * @property string              $imageTitle
  * @property string|integer      $size
- * @property string|array        $imagemargin
  * @property string              $imageUrl
  * @property string|boolean      $fullsize
  * @property string              $caption
@@ -88,7 +87,6 @@ use Contao\Model\Collection;
  * @method static CalendarEventsModel|null findOneByAlt($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByImageTitle($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneBySize($val, array $opt=array())
- * @method static CalendarEventsModel|null findOneByImagemargin($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByImageUrl($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByFullsize($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByCaption($val, array $opt=array())
@@ -133,7 +131,6 @@ use Contao\Model\Collection;
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByAlt($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByImageTitle($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findBySize($val, array $opt=array())
- * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByImagemargin($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByImageUrl($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByFullsize($val, array $opt=array())
  * @method static Collection|CalendarEventsModel[]|CalendarEventsModel|null findByCaption($val, array $opt=array())
@@ -182,7 +179,6 @@ use Contao\Model\Collection;
  * @method static integer countByAlt($val, array $opt=array())
  * @method static integer countByImageTitle($val, array $opt=array())
  * @method static integer countBySize($val, array $opt=array())
- * @method static integer countByImagemargin($val, array $opt=array())
  * @method static integer countByImageUrl($val, array $opt=array())
  * @method static integer countByFullsize($val, array $opt=array())
  * @method static integer countByCaption($val, array $opt=array())

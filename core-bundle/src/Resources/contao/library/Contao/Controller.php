@@ -63,9 +63,10 @@ abstract class Controller extends System
 	public static function getTemplate($strTemplate)
 	{
 		$strTemplate = basename($strTemplate);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		// Check for a theme folder
-		if (\defined('TL_MODE') && TL_MODE == 'FE')
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
 			/** @var PageModel|null $objPage */
 			global $objPage;
@@ -304,7 +305,7 @@ abstract class Controller extends System
 			// Show a particular article only
 			if ($objPage->type == 'regular' && Input::get('articles'))
 			{
-				list($strSection, $strArticle) = explode(':', Input::get('articles'));
+				list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
 
 				if ($strArticle === null)
 				{
@@ -726,9 +727,10 @@ abstract class Controller extends System
 	public static function isVisibleElement(Model $objElement)
 	{
 		$blnReturn = true;
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		// Only apply the restrictions in the front end
-		if (TL_MODE == 'FE' && $objElement->protected)
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request) && $objElement->protected)
 		{
 			$groups = StringUtil::deserialize($objElement->groups, true);
 			$security = System::getContainer()->get('security.helper');
@@ -970,62 +972,6 @@ abstract class Controller extends System
 		$arrReplace["[[TL_HEAD_$nonce]]"] = $strScripts;
 
 		return str_replace(array_keys($arrReplace), $arrReplace, $strBuffer);
-	}
-
-	/**
-	 * Compile the margin format definition based on an array of values
-	 *
-	 * @param array  $arrValues An array of four values and a unit
-	 * @param string $strType   Either "margin" or "padding"
-	 *
-	 * @return string The CSS markup
-	 */
-	public static function generateMargin($arrValues, $strType='margin')
-	{
-		// Initialize an empty array (see #5217)
-		if (!\is_array($arrValues))
-		{
-			$arrValues = array('top'=>'', 'right'=>'', 'bottom'=>'', 'left'=>'', 'unit'=>'');
-		}
-
-		$top = $arrValues['top'];
-		$right = $arrValues['right'];
-		$bottom = $arrValues['bottom'];
-		$left = $arrValues['left'];
-
-		// Try to shorten the definition
-		if ($top && $right  && $bottom  && $left)
-		{
-			if ($top == $right && $top == $bottom && $top == $left)
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ';';
-			}
-
-			if ($top == $bottom && $right == $left)
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
-			}
-
-			if ($top != $bottom && $right == $left)
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ';';
-			}
-
-			return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
-		}
-
-		$return = array();
-		$arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
-
-		foreach ($arrDir as $k=>$v)
-		{
-			if ($v)
-			{
-				$return[] = $strType . '-' . $k . ':' . $v . $arrValues['unit'] . ';';
-			}
-		}
-
-		return implode('', $return);
 	}
 
 	/**
@@ -1322,7 +1268,7 @@ abstract class Controller extends System
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
 		}
-		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		while ($intId && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{

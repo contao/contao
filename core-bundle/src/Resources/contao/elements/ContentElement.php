@@ -30,7 +30,6 @@ use Contao\Model\Collection;
  * @property string  $alt
  * @property string  $title
  * @property string  $size
- * @property string  $imagemargin
  * @property string  $imageUrl
  * @property boolean $fullsize
  * @property string  $caption

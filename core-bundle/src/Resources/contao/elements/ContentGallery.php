@@ -225,7 +225,7 @@ class ContentGallery extends ContentElement
 						->fromFilesModel($image)
 						->build();
 
-					$cellData = $figure->getLegacyTemplateData($this->imagemargin);
+					$cellData = $figure->getLegacyTemplateData();
 					$cellData['figure'] = $figure;
 				}
 				else

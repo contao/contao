@@ -95,9 +95,9 @@ class ModuleEventlist extends Events
 
 		$blnClearInput = false;
 
-		$intYear = Input::get('year');
-		$intMonth = Input::get('month');
-		$intDay = Input::get('day');
+		$intYear = (int) Input::get('year');
+		$intMonth = (int) Input::get('month');
+		$intDay = (int) Input::get('day');
 
 		// Handle featured events
 		$blnFeatured = null;
@@ -370,7 +370,7 @@ class ModuleEventlist extends Events
 							->build();
 					}
 
-					$figure->applyLegacyTemplateData($objTemplate, $eventModel->imagemargin, $eventModel->floating);
+					$figure->applyLegacyTemplateData($objTemplate, null, $eventModel->floating);
 				}
 			}
 

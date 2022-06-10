@@ -15,14 +15,12 @@ namespace Contao\CoreBundle\Framework;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\Model\Registry;
 use Contao\PageModel;
-use Contao\RequestToken;
 use Contao\System;
 use Contao\TemplateLoader;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -30,7 +28,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -45,13 +42,11 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     private static string $nonce = '';
 
     private Request|null $request = null;
-    private bool $isFrontend = false;
     private array $adapterCache = [];
     private array $hookListeners = [];
 
     public function __construct(
         private RequestStack $requestStack,
-        private ScopeMatcher $scopeMatcher,
         private UrlGeneratorInterface $urlGenerator,
         private string $projectDir,
         private int $errorLevel,
@@ -61,7 +56,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     public function reset(): void
     {
         $this->adapterCache = [];
-        $this->isFrontend = false;
         self::$nonce = '';
 
         if (!$this->isInitialized()) {
@@ -84,7 +78,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
     /**
      * @throws \LogicException
      */
-    public function initialize(bool $isFrontend = false): void
+    public function initialize(): void
     {
         if ($this->isInitialized()) {
             return;
@@ -97,10 +91,8 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
             throw new \LogicException('The service container has not been set.');
         }
 
-        $this->isFrontend = $isFrontend;
         $this->request = $this->requestStack->getMainRequest();
 
-        $this->setConstants();
         $this->initializeFramework();
     }
 
@@ -150,39 +142,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         return self::$nonce;
     }
 
-    /**
-     * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
-     */
-    private function setConstants(): void
-    {
-        if (!\defined('TL_MODE')) {
-            \define('TL_MODE', $this->getMode());
-        }
-
-        \define('TL_ROOT', $this->projectDir);
-    }
-
-    private function getMode(): string|null
-    {
-        if (true === $this->isFrontend) {
-            return 'FE';
-        }
-
-        if (null === $this->request) {
-            return null;
-        }
-
-        if ($this->scopeMatcher->isBackendRequest($this->request)) {
-            return 'BE';
-        }
-
-        if ($this->scopeMatcher->isFrontendRequest($this->request)) {
-            return 'FE';
-        }
-
-        return null;
-    }
-
     private function initializeFramework(): void
     {
         // Set the error_reporting level
@@ -211,7 +170,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         $this->setTimezone();
         $this->triggerInitializeSystemHook();
-        $this->handleRequestToken();
     }
 
     /**
@@ -288,30 +246,11 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         }
     }
 
-    private function handleRequestToken(): void
-    {
-        $requestToken = $this->getAdapter(RequestToken::class);
-
-        // Deprecated since Contao 4.0, to be removed in Contao 5.0
-        if (!\defined('REQUEST_TOKEN')) {
-            \define('REQUEST_TOKEN', 'cli' === \PHP_SAPI ? null : $requestToken->get());
-        }
-    }
-
     private function iniSet(string $key, string $value): void
     {
         if (\function_exists('ini_set')) {
             ini_set($key, $value);
         }
-    }
-
-    private function getSession(): SessionInterface|null
-    {
-        if (null === $this->request || !$this->request->hasSession()) {
-            return null;
-        }
-
-        return $this->request->getSession();
     }
 
     private function registerHookListeners(): void
