@@ -1,0 +1,5 @@
+{% extends "@Contao/content_element/_video.html.twig" %}
+
+{% set iframe_attrs = attrs(iframe_attrs|default)
+    .set('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen')
+%}
