@@ -312,10 +312,12 @@ class HtmlAttributesTest extends TestCase
         // And remove classes
         $attributes->addClass('baz');
         $attributes->addClass('foo foobar');
+        $attributes->addClass(['foo2', 'foobar2']);
         $attributes->removeClass(' other1');
         $attributes->removeClass('thing other2');
+        $attributes->removeClass(['foo2', ' foobar ']);
 
-        $this->assertSame('foo bar baz foobar', $attributes['class']);
+        $this->assertSame('foo bar baz foobar2', $attributes['class']);
     }
 
     public function testAddAndRemoveConditionalClasses(): void

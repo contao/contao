@@ -151,11 +151,17 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      * Add a single class ("foo") or multiple from a class string ("foo bar baz").
      *
      * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param string|array<string> $classes
      */
-    public function addClass(string $classes, mixed $condition = true): self
+    public function addClass(string|array $classes, mixed $condition = true): self
     {
         if (!$this->test($condition)) {
             return $this;
+        }
+
+        if (\is_array($classes)) {
+            $classes = implode(' ', $classes);
         }
 
         $this->attributes['class'] = implode(
@@ -174,11 +180,17 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      * Remove a single class ("foo") or multiple from a class string ("foo bar baz").
      *
      * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param string|array<string> $classes
      */
-    public function removeClass(string $classes, mixed $condition = true): self
+    public function removeClass(string|array $classes, mixed $condition = true): self
     {
         if (!$this->test($condition)) {
             return $this;
+        }
+
+        if (\is_array($classes)) {
+            $classes = implode(' ', $classes);
         }
 
         $this->attributes['class'] = implode(
