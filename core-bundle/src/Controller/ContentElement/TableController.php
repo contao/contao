@@ -28,8 +28,8 @@ class TableController extends AbstractContentElementController
     {
         // Table fields
         $rows = StringUtil::deserialize($model->tableitems, true);
-        $header = $model->thead && !empty($rows) ? array_shift($rows) : [];
-        $footer = $model->tfoot && !empty($rows) ? array_pop($rows) : [];
+        $header = $model->thead && $rows ? array_shift($rows) : [];
+        $footer = $model->tfoot && $rows ? array_pop($rows) : [];
 
         $template->set('header', $header);
         $template->set('footer', $footer);
