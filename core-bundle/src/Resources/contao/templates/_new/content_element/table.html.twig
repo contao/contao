@@ -26,7 +26,7 @@
                 <thead>
                 {% block header_inner %}
                     <tr>
-                        {% for col in header %}
+                        {% for cell in header %}
                             {% if loop.first and use_row_headers %}
                                 <th class="unsortable">{{ block('cell_content') }}</th>
                             {% else %}
@@ -45,7 +45,7 @@
                 <tfoot>
                 {% block footer_inner %}
                     <tr>
-                        {% for col in footer %}
+                        {% for cell in footer %}
                             <td>{{ block('cell_content') }}</td>
                         {% endfor %}
                     </tr>
@@ -60,14 +60,14 @@
             {% block body_inner %}
                 {% for row in rows %}
                     <tr>
-                        {% for col in row %}
+                        {% for cell in row %}
                             {% if loop.first and use_row_headers %}
                                 <th scope="row">{{ block('cell_content') }}</th>
                             {% else %}
                                 <td>
                                     {%- block body_cell_content %}
                                         {%- block cell_content %}
-                                            {{- col|nl2br|insert_tag_raw -}}
+                                            {{- cell|nl2br|insert_tag_raw -}}
                                         {% endblock -%}
                                     {% endblock -%}
                                 </td>
