@@ -33,7 +33,7 @@ class HyperlinkController extends AbstractContentElementController
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         // Link with attributes
-        $href = $this->insertTagParser->replace($model->url);
+        $href = $this->insertTagParser->replaceInline($model->url);
 
         $linkAttributes = (new HtmlAttributes())
             ->set('href', $href)
