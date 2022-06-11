@@ -20,8 +20,8 @@ use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -240,7 +240,7 @@ class ContentElementTestCase extends TestCase
         $environment->addExtension(new TranslationExtension($translator));
 
         // Runtime loaders
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
+        $insertTagParser = $this->getDefaultInsertTagParser();
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
 
         $environment->addRuntimeLoader(
@@ -313,10 +313,33 @@ class ContentElementTestCase extends TestCase
     protected function getDefaultInsertTagParser(): InsertTagParser
     {
         $insertTagParser = $this->createMock(InsertTagParser::class);
+
+        $replaceDemo = static fn (string $input): string => str_replace(
+            ['{{demo}}', '{{br}}'],
+            ['demo', '<br>'],
+            $input
+        );
+
         $insertTagParser
             ->method('replace')
+            ->willReturnCallback($replaceDemo)
+        ;
+
+        $insertTagParser
+            ->method('replaceInline')
+            ->willReturnCallback($replaceDemo)
+        ;
+
+        $insertTagParser
+            ->method('replaceChunked')
             ->willReturnCallback(
-                static fn (string $input): string => str_replace('{{demo}}', 'demo', $input)
+                static function (string $input) use ($replaceDemo): ChunkedText {
+                    if (preg_match('/^(.*)\{\{br}}(.*)$/', $input, $matches)) {
+                        return new ChunkedText([$matches[1], '<br>', $matches[2]]);
+                    }
+
+                    return new ChunkedText([$replaceDemo($input)]);
+                }
             )
         ;
 
