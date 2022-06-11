@@ -4,11 +4,14 @@
 {% set attributes = attrs().addClass('ce_table') %}
 
 {% block content %}
-    {% set table_attributes = attrs(table_attributes|default)
-        .set('id', 'table_' ~ data.id, sorting)
-        .addClass('sortable', sorting)
-        .set('data-sort-default', sorting.column|default ~ '|' ~ sorting.order|default, sorting)
-    %}
+    {% set table_attributes = attrs(table_attributes|default) %}
+    {% if sorting %}
+        {% do table_attributes
+            .set('id', 'table_' ~ data.id)
+            .addClass('sortable')
+            .set('data-sort-default', sorting.column|default ~ '|' ~ sorting.order|default)
+        %}
+    {% endif %}
     <table{% block table_attributes %}{{ table_attributes }}{% endblock %}>
         {# Caption #}
         {% if caption %}
