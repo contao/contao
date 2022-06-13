@@ -15,8 +15,8 @@ use Contao\Model\Collection;
 /**
  * Reads and writes user groups
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string            $name
  * @property string|array|null $modules
  * @property string|array|null $themes

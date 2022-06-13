@@ -15,9 +15,9 @@ use Contao\Model\Collection;
 /**
  * Reads and writes newsletters
  *
- * @property string|integer $id
- * @property string|integer $pid
- * @property string|integer $tstamp
+ * @property integer        $id
+ * @property integer        $pid
+ * @property integer        $tstamp
  * @property string         $subject
  * @property string         $alias
  * @property string|null    $content
@@ -31,7 +31,7 @@ use Contao\Model\Collection;
  * @property string         $sender
  * @property string         $senderName
  * @property string|boolean $sent
- * @property string|integer $date
+ * @property integer        $date
  *
  * @method static NewsletterModel|null findById($id, array $opt=array())
  * @method static NewsletterModel|null findByPk($id, array $opt=array())

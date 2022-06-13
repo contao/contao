@@ -19,6 +19,7 @@ use Contao\CoreBundle\Config\ResourceFinderInterface;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\DcaExtractor;
+use Contao\Model;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -61,6 +62,7 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->generateLanguageCache($cacheDir);
         $this->generateDcaExtracts($cacheDir);
         $this->generateTemplateMapper($cacheDir);
+        $this->generateColumnCastTypes($cacheDir);
 
         return [];
     }
@@ -196,6 +198,14 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $this->filesystem->dumpFile(
             Path::join($cacheDir, 'contao/config/templates.php'),
             sprintf("<?php\n\nreturn %s;\n", var_export($mapper, true))
+        );
+    }
+
+    private function generateColumnCastTypes(string $cacheDir): void
+    {
+        $this->filesystem->dumpFile(
+            Path::join($cacheDir, 'contao/config/column-types.php'),
+            sprintf("<?php\n\nreturn %s;\n", var_export(Model::getColumnCastTypes(), true))
         );
     }
 

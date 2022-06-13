@@ -32,8 +32,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *         echo $user->name;
  *     }
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string|null       $username
  * @property string            $name
  * @property string            $email
@@ -65,18 +65,18 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property string|integer    $start
  * @property string|integer    $stop
  * @property string|array|null $session
- * @property string|integer    $dateAdded
+ * @property integer           $dateAdded
  * @property string|null       $secret
  * @property string|boolean    $useTwoFactor
- * @property string|integer    $lastLogin
- * @property string|integer    $currentLogin
- * @property string|integer    $loginAttempts
- * @property string|integer    $locked
+ * @property integer           $lastLogin
+ * @property integer           $currentLogin
+ * @property integer           $loginAttempts
+ * @property integer           $locked
  * @property string|null       $backupCodes
- * @property string|integer    $trustedTokenVersion
+ * @property integer           $trustedTokenVersion
  * @property string            $firstname
  * @property string            $lastname
- * @property string|integer    $dateOfBirth
+ * @property integer           $dateOfBirth
  * @property string            $gender
  * @property string            $company
  * @property string            $street
@@ -270,7 +270,13 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		if ($objResult->numRows > 0)
 		{
-			$this->arrData = $objResult->row();
+			$strModelClass = Model::getClassFromTable($this->strTable);
+			$this->arrData = array();
+
+			foreach ($objResult->row() as $strKey => $varData)
+			{
+				$this->arrData[$strKey] = $strModelClass::convertToPhpValue($strKey, $varData);
+			}
 
 			return true;
 		}

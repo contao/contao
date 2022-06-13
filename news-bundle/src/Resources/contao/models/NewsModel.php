@@ -16,14 +16,14 @@ use Contao\Model\Collection;
 /**
  * Reads and writes news
  *
- * @property string|integer $id
- * @property string|integer $pid
- * @property string|integer $tstamp
+ * @property integer        $id
+ * @property integer        $pid
+ * @property integer        $tstamp
  * @property string         $headline
  * @property string         $alias
- * @property string|integer $author
- * @property string|integer $date
- * @property string|integer $time
+ * @property integer        $author
+ * @property integer        $date
+ * @property integer        $time
  * @property string         $pageTitle
  * @property string         $robots
  * @property string|null    $description
@@ -42,8 +42,8 @@ use Contao\Model\Collection;
  * @property string|boolean $addEnclosure
  * @property string|null    $enclosure
  * @property string         $source
- * @property string|integer $jumpTo
- * @property string|integer $articleId
+ * @property integer        $jumpTo
+ * @property integer        $articleId
  * @property string         $url
  * @property string|boolean $target
  * @property string         $cssClass

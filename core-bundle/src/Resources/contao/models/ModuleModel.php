@@ -15,39 +15,39 @@ use Contao\Model\Collection;
 /**
  * Reads and writes front end modules
  *
- * @property string|integer    $id
- * @property string|integer    $pid
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $pid
+ * @property integer           $tstamp
  * @property string            $name
  * @property string            $headline
  * @property string            $type
- * @property string|integer    $levelOffset
- * @property string|integer    $showLevel
+ * @property integer           $levelOffset
+ * @property integer           $showLevel
  * @property string|boolean    $hardLimit
  * @property string|boolean    $showProtected
  * @property string|boolean    $defineRoot
- * @property string|integer    $rootPage
+ * @property integer           $rootPage
  * @property string            $navigationTpl
  * @property string            $customTpl
  * @property string|array|null $pages
  * @property string|boolean    $showHidden
  * @property string            $customLabel
  * @property string|boolean    $autologin
- * @property string|integer    $jumpTo
- * @property string|integer    $overviewPage
+ * @property integer           $jumpTo
+ * @property integer           $overviewPage
  * @property string|boolean    $redirectBack
  * @property string|array|null $editable
  * @property string            $memberTpl
- * @property string|integer    $form
+ * @property integer           $form
  * @property string            $queryType
  * @property string|boolean    $fuzzy
  * @property string|array      $contextLength
- * @property string|integer    $minKeywordLength
- * @property string|integer    $perPage
+ * @property integer           $minKeywordLength
+ * @property integer           $perPage
  * @property string            $searchType
  * @property string            $searchTpl
  * @property string            $inColumn
- * @property string|integer    $skipFirst
+ * @property integer           $skipFirst
  * @property string|boolean    $loadFirst
  * @property string|null       $singleSRC
  * @property string            $url
@@ -57,10 +57,10 @@ use Contao\Model\Collection;
  * @property string|array|null $multiSRC
  * @property string|null       $html
  * @property string|null       $unfilteredHtml
- * @property string|integer    $rss_cache
+ * @property integer           $rss_cache
  * @property string|null       $rss_feed
  * @property string            $rss_template
- * @property string|integer    $numberOfItems
+ * @property integer           $numberOfItems
  * @property string|boolean    $disableCaptcha
  * @property string|array|null $reg_groups
  * @property string|boolean    $reg_allowLogin
@@ -70,7 +70,7 @@ use Contao\Model\Collection;
  * @property string|boolean    $reg_assignDir
  * @property string|null       $reg_homeDir
  * @property string|boolean    $reg_activate
- * @property string|integer    $reg_jumpTo
+ * @property integer           $reg_jumpTo
  * @property string|null       $reg_text
  * @property string|null       $reg_password
  * @property string|boolean    $protected

@@ -15,9 +15,9 @@ use Contao\Model\Collection;
 /**
  * Reads and writes newsletter deny list entries
  *
- * @property string|integer $id
- * @property string|integer $pid
- * @property string|null    $hash
+ * @property integer     $id
+ * @property integer     $pid
+ * @property string|null $hash
  *
  * @method static NewsletterDenyListModel|null findById($id, array $opt=array())
  * @method static NewsletterDenyListModel|null findByPk($id, array $opt=array())
