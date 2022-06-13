@@ -20,10 +20,7 @@ use Contao\ContentAlias;
 use Contao\ContentArticle;
 use Contao\ContentDownload;
 use Contao\ContentDownloads;
-use Contao\ContentGallery;
 use Contao\ContentHyperlink;
-use Contao\ContentImage;
-use Contao\ContentList;
 use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentPlayer;
@@ -276,7 +273,6 @@ $GLOBALS['TL_CTE'] = array
 	'texts' => array
 	(
 		'text'            => ContentText::class,
-		'list'            => ContentList::class,
 		'table'           => ContentTable::class,
 	),
 	'accordion' => array
@@ -297,8 +293,6 @@ $GLOBALS['TL_CTE'] = array
 	),
 	'media' => array
 	(
-		'image'           => ContentImage::class,
-		'gallery'         => ContentGallery::class,
 		'player'          => ContentPlayer::class,
 		'youtube'         => ContentYouTube::class,
 		'vimeo'           => ContentVimeo::class

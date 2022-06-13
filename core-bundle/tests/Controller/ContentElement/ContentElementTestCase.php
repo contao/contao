@@ -18,10 +18,17 @@ use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\Image\Studio\FigureBuilderStub;
+use Contao\CoreBundle\Tests\Image\Studio\ImageResultStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
@@ -31,21 +38,29 @@ use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
+use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\InsertTags;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class ContentElementTestCase extends TestCase
 {
+    public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
+    public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
+    public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
+
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
@@ -91,6 +106,28 @@ class ContentElementTestCase extends TestCase
 
         // Render template with model data
         $model = $this->mockClassWithProperties(ContentModel::class);
+        $model
+            ->method('getOverwriteMetadata')
+            ->willReturnCallback(
+                static function () use ($modelData): Metadata|null {
+                    if (!($modelData['overwriteMeta'] ?? null)) {
+                        return null;
+                    }
+
+                    $data = $modelData;
+
+                    if (isset($data['imageTitle'])) {
+                        $data[Metadata::VALUE_TITLE] = $data['imageTitle'];
+                    }
+
+                    if (isset($data['imageUrl'])) {
+                        $data[Metadata::VALUE_URL] = $data['imageUrl'];
+                    }
+
+                    return new Metadata(array_intersect_key($data, array_flip(['title', 'alt', 'link', 'caption', 'license'])));
+                }
+            )
+        ;
 
         foreach ($modelData as $key => $value) {
             $model->$key = $value;
@@ -187,18 +224,73 @@ class ContentElementTestCase extends TestCase
         // Contao extension
         $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader, $this->createMock(ContaoCsrfTokenManager::class)));
 
+        // Symfony extensions
+        $translator = $this->createMock(TranslatorInterface::class);
+        $environment->addExtension(new TranslationExtension($translator));
+
         // Runtime loaders
         $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
                 InsertTagRuntime::class => static fn () => new InsertTagRuntime($insertTagParser),
                 HighlighterRuntime::class => static fn () => new HighlighterRuntime(),
+                SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
             ])
         );
 
         $environment->enableStrictVariables();
 
         return $environment;
+    }
+
+    protected function getDefaultStorage(): VirtualFilesystem
+    {
+        $storage = $this->createMock(VirtualFilesystem::class);
+        $storage
+            ->method('getPrefix')
+            ->willReturn('files')
+        ;
+
+        $storage
+            ->method('get')
+            ->willReturnCallback(
+                static function (Uuid $uuid): FilesystemItem|null {
+                    $storageMap = [
+                        self::FILE_IMAGE1 => new FilesystemItem(true, 'image1.jpg'),
+                        self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg'),
+                        self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg'),
+                    ];
+
+                    return $storageMap[$uuid->toRfc4122()] ?? null;
+                }
+            )
+        ;
+
+        return $storage;
+    }
+
+    protected function getDefaultStudio(): Studio
+    {
+        $studio = $this->createMock(Studio::class);
+        $studio
+            ->method('createFigureBuilder')
+            ->willReturn(new FigureBuilderStub(
+                [
+                    'files/image1.jpg' => new ImageResultStub([
+                        'src' => 'files/image1.jpg',
+                    ]),
+                    'files/image2.jpg' => new ImageResultStub([
+                        'src' => 'files/image2.jpg',
+                    ]),
+                    'files/image3.jpg' => new ImageResultStub([
+                        'src' => 'files/image3.jpg',
+                    ]),
+                ],
+            ))
+        ;
+
+        return $studio;
     }
 }

@@ -1,9 +1,12 @@
+{% use "@Contao/component/_headline.html.twig" %}
+
 {% if not searchable|default(true) %}
 <!-- indexer::stop -->
 {%- endif %}
 
 {% block wrapper %}
-    {# Wrapper attributes: add the user defined id/classes, also add the template name (e.g. "content_element/text") as a class #}
+    {# Wrapper attributes: add the user defined ID/classes and also add the
+       template name (e.g. "content_element/text") as a class #}
     {% set attributes = attrs(attributes|default)
         .setIfExists('id', element_html_id)
         .addClass(element_css_classes, template)
@@ -12,11 +15,9 @@
     {# Wrapper element around headline and content #}
     <{% block wrapper_tag %}div{% endblock %}{% block attributes %}{{ attributes }}{% endblock %}>
         {% block inner %}
-            {% block headline %}
-                {% if headline.text %}
-                    {% include "@Contao/component/_headline.html.twig" with headline|merge({as_editor_view}) only %}
-                {% endif %}
-            {% endblock %}
+            {% if headline.text %}
+                {{ block('headline_component') }}
+            {% endif %}
 
             {% block content %}{% endblock %}
         {% endblock %}
