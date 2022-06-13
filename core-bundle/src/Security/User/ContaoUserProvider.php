@@ -68,9 +68,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             throw new UnsupportedUserException(sprintf('Unsupported class "%s".', $user::class));
         }
 
-        $user = $this->loadUserByIdentifier($user->getUserIdentifier());
-
-        return $user;
+        return $this->loadUserByIdentifier($user->getUserIdentifier());
     }
 
     /**
