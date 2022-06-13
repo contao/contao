@@ -99,7 +99,7 @@ class UserPasswordCommand extends Command
                 'password' => $hash,
                 'locked' => 0,
                 'loginAttempts' => 0,
-                'pwChange' => (bool) $input->getOption('require-change'),
+                'pwChange' => $input->getOption('require-change') ? 1 : 0,
             ],
             ['username' => $input->getArgument('username')]
         );
