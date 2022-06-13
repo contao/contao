@@ -11,7 +11,6 @@
 namespace Contao\Database;
 
 use Contao\Database;
-use Contao\Model;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
 
@@ -146,7 +145,7 @@ class Statement
 			throw new \InvalidArgumentException(sprintf('Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder.', __METHOD__));
 		}
 
-		$this->arrSetParams = $arrParams;
+		$this->arrSetParams = array_values($arrParams);
 
 		$arrParamNames = array_map(
 			static function ($strName)
@@ -179,7 +178,7 @@ class Statement
 				throw new \InvalidArgumentException('Set array must not be empty for UPDATE queries');
 			}
 
-			$strQuery = 'SET ' . implode(', ', array_map(function($key) { return $key.'=:'.$key; }, array_keys($arrParams)));
+			$strQuery = 'SET ' . implode('=?, ', $arrParamNames) . '=?';
 		}
 
 		$this->strQuery = str_replace('%s', $strQuery, $this->strQuery);
@@ -254,7 +253,13 @@ class Statement
 		$arrParams = array_map(
 			static function ($varParam)
 			{
-				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
+				// Cast boolean to integer, otherwise doctrine will convert "false" to an empty string
+				if (\is_bool($varParam))
+				{
+					return (int) $varParam;
+				}
+
+				if (\is_string($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
 				{
 					return $varParam;
 				}
@@ -263,12 +268,6 @@ class Statement
 			},
 			$arrParams
 		);
-
-		// Automatically set the types
-		if (empty($arrTypes) && preg_match('/(INSERT INTO|UPDATE) ([^\s]+)/i', $this->strQuery, $matches) && ($types = Model::getColumnCastTypes()[$matches[2]] ?? null))
-		{
-			$arrTypes = $types;
-		}
 
 		$this->arrLastUsedParams = $arrParams;
 
