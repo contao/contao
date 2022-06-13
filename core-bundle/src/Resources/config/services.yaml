@@ -799,9 +799,7 @@ services:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
             - '@contao.framework'
-            - '@session'
             - Contao\FrontendUser
-            - '@?logger'
 
     contao.security.login_authentication_listener:
         class: Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener
