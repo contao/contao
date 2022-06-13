@@ -342,7 +342,9 @@ abstract class Backend extends Controller
 		$id = $this->findCurrentId($strTable);
 		$objSession->set('CURRENT_ID', $id);
 
+		// Define the current ID
 		\define('CURRENT_ID', (Input::get('table') ? $id : Input::get('id')));
+
 		$this->Template->headline = $GLOBALS['TL_LANG']['MOD'][$module][0];
 
 		// Add the module style sheet
@@ -644,13 +646,13 @@ abstract class Backend extends Controller
 	}
 
 	/**
-	 * With this method the id of the current (parent) record can be determined
-	 * stateless based on the current request only.
+	 * With this method, the ID of the current (parent) record can be
+	 * determined stateless based on the current request only.
 	 *
-	 * In older versions Contao stored the id of the current (parent) record in
-	 * the user session as "CURRENT_ID" to make it known on subsequent requests.
-	 * This was unreliable and caused several issues, like for example if the
-	 * user used multiple browser tabs at the same time.
+	 * In older versions, Contao stored the ID of the current (parent) record
+	 * in the user session as "CURRENT_ID" to make it known on subsequent
+	 * requests. This was unreliable and caused several issues, like for
+	 * example if the user used multiple browser tabs at the same time.
 	 */
 	protected function findCurrentId(?string $table): ?string
 	{
@@ -665,10 +667,8 @@ abstract class Backend extends Controller
 		$mode = Input::get('mode');
 
 		// For these actions the id parameter refers to the parent record
-		if (
-			($act === 'paste' && $mode === 'create')
-			|| \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true)
-		) {
+		if (($act === 'paste' && $mode === 'create') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+		{
 			return $id;
 		}
 
@@ -710,11 +710,7 @@ abstract class Backend extends Controller
 
 		try
 		{
-			$objPid = $this->Database->prepare("SELECT pid FROM `$table` WHERE id=?")
-				->limit(1)
-				->execute($id);
-
-			return $objPid->pid;
+			return $this->Database->prepare("SELECT pid FROM `$table` WHERE id=?")->limit(1)->execute($id)->pid;
 		}
 		catch (\Throwable $exception)
 		{

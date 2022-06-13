@@ -72,6 +72,7 @@ class BackendFile extends Backend
 
 		$strTable = Input::get('table');
 		$strField = Input::get('field');
+
 		$id = $this->findCurrentId($strTable);
 		$objSession->set('CURRENT_ID', $id);
 
