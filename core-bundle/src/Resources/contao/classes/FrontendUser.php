@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Security\ContaoCorePermissions;
-
 /**
  * Provide methods to manage front end users.
  *
@@ -20,12 +18,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
  */
 class FrontendUser extends User
 {
-	/**
-	 * Symfony Security session key
-	 * @deprecated Deprecated since Contao 4.8, to be removed in Contao 5.0
-	 */
-	const SECURITY_SESSION_KEY = '_security_contao_frontend';
-
 	/**
 	 * Current object instance (do not remove)
 	 * @var FrontendUser
@@ -146,36 +138,6 @@ class FrontendUser extends User
 	}
 
 	/**
-	 * Authenticate a user
-	 *
-	 * @return boolean
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	public function authenticate()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\FrontendUser::authenticate()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		return System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
-	}
-
-	/**
-	 * Try to log in the current user
-	 *
-	 * @return boolean True if the user could be logged in
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	public function login()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\FrontendUser::login()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		return System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
-	}
-
-	/**
 	 * Save the original group membership
 	 *
 	 * @param string $strColumn
@@ -246,30 +208,6 @@ class FrontendUser extends User
 				$this->strLoginPage = $objGroup->jumpTo;
 			}
 		}
-	}
-
-	/**
-	 * Return true if the user is member of a particular group
-	 *
-	 * @param mixed $ids A single group ID or an array of group IDs
-	 *
-	 * @return boolean True if the user is a member of the group
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5.0;
-	 *             use Symfony security instead
-	 */
-	public function isMemberOf($ids)
-	{
-		$security = System::getContainer()->get('security.helper');
-
-		if ($security->getUser() === $this)
-		{
-			trigger_deprecation('contao/core-bundle', '4.12', 'Using "Contao\FrontendUser::isMemberOf()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-			return $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $ids);
-		}
-
-		return parent::isMemberOf($ids);
 	}
 
 	/**

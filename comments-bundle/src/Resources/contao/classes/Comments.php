@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Nyholm\Psr7\Uri;
 
 /**
  * Class Comments
@@ -137,7 +138,6 @@ class Comments extends Frontend
 		$objTemplate->email = $GLOBALS['TL_LANG']['MSC']['com_email'];
 		$objTemplate->website = $GLOBALS['TL_LANG']['MSC']['com_website'];
 		$objTemplate->commentsTotal = $limit ? $gtotal : $total;
-		$objTemplate->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		// Add a form to create new comments
 		$this->renderCommentForm($objTemplate, $objConfig, $strSource, $intParent, $varNotifies);
@@ -270,7 +270,6 @@ class Comments extends Frontend
 
 		$objTemplate->fields = $arrWidgets;
 		$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['com_submit'];
-		$objTemplate->messages = ''; // Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;
 
@@ -546,6 +545,9 @@ class Comments extends Frontend
 
 		$time = time();
 
+		// Ensure that the URL only contains ASCII characters (see #4708)
+		$request = (string) (new Uri(Environment::get('request')));
+
 		// Prepare the record
 		$arrSet = array
 		(
@@ -554,7 +556,7 @@ class Comments extends Frontend
 			'parent'       => $objComment->parent,
 			'name'         => $objComment->name,
 			'email'        => $objComment->email,
-			'url'          => Environment::get('request'),
+			'url'          => $request,
 			'addedOn'      => $time,
 			'active'       => '',
 			'tokenRemove'  => 'cor-' . bin2hex(random_bytes(10))
@@ -564,7 +566,7 @@ class Comments extends Frontend
 		$objNotify = new CommentsNotifyModel();
 		$objNotify->setRow($arrSet)->save();
 
-		$strUrl = Idna::decode(Environment::get('base')) . Environment::get('request');
+		$strUrl = Idna::decode(Environment::get('base')) . $request;
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
 		$optIn = System::getContainer()->get('contao.opt_in');

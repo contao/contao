@@ -44,12 +44,6 @@ parameters:
             message: '#type array<Symfony\\Component\\HttpKernel\\Fragment\\FragmentRendererInterface> is incompatible with native type Psr\\Container\\ContainerInterface#'
             path: %currentWorkingDirectory%/core-bundle/src/Fragment/FragmentHandler.php
 
-        -
-            # Ignore the errors due to PHPStan not understanding the @param-out annotation
-            # TODO: remove once https://github.com/phpstan/phpstan/issues/4372 has been fixed
-            message: '#Undefined variable: \$responseContextData#'
-            path: %currentWorkingDirectory%/core-bundle/tests/Controller
-
         # Ignore the wrong return type hint of the UrlGeneratorInterface::generate() method
         - '#Method Contao\\CoreBundle\\Picker\\AbstractPickerProvider::generateUrl\(\) never returns null so it can be removed from the return type\.#'
 

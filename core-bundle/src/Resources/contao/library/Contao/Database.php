@@ -118,13 +118,15 @@ class Database
 
 		if (\is_array($arrCustomConfig))
 		{
+			$container = System::getContainer();
+
 			$arrDefaultConfig = array
 			(
-				'dbHost'     => Config::get('dbHost'),
-				'dbPort'     => Config::get('dbPort'),
-				'dbUser'     => Config::get('dbUser'),
-				'dbPass'     => Config::get('dbPass'),
-				'dbDatabase' => Config::get('dbDatabase')
+				'dbHost'     => $container->hasParameter('database_host') ? $container->getParameter('database_host') : null,
+				'dbPort'     => $container->hasParameter('database_port') ? $container->getParameter('database_port') : null,
+				'dbUser'     => $container->hasParameter('database_user') ? $container->getParameter('database_user') : null,
+				'dbPass'     => $container->hasParameter('database_password') ? $container->getParameter('database_password') : null,
+				'dbDatabase' => $container->hasParameter('database_name') ? $container->getParameter('database_name') : null,
 			);
 
 			$arrConfig = array_merge($arrDefaultConfig, $arrCustomConfig);

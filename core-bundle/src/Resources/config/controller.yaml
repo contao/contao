@@ -50,6 +50,7 @@ services:
             - '@twig'
             - '@router'
             - '@contao.csrf.token_manager'
+            - '@translator'
             - '%contao.backend.attributes%'
             - '%contao.backend.badge_title%'
         tags:

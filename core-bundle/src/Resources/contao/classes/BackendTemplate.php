@@ -55,6 +55,8 @@ class BackendTemplate extends Template
 	 */
 	public function getResponse()
 	{
+		$this->compile();
+
 		$response = parent::getResponse();
 		$response->headers->set('Cache-Control', 'no-cache, no-store');
 
@@ -63,10 +65,8 @@ class BackendTemplate extends Template
 
 	/**
 	 * Compile the template
-	 *
-	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
-	protected function compile()
+	private function compile()
 	{
 		$this->addBackendConfig();
 
@@ -151,8 +151,6 @@ class BackendTemplate extends Template
 		}
 
 		$this->strBuffer = $strBuffer;
-
-		parent::compile();
 	}
 
 	/**

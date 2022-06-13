@@ -243,24 +243,6 @@ class ConfigurationTest extends TestCase
     }
 
     /**
-     * @group legacy
-     */
-    public function testTriggersContaoLocalconfigDeprecations(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.12: Setting "contao.localconfig.enableSearch" has been deprecated. Use "contao.search.default_indexer.enable" instead.');
-
-        $params = [
-            'contao' => [
-                'localconfig' => [
-                    'enableSearch' => false,
-                ],
-            ],
-        ];
-
-        (new Processor())->processConfiguration($this->configuration, $params);
-    }
-
-    /**
      * Ensure that all non-deprecated configuration keys are in lower case and
      * separated by underscores (aka snake_case).
      */

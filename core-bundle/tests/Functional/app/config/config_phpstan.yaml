@@ -1,5 +1,5 @@
 imports:
-    - { resource: config_test.yml }
+    - { resource: config_test.yaml }
 
 doctrine:
     dbal:
