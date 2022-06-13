@@ -10,9 +10,7 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -31,48 +29,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class BackendUser extends User
 {
-	/**
-	 * Edit page flag
-	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_PAGE.
-	 */
-	const CAN_EDIT_PAGE = 1;
-
-	/**
-	 * Edit page hierarchy flag
-	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY.
-	 */
-	const CAN_EDIT_PAGE_HIERARCHY = 2;
-
-	/**
-	 * Delete page flag
-	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_DELETE_PAGE.
-	 */
-	const CAN_DELETE_PAGE = 3;
-
-	/**
-	 * Edit articles flag
-	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_ARTICLES.
-	 */
-	const CAN_EDIT_ARTICLES = 4;
-
-	/**
-	 * Edit article hierarchy flag
-	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY.
-	 */
-	const CAN_EDIT_ARTICLE_HIERARCHY = 5;
-
-	/**
-	 * Delete articles flag
-	 * @deprecated Deprecated since Contao 4.13. Use Symfony security and ContaoCorePermissions::USER_CAN_DELETE_ARTICLES.
-	 */
-	const CAN_DELETE_ARTICLES = 6;
-
-	/**
-	 * Symfony Security session key
-	 * @deprecated Deprecated since Contao 4.8, to be removed in Contao 5.0
-	 */
-	const SECURITY_SESSION_KEY = '_security_contao_backend';
-
 	/**
 	 * Current object instance (do not remove)
 	 * @var BackendUser
@@ -190,56 +146,6 @@ class BackendUser extends User
 	}
 
 	/**
-	 * Redirect to the login screen if authentication fails
-	 *
-	 * @return boolean True if the user could be authenticated
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	public function authenticate()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\BackendUser::authenticate()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		// Do not redirect if authentication is successful
-		if (System::getContainer()->get('contao.security.token_checker')->hasBackendUser())
-		{
-			return true;
-		}
-
-		if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
-		{
-			return false;
-		}
-
-		$route = $request->attributes->get('_route');
-
-		if ($route == 'contao_backend_login')
-		{
-			return false;
-		}
-
-		$url = System::getContainer()->get('router')->generate('contao_backend_login', array('redirect' => $request->getUri()), UrlGeneratorInterface::ABSOLUTE_URL);
-
-		throw new RedirectResponseException(System::getContainer()->get('uri_signer')->sign($url));
-	}
-
-	/**
-	 * Try to login the current user
-	 *
-	 * @return boolean True if the user could be logged in
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	public function login()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\BackendUser::login()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		return System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
-	}
-
-	/**
 	 * Check whether the current user has a certain access right
 	 *
 	 * @param array|string $field
@@ -277,107 +183,6 @@ class BackendUser extends User
 		}
 
 		return false;
-	}
-
-	/**
-	 * Return true if the current user is allowed to do the current operation on the current page
-	 *
-	 * @param integer $int
-	 * @param array   $row
-	 *
-	 * @return boolean
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 *             Use the "security.helper" service with the ContaoCorePermissions
-	 *             constants instead.
-	 */
-	public function isAllowed($int, $row)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::isAllowed()" has been deprecated and will no longer work in Contao 5. Use the "security.helper" service with the ContaoCorePermissions constants instead.');
-
-		if ($this->isAdmin)
-		{
-			return true;
-		}
-
-		// Inherit CHMOD settings
-		if (!$row['includeChmod'])
-		{
-			$pid = $row['pid'];
-
-			$row['chmod'] = false;
-			$row['cuser'] = false;
-			$row['cgroup'] = false;
-
-			$objParentPage = PageModel::findById($pid);
-
-			while ($objParentPage !== null && $row['chmod'] === false && $pid > 0)
-			{
-				$pid = $objParentPage->pid;
-
-				$row['chmod'] = $objParentPage->includeChmod ? $objParentPage->chmod : false;
-				$row['cuser'] = $objParentPage->includeChmod ? $objParentPage->cuser : false;
-				$row['cgroup'] = $objParentPage->includeChmod ? $objParentPage->cgroup : false;
-
-				$objParentPage = PageModel::findById($pid);
-			}
-
-			// Set default values
-			if ($row['chmod'] === false)
-			{
-				$row['chmod'] = Config::get('defaultChmod');
-			}
-
-			if ($row['cuser'] === false)
-			{
-				$row['cuser'] = (int) Config::get('defaultUser');
-			}
-
-			if ($row['cgroup'] === false)
-			{
-				$row['cgroup'] = (int) Config::get('defaultGroup');
-			}
-		}
-
-		// Set permissions
-		$chmod = StringUtil::deserialize($row['chmod']);
-		$chmod = \is_array($chmod) ? $chmod : array($chmod);
-		$permission = array('w' . $int);
-
-		if (\in_array($row['cgroup'], $this->groups))
-		{
-			$permission[] = 'g' . $int;
-		}
-
-		if ($row['cuser'] == $this->id)
-		{
-			$permission[] = 'u' . $int;
-		}
-
-		return \count(array_intersect($permission, $chmod)) > 0;
-	}
-
-	/**
-	 * Return true if there is at least one allowed excluded field
-	 *
-	 * @param string $table
-	 *
-	 * @return boolean
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 *             Use the "security.helper" service with the ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE
-	 *             constant instead.
-	 */
-	public function canEditFieldsOf($table)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\BackendUser::canEditFieldsOfTable()" has been deprecated and will no longer work in Contao 5. Use the "security.helper" service with the ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE constant instead.');
-
-		if ($this->isAdmin)
-		{
-			return true;
-		}
-
-		return \count(preg_grep('/^' . preg_quote($table, '/') . '::/', $this->alexf)) > 0;
 	}
 
 	/**

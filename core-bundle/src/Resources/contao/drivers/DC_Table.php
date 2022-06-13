@@ -99,6 +99,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected $intPreserveRecord;
 
 	/**
+	 * Data of fields to be submitted
+	 * @var array
+	 */
+	protected $arrSubmit = array();
+
+	/**
 	 * Initialize the object
 	 *
 	 * @param string $strTable
@@ -190,6 +196,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(self::MODE_TREE, self::MODE_TREE_EXTENDED));
 		$this->arrModule = $arrModule;
+		$this->intCurrentPid = $this->findCurrentPid();
 
 		// Call onload_callback (e.g. to check permissions)
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] ?? null))
@@ -223,6 +230,58 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$session[$strRefererId][$this->strTable] = substr(Environment::get('requestUri'), \strlen(Environment::get('path')) + 1);
 			$objSession->set($strKey, $session);
 		}
+	}
+
+	/**
+	 * With this method, the ID of the current (parent) record can be
+	 * determined stateless based on the current request only.
+	 *
+	 * In older versions, Contao stored the ID of the current (parent) record
+	 * in the user session as "CURRENT_ID" to make it known on subsequent
+	 * requests. This was unreliable and caused several issues, like for
+	 * example if the user used multiple browser tabs at the same time.
+	 */
+	private function findCurrentPid(): ?int
+	{
+		if (!$this->ptable)
+		{
+			return null;
+		}
+
+		$id = ((int) Input::get('id')) ?: null;
+		$pid = ((int) Input::get('pid')) ?: null;
+		$act = Input::get('act');
+		$mode = Input::get('mode');
+
+		// For these actions the id parameter refers to the parent record
+		if (($act === 'paste' && $mode === 'create') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+		{
+			return $id;
+		}
+
+		// For these actions the pid parameter refers to the insert position
+		if (\in_array($act, array('create', 'cut', 'copy', 'cutAll', 'copyAll'), true))
+		{
+			// Mode “paste into”
+			if ($mode === '2')
+			{
+				return $pid;
+			}
+
+			// Mode “paste after”
+			$id = $pid;
+		}
+
+		if (!$id || !$this->Database->fieldExists('pid', $this->strTable))
+		{
+			return null;
+		}
+
+		$objPid = $this->Database->prepare("SELECT pid FROM `$this->strTable` WHERE id=?")
+								 ->limit(1)
+								 ->execute($id);
+
+		return ((int) $objPid->pid) ?: null;
 	}
 
 	/**
@@ -307,7 +366,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($this->ptable && Input::get('table') && $this->Database->fieldExists('pid', $this->strTable))
 			{
 				$this->procedure[] = 'pid=?';
-				$this->values[] = CURRENT_ID;
+				$this->values[] = $this->currentPid;
 			}
 
 			$return .= $this->panel();
@@ -1140,7 +1199,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$newPID = null;
 				$newSorting = null;
-				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 
 				/** @var Session $objSession */
 				$objSession = System::getContainer()->get('session');
@@ -1765,7 +1824,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return = '';
 		$this->values[] = $this->intId;
 		$this->procedure[] = 'id=?';
-
+		$this->arrSubmit = array();
 		$this->blnCreateNewVersion = false;
 		$objVersions = new Versions($this->strTable, $this->intId);
 
@@ -1789,6 +1848,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$objVersions->initialize();
+		$intLatestVersion = $objVersions->getLatestVersion();
 
 		// Build an array from boxes and rows
 		$this->strPalette = $this->getPalette();
@@ -1941,6 +2001,127 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$class = 'tl_box';
 				$return .= "\n" . '</fieldset>';
 			}
+
+			$this->submit();
+		}
+
+		// Reload the page to prevent _POST variables from being sent twice
+		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
+		{
+			// Show a warning if the record has been saved by another user (see #8412)
+			if ($intLatestVersion !== null && Input::post('VERSION_NUMBER') !== null && $intLatestVersion > Input::post('VERSION_NUMBER'))
+			{
+				$objTemplate = new BackendTemplate('be_conflict');
+				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
+				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
+				$objTemplate->theme = Backend::getTheme();
+				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
+				$objTemplate->base = Environment::get('base');
+				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
+				$objTemplate->explain1 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, Input::post('VERSION_NUMBER'));
+				$objTemplate->explain2 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict2'], $intLatestVersion + 1, $intLatestVersion);
+				$objTemplate->diff = $objVersions->compare(true);
+				$objTemplate->href = Environment::get('request');
+				$objTemplate->button = $GLOBALS['TL_LANG']['MSC']['continue'];
+
+				throw new ResponseException($objTemplate->getResponse());
+			}
+
+			// Redirect
+			if (Input::post('saveNclose') !== null)
+			{
+				Message::reset();
+
+				$this->redirect($this->getReferer());
+			}
+			elseif (Input::post('saveNedit') !== null)
+			{
+				Message::reset();
+
+				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['children']['href'] ?? '', false, array('s2e', 'act', 'mode', 'pid')));
+			}
+			elseif (Input::post('saveNback') !== null)
+			{
+				Message::reset();
+
+				if (!$this->ptable)
+				{
+					$this->redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do'));
+				}
+				// TODO: try to abstract this
+				elseif ($this->ptable == 'tl_page' && $this->strTable == 'tl_article')
+				{
+					$this->redirect($this->getReferer(false, $this->strTable));
+				}
+				else
+				{
+					$this->redirect($this->getReferer(false, $this->ptable));
+				}
+			}
+			elseif (Input::post('saveNcreate') !== null)
+			{
+				Message::reset();
+
+				$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do');
+
+				if (Input::get('table') !== null)
+				{
+					$strUrl .= '&amp;table=' . Input::get('table');
+				}
+
+				// Tree view
+				if ($this->treeView)
+				{
+					$strUrl .= '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId;
+				}
+
+				// Parent view
+				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
+				{
+					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . $this->activeRecord->pid;
+				}
+
+				// List view
+				else
+				{
+					$strUrl .= $this->ptable ? '&amp;act=create&amp;mode=2&amp;pid=' . $this->intCurrentPid : '&amp;act=create';
+				}
+
+				$this->redirect($strUrl . '&amp;rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+			}
+			elseif (Input::post('saveNduplicate') !== null)
+			{
+				Message::reset();
+
+				$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do');
+
+				if (Input::get('table') !== null)
+				{
+					$strUrl .= '&amp;table=' . Input::get('table');
+				}
+
+				// Tree view
+				if ($this->treeView)
+				{
+					$strUrl .= '&amp;act=copy&amp;mode=1&amp;id=' . $this->intId . '&amp;pid=' . $this->intId;
+				}
+
+				// Parent view
+				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
+				{
+					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId;
+				}
+
+				// List view
+				else
+				{
+					$strUrl .= $this->ptable ? '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intCurrentPid : '&amp;act=copy&amp;id=' . $this->intCurrentPid;
+				}
+
+				$this->redirect($strUrl . '&amp;rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+			}
+
+			$this->reload();
 		}
 
 		// Versions overview
@@ -2030,24 +2211,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>
 </form>';
 
-		// Always create a new version if something has changed, even if the form has errors (see #237)
-		if ($this->noReload && $this->blnCreateNewVersion && Input::post('FORM_SUBMIT') == $this->strTable)
-		{
-			$objVersions->create();
-		}
-
 		$strVersionField = '';
 
 		// Store the current version number (see #8412)
-		if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+		if ($intLatestVersion !== null)
 		{
 			$strVersionField = '
 <input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
 		}
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = $version . Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
+		$return = $version . ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . '
 <div id="tl_buttons">' . (Input::get('nb') ? '&nbsp;' : '
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>') . '
 </div>
@@ -2056,172 +2231,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $strVersionField . $return;
 
-		// Reload the page to prevent _POST variables from being sent twice
-		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
-		{
-			$arrValues = $this->values;
-			array_unshift($arrValues, time());
-
-			// Trigger the onsubmit_callback
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
-			{
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
-				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$callback($this);
-					}
-				}
-			}
-
-			// Set the current timestamp before adding a new version
-			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
-			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-							   ->execute($this->ptable, time(), $this->intId);
-			}
-			else
-			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-							   ->execute(time(), $this->intId);
-			}
-
-			// Save the current version
-			if ($this->blnCreateNewVersion)
-			{
-				$objVersions->create();
-			}
-
-			// Show a warning if the record has been saved by another user (see #8412)
-			if ($intLatestVersion !== null && Input::post('VERSION_NUMBER') !== null && $intLatestVersion > Input::post('VERSION_NUMBER'))
-			{
-				$objTemplate = new BackendTemplate('be_conflict');
-				$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
-				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
-				$objTemplate->theme = Backend::getTheme();
-				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
-				$objTemplate->base = Environment::get('base');
-				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
-				$objTemplate->explain1 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, Input::post('VERSION_NUMBER'));
-				$objTemplate->explain2 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict2'], $intLatestVersion + 1, $intLatestVersion);
-				$objTemplate->diff = $objVersions->compare(true);
-				$objTemplate->href = Environment::get('request');
-				$objTemplate->button = $GLOBALS['TL_LANG']['MSC']['continue'];
-
-				throw new ResponseException($objTemplate->getResponse());
-			}
-
-			$this->invalidateCacheTags();
-
-			// Redirect
-			if (Input::post('saveNclose') !== null)
-			{
-				Message::reset();
-
-				$this->redirect($this->getReferer());
-			}
-			elseif (Input::post('saveNedit') !== null)
-			{
-				Message::reset();
-
-				$this->redirect($this->addToUrl($GLOBALS['TL_DCA'][$this->strTable]['list']['operations']['children']['href'] ?? '', false, array('s2e', 'act', 'mode', 'pid')));
-			}
-			elseif (Input::post('saveNback') !== null)
-			{
-				Message::reset();
-
-				if (!$this->ptable)
-				{
-					$this->redirect(System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do'));
-				}
-				// TODO: try to abstract this
-				elseif ($this->ptable == 'tl_page' && $this->strTable == 'tl_article')
-				{
-					$this->redirect($this->getReferer(false, $this->strTable));
-				}
-				else
-				{
-					$this->redirect($this->getReferer(false, $this->ptable));
-				}
-			}
-			elseif (Input::post('saveNcreate') !== null)
-			{
-				Message::reset();
-
-				$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do');
-
-				if (Input::get('table') !== null)
-				{
-					$strUrl .= '&amp;table=' . Input::get('table');
-				}
-
-				// Tree view
-				if ($this->treeView)
-				{
-					$strUrl .= '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId;
-				}
-
-				// Parent view
-				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
-				{
-					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . $this->activeRecord->pid;
-				}
-
-				// List view
-				else
-				{
-					$strUrl .= $this->ptable ? '&amp;act=create&amp;mode=2&amp;pid=' . CURRENT_ID : '&amp;act=create';
-				}
-
-				$this->redirect($strUrl . '&amp;rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
-			}
-			elseif (Input::post('saveNduplicate') !== null)
-			{
-				Message::reset();
-
-				$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?do=' . Input::get('do');
-
-				if (Input::get('table') !== null)
-				{
-					$strUrl .= '&amp;table=' . Input::get('table');
-				}
-
-				// Tree view
-				if ($this->treeView)
-				{
-					$strUrl .= '&amp;act=copy&amp;mode=1&amp;id=' . $this->intId . '&amp;pid=' . $this->intId;
-				}
-
-				// Parent view
-				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
-				{
-					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . CURRENT_ID . '&amp;id=' . $this->intId;
-				}
-
-				// List view
-				else
-				{
-					$strUrl .= $this->ptable ? '&amp;act=copy&amp;mode=2&amp;pid=' . CURRENT_ID . '&amp;id=' . CURRENT_ID : '&amp;act=copy&amp;id=' . CURRENT_ID;
-				}
-
-				$this->redirect($strUrl . '&amp;rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
-			}
-
-			$this->reload();
-		}
-
 		// Set the focus if there is an error
 		if ($this->noReload)
 		{
 			$return .= '
 <script>
   window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
+    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
+    if (error) Backend.vScrollTo((error.getPosition().y - 20));
   });
 </script>';
 		}
@@ -2275,202 +2292,201 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$class = 'tl_tbox';
 
-			// Walk through each record
-			foreach ($ids as $id)
+			if (Input::post('FORM_SUBMIT') == $this->strTable)
 			{
-				$this->intId = $id;
-				$this->procedure = array('id=?');
-				$this->values = array($this->intId);
-				$this->blnCreateNewVersion = false;
-				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
+				$this->Database->beginTransaction();
+			}
 
-				$objVersions = new Versions($this->strTable, $this->intId);
-				$objVersions->initialize();
+			try
+			{
+				$blnNoReload = false;
 
-				// Add meta fields if the current user is an administrator
-				if ($this->User->isAdmin)
+				// Walk through each record
+				foreach ($ids as $id)
 				{
-					if ($this->Database->fieldExists('sorting', $this->strTable))
-					{
-						array_unshift($this->strPalette, 'sorting');
-					}
+					$this->intId = $id;
+					$this->procedure = array('id=?');
+					$this->values = array($this->intId);
+					$this->arrSubmit = array();
+					$this->blnCreateNewVersion = false;
+					$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
 
-					if ($this->Database->fieldExists('pid', $this->strTable))
-					{
-						array_unshift($this->strPalette, 'pid');
-					}
+					// Reset the "noReload" state but remember it for the final handling
+					$blnNoReload = $blnNoReload || $this->noReload;
+					$this->noReload = false;
 
-					// Ensure a minimum configuration
-					foreach (array('pid', 'sorting') as $f)
+					$objVersions = new Versions($this->strTable, $this->intId);
+					$objVersions->initialize();
+
+					// Add meta fields if the current user is an administrator
+					if ($this->User->isAdmin)
 					{
-						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label']))
+						if ($this->Database->fieldExists('sorting', $this->strTable))
 						{
-							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] = &$GLOBALS['TL_LANG']['MSC'][$f];
+							array_unshift($this->strPalette, 'sorting');
 						}
 
-						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['inputType']))
+						if ($this->Database->fieldExists('pid', $this->strTable))
 						{
-							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['inputType'] = 'text';
+							array_unshift($this->strPalette, 'pid');
 						}
 
-						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['tl_class']))
+						// Ensure a minimum configuration
+						foreach (array('pid', 'sorting') as $f)
 						{
-							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['tl_class'] = 'w50';
-						}
-
-						if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp']))
-						{
-							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp'] = 'natural';
-						}
-					}
-				}
-
-				// Begin current row
-				$strAjax = '';
-				$blnAjax = false;
-				$return .= '
-<div class="' . $class . ' cf">';
-
-				$class = 'tl_box';
-				$formFields = array();
-
-				// Get the field values
-				$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-										 ->limit(1)
-										 ->execute($this->intId);
-
-				// Store the active record
-				$this->objActiveRecord = $objRow;
-
-				foreach ($this->strPalette as $v)
-				{
-					// Check whether field is excluded
-					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null)
-					{
-						continue;
-					}
-
-					if ($v == '[EOF]')
-					{
-						if ($blnAjax && Environment::get('isAjaxRequest'))
-						{
-							return $strAjax;
-						}
-
-						$blnAjax = false;
-						$return .= "\n  " . '</div>';
-
-						continue;
-					}
-
-					if (preg_match('/^\[.*]$/', $v))
-					{
-						$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
-						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
-						$return .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
-
-						continue;
-					}
-
-					if (!\in_array($v, $fields))
-					{
-						continue;
-					}
-
-					$this->strField = $v;
-					$this->strInputName = $v . '_' . $this->intId;
-					$formFields[] = $v . '_' . $this->intId;
-
-					// Set the default value and try to load the current value from DB (see #5252)
-					if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array()))
-					{
-						$this->varValue = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default'];
-					}
-
-					if ($objRow->$v !== false)
-					{
-						$this->varValue = $objRow->$v;
-					}
-
-					// Convert CSV fields (see #2890)
-					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] ?? null) && isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['csv']))
-					{
-						$this->varValue = StringUtil::trimsplit($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['csv'], $this->varValue);
-					}
-
-					// Call load_callback
-					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] ?? null))
-					{
-						foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] as $callback)
-						{
-							if (\is_array($callback))
+							if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label']))
 							{
-								$this->import($callback[0]);
-								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
+								$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] = &$GLOBALS['TL_LANG']['MSC'][$f];
 							}
-							elseif (\is_callable($callback))
+
+							if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['inputType']))
 							{
-								$this->varValue = $callback($this->varValue, $this);
+								$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['inputType'] = 'text';
+							}
+
+							if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['tl_class']))
+							{
+								$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['tl_class'] = 'w50';
+							}
+
+							if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp']))
+							{
+								$GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['eval']['rgxp'] = 'natural';
 							}
 						}
 					}
 
-					// Re-set the current value
-					$this->objActiveRecord->{$this->strField} = $this->varValue;
+					// Begin current row
+					$strAjax = '';
+					$blnAjax = false;
+					$box = '';
 
-					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $strAjax .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
-				}
+					// Get the field values
+					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+											 ->limit(1)
+											 ->execute($this->intId);
 
-				// Close box
-				$return .= '
+					// Store the active record
+					$this->objActiveRecord = $objRow;
+
+					foreach ($this->strPalette as $v)
+					{
+						// Check whether field is excluded
+						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null)
+						{
+							continue;
+						}
+
+						if ($v == '[EOF]')
+						{
+							if ($blnAjax && Environment::get('isAjaxRequest'))
+							{
+								return $strAjax;
+							}
+
+							$blnAjax = false;
+							$box .= "\n  " . '</div>';
+
+							continue;
+						}
+
+						if (preg_match('/^\[.*]$/', $v))
+						{
+							$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
+							$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
+							$box .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
+
+							continue;
+						}
+
+						if (!\in_array($v, $fields))
+						{
+							continue;
+						}
+
+						$this->strField = $v;
+						$this->strInputName = $v . '_' . $this->intId;
+
+						// Set the default value and try to load the current value from DB (see #5252)
+						if (\array_key_exists('default', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array()))
+						{
+							$this->varValue = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default'];
+						}
+
+						if ($objRow->$v !== false)
+						{
+							$this->varValue = $objRow->$v;
+						}
+
+						// Convert CSV fields (see #2890)
+						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] ?? null) && isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['csv']))
+						{
+							$this->varValue = StringUtil::trimsplit($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['csv'], $this->varValue);
+						}
+
+						// Call load_callback
+						if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] ?? null))
+						{
+							foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] as $callback)
+							{
+								if (\is_array($callback))
+								{
+									$this->import($callback[0]);
+									$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
+								}
+								elseif (\is_callable($callback))
+								{
+									$this->varValue = $callback($this->varValue, $this);
+								}
+							}
+						}
+
+						// Re-set the current value
+						$this->objActiveRecord->{$this->strField} = $this->varValue;
+
+						// Build the row and pass the current palette string (thanks to Tristan Lins)
+						$blnAjax ? $strAjax .= $this->row($this->strPalette) : $box .= $this->row($this->strPalette);
+					}
+
+					// Save record
+					$this->submit();
+
+					$return .= Message::generateUnwrapped() . '
+<div class="' . $class . ' cf">' . $box . '
 </div>';
 
-				// Always create a new version if something has changed, even if the form has errors (see #237)
-				if ($this->noReload && $this->blnCreateNewVersion && Input::post('FORM_SUBMIT') == $this->strTable)
-				{
-					$objVersions->create();
+					$class = 'tl_box';
 				}
 
-				// Save record
-				if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
+				$this->noReload = $blnNoReload || $this->noReload;
+			}
+			catch (\Throwable $e)
+			{
+				if (Input::post('FORM_SUBMIT') == $this->strTable)
 				{
-					// Call the onsubmit_callback
-					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
+					$this->Database->rollbackTransaction();
+				}
+
+				throw $e;
+			}
+
+			// Reload the page to prevent _POST variables from being sent twice
+			if (Input::post('FORM_SUBMIT') == $this->strTable)
+			{
+				if ($this->noReload)
+				{
+					$this->Database->rollbackTransaction();
+				}
+				else
+				{
+					$this->Database->commitTransaction();
+
+					if (Input::post('saveNclose') !== null)
 					{
-						foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
-						{
-							if (\is_array($callback))
-							{
-								$this->import($callback[0]);
-								$this->{$callback[0]}->{$callback[1]}($this);
-							}
-							elseif (\is_callable($callback))
-							{
-								$callback($this);
-							}
-						}
+						$this->redirect($this->getReferer());
 					}
 
-					// Set the current timestamp before adding a new version
-					if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
-					{
-						$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-									   ->execute($this->ptable, time(), $this->intId);
-					}
-					else
-					{
-						$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-									   ->execute(time(), $this->intId);
-					}
-
-					// Create a new version
-					if ($this->blnCreateNewVersion)
-					{
-						$objVersions->create();
-					}
-
-					$this->invalidateCacheTags();
+					$this->reload();
 				}
 			}
 
@@ -2520,8 +2536,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $return . '
 </div>
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
@@ -2536,20 +2551,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$return .= '
 <script>
   window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
+    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
+    if (error) Backend.vScrollTo((error.getPosition().y - 20));
   });
 </script>';
-			}
-
-			// Reload the page to prevent _POST variables from being sent twice
-			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
-			{
-				if (Input::post('saveNclose') !== null)
-				{
-					$this->redirect($this->getReferer());
-				}
-
-				$this->reload();
 			}
 		}
 
@@ -2616,7 +2621,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Return
-		return '
+		return ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>' . $return;
@@ -2675,8 +2681,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$this->objActiveRecord = $objRow;
-		$this->values[] = $this->intId;
-		$this->procedure[] = 'id=?';
+		$this->procedure = array('id=?');
+		$this->values = array($this->intId);
 		$this->blnCreateNewVersion = false;
 
 		$objVersions = new Versions($this->strTable, $this->intId);
@@ -2686,43 +2692,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->varValue = $objRow->{$this->strField};
 
 		$this->save($this->varValue ? '' : '1');
-
-		// Trigger the onsubmit_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$callback($this);
-				}
-			}
-		}
-
-		// Set the current timestamp before adding a new version
-		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
-		{
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-						   ->execute($this->ptable, time(), $this->intId);
-		}
-		else
-		{
-			$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-						   ->execute(time(), $this->intId);
-		}
-
-		// Save the current version
-		if ($this->blnCreateNewVersion)
-		{
-			$objVersions->create();
-		}
-
-		$this->invalidateCacheTags();
+		$this->submit();
 
 		$this->redirect($this->getReferer());
 	}
@@ -2764,104 +2734,87 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($fields) && \is_array($fields) && Input::get('fields'))
 		{
 			$class = 'tl_tbox';
-			$formFields = array();
 
 			// Save record
 			if (Input::post('FORM_SUBMIT') == $this->strTable)
 			{
-				foreach ($ids as $id)
+				$this->Database->beginTransaction();
+
+				try
 				{
-					try
+					foreach ($ids as $id)
 					{
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $id));
-					}
-					catch (AccessDeniedException)
-					{
-						continue;
-					}
-
-					$this->intId = $id;
-					$this->procedure = array('id=?');
-					$this->values = array($this->intId);
-					$this->blnCreateNewVersion = false;
-
-					// Get the field values
-					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-											 ->limit(1)
-											 ->execute($this->intId);
-
-					// Store the active record
-					$this->objActiveRecord = $objRow;
-
-					$objVersions = new Versions($this->strTable, $this->intId);
-					$objVersions->initialize();
-
-					// Store all fields
-					foreach ($fields as $v)
-					{
-						// Check whether field is excluded
-						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null)
+						try
+						{
+							$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $id));
+						}
+						catch (AccessDeniedException)
 						{
 							continue;
 						}
 
-						$this->strField = $v;
-						$this->strInputName = $v;
-						$this->varValue = '';
+						$this->intId = $id;
+						$this->procedure = array('id=?');
+						$this->values = array($this->intId);
+						$this->arrSubmit = array();
+						$this->blnCreateNewVersion = false;
 
-						// Make sure the new value is applied
-						$GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['eval']['alwaysSave'] = true;
+						// Get the field values
+						$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+												 ->limit(1)
+												 ->execute($this->intId);
 
-						// Store value
-						$this->row();
-					}
+						// Store the active record
+						$this->objActiveRecord = $objRow;
 
-					// Always create a new version if something has changed, even if the form has errors (see #237)
-					if ($this->noReload && $this->blnCreateNewVersion)
-					{
-						$objVersions->create();
-					}
+						$objVersions = new Versions($this->strTable, $this->intId);
+						$objVersions->initialize();
 
-					// Post-processing
-					if (!$this->noReload)
-					{
-						// Call the onsubmit_callback
-						if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
+						// Store all fields
+						foreach ($fields as $v)
 						{
-							foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
+							// Check whether field is excluded
+							if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null)
 							{
-								if (\is_array($callback))
-								{
-									$this->import($callback[0]);
-									$this->{$callback[0]}->{$callback[1]}($this);
-								}
-								elseif (\is_callable($callback))
-								{
-									$callback($this);
-								}
+								continue;
 							}
+
+							$this->strField = $v;
+							$this->strInputName = $v;
+							$this->varValue = '';
+
+							// Make sure the new value is applied
+							$GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['eval']['alwaysSave'] = true;
+
+							// Store value
+							$this->row();
 						}
 
-						$this->invalidateCacheTags();
-
-						// Set the current timestamp before adding a new version
-						if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
-						{
-							$this->Database->prepare("UPDATE " . $this->strTable . " SET ptable=?, tstamp=? WHERE id=?")
-										   ->execute($this->ptable, time(), $this->intId);
-						}
-						else
-						{
-							$this->Database->prepare("UPDATE " . $this->strTable . " SET tstamp=? WHERE id=?")
-										   ->execute(time(), $this->intId);
-						}
-
-						// Create a new version
-						if ($this->blnCreateNewVersion)
-						{
-							$objVersions->create();
-						}
+						$this->submit();
 					}
+				}
+				catch (\Throwable $e)
+				{
+					$this->Database->rollbackTransaction();
+
+					throw $e;
+				}
+
+				// Reload the page to prevent _POST variables from being sent twice
+				if ($this->noReload)
+				{
+					$this->Database->rollbackTransaction();
+				}
+				else
+				{
+					$this->Database->commitTransaction();
+
+					if (Input::post('saveNclose') !== null)
+					{
+						$this->redirect($this->getReferer());
+					}
+
+					$this->reload();
 				}
 			}
 
@@ -2876,8 +2829,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					continue;
 				}
-
-				$formFields[] = $v;
 
 				$this->intId = 0;
 				$this->procedure = array('id=?');
@@ -2940,8 +2891,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . $return . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $return . '
 </div>
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
@@ -2956,20 +2906,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$return .= '
 <script>
   window.addEvent(\'domready\', function() {
-    Backend.vScrollTo(($(\'' . $this->strTable . '\').getElement(\'label.error\').getPosition().y - 20));
+    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
+    if (error) Backend.vScrollTo((error.getPosition().y - 20));
   });
 </script>';
-			}
-
-			// Reload the page to prevent _POST variables from being sent twice
-			if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
-			{
-				if (Input::post('saveNclose') !== null)
-				{
-					$this->redirect($this->getReferer());
-				}
-
-				$this->reload();
 			}
 		}
 
@@ -3035,7 +2975,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Return
-		return '
+		return ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . '
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>' . $return;
@@ -3062,12 +3003,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$objDate = new Date($varValue, Date::getFormatFromRgxp($arrData['eval']['rgxp']));
 			$varValue = $objDate->tstamp;
-		}
-
-		// Make sure unique fields are unique
-		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
-		{
-			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
 
 		// Handle multi-select fields in "override all" mode
@@ -3145,53 +3080,167 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		// Make sure unique fields are unique
+		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+		{
+			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
+		}
+
 		// Save the value if there was no error
 		if ((\is_array($varValue) || (string) $varValue !== '' || !($arrData['eval']['doNotSaveEmpty'] ?? null)) && ($this->varValue !== $varValue || ($arrData['eval']['alwaysSave'] ?? null)))
 		{
-			$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
-			$arrTypes = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
+			// Set the correct empty value (see #6284, #6373)
+			if (!\is_array($varValue) && (string) $varValue === '')
+			{
+				$varValue = Widget::getEmptyValueByFieldType($arrData['sql'] ?? array());
+			}
+
+			$this->arrSubmit[$this->strField] = $varValue;
+			$this->varValue = StringUtil::deserialize($varValue);
+
+			if (\is_object($this->objActiveRecord))
+			{
+				$this->objActiveRecord->{$this->strField} = $this->varValue;
+			}
+		}
+	}
+
+	protected function submit()
+	{
+		if (empty($this->arrSubmit) || Input::post('FORM_SUBMIT') != $this->strTable)
+		{
+			return;
+		}
+
+		if ($this->noReload)
+		{
+			// Data should not be submitted due to validation errors
+			$this->arrSubmit = array();
+
+			return;
+		}
+
+		$arrValues = $this->arrSubmit;
+		$this->arrSubmit = array();
+
+		// Call onbeforesubmit_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onbeforesubmit_callback'] as $callback)
+			{
+				try
+				{
+					if (\is_array($callback))
+					{
+						$this->import($callback[0]);
+						$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $this);
+					}
+					elseif (\is_callable($callback))
+					{
+						$arrValues = $callback($arrValues, $this);
+					}
+
+					if (!\is_array($arrValues))
+					{
+						throw new \RuntimeException('The onbeforesubmit_callback must return the values!');
+					}
+				}
+				catch (\Exception $e)
+				{
+					$this->noReload = true;
+					Message::addError($e->getMessage());
+
+					return;
+				}
+			}
+		}
+
+		$arrTypes = array();
+		$blnVersionize = false;
+
+		foreach ($arrValues as $strField => $varValue)
+		{
+			$this->strField = $strField;
+			$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
 			// If the field is a fallback field, empty all other columns (see #6498)
 			if ($varValue && ($arrData['eval']['fallback'] ?? null))
 			{
+				$varEmpty = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
+				$arrType = array_filter(array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null));
+
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
-								   ->query('', array($varEmpty, $this->activeRecord->pid), $arrTypes);
+					$this->Database
+						->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
+						->query('', array($varEmpty, $this->activeRecord->pid), $arrType);
 				}
 				else
 				{
-					$this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
-								   ->query('', array($varEmpty), $arrTypes);
+					$this->Database
+						->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=?")
+						->query('', array($varEmpty), $arrType);
 				}
 			}
 
-			// Set the correct empty value (see #6284, #6373)
-			if (!\is_array($varValue) && (string) $varValue === '')
+			$arrTypes[] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql']['type'] ?? null;
+
+			if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
 			{
-				$varValue = $varEmpty;
+				$blnVersionize = true;
 			}
 
-			$arrValues = $this->values;
-			array_unshift($arrValues, $varValue);
+			$this->varValue = StringUtil::deserialize($varValue);
 
-			$objUpdateStmt = $this->Database->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE " . implode(' AND ', $this->procedure))
-											->query('', $arrValues, $arrTypes);
-
-			if ($objUpdateStmt->affectedRows)
+			if (\is_object($this->objActiveRecord))
 			{
-				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
+				$this->objActiveRecord->{$this->strField} = $this->varValue;
+			}
+		}
+
+		if (!empty($arrValues))
+		{
+			$arrValues['tstamp'] = time();
+
+			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+			{
+				$arrValues['ptable'] = $this->ptable;
+			}
+
+			$objUpdateStmt = $this->Database
+				->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
+				->set($arrValues)
+				->query('', array_merge(array_values($arrValues), $this->values), $arrTypes);
+
+			if ($objUpdateStmt->affectedRows && $blnVersionize)
+			{
+				$this->blnCreateNewVersion = true;
+			}
+		}
+
+		// Trigger the onsubmit_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onsubmit_callback'] as $callback)
+			{
+				if (\is_array($callback))
 				{
-					$this->blnCreateNewVersion = true;
+					$this->import($callback[0]);
+					$this->{$callback[0]}->{$callback[1]}($this);
 				}
-
-				$this->varValue = StringUtil::deserialize($varValue);
-
-				if (\is_object($this->objActiveRecord))
+				elseif (\is_callable($callback))
 				{
-					$this->objActiveRecord->{$this->strField} = $this->varValue;
+					$callback($this);
 				}
 			}
+		}
+
+		if ($this->blnCreateNewVersion)
+		{
+			$objVersions = new Versions($this->strTable, $this->intId);
+			$objVersions->create();
+
+			$this->invalidateCacheTags();
 		}
 	}
 
@@ -4181,7 +4230,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Get all details of the parent record
 		$objParent = $this->Database->prepare("SELECT * FROM " . $this->ptable . " WHERE id=?")
 									->limit(1)
-									->execute(CURRENT_ID);
+									->execute($this->intCurrentPid);
 
 		if ($objParent->numRows < 1)
 		{
@@ -4444,7 +4493,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$return .= '
 
-<ul id="ul_' . CURRENT_ID . '">';
+<ul id="ul_' . $this->intCurrentPid . '">';
 			}
 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
@@ -4585,7 +4634,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '
 </ul>
 <script>
-  Backend.makeParentViewSortable("ul_' . CURRENT_ID . '");
+  Backend.makeParentViewSortable("ul_' . $this->intCurrentPid . '");
 </script>';
 		}
 
@@ -5117,7 +5166,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$searchValue = preg_quote($searchValue);
+				$searchValue = preg_quote($searchValue, null);
 			}
 
 			$strReplacePrefix = '';
@@ -5147,12 +5196,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$strPattern = "$strReplacePrefix CAST(%s AS CHAR) $strReplaceSuffix REGEXP ?";
-
-			if (substr(Config::get('dbCollation'), -3) == '_ci')
-			{
-				$strPattern = "$strReplacePrefix LOWER(CAST(%s AS CHAR)) $strReplaceSuffix REGEXP LOWER(?)";
-			}
+			$strPattern = "$strReplacePrefix LOWER(CAST(%s AS CHAR)) $strReplaceSuffix REGEXP LOWER(?)";
 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
@@ -5331,7 +5375,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 		$fields = '';
 
 		// Set limit from user input
@@ -5470,7 +5514,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$fields = '';
 		$sortingFields = array();
 		$session = $objSessionBag->all();
-		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 
 		// Get the sorting fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
@@ -5597,7 +5641,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 			{
 				$arrProcedure[] = 'pid=?';
-				$arrValues[] = CURRENT_ID;
+				$arrValues[] = $this->intCurrentPid;
 			}
 
 			if (!$this->treeView && !empty($this->root) && \is_array($this->root))
@@ -5943,7 +5987,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 
 		list($offset, $limit) = explode(',', $this->limit) + array(null, null);
 

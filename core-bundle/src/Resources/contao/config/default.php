@@ -9,10 +9,7 @@
  */
 
 // General settings
-$GLOBALS['TL_CONFIG']['characterSet']   = 'utf-8';
 $GLOBALS['TL_CONFIG']['adminEmail']     = '';
-$GLOBALS['TL_CONFIG']['enableSearch']   = true;
-$GLOBALS['TL_CONFIG']['indexProtected'] = false;
 $GLOBALS['TL_CONFIG']['folderUrl']      = true;
 
 // Date and time
@@ -63,10 +60,6 @@ $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(array(
 	array('key' => 'details', 'value' => 'open'),
 ));
 
-// Database
-$GLOBALS['TL_CONFIG']['dbCharset']   = 'utf8mb4';
-$GLOBALS['TL_CONFIG']['dbCollation'] = 'utf8mb4_unicode_ci';
-
 // File uploads
 $GLOBALS['TL_CONFIG']['uploadTypes']
 	= 'jpg,jpeg,gif,png,ico,svg,svgz,webp,avif,heic,jxl,'
@@ -83,7 +76,6 @@ $GLOBALS['TL_CONFIG']['imageHeight']    = 0;
 $GLOBALS['TL_CONFIG']['undoPeriod']     = 2592000;
 $GLOBALS['TL_CONFIG']['versionPeriod']  = 7776000;
 $GLOBALS['TL_CONFIG']['logPeriod']      = 604800;
-$GLOBALS['TL_CONFIG']['sessionTimeout'] = 3600;
 
 // User defaults
 $GLOBALS['TL_CONFIG']['showHelp']   = true;
@@ -106,16 +98,9 @@ $GLOBALS['TL_CONFIG']['allowedDownload']
 	. 'zip,rar,7z,md';
 $GLOBALS['TL_CONFIG']['installPassword']      = '';
 $GLOBALS['TL_CONFIG']['backendTheme']         = 'flexible';
-$GLOBALS['TL_CONFIG']['rootFiles']            = array();
 $GLOBALS['TL_CONFIG']['doNotCollapse']        = false;
-$GLOBALS['TL_CONFIG']['exampleWebsite']       = '';
 $GLOBALS['TL_CONFIG']['minPasswordLength']    = 8;
 $GLOBALS['TL_CONFIG']['disableCron']          = false;
-$GLOBALS['TL_CONFIG']['coreOnlyMode']         = false;
-$GLOBALS['TL_CONFIG']['privacyAnonymizeIp']   = true;
-$GLOBALS['TL_CONFIG']['privacyAnonymizeGA']   = true;
-$GLOBALS['TL_CONFIG']['bypassCache']          = false;
 $GLOBALS['TL_CONFIG']['defaultFileChmod']     = 0644;
 $GLOBALS['TL_CONFIG']['defaultFolderChmod']   = 0755;
 $GLOBALS['TL_CONFIG']['maxPaginationLinks']   = 7;
-$GLOBALS['TL_CONFIG']['sslProxyDomain']       = '';

@@ -891,7 +891,7 @@ class tl_page extends Backend
 		if (Input::get('act') && Input::get('act') != 'paste')
 		{
 			$permission = null;
-			$cid = CURRENT_ID ?: Input::get('id');
+			$cid = Input::get('id');
 			$ids = $cid ? array($cid) : array();
 
 			// Set permission

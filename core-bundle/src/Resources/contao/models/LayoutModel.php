@@ -15,9 +15,9 @@ use Contao\Model\Collection;
 /**
  * Reads and writes page layouts
  *
- * @property string|integer    $id
- * @property string|integer    $pid
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $pid
+ * @property integer           $tstamp
  * @property string            $name
  * @property string            $rows
  * @property string|array      $headerHeight
