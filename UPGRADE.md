@@ -4,9 +4,8 @@
 
 ### CURRENT_ID
 
-The constant `CURRENT_ID` as well as the session variable `CURRENT_ID` has been
-removed. Use `DataContainer::$currentPid` instead to determine the ID of the
-current parent record.
+The `CURRENT_ID` constant and session variable have been removed. Use
+`DataContainer::$currentPid` instead to determine the ID of the current parent record.
 
 ```php
 $intCurrentParentRecordId = $dc->currentPid;

@@ -233,13 +233,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * With this method the id of the current parent record can be determined
-	 * stateless based on the current request only.
+	 * With this method, the ID of the current (parent) record can be
+	 * determined stateless based on the current request only.
 	 *
-	 * In older versions Contao stored the id of the current parent record in
-	 * the user session as "CURRENT_ID" to make it known on subsequent requests.
-	 * This was unreliable and caused several issues, like for example if the
-	 * user used multiple browser tabs at the same time.
+	 * In older versions, Contao stored the ID of the current (parent) record
+	 * in the user session as "CURRENT_ID" to make it known on subsequent
+	 * requests. This was unreliable and caused several issues, like for
+	 * example if the user used multiple browser tabs at the same time.
 	 */
 	private function findCurrentPid(): ?int
 	{
@@ -254,10 +254,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$mode = Input::get('mode');
 
 		// For these actions the id parameter refers to the parent record
-		if (
-			($act === 'paste' && $mode === 'create')
-			|| \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true)
-		) {
+		if (($act === 'paste' && $mode === 'create') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+		{
 			return $id;
 		}
 
@@ -280,8 +278,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$objPid = $this->Database->prepare("SELECT pid FROM `$this->strTable` WHERE id=?")
-			->limit(1)
-			->execute($id);
+								 ->limit(1)
+								 ->execute($id);
 
 		return ((int) $objPid->pid) ?: null;
 	}
