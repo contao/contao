@@ -253,7 +253,7 @@ class Statement
 		$arrParams = array_map(
 			static function ($varParam)
 			{
-				// Cast boolean to integer, otherwise doctrine will convert "false" to an empty string
+				// Cast boolean to integer, otherwise Doctrine will convert "false" to an empty string
 				if (\is_bool($varParam))
 				{
 					return (int) $varParam;
