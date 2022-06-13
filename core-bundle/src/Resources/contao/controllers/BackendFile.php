@@ -73,8 +73,11 @@ class BackendFile extends Backend
 		$strTable = Input::get('table');
 		$strField = Input::get('field');
 
+		$id = $this->findCurrentId($strTable);
+		$objSession->set('CURRENT_ID', $id);
+
 		// Define the current ID
-		\define('CURRENT_ID', (Input::get('table') ? $objSession->get('CURRENT_ID') : Input::get('id')));
+		\define('CURRENT_ID', (Input::get('table') ? $id : Input::get('id')));
 
 		$this->loadDataContainer($strTable);
 		$strDriver = DataContainer::getDriverForTable($strTable);
