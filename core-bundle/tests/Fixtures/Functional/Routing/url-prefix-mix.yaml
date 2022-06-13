@@ -1,0 +1,68 @@
+tl_page:
+    - id: 1
+      pid: 0
+      sorting: 128
+      tstamp: 1550250933
+      title: English root
+      alias: english-root
+      urlPrefix: en
+      urlSuffix: .html
+      type: root
+      language: en
+      dns: example.local
+      fallback: '1'
+      includeLayout: '1'
+      layout: 1
+      published: '1'
+
+    - id: 2
+      pid: 1
+      sorting: 128
+      tstamp: 1539698035
+      title: English site
+      alias: index
+      type: regular
+      published: '1'
+
+    - id: 3
+      pid: 1
+      sorting: 256
+      tstamp: 1539698035
+      title: English 404
+      alias: error404
+      type: error_404
+      published: '1'
+
+    - id: 4
+      pid: 0
+      sorting: 256
+      tstamp: 1539696285
+      title: Dutch root
+      alias: dutch-root
+      urlPrefix: ''
+      urlSuffix: .html
+      type: root
+      language: nl
+      dns: example.local
+      fallback: ''
+      includeLayout: '1'
+      layout: 1
+      published: '1'
+
+    - id: 5
+      pid: 4
+      sorting: 128
+      tstamp: 1539698035
+      title: Dutch site
+      alias: index
+      type: regular
+      published: '1'
+
+    - id: 6
+      pid: 4
+      sorting: 256
+      tstamp: 1539698035
+      title: Dutch 404
+      alias: error404
+      type: error_404
+      published: '1'

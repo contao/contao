@@ -17,6 +17,7 @@ use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -221,7 +222,11 @@ class ContentElementTestCase extends TestCase
         $environment = new Environment($contaoFilesystemLoader);
 
         // Contao extension
-        $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader));
+        $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader, $this->createMock(ContaoCsrfTokenManager::class)));
+
+        // Symfony extensions
+        $translator = $this->createMock(TranslatorInterface::class);
+        $environment->addExtension(new TranslationExtension($translator));
 
         // Symfony extensions
         $translator = $this->createMock(TranslatorInterface::class);

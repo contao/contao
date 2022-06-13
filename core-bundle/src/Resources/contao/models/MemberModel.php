@@ -16,11 +16,11 @@ use Contao\Model\Registry;
 /**
  * Reads and writes members
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string            $firstname
  * @property string            $lastname
- * @property string|integer    $dateOfBirth
+ * @property integer           $dateOfBirth
  * @property string            $gender
  * @property string            $company
  * @property string            $street
@@ -43,16 +43,16 @@ use Contao\Model\Registry;
  * @property string|boolean    $disable
  * @property string|integer    $start
  * @property string|integer    $stop
- * @property string|integer    $dateAdded
- * @property string|integer    $lastLogin
- * @property string|integer    $currentLogin
- * @property string|integer    $loginAttempts
- * @property string|integer    $locked
+ * @property integer           $dateAdded
+ * @property integer           $lastLogin
+ * @property integer           $currentLogin
+ * @property integer           $loginAttempts
+ * @property integer           $locked
  * @property string|array|null $session
  * @property string|null       $secret
  * @property string|boolean    $useTwoFactor
  * @property string|null       $backupCodes
- * @property string|integer    $trustedTokenVersion
+ * @property integer           $trustedTokenVersion
  *
  * @method static MemberModel|null findById($id, array $opt=array())
  * @method static MemberModel|null findByPk($id, array $opt=array())

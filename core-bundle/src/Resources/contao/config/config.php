@@ -20,6 +20,7 @@ use Contao\ContentAlias;
 use Contao\ContentArticle;
 use Contao\ContentDownload;
 use Contao\ContentDownloads;
+use Contao\ContentHyperlink;
 use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentPlayer;
@@ -72,7 +73,6 @@ use Contao\ModuleCloseAccount;
 use Contao\ModuleCustomnav;
 use Contao\ModuleHtml;
 use Contao\ModuleLogin;
-use Contao\ModuleLogout;
 use Contao\ModuleLostPassword;
 use Contao\ModuleMaintenance;
 use Contao\ModuleModel;
@@ -246,7 +246,6 @@ $GLOBALS['FE_MOD'] = array
 	'user' => array
 	(
 		'login'          => ModuleLogin::class,
-		'logout'         => ModuleLogout::class,
 		'personalData'   => ModulePersonalData::class,
 		'registration'   => ModuleRegistration::class,
 		'changePassword' => ModuleChangePassword::class,

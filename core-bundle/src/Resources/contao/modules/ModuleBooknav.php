@@ -94,7 +94,7 @@ class ModuleBooknav extends Module
 			$intKey = $objPage->pid;
 
 			// Skip forward pages (see #5074)
-			while ($this->arrPages[$intKey]->type == 'forward' && isset($this->arrPages[$intKey]->pid))
+			while (isset($this->arrPages[$intKey]->pid) && $this->arrPages[$intKey]->type == 'forward')
 			{
 				$intKey = $this->arrPages[$intKey]->pid;
 			}

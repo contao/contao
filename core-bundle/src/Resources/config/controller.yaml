@@ -50,6 +50,7 @@ services:
             - '@twig'
             - '@router'
             - '@contao.csrf.token_manager'
+            - '@translator'
             - '%contao.backend.attributes%'
             - '%contao.backend.badge_title%'
         tags:
@@ -57,9 +58,9 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
-    Contao\CoreBundle\Controller\ContentElement\HtmlController: ~
-
     Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\HtmlController: ~
 
     Contao\CoreBundle\Controller\ContentElement\HyperlinkController:
         arguments:
@@ -80,6 +81,8 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\ToplinkController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
+
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
@@ -99,6 +102,8 @@ services:
     Contao\CoreBundle\Controller\FrontendModule\TemplateController: ~
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController: ~
+
+    Contao\CoreBundle\Controller\FrontendModule\UnfilteredHtmlController: ~
 
     Contao\CoreBundle\Controller\ImagesController:
         public: true

@@ -98,14 +98,14 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		(
 			'edit' => array
 			(
-				'href'                => 'table=tl_calendar_events',
-				'icon'                => 'edit.svg'
-			),
-			'editheader' => array
-			(
 				'href'                => 'act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_calendar', 'editHeader')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_calendar_events',
+				'icon'                => 'children.svg'
 			),
 			'copy' => array
 			(

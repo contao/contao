@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\String\SimpleTokenParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
@@ -49,6 +50,8 @@ class InputTest extends TestCase
         $container = new ContainerBuilder();
         $container->setParameter('kernel.charset', 'UTF-8');
         $container->setParameter('contao.sanitizer.allowed_url_protocols', ['http', 'https', 'mailto', 'tel']);
+        $container->set('request_stack', new RequestStack());
+        $container->set('contao.routing.scope_matcher', $this->createMock(ScopeMatcher::class));
 
         System::setContainer($container);
     }

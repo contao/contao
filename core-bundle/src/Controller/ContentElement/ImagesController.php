@@ -82,7 +82,6 @@ class ImagesController extends AbstractContentElementController
         );
 
         $template->set('images', $imageList);
-
         $template->set('items_per_page', (int) $model->perPage ?: null);
         $template->set('items_per_row', (int) $model->perRow ?: null);
 
@@ -94,7 +93,7 @@ class ImagesController extends AbstractContentElementController
      */
     private function getSources(ContentModel $model): string|array
     {
-        // Depending on the selected mode we read from tl_content.singleSRC,
+        // Depending on the selected mode, we read from tl_content.singleSRC,
         // tl_content.multiSRC or the user's home directory (tl_user.homeDir)
         return match (true) {
             'image' === $model->type => [$model->singleSRC],

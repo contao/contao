@@ -598,7 +598,7 @@ class tl_user extends Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin='' AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin='' AND themes LIKE '%\"theme_import\"%') as showThemeWarning");
+		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin='' AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin='' AND themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user WHERE elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
 
 		if ($objResult->showTemplateWarning)
 		{
@@ -608,6 +608,11 @@ class tl_user extends Backend
 		if ($objResult->showThemeWarning)
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeImport']);
+		}
+
+		if ($objResult->showUnfilteredHtmlWarning)
+		{
+			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userUnfilteredHtml']);
 		}
 	}
 
