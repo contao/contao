@@ -11,6 +11,7 @@
 namespace Contao\Database;
 
 use Contao\Database;
+use Contao\Model;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result as DoctrineResult;
 
@@ -145,7 +146,7 @@ class Statement
 			throw new \InvalidArgumentException(sprintf('Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder.', __METHOD__));
 		}
 
-		$this->arrSetParams = array_values($arrParams);
+		$this->arrSetParams = $arrParams;
 
 		$arrParamNames = array_map(
 			static function ($strName)
@@ -178,7 +179,7 @@ class Statement
 				throw new \InvalidArgumentException('Set array must not be empty for UPDATE queries');
 			}
 
-			$strQuery = 'SET ' . implode('=?, ', $arrParamNames) . '=?';
+			$strQuery = 'SET ' . implode(', ', array_map(function($key) { return $key.'=:'.$key; }, array_keys($arrParams)));
 		}
 
 		$this->strQuery = str_replace('%s', $strQuery, $this->strQuery);
@@ -262,6 +263,12 @@ class Statement
 			},
 			$arrParams
 		);
+
+		// Automatically set the types
+		if (empty($arrTypes) && preg_match('/(INSERT INTO|UPDATE) ([^\s]+)/i', $this->strQuery, $matches) && ($types = Model::getColumnCastTypes()[$matches[2]] ?? null))
+		{
+			$arrTypes = $types;
+		}
 
 		$this->arrLastUsedParams = $arrParams;
 
