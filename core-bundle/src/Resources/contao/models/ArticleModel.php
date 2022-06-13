@@ -32,8 +32,8 @@ use Contao\Model\Collection;
  * @property string|null    $groups
  * @property string|array   $cssID
  * @property string|boolean $published
- * @property integer        $start
- * @property integer        $stop
+ * @property string|integer $start
+ * @property string|integer $stop
  *
  * @method static ArticleModel|null findById($id, array $opt=array())
  * @method static ArticleModel|null findByPk($id, array $opt=array())

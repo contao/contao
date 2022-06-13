@@ -45,8 +45,8 @@ use Contao\Model\Collection;
  * @property string|array|null $formp
  * @property string|array|null $amg
  * @property string|boolean    $disable
- * @property integer           $start
- * @property integer           $stop
+ * @property string|integer    $start
+ * @property string|integer    $stop
  * @property string|array|null $session
  * @property integer           $dateAdded
  * @property string|null       $secret

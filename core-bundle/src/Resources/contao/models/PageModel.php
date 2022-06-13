@@ -80,8 +80,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|boolean    $hide
  * @property string            $accesskey
  * @property string|boolean    $published
- * @property integer           $start
- * @property integer           $stop
+ * @property string|integer    $start
+ * @property string|integer    $stop
  * @property string|boolean    $enforceTwoFactor
  * @property integer           $twoFactorJumpTo
  *

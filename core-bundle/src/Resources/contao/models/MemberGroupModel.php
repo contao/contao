@@ -21,8 +21,8 @@ use Contao\Model\Collection;
  * @property string|boolean $redirect
  * @property integer        $jumpTo
  * @property string|boolean $disable
- * @property integer        $start
- * @property integer        $stop
+ * @property string|integer $start
+ * @property string|integer $stop
  *
  * @method static MemberGroupModel|null findById($id, array $opt=array())
  * @method static MemberGroupModel|null findByPk($id, array $opt=array())

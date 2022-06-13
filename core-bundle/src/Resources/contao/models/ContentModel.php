@@ -98,8 +98,8 @@ use Contao\Model\Collection;
  * @property string|array|null $groups
  * @property string|array      $cssID
  * @property string|boolean    $invisible
- * @property integer           $start
- * @property integer           $stop
+ * @property string|integer    $start
+ * @property string|integer    $stop
  * @property string|boolean    $showPreview
  *
  * @property string  $typePrefix

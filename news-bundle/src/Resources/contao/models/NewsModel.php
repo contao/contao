@@ -50,8 +50,8 @@ use Contao\Model\Collection;
  * @property string|boolean $noComments
  * @property string|boolean $featured
  * @property string|boolean $published
- * @property integer        $start
- * @property integer        $stop
+ * @property string|integer $start
+ * @property string|integer $stop
  *
  * @method static NewsModel|null findById($id, array $opt=array())
  * @method static NewsModel|null findByPk($id, array $opt=array())

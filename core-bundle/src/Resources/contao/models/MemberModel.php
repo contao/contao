@@ -41,8 +41,8 @@ use Contao\Model\Registry;
  * @property string|boolean    $assignDir
  * @property string|null       $homeDir
  * @property string|boolean    $disable
- * @property integer           $start
- * @property integer           $stop
+ * @property string|integer    $start
+ * @property string|integer    $stop
  * @property integer           $dateAdded
  * @property integer           $lastLogin
  * @property integer           $currentLogin

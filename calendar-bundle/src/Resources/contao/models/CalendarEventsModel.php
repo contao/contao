@@ -58,8 +58,8 @@ use Contao\Model\Collection;
  * @property string|boolean    $noComments
  * @property string|boolean    $featured
  * @property string|boolean    $published
- * @property integer           $start
- * @property integer           $stop
+ * @property string|integer    $start
+ * @property string|integer    $stop
  *
  * @method static CalendarEventsModel|null findById($id, array $opt=array())
  * @method static CalendarEventsModel|null findByPk($id, array $opt=array())
