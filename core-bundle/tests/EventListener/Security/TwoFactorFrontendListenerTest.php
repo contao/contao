@@ -321,7 +321,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
         $page401 = $this->mockClassWithProperties(PageModel::class);
         $page401->autoforward = true;
-        $page401->jumpTo = true;
+        $page401->jumpTo = 1;
 
         $adapter = $this->mockAdapter(['find401ByPid']);
         $adapter

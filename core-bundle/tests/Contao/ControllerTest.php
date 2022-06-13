@@ -158,7 +158,7 @@ class ControllerTest extends TestCase
                 'protected' => false,
                 'start' => '',
                 'stop' => '',
-                'published' => true,
+                'published' => false,
             ]),
             'regular_1.svg',
         ];
