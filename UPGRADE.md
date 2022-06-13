@@ -2,6 +2,15 @@
 
 ## Version 4.* to 5.0
 
+### CURRENT_ID
+
+The `CURRENT_ID` constant and session variable have been removed. Use
+`DataContainer::$currentPid` instead to determine the ID of the current parent record.
+
+```php
+$intCurrentParentRecordId = $dc->currentPid;
+```
+
 ### Logout module
 
 The deprecated logout module has been removed. Use the logout page instead.
