@@ -12,7 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Exception\InternalServerErrorException;
+use Contao\CoreBundle\Exception\BadRequestException;
+use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -622,13 +623,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * Create a new folder
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
 	 */
 	public function create()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not creatable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
 		$this->import(Files::class, 'Files');
@@ -658,13 +658,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * @param string $source
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
+	 * @throws BadRequestException
 	 */
 	public function cut($source=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
 		$strFolder = Input::get('pid', true);
@@ -690,7 +690,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Avoid a circular reference
 		if (preg_match('/^' . preg_quote($source, '/') . '/i', $strFolder))
 		{
-			throw new InternalServerErrorException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
+			throw new BadRequestException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_MOVE, new DataContainerSubject($this->strTable, $source));
@@ -766,19 +766,19 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	/**
 	 * Move all selected files and folders
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function cutAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not sortable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
 		// PID is mandatory
 		if (!Input::get('pid', true))
 		{
-			$this->redirect($this->getReferer());
+			throw new BadRequestException();
 		}
 
 		$objSession = System::getContainer()->get('session');
@@ -809,13 +809,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * @param string $destination
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
+	 * @throws BadRequestException
 	 */
 	public function copy($source=null, $destination=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
 		$strFolder = Input::get('pid', true);
@@ -847,7 +847,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Avoid a circular reference
 		if (preg_match('/^' . preg_quote($source, '/') . '/i', $strFolder))
 		{
-			throw new InternalServerErrorException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
+			throw new BadRequestException('Attempt to copy the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_COPY, new DataContainerSubject($this->strTable, $source, array('destination' => $destination)));
@@ -945,19 +945,19 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	/**
 	 * Move all selected files and folders
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function copyAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not copyable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
 		// PID is mandatory
 		if (!Input::get('pid', true))
 		{
-			$this->redirect($this->getReferer());
+			throw new BadRequestException();
 		}
 
 		$objSession = System::getContainer()->get('session');
@@ -987,13 +987,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 * @param string $source
 	 *
 	 * @throws AccessDeniedException
-	 * @throws InternalServerErrorException
 	 */
 	public function delete($source=null)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
 		$blnDoNotRedirect = ($source !== null);
@@ -1069,13 +1068,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	/**
 	 * Delete all files and folders that are currently shown
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function deleteAll()
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not deletable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
 		$objSession = System::getContainer()->get('session');
@@ -1627,7 +1626,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 *
 	 * @return string
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
 	 */
 	public function editAll()
 	{
@@ -1635,7 +1634,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
-			throw new InternalServerErrorException('Table "' . $this->strTable . '" is not editable.');
+			throw new AccessDeniedException('Table "' . $this->strTable . '" is not editable.');
 		}
 
 		$objSession = System::getContainer()->get('session');
@@ -1945,7 +1944,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 *
 	 * @return string
 	 *
-	 * @throws InternalServerErrorException
+	 * @throws AccessDeniedException
+	 * @throws BadRequestException
+	 * @throws NotFoundException
 	 */
 	public function source()
 	{
@@ -1953,12 +1954,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if (is_dir($this->strRootDir . '/' . $this->intId))
 		{
-			throw new InternalServerErrorException('Folder "' . $this->intId . '" cannot be edited.');
+			throw new BadRequestException('Folder "' . $this->intId . '" cannot be edited.');
 		}
 
 		if (!file_exists($this->strRootDir . '/' . $this->intId))
 		{
-			throw new InternalServerErrorException('File "' . $this->intId . '" does not exist.');
+			throw new NotFoundException('File "' . $this->intId . '" does not exist.');
 		}
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_ACTION_EDIT, new DataContainerSubject($this->strTable, $this->intId));
