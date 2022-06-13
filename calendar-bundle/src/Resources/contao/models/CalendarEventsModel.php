@@ -22,7 +22,7 @@ use Contao\Model\Collection;
  * @property string            $title
  * @property string            $alias
  * @property integer           $author
- * @property string|boolean    $addTime
+ * @property boolean           $addTime
  * @property integer|null      $startTime
  * @property integer|null      $endTime
  * @property integer|null      $startDate
@@ -33,31 +33,31 @@ use Contao\Model\Collection;
  * @property string            $location
  * @property string            $address
  * @property string|null       $teaser
- * @property string|boolean    $addImage
- * @property string|boolean    $overwriteMeta
+ * @property boolean           $addImage
+ * @property boolean           $overwriteMeta
  * @property string|null       $singleSRC
  * @property string            $alt
  * @property string            $imageTitle
  * @property string|integer    $size
  * @property string            $imageUrl
- * @property string|boolean    $fullsize
+ * @property boolean           $fullsize
  * @property string            $caption
  * @property string            $floating
- * @property string|boolean    $recurring
+ * @property boolean           $recurring
  * @property string            $repeatEach
  * @property integer           $repeatEnd
  * @property integer           $recurrences
- * @property string|boolean    $addEnclosure
+ * @property boolean           $addEnclosure
  * @property string|array|null $enclosure
  * @property string            $source
  * @property integer           $jumpTo
  * @property integer           $articleId
  * @property string            $url
- * @property string|boolean    $target
+ * @property boolean           $target
  * @property string            $cssClass
- * @property string|boolean    $noComments
- * @property string|boolean    $featured
- * @property string|boolean    $published
+ * @property boolean           $noComments
+ * @property boolean           $featured
+ * @property boolean           $published
  * @property string|integer    $start
  * @property string|integer    $stop
  *

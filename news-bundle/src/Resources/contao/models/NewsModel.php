@@ -29,27 +29,27 @@ use Contao\Model\Collection;
  * @property string|null    $description
  * @property string         $subheadline
  * @property string|null    $teaser
- * @property string|boolean $addImage
- * @property string|boolean $overwriteMeta
+ * @property boolean        $addImage
+ * @property boolean        $overwriteMeta
  * @property string|null    $singleSRC
  * @property string         $alt
  * @property string         $imageTitle
  * @property string|integer $size
  * @property string         $imageUrl
- * @property string|boolean $fullsize
+ * @property boolean        $fullsize
  * @property string         $caption
  * @property string         $floating
- * @property string|boolean $addEnclosure
+ * @property boolean        $addEnclosure
  * @property string|null    $enclosure
  * @property string         $source
  * @property integer        $jumpTo
  * @property integer        $articleId
  * @property string         $url
- * @property string|boolean $target
+ * @property boolean        $target
  * @property string         $cssClass
- * @property string|boolean $noComments
- * @property string|boolean $featured
- * @property string|boolean $published
+ * @property boolean        $noComments
+ * @property boolean        $featured
+ * @property boolean        $published
  * @property string|integer $start
  * @property string|integer $stop
  *

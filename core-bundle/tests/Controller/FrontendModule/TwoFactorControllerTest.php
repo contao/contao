@@ -90,7 +90,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = 1;
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -104,7 +104,7 @@ class TwoFactorControllerTest extends TestCase
         $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
-        $page->enforceTwoFactor = 1;
+        $page->enforceTwoFactor = true;
 
         $response = $controller(new Request(), $module, 'main', null, $page);
 

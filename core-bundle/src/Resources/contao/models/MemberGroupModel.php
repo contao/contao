@@ -18,9 +18,9 @@ use Contao\Model\Collection;
  * @property integer        $id
  * @property integer        $tstamp
  * @property string         $name
- * @property string|boolean $redirect
+ * @property boolean        $redirect
  * @property integer        $jumpTo
- * @property string|boolean $disable
+ * @property boolean        $disable
  * @property string|integer $start
  * @property string|integer $stop
  *

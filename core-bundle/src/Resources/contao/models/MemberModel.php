@@ -35,12 +35,12 @@ use Contao\Model\Registry;
  * @property string            $website
  * @property string            $language
  * @property string|array|null $groups
- * @property string|boolean    $login
+ * @property boolean           $login
  * @property string|null       $username
  * @property string            $password
- * @property string|boolean    $assignDir
+ * @property boolean           $assignDir
  * @property string|null       $homeDir
- * @property string|boolean    $disable
+ * @property boolean           $disable
  * @property string|integer    $start
  * @property string|integer    $stop
  * @property integer           $dateAdded
@@ -50,7 +50,7 @@ use Contao\Model\Registry;
  * @property integer           $locked
  * @property string|array|null $session
  * @property string|null       $secret
- * @property string|boolean    $useTwoFactor
+ * @property boolean           $useTwoFactor
  * @property string|null       $backupCodes
  * @property integer           $trustedTokenVersion
  *

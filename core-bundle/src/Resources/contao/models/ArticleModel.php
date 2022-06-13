@@ -23,15 +23,15 @@ use Contao\Model\Collection;
  * @property string         $alias
  * @property integer        $author
  * @property string         $inColumn
- * @property string|boolean $showTeaser
+ * @property boolean        $showTeaser
  * @property string         $teaserCssID
  * @property string|null    $teaser
  * @property string         $printable
  * @property string         $customTpl
- * @property string|boolean $protected
+ * @property boolean        $protected
  * @property string|null    $groups
  * @property string|array   $cssID
- * @property string|boolean $published
+ * @property boolean        $published
  * @property string|integer $start
  * @property string|integer $stop
  *
