@@ -32,7 +32,7 @@ use Contao\Model\Collection;
  * @property string|array|null $modules
  * @property string            $template
  * @property string|boolean    $minifyMarkup
- * @property integer           $lightboxSize
+ * @property string|integer    $lightboxSize
  * @property string            $defaultImageDensities
  * @property string            $viewport
  * @property string            $titleTag

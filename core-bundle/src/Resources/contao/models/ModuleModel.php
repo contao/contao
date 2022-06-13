@@ -51,7 +51,7 @@ use Contao\Model\Collection;
  * @property string|boolean    $loadFirst
  * @property string|null       $singleSRC
  * @property string            $url
- * @property integer           $imgSize
+ * @property string|integer    $imgSize
  * @property string|boolean    $useCaption
  * @property string|boolean    $fullsize
  * @property string|array|null $multiSRC

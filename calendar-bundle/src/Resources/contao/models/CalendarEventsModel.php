@@ -38,7 +38,7 @@ use Contao\Model\Collection;
  * @property string|null       $singleSRC
  * @property string            $alt
  * @property string            $imageTitle
- * @property integer           $size
+ * @property string|integer    $size
  * @property string            $imageUrl
  * @property string|boolean    $fullsize
  * @property string            $caption

@@ -22,7 +22,7 @@ use Symfony\Component\Filesystem\Path;
  * the corresponding database entries (database aided file system).
  *
  * @property integer           $id
- * @property integer|null      $pid
+ * @property string|null       $pid
  * @property integer           $tstamp
  * @property string|null       $uuid
  * @property string            $type
