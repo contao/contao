@@ -21,69 +21,69 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Reads and writes pages
  *
- * @property string|integer         $id
- * @property string|integer         $pid
- * @property string|integer         $sorting
- * @property string|integer         $tstamp
- * @property string                 $title
- * @property string                 $alias
- * @property string                 $type
- * @property string|integer         $routePriority
- * @property string                 $pageTitle
- * @property string                 $language
- * @property string                 $robots
- * @property string|null            $description
- * @property string                 $redirect
- * @property string|integer         $jumpTo
- * @property string|boolean         $redirectBack
- * @property string                 $url
- * @property string|boolean         $target
- * @property string                 $dns
- * @property string                 $staticFiles
- * @property string                 $staticPlugins
- * @property string|boolean         $fallback
- * @property string|boolean         $disableLanguageRedirect
- * @property string|boolean         $maintenanceMode
- * @property string|null            $favicon
- * @property string|null            $robotsTxt
- * @property string                 $mailerTransport
- * @property string|integer         $enableCanonical
- * @property string                 $canonicalLink
- * @property string                 $canonicalKeepParams
- * @property string                 $adminEmail
- * @property string                 $dateFormat
- * @property string                 $timeFormat
- * @property string                 $datimFormat
- * @property string                 $validAliasCharacters
- * @property string|boolean         $useFolderUrl
- * @property string                 $urlPrefix
- * @property string                 $urlSuffix
- * @property string|boolean         $useSSL
- * @property string|boolean         $autoforward
- * @property string|boolean         $protected
- * @property string|array|null      $groups
- * @property string|boolean         $includeLayout
- * @property string|integer         $layout
- * @property string|integer         $subpageLayout
- * @property string|boolean         $includeCache
- * @property string|integer|boolean $cache
- * @property string|boolean         $alwaysLoadFromCache
- * @property string|integer|boolean $clientCache
- * @property string|boolean         $includeChmod
- * @property string|integer         $cuser
- * @property string|integer         $cgroup
- * @property string                 $chmod
- * @property string|boolean         $noSearch
- * @property string|boolean         $requireItem
- * @property string                 $cssClass
- * @property string                 $sitemap
- * @property string|boolean         $hide
- * @property string                 $accesskey
- * @property string|boolean         $published
- * @property string|integer         $start
- * @property string|integer         $stop
- * @property string|boolean         $enforceTwoFactor
- * @property string|integer         $twoFactorJumpTo
+ * @property integer           $id
+ * @property integer           $pid
+ * @property integer           $sorting
+ * @property integer           $tstamp
+ * @property string            $title
+ * @property string            $alias
+ * @property string            $type
+ * @property integer           $routePriority
+ * @property string            $pageTitle
+ * @property string            $language
+ * @property string            $robots
+ * @property string|null       $description
+ * @property string            $redirect
+ * @property integer           $jumpTo
+ * @property string|boolean    $redirectBack
+ * @property string            $url
+ * @property string|boolean    $target
+ * @property string            $dns
+ * @property string            $staticFiles
+ * @property string            $staticPlugins
+ * @property string|boolean    $fallback
+ * @property string|boolean    $disableLanguageRedirect
+ * @property string|boolean    $maintenanceMode
+ * @property string|null       $favicon
+ * @property string|null       $robotsTxt
+ * @property string            $mailerTransport
+ * @property integer           $enableCanonical
+ * @property string            $canonicalLink
+ * @property string            $canonicalKeepParams
+ * @property string            $adminEmail
+ * @property string            $dateFormat
+ * @property string            $timeFormat
+ * @property string            $datimFormat
+ * @property string            $validAliasCharacters
+ * @property string|boolean    $useFolderUrl
+ * @property string            $urlPrefix
+ * @property string            $urlSuffix
+ * @property string|boolean    $useSSL
+ * @property string|boolean    $autoforward
+ * @property string|boolean    $protected
+ * @property string|array|null $groups
+ * @property string|boolean    $includeLayout
+ * @property integer           $layout
+ * @property integer           $subpageLayout
+ * @property string|boolean    $includeCache
+ * @property integer           $cache
+ * @property string|boolean    $alwaysLoadFromCache
+ * @property integer           $clientCache
+ * @property string|boolean    $includeChmod
+ * @property integer           $cuser
+ * @property integer           $cgroup
+ * @property string            $chmod
+ * @property string|boolean    $noSearch
+ * @property string|boolean    $requireItem
+ * @property string            $cssClass
+ * @property string            $sitemap
+ * @property string|boolean    $hide
+ * @property string            $accesskey
+ * @property string|boolean    $published
+ * @property string|integer    $start
+ * @property string|integer    $stop
+ * @property string|boolean    $enforceTwoFactor
+ * @property integer           $twoFactorJumpTo
  *
  * @property array          $trail
  * @property string         $mainAlias
@@ -93,7 +93,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string         $parentTitle
  * @property string         $parentPageTitle
  * @property string         $folderUrl
- * @property boolean        $isPublic
+ * @property string|boolean $isPublic
  * @property integer        $rootId
  * @property string         $rootAlias
  * @property string         $rootTitle
@@ -101,14 +101,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer        $rootSorting
  * @property string         $domain
  * @property string         $rootLanguage
- * @property boolean        $rootIsPublic
- * @property boolean        $rootIsFallback
+ * @property string|boolean $rootIsPublic
+ * @property string|boolean $rootIsFallback
  * @property string|boolean $rootUseSSL
  * @property string         $rootFallbackLanguage
- * @property boolean        $minifyMarkup
+ * @property string|boolean $minifyMarkup
  * @property integer        $layoutId
- * @property boolean        $hasJQuery
- * @property boolean        $hasMooTools
+ * @property string|boolean $hasJQuery
+ * @property string|boolean $hasMooTools
  * @property string         $template
  * @property string         $templateGroup
  *
@@ -874,8 +874,8 @@ class PageModel extends Model
 		// Set some default values
 		$this->protected = (bool) $this->protected;
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups, true) : array();
-		$this->layout = $this->includeLayout ? $this->layout : false;
-		$this->cache = $this->includeCache ? $this->cache : false;
+		$this->layout = $this->includeLayout ? $this->layout : 0;
+		$this->cache = $this->includeCache ? $this->cache : 0;
 		$this->alwaysLoadFromCache = $this->includeCache ? $this->alwaysLoadFromCache : false;
 		$this->clientCache = $this->includeCache ? $this->clientCache : false;
 
@@ -941,7 +941,7 @@ class PageModel extends Model
 					}
 
 					// Layout
-					if ($objParentPage->includeLayout && $this->layout === false)
+					if ($objParentPage->includeLayout && $this->layout === 0)
 					{
 						$this->layout = $objParentPage->subpageLayout ?: $objParentPage->layout;
 					}

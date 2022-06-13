@@ -15,14 +15,14 @@ use Contao\Model\Collection;
 /**
  * Reads and writes comments subscriptions
  *
- * @property string|integer $id
- * @property string|integer $tstamp
+ * @property integer        $id
+ * @property integer        $tstamp
  * @property string         $source
- * @property string|integer $parent
+ * @property integer        $parent
  * @property string         $name
  * @property string         $email
  * @property string         $url
- * @property string|integer $addedOn
+ * @property integer        $addedOn
  * @property string|boolean $active
  * @property string         $tokenRemove
  *

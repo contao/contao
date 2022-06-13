@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\Config;
 use Contao\CoreBundle\Command\DebugPagesCommand;
 use Contao\CoreBundle\Controller\Page\RootPageController;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Fixtures\Controller\Page\TestPageController;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
@@ -30,6 +31,7 @@ use Contao\PageModel;
 use Contao\PageRedirect;
 use Contao\PageRegular;
 use Contao\System;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -62,7 +64,14 @@ class DebugPagesCommandTest extends TestCase
      */
     public function testCommandOutput(array $pages, array $legacyPages, string $expectedOutput): void
     {
+        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider
+            ->method('createSchema')
+            ->willReturn(new Schema())
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.doctrine.schema_provider', $schemaProvider);
         $container->setParameter('contao.resources_paths', $this->getTempDir());
 
         (new Filesystem())->mkdir($this->getTempDir().'/languages/en');
