@@ -127,17 +127,12 @@ documentation for more details.
 The following content element types have been rewritten as fragment controllers with
 Twig-only templates:
 
-#### Category "texts"
-
-- `code` (`ce_code` → `content_element/code`)
-- `headline` (`ce_headline` → `content_element/headline`)
-- `html` (`ce_html` → `content_element/html`)
-- `list` (`ce_list` → `content_element/list`)
-
-#### Category "media"
-
-- `image` (`ce_image` → `content_element/image`)
-- `gallery` (`ce_gallery` → `content_element/gallery`)
+ - `code` (`ce_code` → `content_element/code`)
+ - `headline` (`ce_headline` → `content_element/headline`)
+ - `html` (`ce_html` → `content_element/html`)
+ - `list` (`ce_list` → `content_element/list`)
+ - `image` (`ce_image` → `content_element/image`)
+ - `gallery` (`ce_gallery` → `content_element/gallery`)
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6.
 If you want to use them instead of the new ones, you can opt in on a per-element basis by adding the

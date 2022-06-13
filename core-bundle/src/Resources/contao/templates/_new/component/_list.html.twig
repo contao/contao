@@ -6,12 +6,12 @@
           <li>…</li>
         </ul>
 
-    Setting 'randomize_order' to true will randomize the order of list items.
-    Setting 'items_per_page' to a number smaller than the amount of list items
+    Setting "randomize_order" to true will randomize the order of list items.
+    Setting "items_per_page" to a number smaller than the amount of list items
     will output a pagination control beneath the list.
 
     Both of the above operations run client-side. To prevent a flash of
-    unstyled content you may want to target the list's data-list-* attributes
+    unstyled content, you may want to target the list's data-list-* attributes
     via CSS; they are set to "ready" once initialized:
 
         *[data-list-random]:not(*[data-list-random="ready"]) {
@@ -31,7 +31,7 @@
         @var \Contao\CoreBundle\String\HtmlAttributes pagination_attributes
 
     Note:
-        You can either group all variables in an object named 'list' or
+        You can either group all variables in an object named "list" or
         all directly in the context. Grouping under an object has precedence.
 #}
 
@@ -57,7 +57,6 @@
             .set('data-list-random', '', randomize_order)
             .set('data-list-paginate', items_per_page ~ ',' ~ limit, add_pagination or limit_elements)
         %}
-
         <{{ tag_name }}{% block list_attributes %}{{ list_attributes }}{% endblock %}>
         {% for item in list.items %}
             <li{% block list_item_attributes %}{{ attrs(list.item_attributes|default) }}{% endblock %}>
@@ -109,7 +108,6 @@
                     {# Apply pagination #}
                     document.querySelectorAll('*[data-list-paginate]').forEach(list => {
                         const [items_per_page, max_items] = list.dataset.listPaginate.split(',').map(v => Number(v));
-
                         const list_elements = list.querySelectorAll('li');
                         const pagination = list.parentElement.querySelector('*[data-pagination]');
                         const pagination_elements = pagination ? pagination.querySelectorAll('*[data-page]') : [];
