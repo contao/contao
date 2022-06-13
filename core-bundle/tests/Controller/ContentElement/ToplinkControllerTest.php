@@ -28,7 +28,9 @@ class ToplinkControllerTest extends ContentElementTestCase
                 'type' => 'toplink',
                 'linkTitle' => $linkText,
             ],
-            responseContextData: $responseContextData
+            null,
+            false,
+            $responseContextData
         );
 
         $expectedOutput = <<<HTML
@@ -71,8 +73,9 @@ class ToplinkControllerTest extends ContentElementTestCase
                 'type' => 'toplink',
                 'linkTitle' => '',
             ],
-            asEditorView: true,
-            responseContextData: $responseContextData
+            null,
+            true,
+            $responseContextData
         );
 
         $this->assertEmpty($responseContextData[DocumentLocation::endOfBody->value]);

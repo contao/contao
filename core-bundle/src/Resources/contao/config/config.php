@@ -20,7 +20,6 @@ use Contao\ContentAlias;
 use Contao\ContentArticle;
 use Contao\ContentDownload;
 use Contao\ContentDownloads;
-use Contao\ContentHyperlink;
 use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentPlayer;
