@@ -401,13 +401,8 @@ abstract class Model
 		{
 			foreach ($table->getColumns() as $column)
 			{
-				if (
-					\in_array(
-						$column->getType()->getName(),
-						array(Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN),
-						true,
-					)
-				) {
+				if (\in_array($column->getType()->getName(), array(Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN), true))
+				{
 					$types[$table->getName()][$column->getName()] = $column->getType()->getName();
 				}
 			}
