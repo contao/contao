@@ -121,9 +121,9 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $loader->load(
             static function (ContainerBuilder $container) use ($loader): void {
                 if ('dev' === $container->getParameter('kernel.environment')) {
-                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_dev.yml');
+                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_dev.yaml');
                 } else {
-                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_prod.yml');
+                    $loader->load('@ContaoManagerBundle/Resources/skeleton/config/config_prod.yaml');
                 }
 
                 $container->setParameter('container.dumper.inline_class_loader', true);
@@ -244,8 +244,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
                 $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
+                $extensionConfigs = $this->enableStrictMode($extensionConfigs, $container);
+                $extensionConfigs = $this->setDefaultCollation($extensionConfigs);
 
-                return $this->enableStrictMode($extensionConfigs, $container);
+                return $extensionConfigs;
 
             case 'nelmio_security':
                 return $this->checkClickjackingPaths($extensionConfigs);
@@ -401,6 +403,41 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     }
 
     /**
+     * Sets the "collate" and "collation" options to the same value (see #4798).
+     *
+     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     */
+    private function setDefaultCollation(array $extensionConfigs): array
+    {
+        $defaultCollation = null;
+
+        foreach ($extensionConfigs as $config) {
+            $collation = $config['dbal']['connections']['default']['default_table_options']['collation'] ?? $config['dbal']['connections']['default']['default_table_options']['collate'] ?? null;
+
+            if (null !== $collation) {
+                $defaultCollation = $collation;
+            }
+        }
+
+        if (null !== $defaultCollation) {
+            $extensionConfigs[] = [
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'collate' => $defaultCollation,
+                                'collation' => $defaultCollation,
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
+        return $extensionConfigs;
+    }
+
+    /**
      * Changes the mail transport from "mail" to "sendmail".
      *
      * @return array<string,array<string,array<string,array<string,mixed>>>>
@@ -417,7 +454,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Dynamically adds a default mailer to the config, if no mailer is defined.
      *
-     * We cannot add a default mailer configuration to the skeleton config.yml,
+     * We cannot add a default mailer configuration to the skeleton config.yaml,
      * since different types of configurations are not allowed.
      *
      * For example, if the Manager Bundle defined
@@ -426,14 +463,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *         mailer:
      *             dsn: '%env(MAILER_DSN)%'
      *
-     * in the skeleton config.yml and the user adds
+     * in the skeleton config.yaml and the user adds
      *
      *     framework:
      *         mailer:
      *             transports:
      *                 foobar: 'smtps://smtp.example.com'
      *
-     * to their config.yml, the merged configuration will lead to an error, since
+     * to their config.yaml, the merged configuration will lead to an error, since
      * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
      * Thus, the default mailer configuration needs to be added dynamically if
      * not already present.

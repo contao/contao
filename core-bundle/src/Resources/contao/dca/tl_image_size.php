@@ -79,14 +79,14 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'edit' => array
 			(
-				'href'                => 'table=tl_image_size_item',
-				'icon'                => 'edit.svg'
-			),
-			'editheader' => array
-			(
 				'href'                => 'table=tl_image_size&amp;act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_image_size', 'editHeader')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_image_size_item',
+				'icon'                => 'children.svg'
 			),
 			'copy' => array
 			(

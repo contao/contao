@@ -16,13 +16,13 @@ use Contao\Model\Collection;
 /**
  * Reads and writes FAQs
  *
- * @property string|integer $id
- * @property string|integer $pid
- * @property string|integer $sorting
- * @property string|integer $tstamp
+ * @property integer        $id
+ * @property integer        $pid
+ * @property integer        $sorting
+ * @property integer        $tstamp
  * @property string         $question
  * @property string         $alias
- * @property string|integer $author
+ * @property integer        $author
  * @property string|null    $answer
  * @property string         $pageTitle
  * @property string         $robots
@@ -33,7 +33,6 @@ use Contao\Model\Collection;
  * @property string         $alt
  * @property string         $imageTitle
  * @property string|integer $size
- * @property string|array   $imagemargin
  * @property string         $imageUrl
  * @property string|boolean $fullsize
  * @property string         $caption
@@ -63,7 +62,6 @@ use Contao\Model\Collection;
  * @method static FaqModel|null findOneByAlt($val, $opt=array())
  * @method static FaqModel|null findOneByImageTitle($val, $opt=array())
  * @method static FaqModel|null findOneBySize($val, $opt=array())
- * @method static FaqModel|null findOneByImagemargin($val, $opt=array())
  * @method static FaqModel|null findOneByImageUrl($val, $opt=array())
  * @method static FaqModel|null findOneByFullsize($val, $opt=array())
  * @method static FaqModel|null findOneByCaption($val, $opt=array())
@@ -89,7 +87,6 @@ use Contao\Model\Collection;
  * @method static Collection|FaqModel[]|FaqModel|null findByAlt($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByImageTitle($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findBySize($val, $opt=array())
- * @method static Collection|FaqModel[]|FaqModel|null findByImagemargin($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByImageUrl($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByFullsize($val, $opt=array())
  * @method static Collection|FaqModel[]|FaqModel|null findByCaption($val, $opt=array())
@@ -119,7 +116,6 @@ use Contao\Model\Collection;
  * @method static integer countByAlt($val, $opt=array())
  * @method static integer countByImageTitle($val, $opt=array())
  * @method static integer countBySize($val, $opt=array())
- * @method static integer countByImagemargin($val, $opt=array())
  * @method static integer countByImageUrl($val, $opt=array())
  * @method static integer countByFullsize($val, $opt=array())
  * @method static integer countByCaption($val, $opt=array())

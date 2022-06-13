@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\NoRootPageFoundException;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
 use Contao\Model\Registry;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -22,69 +21,69 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * Reads and writes pages
  *
- * @property string|integer         $id
- * @property string|integer         $pid
- * @property string|integer         $sorting
- * @property string|integer         $tstamp
- * @property string                 $title
- * @property string                 $alias
- * @property string                 $type
- * @property string|integer         $routePriority
- * @property string                 $pageTitle
- * @property string                 $language
- * @property string                 $robots
- * @property string|null            $description
- * @property string                 $redirect
- * @property string|integer         $jumpTo
- * @property string|boolean         $redirectBack
- * @property string                 $url
- * @property string|boolean         $target
- * @property string                 $dns
- * @property string                 $staticFiles
- * @property string                 $staticPlugins
- * @property string|boolean         $fallback
- * @property string|boolean         $disableLanguageRedirect
- * @property string|boolean         $maintenanceMode
- * @property string|null            $favicon
- * @property string|null            $robotsTxt
- * @property string                 $mailerTransport
- * @property string|integer         $enableCanonical
- * @property string                 $canonicalLink
- * @property string                 $canonicalKeepParams
- * @property string                 $adminEmail
- * @property string                 $dateFormat
- * @property string                 $timeFormat
- * @property string                 $datimFormat
- * @property string                 $validAliasCharacters
- * @property string|boolean         $useFolderUrl
- * @property string                 $urlPrefix
- * @property string                 $urlSuffix
- * @property string|boolean         $useSSL
- * @property string|boolean         $autoforward
- * @property string|boolean         $protected
- * @property string|array|null      $groups
- * @property string|boolean         $includeLayout
- * @property string|integer         $layout
- * @property string|integer         $subpageLayout
- * @property string|boolean         $includeCache
- * @property string|integer|boolean $cache
- * @property string|boolean         $alwaysLoadFromCache
- * @property string|integer|boolean $clientCache
- * @property string|boolean         $includeChmod
- * @property string|integer         $cuser
- * @property string|integer         $cgroup
- * @property string                 $chmod
- * @property string|boolean         $noSearch
- * @property string|boolean         $requireItem
- * @property string                 $cssClass
- * @property string                 $sitemap
- * @property string|boolean         $hide
- * @property string                 $accesskey
- * @property string|boolean         $published
- * @property string|integer         $start
- * @property string|integer         $stop
- * @property string|boolean         $enforceTwoFactor
- * @property string|integer         $twoFactorJumpTo
+ * @property integer           $id
+ * @property integer           $pid
+ * @property integer           $sorting
+ * @property integer           $tstamp
+ * @property string            $title
+ * @property string            $alias
+ * @property string            $type
+ * @property integer           $routePriority
+ * @property string            $pageTitle
+ * @property string            $language
+ * @property string            $robots
+ * @property string|null       $description
+ * @property string            $redirect
+ * @property integer           $jumpTo
+ * @property string|boolean    $redirectBack
+ * @property string            $url
+ * @property string|boolean    $target
+ * @property string            $dns
+ * @property string            $staticFiles
+ * @property string            $staticPlugins
+ * @property string|boolean    $fallback
+ * @property string|boolean    $disableLanguageRedirect
+ * @property string|boolean    $maintenanceMode
+ * @property string|null       $favicon
+ * @property string|null       $robotsTxt
+ * @property string            $mailerTransport
+ * @property integer           $enableCanonical
+ * @property string            $canonicalLink
+ * @property string            $canonicalKeepParams
+ * @property string            $adminEmail
+ * @property string            $dateFormat
+ * @property string            $timeFormat
+ * @property string            $datimFormat
+ * @property string            $validAliasCharacters
+ * @property string|boolean    $useFolderUrl
+ * @property string            $urlPrefix
+ * @property string            $urlSuffix
+ * @property string|boolean    $useSSL
+ * @property string|boolean    $autoforward
+ * @property string|boolean    $protected
+ * @property string|array|null $groups
+ * @property string|boolean    $includeLayout
+ * @property integer           $layout
+ * @property integer           $subpageLayout
+ * @property string|boolean    $includeCache
+ * @property integer           $cache
+ * @property string|boolean    $alwaysLoadFromCache
+ * @property integer           $clientCache
+ * @property string|boolean    $includeChmod
+ * @property integer           $cuser
+ * @property integer           $cgroup
+ * @property string            $chmod
+ * @property string|boolean    $noSearch
+ * @property string|boolean    $requireItem
+ * @property string            $cssClass
+ * @property string            $sitemap
+ * @property string|boolean    $hide
+ * @property string            $accesskey
+ * @property string|boolean    $published
+ * @property string|integer    $start
+ * @property string|integer    $stop
+ * @property string|boolean    $enforceTwoFactor
+ * @property integer           $twoFactorJumpTo
  *
  * @property array          $trail
  * @property string         $mainAlias
@@ -94,7 +93,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string         $parentTitle
  * @property string         $parentPageTitle
  * @property string         $folderUrl
- * @property boolean        $isPublic
+ * @property string|boolean $isPublic
  * @property integer        $rootId
  * @property string         $rootAlias
  * @property string         $rootTitle
@@ -102,14 +101,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer        $rootSorting
  * @property string         $domain
  * @property string         $rootLanguage
- * @property boolean        $rootIsPublic
- * @property boolean        $rootIsFallback
+ * @property string|boolean $rootIsPublic
+ * @property string|boolean $rootIsFallback
  * @property string|boolean $rootUseSSL
  * @property string         $rootFallbackLanguage
- * @property boolean        $minifyMarkup
+ * @property string|boolean $minifyMarkup
  * @property integer        $layoutId
- * @property boolean        $hasJQuery
- * @property boolean        $hasMooTools
+ * @property string|boolean $hasJQuery
+ * @property string|boolean $hasMooTools
  * @property string         $template
  * @property string         $templateGroup
  *
@@ -875,8 +874,8 @@ class PageModel extends Model
 		// Set some default values
 		$this->protected = (bool) $this->protected;
 		$this->groups = $this->protected ? StringUtil::deserialize($this->groups, true) : array();
-		$this->layout = $this->includeLayout ? $this->layout : false;
-		$this->cache = $this->includeCache ? $this->cache : false;
+		$this->layout = $this->includeLayout ? $this->layout : 0;
+		$this->cache = $this->includeCache ? $this->cache : 0;
 		$this->alwaysLoadFromCache = $this->includeCache ? $this->alwaysLoadFromCache : false;
 		$this->clientCache = $this->includeCache ? $this->clientCache : false;
 
@@ -942,7 +941,7 @@ class PageModel extends Model
 					}
 
 					// Layout
-					if ($objParentPage->includeLayout && $this->layout === false)
+					if ($objParentPage->includeLayout && $this->layout === 0)
 					{
 						$this->layout = $objParentPage->subpageLayout ?: $objParentPage->layout;
 					}
@@ -1015,11 +1014,17 @@ class PageModel extends Model
 		}
 
 		// No root page found
-		elseif (TL_MODE == 'FE' && $this->type != 'root')
+		elseif ($this->type != 'root')
 		{
-			System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
-			throw new NoRootPageFoundException('No root page found');
+			if ($isFrontend)
+			{
+				System::getContainer()->get('monolog.logger.contao.error')->error('Page ID "' . $this->id . '" does not belong to a root page');
+
+				throw new NoRootPageFoundException('No root page found');
+			}
 		}
 
 		$this->trail = array_reverse($trail);
@@ -1068,30 +1073,17 @@ class PageModel extends Model
 	/**
 	 * Generate a front end URL
 	 *
-	 * @param string $strParams    An optional string of URL parameters
-	 * @param string $strForceLang Force a certain language
+	 * @param string $strParams An optional string of URL parameters
 	 *
 	 * @throws RouteNotFoundException
 	 * @throws ResourceNotFoundException
 	 *
 	 * @return string A URL that can be used in the front end
 	 */
-	public function getFrontendUrl($strParams=null, $strForceLang=null)
+	public function getFrontendUrl($strParams=null)
 	{
 		$page = $this;
 		$page->loadDetails();
-
-		if ($strForceLang !== null)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\PageModel::getFrontendUrl()" with $strForceLang has been deprecated and will no longer work in Contao 5.0.');
-
-			$strForceLang = LocaleUtil::formatAsLanguageTag($strForceLang);
-
-			$page = $page->cloneOriginal();
-			$page->preventSaving(false);
-			$page->language = $strForceLang;
-			$page->rootLanguage = $strForceLang;
-		}
 
 		$objRouter = System::getContainer()->get('router');
 
@@ -1117,7 +1109,7 @@ class PageModel extends Model
 			$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 		}
 
-		return $this->applyLegacyLogic($strUrl, $strParams);
+		return $strUrl;
 	}
 
 	/**
@@ -1152,7 +1144,7 @@ class PageModel extends Model
 			throw $e;
 		}
 
-		return $this->applyLegacyLogic($strUrl, $strParams);
+		return $strUrl;
 	}
 
 	/**
@@ -1202,7 +1194,7 @@ class PageModel extends Model
 
 		$context->setBaseUrl($baseUrl);
 
-		return $this->applyLegacyLogic($strUrl, $strParams);
+		return $strUrl;
 	}
 
 	/**
@@ -1220,46 +1212,6 @@ class PageModel extends Model
 		}
 
 		return $slugOptions;
-	}
-
-	/**
-	 * Modifies a URL from the URL generator.
-	 *
-	 * @param string      $strUrl
-	 * @param string|null $strParams
-	 *
-	 * @return string
-	 */
-	private function applyLegacyLogic($strUrl, $strParams)
-	{
-		// Decode sprintf placeholders
-		if ($strParams !== null && strpos($strParams, '%') !== false)
-		{
-			trigger_deprecation('contao/core-bundle', '4.2', 'Using sprintf placeholders in URLs has been deprecated and will no longer work in Contao 5.0.');
-
-			$arrMatches = array();
-			preg_match_all('/%([sducoxXbgGeEfF])/', $strParams, $arrMatches);
-
-			foreach (array_unique($arrMatches[1]) as $v)
-			{
-				$strUrl = str_replace('%25' . $v, '%' . $v, $strUrl);
-			}
-		}
-
-		// HOOK: add custom logic
-		if (isset($GLOBALS['TL_HOOKS']['generateFrontendUrl']) && \is_array($GLOBALS['TL_HOOKS']['generateFrontendUrl']))
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Using the "generateFrontendUrl" hook has been deprecated and will no longer work in Contao 5.0.');
-
-			foreach ($GLOBALS['TL_HOOKS']['generateFrontendUrl'] as $callback)
-			{
-				$strUrl = System::importStatic($callback[0])->{$callback[1]}($this->row(), $strParams ?? '', $strUrl);
-			}
-
-			return $strUrl;
-		}
-
-		return $strUrl;
 	}
 
 	private static function stripPrefixesAndSuffixes(string $alias, string $urlPrefix, string $urlSuffix): string

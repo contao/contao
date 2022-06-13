@@ -41,9 +41,6 @@
       <trans-unit id="tl_image_size_item.edit">
         <source>Edit media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.editheader">
-        <source>Edit the image size settings</source>
-      </trans-unit>
       <trans-unit id="tl_image_size_item.cut">
         <source>Move media query ID %s</source>
       </trans-unit>

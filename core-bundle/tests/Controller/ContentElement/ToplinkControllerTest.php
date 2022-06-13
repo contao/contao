@@ -28,7 +28,9 @@ class ToplinkControllerTest extends ContentElementTestCase
                 'type' => 'toplink',
                 'linkTitle' => $linkText,
             ],
-            responseContextData: $responseContextData
+            null,
+            false,
+            $responseContextData
         );
 
         $expectedOutput = <<<HTML
@@ -45,7 +47,7 @@ class ToplinkControllerTest extends ContentElementTestCase
 
         $this->assertCount(1, $additionalBodyCode);
         $this->assertMatchesRegularExpression(
-            '/<script type="application\/javascript">[^<]+scrollIntoView\([^<]+\)[^<]+<\/script>/',
+            '/<script>[^<]+link\.href = location\.href[^<]+<\/script>/',
             $additionalBodyCode['toplink_script']
         );
     }
@@ -54,12 +56,12 @@ class ToplinkControllerTest extends ContentElementTestCase
     {
         yield 'no value' => [
             '',
-            '<a href="#" data-toplink>translated(contao_default:MSC.backToTop)</a>',
+            '<a href="#top" data-toplink>translated(contao_default:MSC.backToTop)</a>',
         ];
 
         yield 'user defined value' => [
             'All the way up!',
-            '<a href="#" data-toplink title="All the way up!">All the way up!</a>',
+            '<a href="#top" data-toplink title="All the way up!">All the way up!</a>',
         ];
     }
 
@@ -71,8 +73,9 @@ class ToplinkControllerTest extends ContentElementTestCase
                 'type' => 'toplink',
                 'linkTitle' => '',
             ],
-            asEditorView: true,
-            responseContextData: $responseContextData
+            null,
+            true,
+            $responseContextData
         );
 
         $this->assertEmpty($responseContextData[DocumentLocation::endOfBody->value]);

@@ -197,7 +197,7 @@ abstract class Backend extends Controller
 		// Unset the "no back button" flag
 		$arrUnset[] = 'nb';
 
-		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . REQUEST_TOKEN, $blnAddRef, $arrUnset);
+		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), $blnAddRef, $arrUnset);
 	}
 
 	/**
@@ -240,18 +240,8 @@ abstract class Backend extends Controller
 			throw new \InvalidArgumentException('Back end module "' . $module . '" is not defined in the BE_MOD array');
 		}
 
-		$objSession = System::getContainer()->get('session');
 		$arrTables = (array) ($arrModule['tables'] ?? array());
 		$strTable = Input::get('table') ?: ($arrTables[0] ?? null);
-		$id = (!Input::get('act') && Input::get('id')) ? Input::get('id') : $objSession->get('CURRENT_ID');
-
-		// Store the current ID in the current session
-		if ($id != $objSession->get('CURRENT_ID'))
-		{
-			$objSession->set('CURRENT_ID', $id);
-		}
-
-		\define('CURRENT_ID', (Input::get('table') ? $id : Input::get('id')));
 
 		if (isset($GLOBALS['TL_LANG']['MOD'][$module][0]))
 		{
@@ -469,7 +459,7 @@ abstract class Backend extends Controller
 								'table' => $table,
 								'id' => $objRow->id,
 								'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
-								'rt' => REQUEST_TOKEN,
+								'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
 							));
 
 							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);

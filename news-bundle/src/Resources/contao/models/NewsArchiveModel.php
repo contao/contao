@@ -15,16 +15,16 @@ use Contao\Model\Collection;
 /**
  * Reads and writes news archives
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string            $title
- * @property string|integer    $jumpTo
+ * @property integer           $jumpTo
  * @property string|boolean    $protected
  * @property string|array|null $groups
  * @property string|boolean    $allowComments
  * @property string            $notify
  * @property string            $sortOrder
- * @property string|integer    $perPage
+ * @property integer           $perPage
  * @property string|boolean    $moderate
  * @property string|boolean    $bbcode
  * @property string|boolean    $requireLogin

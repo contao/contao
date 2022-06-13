@@ -22,23 +22,20 @@ class ParameterDumperTest extends TestCase
     /**
      * @dataProvider provideConfigs
      */
-    public function testUsesCorrectConfigFile(bool $hasConfig, bool $hasLegacyConfig, string $expectedConfigFile): void
+    public function testUsesCorrectConfigFile(bool $hasConfig): void
     {
         $fixtureDir = Path::canonicalize(__DIR__.'/../Fixtures');
 
         $filesystem = $this->createMock(Filesystem::class);
         $filesystem
             ->method('exists')
-            ->willReturnMap([
-                [Path::join($fixtureDir, 'config/parameters.yml'), $hasConfig],
-                [Path::join($fixtureDir, 'app/config/parameters.yml'), $hasLegacyConfig],
-            ])
+            ->willReturn([Path::join($fixtureDir, 'config/parameters.yaml'), $hasConfig])
         ;
 
         $filesystem
             ->expects($this->once())
             ->method('dumpFile')
-            ->with(Path::join($fixtureDir, $expectedConfigFile))
+            ->with(Path::join($fixtureDir, 'config/parameters.yaml'))
         ;
 
         $dumper = new ParameterDumper($fixtureDir, $filesystem);
@@ -47,9 +44,7 @@ class ParameterDumperTest extends TestCase
 
     public function provideConfigs(): \Generator
     {
-        yield 'just new' => [true, false, 'config/parameters.yml'];
-        yield 'both new and old' => [true, true, 'config/parameters.yml'];
-        yield 'just old' => [false, true, 'app/config/parameters.yml'];
-        yield 'neither new nor old' => [false, false, 'config/parameters.yml'];
+        yield 'with config' => [true];
+        yield 'without config' => [false];
     }
 }

@@ -30,7 +30,6 @@ use Contao\Model\Collection;
  * @property string  $alt
  * @property string  $title
  * @property string  $size
- * @property string  $imagemargin
  * @property string  $imageUrl
  * @property boolean $fullsize
  * @property string  $caption
@@ -60,7 +59,6 @@ use Contao\Model\Collection;
  * @property string  $rel
  * @property boolean $useImage
  * @property string  $multiSRC
- * @property string  $orderSRC
  * @property boolean $useHomeDir
  * @property integer $perRow
  * @property integer $perPage

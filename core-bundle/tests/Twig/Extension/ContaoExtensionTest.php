@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Extension;
 
 use Contao\Config;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -165,7 +166,7 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        $extension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class));
+        $extension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class));
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The Twig\Extension\CoreExtension class was expected to register the "include" Twig function but did not.');
@@ -363,6 +364,6 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension($environment, $hierarchy);
+        return new ContaoExtension($environment, $hierarchy, $this->createMock(ContaoCsrfTokenManager::class));
     }
 }

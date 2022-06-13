@@ -15,18 +15,18 @@ use Contao\Model\Collection;
 /**
  * Reads and writes comments
  *
- * @property string|integer $id
- * @property string|integer $tstamp
+ * @property integer        $id
+ * @property integer        $tstamp
  * @property string         $source
- * @property string|integer $parent
+ * @property integer        $parent
  * @property string         $date
  * @property string         $name
  * @property string         $email
  * @property string         $website
- * @property string|integer $member
+ * @property integer        $member
  * @property string|null    $comment
  * @property string|boolean $addReply
- * @property string|integer $author
+ * @property integer        $author
  * @property string|null    $reply
  * @property string|boolean $published
  * @property string         $ip

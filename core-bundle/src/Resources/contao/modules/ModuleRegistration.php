@@ -325,26 +325,19 @@ class ModuleRegistration extends Module
 		$this->Template->loginDetails = $GLOBALS['TL_LANG']['tl_member']['loginDetails'];
 		$this->Template->addressDetails = $GLOBALS['TL_LANG']['tl_member']['addressDetails'];
 		$this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];
-		$this->Template->personalData = $GLOBALS['TL_LANG']['tl_member']['personalData'];
+		$this->Template->personalDetails = $GLOBALS['TL_LANG']['tl_member']['personalDetails'];
 		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['MSC']['securityQuestion'];
 
 		// Add the groups
 		foreach ($arrFields as $k=>$v)
 		{
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$this->Template->$k = $v;
-
-			$key = $k . (($k == 'personal') ? 'Data' : 'Details');
-			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key] ?? ''] = $v;
+			$key = $k . 'Details';
+			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key] ?? $key] = $v;
 		}
 
 		$this->Template->categories = array_filter($arrGroups);
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['register']);
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$this->Template->captcha = $arrFields['captcha']['captcha'] ?? '';
 	}
 
 	/**
@@ -492,9 +485,6 @@ class ModuleRegistration extends Module
 				}
 			}
 		}
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$arrTokenData['channel'] = $arrTokenData['channels'];
 
 		// Send the token
 		$optInToken->send(

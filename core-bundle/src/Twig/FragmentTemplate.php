@@ -241,14 +241,6 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function generateMargin($arrValues, $strType = 'margin'): never
-    {
-        self::throwOnAccess();
-    }
-
-    /**
-     * @internal
-     */
     public static function reload(): never
     {
         self::throwOnAccess();

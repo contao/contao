@@ -95,9 +95,9 @@ class ModuleEventlist extends Events
 
 		$blnClearInput = false;
 
-		$intYear = Input::get('year');
-		$intMonth = Input::get('month');
-		$intDay = Input::get('day');
+		$intYear = (int) Input::get('year');
+		$intMonth = (int) Input::get('month');
+		$intDay = (int) Input::get('day');
 
 		// Handle featured events
 		$blnFeatured = null;
@@ -314,7 +314,7 @@ class ModuleEventlist extends Events
 			$objTemplate->classList = $event['class'] . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ' cal_' . $event['parent'];
 			$objTemplate->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
-			$objTemplate->more = $GLOBALS['TL_LANG']['MSC']['more'];
+			$objTemplate->more = $event['linkText'] ?: $GLOBALS['TL_LANG']['MSC']['more'];
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 
 			// Short view
@@ -370,7 +370,7 @@ class ModuleEventlist extends Events
 							->build();
 					}
 
-					$figure->applyLegacyTemplateData($objTemplate, $eventModel->imagemargin, $eventModel->floating);
+					$figure->applyLegacyTemplateData($objTemplate, null, $eventModel->floating);
 				}
 			}
 

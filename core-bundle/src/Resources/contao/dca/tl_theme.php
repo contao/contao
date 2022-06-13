@@ -247,10 +247,10 @@ class tl_theme extends Backend
 		if ($row['screenshot'])
 		{
 			$objFile = FilesModel::findByUuid($row['screenshot']);
+			$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
-			if ($objFile !== null && file_exists(TL_ROOT . '/' . $objFile->path))
+			if ($objFile !== null && file_exists($projectDir . '/' . $objFile->path))
 			{
-				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 				$label = Image::getHtml(System::getContainer()->get('contao.image.factory')->create($projectDir . '/' . $objFile->path, array(75, 50, 'center_top'))->getUrl($projectDir), '', 'class="theme_preview"') . ' ' . $label;
 			}
 		}

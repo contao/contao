@@ -2,6 +2,120 @@
 
 ## Version 4.* to 5.0
 
+### CURRENT_ID
+
+The `CURRENT_ID` constant and session variable have been removed. Use
+`DataContainer::$currentPid` instead to determine the ID of the current parent record.
+
+```php
+$intCurrentParentRecordId = $dc->currentPid;
+```
+
+### Logout module
+
+The deprecated logout module has been removed. Use the logout page instead.
+
+### RequestToken class
+
+The `RequestToken` class as well as the `disableRefererCheck` and `requestTokenWhitelist`
+settings have been removed.
+
+### FORM_FIELDS
+
+It is no longer possible to use the `FORM_FIELDS` mechanism to determine which form fields have been
+submitted. Make sure to always submit at least an empty string in your widget:
+
+```html
+<!-- Wrong: the input will only be submitted if checked -->
+<input type="checkbox" name="foo" value="bar">
+
+<!-- Right: the input will always be submitted -->
+<input type="hidden" name="foo" value=""><input type="checkbox" name="foo" value="bar">
+```
+
+### Constants
+
+The constants `TL_ROOT`, `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`,
+`TL_REFERER_ID`, `TL_SCRIPT`, `TL_MODE` and `REQUEST_TOKEN`  have been removed.
+
+Use the `kernel.project_dir` instead of `TL_ROOT`:
+
+```php
+$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+```
+
+`BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
+token checker service to check the separate cases instead:
+
+```php
+$hasBackendUser = System::getContainer()->get('contao.security.token_checker')->hasBackendUser();
+$showUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+```
+
+Use the token checker service instead of `FE_USER_LOGGED_IN`:
+
+```php
+$hasFrontendUser = System::getContainer()->get('contao.security.token_checker')->hasFrontendUser();
+```
+
+Use the kernel start time instead of `TL_START`:
+
+```php
+$startTime = System::getContainer()->get('kernel')->getStartTime();
+```
+
+Use the request attribute `_contao_referer_id` instead of `TL_REFERER_ID`:
+
+```php
+$refererId = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_contao_referer_id');
+```
+
+Use the request stack to get the route instead of using `TL_SCRIPT`:
+
+```php
+$route = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
+
+if ('contao_backend' === $route) {
+    // Do something
+}
+```
+
+Use the `ScopeMatcher` service instead of using `TL_MODE`:
+
+```php
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
+
+class Test {
+    private $requestStack;
+    private $scopeMatcher;
+
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
+        $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
+    }
+
+    public function isBackend() {
+        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+    }
+
+    public function isFrontend() {
+        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
+    }
+}
+```
+
+Use the `contao.csrf.token_manager` service or the `requestToken` variable in your
+template instead of `REQUEST_TOKEN`:
+
+```php
+$requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+```
+
+```php
+<input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+```
+
 ### TL_CRON
 
 Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob`
@@ -13,22 +127,14 @@ documentation for more details.
 The following content element types have been rewritten as fragment controllers with
 Twig-only templates:
 
-#### Category "texts"
-
 - `code` (`ce_code` → `content_element/code`)
 - `headline` (`ce_headline` → `content_element/headline`)
 - `html` (`ce_html` → `content_element/html`)
 - `list` (`ce_list` → `content_element/list`)
 - `text` (`ce_text` → `content_element/text`)
 - `table` (`ce_table` → `content_element/table`)
-
-#### Category "links"
-
 - `hyperlink` (`ce_hyperlink` → `content_element/hyperlink`)
 - `toplink` (`ce_toplink` → `content_element/toplink`)
-
-#### Category "media"
-
 - `image` (`ce_image` → `content_element/image`)
 - `gallery` (`ce_gallery` → `content_element/gallery`)
 

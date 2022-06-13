@@ -4,7 +4,7 @@
 {% block content %}
     {% block link %}
         {% set link_attributes = attrs(link_attributes|default)
-            .set('href', '#')
+            .set('href', '#top')
             .set('data-toplink')
             .setIfExists('title', link_text)
         %}
@@ -18,17 +18,11 @@
     {% block script %}
         {% if not as_editor_view %}
             {% add "toplink_script" to body %}
-                <script type="application/javascript">
-                    {# Scroll toplink_anchor into view when an element with a data-toplink attribute is clicked #}
-                    const toplink_anchor = document.getElementById('{% block toplink_anchor %}top{% endblock %}');
-
-                    document.querySelectorAll('*[data-toplink]').forEach(link => link.addEventListener('click', e => {
-                        e.preventDefault();
-                        toplink_anchor.scrollIntoView({
-                            block: '{% block toplink_scroll_align %}start{% endblock %}',
-                            behavior: '{% block toplink_scroll_behavior %}smooth{% endblock %}',
-                        });
-                    }));
+                <script>
+                    document.querySelectorAll('*[data-toplink]').forEach(link => {
+                        link.href = location.href;
+                        link.hash = '#top';
+                    });
                 </script>
             {% endadd %}
         {% endif %}
