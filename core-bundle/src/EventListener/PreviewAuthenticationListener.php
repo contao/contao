@@ -13,12 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Security;
 
 /**
@@ -43,7 +43,7 @@ class PreviewAuthenticationListener
             !$request->attributes->get('_preview', false)
             || $this->scopeMatcher->isBackendRequest($request)
             || $this->tokenChecker->hasBackendUser()
-            || $this->security->getToken() instanceof FrontendPreviewToken
+            || $this->security->getToken() instanceof UsernamePasswordToken
         ) {
             return;
         }

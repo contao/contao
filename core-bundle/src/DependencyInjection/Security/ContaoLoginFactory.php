@@ -32,6 +32,11 @@ class ContaoLoginFactory extends AbstractFactory implements AuthenticatorFactory
         $this->defaultFailureHandlerOptions = [];
     }
 
+    public function getPriority(): int
+    {
+        return 0;
+    }
+
     public function getPosition(): string
     {
         return 'form';

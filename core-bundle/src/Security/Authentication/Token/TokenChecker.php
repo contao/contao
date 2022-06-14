@@ -101,9 +101,15 @@ class TokenChecker
             return false;
         }
 
-        $token = $this->getToken(self::FRONTEND_FIREWALL);
+        $session = $request->getSession();
 
-        return $token instanceof FrontendPreviewToken && $token->showUnpublished();
+        if (!$session->has('_contao_frontend_preview')) {
+            return false;
+        }
+
+        $preview = $session->get('_contao_frontend_preview');
+
+        return (bool) $preview['showUnpublished'];
     }
 
     private function getToken(string $context): TokenInterface|null
@@ -118,7 +124,7 @@ class TokenChecker
             return null;
         }
 
-        if ($this->trustResolver->isAnonymous($token)) {
+        if (!$this->trustResolver->isAuthenticated($token) || !$this->trustResolver->isFullFledged($token)) {
             return null;
         }
 

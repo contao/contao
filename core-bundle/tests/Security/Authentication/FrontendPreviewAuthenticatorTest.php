@@ -14,11 +14,11 @@ namespace Contao\CoreBundle\Tests\Security\Authentication;
 
 use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInterface;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
-use Contao\CoreBundle\Security\Authentication\Token\FrontendPreviewToken;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -56,12 +56,13 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $this->assertTrue($authenticator->authenticateFrontendUser('foobar', $showUnpublished));
         $this->assertTrue($session->has('_security_contao_frontend'));
+        $this->assertTrue($session->has('_contao_frontend_preview'));
 
         $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
-        $this->assertInstanceOf(FrontendPreviewToken::class, $token);
+        $this->assertInstanceOf(UsernamePasswordToken::class, $token);
         $this->assertInstanceOf(FrontendUser::class, $token->getUser());
-        $this->assertSame($showUnpublished, $token->showUnpublished());
+        $this->assertSame($showUnpublished, $session->get('_contao_frontend_preview')['showUnpublished']);
     }
 
     public function getShowUnpublishedData(): \Generator
@@ -139,13 +140,10 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $authenticator = $this->getAuthenticator($security, $session);
 
         $this->assertTrue($authenticator->authenticateFrontendGuest($showUnpublished));
-        $this->assertTrue($session->has('_security_contao_frontend'));
+        $this->assertFalse($session->has('_security_contao_frontend'));
+        $this->assertTrue($session->has('_contao_frontend_preview'));
 
-        $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
-
-        $this->assertInstanceOf(FrontendPreviewToken::class, $token);
-        $this->assertNull($token->getUser());
-        $this->assertSame($showUnpublished, $token->showUnpublished());
+        $this->assertSame($showUnpublished, $session->get('_contao_frontend_preview')['showUnpublished']);
     }
 
     public function testRemovesTheAuthenticationFromTheSession(): void
@@ -158,16 +156,16 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         ;
 
         $session
-            ->expects($this->once())
+            ->expects($this->atMost(2))
             ->method('has')
-            ->with('_security_contao_frontend')
+            ->withConsecutive(['_security_contao_frontend'], ['_contao_frontend_preview'])
             ->willReturn(true)
         ;
 
         $session
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('remove')
-            ->with('_security_contao_frontend')
+            ->withConsecutive(['_security_contao_frontend'], ['_contao_frontend_preview'])
         ;
 
         $authenticator = $this->getAuthenticator(null, $session);
@@ -199,9 +197,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         ;
 
         $session
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('has')
-            ->with('_security_contao_frontend')
+            ->withConsecutive(['_security_contao_frontend'], ['_contao_frontend_preview'])
             ->willReturn(false)
         ;
 
