@@ -213,7 +213,7 @@ class MetaWizard extends Widget
 
 				unset($items[$languages[$this->User->language]]);
 
-				$items = array_merge([$languages[$this->User->language] => $buffer], $items);
+				$items = array_merge(array($languages[$this->User->language] => $buffer), $items);
 			}
 
 			$return = implode('', $items);
