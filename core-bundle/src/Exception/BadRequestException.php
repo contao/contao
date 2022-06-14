@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Exception;
 
-use Symfony\Component\HttpFoundation\Exception\BadRequestException as BaseBadRequestExceptionAlias;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException as BaseBadRequestException;
 
-class BadRequestException extends BaseBadRequestExceptionAlias
+class BadRequestException extends BaseBadRequestException
 {
 }
