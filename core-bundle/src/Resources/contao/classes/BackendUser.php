@@ -396,7 +396,7 @@ class BackendUser extends User
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getRoles()
+	public function getRoles(): array
 	{
 		if ($this->isAdmin)
 		{
@@ -431,7 +431,7 @@ class BackendUser extends User
 	/**
 	 * {@inheritdoc}
 	 */
-	public function isEqualTo(UserInterface $user)
+	public function isEqualTo(UserInterface $user): bool
 	{
 		if (!$user instanceof self)
 		{

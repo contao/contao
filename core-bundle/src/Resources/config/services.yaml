@@ -713,11 +713,14 @@ services:
             - '@contao.routing.scope_matcher'
             - '@request_stack'
 
+    contao.security.priority_strategy:
+        class: Symfony\Component\Security\Core\Authorization\Strategy\PriorityStrategy
+
     contao.security.access_decision_manager.priority:
         class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
         arguments:
             - !tagged_iterator security.voter
-            - Symfony\Component\Security\Core\Authorization\Strategy\PriorityStrategy
+            - '@contao.security.priority_strategy'
 
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler
