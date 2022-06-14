@@ -613,14 +613,14 @@ class StringUtilTest extends TestCase
         yield 'From UTF-8 to ISO-8859-1' => [
             '𝚏ōȏճăᴦ',
             'ISO-8859-1',
-            utf8_decode('𝚏ōȏճăᴦ'),
+            '??????',
             'UTF-8',
         ];
 
         yield 'From ISO-8859-1 to UTF-8' => [
             '𝚏ōȏճăᴦ',
             'UTF-8',
-            utf8_encode('𝚏ōȏճăᴦ'),
+            'ðÅÈÕ³Äá´¦',
             'ISO-8859-1',
         ];
 
