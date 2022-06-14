@@ -717,7 +717,7 @@ services:
         class: Symfony\Component\Security\Core\Authorization\AccessDecisionManager
         arguments:
             - !tagged_iterator security.voter
-            - !php/const Symfony\Component\Security\Core\Authorization\AccessDecisionManager::STRATEGY_PRIORITY
+            - Symfony\Component\Security\Core\Authorization\Strategy\PriorityStrategy
 
     contao.security.authentication_failure_handler:
         class: Contao\CoreBundle\Security\Authentication\AuthenticationFailureHandler

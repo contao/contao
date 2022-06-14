@@ -18,6 +18,7 @@ use Contao\FrontendUser;
 use Contao\User;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -34,17 +35,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
             throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));
         }
-    }
-
-    /**
-     * @param mixed $username
-     *
-     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0;
-     *             use ContaoUserProvider::loadUserByIdentifier() instead
-     */
-    public function loadUserByUsername($username): User
-    {
-        return $this->loadUserByIdentifier((string) $username);
     }
 
     public function loadUserByIdentifier(string $identifier): User
@@ -82,7 +72,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     /**
      * @param User $user
      */
-    public function upgradePassword(UserInterface $user, string $newHashedPassword): void
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!is_a($user, $this->userClass)) {
             throw new UnsupportedUserException(sprintf('Unsupported class "%s".', $user::class));

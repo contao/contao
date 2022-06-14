@@ -333,7 +333,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getRoles()
+	public function getRoles(): array
 	{
 		return array();
 	}
@@ -467,7 +467,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function isEqualTo(UserInterface $user)
+	public function isEqualTo(UserInterface $user): bool
 	{
 		if (!$user instanceof self)
 		{
