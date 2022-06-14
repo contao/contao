@@ -286,12 +286,12 @@ class FrontendIndex extends Frontend
 
 		// Backup some globals (see #7659)
 		$arrBackup = array(
-			$GLOBALS['TL_HEAD'] ?? [],
-			$GLOBALS['TL_BODY'] ?? [],
-			$GLOBALS['TL_MOOTOOLS'] ?? [],
-			$GLOBALS['TL_JQUERY'] ?? [],
-			$GLOBALS['TL_USER_CSS'] ?? [],
-			$GLOBALS['TL_FRAMEWORK_CSS'] ?? []
+			$GLOBALS['TL_HEAD'] ?? array(),
+			$GLOBALS['TL_BODY'] ?? array(),
+			$GLOBALS['TL_MOOTOOLS'] ?? array(),
+			$GLOBALS['TL_JQUERY'] ?? array(),
+			$GLOBALS['TL_USER_CSS'] ?? array(),
+			$GLOBALS['TL_FRAMEWORK_CSS'] ?? array()
 		);
 
 		try
