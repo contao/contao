@@ -219,6 +219,32 @@ class ModuleEventlist extends Events
 		}
 
 		unset($arrAllEvents);
+
+		// Limit the number of recurrences if both the event list and the event
+		// allow unlimited recurrences (see #4037)
+		if (!$this->numberOfItems)
+		{
+			$unset = array();
+
+			foreach ($arrEvents as $k=>$v)
+			{
+				if ($v['recurring'] && !$v['recurrences'])
+				{
+					if (!isset($unset[$v['id']]))
+					{
+						$unset[$v['id']] = true;
+					}
+					else
+					{
+						unset($arrEvents[$k]);
+					}
+				}
+			}
+
+			unset($unset);
+			$arrEvents = array_values($arrEvents);
+		}
+
 		$total = \count($arrEvents);
 		$limit = $total;
 		$offset = 0;
