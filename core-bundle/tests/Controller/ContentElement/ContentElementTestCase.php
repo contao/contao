@@ -21,8 +21,8 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\Studio;
+use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -226,10 +226,22 @@ class ContentElementTestCase extends TestCase
 
         // Symfony extensions
         $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnCallback(
+                static fn (string $id, array $parameters = [], string $domain = null, string $locale = null): string => sprintf(
+                    'translated(%s%s%s)',
+                    null !== $domain ? "$domain:" : '',
+                    $id,
+                    !empty($parameters) ? '['.implode(', ', $parameters).']' : ''
+                )
+            )
+        ;
+
         $environment->addExtension(new TranslationExtension($translator));
 
         // Runtime loaders
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class));
+        $insertTagParser = $this->getDefaultInsertTagParser();
         $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
 
         $environment->addRuntimeLoader(
@@ -288,9 +300,49 @@ class ContentElementTestCase extends TestCase
                         'src' => 'files/image3.jpg',
                     ]),
                 ],
+                [
+                    self::FILE_IMAGE1 => 'files/image1.jpg',
+                    self::FILE_IMAGE2 => 'files/image2.jpg',
+                    self::FILE_IMAGE3 => 'files/image3.jpg',
+                ]
             ))
         ;
 
         return $studio;
+    }
+
+    protected function getDefaultInsertTagParser(): InsertTagParser
+    {
+        $replaceDemo = static fn (string $input): string => str_replace(
+            ['{{demo}}', '{{br}}'],
+            ['demo', '<br>'],
+            $input
+        );
+
+        $insertTagParser = $this->createMock(InsertTagParser::class);
+        $insertTagParser
+            ->method('replace')
+            ->willReturnCallback($replaceDemo)
+        ;
+
+        $insertTagParser
+            ->method('replaceInline')
+            ->willReturnCallback($replaceDemo)
+        ;
+
+        $insertTagParser
+            ->method('replaceChunked')
+            ->willReturnCallback(
+                static function (string $input) use ($replaceDemo): ChunkedText {
+                    if (preg_match('/^(.*)\{\{br}}(.*)$/', $input, $matches)) {
+                        return new ChunkedText([$matches[1], '<br>', $matches[2]]);
+                    }
+
+                    return new ChunkedText([$replaceDemo($input)]);
+                }
+            )
+        ;
+
+        return $insertTagParser;
     }
 }
