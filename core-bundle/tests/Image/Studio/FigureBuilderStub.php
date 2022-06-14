@@ -76,8 +76,7 @@ class FigureBuilderStub extends FigureBuilder
 
     public function setLinkAttributes(HtmlAttributes|array $attributes): FigureBuilder
     {
-        $this->linkAttributes = $attributes instanceof HtmlAttributes ?
-            iterator_to_array($attributes) : $attributes;
+        $this->linkAttributes = $attributes instanceof HtmlAttributes ? iterator_to_array($attributes) : $attributes;
 
         return $this;
     }
