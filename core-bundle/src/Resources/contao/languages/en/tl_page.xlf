@@ -467,9 +467,6 @@
       <trans-unit id="tl_page.articles">
         <source>Edit the articles of page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.legacyRouting">
-        <source>Disable legacy routing mode to enable this configuration.</source>
-      </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">
         <source>Route conflicts</source>
       </trans-unit>

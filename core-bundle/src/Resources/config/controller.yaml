@@ -81,11 +81,11 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\TemplateController: ~
 
-    Contao\CoreBundle\Controller\ContentElement\ToplinkController: ~
-
     Contao\CoreBundle\Controller\ContentElement\TextController:
         arguments:
             - '@contao.image.studio'
+
+    Contao\CoreBundle\Controller\ContentElement\ToplinkController: ~
 
     Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
 
