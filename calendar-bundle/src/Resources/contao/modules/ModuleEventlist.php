@@ -232,16 +232,11 @@ class ModuleEventlist extends Events
 				{
 					if (!isset($unset[$v['id']]))
 					{
-						$unset[$v['id']] = 0;
-					}
-
-					if ($unset[$v['id']] > 99)
-					{
-						unset($arrEvents[$k]);
+						$unset[$v['id']] = true;
 					}
 					else
 					{
-						++$unset[$v['id']];
+						unset($arrEvents[$k]);
 					}
 				}
 			}
