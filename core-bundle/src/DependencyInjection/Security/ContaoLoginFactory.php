@@ -15,12 +15,11 @@ namespace Contao\CoreBundle\DependencyInjection\Security;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorFactory;
 use Scheb\TwoFactorBundle\DependencyInjection\Factory\Security\TwoFactorServicesFactory;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AbstractFactory;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\Security\Factory\AuthenticatorFactoryInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-class ContaoLoginFactory extends AbstractFactory implements AuthenticatorFactoryInterface
+class ContaoLoginFactory extends AbstractFactory
 {
     public function __construct()
     {
@@ -82,26 +81,6 @@ class ContaoLoginFactory extends AbstractFactory implements AuthenticatorFactory
         ;
 
         return $authenticatorId;
-    }
-
-    protected function createAuthProvider(ContainerBuilder $container, string $id, array $config, string $userProviderId): string
-    {
-        throw new \RuntimeException('The old authentication system is not supported with contao_login.');
-    }
-
-    protected function getListenerId(): string
-    {
-        throw new \RuntimeException('The old authentication system is not supported with contao_login.');
-    }
-
-    protected function createListener(ContainerBuilder $container, string $id, array $config, string $userProvider): string
-    {
-        throw new \RuntimeException('The old authentication system is not supported with contao_login.');
-    }
-
-    protected function createEntryPoint(ContainerBuilder $container, string $id, array $config, string|null $defaultEntryPointId): string
-    {
-        throw new \RuntimeException('The old authentication system is not supported with contao_login.');
     }
 
     protected function createAuthenticationSuccessHandler(ContainerBuilder $container, string $id, array $config): string
