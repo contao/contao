@@ -12,6 +12,13 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao_news.listener.data_container.start_stop_validation:
+        class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
+        arguments:
+            - '@translator'
+        tags:
+            - { name: contao.callback, table: tl_news, target: config.onbeforesubmit }
+
     contao_news.listener.generate_page:
         class: Contao\NewsBundle\EventListener\GeneratePageListener
         arguments:
