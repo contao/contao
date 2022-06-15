@@ -183,10 +183,11 @@
                                 childList: true,
                                 subtree: true
                             });
+
+                            initTree(document.documentElement);
                         })
 
                         document.head.appendChild(script);
-                        document.addEventListener('domready', () => initTree(document));
                     }
                 </script>
             {% endadd %}
