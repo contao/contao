@@ -23,8 +23,8 @@ class StartStopValidationListener
 
     public function __invoke(array $values, DataContainer $dc): array
     {
-        $start = (string) (array_key_exists('start', $values) ? $values['start'] : $dc->activeRecord->start);
-        $stop = (string) (array_key_exists('stop', $values) ? $values['stop'] : $dc->activeRecord->stop);
+        $start = (string) (\array_key_exists('start', $values) ? $values['start'] : $dc->activeRecord->start);
+        $stop = (string) (\array_key_exists('stop', $values) ? $values['stop'] : $dc->activeRecord->stop);
 
         if ('' !== $start && '' !== $stop && $stop < $start) {
             throw new \RuntimeException($this->translator->trans('ERR.startStop', [], 'contao_default'));
