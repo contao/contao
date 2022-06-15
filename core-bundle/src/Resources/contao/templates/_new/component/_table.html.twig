@@ -141,7 +141,7 @@
                     {
                         const instances = new WeakMap();
                         const initTree = (root) => {
-                            const elements = root.tagName === 'TABLE' && root.hasAttribute('data-sortable-table') ?
+                            const elements = root.matches('table[data-sortable-table]') ?
                                 [root] : root.querySelectorAll('table[data-sortable-table]');
 
                             elements.forEach(element => {
@@ -170,8 +170,8 @@
                         }
 
                         const script = document.createElement('script');
-                        script.setAttribute('src', 'bundles/contaocore/sortabletable.js');
-                        script.setAttribute('async', true);
+                        script.src = 'bundles/contaocore/sortabletable.js';
+                        script.async = true;
 
                         script.addEventListener('load', () => {
                             new MutationObserver(function (mutations) {
@@ -179,8 +179,6 @@
                                     initTree(mutation.target)
                                 });
                             }).observe(document.documentElement, {
-                                attributes: true,
-                                attributeFilter: ['data-sortable-table'],
                                 childList: true,
                                 subtree: true
                             });
