@@ -20,6 +20,7 @@ use Contao\FrontendUser;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class ContaoUserProviderTest extends TestCase
@@ -110,7 +111,7 @@ class ContaoUserProviderTest extends TestCase
 
     public function testFailsToUpgradePasswordsOfUnsupportedUsers(): void
     {
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createMock(PasswordAuthenticatedUserInterface::class);
         $provider = $this->getProvider();
 
         $this->expectException(UnsupportedUserException::class);
