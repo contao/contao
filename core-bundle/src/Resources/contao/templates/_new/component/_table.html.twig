@@ -1,0 +1,196 @@
+{#
+    This component outputs a table with client side sorting capabilities.
+
+        <table data-sortable-table="1|asc">
+          <caption>My table</caption>
+          <thead>…</thead>
+          <tfoot>…</tfoot>
+          <tbody>
+            <tr>
+              <td>Cell data</td>
+              <td>Cell data</td>
+            </tr>
+            …
+          </tbody>
+        </ul>
+
+    If you want to make your table sortable, either set "sorting" to true or to
+    an object with the keys "column" and "order", in which you set the initial
+    zero-based column index and the sorting order ("asc"/"desc"):
+
+        {% set sorting = true %}
+        {% set sorting = {column: 1, order: 'desc'} %}
+
+    Mandatory variables:
+        @var iterable rows
+
+    Optional variables:
+        @var string caption
+        @var iterable header
+        @var iterable footer
+        @var bool use_row_headers
+        @var \Contao\CoreBundle\String\HtmlAttributes table_attributes
+        @var \Contao\CoreBundle\String\HtmlAttributes table_caption_attributes
+        @var \Contao\CoreBundle\String\HtmlAttributes table_header_attributes
+        @var \Contao\CoreBundle\String\HtmlAttributes table_footer_attributes
+        @var \Contao\CoreBundle\String\HtmlAttributes table_body_attributes
+        @var object|bool sorting
+        @var object table_sorting_settings
+
+    Note:
+        You can either group all variables in an object named "table" or
+        all directly in the context. Grouping under an object has precedence.
+#}
+
+{% trans_default_domain "contao_default" %}
+
+{% block table_component %}
+    {% set table = table|default(_context) %}
+    {% set sorting = table.sorting|default(null) %}
+    {% set caption = table.caption|default %}
+    {% set header = table.header|default([]) %}
+    {% set footer = table.footer|default([]) %}
+    {% set use_row_headers = table.use_row_headers|default(false) %}
+
+    {% block table %}
+        {% set table_attributes = attrs(table_attributes|default)
+            .set('data-sortable-table', sorting.column|default ~ '|' ~ sorting.order|default, sorting) %}
+        <table{% block table_attributes %}{{ table_attributes }}{% endblock %}>
+            {# Caption #}
+            {% if caption %}
+                {% block table_caption %}
+                    <caption{{ table_caption_attributes|default }}>
+                        {%- block table_caption_inner %}{{ caption|insert_tag_raw }}{% endblock -%}
+                    </caption>
+                {% endblock %}
+            {% endif %}
+
+            {# Header #}
+            {% if header %}
+                {% block table_header %}
+                    <thead{{ table_header_attributes|default }}>
+                    {% block header_inner %}
+                        <tr>
+                            {% for cell in header %}
+                                {% if loop.first and use_row_headers %}
+                                    <th class="sort-none">{{ block('table_cell_content') }}</th>
+                                {% else %}
+                                    <th>{{ block('table_cell_content') }}</th>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endblock %}
+                    </thead>
+                {% endblock %}
+            {% endif %}
+
+            {# Footer #}
+            {% if footer %}
+                {% block table_footer %}
+                    <tfoot{{ table_footer_attributes|default }}>
+                    {% block table_footer_inner %}
+                        <tr>
+                            {% for cell in footer %}
+                                <td>{{ block('table_cell_content') }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endblock %}
+                    </tfoot>
+                {% endblock %}
+            {% endif %}
+
+            {# Body #}
+            {% block table_body %}
+                <tbody{{ table_body_attributes|default }}>
+                {% block table_body_inner %}
+                    {% for row in rows %}
+                        <tr>
+                            {% for cell in row %}
+                                {% if loop.first and use_row_headers %}
+                                    <th scope="row">{{ block('table_cell_content') }}</th>
+                                {% else %}
+                                    <td>
+                                        {%- block table_body_cell_content %}
+                                            {%- block table_cell_content %}
+                                                {{- cell|nl2br|insert_tag_raw -}}
+                                            {% endblock -%}
+                                        {% endblock -%}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% endblock %}
+                </tbody>
+            {% endblock %}
+        </table>
+    {% endblock %}
+
+    {% block script %}
+        {% if sorting %}
+            {# You can provide custom settings for the sorting script, for instance if you want to
+               use different class names or icons. See bundles/contaocore/sortabletable.js for more
+               details on what is possible. #}
+            {% set table_sorting_settings = {
+                ascendingText: 'MSC.ascending'|trans,
+                descendingText: 'MSC.descending'|trans,
+            }|merge(table_sorting_settings|default({})) %}
+
+            {% add "table_sorting_script" to head %}
+                <script>
+                    {
+                        const instances = new WeakMap();
+                        const initTree = (root) => {
+                            const elements = root.tagName === 'TABLE' && root.hasAttribute('data-sortable-table') ?
+                                [root] : root.querySelectorAll('table[data-sortable-table]');
+
+                            elements.forEach(element => {
+                                if (!SortableTable.isSortable(element)) {
+                                    return;
+                                }
+
+                                const settings = {{ table_sorting_settings|json_encode|raw }};
+                                const table = instances.has(element) ? instances.get(element) : new SortableTable(element, settings);
+                                instances.set(element, table);
+
+                                {# Sort a column initially #}
+                                [index, mode] = element.dataset.sortableTable.split('|');
+                                if (index !== undefined) {
+                                    try {
+                                        table.sort(index);
+
+                                        if (mode === 'desc') {
+                                            table.sort(index);
+                                        }
+                                    } catch (e) {
+                                        // ignore
+                                    }
+                                }
+                            });
+                        }
+
+                        const script = document.createElement('script');
+                        script.setAttribute('src', 'bundles/contaocore/sortabletable.js');
+                        script.setAttribute('async', true);
+
+                        script.addEventListener('load', () => {
+                            new MutationObserver(function (mutations) {
+                                mutations.forEach(function (mutation) {
+                                    initTree(mutation.target)
+                                });
+                            }).observe(document.documentElement, {
+                                attributes: true,
+                                attributeFilter: ['data-sortable-table'],
+                                childList: true,
+                                subtree: true
+                            });
+                        })
+
+                        document.head.appendChild(script);
+                        document.addEventListener('domready', () => initTree(document));
+                    }
+                </script>
+            {% endadd %}
+        {% endif %}
+    {% endblock %}
+{% endblock %}

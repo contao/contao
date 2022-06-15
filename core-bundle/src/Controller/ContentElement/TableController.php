@@ -40,7 +40,7 @@ class TableController extends AbstractContentElementController
 
         // Client side sorting
         $sorting = !$header || !$model->sortable ? null : [
-            'column' => (int) $model->sortIndex,
+            'column' => ((int) $model->sortIndex) - 1,
             'order' => 'descending' === $model->sortOrder ? 'desc' : 'asc',
         ];
 
