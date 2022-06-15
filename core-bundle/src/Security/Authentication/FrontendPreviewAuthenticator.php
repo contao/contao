@@ -43,7 +43,7 @@ class FrontendPreviewAuthenticator
             return false;
         }
 
-        $token = new UsernamePasswordToken($user, $user->getRoles());
+        $token = new UsernamePasswordToken($user, 'contao_frontend');
 
         $this->session->set('_security_contao_frontend', serialize($token));
         $this->session->set('_contao_frontend_preview', ['showUnpublished' => $showUnpublished]);

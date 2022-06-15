@@ -20,16 +20,12 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class MemberGroupVoter extends Voter
 {
-    protected function supports($attribute, $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
         return ContaoCorePermissions::MEMBER_IN_GROUPS === $attribute;
     }
 
-    /**
-     * @param mixed $attribute
-     * @param mixed $subject
-     */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         // Filter non-numeric values
         $subject = array_filter((array) $subject, static fn ($val) => (string) (int) $val === (string) $val);
