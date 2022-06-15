@@ -54,7 +54,8 @@
 
     {% block table %}
         {% set table_attributes = attrs(table_attributes|default)
-            .set('data-sortable-table', sorting.column|default ~ ' ' ~ sorting.order|default, sorting) %}
+            .set('data-sortable-table', sorting.column|default ~ ' ' ~ sorting.order|default, sorting)
+        %}
         <table{% block table_attributes %}{{ table_attributes }}{% endblock %}>
             {# Caption #}
             {% if caption %}
