@@ -1,7 +1,7 @@
 {#
     This component outputs a table with client side sorting capabilities.
 
-        <table data-sortable-table="1|asc">
+        <table data-sortable-table="1 asc">
           <caption>My table</caption>
           <thead>…</thead>
           <tfoot>…</tfoot>
@@ -54,7 +54,7 @@
 
     {% block table %}
         {% set table_attributes = attrs(table_attributes|default)
-            .set('data-sortable-table', sorting.column|default ~ '|' ~ sorting.order|default, sorting) %}
+            .set('data-sortable-table', sorting.column|default ~ ' ' ~ sorting.order|default, sorting) %}
         <table{% block table_attributes %}{{ table_attributes }}{% endblock %}>
             {# Caption #}
             {% if caption %}
@@ -154,7 +154,7 @@
                                 instances.set(element, table);
 
                                 {# Sort a column initially #}
-                                [index, mode] = element.dataset.sortableTable.split('|');
+                                [index, mode] = element.dataset.sortableTable.split(' ');
                                 if (index !== undefined) {
                                     try {
                                         table.sort(index);

@@ -81,7 +81,7 @@ class TableControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content_element/table">
-                <table data-sortable-table="1|asc">
+                <table data-sortable-table="1 asc">
                     <thead>
                         <tr>
                             <th class="sort-none">header1</th>
