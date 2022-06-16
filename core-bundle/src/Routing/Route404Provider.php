@@ -157,7 +157,7 @@ class Route404Provider extends AbstractPageRouteProvider
             '_token_check' => true,
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-            '_locale' => LocaleUtil::formatAsLocale((string) $page->rootLanguage),
+            '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage ?? ''),
             '_format' => 'html',
             '_canonical_route' => 'tl_page.'.$page->id,
             'pageModel' => $page,
