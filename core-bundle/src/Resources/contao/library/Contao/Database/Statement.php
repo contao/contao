@@ -256,7 +256,8 @@ class Statement
 			throw new \Exception('Empty query string');
 		}
 
-		$arrParams = array_merge($this->arrSetParams, $arrParams);
+		$arrTypes = array_map(static fn ($key) => $arrTypes[$key] ?? null, array_keys($arrParams));
+		$arrParams = array_merge($this->arrSetParams, array_values($arrParams));
 		$arrTypes = array_merge($this->arrSetTypes, $arrTypes);
 
 		$arrParams = array_map(
