@@ -536,7 +536,7 @@ class Search
 					if ($strKeyword = trim(substr($strKeyword, 1, -1)))
 					{
 						$arrPhrases[] = $strKeyword;
-						$arrPhrasesRegExp[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword));
+						$arrPhrasesRegExp[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword, null));
 					}
 					break;
 

@@ -43,7 +43,7 @@ class PageRoute extends Route implements RouteObjectInterface
                 '_token_check' => true,
                 '_controller' => 'Contao\FrontendIndex::renderPage',
                 '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-                '_locale' => LocaleUtil::formatAsLocale((string) $pageModel->rootLanguage),
+                '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage ?? ''),
                 '_format' => 'html',
                 '_canonical_route' => 'tl_page.'.$pageModel->id,
             ],

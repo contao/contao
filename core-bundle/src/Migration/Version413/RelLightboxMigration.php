@@ -93,7 +93,7 @@ class RelLightboxMigration extends AbstractMigration
             }
 
             foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
-                if ('tiny' === substr($fieldConfig['eval']['rte'] ?? '', 0, 4)) {
+                if (0 === strpos($fieldConfig['eval']['rte'] ?? '', 'tiny')) {
                     $targets[] = [$tableName, strtolower($fieldName)];
                 }
             }

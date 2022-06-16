@@ -118,7 +118,7 @@ class FileSelector extends Widget
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$for = preg_quote($for);
+				$for = preg_quote($for, null);
 			}
 
 			$strPattern = "CAST(name AS CHAR) REGEXP ?";

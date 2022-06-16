@@ -5185,7 +5185,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$searchValue = preg_quote($searchValue);
+				$searchValue = preg_quote($searchValue, null);
 			}
 
 			$strReplacePrefix = '';

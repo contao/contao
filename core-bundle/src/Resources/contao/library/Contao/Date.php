@@ -235,7 +235,7 @@ class Date
 
 				return $arrRegexp[$matches[0]] ?? $matches[0];
 			},
-			preg_quote($strFormat)
+			preg_quote($strFormat, null)
 		);
 	}
 
