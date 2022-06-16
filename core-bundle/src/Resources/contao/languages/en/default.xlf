@@ -270,7 +270,7 @@
         <source>Unknown username: %s</source>
       </trans-unit>
       <trans-unit id="ERR.startStop">
-        <source>The start date of a record cannot be after the stop date.</source>
+        <source>The start time must not be after the stop time.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
