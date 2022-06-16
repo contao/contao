@@ -16,7 +16,7 @@
 
     If you want to make your table sortable, either set "sorting" to true or to
     an object with the keys "column" and "order", in which you set the initial
-    zero-based column index and the sorting order ("asc"/"desc"):
+    zero-based column index and the sorting order (asc/desc):
 
         {% set sorting = true %}
         {% set sorting = {column: 1, order: 'desc'} %}
@@ -141,6 +141,7 @@
                 <script>
                     {
                         const instances = new WeakMap();
+
                         const initTree = (root) => {
                             const elements = root.matches('table[data-sortable-table]') ?
                                 [root] : root.querySelectorAll('table[data-sortable-table]');
