@@ -60,6 +60,11 @@ class Statement
 	/**
 	 * @var array
 	 */
+	private $arrSetTypes = array();
+
+	/**
+	 * @var array
+	 */
 	private $arrLastUsedParams = array();
 
 	/**
@@ -138,7 +143,7 @@ class Statement
 	 *
 	 * @return Statement The statement object
 	 */
-	public function set($arrParams)
+	public function set($arrParams, $arrTypes = array())
 	{
 		if (substr_count((string) $this->strQuery, '%s') !== 1 || !\in_array(strtoupper(substr($this->strQuery, 0, 6)), array('INSERT', 'UPDATE'), true))
 		{
@@ -146,6 +151,7 @@ class Statement
 		}
 
 		$this->arrSetParams = array_values($arrParams);
+		$this->arrSetTypes = array_map(static fn ($key) => $arrTypes[$key] ?? null, array_keys($arrParams));
 
 		$arrParamNames = array_map(
 			static function ($strName)
@@ -225,7 +231,7 @@ class Statement
 	 */
 	public function execute()
 	{
-		return $this->query('', array_merge($this->arrSetParams, \func_get_args()));
+		return $this->query('', \func_get_args());
 	}
 
 	/**
@@ -249,6 +255,9 @@ class Statement
 		{
 			throw new \Exception('Empty query string');
 		}
+
+		$arrParams = array_merge($this->arrSetParams, $arrParams);
+		$arrTypes = array_merge($this->arrSetTypes, $arrTypes);
 
 		$arrParams = array_map(
 			static function ($varParam)
