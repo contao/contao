@@ -1,0 +1,22 @@
+{% extends "@Contao/frontend_module/_base.html.twig" %}
+{% use "@Contao/component/_pagination.html.twig" %}
+
+{% block content %}
+    {% if feeds|length == 1 %}
+    <div class="rss_default_header">
+        {% set feed = feeds.0 %}
+        <h1><a href="{{ feed.link }}" target="_blank" rel="noreferrer noopener">{{ feed.title }}</a></h1>
+        {% if feed.description %}
+            <div class="description">{{ feed.description }}</div>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% for item in items %}
+    <div class="rss_default">
+        <h2><a href="{{ item.link }}" target="_blank" rel="noreferrer noopener">{{ item.title }}</a></h2>
+        <div class="description">{{ item.content }}</div>
+    </div>
+    {% endfor %}
+
+    {% if pagination is defined %}{{ block('pagination') }}{% endif %}
+{% endblock %}

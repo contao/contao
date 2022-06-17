@@ -299,11 +299,11 @@
       <trans-unit id="FMD.template.1">
         <source>Generates a module to insert a custom template.</source>
       </trans-unit>
-      <trans-unit id="FMD.rssReader.0">
-        <source>RSS reader</source>
+      <trans-unit id="FMD.feed_reader.0">
+        <source>Feed reader</source>
       </trans-unit>
-      <trans-unit id="FMD.rssReader.1">
-        <source>Adds an RSS feed to the page</source>
+      <trans-unit id="FMD.feed_reader.1">
+        <source>Adds an RSS, Aom or JSON feed to the page</source>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>

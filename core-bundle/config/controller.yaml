@@ -124,6 +124,12 @@ services:
 
     Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController: ~
 
+    Contao\CoreBundle\Controller\FrontendModule\FeedReaderController:
+        arguments:
+            - '@contao.feed.feedio'
+            - '@contao.feed.null_logger'
+            - '@cache.system'
+
     Contao\CoreBundle\Controller\FrontendModule\TemplateController: ~
 
     Contao\CoreBundle\Controller\FrontendModule\TwoFactorController: ~

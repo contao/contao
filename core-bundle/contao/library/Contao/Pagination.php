@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Provide methods to render a pagination menu.
  */
@@ -212,9 +214,49 @@ class Pagination
 	 */
 	public function generate($strSeparator=' ')
 	{
-		if ($this->intRowsPerPage < 1)
+		$values = $this->compile();
+
+		if (null === $values)
 		{
 			return '';
+		}
+
+		$objTemplate = $this->objTemplate;
+
+		$objTemplate->hasFirst = $values['hasFirst'];
+		$objTemplate->hasPrevious = $values['hasPrevious'];
+		$objTemplate->hasNext = $values['hasNext'];
+		$objTemplate->hasLast = $values['hasLast'];
+
+		$objTemplate->pages = $values['pages'];
+		$objTemplate->total = $values['total'];
+
+		$objTemplate->first = $values['first'];
+		$objTemplate->first['title'] = StringUtil::specialchars($objTemplate->first['title']);
+
+		$objTemplate->previous = $values['previous'];
+		$objTemplate->previous['title'] = StringUtil::specialchars($objTemplate->previous['title']);
+
+		$objTemplate->next = $values['next'];
+		$objTemplate->next['title'] = StringUtil::specialchars($objTemplate->next['title']);
+
+		$objTemplate->last = $values['last'];
+		$objTemplate->last['title'] = StringUtil::specialchars($objTemplate->last['title']);
+
+		$objTemplate->class = $values['class'];
+		$objTemplate->pagination = StringUtil::specialchars($values['title']);
+
+		// Adding rel="prev" and rel="next" links is not possible
+		// anymore with unique variable names (see #3515 and #4141)
+
+		return $objTemplate->parse();
+	}
+
+	public function compile(): ?array
+	{
+		if ($this->intRowsPerPage < 1)
+		{
+			return null;
 		}
 
 		$blnQuery = false;
@@ -235,7 +277,7 @@ class Pagination
 		// Return if there is only one page
 		if ($this->intTotalPages < 2 || $this->intRows < 1)
 		{
-			return '';
+			return null;
 		}
 
 		if ($this->intPage > $this->intTotalPages)
@@ -243,51 +285,42 @@ class Pagination
 			$this->intPage = $this->intTotalPages;
 		}
 
-		$objTemplate = $this->objTemplate;
+		return array(
+			'title' => $GLOBALS['TL_LANG']['MSC']['pagination'],
+			'class' => 'pagination-' . $this->strParameter,
 
-		$objTemplate->hasFirst = $this->hasFirst();
-		$objTemplate->hasPrevious = $this->hasPrevious();
-		$objTemplate->hasNext = $this->hasNext();
-		$objTemplate->hasLast = $this->hasLast();
+			'hasFirst' => $this->hasFirst(),
+			'hasPrevious' => $this->hasPrevious(),
+			'hasNext' => $this->hasNext(),
+			'hasLast' => $this->hasLast(),
 
-		$objTemplate->pages = $this->getItemsAsArray();
-		$objTemplate->total = sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
+			'pages' => $this->getItemsAsArray(),
+			'total' => sprintf($this->lblTotal, $this->intPage, $this->intTotalPages),
 
-		$objTemplate->first = array
-		(
-			'link' => $this->lblFirst,
-			'href' => $this->linkToPage(1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
+			'first' => array(
+				'link' => $this->lblFirst,
+				'href' => $this->linkToPage(1),
+				'title' => sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], 1)
+			),
+
+			'previous' => array(
+				'link' => $this->lblPrevious,
+				'href' => $this->linkToPage($this->intPage - 1),
+				'title' => sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], ($this->intPage - 1))
+			),
+
+			'next' => array(
+				'link' => $this->lblNext,
+				'href' => $this->linkToPage($this->intPage + 1),
+				'title' => sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], ($this->intPage + 1))
+			),
+
+			'last' => array(
+				'link' => $this->lblLast,
+				'href' => $this->linkToPage($this->intTotalPages),
+				'title' => sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $this->intTotalPages)
+			),
 		);
-
-		$objTemplate->previous = array
-		(
-			'link' => $this->lblPrevious,
-			'href' => $this->linkToPage($this->intPage - 1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage - 1))
-		);
-
-		$objTemplate->next = array
-		(
-			'link' => $this->lblNext,
-			'href' => $this->linkToPage($this->intPage + 1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage + 1))
-		);
-
-		$objTemplate->last = array
-		(
-			'link' => $this->lblLast,
-			'href' => $this->linkToPage($this->intTotalPages),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
-		);
-
-		$objTemplate->class = 'pagination-' . $this->strParameter;
-		$objTemplate->pagination = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagination']);
-
-		// Adding rel="prev" and rel="next" links is not possible
-		// anymore with unique variable names (see #3515 and #4141)
-
-		return $objTemplate->parse();
 	}
 
 	/**
@@ -384,6 +417,11 @@ class Pagination
 		}
 
 		return $arrLinks;
+	}
+
+	public function getContextForTwigComponent(Request $request): ?array
+	{
+		return $this->compile();
 	}
 
 	/**

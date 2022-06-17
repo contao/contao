@@ -194,6 +194,20 @@ services:
         arguments:
             - '@doctrine.orm.default_entity_manager'
 
+    contao.feed.feedio:
+        class: FeedIo\FeedIo
+        arguments:
+            - '@contao.feed.http_adapter'
+            - '@contao.feed.null_logger'
+
+    contao.feed.http_adapter:
+        class: FeedIo\Adapter\Http\Client
+        arguments:
+            - '@psr18.http_client'
+
+    contao.feed.null_logger:
+        class: Psr\Log\NullLogger
+
     contao.filesystem.dbafs_factory:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsFactory
         arguments:
