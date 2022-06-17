@@ -209,7 +209,7 @@ class MetaWizard extends Widget
 			// Show the user language on top (see #3818)
 			if (isset($languages[$this->User->language], $items[$languages[$this->User->language]]))
 			{
-				$items = array($languages[$this->User->language] => $items[$languages[$this->User->language]]) + $items;
+				$items = array_merge(array($languages[$this->User->language] => null), $items);
 			}
 
 			$return = implode('', $items);
