@@ -717,7 +717,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			$this->denyAccessUnlessGranted(
 				ContaoCorePermissions::DC_PREFIX . $this->strTable,
-				new UpdateAction($this->strTable, array('id' => $source, 'pid' => \dirname($source)), array('id' => $source, 'pid' => $strFolder))
+				new UpdateAction($this->strTable, array('id' => $source, 'pid' => \dirname($source)), array('pid' => $strFolder))
 			);
 
 			$this->Files->rename($source, $destination);
@@ -1700,7 +1700,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$objModel = Dbafs::addResource($id);
 					}
 
-					$this->objActiveRecord = $objModel;
+					$this->objActivUpdateActioneRecord = $objModel;
 					$this->blnCreateNewVersion = false;
 
 					/** @var FilesModel $objModel */

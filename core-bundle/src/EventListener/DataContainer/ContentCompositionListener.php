@@ -89,14 +89,14 @@ class ContentCompositionListener
         $request = $this->requestStack->getCurrentRequest();
         $user = $this->security->getUser();
 
-        // Return if there is no active record (override all)
-        if (!$dc->activeRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
+        // Return if there is no current record (override all)
+        if (null === ($currentRecord = $dc->getCurrentRecord()) || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
             return;
         }
 
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
-        $pageModel->setRow((array) $dc->activeRecord);
+        $pageModel->setRow($currentRecord);
 
         if (
             empty($pageModel->title)

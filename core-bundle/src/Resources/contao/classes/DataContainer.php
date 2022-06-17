@@ -28,7 +28,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $field
  * @property string         $inputName
  * @property string         $palette
- * @property \stdClass|null $activeRecord
  * @property array          $rootIds
  */
 abstract class DataContainer extends Backend
@@ -215,6 +214,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * Active record
 	 * @var \stdClass|null
+	 * @deprecated The active record has been deprecated and will be removed in Contao 6. Use $dc->getCurrentRecord() instead.
 	 */
 	protected $objActiveRecord;
 
@@ -256,9 +256,9 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Active record cache
-	 * @var array
+	 * @var array<int|string, array>
 	 */
-	protected $arrActiveRecordCache = array();
+	protected $arrCurrentRecordCache = array();
 
 	/**
 	 * Set an object property
@@ -271,6 +271,7 @@ abstract class DataContainer extends Backend
 		switch ($strKey)
 		{
 			case 'activeRecord':
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use $dc->getCurrentRecord() instead.');
 				$this->objActiveRecord = $varValue;
 				break;
 
@@ -318,6 +319,7 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use $dc->getCurrentRecord() instead.');
 				return $this->objActiveRecord;
 
 			case 'createNewVersion':
@@ -1695,18 +1697,21 @@ abstract class DataContainer extends Backend
 		return $label;
 	}
 
-	protected function preloadActiveRecords(array $ids): void
+	/**
+	 * @param array<int|string> $ids
+	 */
+	protected function preloadCurrentRecords(array $ids, string $table): void
 	{
 		if (\count($ids) === 1)
 		{
-			$rows = array($this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+			$rows = array($this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
 				->limit(1)
 				->execute($ids[0])
 				->fetchAssoc());
 		}
 		else
 		{
-			$rows = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id IN (?)")
+			$rows = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id IN (?)")
 				->execute($ids)
 				->fetchAllAssoc();
 		}
@@ -1718,26 +1723,22 @@ abstract class DataContainer extends Backend
 				continue;
 			}
 
-			$this->arrActiveRecordCache[$row['id']] = (object) $row;
+			$this->arrCurrentRecordCache[$table . '.' . $row['id']] = $row;
 		}
 	}
 
-	protected function loadActiveRecord($id = null, bool $noCache = false): void
+	public function getCurrentRecord(string|int $id = null, string $table = null, bool $noCache = false): ?array
 	{
-		$this->intId = $id ?: $this->intId;
+		$id = $id ?: $this->intId;
+		$table = $table ?: $this->strTable;
 
-		if ($noCache || !isset($this->arrActiveRecordCache[$this->intId]))
+		$key = $table . '.' . $id;
+
+		if ($noCache || !isset($this->arrCurrentRecordCache[$key]))
 		{
-			$this->preloadActiveRecords(array($this->intId));
+			$this->preloadCurrentRecords(array($id), $table);
 		}
 
-		if (!isset($this->arrActiveRecordCache[$this->intId]))
-		{
-			$this->objActiveRecord = null;
-
-			return;
-		}
-
-		$this->objActiveRecord = $this->arrActiveRecordCache[$this->intId];
+		return $this->arrCurrentRecordCache[$key] ?? null;
 	}
 }
