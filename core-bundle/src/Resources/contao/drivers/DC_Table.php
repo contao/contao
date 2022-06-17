@@ -343,9 +343,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $currentRecord));
 
 		$data = array();
+		$row = $currentRecord;
 
 		// Get all fields
-		$fields = array_keys($currentRecord);
+		$fields = array_keys($row);
 		$allowedFields = array('id', 'pid', 'sorting', 'tstamp');
 
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? null))
@@ -370,7 +371,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				continue;
 			}
 
-			$value = StringUtil::deserialize($currentRecord[$i]);
+			$value = StringUtil::deserialize($row[$i]);
 
 			// Get the field value
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['foreignKey']))
@@ -390,7 +391,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$currentRecord[$i] = implode(', ', $temp);
+				$row[$i] = implode(', ', $temp);
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'fileTree')
 			{
@@ -408,22 +409,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
-					$currentRecord[$i] = implode(', ', $value);
+					$row[$i] = implode(', ', $value);
 				}
 				elseif (($objFile = FilesModel::findByUuid($value)) instanceof FilesModel)
 				{
-					$currentRecord[$i] = $objFile->path . ' (' . StringUtil::binToUuid($value) . ')';
+					$row[$i] = $objFile->path . ' (' . StringUtil::binToUuid($value) . ')';
 				}
 				else
 				{
-					$currentRecord[$i] = '';
+					$row[$i] = '';
 				}
 			}
 			elseif (\is_array($value))
 			{
 				if (isset($value['value'], $value['unit']) && \count($value) == 2)
 				{
-					$currentRecord[$i] = trim($value['value'] . ', ' . $value['unit']);
+					$row[$i] = trim($value['value'] . ', ' . $value['unit']);
 				}
 				else
 				{
@@ -444,44 +445,44 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
-					$currentRecord[$i] = implode(', ', $value);
+					$row[$i] = implode(', ', $value);
 				}
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'date')
 			{
-				$currentRecord[$i] = $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
+				$row[$i] = $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'time')
 			{
-				$currentRecord[$i] = $value ? Date::parse(Config::get('timeFormat'), $value) : '-';
+				$row[$i] = $value ? Date::parse(Config::get('timeFormat'), $value) : '-';
 			}
 			elseif ($i == 'tstamp' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'datim' || \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 			{
-				$currentRecord[$i] = $value ? Date::parse(Config::get('datimFormat'), $value) : '-';
+				$row[$i] = $value ? Date::parse(Config::get('datimFormat'), $value) : '-';
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['multiple'] ?? null)))
 			{
-				$currentRecord[$i] = $value ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
+				$row[$i] = $value ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'email')
 			{
-				$currentRecord[$i] = Idna::decodeEmail($value);
+				$row[$i] = Idna::decodeEmail($value);
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'textarea' && (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['allowHtml'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['preserveTags'] ?? null)))
 			{
-				$currentRecord[$i] = StringUtil::specialchars($value);
+				$row[$i] = StringUtil::specialchars($value);
 			}
 			elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'] ?? null))
 			{
-				$currentRecord[$i] = isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$currentRecord[$i]]) ? (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$currentRecord[$i]]) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$currentRecord[$i]][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$currentRecord[$i]]) : $currentRecord[$i];
+				$row[$i] = isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) ? (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) : $row[$i];
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options'] ?? null))
 			{
-				$currentRecord[$i] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options'][$currentRecord[$i]] ?? null;
+				$row[$i] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options'][$row[$i]] ?? null;
 			}
 			else
 			{
-				$currentRecord[$i] = $value;
+				$row[$i] = $value;
 			}
 
 			$label = null;
@@ -503,7 +504,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$label .= ' <small>' . $i . '</small>';
 
-			$data[$this->strTable][0][$label] = $currentRecord[$i];
+			$data[$this->strTable][0][$label] = $row[$i];
 		}
 
 		// Call onshow_callback
@@ -514,11 +515,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
-					$data = $this->{$callback[0]}->{$callback[1]}($data, $currentRecord, $this);
+					$data = $this->{$callback[0]}->{$callback[1]}($data, $row, $this);
 				}
 				elseif (\is_callable($callback))
 				{
-					$data = $callback($data, $currentRecord, $this);
+					$data = $callback($data, $row, $this);
 				}
 			}
 		}
