@@ -92,7 +92,7 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
             'element_css_classes' => trim(($attributesData[1] ?? '').' '.implode(' ', $classes)),
             'headline' => [
                 'text' => $headlineData['value'] ?? '',
-                'tagName' => $headlineData['unit'] ?? 'h1',
+                'tag_name' => $headlineData['unit'] ?? 'h1',
             ],
         ]);
     }

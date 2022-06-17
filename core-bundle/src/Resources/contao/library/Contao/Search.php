@@ -763,16 +763,6 @@ class Search
 	}
 
 	/**
-	 * Prevent cloning of the object (Singleton)
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Search class is now static.
-	 */
-	final public function __clone()
-	{
-	}
-
-	/**
 	 * @param string $strUrlA
 	 * @param string $strUrlB
 	 *

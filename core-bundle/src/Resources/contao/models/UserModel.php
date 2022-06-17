@@ -15,8 +15,8 @@ use Contao\Model\Collection;
 /**
  * Reads and writes users
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string|null       $username
  * @property string            $name
  * @property string            $email
@@ -48,15 +48,15 @@ use Contao\Model\Collection;
  * @property string|integer    $start
  * @property string|integer    $stop
  * @property string|array|null $session
- * @property string|integer    $dateAdded
+ * @property integer           $dateAdded
  * @property string|null       $secret
  * @property string|boolean    $useTwoFactor
- * @property string|integer    $lastLogin
- * @property string|integer    $currentLogin
- * @property string|integer    $loginAttempts
- * @property string|integer    $locked
+ * @property integer           $lastLogin
+ * @property integer           $currentLogin
+ * @property integer           $loginAttempts
+ * @property integer           $locked
  * @property string|null       $backupCodes
- * @property string|integer    $trustedTokenVersion
+ * @property integer           $trustedTokenVersion
  *
  * @method static UserModel|null findById($id, array $opt=array())
  * @method static UserModel|null findByPk($id, array $opt=array())

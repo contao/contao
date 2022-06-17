@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Framework;
 
 use Contao\Config;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Fixtures\Adapter\LegacyClass;
 use Contao\CoreBundle\Fixtures\Adapter\LegacySingletonClass;
@@ -25,6 +26,7 @@ use Contao\Input;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
+use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -416,8 +418,17 @@ class ContaoFrameworkTest extends TestCase
 
     public function testDelegatesTheResetCalls(): void
     {
+        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider
+            ->method('createSchema')
+            ->willReturn(new Schema())
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.doctrine.schema_provider', $schemaProvider);
+
         $framework = $this->getFramework();
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
+        $framework->setContainer($container);
         $framework->initialize();
 
         Environment::set('scriptFilename', 'bar');

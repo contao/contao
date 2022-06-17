@@ -402,7 +402,7 @@ class TemplateTest extends TestCase
 
             public function testCompile(): string
             {
-                $this->compile();
+                $this->getResponse();
 
                 return $this->strBuffer;
             }

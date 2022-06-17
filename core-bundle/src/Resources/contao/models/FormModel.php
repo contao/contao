@@ -15,11 +15,11 @@ use Contao\Model\Collection;
 /**
  * Reads and writes forms
  *
- * @property string|integer $id
- * @property string|integer $tstamp
+ * @property integer        $id
+ * @property integer        $tstamp
  * @property string         $title
  * @property string         $alias
- * @property string|integer $jumpTo
+ * @property integer        $jumpTo
  * @property string|boolean $sendViaEmail
  * @property string         $mailerTransport
  * @property string         $recipient

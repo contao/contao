@@ -22,17 +22,12 @@ class PageError403 extends Frontend
 	/**
 	 * Return a response object
 	 *
-	 * @param PageModel|integer|null $objRootPage
+	 * @param PageModel|null $objRootPage
 	 *
 	 * @return Response
 	 */
-	public function getResponse($objRootPage=null)
+	public function getResponse(PageModel $objRootPage=null)
 	{
-		if (is_numeric($objRootPage))
-		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Passing a numeric ID to PageError403::getResponse() has been deprecated and will no longer work in Contao 5.0.');
-		}
-
 		/** @var PageModel $objPage */
 		global $objPage;
 
@@ -55,15 +50,13 @@ class PageError403 extends Frontend
 	/**
 	 * Prepare the output
 	 *
-	 * @param PageModel|integer $objRootPage
+	 * @param PageModel|null $objRootPage
 	 *
 	 * @return PageModel
 	 *
 	 * @throws AccessDeniedException
-	 *
-	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
-	protected function prepare($objRootPage=null)
+	private function prepare(PageModel $objRootPage=null)
 	{
 		// Use the given root page object if available (thanks to Andreas Schempp)
 		if ($objRootPage === null)
@@ -71,13 +64,9 @@ class PageError403 extends Frontend
 			$objRootPage = $this->getRootPageFromUrl();
 			$obj403 = PageModel::find403ByPid($objRootPage->id);
 		}
-		elseif ($objRootPage instanceof PageModel)
-		{
-			$obj403 = $objRootPage->type === 'error_403' ? $objRootPage : PageModel::find403ByPid($objRootPage->id);
-		}
 		else
 		{
-			$obj403 = PageModel::find403ByPid(is_numeric($objRootPage) ? $objRootPage : $objRootPage->id);
+			$obj403 = $objRootPage->type === 'error_403' ? $objRootPage : PageModel::find403ByPid($objRootPage->id);
 		}
 
 		// Die if there is no page at all

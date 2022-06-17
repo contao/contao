@@ -190,6 +190,7 @@ services:
 
     contao.doctrine.schema_provider:
         class: Contao\CoreBundle\Doctrine\Schema\SchemaProvider
+        public: true
         arguments:
             - '@doctrine.orm.default_entity_manager'
 
@@ -798,9 +799,7 @@ services:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
         arguments:
             - '@contao.framework'
-            - '@session'
             - Contao\FrontendUser
-            - '@?logger'
 
     contao.security.login_authentication_listener:
         class: Contao\CoreBundle\Security\Authentication\ContaoLoginAuthenticationListener

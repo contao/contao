@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Cache;
 use Contao\Config;
 use Contao\CoreBundle\Cache\ContaoCacheWarmer;
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
@@ -22,6 +23,7 @@ use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -36,6 +38,18 @@ class ContaoCacheWarmerTest extends TestCase
             Path::join(self::getTempDir(), 'var/cache'),
             Path::join(self::getTempDir(), 'other'),
         ]);
+
+        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider
+            ->method('createSchema')
+            ->willReturn(new Schema())
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set('contao.doctrine.schema_provider', $schemaProvider);
+        $container->set('database_connection', $this->createMock(Connection::class));
+
+        System::setContainer($container);
     }
 
     protected function tearDown(): void
@@ -51,11 +65,6 @@ class ContaoCacheWarmerTest extends TestCase
 
     public function testCreatesTheCacheFolder(): void
     {
-        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-        $container->set('database_connection', $this->createMock(Connection::class));
-
-        System::setContainer($container);
-
         $warmer = $this->getCacheWarmer();
         $warmer->warmUp(Path::join($this->getTempDir(), 'var/cache'));
 

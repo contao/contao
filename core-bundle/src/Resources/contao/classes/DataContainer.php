@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $inputName
  * @property string         $palette
  * @property array          $rootIds
+ * @property int            $currentPid
  */
 abstract class DataContainer extends Backend
 {
@@ -255,6 +256,11 @@ abstract class DataContainer extends Backend
 	protected $blnCreateNewVersion = false;
 
 	/**
+	 * @var int
+	 */
+	protected $intCurrentPid;
+
+	/**
 	 * Active record cache
 	 * @var array<int|string, array>
 	 */
@@ -325,6 +331,9 @@ abstract class DataContainer extends Backend
 
 			case 'createNewVersion':
 				return $this->blnCreateNewVersion;
+
+			case 'currentPid':
+				return $this->intCurrentPid;
 		}
 
 		return parent::__get($strKey);
@@ -1281,7 +1290,7 @@ abstract class DataContainer extends Backend
 
 			unset(
 				$data['filter'][$this->strTable],
-				$data['filter'][$this->strTable . '_' . CURRENT_ID],
+				$data['filter'][$this->strTable . '_' . $this->currentPid],
 				$data['sorting'][$this->strTable],
 				$data['search'][$this->strTable]
 			);

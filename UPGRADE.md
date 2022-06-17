@@ -2,6 +2,19 @@
 
 ## Version 4.* to 5.0
 
+### CURRENT_ID
+
+The `CURRENT_ID` constant and session variable have been removed. Use
+`DataContainer::$currentPid` instead to determine the ID of the current parent record.
+
+```php
+$intCurrentParentRecordId = $dc->currentPid;
+```
+
+### Logout module
+
+The deprecated logout module has been removed. Use the logout page instead.
+
 ### RequestToken class
 
 The `RequestToken` class as well as the `disableRefererCheck` and `requestTokenWhitelist`
@@ -114,11 +127,14 @@ documentation for more details.
 The following content element types have been rewritten as fragment controllers with
 Twig-only templates:
 
-#### Category "texts"
-
-  - `code` (`ce_code` → `content_element/code`)
-  - `headline` (`ce_headline` → `content_element/headline`)
-  - `html` (`ce_html` → `content_element/html`)
+ - `code` (`ce_code` → `content_element/code`)
+ - `headline` (`ce_headline` → `content_element/headline`)
+ - `html` (`ce_html` → `content_element/html`)
+ - `list` (`ce_list` → `content_element/list`)
+ - `hyperlink` (`ce_hyperlink` → `content_element/hyperlink`)
+ - `toplink` (`ce_toplink` → `content_element/toplink`)
+ - `image` (`ce_image` → `content_element/image`)
+ - `gallery` (`ce_gallery` → `content_element/gallery`)
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6.
 If you want to use them instead of the new ones, you can opt in on a per-element basis by adding the
@@ -129,6 +145,11 @@ respective lines to your `contao/config/config.php`:
 $GLOBALS['TL_CTE']['texts']['code'] = \Contao\ContentCode::class;
 $GLOBALS['TL_CTE']['texts']['headline'] = \Contao\ContentHeadline::class;
 $GLOBALS['TL_CTE']['texts']['html'] = \Contao\ContentHtml::class;
+$GLOBALS['TL_CTE']['texts']['list'] = \Contao\ContentList::class;
+$GLOBALS['TL_CTE']['links']['hyperlink'] = \Contao\ContentHyperlink::class;
+$GLOBALS['TL_CTE']['links']['toplink'] = \Contao\ContentToplink::class;
+$GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
+$GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
 ```
 
 ### Show to guests only

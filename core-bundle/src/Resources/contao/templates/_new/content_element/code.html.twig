@@ -1,4 +1,5 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_stylesheet.html.twig" %}
 
 {% set highlighter_css_file = 'vendor/scrivo/highlight_php/styles/foundation.css' %}
 
@@ -9,7 +10,7 @@
         {% block highlighted %}
             {% block style %}
                 {% add "highlighter_css" to head %}
-                    {% include "@Contao/component/_stylesheet.html.twig" with {file: highlighter_css_file} %}
+                    {% with {file: highlighter_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
                 {% endadd %}
             {% endblock %}
 

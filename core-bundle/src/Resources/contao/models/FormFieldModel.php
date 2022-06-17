@@ -15,10 +15,10 @@ use Contao\Model\Collection;
 /**
  * Reads and writes form fields
  *
- * @property string|integer    $id
- * @property string|integer    $pid
- * @property string|integer    $sorting
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $pid
+ * @property integer           $sorting
+ * @property integer           $tstamp
  * @property string            $type
  * @property string            $label
  * @property string            $name
@@ -30,14 +30,14 @@ use Contao\Model\Collection;
  * @property string            $placeholder
  * @property string            $customRgxp
  * @property string            $errorMsg
- * @property string|integer    $minlength
- * @property string|integer    $maxlength
- * @property string|integer    $minval
- * @property string|integer    $maxval
- * @property string|integer    $step
+ * @property integer           $minlength
+ * @property integer           $maxlength
+ * @property integer           $minval
+ * @property integer           $maxval
+ * @property integer           $step
  * @property string|array      $size
  * @property string|boolean    $multiple
- * @property string|integer    $mSize
+ * @property integer           $mSize
  * @property string            $extensions
  * @property string|boolean    $storeFile
  * @property string|null       $uploadFolder
@@ -46,7 +46,7 @@ use Contao\Model\Collection;
  * @property string            $class
  * @property string            $value
  * @property string|boolean    $accesskey
- * @property string|integer    $fSize
+ * @property integer           $fSize
  * @property string            $customTpl
  * @property string            $slabel
  * @property string|boolean    $imageSubmit

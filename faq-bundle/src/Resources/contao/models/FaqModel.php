@@ -16,13 +16,13 @@ use Contao\Model\Collection;
 /**
  * Reads and writes FAQs
  *
- * @property string|integer $id
- * @property string|integer $pid
- * @property string|integer $sorting
- * @property string|integer $tstamp
+ * @property integer        $id
+ * @property integer        $pid
+ * @property integer        $sorting
+ * @property integer        $tstamp
  * @property string         $question
  * @property string         $alias
- * @property string|integer $author
+ * @property integer        $author
  * @property string|null    $answer
  * @property string         $pageTitle
  * @property string         $robots

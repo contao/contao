@@ -24,10 +24,8 @@ use Contao\Template;
  * use the provided legacy helper methods to manually apply the data to them.
  *
  * Wherever possible, the actual data is only requested/built on demand.
- *
- * @final This class will be made final in Contao 5.
  */
-class Figure
+final class Figure
 {
     /**
      * Creates a figure container.

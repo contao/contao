@@ -20,10 +20,6 @@ use Contao\ContentAlias;
 use Contao\ContentArticle;
 use Contao\ContentDownload;
 use Contao\ContentDownloads;
-use Contao\ContentGallery;
-use Contao\ContentHyperlink;
-use Contao\ContentImage;
-use Contao\ContentList;
 use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentPlayer;
@@ -32,7 +28,6 @@ use Contao\ContentSliderStop;
 use Contao\ContentTable;
 use Contao\ContentTeaser;
 use Contao\ContentText;
-use Contao\ContentToplink;
 use Contao\ContentVimeo;
 use Contao\ContentYouTube;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
@@ -77,7 +72,6 @@ use Contao\ModuleCloseAccount;
 use Contao\ModuleCustomnav;
 use Contao\ModuleHtml;
 use Contao\ModuleLogin;
-use Contao\ModuleLogout;
 use Contao\ModuleLostPassword;
 use Contao\ModuleMaintenance;
 use Contao\ModuleModel;
@@ -251,7 +245,6 @@ $GLOBALS['FE_MOD'] = array
 	'user' => array
 	(
 		'login'          => ModuleLogin::class,
-		'logout'         => ModuleLogout::class,
 		'personalData'   => ModulePersonalData::class,
 		'registration'   => ModuleRegistration::class,
 		'changePassword' => ModuleChangePassword::class,
@@ -278,7 +271,6 @@ $GLOBALS['TL_CTE'] = array
 	'texts' => array
 	(
 		'text'            => ContentText::class,
-		'list'            => ContentList::class,
 		'table'           => ContentTable::class,
 	),
 	'accordion' => array
@@ -292,15 +284,8 @@ $GLOBALS['TL_CTE'] = array
 		'sliderStart'     => ContentSliderStart::class,
 		'sliderStop'      => ContentSliderStop::class
 	),
-	'links' => array
-	(
-		'hyperlink'       => ContentHyperlink::class,
-		'toplink'         => ContentToplink::class
-	),
 	'media' => array
 	(
-		'image'           => ContentImage::class,
-		'gallery'         => ContentGallery::class,
 		'player'          => ContentPlayer::class,
 		'youtube'         => ContentYouTube::class,
 		'vimeo'           => ContentVimeo::class

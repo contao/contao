@@ -199,6 +199,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(self::MODE_TREE, self::MODE_TREE_EXTENDED));
 		$this->arrModule = $arrModule;
+		$this->intCurrentPid = $this->findCurrentPid();
 
 		// Call onload_callback (e.g. to check permissions)
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onload_callback'] ?? null))
@@ -232,6 +233,58 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$session[$strRefererId][$this->strTable] = substr(Environment::get('requestUri'), \strlen(Environment::get('path')) + 1);
 			$objSession->set($strKey, $session);
 		}
+	}
+
+	/**
+	 * With this method, the ID of the current (parent) record can be
+	 * determined stateless based on the current request only.
+	 *
+	 * In older versions, Contao stored the ID of the current (parent) record
+	 * in the user session as "CURRENT_ID" to make it known on subsequent
+	 * requests. This was unreliable and caused several issues, like for
+	 * example if the user used multiple browser tabs at the same time.
+	 */
+	private function findCurrentPid(): ?int
+	{
+		if (!$this->ptable)
+		{
+			return null;
+		}
+
+		$id = ((int) Input::get('id')) ?: null;
+		$pid = ((int) Input::get('pid')) ?: null;
+		$act = Input::get('act');
+		$mode = Input::get('mode');
+
+		// For these actions the id parameter refers to the parent record
+		if (($act === 'paste' && $mode === 'create') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+		{
+			return $id;
+		}
+
+		// For these actions the pid parameter refers to the insert position
+		if (\in_array($act, array('create', 'cut', 'copy', 'cutAll', 'copyAll'), true))
+		{
+			// Mode “paste into”
+			if ($mode === '2')
+			{
+				return $pid;
+			}
+
+			// Mode “paste after”
+			$id = $pid;
+		}
+
+		if (!$id || !$this->Database->fieldExists('pid', $this->strTable))
+		{
+			return null;
+		}
+
+		$objPid = $this->Database->prepare("SELECT pid FROM `$this->strTable` WHERE id=?")
+								 ->limit(1)
+								 ->execute($id);
+
+		return ((int) $objPid->pid) ?: null;
 	}
 
 	/**
@@ -316,7 +369,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($this->ptable && Input::get('table') && $this->Database->fieldExists('pid', $this->strTable))
 			{
 				$this->procedure[] = 'pid=?';
-				$this->values[] = CURRENT_ID;
+				$this->values[] = $this->currentPid;
 			}
 
 			$return .= $this->panel();
@@ -1143,7 +1196,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$newPID = null;
 				$newSorting = null;
-				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 
 				/** @var Session $objSession */
 				$objSession = System::getContainer()->get('session');
@@ -2027,7 +2080,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// List view
 				else
 				{
-					$strUrl .= $this->ptable ? '&amp;act=create&amp;mode=2&amp;pid=' . CURRENT_ID : '&amp;act=create';
+					$strUrl .= $this->ptable ? '&amp;act=create&amp;mode=2&amp;pid=' . $this->intCurrentPid : '&amp;act=create';
 				}
 
 				$this->redirect($strUrl . '&amp;rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
@@ -2052,13 +2105,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Parent view
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . CURRENT_ID . '&amp;id=' . $this->intId;
+					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId;
 				}
 
 				// List view
 				else
 				{
-					$strUrl .= $this->ptable ? '&amp;act=copy&amp;mode=2&amp;pid=' . CURRENT_ID . '&amp;id=' . CURRENT_ID : '&amp;act=copy&amp;id=' . CURRENT_ID;
+					$strUrl .= $this->ptable ? '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intCurrentPid : '&amp;act=copy&amp;id=' . $this->intCurrentPid;
 				}
 
 				$this->redirect($strUrl . '&amp;rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
@@ -4166,7 +4219,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Get all details of the parent record
 		$objParent = $this->Database->prepare("SELECT * FROM " . $this->ptable . " WHERE id=?")
 									->limit(1)
-									->execute(CURRENT_ID);
+									->execute($this->intCurrentPid);
 
 		if ($objParent->numRows < 1)
 		{
@@ -4428,7 +4481,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$return .= '
 
-<ul id="ul_' . CURRENT_ID . '">';
+<ul id="ul_' . $this->intCurrentPid . '">';
 			}
 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
@@ -4568,7 +4621,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '
 </ul>
 <script>
-  Backend.makeParentViewSortable("ul_' . CURRENT_ID . '");
+  Backend.makeParentViewSortable("ul_' . $this->intCurrentPid . '");
 </script>';
 		}
 
@@ -5311,7 +5364,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 		$fields = '';
 
 		// Set limit from user input
@@ -5450,7 +5503,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$fields = '';
 		$sortingFields = array();
 		$session = $objSessionBag->all();
-		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 
 		// Get the sorting fields
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
@@ -5577,7 +5630,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 			{
 				$arrProcedure[] = 'pid=?';
-				$arrValues[] = CURRENT_ID;
+				$arrValues[] = $this->intCurrentPid;
 			}
 
 			if (!$this->treeView && !empty($this->root) && \is_array($this->root))
@@ -5616,19 +5669,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Sort by day
 				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_DAY_ASC, self::SORT_DAY_DESC)))
 				{
-					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-%%d'))), '') AS $what";
+					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-%m-%d'))), '') AS $what";
 				}
 
 				// Sort by month
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_MONTH_ASC, self::SORT_MONTH_DESC)))
 				{
-					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-%%m-01'))), '') AS $what";
+					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-%m-01'))), '') AS $what";
 				}
 
 				// Sort by year
 				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['flag'], array(self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 				{
-					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%%Y-01-01'))), '') AS $what";
+					$what = "IF($what!='', FLOOR(UNIX_TIMESTAMP(FROM_UNIXTIME($what , '%Y-01-01'))), '') AS $what";
 				}
 			}
 
@@ -5923,7 +5976,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
-		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . CURRENT_ID : $this->strTable;
+		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 
 		list($offset, $limit) = explode(',', $this->limit) + array(null, null);
 

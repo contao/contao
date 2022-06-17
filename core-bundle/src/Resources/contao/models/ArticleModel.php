@@ -15,13 +15,13 @@ use Contao\Model\Collection;
 /**
  * Reads and writes articles
  *
- * @property string|integer $id
- * @property string|integer $pid
- * @property string|integer $sorting
- * @property string|integer $tstamp
+ * @property integer        $id
+ * @property integer        $pid
+ * @property integer        $sorting
+ * @property integer        $tstamp
  * @property string         $title
  * @property string         $alias
- * @property string|integer $author
+ * @property integer        $author
  * @property string         $inColumn
  * @property string|boolean $showTeaser
  * @property string         $teaserCssID
