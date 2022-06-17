@@ -333,19 +333,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function show()
 	{
-		$row = $this->getCurrentRecord();
+		$currentRecord = $this->getCurrentRecord();
 
-		if (null === $row)
+		if (null === $currentRecord)
 		{
 			return '';
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $currentRecord));
 
 		$data = array();
 
 		// Get all fields
-		$fields = array_keys($row);
+		$fields = array_keys($currentRecord);
 		$allowedFields = array('id', 'pid', 'sorting', 'tstamp');
 
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? null))
@@ -370,7 +370,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				continue;
 			}
 
-			$value = StringUtil::deserialize($row[$i]);
+			$value = StringUtil::deserialize($currentRecord[$i]);
 
 			// Get the field value
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['foreignKey']))
@@ -390,7 +390,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$row[$i] = implode(', ', $temp);
+				$currentRecord[$i] = implode(', ', $temp);
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'fileTree')
 			{
@@ -408,22 +408,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
-					$row[$i] = implode(', ', $value);
+					$currentRecord[$i] = implode(', ', $value);
 				}
 				elseif (($objFile = FilesModel::findByUuid($value)) instanceof FilesModel)
 				{
-					$row[$i] = $objFile->path . ' (' . StringUtil::binToUuid($value) . ')';
+					$currentRecord[$i] = $objFile->path . ' (' . StringUtil::binToUuid($value) . ')';
 				}
 				else
 				{
-					$row[$i] = '';
+					$currentRecord[$i] = '';
 				}
 			}
 			elseif (\is_array($value))
 			{
 				if (isset($value['value'], $value['unit']) && \count($value) == 2)
 				{
-					$row[$i] = trim($value['value'] . ', ' . $value['unit']);
+					$currentRecord[$i] = trim($value['value'] . ', ' . $value['unit']);
 				}
 				else
 				{
@@ -444,44 +444,44 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
-					$row[$i] = implode(', ', $value);
+					$currentRecord[$i] = implode(', ', $value);
 				}
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'date')
 			{
-				$row[$i] = $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
+				$currentRecord[$i] = $value ? Date::parse(Config::get('dateFormat'), $value) : '-';
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'time')
 			{
-				$row[$i] = $value ? Date::parse(Config::get('timeFormat'), $value) : '-';
+				$currentRecord[$i] = $value ? Date::parse(Config::get('timeFormat'), $value) : '-';
 			}
 			elseif ($i == 'tstamp' || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'datim' || \in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC)))
 			{
-				$row[$i] = $value ? Date::parse(Config::get('datimFormat'), $value) : '-';
+				$currentRecord[$i] = $value ? Date::parse(Config::get('datimFormat'), $value) : '-';
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['multiple'] ?? null)))
 			{
-				$row[$i] = $value ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
+				$currentRecord[$i] = $value ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['rgxp'] ?? null) == 'email')
 			{
-				$row[$i] = Idna::decodeEmail($value);
+				$currentRecord[$i] = Idna::decodeEmail($value);
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['inputType'] ?? null) == 'textarea' && (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['allowHtml'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['preserveTags'] ?? null)))
 			{
-				$row[$i] = StringUtil::specialchars($value);
+				$currentRecord[$i] = StringUtil::specialchars($value);
 			}
 			elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'] ?? null))
 			{
-				$row[$i] = isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) ? (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$row[$i]]) : $row[$i];
+				$currentRecord[$i] = isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$currentRecord[$i]]) ? (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$currentRecord[$i]]) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$currentRecord[$i]][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['reference'][$currentRecord[$i]]) : $currentRecord[$i];
 			}
 			elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options'] ?? null))
 			{
-				$row[$i] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options'][$row[$i]] ?? null;
+				$currentRecord[$i] = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['options'][$currentRecord[$i]] ?? null;
 			}
 			else
 			{
-				$row[$i] = $value;
+				$currentRecord[$i] = $value;
 			}
 
 			$label = null;
@@ -503,7 +503,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$label .= ' <small>' . $i . '</small>';
 
-			$data[$this->strTable][0][$label] = $row[$i];
+			$data[$this->strTable][0][$label] = $currentRecord[$i];
 		}
 
 		// Call onshow_callback
@@ -514,11 +514,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				if (\is_array($callback))
 				{
 					$this->import($callback[0]);
-					$data = $this->{$callback[0]}->{$callback[1]}($data, $row, $this);
+					$data = $this->{$callback[0]}->{$callback[1]}($data, $currentRecord, $this);
 				}
 				elseif (\is_callable($callback))
 				{
-					$data = $callback($data, $row, $this);
+					$data = $callback($data, $currentRecord, $this);
 				}
 			}
 		}
@@ -717,9 +717,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->set['ptable'] = $this->ptable;
 		}
 
-		$row = $this->getCurrentRecord();
+		$currentRecord = $this->getCurrentRecord();
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row, $this->set));
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord, $this->set));
 
 		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
 					   ->set($this->set)
@@ -815,12 +815,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = $objSession->getBag('contao_backend');
 
-		$row = $this->getCurrentRecord();
+		$currentRecord = $this->getCurrentRecord();
 
 		// Copy the values if the record contains data
-		if (null !== $row)
+		if (null !== $currentRecord)
 		{
-			foreach ($row as $k=>$v)
+			foreach ($currentRecord as $k=>$v)
 			{
 				if (\array_key_exists($k, $GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array()))
 				{
@@ -2020,7 +2020,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Parent view
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . $this->activeRecord->pid;
+					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . $currentRecord['pid'];
 				}
 
 				// List view
@@ -2310,7 +2310,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $currentRecord));
 
 					// Store the active record
-					$this->objActiveRecord = $objRow;
+					$this->objActiveRecord = (object) $currentRecord;
 
 					foreach ($this->strPalette as $v)
 					{
@@ -2611,10 +2611,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the current record
-		$this->getCurrentRecord();
+		$currentRecord = $this->getCurrentRecord();
 
 		// Redirect if there is no record with the given ID
-		if (null === $this->activeRecord)
+		if (null === $currentRecord)
 		{
 			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
@@ -2627,7 +2627,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objVersions->initialize();
 
 		Input::setPost('FORM_SUBMIT', $this->strTable);
-		$this->varValue = $this->activeRecord->{$this->strField};
+		$this->varValue = $currentRecord[$this->strField];
 
 		$this->save($this->varValue ? '' : '1');
 
@@ -2939,11 +2939,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$varValue = $objDate->tstamp;
 		}
 
+		$currentRecord = $this->getCurrentRecord();
+
 		// Handle multi-select fields in "override all" mode
-		if ($this->objActiveRecord !== null && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
+		if ($currentRecord !== null && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
 		{
 			$new = StringUtil::deserialize($varValue, true);
-			$old = StringUtil::deserialize($this->objActiveRecord->{$this->strField}, true);
+			$old = StringUtil::deserialize($currentRecord[$this->strField], true);
 
 			// Call load_callback
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] ?? null))
@@ -3015,7 +3017,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make sure unique fields are unique
-		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $this->objActiveRecord->id))
+		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $currentRecord['id']))
 		{
 			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
@@ -3032,7 +3034,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->arrSubmit[$this->strField] = $varValue;
 			$this->varValue = StringUtil::deserialize($varValue);
 
-			// Do not set the new value on activeRecord. The activeRecord always contains the pre-submit data.
+			if (\is_object($this->objActiveRecord))
+			{
+				$this->objActiveRecord->{$this->strField} = $this->varValue;
+			}
 		}
 	}
 
@@ -3351,12 +3356,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				foreach ($ids as $id)
 				{
 					// Get the current record
-					$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-											 ->limit(1)
-											 ->execute($id);
+					$currentRecord = $this->getCurrentRecord($id);
 
 					$this->id = $id;
-					$this->activeRecord = $objRow;
+					$this->activeRecord = (object) $currentRecord;
 
 					// Invalidate cache tags (no need to invalidate the parent)
 					$this->invalidateCacheTags();
