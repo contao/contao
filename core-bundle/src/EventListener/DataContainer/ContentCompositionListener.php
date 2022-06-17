@@ -133,9 +133,9 @@ class ContentCompositionListener
             'tstamp' => time(),
             'author' => $user->id,
             'inColumn' => $column,
-            'title' => $dc->activeRecord->title,
-            'alias' => str_replace('/', '-', $dc->activeRecord->alias), // see #516
-            'published' => $dc->activeRecord->published,
+            'title' => $currentRecord['title'],
+            'alias' => str_replace('/', '-', $currentRecord['alias']), // see #516
+            'published' => $currentRecord['published'],
         ];
 
         $this->connection->insert('tl_article', $article);
