@@ -341,7 +341,6 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->createMock(DC_Table::class);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
             ->willReturn(null)
         ;
@@ -366,9 +365,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->createMock(DC_Table::class);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn(['id' => 17]);
+            ->willReturn(['id' => 17])
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -402,9 +401,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->createMock(DC_Table::class);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn(['id' => 17]);
+            ->willReturn(['id' => 17])
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -421,9 +420,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->createMock(DC_Table::class);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn(['id' => 17]);
+            ->willReturn(['id' => 17])
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -443,9 +442,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->createMock(DC_Table::class);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -461,9 +460,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->createMock(DC_Table::class);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -479,9 +478,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->createMock(DC_Table::class);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -497,9 +496,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->createMock(DC_Table::class);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -515,9 +514,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->createMock(DC_Table::class);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -539,9 +538,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
     }
@@ -577,9 +576,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
 
@@ -627,9 +626,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->listener->generateArticleForPage($dc);
 
@@ -680,9 +679,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->imageAdapter
             ->expects($this->never())
@@ -705,9 +704,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->imageAdapter
             ->expects($this->never())
@@ -742,9 +741,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->assertSame(
             '<img src="pasteinto_.svg"> ',
@@ -774,9 +773,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->assertSame(
             '<img src="pasteinto_.svg"> ',
@@ -812,9 +811,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord);
+            ->willReturn($this->pageRecord)
+        ;
 
         $this->assertSame(
             '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteinto.svg"></a> ',
@@ -842,9 +841,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord);
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->imageAdapter
             ->expects($this->never())
@@ -865,9 +864,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord);
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->never())
@@ -893,9 +892,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord);
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->never())
@@ -921,9 +920,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord);
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->never())
@@ -951,9 +950,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord);
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->never())
@@ -981,9 +980,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord);
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->never())
@@ -1011,9 +1010,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord);
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->once())
@@ -1043,9 +1042,9 @@ class ContentCompositionListenerTest extends TestCase
 
         $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
         $dc
-            ->expects($this->any())
             ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord);
+            ->willReturn($this->articleRecord)
+        ;
 
         $this->security
             ->expects($this->once())

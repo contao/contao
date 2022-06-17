@@ -2725,7 +2725,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							continue;
 						}
-						
 					}
 				}
 				catch (\Throwable $e)
