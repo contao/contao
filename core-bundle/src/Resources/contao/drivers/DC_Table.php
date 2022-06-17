@@ -2631,7 +2631,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->varValue = $currentRecord[$this->strField];
 
 		$this->save($this->varValue ? '' : '1');
-
 		$this->submit();
 
 		$this->redirect($this->getReferer());
@@ -4499,7 +4498,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$security = System::getContainer()->get('security.helper');
 
 						// Create new button
-						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
+						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, ['pid' => $row[$i]['id']])))
 						{
 							$return .= ' <a href="' . $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteNew[1], $row[$i]['id'])) . '">' . $imagePasteNew . '</a>';
 						}
