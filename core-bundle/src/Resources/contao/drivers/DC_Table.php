@@ -3827,6 +3827,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		while ($objRows->next())
 		{
+			// Improve performance for $dc->getCurrentRecord($id);
+			$this->setCurrentRecordCache($objRows->id, $table, $objRows->row());
+
 			$arrIds[] = $objRows->id;
 		}
 
@@ -3897,12 +3900,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('request')));
 		}
 
-		$objRow = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
-								 ->limit(1)
-								 ->execute($id);
+		$currentRecord = $this->getCurrentRecord($id, $table);
 
 		// Return if there is no result
-		if ($objRow->numRows < 1)
+		if (null === $currentRecord)
 		{
 			$objSessionBag->replace($session);
 
@@ -3916,7 +3917,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add the ID to the list of current IDs
 		if ($this->strTable == $table)
 		{
-			$this->current[] = $objRow->id;
+			$this->current[] = $currentRecord['id'];
 		}
 
 		// Check whether there are child records
@@ -3939,7 +3940,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check whether the page is protected
 		if ($table == 'tl_page')
 		{
-			$blnProtected = ($objRow->protected || $protectedPage);
+			$blnProtected = ($currentRecord['protected'] || $protectedPage);
 		}
 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
@@ -3955,7 +3956,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$mouseover = ' hover-div';
 		}
 
-		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
+		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $currentRecord['type'] == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
 		$level = ($intMargin / $intSpacing + 1);
@@ -3986,9 +3987,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Check either the ID (tree mode or parent table) or the parent ID (child table)
-		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($objRow->pid, $this->visibleRootTrails);
+		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($currentRecord['pid'], $this->visibleRootTrails);
 
-		$return .= $this->generateRecordLabel($objRow->row(), $table, $blnProtected, $isVisibleRootTrailPage);
+		$return .= $this->generateRecordLabel($currentRecord, $table, $blnProtected, $isVisibleRootTrailPage);
 		$return .= '</div> <div class="tl_right">';
 		$previous = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['pp'] ?? null) : ($arrPrevNext['p'] ?? null);
 		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
@@ -3997,7 +3998,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Regular buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
 		if ($this->strTable == $table && !$isVisibleRootTrailPage)
 		{
-			$_buttons .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : $this->generateButtons($objRow->row(), $table, $this->root, $blnCircularReference, $childs, $previous, $next);
+			$_buttons .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $childs, $previous, $next);
 
 			if ($this->strPickerFieldType)
 			{
@@ -4017,11 +4018,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
 
 				$this->import($strClass);
-				$_buttons .= $this->$strClass->$strMethod($this, $objRow->row(), $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
+				$_buttons .= $this->$strClass->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
 			}
 			elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
-				$_buttons .= $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, $objRow->row(), $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
+				$_buttons .= $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
 			}
 			else
 			{
@@ -4498,7 +4499,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$security = System::getContainer()->get('security.helper');
 
 						// Create new button
-						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, ['pid' => $row[$i]['id']])))
+						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $row[$i]['id']))))
 						{
 							$return .= ' <a href="' . $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteNew[1], $row[$i]['id'])) . '">' . $imagePasteNew . '</a>';
 						}
@@ -4873,6 +4874,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			foreach ($result as $row)
 			{
+				// Improve performance for $dc->getCurrentRecord($id);
+				$this->setCurrentRecordCache($row['id'], $this->strTable, $row);
+
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row));
 
 				$this->current[] = $row['id'];

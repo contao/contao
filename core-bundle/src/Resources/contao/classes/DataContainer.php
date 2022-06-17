@@ -258,7 +258,7 @@ abstract class DataContainer extends Backend
 	 * Active record cache
 	 * @var array<int|string, array>
 	 */
-	protected $arrCurrentRecordCache = array();
+	private $arrCurrentRecordCache = array();
 
 	/**
 	 * Set an object property
@@ -1724,8 +1724,13 @@ abstract class DataContainer extends Backend
 				continue;
 			}
 
-			$this->arrCurrentRecordCache[$table . '.' . $row['id']] = $row;
+			$this->setCurrentRecordCache($row['id'], $table, $row);
 		}
+	}
+
+	protected function setCurrentRecordCache(string|int $id, string $table, array $row): void
+	{
+		$this->arrCurrentRecordCache[$table . '.' . $id] = $row;
 	}
 
 	public function getCurrentRecord(string|int $id = null, string $table = null, bool $noCache = false): ?array
