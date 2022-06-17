@@ -173,13 +173,16 @@ class TemplateOptionsListenerTest extends TestCase
     /**
      * @return DataContainer&MockObject
      */
-    private function mockDataContainer(string $table, array $activeRecord = []): DataContainer
+    private function mockDataContainer(string $table, array $currentRecord = []): DataContainer
     {
         $dc = $this->mockClassWithProperties(DataContainer::class);
         $dc->table = $table;
 
-        if (!empty($activeRecord)) {
-            $dc->activeRecord = (object) $activeRecord;
+        if (!empty($currentRecord)) {
+            $dc
+                ->method('getCurrentRecord')
+                ->willReturn($currentRecord)
+            ;
         }
 
         return $dc;
