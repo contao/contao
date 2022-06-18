@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\Exception\ValidationErrorException;
 use Contao\DataContainer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -27,7 +28,7 @@ class StartStopValidationListener
         $stop = (string) (\array_key_exists('stop', $values) ? $values['stop'] : $dc->activeRecord->stop);
 
         if ('' !== $start && '' !== $stop && $stop < $start) {
-            throw new \RuntimeException($this->translator->trans('ERR.startStop', [], 'contao_default'));
+            throw new ValidationErrorException($this->translator->trans('ERR.startStop', [], 'contao_default'), 'start');
         }
 
         return $values;

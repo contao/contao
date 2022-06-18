@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Exception\ValidationErrorException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
@@ -1821,7 +1822,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->objActiveRecord = $objRow;
 
-		$return = '';
+		$return = array();
 		$this->values[] = $this->intId;
 		$this->procedure[] = 'id=?';
 		$this->arrSubmit = array();
@@ -1919,7 +1920,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$class .= (($cls && $legend) ? ' ' . $cls : '');
 				}
 
-				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
+				$return[] = "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
 				$thisId = '';
 
 				// Build rows of the current box
@@ -1949,7 +1950,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							}
 						}
 
-						$return .= "\n" . '</div>';
+						$return[] = "\n" . '</div>';
 
 						continue;
 					}
@@ -1959,7 +1960,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$arrAjax[$thisId] = '';
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
-						$return .= "\n" . '<div id="' . $thisId . '" class="subpal cf">';
+						$return[] = "\n" . '<div id="' . $thisId . '" class="subpal cf">';
 
 						continue;
 					}
@@ -1995,14 +1996,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
+					if ($blnAjax)
+					{
+						$arrAjax[$thisId] .= $this->row($this->strPalette);
+					}
+					else
+					{
+						$return[isset($return[$this->strField]) ? \count($return) : $this->strField] = $this->row($this->strPalette);
+					}
 				}
 
 				$class = 'tl_box';
-				$return .= "\n" . '</fieldset>';
+				$return[] = "\n" . '</fieldset>';
 			}
 
-			$this->submit();
+			$return = $this->submit($return);
 		}
 
 		// Reload the page to prevent _POST variables from being sent twice
@@ -2202,7 +2210,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Add the buttons and end the form
-		$return .= '
+		$return[] = '
 </div>
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
@@ -2229,7 +2237,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $strVersionField . $return;
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $strVersionField . implode('', $return);
 
 		// Set the focus if there is an error
 		if ($this->noReload)
@@ -3105,11 +3113,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 	}
 
-	protected function submit()
+	protected function submit(array $return = array()): array
 	{
 		if (empty($this->arrSubmit) || Input::post('FORM_SUBMIT') != $this->strTable)
 		{
-			return;
+			return $return;
 		}
 
 		if ($this->noReload)
@@ -3117,7 +3125,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Data should not be submitted due to validation errors
 			$this->arrSubmit = array();
 
-			return;
+			return $return;
 		}
 
 		$arrValues = $this->arrSubmit;
@@ -3148,9 +3156,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				catch (\Exception $e)
 				{
 					$this->noReload = true;
+
+					if ($e instanceof ValidationErrorException && null !== $e->propertyPath && isset($return[$e->propertyPath]))
+					{
+						if (str_contains($return[$e->propertyPath], '<p class="tl_help tl_tip">'))
+						{
+							$return[$e->propertyPath] = str_replace('<p class="tl_help tl_tip">', '<p class="tl_error">' . $e->getMessage() . '</p><p style="display: none">', $return[$e->propertyPath]);
+						}
+						else
+						{
+							array_splice($return, array_search($e->propertyPath, array_keys($return), true), 0, array(
+								'<p class="tl_gerror">' . $e->getMessage() . '</p>',
+							));
+						}
+
+						return $return;
+					}
+
 					Message::addError($e->getMessage());
 
-					return;
+					return $return;
 				}
 			}
 		}
@@ -3242,6 +3267,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->invalidateCacheTags();
 		}
+
+		return $return;
 	}
 
 	/**
