@@ -153,7 +153,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	// Subpalettes
 	'subpalettes' => array
 	(
-		'addImage'                    => 'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta',
+		'addImage'                    => 'singleSRC,fullsize,size,floating,overwriteMeta',
 		'addEnclosure'                => 'enclosure',
 		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption'
 	),
@@ -344,21 +344,12 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
 			'options_callback' => static function ()
 			{
 				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'imagemargin' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imagemargin'],
-			'exclude'                 => true,
-			'inputType'               => 'trbl',
-			'options'                 => array('px', '%', 'em', 'rem'),
-			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
 		'imageUrl' => array
 		(
@@ -374,7 +365,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['fullsize'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'caption' => array
@@ -526,9 +517,11 @@ class tl_news extends Backend
 	/**
 	 * Check permissions to edit table tl_news
 	 *
+	 * @param DataContainer $dc
+	 *
 	 * @throws AccessDeniedException
 	 */
-	public function checkPermission()
+	public function checkPermission(DataContainer $dc)
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -554,15 +547,15 @@ class tl_news extends Backend
 			$root = $this->User->news;
 		}
 
-		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
 		switch (Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
-				// Check CURRENT_ID here (see #247)
-				if (!in_array(CURRENT_ID, $root))
+				// Check currentPid here (see #247)
+				if (!in_array($dc->currentPid, $root))
 				{
 					throw new AccessDeniedException('Not enough permissions to access news archive ID ' . $id . '.');
 				}

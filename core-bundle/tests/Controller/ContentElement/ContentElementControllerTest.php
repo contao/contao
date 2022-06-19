@@ -215,7 +215,7 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('main', $template['section']);
         $this->assertSame('foo-id', $template['element_html_id']);
         $this->assertSame('foo-class bar-class baz-class', $template['element_css_classes']);
-        $this->assertSame(['text' => 'foo', 'tagName' => 'h3'], $template['headline']);
+        $this->assertSame(['text' => 'foo', 'tag_name' => 'h3'], $template['headline']);
         $this->assertSame($model->row(), $template['data']);
     }
 

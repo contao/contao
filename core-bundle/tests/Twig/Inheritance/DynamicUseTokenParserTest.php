@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -62,7 +63,7 @@ class DynamicUseTokenParserTest extends TestCase
         $warmer->warmUp('');
 
         $environment = new Environment($loader);
-        $environment->addExtension(new ContaoExtension($environment, $loader));
+        $environment->addExtension(new ContaoExtension($environment, $loader, $this->createMock(ContaoCsrfTokenManager::class)));
 
         // A component is adjusted by overwriting the component's template
         // (here by adding the item "ice" and turning apples into pineapples).

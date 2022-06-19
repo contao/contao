@@ -15,11 +15,11 @@ use Contao\Model\Collection;
 /**
  * Reads and writes member groups
  *
- * @property string|integer $id
- * @property string|integer $tstamp
+ * @property integer        $id
+ * @property integer        $tstamp
  * @property string         $name
  * @property string|boolean $redirect
- * @property string|integer $jumpTo
+ * @property integer        $jumpTo
  * @property string|boolean $disable
  * @property string|integer $start
  * @property string|integer $stop

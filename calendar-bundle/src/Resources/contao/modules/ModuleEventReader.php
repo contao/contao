@@ -312,7 +312,7 @@ class ModuleEventReader extends Events
 
 			if (null !== $figure)
 			{
-				$figure->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
+				$figure->applyLegacyTemplateData($objTemplate, null, $objEvent->floating);
 			}
 		}
 

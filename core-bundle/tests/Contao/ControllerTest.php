@@ -50,19 +50,6 @@ class ControllerTest extends TestCase
         parent::tearDown();
     }
 
-    public function testGeneratesTheMargin(): void
-    {
-        $margins = [
-            'top' => '40px',
-            'right' => '10%',
-            'bottom' => '-2px',
-            'left' => '-50%',
-            'unit' => '',
-        ];
-
-        $this->assertSame('margin:40px 10% -2px -50%;', Controller::generateMargin($margins));
-    }
-
     public function testAddToUrlWithoutQueryString(): void
     {
         $request = new Request();

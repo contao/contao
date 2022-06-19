@@ -21,21 +21,21 @@ use Symfony\Component\Filesystem\Path;
  * The files themselves reside in the files directory. This class only handles
  * the corresponding database entries (database aided file system).
  *
- * @property string|integer      $id
- * @property string|integer|null $pid
- * @property string|integer      $tstamp
- * @property string|null         $uuid
- * @property string              $type
- * @property string              $path
- * @property string              $extension
- * @property string              $hash
- * @property string|boolean      $found
- * @property string              $name
- * @property string|float        $importantPartX
- * @property string|float        $importantPartY
- * @property string|float        $importantPartWidth
- * @property string|float        $importantPartHeight
- * @property string|array|null   $meta
+ * @property integer           $id
+ * @property string|null       $pid
+ * @property integer           $tstamp
+ * @property string|null       $uuid
+ * @property string            $type
+ * @property string            $path
+ * @property string            $extension
+ * @property string            $hash
+ * @property string|boolean    $found
+ * @property string            $name
+ * @property float             $importantPartX
+ * @property float             $importantPartY
+ * @property float             $importantPartWidth
+ * @property float             $importantPartHeight
+ * @property string|array|null $meta
  *
  * @method static FilesModel|null findByIdOrAlias($val, array $opt=array())
  * @method static FilesModel|null findOneBy($col, $val, array $opt=array())

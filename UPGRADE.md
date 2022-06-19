@@ -2,7 +2,25 @@
 
 ## Version 4.* to 5.0
 
-## FORM_FIELDS
+### CURRENT_ID
+
+The `CURRENT_ID` constant and session variable have been removed. Use
+`DataContainer::$currentPid` instead to determine the ID of the current parent record.
+
+```php
+$intCurrentParentRecordId = $dc->currentPid;
+```
+
+### Logout module
+
+The deprecated logout module has been removed. Use the logout page instead.
+
+### RequestToken class
+
+The `RequestToken` class as well as the `disableRefererCheck` and `requestTokenWhitelist`
+settings have been removed.
+
+### FORM_FIELDS
 
 It is no longer possible to use the `FORM_FIELDS` mechanism to determine which form fields have been
 submitted. Make sure to always submit at least an empty string in your widget:
@@ -17,8 +35,14 @@ submitted. Make sure to always submit at least an empty string in your widget:
 
 ### Constants
 
-The constants `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`, `TL_REFERER_ID` and `TL_SCRIPT` have
-been removed.
+The constants `TL_ROOT`, `BE_USER_LOGGED_IN`, `FE_USER_LOGGED_IN`, `TL_START`,
+`TL_REFERER_ID`, `TL_SCRIPT`, `TL_MODE` and `REQUEST_TOKEN`  have been removed.
+
+Use the `kernel.project_dir` instead of `TL_ROOT`:
+
+```php
+$rootDir = System::getContainer()->getParameter('kernel.project_dir');
+```
 
 `BE_USER_LOGGED_IN` was historically used to preview unpublished elements in the front end. Use the
 token checker service to check the separate cases instead:
@@ -56,6 +80,42 @@ if ('contao_backend' === $route) {
 }
 ```
 
+Use the `ScopeMatcher` service instead of using `TL_MODE`:
+
+```php
+use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\HttpFoundation\RequestStack;
+
+class Test {
+    private $requestStack;
+    private $scopeMatcher;
+
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
+        $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
+    }
+
+    public function isBackend() {
+        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+    }
+
+    public function isFrontend() {
+        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
+    }
+}
+```
+
+Use the `contao.csrf.token_manager` service or the `requestToken` variable in your
+template instead of `REQUEST_TOKEN`:
+
+```php
+$requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+```
+
+```php
+<input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+```
+
 ### TL_CRON
 
 Cronjobs can no longer be registered via `$GLOBALS['TL_CRON']`. Use a service tagged with `contao.cronjob`
@@ -67,11 +127,14 @@ documentation for more details.
 The following content element types have been rewritten as fragment controllers with
 Twig-only templates:
 
-#### Category "texts"
-
-  - `code` (`ce_code` → `content_element/code`)
-  - `headline` (`ce_headline` → `content_element/headline`)
-  - `html` (`ce_html` → `content_element/html`)
+ - `code` (`ce_code` → `content_element/code`)
+ - `headline` (`ce_headline` → `content_element/headline`)
+ - `html` (`ce_html` → `content_element/html`)
+ - `list` (`ce_list` → `content_element/list`)
+ - `hyperlink` (`ce_hyperlink` → `content_element/hyperlink`)
+ - `toplink` (`ce_toplink` → `content_element/toplink`)
+ - `image` (`ce_image` → `content_element/image`)
+ - `gallery` (`ce_gallery` → `content_element/gallery`)
 
 The legacy content elements and their templates are still around and will only be dropped in Contao 6.
 If you want to use them instead of the new ones, you can opt in on a per-element basis by adding the
@@ -82,6 +145,11 @@ respective lines to your `contao/config/config.php`:
 $GLOBALS['TL_CTE']['texts']['code'] = \Contao\ContentCode::class;
 $GLOBALS['TL_CTE']['texts']['headline'] = \Contao\ContentHeadline::class;
 $GLOBALS['TL_CTE']['texts']['html'] = \Contao\ContentHtml::class;
+$GLOBALS['TL_CTE']['texts']['list'] = \Contao\ContentList::class;
+$GLOBALS['TL_CTE']['links']['hyperlink'] = \Contao\ContentHyperlink::class;
+$GLOBALS['TL_CTE']['links']['toplink'] = \Contao\ContentToplink::class;
+$GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
+$GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
 ```
 
 ### Show to guests only

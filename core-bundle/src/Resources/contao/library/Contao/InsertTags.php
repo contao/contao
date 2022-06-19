@@ -1306,7 +1306,7 @@ class InsertTags extends Controller
 			// Skip RCDATA and RAWTEXT elements https://html.spec.whatwg.org/#rcdata-state
 			if (
 				\in_array(strtolower($matches[1][0]), array('script', 'title', 'textarea', 'style', 'xmp', 'iframe', 'noembed', 'noframes', 'noscript'), true)
-				&& preg_match('(</' . preg_quote($matches[1][0]) . '[\s/>])i', $html, $endTagMatches, PREG_OFFSET_CAPTURE, $offset)
+				&& preg_match('(</' . preg_quote($matches[1][0], null) . '[\s/>])i', $html, $endTagMatches, PREG_OFFSET_CAPTURE, $offset)
 			) {
 				$offset = $endTagMatches[0][1] + \strlen($endTagMatches[0][0]);
 				$htmlResult .= substr($html, $matches[0][1] + \strlen($matches[0][0]), $offset - $matches[0][1] - \strlen($matches[0][0]));

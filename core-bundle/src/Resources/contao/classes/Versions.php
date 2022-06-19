@@ -604,7 +604,7 @@ class Versions extends Controller
 <form id="tl_version" class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versioning']) . '">
 <div class="tl_formbody">
 <input type="hidden" name="FORM_SUBMIT" value="tl_version">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
 <select name="version" class="tl_select">' . $versions . '
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">' . $GLOBALS['TL_LANG']['MSC']['restore'] . '</button>
@@ -680,7 +680,7 @@ class Versions extends Controller
 					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
 				}
 
-				$arrRow['editUrl'] = preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . REQUEST_TOKEN), StringUtil::ampersand($arrRow['editUrl']));
+				$arrRow['editUrl'] = preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue())), StringUtil::ampersand($arrRow['editUrl']));
 			}
 
 			$arrVersions[] = $arrRow;
@@ -736,7 +736,7 @@ class Versions extends Controller
 		{
 			$pairs['do'] = 'user';
 			$pairs['id'] = BackendUser::getInstance()->id;
-			$pairs['rt'] = REQUEST_TOKEN;
+			$pairs['rt'] = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 		}
 
 		if (isset($pairs['act']))

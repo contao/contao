@@ -741,16 +741,6 @@ class StringUtil
 			return $str;
 		}
 
-		if ($from == 'UTF-8' && $to == 'ISO-8859-1')
-		{
-			return utf8_decode($str);
-		}
-
-		if ($from == 'ISO-8859-1' && $to == 'UTF-8')
-		{
-			return utf8_encode($str);
-		}
-
 		return mb_convert_encoding($str, $to, $from);
 	}
 
@@ -770,7 +760,7 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		return htmlspecialchars((string) $strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
+		return htmlspecialchars((string) $strString, ENT_QUOTES, 'UTF-8', $blnDoubleEncode);
 	}
 
 	/**
@@ -879,7 +869,7 @@ class StringUtil
 		$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 		$arrReplace = array('', '-');
 
-		$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8');
+		$strString = html_entity_decode($strString, ENT_QUOTES, 'UTF-8');
 		$strString = static::stripInsertTags($strString);
 		$strString = preg_replace($arrSearch, $arrReplace, $strString);
 

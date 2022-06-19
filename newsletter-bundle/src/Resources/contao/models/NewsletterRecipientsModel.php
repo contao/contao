@@ -15,12 +15,12 @@ use Contao\Model\Collection;
 /**
  * Reads and writes newsletter recipients
  *
- * @property string|integer $id
- * @property string|integer $pid
- * @property string|integer $tstamp
+ * @property integer        $id
+ * @property integer        $pid
+ * @property integer        $tstamp
  * @property string         $email
  * @property string|boolean $active
- * @property string|integer $addedOn
+ * @property integer        $addedOn
  *
  * @method static NewsletterRecipientsModel|null findById($id, array $opt=array())
  * @method static NewsletterRecipientsModel|null findByPk($id, array $opt=array())

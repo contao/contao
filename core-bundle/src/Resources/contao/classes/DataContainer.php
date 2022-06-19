@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $palette
  * @property object|null    $activeRecord
  * @property array          $rootIds
+ * @property int            $currentPid
  */
 abstract class DataContainer extends Backend
 {
@@ -255,6 +256,11 @@ abstract class DataContainer extends Backend
 	protected $blnCreateNewVersion = false;
 
 	/**
+	 * @var int
+	 */
+	protected $intCurrentPid;
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey
@@ -316,6 +322,9 @@ abstract class DataContainer extends Backend
 
 			case 'createNewVersion':
 				return $this->blnCreateNewVersion;
+
+			case 'currentPid':
+				return $this->intCurrentPid;
 		}
 
 		return parent::__get($strKey);
@@ -1272,7 +1281,7 @@ abstract class DataContainer extends Backend
 
 			unset(
 				$data['filter'][$this->strTable],
-				$data['filter'][$this->strTable . '_' . CURRENT_ID],
+				$data['filter'][$this->strTable . '_' . $this->currentPid],
 				$data['sorting'][$this->strTable],
 				$data['search'][$this->strTable]
 			);
@@ -1394,7 +1403,7 @@ abstract class DataContainer extends Backend
 <form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
   ' . $return . '
 </div>
 </form>';

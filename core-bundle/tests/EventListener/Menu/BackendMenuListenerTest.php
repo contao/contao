@@ -83,6 +83,8 @@ class BackendMenuListenerTest extends TestCase
                 'class' => 'group-category1 custom-class',
                 'title' => 'Category 1 Title',
                 'onclick' => "return AjaxRequest.toggleNavigation(this, 'category1', '/contao')",
+                'aria-controls' => 'category1',
+                'aria-expanded' => 'true',
             ],
             $children['category1']->getLinkAttributes()
         );
@@ -115,6 +117,8 @@ class BackendMenuListenerTest extends TestCase
                 'class' => 'group-category2',
                 'title' => 'Category 2 Title',
                 'onclick' => "return AjaxRequest.toggleNavigation(this, 'category2', '/contao')",
+                'aria-controls' => 'category2',
+                'aria-expanded' => 'false',
             ],
             $children['category2']->getLinkAttributes()
         );
@@ -276,10 +280,10 @@ class BackendMenuListenerTest extends TestCase
         );
 
         // Submenu
-        $this->assertSame('MSC.user foo', $children['submenu']->getLabel());
+        $this->assertSame('<button type="button">MSC.user foo</button>', $children['submenu']->getLabel());
         $this->assertSame(['class' => 'submenu'], $children['submenu']->getAttributes());
-        $this->assertSame(['class' => 'h2'], $children['submenu']->getLabelAttributes());
-        $this->assertSame(['translation_domain' => false], $children['submenu']->getExtras());
+        $this->assertSame(['class' => 'profile'], $children['submenu']->getLabelAttributes());
+        $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['submenu']->getExtras());
 
         $grandChildren = $children['submenu']->getChildren();
 
