@@ -1822,7 +1822,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->objActiveRecord = $objRow;
 
-		$return = array();
+		$return = '';
 		$this->values[] = $this->intId;
 		$this->procedure[] = 'id=?';
 		$this->arrSubmit = array();
@@ -1858,6 +1858,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!empty($boxes))
 		{
+			$return = array($return);
+
 			foreach ($boxes as $k=>$v)
 			{
 				$eCount = 1;
@@ -2002,7 +2004,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 					else
 					{
-						$return[isset($return[$this->strField]) ? \count($return) : $this->strField] = $this->row($this->strPalette);
+						$return[isset($return[$this->strField]) ? \count($return) : $this->strField] = $this->prepareRow($this->strPalette);
 					}
 				}
 
@@ -2011,6 +2013,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$return = $this->submit($return);
+			$return = implode('', array_map(static fn ($val) => \is_string($val) ? $val : $val[0](), $return));
 		}
 
 		// Reload the page to prevent _POST variables from being sent twice
@@ -2210,7 +2213,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Add the buttons and end the form
-		$return[] = '
+		$return .= '
 </div>
 <div class="tl_formbody_submit">
 <div class="tl_submit_container">
@@ -2237,7 +2240,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $strVersionField . implode('', $return);
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $strVersionField . $return;
 
 		// Set the focus if there is an error
 		if ($this->noReload)
@@ -3157,20 +3160,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$this->noReload = true;
 
-					if ($e instanceof ValidationErrorException && null !== $e->propertyPath && isset($return[$e->propertyPath]))
+					if ($e instanceof ValidationErrorException && array_intersect($e->propertyPaths, array_keys($return)))
 					{
-						if (str_contains($return[$e->propertyPath], '<p class="tl_help tl_tip">'))
+						foreach ($e->propertyPaths as $propertyPath)
 						{
-							$return[$e->propertyPath] = str_replace('<p class="tl_help tl_tip">', '<p class="tl_error">' . $e->getMessage() . '</p><p style="display: none">', $return[$e->propertyPath]);
+							$return[$propertyPath][1]->addError($e->getMessage());
 						}
-						else
-						{
-							array_splice($return, array_search($e->propertyPath, array_keys($return), true), 0, array(
-								'<p class="tl_gerror">' . $e->getMessage() . '</p>',
-							));
-						}
-
-						return $return;
 					}
 
 					Message::addError($e->getMessage());

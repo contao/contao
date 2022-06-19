@@ -28,7 +28,7 @@ class StartStopValidationListener
         $stop = (string) (\array_key_exists('stop', $values) ? $values['stop'] : $dc->activeRecord->stop);
 
         if ('' !== $start && '' !== $stop && $stop < $start) {
-            throw new ValidationErrorException($this->translator->trans('ERR.startStop', [], 'contao_default'), 'start');
+            throw new ValidationErrorException($this->translator->trans('ERR.startStop', [], 'contao_default'), ['start', 'stop']);
         }
 
         return $values;
