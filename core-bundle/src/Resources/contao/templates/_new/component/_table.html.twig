@@ -1,9 +1,14 @@
 {#
     This component outputs a table with client side sorting capabilities.
 
-        <table data-sortable-table="1 asc">
+        <table data-sortable-table="desc">
           <caption>My table</caption>
-          <thead>…</thead>
+          <thead>
+            <tr>
+              <th data-sort-method="none"></th>
+              <th data-sort-default>Things</th>
+            </tr>
+          </thead>
           <tfoot>…</tfoot>
           <tbody>
             <tr>
@@ -35,7 +40,7 @@
         @var \Contao\CoreBundle\String\HtmlAttributes table_footer_attributes
         @var \Contao\CoreBundle\String\HtmlAttributes table_body_attributes
         @var object|bool sorting
-        @var object table_sorting_settings
+        @var object tablesort_options
 
     Note:
         You can either group all variables in an object named "table" or
@@ -53,9 +58,15 @@
     {% set use_row_headers = table.use_row_headers|default(false) %}
 
     {% block table %}
-        {% set table_attributes = attrs(table_attributes|default)
-            .set('data-sortable-table', sorting.column|default ~ ' ' ~ sorting.order|default, sorting)
-        %}
+        {% set table_attributes = attrs(table_attributes|default) %}
+        {% if sorting %}
+            {# You can provide custom options for the tablesort script.
+               See https://github.com/tristen/tablesort for more details. #}
+            {% do table_attributes.set(
+                'data-sortable-table',
+                tablesort_option|default({})|merge({descending: sorting.order == 'desc'})|json_encode
+            ) %}
+        {% endif %}
         <table{% block table_attributes %}{{ table_attributes }}{% endblock %}>
             {# Caption #}
             {% if caption %}
@@ -73,11 +84,11 @@
                     {% block header_inner %}
                         <tr>
                             {% for cell in header %}
-                                {% if loop.first and use_row_headers %}
-                                    <th class="sort-none">{{ block('table_cell_content') }}</th>
-                                {% else %}
-                                    <th>{{ block('table_cell_content') }}</th>
-                                {% endif %}
+                                {% set header_cell_attributes = attrs(default_header_cell_attributes|default)
+                                    .set('data-sort-method', 'none', sorting and loop.first and use_row_headers)
+                                    .set('data-sort-default', '', sorting.column|default == loop.index0)
+                                %}
+                                <th{{ header_cell_attributes }}>{{ block('table_cell_content') }}</th>
                             {% endfor %}
                         </tr>
                     {% endblock %}
@@ -129,15 +140,7 @@
 
     {% block script %}
         {% if sorting %}
-            {# You can provide custom settings for the sorting script, for instance if you want to
-               use different class names or icons. See bundles/contaocore/sortabletable.js for more
-               details on what is possible. #}
-            {% set table_sorting_settings = {
-                ascendingText: 'MSC.ascending'|trans,
-                descendingText: 'MSC.descending'|trans,
-            }|merge(table_sorting_settings|default({})) %}
-
-            {% add "table_sorting_script" to head %}
+            {% add "tablesort_script" to head %}
                 <script>
                     {
                         const instances = new WeakMap();
@@ -147,32 +150,14 @@
                                 [root] : root.querySelectorAll('table[data-sortable-table]');
 
                             elements.forEach(element => {
-                                if (!SortableTable.isSortable(element)) {
-                                    return;
-                                }
-
-                                const settings = {{ table_sorting_settings|json_encode|raw }};
-                                const table = instances.has(element) ? instances.get(element) : new SortableTable(element, settings);
+                                const options = JSON.parse(element.dataset.sortableTable);
+                                const table = instances.has(element) ? instances.get(element) : new Tablesort(element, options);
                                 instances.set(element, table);
-
-                                {# Sort a column initially #}
-                                [index, mode] = element.dataset.sortableTable.split(' ');
-                                if (index !== undefined) {
-                                    try {
-                                        table.sort(index);
-
-                                        if (mode === 'desc') {
-                                            table.sort(index);
-                                        }
-                                    } catch (e) {
-                                        // ignore
-                                    }
-                                }
                             });
                         }
 
                         const script = document.createElement('script');
-                        script.src = 'bundles/contaocore/sortabletable.js';
+                        script.src = 'bundles/contaocore/tablesort/tablesort.min.js';
                         script.async = true;
 
                         script.addEventListener('load', () => {

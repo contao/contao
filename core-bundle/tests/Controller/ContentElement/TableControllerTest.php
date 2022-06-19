@@ -81,11 +81,11 @@ class TableControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content_element/table">
-                <table data-sortable-table="1 asc">
+                <table data-sortable-table="{&quot;descending&quot;:false}">
                     <thead>
                         <tr>
-                            <th class="sort-none">header1</th>
-                            <th>header2</th>
+                            <th data-sort-method="none">header1</th>
+                            <th data-sort-default>header2</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -111,8 +111,8 @@ class TableControllerTest extends ContentElementTestCase
         $this->assertCount(1, $additionalHeadCode);
 
         $this->assertMatchesRegularExpression(
-            '/<script>[^<]+bundles\/contaocore\/sortabletable.js[^<]+<\/script>/',
-            $additionalHeadCode['table_sorting_script']
+            '/<script>[^<]+tablesort.min.js[^<]+<\/script>/',
+            $additionalHeadCode['tablesort_script']
         );
     }
 }
