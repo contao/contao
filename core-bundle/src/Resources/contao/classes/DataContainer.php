@@ -1716,7 +1716,7 @@ abstract class DataContainer extends Backend
 		{
 			$rows = array($this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
 				->limit(1)
-				->execute($ids[0])
+				->execute(array_shift($ids))
 				->fetchAssoc());
 		}
 		else
