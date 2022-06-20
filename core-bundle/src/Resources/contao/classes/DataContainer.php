@@ -264,7 +264,7 @@ abstract class DataContainer extends Backend
 	 * Active record cache
 	 * @var array<int|string, array>
 	 */
-	private $arrCurrentRecordCache = array();
+	protected $arrCurrentRecordCache = array();
 
 	/**
 	 * Set an object property
@@ -277,7 +277,7 @@ abstract class DataContainer extends Backend
 		switch ($strKey)
 		{
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use $dc->getCurrentRecord() instead.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'Setting the active record has been deprecated and will be removed in Contao 6.');
 				$this->objActiveRecord = $varValue;
 				break;
 

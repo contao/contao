@@ -1709,6 +1709,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Unset fields that no longer exist in the database
 				$row = array_intersect_key($row, $arrFields[$table]);
 
+				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($table, $row));
+
 				// Re-insert the data
 				$objInsertStmt = $this->Database->prepare("INSERT INTO " . $table . " %s")
 												->set($row)
@@ -2734,18 +2736,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				try
 				{
-					$this->preloadCurrentRecords($ids);
+					$this->preloadCurrentRecords($ids, $this->strTable);
 
 					foreach ($ids as $id)
 					{
-						$currentRecord = $this->getCurrentRecord($id);
-
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $currentRecord));
-
+						$this->intId = $id;
 						$this->procedure = array('id=?');
 						$this->values = array($this->intId);
 						$this->arrSubmit = array();
 						$this->blnCreateNewVersion = false;
+
+						// Store the active record (BC)
+						$this->objActiveRecord = $this->getCurrentRecord();
 
 						$objVersions = new Versions($this->strTable, $this->intId);
 						$objVersions->initialize();
@@ -3234,6 +3236,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->invalidateCacheTags();
 		}
+
+		// Empty cached data
+		$this->arrCurrentRecordCache = array();
 	}
 
 	/**
