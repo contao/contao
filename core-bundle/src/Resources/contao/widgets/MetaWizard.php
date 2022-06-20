@@ -215,7 +215,6 @@ class MetaWizard extends Widget
 				{
 					return 1;
 				}
-				
 				return ($languages[$a] ?? $a) <=> ($languages[$b] ?? $b);
 			});
 
