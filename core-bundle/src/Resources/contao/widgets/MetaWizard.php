@@ -203,7 +203,7 @@ class MetaWizard extends Widget
 				++$count;
 			}
 
-			// Sort the items by language name (see #3818)
+			// Sort the items by language name with the user language on top (see #3818)
 			uksort($items, function ($a, $b) use ($languages)
 			{
 				if ($this->User->language === $a)
