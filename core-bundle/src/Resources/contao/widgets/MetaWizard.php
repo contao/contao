@@ -198,19 +198,26 @@ class MetaWizard extends Widget
 
 				$item .= '</li>';
 
-				$items[$languages[$lang] ?? $lang] = $item;
+				$items[$lang] = $item;
 
 				++$count;
 			}
 
 			// Sort the items by language name (see #3818)
-			ksort($items);
-
-			// Show the user language on top (see #3818)
-			if (isset($languages[$this->User->language], $items[$languages[$this->User->language]]))
+			uksort($items, function ($a, $b) use ($languages)
 			{
-				$items = array_merge(array($languages[$this->User->language] => null), $items);
-			}
+				if ($this->User->language === $a)
+				{
+					return -1;
+				}
+
+				if ($this->User->language === $b)
+				{
+					return 1;
+				}
+				
+				return ($languages[$a] ?? $a) <=> ($languages[$b] ?? $b);
+			});
 
 			$return = implode('', $items);
 		}
