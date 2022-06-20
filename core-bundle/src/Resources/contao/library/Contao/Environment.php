@@ -204,7 +204,7 @@ class Environment
 			}
 			else
 			{
-				$strRequest = $arrComponents['path'] . (isset($arrComponents['query']) ? '?' . $arrComponents['query'] : '');
+				$strRequest = ($arrComponents['path'] ?? '') . (isset($arrComponents['query']) ? '?' . $arrComponents['query'] : '');
 			}
 		}
 		else
