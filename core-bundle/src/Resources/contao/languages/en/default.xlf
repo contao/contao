@@ -2166,7 +2166,7 @@
         <source>Indexed %d URI(s) successfully. %d failed.</source>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>
