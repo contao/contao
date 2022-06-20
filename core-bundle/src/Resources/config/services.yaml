@@ -394,6 +394,11 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.insert_tag.resolver.if_language:
+        class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag
+        arguments:
+            - '@contao.insert_tag.parser'
+
     contao.insert_tag.resolver.link:
         class: Contao\CoreBundle\InsertTag\Resolver\LinkInsertTag
         arguments:

@@ -190,7 +190,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
                     if (AsInsertTag::class === $attributeClass) {
                         $tagAttributes['mode'] = serialize($tagAttributes['mode']);
-                        $tagAttributes['type'] = serialize($tagAttributes['type']);
 
                         /*
                         $method = $reflector instanceof \ReflectionClass

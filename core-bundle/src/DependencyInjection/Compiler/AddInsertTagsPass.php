@@ -12,7 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
+use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\ParsedSequence;
+use Contao\CoreBundle\InsertTag\ProcessingMode;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -38,7 +41,9 @@ class AddInsertTagsPass implements CompilerPassInterface
                     throw new InvalidDefinitionException(sprintf('Invalid insert tag name "%s"', $attributes['name'] ?? ''));
                 }
 
-                $method = $this->getMethod($attributes['method'], $container->findDefinition($serviceId)->getClass(), $serviceId);
+                $attributes['mode'] = unserialize($attributes['mode'], ['allowed_classes' => false]);
+
+                $method = $this->getMethod($attributes['method'], $attributes['mode'], $container->findDefinition($serviceId)->getClass(), $serviceId);
 
                 $priorities[] = $attributes['priority'];
                 $subscriptions[] = new Definition(
@@ -47,8 +52,8 @@ class AddInsertTagsPass implements CompilerPassInterface
                         new Reference($serviceId),
                         $method,
                         $attributes['name'],
-                        unserialize($attributes['mode'], ['allowed_classes' => false]),
-                        unserialize($attributes['type'], ['allowed_classes' => false]),
+                        $attributes['endTag'],
+                        $attributes['mode'],
                     ],
                 );
             }
@@ -62,7 +67,7 @@ class AddInsertTagsPass implements CompilerPassInterface
         }
     }
 
-    private function getMethod(string|null $method, string $class, string $serviceId): string
+    private function getMethod(string|null $method, ProcessingMode $mode, string $class, string $serviceId): string
     {
         $ref = new \ReflectionClass($class);
         $invalid = sprintf('The contao.insert_tag definition for service "%s" is invalid. ', $serviceId);
@@ -83,8 +88,14 @@ class AddInsertTagsPass implements CompilerPassInterface
             throw new InvalidDefinitionException($invalid);
         }
 
-        if ('string' !== (string) $ref->getReturnType()) {
-            $invalid .= sprintf('The "%s::%s" method exists but has an invalid return type. Expected "string", got "%s".', $class, $method, (string) $ref->getReturnType());
+        $expectedReturnType = InsertTagResult::class;
+
+        if (ProcessingMode::wrappedParsed === $mode || ProcessingMode::wrappedResolved === $mode) {
+            $expectedReturnType = ParsedSequence::class;
+        }
+
+        if ($expectedReturnType !== (string) $ref->getReturnType()) {
+            $invalid .= sprintf('The "%s::%s" method exists but has an invalid return type. Expected "%s", got "%s".', $class, $method, $expectedReturnType, (string) $ref->getReturnType());
 
             throw new InvalidDefinitionException($invalid);
         }

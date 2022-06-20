@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection\Attribute;
 
-use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ProcessingMode;
 
 /**
@@ -23,10 +22,17 @@ class AsInsertTag
 {
     public function __construct(
         public string $name,
+        public string|null $endTag = null,
         public ProcessingMode $mode = ProcessingMode::resolved,
-        public OutputType $type = OutputType::text,
         public int $priority = 0,
         public string|null $method = null,
     ) {
+        if (\in_array($mode, [ProcessingMode::wrappedParsed, ProcessingMode::wrappedResolved], true)) {
+            if (null === $endTag) {
+                throw new \InvalidArgumentException('Missing $endTag parameter');
+            }
+        } elseif (null !== $endTag) {
+            throw new \InvalidArgumentException('$endTag parameter is only supported for wrappedParsed or wrappedResolved mode');
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\InsertTag\Resolver;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\Exception\InvalidInsertTagException;
+use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -29,12 +30,12 @@ class LinkInsertTag
     {
     }
 
-    #[AsInsertTag('link', type: OutputType::html)]
-    #[AsInsertTag('link_open', type: OutputType::html)]
-    #[AsInsertTag('link_title', type: OutputType::text)]
-    #[AsInsertTag('link_name', type: OutputType::text)]
-    #[AsInsertTag('link_url', type: OutputType::url)]
-    public function replaceInsertTag(ResolvedInsertTag $insertTag): string
+    #[AsInsertTag('link')]
+    #[AsInsertTag('link_open')]
+    #[AsInsertTag('link_title')]
+    #[AsInsertTag('link_name')]
+    #[AsInsertTag('link_url')]
+    public function replaceInsertTag(ResolvedInsertTag $insertTag): InsertTagResult
     {
         $strTarget = null;
         $strClass = '';
@@ -57,7 +58,7 @@ class LinkInsertTag
             // User login page
             if ('login' === $urlParam) {
                 if (!$this->tokenChecker->hasFrontendUser()) {
-                    return '';
+                    return new InsertTagResult('');
                 }
 
                 $urlParam = $this->framework->createInstance(FrontendUser::class)->loginPage;
@@ -68,10 +69,10 @@ class LinkInsertTag
             if (null === $objNextPage) {
                 // Prevent broken markup with link_open and link_close (see #92)
                 if ('link_open' === $insertTag->getName()) {
-                    return '<a>';
+                    return new InsertTagResult('<a>', OutputType::html);
                 }
 
-                return '';
+                return new InsertTagResult('');
             }
 
             $strUrl = '';
@@ -125,27 +126,27 @@ class LinkInsertTag
         // Replace the tag
         switch ($insertTag->getName()) {
             case 'link':
-                return sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName);
+                return new InsertTagResult(sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName), OutputType::html);
 
             case 'link_open':
-                return sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget);
+                return new InsertTagResult(sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget), OutputType::html);
 
             case 'link_url':
-                return $strUrl ?: './';
+                return new InsertTagResult($strUrl ?: './', OutputType::url);
 
             case 'link_title':
-                return StringUtil::specialcharsAttribute($strTitle);
+                return new InsertTagResult(StringUtil::specialcharsAttribute($strTitle), OutputType::html);
 
             case 'link_name':
-                return StringUtil::specialcharsAttribute($strName);
+                return new InsertTagResult(StringUtil::specialcharsAttribute($strName), OutputType::html);
         }
 
         throw new InvalidInsertTagException();
     }
 
-    #[AsInsertTag('link_close', type: OutputType::html)]
-    public function replaceInsertTagClose(ResolvedInsertTag $insertTag): string
+    #[AsInsertTag('link_close')]
+    public function replaceInsertTagClose(ResolvedInsertTag $insertTag): InsertTagResult
     {
-        return '</a>';
+        return new InsertTagResult('</a>', OutputType::html);
     }
 }

@@ -18,8 +18,8 @@ final class InsertTagSubscription
         public readonly object $service,
         public readonly string $method,
         public readonly string $name,
+        public readonly string|null $endTag,
         public readonly ProcessingMode $mode,
-        public readonly OutputType $type,
     ) {
     }
 }

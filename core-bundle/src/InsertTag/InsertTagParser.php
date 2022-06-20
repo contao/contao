@@ -48,16 +48,24 @@ class InsertTagParser implements ResetInterface
         $this->subscriptions[$subscription->name] = $subscription;
     }
 
-    public function replace(string $input): string
+    public function replace(ParsedSequence|string $input): string
     {
+        // TODO:
+        return $this->replaceInline($input);
+
+        /*
+        if(!$input instanceof ParsedSequence) {
+            $input = $this->parse($input);
+        }
+
         $return = '';
 
-        foreach ($this->parse($input) as $item) {
+        foreach ($input as $item) {
             if (\is_string($item)) {
                 $return .= $item;
             } else {
                 try {
-                    $return .= $this->renderSubscription($item) ?? $item->serialize();
+                    $return .= $this->renderSubscription($item)?->getValue() ?? $item->serialize();
                 } catch (\Throwable) {
                     // TODO: Throw and catch specific exceptions that are caused by legacy insert tags
                     $return .= $item->serialize();
@@ -66,6 +74,7 @@ class InsertTagParser implements ResetInterface
         }
 
         return (string) $this->callLegacyClass($return, true);
+        */
     }
 
     public function replaceChunked(string $input): ChunkedText
@@ -73,20 +82,57 @@ class InsertTagParser implements ResetInterface
         return $this->callLegacyClass($input, true);
     }
 
-    public function replaceInline(string $input): string
+    public function replaceInline(ParsedSequence|string $input): string
     {
-        $return = '';
+        if (!$input instanceof ParsedSequence) {
+            $input = $this->parse($input);
+        }
 
-        foreach ($this->parse($input) as $item) {
+        $return = '';
+        $wrapStart = null;
+        $wrapContent = [];
+
+        foreach ($input as $item) {
+            if ($wrapStart && $item instanceof InsertTag && $item->getName() === $this->subscriptions[$wrapStart->getName()]->endTag) {
+                $return .= $this->replaceInline($this->renderBlockSubscription($wrapStart, new ParsedSequence($wrapContent)));
+
+                $wrapStart = null;
+                $wrapContent = [];
+
+                // Reprocess non-empty end tags to enable chaining block insert tags
+                // E.g. `{{iflng::de}}…{{iflng::en}}…{{iflng}}`
+                if (!\count($item->getParameters()->all())) {
+                    continue;
+                }
+            }
+
+            if ($wrapStart) {
+                $wrapContent[] = $item;
+
+                continue;
+            }
+
             if (\is_string($item)) {
                 $return .= $item;
-            } else {
-                try {
-                    $return .= $this->renderSubscription($item) ?? $item->serialize();
-                } catch (\Throwable) {
-                    // TODO: Throw and catch specific exceptions that are caused by legacy insert tags
-                    $return .= $item->serialize();
-                }
+                continue;
+            }
+
+            if (
+                \in_array(
+                    ($this->subscriptions[$item->getName()] ?? null)?->mode,
+                    [ProcessingMode::wrappedResolved, ProcessingMode::wrappedParsed],
+                    true,
+                )
+            ) {
+                $wrapStart = $item;
+                continue;
+            }
+
+            try {
+                $return .= $this->renderSubscription($item)?->getValue() ?? $item->serialize();
+            } catch (\Throwable) {
+                // TODO: Throw and catch specific exceptions that are caused by legacy insert tags
+                $return .= $item->serialize();
             }
         }
 
@@ -98,7 +144,7 @@ class InsertTagParser implements ResetInterface
         return $this->callLegacyClass($input, false);
     }
 
-    public function render(InsertTag|string $input): string
+    public function render(InsertTag|string $input): InsertTagResult
     {
         if ($input instanceof InsertTag) {
             $tag = $input;
@@ -130,20 +176,38 @@ class InsertTagParser implements ResetInterface
             throw new \RuntimeException('Rendering a single insert tag has to return a single raw chunk');
         }
 
-        return $chunked[0][1];
+        return new InsertTagResult($chunked[0][1], OutputType::html);
     }
 
-    private function renderSubscription(InsertTag $tag): string|null
+    private function renderSubscription(InsertTag $tag): InsertTagResult|null
     {
         if (!$subscription = $this->subscriptions[$tag->getName()] ?? null) {
             return null;
         }
 
-        if (ProcessingMode::resolved === $subscription->mode) {
+        if (ProcessingMode::resolved === $subscription->mode || ProcessingMode::wrappedResolved === $subscription->mode) {
             $tag = $this->resolveNestedTags($tag);
+        } else {
+            $tag = $this->unresolveTag($tag);
         }
 
         return $subscription->service->{$subscription->method}($tag);
+    }
+
+    private function renderBlockSubscription(InsertTag $tag, ParsedSequence|null $content = null): ParsedSequence|null
+    {
+        if (!$subscription = $this->subscriptions[$tag->getName()] ?? null) {
+            return null;
+        }
+
+        if (ProcessingMode::resolved === $subscription->mode || ProcessingMode::wrappedResolved === $subscription->mode) {
+            $tag = $this->resolveNestedTags($tag);
+            $content = new ParsedSequence([$this->replaceInline($content)]);
+        } else {
+            $tag = $this->unresolveTag($tag);
+        }
+
+        return $subscription->service->{$subscription->method}($tag, $content);
     }
 
     public function parse(string $input): ParsedSequence
@@ -305,6 +369,23 @@ class InsertTagParser implements ResetInterface
         throw new \InvalidArgumentException(sprintf('Unsupported insert tag class "%s"', $tag::class));
     }
 
+    private function unresolveTag(InsertTag $tag): ParsedInsertTag
+    {
+        if ($tag instanceof ParsedInsertTag) {
+            return $tag;
+        }
+
+        if ($tag instanceof ResolvedInsertTag) {
+            return new ParsedInsertTag(
+                $tag->getName(),
+                new ParsedParameters(array_map(static fn ($param) => new ParsedSequence([(string) $param]), $tag->getParameters()->all())),
+                $tag->getFlags(),
+            );
+        }
+
+        throw new \InvalidArgumentException(sprintf('Unsupported insert tag class "%s"', $tag::class));
+    }
+
     private function resolveParameters(ParsedParameters $parameters): ResolvedParameters
     {
         $resolvedParameters = [];
@@ -319,7 +400,7 @@ class InsertTagParser implements ResetInterface
                     continue;
                 }
 
-                $value = $this->render($value);
+                $value .= $this->render($value)->getValue();
             }
 
             $resolvedParameters[] = $value;
