@@ -936,7 +936,7 @@ abstract class DataContainer extends Backend
 					}
 					else
 					{
-						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
+						$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
 					}
 
 					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $label)) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
@@ -949,7 +949,7 @@ abstract class DataContainer extends Backend
 					}
 					else
 					{
-						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
+						$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
 					}
 
 					parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
@@ -1080,7 +1080,7 @@ abstract class DataContainer extends Backend
 			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? '', $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
@@ -1096,7 +1096,7 @@ abstract class DataContainer extends Backend
 			}
 			else
 			{
-				$href = $this->addToUrl($v['href']);
+				$href = $this->addToUrl($v['href'] ?? '');
 			}
 
 			$return .= '<a href="' . $href . '" class="' . $v['class'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
