@@ -448,6 +448,7 @@ class PageRegular extends Frontend
 		$this->Template->layout = $objLayout;
 		$this->Template->language = $GLOBALS['TL_LANGUAGE'];
 		$this->Template->charset = System::getContainer()->getParameter('kernel.charset');
+		$this->Template->base = Environment::get('base');
 		$this->Template->isRTL = false;
 	}
 
