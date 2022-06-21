@@ -1965,7 +1965,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$this->strField = $vv;
 					$this->strInputName = $vv;
-					$this->varValue = $currentRecord[$vv];
+					$this->varValue = $currentRecord[$vv] ?? null;
 
 					// Convert CSV fields (see #2890)
 					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] ?? null) && isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['csv']))
@@ -3261,16 +3261,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$sValues = array();
 			$subpalettes = array();
 
-			$objFields = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-										->limit(1)
-										->execute($this->intId);
+			$currentRow = $this->getCurrentRecord();
 
 			// Get selector values from DB
-			if ($objFields->numRows > 0)
+			if (null !== $currentRow)
 			{
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name)
 				{
-					$trigger = $objFields->$name;
+					$trigger = $currentRow[$name] ?? null;
 
 					// Overwrite the trigger
 					if (Input::post('FORM_SUBMIT') == $this->strTable)
