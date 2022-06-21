@@ -13,6 +13,7 @@ window.tinymce && tinymce.init({
   min_height: 336,
   language: '<?= Backend::getTinyMceLanguage() ?>',
   element_format: 'html',
+  document_base_url: '<?= Environment::get('base') ?>',
   entities: '160,nbsp,60,lt,62,gt,173,shy',
   branding: false,
   skin: 'tinymce-5',
