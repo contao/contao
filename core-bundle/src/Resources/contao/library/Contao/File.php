@@ -807,19 +807,6 @@ class File extends System
 	}
 
 	/**
-	 * Return the full path
-	 */
-	public function getFullPath()
-	{
-		if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
-		{
-			throw new \RuntimeException('The request stack did not contain a request');
-		}
-
-		return $request->getBasePath() . '/' . $this->strFile;
-	}
-
-	/**
 	 * Write data to a file
 	 *
 	 * @param mixed  $varData The data to be written

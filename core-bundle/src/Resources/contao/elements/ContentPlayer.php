@@ -144,6 +144,7 @@ class ContentPlayer extends ContentElement
 
 			$objFile = new File($objFileModel->path);
 			$objFile->title = StringUtil::specialchars($strTitle ?: $objFile->name);
+			$objFile->path = $objFileModel->getFullPath();
 
 			$arrFiles[$objFile->extension] = $objFile;
 		}

@@ -2,10 +2,6 @@
 
 ## Version 4.* to 5.0
 
-### Base tag
-
-The `<base>` tag has been removed. Use absolute paths for links and assets instead.
-
 ### CURRENT_ID
 
 The `CURRENT_ID` constant and session variable have been removed. Use
