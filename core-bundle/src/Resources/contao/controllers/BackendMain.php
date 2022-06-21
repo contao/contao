@@ -223,7 +223,6 @@ class BackendMain extends Backend
 		$container = System::getContainer();
 
 		$data['theme'] = Backend::getTheme();
-		$data['base'] = Environment::get('base');
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
 		$data['title'] = StringUtil::specialchars(strip_tags($data['title'] ?? ''));
 		$data['host'] = Backend::getDecodedHostname();

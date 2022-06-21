@@ -241,7 +241,7 @@ class TemplateTest extends TestCase
         $template = new FrontendTemplate();
         $url = $template->asset('/path/to/asset', 'package_name');
 
-        $this->assertSame('path/to/asset', $url);
+        $this->assertSame('/path/to/asset', $url);
     }
 
     public function testStripsTheBasePathFromAssetUrl(): void
@@ -275,7 +275,7 @@ class TemplateTest extends TestCase
         $template = new FrontendTemplate();
         $url = $template->asset('/path/to/asset', 'package_name');
 
-        $this->assertSame('path/to/asset', $url);
+        $this->assertSame('/foo/path/to/asset', $url);
     }
 
     public function testDoesNotModifyAbsoluteAssetUrl(): void

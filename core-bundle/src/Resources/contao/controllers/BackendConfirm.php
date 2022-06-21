@@ -151,7 +151,6 @@ class BackendConfirm extends Backend
 		$objTemplate->cancel = $GLOBALS['TL_LANG']['MSC']['cancelBT'];
 		$objTemplate->continue = $GLOBALS['TL_LANG']['MSC']['continue'];
 		$objTemplate->theme = Backend::getTheme();
-		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['invalidToken']);

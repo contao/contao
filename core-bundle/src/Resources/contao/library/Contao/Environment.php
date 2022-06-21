@@ -314,7 +314,7 @@ class Environment
 	 */
 	protected static function script()
 	{
-		return preg_replace('/^' . preg_quote(static::get('path'), '/') . '\/?/', '', static::get('scriptName'));
+		return static::get('scriptName');
 	}
 
 	/**
@@ -324,7 +324,7 @@ class Environment
 	 */
 	protected static function request()
 	{
-		return preg_replace('/^' . preg_quote(static::get('path'), '/') . '\/?/', '', static::get('requestUri'));
+		return static::get('requestUri');
 	}
 
 	/**

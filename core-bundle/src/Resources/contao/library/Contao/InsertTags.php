@@ -730,7 +730,7 @@ class InsertTags extends Controller
 							break;
 
 						case 'path':
-							$arrCache[$strTag] = Idna::decode(Environment::get('base'));
+							$arrCache[$strTag] = Idna::decode(Environment::get('path')) . '/';
 							break;
 
 						case 'request':

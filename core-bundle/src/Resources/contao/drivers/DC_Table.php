@@ -227,7 +227,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$strRefererId = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 			$session = $objSession->get($strKey);
-			$session[$strRefererId][$this->strTable] = substr(Environment::get('requestUri'), \strlen(Environment::get('path')) + 1);
+			$session[$strRefererId][$this->strTable] = Environment::get('requestUri');
 			$objSession->set($strKey, $session);
 		}
 	}
@@ -2016,7 +2016,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
 				$objTemplate->theme = Backend::getTheme();
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
-				$objTemplate->base = Environment::get('base');
 				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
 				$objTemplate->explain1 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, Input::post('VERSION_NUMBER'));
 				$objTemplate->explain2 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict2'], $intLatestVersion + 1, $intLatestVersion);

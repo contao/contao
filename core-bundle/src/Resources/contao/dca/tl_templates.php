@@ -486,7 +486,6 @@ class tl_templates extends Backend
 		$objTemplate->showLabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->content = $strBuffer;
 		$objTemplate->theme = Backend::getTheme();
-		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');

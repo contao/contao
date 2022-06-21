@@ -2763,7 +2763,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
-				$return .= '<a href="' . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $objFile->mime) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= '<a href="' . $this->urlEncode($objFile->getFullPath()) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $objFile->mime) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
 			}
 
 			// Buttons

@@ -199,7 +199,6 @@ class BackendPopup extends Backend
 		$objTemplate->atime = Date::parse(Config::get('datimFormat'), $objFile->atime);
 		$objTemplate->path = StringUtil::specialchars($this->strFile);
 		$objTemplate->theme = Backend::getTheme();
-		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($this->strFile);
 		$objTemplate->host = Backend::getDecodedHostname();
