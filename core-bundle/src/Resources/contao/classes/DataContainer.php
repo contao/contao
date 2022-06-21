@@ -17,6 +17,7 @@ use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\AbstractAction;
 use Contao\Image\ResizeConfiguration;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -1712,19 +1713,14 @@ abstract class DataContainer extends Backend
 	 */
 	protected function preloadCurrentRecords(array $ids, string $table): void
 	{
-		if (\count($ids) === 1)
-		{
-			$rows = array($this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
-				->limit(1)
-				->execute(array_shift($ids))
-				->fetchAssoc());
-		}
-		else
-		{
-			$rows = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id IN (?)")
-				->execute($ids)
-				->fetchAllAssoc();
-		}
+		$connection = System::getContainer()->get('database_connection');
+
+		$stmt = $connection->executeQuery(
+			'SELECT * FROM ' . $table . ' WHERE id IN (?)',
+			array($ids),
+			array(is_numeric(array_shift($ids)) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY)
+		);
+		$rows = $stmt->fetchAllAssociative();
 
 		foreach ($rows as $row)
 		{
