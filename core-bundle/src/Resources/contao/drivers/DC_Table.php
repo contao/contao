@@ -3690,6 +3690,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Call a recursive function that builds the tree
 		if (!empty($topMostRootIds))
 		{
+			$this->preloadCurrentRecords($topMostRootIds, $table);
+
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
 				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
@@ -4131,6 +4133,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($objChilds->numRows)
 			{
 				$ids = $objChilds->fetchEach('id');
+				$this->preloadCurrentRecords($ids, $this->strTable);
 
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
@@ -4152,6 +4155,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Add the records of the parent table
 			if ($blnIsOpen && \is_array($childs))
 			{
+				$this->preloadCurrentRecords($childs, $table);
+
 				for ($k=0, $c=\count($childs); $k<$c; $k++)
 				{
 					$return .= $this->generateTree($table, $childs[$k], array('p'=>($childs[($k-1)] ?? null), 'n'=>($childs[($k+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $childs[$k] == $arrClipboard['id']) || $blnCircularReference), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
