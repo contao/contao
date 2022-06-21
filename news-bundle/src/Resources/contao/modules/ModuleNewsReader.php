@@ -106,7 +106,7 @@ class ModuleNewsReader extends ModuleNews
 			case 'external':
 				if ($objArticle->url)
 				{
-					throw new RedirectResponseException($objArticle->url, 301);
+					throw new RedirectResponseException(System::getContainer()->get('contao.routing.base_path_prefixer')->prefix($objArticle->url), 301);
 				}
 
 				throw new InternalServerErrorException('Empty target URL');

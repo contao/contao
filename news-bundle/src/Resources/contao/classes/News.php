@@ -313,7 +313,7 @@ class News extends Frontend
 				}
 				else
 				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objItem->url);
+					self::$arrUrlCache[$strCacheKey] = System::getContainer()->get('contao.routing.base_path_prefixer')->prefix(StringUtil::ampersand($objItem->url));
 				}
 				break;
 
@@ -415,7 +415,7 @@ class News extends Frontend
 		{
 			// Link to an external page
 			case 'external':
-				return $objItem->url;
+				return System::getContainer()->get('contao.routing.base_path_prefixer')->prefix($objItem->url);
 
 			// Link to an internal page
 			case 'internal':

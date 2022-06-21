@@ -13,14 +13,23 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\HyperlinkController;
+use Contao\CoreBundle\Routing\BasePathPrefixer;
 use Contao\StringUtil;
 
 class HyperlinkControllerTest extends ContentElementTestCase
 {
     public function testOutputsSimpleLink(): void
     {
+        $basePathPrefixer = $this->createMock(BasePathPrefixer::class);
+        $basePathPrefixer
+            ->expects($this->once())
+            ->method('prefix')
+            ->with('my-link.html')
+            ->willReturn('/my-link.html')
+        ;
+
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), $basePathPrefixer),
             [
                 'type' => 'hyperlink',
                 'url' => 'my-link.html',
@@ -36,7 +45,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content_element/hyperlink">
-                <a href="my-link.html">my-link.html</a>
+                <a href="/my-link.html">/my-link.html</a>
             </div>
             HTML;
 
@@ -45,8 +54,16 @@ class HyperlinkControllerTest extends ContentElementTestCase
 
     public function testOutputsLinkWithBeforeAndAfterText(): void
     {
+        $basePathPrefixer = $this->createMock(BasePathPrefixer::class);
+        $basePathPrefixer
+            ->expects($this->once())
+            ->method('prefix')
+            ->with('https://www.php.net/manual/en/function.sprintf.php')
+            ->willReturn('https://www.php.net/manual/en/function.sprintf.php')
+        ;
+
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), $basePathPrefixer),
             [
                 'type' => 'hyperlink',
                 'url' => 'https://www.php.net/manual/en/function.sprintf.php',
@@ -72,8 +89,16 @@ class HyperlinkControllerTest extends ContentElementTestCase
 
     public function testOutputsImageLink(): void
     {
+        $basePathPrefixer = $this->createMock(BasePathPrefixer::class);
+        $basePathPrefixer
+            ->expects($this->once())
+            ->method('prefix')
+            ->with('foo.html#demo')
+            ->willReturn('/foo.html#demo')
+        ;
+
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), $basePathPrefixer),
             [
                 'type' => 'hyperlink',
                 'url' => 'foo.html#{{demo}}',
@@ -91,7 +116,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
             <div class="content_element/hyperlink">
                 <figure>
                     This is me…
-                    <a href="foo.html#demo" data-lightbox="bar">
+                    <a href="/foo.html#demo" data-lightbox="bar">
                         <img src="files/image1.jpg" alt>
                     </a>
                     …waving to the camera.

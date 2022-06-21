@@ -66,6 +66,7 @@ services:
         arguments:
             - '@contao.image.studio'
             - '@contao.insert_tag.parser'
+            - '@contao.routing.base_path_prefixer'
 
     Contao\CoreBundle\Controller\ContentElement\ImagesController:
         arguments:

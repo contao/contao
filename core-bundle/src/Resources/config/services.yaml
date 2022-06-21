@@ -553,6 +553,12 @@ services:
         calls:
             - [matchAttribute, [_scope, backend]]
 
+    contao.routing.base_path_prefixer:
+        class: Contao\CoreBundle\Routing\BasePathPrefixer
+        public: true
+        arguments:
+            - '@request_stack'
+
     contao.routing.frontend_matcher:
         class: Symfony\Component\HttpFoundation\RequestMatcher
         calls:
