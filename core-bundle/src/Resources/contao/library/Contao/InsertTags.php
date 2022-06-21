@@ -689,6 +689,7 @@ class InsertTags extends Controller
 					$arrCache[$strTag] = $attribute?->getValue()[$elements[1]] ?? null;
 					break;
 
+				/*
 				// Conditional tags (if, if not)
 				case 'iflng':
 				case 'ifnlng':
@@ -710,6 +711,7 @@ class InsertTags extends Controller
 					unset($arrCache[$strTag]);
 					$arrBuffer[$_rit+1] = '';
 					continue 2;
+				*/
 
 				// Environment
 				case 'env':
@@ -1078,6 +1080,7 @@ class InsertTags extends Controller
 						}
 					}
 
+					$arrCache[$strTag] = '{{'.$strTag.'}}';
 					$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
 					break;
 			}

@@ -136,6 +136,12 @@ class InsertTagParser implements ResetInterface
             }
         }
 
+        // Missing end tag
+        if ($wrapStart) {
+            $return .= $wrapStart->serialize();
+            $return .= $this->replaceInline(new ParsedSequence($wrapContent));
+        }
+
         return (string) $this->callLegacyClass($return, false);
     }
 
