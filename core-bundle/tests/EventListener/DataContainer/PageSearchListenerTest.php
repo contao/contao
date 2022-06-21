@@ -41,11 +41,12 @@ class PageSearchListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 17,
-                'activeRecord' => (object) [
-                    'alias' => 'foo',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['alias' => 'foo'])
+        ;
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
@@ -73,11 +74,12 @@ class PageSearchListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 17,
-                'activeRecord' => (object) [
-                    'alias' => 'foo',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['alias' => 'foo'])
+        ;
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
@@ -108,11 +110,12 @@ class PageSearchListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 17,
-                'activeRecord' => (object) [
-                    'noSearch' => '',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['noSearch' => ''])
+        ;
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
@@ -140,11 +143,12 @@ class PageSearchListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 17,
-                'activeRecord' => (object) [
-                    'noSearch' => '1',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['noSearch' => '1'])
+        ;
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
@@ -172,11 +176,12 @@ class PageSearchListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 17,
-                'activeRecord' => (object) [
-                    'noSearch' => '1',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['noSearch' => '1'])
+        ;
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
@@ -207,11 +212,12 @@ class PageSearchListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 17,
-                'activeRecord' => (object) [
-                    'robots' => 'index,follow',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['robots' => 'index,follow'])
+        ;
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
@@ -239,11 +245,12 @@ class PageSearchListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 17,
-                'activeRecord' => (object) [
-                    'robots' => 'noindex,follow',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['robots' => 'noindex,follow'])
+        ;
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
@@ -271,11 +278,12 @@ class PageSearchListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 17,
-                'activeRecord' => (object) [
-                    'robots' => 'noindex,follow',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['robots' => 'noindex,follow'])
+        ;
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),

@@ -36,9 +36,9 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider generatesAliasProvider
      */
-    public function testGeneratesAlias(array $activeRecord, string $expectedAlias): void
+    public function testGeneratesAlias(array $currentRecord, string $expectedAlias): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, $activeRecord);
+        $page = $this->mockClassWithProperties(PageModel::class, $currentRecord);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails']);
         $pageAdapter
@@ -67,9 +67,12 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => $page->id,
-                'activeRecord' => (object) $activeRecord,
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($currentRecord)
+        ;
 
         $listener = new PageUrlListener(
             $framework,
@@ -123,9 +126,9 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider duplicateAliasProvider
      */
-    public function testChecksForDuplicatesWhenGeneratingAlias(array $activeRecord, array $pages, string $value, string $generated, bool $expectExists): void
+    public function testChecksForDuplicatesWhenGeneratingAlias(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists): void
     {
-        $currentPage = $this->mockClassWithProperties(PageModel::class, $activeRecord);
+        $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
         $currentRoute = new PageRoute($currentPage);
 
         $aliasPages = [];
@@ -141,7 +144,7 @@ class PageUrlListenerTest extends TestCase
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
-            ->with($activeRecord['id'])
+            ->with($currentRecord['id'])
             ->willReturn($currentPage)
         ;
 
@@ -164,8 +167,8 @@ class PageUrlListenerTest extends TestCase
             ->expects($this->once())
             ->method('generate')
             ->with(
-                $activeRecord['title'],
-                $activeRecord['id'],
+                $currentRecord['title'],
+                $currentRecord['id'],
                 $this->callback(
                     function (callable $callback) use ($generated, $expectExists) {
                         $this->assertSame($expectExists, $callback($generated));
@@ -180,10 +183,13 @@ class PageUrlListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
-                'id' => $activeRecord['id'],
-                'activeRecord' => (object) $activeRecord,
+                'id' => $currentRecord['id'],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($currentRecord)
+        ;
 
         $pageRegistry = $this->mockPageRegistry(array_fill(0, \count($pages) + 1, true), [$currentRoute, ...$aliasRoutes]);
 
@@ -203,9 +209,9 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider duplicateAliasProvider
      */
-    public function testChecksForDuplicatesWhenValidatingAlias(array $activeRecord, array $pages, string $value, string $generated, bool $expectExists): void
+    public function testChecksForDuplicatesWhenValidatingAlias(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists): void
     {
-        $currentPage = $this->mockClassWithProperties(PageModel::class, $activeRecord);
+        $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
         $currentRoute = new PageRoute($currentPage);
 
         $aliasPages = [];
@@ -221,7 +227,7 @@ class PageUrlListenerTest extends TestCase
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
-            ->with($activeRecord['id'])
+            ->with($currentRecord['id'])
             ->willReturn($currentPage)
         ;
 
@@ -248,10 +254,13 @@ class PageUrlListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
-                'id' => $activeRecord['id'],
-                'activeRecord' => (object) $activeRecord,
+                'id' => $currentRecord['id'],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($currentRecord)
+        ;
 
         $pageRegistry = $this->mockPageRegistry(array_fill(0, \count($pages) + 1, true), [$currentRoute, ...$aliasRoutes]);
 
@@ -277,15 +286,15 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider duplicateAliasProvider
      */
-    public function testDoesNotCheckAliasIfCurrentPageIsUnrouteable(array $activeRecord, array $pages, string $value, string $generated, bool $expectExists): void
+    public function testDoesNotCheckAliasIfCurrentPageIsUnrouteable(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists): void
     {
-        $currentPage = $this->mockClassWithProperties(PageModel::class, $activeRecord);
+        $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
 
         $pageAdapter = $this->mockAdapter(['findWithDetails', 'findSimilarByAlias']);
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
-            ->with($activeRecord['id'])
+            ->with($currentRecord['id'])
             ->willReturn($currentPage)
         ;
 
@@ -310,10 +319,13 @@ class PageUrlListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
-                'id' => $activeRecord['id'],
-                'activeRecord' => (object) $activeRecord,
+                'id' => $currentRecord['id'],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($currentRecord)
+        ;
 
         $listener = new PageUrlListener(
             $framework,
@@ -331,9 +343,9 @@ class PageUrlListenerTest extends TestCase
     /**
      * @dataProvider duplicateAliasProvider
      */
-    public function testDoesNotCheckAliasIfAliasPageIsUnrouteable(array $activeRecord, array $pages, string $value, string $generated, bool $expectExists): void
+    public function testDoesNotCheckAliasIfAliasPageIsUnrouteable(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists): void
     {
-        $currentPage = $this->mockClassWithProperties(PageModel::class, $activeRecord);
+        $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
         $currentRoute = new PageRoute($currentPage);
 
         $aliasPages = [];
@@ -349,7 +361,7 @@ class PageUrlListenerTest extends TestCase
         $pageAdapter
             ->expects($this->once())
             ->method('findWithDetails')
-            ->with($activeRecord['id'])
+            ->with($currentRecord['id'])
             ->willReturn($currentPage)
         ;
 
@@ -376,10 +388,13 @@ class PageUrlListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(
             DataContainer::class,
             [
-                'id' => $activeRecord['id'],
-                'activeRecord' => (object) $activeRecord,
+                'id' => $currentRecord['id'],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($currentRecord)
+        ;
 
         $pageRegistry = $this->mockPageRegistry([...[true], ...array_fill(0, \count($pages), false)], [$currentRoute, ...$aliasRoutes]);
 
@@ -1005,9 +1020,12 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''])
+        ;
 
         $listener->validateUrlPrefix('en', $dc);
     }
@@ -1041,14 +1059,17 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) [
-                    'type' => 'root',
-                    'dns' => 'www.example.com',
-                    'urlPrefix' => 'de',
-                    'urlSuffix' => '',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'type' => 'root',
+                'dns' => 'www.example.com',
+                'urlPrefix' => 'de',
+                'urlSuffix' => '',
+            ])
+        ;
 
         $listener->validateUrlPrefix('en', $dc);
     }
@@ -1143,9 +1164,12 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''])
+        ;
 
         $listener->validateUrlPrefix('en', $dc);
     }
@@ -1236,9 +1260,12 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''])
+        ;
 
         $listener->validateUrlPrefix('en', $dc);
     }
@@ -1267,12 +1294,15 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) [
-                    'type' => 'regular',
-                    'urlPrefix' => 'en',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'type' => 'regular',
+                'urlPrefix' => 'en',
+            ])
+        ;
 
         $listener->validateUrlPrefix('de/ch', $dc);
     }
@@ -1301,12 +1331,15 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) [
-                    'type' => 'root',
-                    'urlPrefix' => 'de/ch',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'type' => 'root',
+                'urlPrefix' => 'de/ch',
+            ])
+        ;
 
         $listener->validateUrlPrefix('de/ch', $dc);
     }
@@ -1337,13 +1370,16 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) [
-                    'type' => 'root',
-                    'dns' => '',
-                    'urlPrefix' => 'en',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'type' => 'root',
+                'dns' => '',
+                'urlPrefix' => 'en',
+            ])
+        ;
 
         $listener->validateUrlPrefix('de/ch', $dc);
     }
@@ -1389,9 +1425,12 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''])
+        ;
 
         $this->assertSame('.html', $listener->validateUrlSuffix('.html', $dc));
     }
@@ -1482,9 +1521,12 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) ['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''])
+        ;
 
         $listener->validateUrlSuffix('.html', $dc);
     }
@@ -1513,12 +1555,15 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) [
-                    'type' => 'regular',
-                    'urlSuffix' => '/',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'type' => 'regular',
+                'urlSuffix' => '/',
+            ])
+        ;
 
         $listener->validateUrlPrefix('.html', $dc);
     }
@@ -1547,12 +1592,15 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) [
-                    'type' => 'root',
-                    'urlPrefix' => '.html',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'type' => 'root',
+                'urlPrefix' => '.html',
+            ])
+        ;
 
         $listener->validateUrlPrefix('.html', $dc);
     }
@@ -1583,13 +1631,16 @@ class PageUrlListenerTest extends TestCase
             DataContainer::class,
             [
                 'id' => 1,
-                'activeRecord' => (object) [
-                    'type' => 'root',
-                    'dns' => '',
-                    'urlPrefix' => '',
-                ],
             ]
         );
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'type' => 'root',
+                'dns' => '',
+                'urlPrefix' => '',
+            ])
+        ;
 
         $listener->validateUrlPrefix('.html', $dc);
     }
