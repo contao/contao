@@ -1650,13 +1650,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($objDelete->numRows && !($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null) && \strlen($v))
 			{
 				$rows = $objDelete->fetchAllAssoc();
-				$this->preloadCurrentRecords(array_column($rows, 'id'), $table);
+				$this->preloadCurrentRecords(array_column($rows, 'id'), $v);
 
 				foreach ($rows as $row)
 				{
-					$currentRecord = $this->getCurrentRecord($row['id'], $table);
+					$currentRecord = $this->getCurrentRecord($row['id'], $v);
 
-					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable, $currentRecord));
+					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new DeleteAction($v, $currentRecord));
 
 					$delete[$v][] = $row['id'];
 
