@@ -3241,8 +3241,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->invalidateCacheTags();
 		}
 
-		// Empty cached data
-		$this->arrCurrentRecordCache = array();
+		// Empty cached data for this record
+		$this->setCurrentRecordCache($this->intId, $this->strTable, null);
 	}
 
 	/**

@@ -1737,8 +1737,18 @@ abstract class DataContainer extends Backend
 		}
 	}
 
-	protected function setCurrentRecordCache(string|int $id, string $table, array $row): void
+	/**
+	 * @param array|null $row Pass null to remove a given cache entry
+	 */
+	protected function setCurrentRecordCache(string|int $id, string $table, ?array $row): void
 	{
+		if (null === $row)
+		{
+			unset($this->arrCurrentRecordCache[$table . '.' . $id]);
+
+			return;
+		}
+
 		$this->arrCurrentRecordCache[$table . '.' . $id] = $row;
 	}
 
