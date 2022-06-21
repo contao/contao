@@ -91,26 +91,13 @@ class FilesModel extends Model
 	protected static $strTable = 'tl_files';
 
 	/**
-	 * Returns the absolute path.
+	 * Returns the full absolute path.
 	 */
 	public function getAbsolutePath(): string
 	{
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		return Path::makeAbsolute($this->path, $projectDir);
-	}
-
-	/**
-	 * Returns the full path.
-	 */
-	public function getFullPath(): string
-	{
-		if (!$request = System::getContainer()->get('request_stack')->getCurrentRequest())
-		{
-			throw new \RuntimeException('The request stack did not contain a request');
-		}
-
-		return $request->getBasePath() . '/' . $this->path;
 	}
 
 	/**
