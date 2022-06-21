@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\DependencyInjection\Compiler;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\ParsedSequence;
-use Contao\CoreBundle\InsertTag\ProcessingMode;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,44 +29,45 @@ class AddInsertTagsPass implements CompilerPassInterface
             return;
         }
 
-        $serviceIds = $container->findTaggedServiceIds('contao.insert_tag');
         $definition = $container->findDefinition('contao.insert_tag.parser');
-        $subscriptions = [];
-        $priorities = [];
 
-        foreach ($serviceIds as $serviceId => $tags) {
-            foreach ($tags as $attributes) {
-                if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', (string) ($attributes['name'] ?? ''))) {
-                    throw new InvalidDefinitionException(sprintf('Invalid insert tag name "%s"', $attributes['name'] ?? ''));
+        foreach (['contao.insert_tag', 'contao.block_insert_tag'] as $serviceTag) {
+            $serviceIds = $container->findTaggedServiceIds($serviceTag);
+            $subscriptions = [];
+            $priorities = [];
+
+            foreach ($serviceIds as $serviceId => $tags) {
+                foreach ($tags as $attributes) {
+                    if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', (string) ($attributes['name'] ?? ''))) {
+                        throw new InvalidDefinitionException(sprintf('Invalid insert tag name "%s"', $attributes['name'] ?? ''));
+                    }
+
+                    $method = $this->getMethod($attributes['method'], 'contao.block_insert_tag' === $serviceTag, $container->findDefinition($serviceId)->getClass(), $serviceId);
+
+                    $priorities[] = $attributes['priority'];
+                    $subscriptions[] = new Definition(
+                        InsertTagSubscription::class,
+                        [
+                            new Reference($serviceId),
+                            $method,
+                            $attributes['name'],
+                            $attributes['endTag'] ?? null,
+                            $attributes['resolveNestedTags'],
+                        ],
+                    );
                 }
-
-                $attributes['mode'] = unserialize($attributes['mode'], ['allowed_classes' => false]);
-
-                $method = $this->getMethod($attributes['method'], $attributes['mode'], $container->findDefinition($serviceId)->getClass(), $serviceId);
-
-                $priorities[] = $attributes['priority'];
-                $subscriptions[] = new Definition(
-                    InsertTagSubscription::class,
-                    [
-                        new Reference($serviceId),
-                        $method,
-                        $attributes['name'],
-                        $attributes['endTag'],
-                        $attributes['mode'],
-                    ],
-                );
             }
-        }
 
-        // Order by priorities
-        array_multisort($priorities, $subscriptions);
+            // Order by priorities
+            array_multisort($priorities, $subscriptions);
 
-        foreach ($subscriptions as $subscription) {
-            $definition->addMethodCall('addSubscription', [$subscription]);
+            foreach ($subscriptions as $subscription) {
+                $definition->addMethodCall('contao.block_insert_tag' === $serviceTag ? 'addBlockSubscription' : 'addSubscription', [$subscription]);
+            }
         }
     }
 
-    private function getMethod(string|null $method, ProcessingMode $mode, string $class, string $serviceId): string
+    private function getMethod(string|null $method, bool $isBlock, string $class, string $serviceId): string
     {
         $ref = new \ReflectionClass($class);
         $invalid = sprintf('The contao.insert_tag definition for service "%s" is invalid. ', $serviceId);
@@ -88,11 +88,7 @@ class AddInsertTagsPass implements CompilerPassInterface
             throw new InvalidDefinitionException($invalid);
         }
 
-        $expectedReturnType = InsertTagResult::class;
-
-        if (ProcessingMode::wrappedParsed === $mode || ProcessingMode::wrappedResolved === $mode) {
-            $expectedReturnType = ParsedSequence::class;
-        }
+        $expectedReturnType = $isBlock ? ParsedSequence::class : InsertTagResult::class;
 
         if ($expectedReturnType !== (string) $ref->getReturnType()) {
             $invalid .= sprintf('The "%s::%s" method exists but has an invalid return type. Expected "%s", got "%s".', $class, $method, $expectedReturnType, (string) $ref->getReturnType());

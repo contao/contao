@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection;
 
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\EscargotSubscriberInterface;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsBlockInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
@@ -172,6 +173,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             AsHook::class => 'contao.hook',
             AsCallback::class => 'contao.callback',
             AsInsertTag::class => 'contao.insert_tag',
+            AsBlockInsertTag::class => 'contao.block_insert_tag',
         ];
 
         foreach ($attributesForAutoconfiguration as $attributeClass => $tag) {
@@ -189,14 +191,10 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                     }
 
                     if (AsInsertTag::class === $attributeClass) {
-                        $tagAttributes['mode'] = serialize($tagAttributes['mode']);
+                        // TODO: $this->validateInsertTagMethodSignature($method);
+                    }
 
-                        /*
-                        $method = $reflector instanceof \ReflectionClass
-                            ? $reflector->getMethod($tagAttributes['method'])
-                            : $reflector;
-                        */
-
+                    if (AsBlockInsertTag::class === $attributeClass) {
                         // TODO: $this->validateInsertTagMethodSignature($method);
                     }
 

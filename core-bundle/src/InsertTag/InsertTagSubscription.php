@@ -19,7 +19,7 @@ final class InsertTagSubscription
         public readonly string $method,
         public readonly string $name,
         public readonly string|null $endTag,
-        public readonly ProcessingMode $mode,
+        public readonly bool $resolveNestedTags,
     ) {
     }
 }

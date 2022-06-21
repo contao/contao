@@ -12,30 +12,21 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag\Resolver;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsBlockInsertTag;
 use Contao\CoreBundle\InsertTag\Exception\InvalidInsertTagException;
-use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\InsertTag\ParsedInsertTag;
 use Contao\CoreBundle\InsertTag\ParsedSequence;
-use Contao\CoreBundle\InsertTag\ProcessingMode;
+use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\StringUtil;
 
 class IfLanguageInsertTag
 {
-    public function __construct(private InsertTagParser $parser)
-    {
-    }
-
-    #[AsInsertTag('iflng', endTag: 'iflng', mode: ProcessingMode::wrappedParsed)]
-    #[AsInsertTag('ifnlng', endTag: 'ifnlng', mode: ProcessingMode::wrappedParsed)]
-    public function replaceInsertTag(ParsedInsertTag $insertTag, ParsedSequence $wrappedContent): ParsedSequence
+    #[AsBlockInsertTag('iflng', endTag: 'iflng')]
+    #[AsBlockInsertTag('ifnlng', endTag: 'ifnlng')]
+    public function replaceInsertTag(ResolvedInsertTag $insertTag, ParsedSequence $wrappedContent): ParsedSequence
     {
         $inverse = 'iflng' !== $insertTag->getName();
-        $language =
-            $this->parser->replaceInline($insertTag->getParameters()->get(0) ?? '')
-            ?: throw new InvalidInsertTagException(sprintf('Missing language parameter in %s insert tag', $insertTag->getName()))
-        ;
+        $language = $insertTag->getParameters()->get(0) ?: throw new InvalidInsertTagException(sprintf('Missing language parameter in %s insert tag', $insertTag->getName()));
 
         if ($this->languageMatchesPage($language)) {
             return $inverse ? new ParsedSequence([]) : $wrappedContent;

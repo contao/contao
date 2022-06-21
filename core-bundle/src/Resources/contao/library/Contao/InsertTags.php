@@ -1080,7 +1080,7 @@ class InsertTags extends Controller
 						}
 					}
 
-					$arrCache[$strTag] = '{{'.$strTag.'}}';
+					$arrCache[$strTag] = '{{' . $strTag . '}}';
 					$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
 					break;
 			}

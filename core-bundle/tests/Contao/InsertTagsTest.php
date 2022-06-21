@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\Config;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
@@ -609,6 +611,12 @@ class InsertTagsTest extends TestCase
             ->willReturn($pageLanguage)
         ;
 
+        $page
+            ->method('__isset')
+            ->with('language')
+            ->willReturn(true)
+        ;
+
         $GLOBALS['objPage'] = $page;
 
         $reflectionClass = new \ReflectionClass(InsertTags::class);
@@ -616,6 +624,22 @@ class InsertTagsTest extends TestCase
         /** @var InsertTags $insertTags */
         $insertTags = $reflectionClass->newInstanceWithoutConstructor();
         $insertTagParser = new InsertTagParser($this->mockContaoFramework(), $insertTags);
+
+        $insertTagParser->addBlockSubscription(new InsertTagSubscription(
+            new IfLanguageInsertTag(),
+            'replaceInsertTag',
+            'iflng',
+            'iflng',
+            true
+        ));
+
+        $insertTagParser->addBlockSubscription(new InsertTagSubscription(
+            new IfLanguageInsertTag(),
+            'replaceInsertTag',
+            'ifnlng',
+            'ifnlng',
+            true
+        ));
 
         $this->assertSame($expected, $insertTagParser->replaceInline($source));
         $this->assertSame($expected.$expected, $insertTagParser->replaceInline($source.$source));

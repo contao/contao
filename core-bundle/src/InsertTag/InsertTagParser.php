@@ -21,16 +21,15 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * Parse and replace insert tags.
  *
- * Formal syntax:
+ * Formal syntax (EBNF):
  *
- *     insert tag = '{{', tag contents, '}}'
- *     tag contents = name, parameter*, query?, flag*
- *     name = [a-z\x80-\xFF], [a-z0-9_\x80-\xFF]*
- *     parameter = '::', value
- *     query = '?', value char *
- *     flag = '|', value char *
- *     value = (value char | insert tag)*
- *     value char = [^{}|?]
+ *     InsertTag    ::= "{{" Name Parameter * Flag * "}}"
+ *     Name         ::= [a-z#x80-#xFF] [a-z0-9_#x80-#xFF] *
+ *     Parameter    ::= "::" ( KeyValuePair | Value )
+ *     Flag         ::= "|" [^{}|] *
+ *     KeyValuePair ::= Key "=" Value
+ *     Key          ::= [^{}|=] *
+ *     Value        ::= ( [^{}|] | InsertTag ) *
  */
 class InsertTagParser implements ResetInterface
 {
@@ -39,13 +38,25 @@ class InsertTagParser implements ResetInterface
      */
     private array $subscriptions = [];
 
+    /**
+     * @var array<string,InsertTagSubscription>
+     */
+    private array $blockSubscriptions = [];
+
     public function __construct(private ContaoFramework $framework, private InsertTags|null $insertTags = null)
     {
     }
 
     public function addSubscription(InsertTagSubscription $subscription): void
     {
+        unset($this->blockSubscriptions[$subscription->name]);
         $this->subscriptions[$subscription->name] = $subscription;
+    }
+
+    public function addBlockSubscription(InsertTagSubscription $subscription): void
+    {
+        unset($this->subscriptions[$subscription->name]);
+        $this->blockSubscriptions[$subscription->name] = $subscription;
     }
 
     public function replace(ParsedSequence|string $input): string
@@ -93,7 +104,11 @@ class InsertTagParser implements ResetInterface
         $wrapContent = [];
 
         foreach ($input as $item) {
-            if ($wrapStart && $item instanceof InsertTag && $item->getName() === $this->subscriptions[$wrapStart->getName()]->endTag) {
+            if (
+                $wrapStart
+                && $item instanceof InsertTag
+                && $item->getName() === $this->blockSubscriptions[$wrapStart->getName()]->endTag
+            ) {
                 $return .= $this->replaceInline($this->renderBlockSubscription($wrapStart, new ParsedSequence($wrapContent)));
 
                 $wrapStart = null;
@@ -117,13 +132,7 @@ class InsertTagParser implements ResetInterface
                 continue;
             }
 
-            if (
-                \in_array(
-                    ($this->subscriptions[$item->getName()] ?? null)?->mode,
-                    [ProcessingMode::wrappedResolved, ProcessingMode::wrappedParsed],
-                    true,
-                )
-            ) {
+            if ($this->blockSubscriptions[$item->getName()] ?? false) {
                 $wrapStart = $item;
                 continue;
             }
@@ -191,7 +200,7 @@ class InsertTagParser implements ResetInterface
             return null;
         }
 
-        if (ProcessingMode::resolved === $subscription->mode || ProcessingMode::wrappedResolved === $subscription->mode) {
+        if ($subscription->resolveNestedTags) {
             $tag = $this->resolveNestedTags($tag);
         } else {
             $tag = $this->unresolveTag($tag);
@@ -202,13 +211,12 @@ class InsertTagParser implements ResetInterface
 
     private function renderBlockSubscription(InsertTag $tag, ParsedSequence|null $content = null): ParsedSequence|null
     {
-        if (!$subscription = $this->subscriptions[$tag->getName()] ?? null) {
+        if (!$subscription = $this->blockSubscriptions[$tag->getName()] ?? null) {
             return null;
         }
 
-        if (ProcessingMode::resolved === $subscription->mode || ProcessingMode::wrappedResolved === $subscription->mode) {
+        if ($subscription->resolveNestedTags) {
             $tag = $this->resolveNestedTags($tag);
-            $content = new ParsedSequence([$this->replaceInline($content)]);
         } else {
             $tag = $this->unresolveTag($tag);
         }

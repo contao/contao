@@ -13,13 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Attribute;
 
 /**
- * An attribute to register an insert tag.
+ * An attribute to register a block insert tag.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
-class AsInsertTag
+class AsBlockInsertTag
 {
     public function __construct(
         public string $name,
+        public string $endTag,
         public bool $resolveNestedTags = true,
         public int $priority = 0,
         public string|null $method = null,
