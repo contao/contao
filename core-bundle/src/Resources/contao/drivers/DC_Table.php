@@ -1509,7 +1509,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$data[$table][$k] = $objSave->row();
 
-					// Store the active record
+					// Store the active record (BC)
 					if ($table == $this->strTable && $v == $this->intId)
 					{
 						$this->objActiveRecord = $objSave;
@@ -1709,7 +1709,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Unset fields that no longer exist in the database
 				$row = array_intersect_key($row, $arrFields[$table]);
 
-				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($table, $row));
+				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new CreateAction($table, $row));
 
 				// Re-insert the data
 				$objInsertStmt = $this->Database->prepare("INSERT INTO " . $table . " %s")
@@ -1817,6 +1817,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
+		// Store the active record (BC)
 		$this->objActiveRecord = (object) $currentRecord;
 
 		$return = '';
@@ -2365,7 +2366,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $currentRecord));
 
-					// Store the active record
+					// Store the active record (BC)
 					$this->objActiveRecord = (object) $currentRecord;
 
 					foreach ($this->strPalette as $v)
@@ -2675,6 +2676,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
+		// Store the active record (BC)
+		$this->objActiveRecord = (object) $currentRecord;
+
 		$this->procedure = array('id=?');
 		$this->values = array($this->intId);
 		$this->blnCreateNewVersion = false;
@@ -2747,7 +2751,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->blnCreateNewVersion = false;
 
 						// Store the active record (BC)
-						$this->objActiveRecord = $this->getCurrentRecord();
+						$this->objActiveRecord = (object) $this->getCurrentRecord();
 
 						$objVersions = new Versions($this->strTable, $this->intId);
 						$objVersions->initialize();
