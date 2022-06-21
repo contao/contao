@@ -3884,7 +3884,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$arrIds = array();
 
 		// Get records
-		$objRows = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($hasSorting ? " ORDER BY sorting" : ""))
+		$objRows = $this->Database->prepare("SELECT * FROM " . $table . " WHERE pid=?" . ($hasSorting ? " ORDER BY sorting" : ""))
 								  ->execute($id);
 
 		while ($objRows->next())
