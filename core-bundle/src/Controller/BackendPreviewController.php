@@ -55,7 +55,7 @@ class BackendPreviewController
             $script = '/'.basename($request->getScriptName());
 
             if ($script !== $this->previewScript) {
-                $path = dirname($request->getScriptName());
+                $path = \dirname($request->getScriptName());
 
                 return new RedirectResponse($path.$this->previewScript.str_replace($path, '', $request->getRequestUri()));
             }
