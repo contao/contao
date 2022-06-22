@@ -53,7 +53,7 @@ class ExpiringTokenBasedRememberMeHandler extends AbstractRememberMeHandler
     {
         $series = base64_encode(random_bytes(64));
         $tokenValue = $this->generateHash(base64_encode(random_bytes(64)));
-        $token = new PersistentToken(\get_class($user), $user->getUserIdentifier(), $series, $tokenValue, new \DateTime());
+        $token = new PersistentToken($user::class, $user->getUserIdentifier(), $series, $tokenValue, new \DateTime());
         $rememberMe = new RememberMe($user, $series);
 
         $this->repository->persist($rememberMe);
