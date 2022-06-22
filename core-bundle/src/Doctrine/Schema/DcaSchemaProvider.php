@@ -22,6 +22,11 @@ use Doctrine\DBAL\Schema\Table;
 class DcaSchemaProvider
 {
     /**
+     * @var array{string, int}|array[]
+     */
+    private array $defaultLength = [];
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.doctrine.dca_schema_provider" service instead
      */
     public function __construct(private ContaoFramework $framework, private Registry $doctrine)
@@ -321,9 +326,14 @@ class DcaSchemaProvider
             $collation = $table->getOption('collate');
         }
 
-        $defaultLength = $this->getDefaultIndexLength($table);
+        $engine = $table->getOption('engine');
+
+        if (!isset($this->defaultLength[$engine])) {
+            $this->defaultLength[$engine] = $this->getDefaultIndexLength($table);
+        }
+
         $bytes = str_starts_with($collation, 'utf8mb4') ? 4 : 3;
-        $indexLength = (int) floor($defaultLength / $bytes);
+        $indexLength = (int) floor($this->defaultLength[$engine] / $bytes);
 
         // Return if the field is shorter than the index length
         if ($length <= $indexLength) {
