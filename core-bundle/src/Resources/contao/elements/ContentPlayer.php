@@ -97,7 +97,7 @@ class ContentPlayer extends ContentElement
 		// Optional poster
 		if ($this->posterSRC && ($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
 		{
-			$this->Template->poster = $objFile->path;
+			$this->Template->poster = Environment::get('path') . '/' . $objFile->path;
 		}
 
 		$objFiles = $this->objFiles;
@@ -143,10 +143,12 @@ class ContentPlayer extends ContentElement
 			}
 
 			$objFile = new File($objFileModel->path);
-			$objFile->title = StringUtil::specialchars($strTitle ?: $objFile->name);
-			$objFile->path = Environment::get('path') . '/' . $objFileModel->path;
 
-			$arrFiles[$objFile->extension] = $objFile;
+			$arrFiles[$objFile->extension] = array
+			(
+				'path' => Environment::get('path') . '/' . $objFileModel->path,
+				'mime' => $objFile->mime,
+			);
 		}
 
 		$size = StringUtil::deserialize($this->playerSize);
