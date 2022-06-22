@@ -18,7 +18,6 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,7 +38,27 @@ class BackendPreviewControllerTest extends TestCase
         $response = $controller(new Request());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('preview.php', $response->getTargetUrl());
+        $this->assertSame('/preview.php/', $response->getTargetUrl());
+    }
+
+    public function testAddsThePreviewEntrypointAtTheCorrectPosition(): void
+    {
+        $controller = new BackendPreviewController(
+            '/preview.php',
+            $this->createMock(FrontendPreviewAuthenticator::class),
+            new EventDispatcher(),
+            $this->mockAuthorizationChecker()
+        );
+
+        $request = Request::create('https://localhost/managed-edition/public/contao/preview');
+        $request->server->set('SCRIPT_NAME', '/managed-edition/public/index.php');
+        $request->server->set('SCRIPT_FILENAME', '/managed-edition/public/index.php');
+
+        /** @var RedirectResponse $response */
+        $response = $controller($request);
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('/managed-edition/public/preview.php/contao/preview', $response->getTargetUrl());
     }
 
     public function testDeniesAccessIfNotGranted(): void
@@ -51,7 +70,11 @@ class BackendPreviewControllerTest extends TestCase
             $this->mockAuthorizationChecker(false)
         );
 
-        $response = $controller($this->mockRequest());
+        $request = Request::create('https://localhost/preview.php/en/');
+        $request->server->set('SCRIPT_NAME', '/preview.php');
+        $request->server->set('SCRIPT_FILENAME', '/preview.php');
+
+        $response = $controller($request);
 
         $this->assertSame($response->getStatusCode(), Response::HTTP_FORBIDDEN);
     }
@@ -65,7 +88,9 @@ class BackendPreviewControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $request = $this->mockRequest();
+        $request = Request::create('https://localhost/managed-edition/preview.php/en/');
+        $request->server->set('SCRIPT_NAME', '/managed-edition/preview.php');
+        $request->server->set('SCRIPT_FILENAME', '/managed-edition/preview.php');
         $request->query->set('user', '9');
 
         $controller = new BackendPreviewController(
@@ -96,8 +121,12 @@ class BackendPreviewControllerTest extends TestCase
             $this->mockAuthorizationChecker()
         );
 
+        $request = Request::create('https://localhost/preview.php/en/');
+        $request->server->set('SCRIPT_NAME', '/preview.php');
+        $request->server->set('SCRIPT_FILENAME', '/preview.php');
+
         /** @var RedirectResponse $response */
-        $response = $controller($this->mockRequest());
+        $response = $controller($request);
 
         $this->assertTrue($response->isRedirection());
     }
@@ -111,34 +140,15 @@ class BackendPreviewControllerTest extends TestCase
             $this->mockAuthorizationChecker()
         );
 
-        $request = $this->mockRequest();
-        $request
-            ->expects($this->once())
-            ->method('getBaseUrl')
-            ->willReturn('/preview.php')
-        ;
+        $request = Request::create('https://localhost/preview.php/en/');
+        $request->server->set('SCRIPT_NAME', '/preview.php');
+        $request->server->set('SCRIPT_FILENAME', '/preview.php');
 
         /** @var RedirectResponse $response */
         $response = $controller($request);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('/preview.php/', $response->getTargetUrl());
-    }
-
-    /**
-     * @return Request&MockObject
-     */
-    private function mockRequest(): Request
-    {
-        $request = $this->createMock(Request::class);
-        $request->query = new InputBag();
-
-        $request
-            ->method('getScriptName')
-            ->willReturn('preview.php')
-        ;
-
-        return $request;
     }
 
     /**
