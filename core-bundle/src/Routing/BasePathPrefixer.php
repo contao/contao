@@ -22,7 +22,7 @@ class BasePathPrefixer
 
     public function prefix(string $url): string
     {
-        if (preg_match('(^(https?://|/|#|\{\{))i', $url)) {
+        if (preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $url)) {
             return $url;
         }
 

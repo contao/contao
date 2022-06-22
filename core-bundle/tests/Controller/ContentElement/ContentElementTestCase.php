@@ -45,7 +45,9 @@ use Contao\InsertTags;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -239,6 +241,18 @@ class ContentElementTestCase extends TestCase
         ;
 
         $environment->addExtension(new TranslationExtension($translator));
+
+        $packages = $this->createMock(Packages::class);
+        $packages
+            ->method('getUrl')
+            ->willReturnCallback(
+                function (string $url): string {
+                    return '/'.$url;
+                }
+            )
+        ;
+
+        $environment->addExtension(new AssetExtension($packages));
 
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();

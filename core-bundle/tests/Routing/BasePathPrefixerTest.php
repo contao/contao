@@ -33,5 +33,6 @@ class BasePathPrefixerTest extends TestCase
         $this->assertSame('#foo', $basePathPrefixer->prefix('#foo'));
         $this->assertSame('{{link::5}}', $basePathPrefixer->prefix('{{link::5}}'));
         $this->assertSame('{{env::path}}foo.html', $basePathPrefixer->prefix('{{env::path}}foo.html'));
+        $this->assertSame('tel:1234', $basePathPrefixer->prefix('tel:1234'));
     }
 }
