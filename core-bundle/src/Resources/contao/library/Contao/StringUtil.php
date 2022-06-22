@@ -656,7 +656,7 @@ class StringUtil
 				continue;
 			}
 
-			if (preg_match('(^(https?://|#|/|\{\{))i', $paths[$i+3]))
+			if (preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $paths[$i+3]))
 			{
 				$return .= $paths[$i+2] . '="' . $paths[$i+3] . '"';
 			}

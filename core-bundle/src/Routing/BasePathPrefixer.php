@@ -26,10 +26,6 @@ class BasePathPrefixer
             return $url;
         }
 
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
-
-        return $request->getBasePath().'/'.$url;
+        return ($this->requestStack->getCurrentRequest()?->getBasePath() ?? '').'/'.$url;
     }
 }
