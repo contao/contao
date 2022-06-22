@@ -417,6 +417,11 @@ class ModuleListing extends Module
 	{
 		$value = StringUtil::deserialize($value);
 
+		// Handle falsy values (see #4858)
+		if ($value === '0' || $value === 0 || $value === false) {
+			return $value;
+		}
+
 		// Return if empty
 		if (empty($value))
 		{
