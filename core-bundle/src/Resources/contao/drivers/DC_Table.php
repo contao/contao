@@ -3222,9 +3222,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				->set($arrValues)
 				->query('', array_merge(array_values($arrValues), $this->values), $arrTypes);
 
-			if ($objUpdateStmt->affectedRows && $blnVersionize)
+			if ($objUpdateStmt->affectedRows)
 			{
-				$this->blnCreateNewVersion = true;
+				// Empty cached data for this record
+				$this->setCurrentRecordCache($this->intId, $this->strTable, null);
+				$this->invalidateCacheTags();
+
+				if ($blnVersionize)
+				{
+					$this->blnCreateNewVersion = true;
+				}
 			}
 		}
 
@@ -3249,12 +3256,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$objVersions = new Versions($this->strTable, $this->intId);
 			$objVersions->create();
-
-			$this->invalidateCacheTags();
 		}
-
-		// Empty cached data for this record
-		$this->setCurrentRecordCache($this->intId, $this->strTable, null);
 	}
 
 	/**
