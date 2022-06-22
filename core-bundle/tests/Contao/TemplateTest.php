@@ -223,61 +223,6 @@ class TemplateTest extends TestCase
         $this->assertSame($obLevel, ob_get_level());
     }
 
-    public function testStripsLeadingSlashFromAssetUrl(): void
-    {
-        $packages = $this->createMock(Packages::class);
-        $packages
-            ->expects($this->once())
-            ->method('getUrl')
-            ->with('/path/to/asset', 'package_name')
-            ->willReturnArgument(0)
-        ;
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('assets.packages', $packages);
-
-        System::setContainer($container);
-
-        $template = new FrontendTemplate();
-        $url = $template->asset('/path/to/asset', 'package_name');
-
-        $this->assertSame('/path/to/asset', $url);
-    }
-
-    public function testStripsTheBasePathFromAssetUrl(): void
-    {
-        $packages = $this->createMock(Packages::class);
-        $packages
-            ->expects($this->once())
-            ->method('getUrl')
-            ->with('/path/to/asset', 'package_name')
-            ->willReturn('/foo/path/to/asset')
-        ;
-
-        $request = Request::create(
-            'https://example.com/foo/index.php',
-            'GET',
-            [],
-            [],
-            [],
-            [
-                'SCRIPT_FILENAME' => '/foo/index.php',
-                'SCRIPT_NAME' => '/foo/index.php',
-            ]
-        );
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('assets.packages', $packages);
-        $container->get('request_stack')->push($request);
-
-        System::setContainer($container);
-
-        $template = new FrontendTemplate();
-        $url = $template->asset('/path/to/asset', 'package_name');
-
-        $this->assertSame('/foo/path/to/asset', $url);
-    }
-
     public function testDoesNotModifyAbsoluteAssetUrl(): void
     {
         $packages = $this->createMock(Packages::class);
