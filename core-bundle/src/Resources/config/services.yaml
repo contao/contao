@@ -204,6 +204,12 @@ services:
         class: Contao\CoreBundle\Filesystem\Dbafs\DbafsManager
         public: true
 
+    contao.filesystem.file_download_helper:
+        class: Contao\CoreBundle\Filesystem\FileDownloadHelper
+        arguments:
+            - '@router'
+            - '@uri_signer'
+
     contao.filesystem.mount_manager:
         class: Contao\CoreBundle\Filesystem\MountManager
         arguments:
@@ -1040,6 +1046,7 @@ services:
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
+    Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\PictureFactoryInterface: '@contao.image.picture_factory'
