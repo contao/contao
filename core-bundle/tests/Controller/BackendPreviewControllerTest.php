@@ -28,7 +28,7 @@ class BackendPreviewControllerTest extends TestCase
     public function testRedirectsToPreviewEntrypoint(): void
     {
         $controller = new BackendPreviewController(
-            'preview.php',
+            '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockAuthorizationChecker()
@@ -64,7 +64,7 @@ class BackendPreviewControllerTest extends TestCase
     public function testDeniesAccessIfNotGranted(): void
     {
         $controller = new BackendPreviewController(
-            'preview.php',
+            '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockAuthorizationChecker(false)
@@ -94,7 +94,7 @@ class BackendPreviewControllerTest extends TestCase
         $request->query->set('user', '9');
 
         $controller = new BackendPreviewController(
-            'preview.php',
+            '/preview.php',
             $previewAuthenticator,
             new EventDispatcher(),
             $this->mockAuthorizationChecker()
@@ -115,7 +115,7 @@ class BackendPreviewControllerTest extends TestCase
         ;
 
         $controller = new BackendPreviewController(
-            'preview.php',
+            '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             $dispatcher,
             $this->mockAuthorizationChecker()
@@ -134,7 +134,7 @@ class BackendPreviewControllerTest extends TestCase
     public function testRedirectsToRootPage(): void
     {
         $controller = new BackendPreviewController(
-            'preview.php',
+            '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockAuthorizationChecker()
