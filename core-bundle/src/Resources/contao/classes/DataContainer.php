@@ -16,6 +16,7 @@ use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\AbstractAction;
+use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -1758,6 +1759,13 @@ abstract class DataContainer extends Backend
 		if ($noCache || !isset($this->arrCurrentRecordCache[$key]))
 		{
 			$this->preloadCurrentRecords(array($id), $table);
+
+			try {
+				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new ReadAction($table, $this->arrCurrentRecordCache[$key]));
+			} catch (AccessDeniedException $e) {
+				unset($this->arrCurrentRecordCache[$key]);
+				throw $e;
+			}
 		}
 
 		return $this->arrCurrentRecordCache[$key] ?? null;

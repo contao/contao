@@ -393,8 +393,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return '';
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $currentRecord));
-
 		$data = array();
 		$row = $currentRecord;
 
@@ -2363,8 +2361,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$box = '';
 
 					$currentRecord = $this->getCurrentRecord();
-
-					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $currentRecord));
 
 					// Store the active record (BC)
 					$this->objActiveRecord = (object) $currentRecord;
@@ -4498,6 +4494,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
 			{
+				// Improve performance
+				$this->setCurrentRecordCache($row[$i]['id'],$this->strTable, $row[$i]);
+
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row[$i]));
 
 				$this->current[] = $row[$i]['id'];
