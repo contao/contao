@@ -730,7 +730,11 @@ class InsertTags extends Controller
 							break;
 
 						case 'path':
-							$arrCache[$strTag] = Idna::decode(Environment::get('path')) . '/';
+							trigger_deprecation('contao/core-bundle', '5.0', 'Using the "env::path" insert has been deprecated and will no longer work in Contao 6.0. Use the "env::base" insert tag instead.');
+							// no break
+
+						case 'base':
+							$arrCache[$strTag] = Idna::decode(Environment::get('base'));
 							break;
 
 						case 'request':
@@ -757,6 +761,10 @@ class InsertTags extends Controller
 
 						case 'base_url':
 							$arrCache[$strTag] = $container->get('request_stack')->getCurrentRequest()->getBaseUrl();
+							break;
+
+						case 'base_path':
+							$arrCache[$strTag] = $container->get('request_stack')->getCurrentRequest()->getBasePath();
 							break;
 					}
 					break;
