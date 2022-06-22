@@ -789,6 +789,8 @@ services:
             - '@uri_signer'
             - '@contao.framework'
             - '@security.token_storage'
+            - '@contao.routing.page_registry'
+            - '@http_kernel'
             - ~
             - ~
 

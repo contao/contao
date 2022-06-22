@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authenticator;
 
-use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\PageError401;
+use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
@@ -51,8 +51,20 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 {
     private array $options;
 
-    public function __construct(private UserProviderInterface $userProvider, private AuthenticationSuccessHandlerInterface $successHandler, private AuthenticationFailureHandlerInterface $failureHandler, private ScopeMatcher $scopeMatcher, private RouterInterface $router, private UriSigner $uriSigner, private ContaoFramework $framework, private TokenStorageInterface $tokenStorage, private TwoFactorAuthenticator $twoFactorAuthenticator, array $options)
-    {
+    public function __construct(
+        private UserProviderInterface $userProvider,
+        private AuthenticationSuccessHandlerInterface $successHandler,
+        private AuthenticationFailureHandlerInterface $failureHandler,
+        private ScopeMatcher $scopeMatcher,
+        private RouterInterface $router,
+        private UriSigner $uriSigner,
+        private ContaoFramework $framework,
+        private TokenStorageInterface $tokenStorage,
+        private PageRegistry $pageRegistry,
+        private HttpKernelInterface $httpKernel,
+        private TwoFactorAuthenticator $twoFactorAuthenticator,
+        array $options
+    ) {
         $this->options = array_merge([
             'username_parameter' => 'username',
             'password_parameter' => 'password',
@@ -72,18 +84,19 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $this->framework->initialize();
 
-        if (!isset($GLOBALS['TL_PTY']['error_401']) || !class_exists($GLOBALS['TL_PTY']['error_401'])) {
-            throw new UnauthorizedHttpException('', 'Not authorized');
+        $page = $request->attributes->get('pageModel');
+
+        if (!$page instanceof PageModel) {
+            throw new \RuntimeException('No PageModel found on request.');
         }
 
-        /** @var PageError401 $pageHandler */
-        $pageHandler = new $GLOBALS['TL_PTY']['error_401']();
+        $page->loadDetails();
+        $page->protected = false;
 
-        try {
-            return $pageHandler->getResponse();
-        } catch (InsufficientAuthenticationException $e) {
-            throw new UnauthorizedHttpException('', $e->getMessage(), $e);
-        }
+        $route = $this->pageRegistry->getRoute($page);
+        $subRequest = $request->duplicate(null, null, $route->getDefaults());
+
+        return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
     }
 
     public function supports(Request $request): ?bool
