@@ -326,7 +326,7 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use $dc->getCurrentRecord() instead.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use '.__CLASS__.'::getCurrentRecord() instead.');
 
 				return $this->objActiveRecord;
 
