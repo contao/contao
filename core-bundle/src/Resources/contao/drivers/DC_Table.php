@@ -2454,7 +2454,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 
 					// Save record
-					$this->submit();
+					try
+					{
+						$this->submit();
+					}
+					catch (AccessDeniedException)
+					{
+						continue;
+					}
 
 					$return .= Message::generateUnwrapped() . '
 <div class="' . $class . ' cf">' . $box . '
