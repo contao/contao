@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authenticator;
 
+use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -44,6 +45,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\ParameterBagUtils;
 
@@ -91,9 +93,28 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         }
 
         $page->loadDetails();
-        $page->protected = false;
+        $currentToken = $this->tokenStorage->getToken();
 
-        $route = $this->pageRegistry->getRoute($page);
+        if ($currentToken instanceof TwoFactorTokenInterface) {
+            $page->protected = false;
+
+            $route = $this->pageRegistry->getRoute($page);
+            $subRequest = $request->duplicate(null, null, $route->getDefaults());
+
+            return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
+        }
+
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
+        $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
+
+        if (null === $errorPage) {
+            throw new PageNotFoundException('No error page found.');
+        }
+
+        $errorPage->loadDetails();
+        $errorPage->protected = false;
+
+        $route = $this->pageRegistry->getRoute($errorPage);
         $subRequest = $request->duplicate(null, null, $route->getDefaults());
 
         return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
