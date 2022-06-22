@@ -266,7 +266,7 @@ abstract class DataContainer extends Backend
 	 * Active record cache
 	 * @var array<int|string, array>
 	 */
-	protected $arrCurrentRecordCache = array();
+	private $arrCurrentRecordCache = array();
 
 	/**
 	 * Set an object property
@@ -1714,6 +1714,12 @@ abstract class DataContainer extends Backend
 	 */
 	protected function preloadCurrentRecords(array $ids, string $table): void
 	{
+		foreach ($ids as $id)
+		{
+			$this->setCurrentRecordCache($id, $table, null);
+		}
+
+		/** @var Connection $connection */
 		$connection = System::getContainer()->get('database_connection');
 
 		$stmt = $connection->executeQuery(
@@ -1721,9 +1727,8 @@ abstract class DataContainer extends Backend
 			array($ids),
 			array(is_numeric(array_shift($ids)) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY)
 		);
-		$rows = $stmt->fetchAllAssociative();
 
-		foreach ($rows as $row)
+		foreach ($stmt->iterateAssociative() as $row)
 		{
 			if (!\is_array($row))
 			{
@@ -1759,19 +1764,33 @@ abstract class DataContainer extends Backend
 		if ($noCache || !isset($this->arrCurrentRecordCache[$key]))
 		{
 			$this->preloadCurrentRecords(array($id), $table);
-
-			try
-			{
-				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new ReadAction($table, $this->arrCurrentRecordCache[$key]));
-			}
-			catch (AccessDeniedException $e)
-			{
-				unset($this->arrCurrentRecordCache[$key]);
-
-				throw $e;
-			}
 		}
 
-		return $this->arrCurrentRecordCache[$key] ?? null;
+		// In case this record was not part of the preloaded result, we don't need to apply any permission checks
+		if (!array_key_exists($key, $this->arrCurrentRecordCache))
+		{
+			return null;
+		}
+
+		// In case this record has been checked before, we don't ask the voters again but instead throw the previous
+		// exception
+		if ($this->arrCurrentRecordCache[$key] instanceof AccessDeniedException)
+		{
+			throw $this->arrCurrentRecordCache[$key];
+		}
+
+		try
+		{
+			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new ReadAction($table, $this->arrCurrentRecordCache[$key]));
+		}
+		catch (AccessDeniedException $e)
+		{
+			// Remember the exception for this key for the next call
+			$this->arrCurrentRecordCache[$key] = $e;
+
+			throw $e;
+		}
+
+		return $this->arrCurrentRecordCache[$key];
 	}
 }

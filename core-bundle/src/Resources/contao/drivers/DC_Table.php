@@ -2369,7 +2369,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$blnAjax = false;
 					$box = '';
 
-					$currentRecord = $this->getCurrentRecord();
+					$currentRecord = $this->getCurrentRecord($id);
 
 					// Store the active record (BC)
 					$this->objActiveRecord = (object) $currentRecord;
