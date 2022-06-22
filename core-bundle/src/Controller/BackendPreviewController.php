@@ -51,14 +51,8 @@ class BackendPreviewController
     {
         // Skip the redirect if there is no preview script, otherwise we will
         // end up in an endless loop (see #1511)
-        if ($this->previewScript) {
-            $script = '/'.basename($request->getScriptName());
-
-            if ($script !== $this->previewScript) {
-                $path = \dirname($request->getScriptName());
-
-                return new RedirectResponse($path.$this->previewScript.str_replace($path, '', $request->getRequestUri()));
-            }
+        if ($this->previewScript && substr($request->getScriptName(), \strlen($request->getBasePath())) !== $this->previewScript) {
+            return new RedirectResponse($request->getBasePath().$this->previewScript.$request->getPathInfo());
         }
 
         if (!$this->authorizationChecker->isGranted('ROLE_USER')) {
