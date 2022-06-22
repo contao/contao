@@ -752,7 +752,6 @@ services:
 
     contao.security.expiring_token_based_remember_me_handler:
         class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeHandler
-        abstract: true
         arguments:
             - '@contao.repository.remember_me'
             - '@contao.security.frontend_user_provider'
