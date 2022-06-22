@@ -757,7 +757,7 @@ services:
             - '@contao.security.frontend_user_provider'
             - '@request_stack'
             - '%kernel.secret%'
-            - ~
+            - []
             - '@?logger'
         tags:
             - { name: monolog.logger, channel: security }
