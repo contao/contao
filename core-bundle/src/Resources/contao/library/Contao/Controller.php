@@ -1031,7 +1031,7 @@ abstract class Controller extends System
 			$uri = '?' . http_build_query($pairs, '', '&amp;', PHP_QUERY_RFC3986);
 		}
 
-		return $request->getBasePath() . $request->getPathInfo() . $uri;
+		return $request->getBaseUrl() . $request->getPathInfo() . $uri;
 	}
 
 	/**
