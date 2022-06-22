@@ -245,11 +245,7 @@ class ContentElementTestCase extends TestCase
         $packages = $this->createMock(Packages::class);
         $packages
             ->method('getUrl')
-            ->willReturnCallback(
-                function (string $url): string {
-                    return '/'.$url;
-                }
-            )
+            ->willReturnCallback(static fn (string $url): string => '/'.$url)
         ;
 
         $environment->addExtension(new AssetExtension($packages));

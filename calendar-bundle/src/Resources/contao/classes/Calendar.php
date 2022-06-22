@@ -271,15 +271,15 @@ class Calendar extends Frontend
 						if ($objElement !== null)
 						{
 							// Overwrite the request (see #7756)
-							$strRequest = Environment::get('request');
-							Environment::set('request', $objItem->link);
+							$strRequest = Environment::get('requestUri');
+							Environment::set('requestUri', $objItem->link);
 
 							while ($objElement->next())
 							{
 								$strDescription .= $this->getContentElement($objElement->current());
 							}
 
-							Environment::set('request', $strRequest);
+							Environment::set('requestUri', $strRequest);
 						}
 					}
 					else

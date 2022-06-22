@@ -218,7 +218,7 @@ class News extends Frontend
 					if ($objElement !== null)
 					{
 						// Overwrite the request (see #7756)
-						$strRequest = Environment::get('request');
+						$strRequest = Environment::get('requestUri');
 						Environment::set('request', $objItem->link);
 
 						while ($objElement->next())
@@ -345,7 +345,7 @@ class News extends Frontend
 
 			if (!$objPage instanceof PageModel)
 			{
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('request'));
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('requestUri'));
 			}
 			else
 			{

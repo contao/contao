@@ -188,7 +188,7 @@ class BackendPopup extends Backend
 				}
 			}
 
-			$objTemplate->href = StringUtil::ampersand(Environment::get('request')) . '&amp;download=1';
+			$objTemplate->href = StringUtil::ampersand(Environment::get('requestUri')) . '&amp;download=1';
 			$objTemplate->filesize = $this->getReadableSize($objFile->filesize) . ' (' . number_format($objFile->filesize, 0, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']) . ' Byte)';
 		}
 

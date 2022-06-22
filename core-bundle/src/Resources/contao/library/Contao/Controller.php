@@ -1055,7 +1055,14 @@ abstract class Controller extends System
 		// Make the location an absolute URL
 		if (!preg_match('@^https?://@i', $strLocation))
 		{
-			$strLocation = Environment::get('base') . ltrim($strLocation, '/');
+			if ($strLocation[0] == '/')
+			{
+				$strLocation = Environment::get('url') . $strLocation;
+			}
+			else
+			{
+				$strLocation = Environment::get('base') . $strLocation;
+			}
 		}
 
 		// Ajax request
@@ -1395,7 +1402,7 @@ abstract class Controller extends System
 				}
 
 				$objFile = new File($objFiles->path);
-				$strHref = Environment::get('request');
+				$strHref = Environment::get('requestUri');
 
 				// Remove an existing file parameter (see #5683)
 				if (preg_match('/(&(amp;)?|\?)file=/', $strHref))

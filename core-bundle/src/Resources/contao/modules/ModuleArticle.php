@@ -230,7 +230,7 @@ class ModuleArticle extends Module
 
 			// URL encoding will be handled by the Symfony router, so do not apply rawurlencode() here anymore
 			$this->Template->print = '#';
-			$this->Template->encUrl = Environment::get('base') . Environment::get('request');
+			$this->Template->encUrl = Environment::get('uri');
 			$this->Template->encTitle = $objPage->pageTitle;
 			$this->Template->href = $request . ((strpos($request, '?') !== false) ? '&amp;' : '?') . 'pdf=' . $this->id;
 
