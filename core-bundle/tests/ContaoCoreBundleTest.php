@@ -64,7 +64,6 @@ class ContaoCoreBundleTest extends TestCase
             RegisterPagesPass::class,
             RegisterFragmentsPass::class,
             RegisterFragmentsPass::class,
-            RemembermeServicesPass::class,
             DataContainerCallbackPass::class,
             TranslationDataCollectorPass::class,
             RegisterHookListenersPass::class,

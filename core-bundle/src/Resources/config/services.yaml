@@ -750,14 +750,14 @@ services:
         tags:
             - { name: security.voter, priority: -1024 } # Should always come last
 
-    contao.security.expiring_token_based_remember_me_services:
-        class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices
+    contao.security.expiring_token_based_remember_me_handler:
+        class: Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeHandler
         abstract: true
         arguments:
             - '@contao.repository.remember_me'
-            - ~
-            - ~
-            - ~
+            - '@contao.security.frontend_user_provider'
+            - '@request_stack'
+            - '%kernel.secret%'
             - ~
             - '@?logger'
         tags:
