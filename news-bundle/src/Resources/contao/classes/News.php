@@ -219,14 +219,14 @@ class News extends Frontend
 					{
 						// Overwrite the request (see #7756)
 						$strRequest = Environment::get('requestUri');
-						Environment::set('request', $objItem->link);
+						Environment::set('requestUri', $objItem->link);
 
 						while ($objElement->next())
 						{
 							$strDescription .= $this->getContentElement($objElement->current());
 						}
 
-						Environment::set('request', $strRequest);
+						Environment::set('requestUri', $strRequest);
 					}
 				}
 				else
