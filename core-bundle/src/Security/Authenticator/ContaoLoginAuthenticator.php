@@ -63,7 +63,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         private PageRegistry $pageRegistry,
         private HttpKernelInterface $httpKernel,
         private TwoFactorAuthenticator $twoFactorAuthenticator,
-        array $options
+        array $options,
     ) {
         $this->options = array_merge([
             'username_parameter' => 'username',
