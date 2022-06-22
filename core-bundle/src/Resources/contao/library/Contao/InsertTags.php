@@ -1017,7 +1017,7 @@ class InsertTags extends Controller
 
 						if ($objFile !== null)
 						{
-							$arrCache[$strTag] = System::urlEncode($objFile->path);
+							$arrCache[$strTag] = System::urlEncode(System::getContainer()->get('contao.routing.base_path_prefixer')->prefix($objFile->path));
 							break;
 						}
 					}
