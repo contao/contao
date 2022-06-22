@@ -220,7 +220,7 @@ class ModuleCustomnav extends Module
 
 		$objTemplate->items = $items;
 
-		$this->Template->request = Environment::get('indexFreeRequest');
+		$this->Template->request = Environment::get('requestUri');
 		$this->Template->skipId = 'skipNavigation' . $this->id;
 		$this->Template->skipNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
 		$this->Template->items = !empty($items) ? $objTemplate->parse() : '';

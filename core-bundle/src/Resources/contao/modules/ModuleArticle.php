@@ -226,7 +226,7 @@ class ModuleArticle extends Module
 		// Add syndication variables
 		if ($this->Template->printable)
 		{
-			$request = Environment::get('indexFreeRequest');
+			$request = Environment::get('requestUri');
 
 			// URL encoding will be handled by the Symfony router, so do not apply rawurlencode() here anymore
 			$this->Template->print = '#';

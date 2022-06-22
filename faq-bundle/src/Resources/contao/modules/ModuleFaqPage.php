@@ -148,7 +148,7 @@ class ModuleFaqPage extends Module
 		}
 
 		$this->Template->faq = array_values(array_filter($arrFaqs));
-		$this->Template->request = Environment::get('indexFreeRequest');
+		$this->Template->request = Environment::get('requestUri');
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 
 		$this->Template->getSchemaOrgData = static function () use ($objFaqs)
