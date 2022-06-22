@@ -92,28 +92,27 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         }
 
         $page->loadDetails();
-        $currentToken = $this->tokenStorage->getToken();
 
-        if ($currentToken instanceof TwoFactorTokenInterface) {
-            $page->protected = false;
+        if (null === $this->tokenStorage->getToken()) {
+            $pageAdapter = $this->framework->getAdapter(PageModel::class);
+            $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
 
-            $route = $this->pageRegistry->getRoute($page);
+            if (null === $errorPage) {
+                throw new PageNotFoundException('No error page found.');
+            }
+
+            $errorPage->loadDetails();
+            $errorPage->protected = false;
+
+            $route = $this->pageRegistry->getRoute($errorPage);
             $subRequest = $request->duplicate(null, null, $route->getDefaults());
 
             return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
         }
 
-        $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
+        $page->protected = false;
 
-        if (null === $errorPage) {
-            throw new PageNotFoundException('No error page found.');
-        }
-
-        $errorPage->loadDetails();
-        $errorPage->protected = false;
-
-        $route = $this->pageRegistry->getRoute($errorPage);
+        $route = $this->pageRegistry->getRoute($page);
         $subRequest = $request->duplicate(null, null, $route->getDefaults());
 
         return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
