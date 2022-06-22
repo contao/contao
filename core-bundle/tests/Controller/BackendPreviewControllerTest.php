@@ -29,7 +29,7 @@ class BackendPreviewControllerTest extends TestCase
     public function testRedirectsToPreviewEntrypoint(): void
     {
         $controller = new BackendPreviewController(
-            'preview.php',
+            '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockAuthorizationChecker()
@@ -39,13 +39,32 @@ class BackendPreviewControllerTest extends TestCase
         $response = $controller(new Request());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('preview.php', $response->getTargetUrl());
+        $this->assertSame('/preview.php', $response->getTargetUrl());
+    }
+
+    public function testAddsThePreviewEntrypointAtTheCorrectPosition(): void
+    {
+        $controller = new BackendPreviewController(
+            '/preview.php',
+            $this->createMock(FrontendPreviewAuthenticator::class),
+            new EventDispatcher(),
+            $this->mockAuthorizationChecker()
+        );
+
+        $request = Request::create('https://localhost/managed-edition/public/contao/preview');
+        $request->server->set('SCRIPT_NAME', '/managed-edition/public/index.php');
+
+        /** @var RedirectResponse $response */
+        $response = $controller($request);
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('/managed-edition/public/preview.php/contao/preview', $response->getTargetUrl());
     }
 
     public function testDeniesAccessIfNotGranted(): void
     {
         $controller = new BackendPreviewController(
-            'preview.php',
+            '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockAuthorizationChecker(false)
@@ -69,7 +88,7 @@ class BackendPreviewControllerTest extends TestCase
         $request->query->set('user', '9');
 
         $controller = new BackendPreviewController(
-            'preview.php',
+            '/preview.php',
             $previewAuthenticator,
             new EventDispatcher(),
             $this->mockAuthorizationChecker()
@@ -90,7 +109,7 @@ class BackendPreviewControllerTest extends TestCase
         ;
 
         $controller = new BackendPreviewController(
-            'preview.php',
+            '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             $dispatcher,
             $this->mockAuthorizationChecker()
@@ -105,7 +124,7 @@ class BackendPreviewControllerTest extends TestCase
     public function testRedirectsToRootPage(): void
     {
         $controller = new BackendPreviewController(
-            'preview.php',
+            '/preview.php',
             $this->createMock(FrontendPreviewAuthenticator::class),
             new EventDispatcher(),
             $this->mockAuthorizationChecker()
