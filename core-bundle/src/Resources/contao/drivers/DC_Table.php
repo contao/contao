@@ -4511,7 +4511,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
 			{
 				// Improve performance
-				$this->setCurrentRecordCache($row[$i]['id'],$this->strTable, $row[$i]);
+				$this->setCurrentRecordCache($row[$i]['id'], $this->strTable, $row[$i]);
 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row[$i]));
 

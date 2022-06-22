@@ -327,7 +327,7 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use '.__CLASS__.'::getCurrentRecord() instead.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use ' . __CLASS__ . '::getCurrentRecord() instead.');
 
 				return $this->objActiveRecord;
 
@@ -1760,10 +1760,14 @@ abstract class DataContainer extends Backend
 		{
 			$this->preloadCurrentRecords(array($id), $table);
 
-			try {
+			try
+			{
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new ReadAction($table, $this->arrCurrentRecordCache[$key]));
-			} catch (AccessDeniedException $e) {
+			}
+			catch (AccessDeniedException $e)
+			{
 				unset($this->arrCurrentRecordCache[$key]);
+
 				throw $e;
 			}
 		}
