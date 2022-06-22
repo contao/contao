@@ -1056,6 +1056,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						continue;
 					}
 
+					try
+					{
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new ReadAction($v, $objCTable->row()));
+					}
+					catch (AccessDeniedException)
+					{
+						continue;
+					}
+
 					foreach ($objCTable->row() as $kk=>$vv)
 					{
 						if ($kk == 'id')
@@ -1095,7 +1104,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					try
 					{
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $objCTable->row(), $copy[$v][$objCTable->id]));
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new CreateAction($v, $copy[$v][$objCTable->id]));
 					}
 					catch (AccessDeniedException)
 					{
