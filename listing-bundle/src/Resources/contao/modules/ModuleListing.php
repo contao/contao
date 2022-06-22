@@ -319,7 +319,7 @@ class ModuleListing extends Module
 				$arrTd[$class][$k] = array
 				(
 					'raw' => $v,
-					'content' => $value ?: '&nbsp;',
+					'content' => ('' !== (string) $value) ? $value : '&nbsp;',
 					'class' => 'col_' . $j . (($j++ == 0) ? ' col_first' : '') . ($this->list_info ? '' : (($j >= (\count($arrRows[$i]) - 1)) ? ' col_last' : '')),
 					'id' => $arrRows[$i][$this->strPk],
 					'field' => $k,
