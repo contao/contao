@@ -250,6 +250,10 @@ class SerpPreview extends Widget
 			array_shift($steps);
 		}
 
-		return isset($chunks['host']) ? array_merge(array($chunks['host']), $steps) : $steps;
+        if (isset($chunks['host'])) {
+            $steps = array_merge(array($chunks['host']), $steps);
+        }
+
+		return $steps;
 	}
 }
