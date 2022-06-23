@@ -33,7 +33,7 @@ class RememberMe
     #[GeneratedValue]
     protected int $id;
 
-    #[Column(type: 'binary_string', length: 32, nullable: false, options: ['fixed' => true])]
+    #[Column(type: 'binary_string', length: 88, nullable: false, options: ['fixed' => true])]
     protected string $series;
 
     #[Column(type: 'binary_string', length: 64, nullable: false, options: ['fixed' => true])]

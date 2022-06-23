@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Security\Authentication\RememberMe;
 use Contao\CoreBundle\Entity\RememberMe;
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\RememberMe\PersistentToken;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -25,7 +24,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\RememberMe\AbstractRememberMeHandler;
 use Symfony\Component\Security\Http\RememberMe\RememberMeDetails;
-use Symfony\Component\Security\Http\RememberMe\ResponseListener;
 
 class ExpiringTokenBasedRememberMeHandler extends AbstractRememberMeHandler
 {
@@ -59,35 +57,6 @@ class ExpiringTokenBasedRememberMeHandler extends AbstractRememberMeHandler
         $this->repository->persist($rememberMe);
 
         $this->createCookie(RememberMeDetails::fromPersistentToken($token, time() + $this->options['lifetime']));
-    }
-
-    protected function createCookie(?RememberMeDetails $rememberMeDetails): void
-    {
-        $request = $this->requestStack->getMainRequest();
-
-        if (!$request) {
-            throw new \LogicException('Cannot create the remember-me cookie; no master request available.');
-        }
-
-        $series = base64_encode(random_bytes(64));
-
-        // the ResponseListener configures the cookie saved in this attribute on the final response object
-        $request->attributes->set(ResponseListener::COOKIE_ATTR_NAME, new Cookie(
-            $this->options['name'],
-            $this->encodeCookie([$series, $rememberMeDetails?->toString()]),
-            time() + $this->options['lifetime'],
-            $this->options['path'],
-            $this->options['domain'],
-            $this->options['secure'] ?? $request->isSecure(),
-            $this->options['httponly'],
-            false,
-            $this->options['samesite'] ?? null
-        ));
-    }
-
-    protected function encodeCookie(array $cookieParts): string
-    {
-        return implode('-', array_map('base64_encode', $cookieParts));
     }
 
     private function generateHash(string $tokenValue): string
@@ -156,13 +125,13 @@ class ExpiringTokenBasedRememberMeHandler extends AbstractRememberMeHandler
     /**
      * @param array<RememberMe> $rows
      */
-    private function findValidToken(array $rows, string $cookieValue): RememberMe|null
+    private function findValidToken(array $rows, string $tokenValue): RememberMe|null
     {
         $lastException = null;
 
         while ($token = array_shift($rows)) {
             try {
-                if ($token->getValue() !== $cookieValue) {
+                if ($token->getValue() !== $tokenValue) {
                     throw new CookieTheftException('This token was already used; the account is possibly compromised');
                 }
 
