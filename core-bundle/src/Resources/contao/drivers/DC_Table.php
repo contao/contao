@@ -915,8 +915,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->set['ptable'] = $this->ptable;
 		}
 
-		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->set));
-
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
 		$arrClipboard[$this->strTable] = array();
@@ -950,6 +948,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// Remove the ID field from the data array
 			unset($this->set['id']);
+
+			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->set));
 
 			$objInsertStmt = $this->Database->prepare("INSERT INTO " . $this->strTable . " %s")
 											->set($this->set)
