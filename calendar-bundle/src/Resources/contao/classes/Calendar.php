@@ -385,7 +385,7 @@ class Calendar extends Frontend
 			case 'external':
 				$url = $objEvent->url;
 
-				if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $url))
+				if (Validator::isRelativeUrl($url))
 				{
 					$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
 				}

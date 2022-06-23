@@ -656,13 +656,13 @@ class StringUtil
 				continue;
 			}
 
-			if (preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $paths[$i+3]))
+			if (Validator::isRelativeUrl($paths[$i+3]))
 			{
-				$return .= $paths[$i+2] . '="' . $paths[$i+3] . '"';
+				$return .= $paths[$i+2] . '="{{env::base_path}}/' . $paths[$i+3] . '"';
 			}
 			else
 			{
-				$return .= $paths[$i+2] . '="{{env::base_path}}/' . $paths[$i+3] . '"';
+				$return .= $paths[$i+2] . '="' . $paths[$i+3] . '"';
 			}
 		}
 

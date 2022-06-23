@@ -18,6 +18,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
+use Contao\Validator;
 use Symfony\Component\Asset\Context\RequestStackContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,7 +40,7 @@ class HyperlinkController extends AbstractContentElementController
         // Link with attributes
         $href = $this->insertTagParser->replaceInline($model->url);
 
-        if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $href)) {
+        if (Validator::isRelativeUrl($href)) {
             $href = $this->requestStackContext->getBasePath().'/'.$href;
         }
 

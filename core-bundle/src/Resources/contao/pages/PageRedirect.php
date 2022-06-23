@@ -30,7 +30,7 @@ class PageRedirect extends Frontend
 
 		$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url);
 
-		if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $url))
+		if (Validator::isRelativeUrl($url))
 		{
 			$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
 		}

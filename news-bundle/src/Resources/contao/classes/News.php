@@ -315,7 +315,7 @@ class News extends Frontend
 				{
 					$url = $objItem->url;
 
-					if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $url))
+					if (Validator::isRelativeUrl($url))
 					{
 						$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
 					}
@@ -424,7 +424,7 @@ class News extends Frontend
 			case 'external':
 				$url = $objItem->url;
 
-				if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $url))
+				if (Validator::isRelativeUrl($url))
 				{
 					$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
 				}
