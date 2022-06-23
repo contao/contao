@@ -793,12 +793,6 @@ services:
             - ~
             - ~
 
-    contao.security.logout_handler:
-        class: Contao\CoreBundle\Security\Logout\LogoutHandler
-        arguments:
-            - '@contao.framework'
-            - '@?logger'
-
     contao.security.member_group_voter:
         class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
 
