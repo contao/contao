@@ -249,7 +249,6 @@ class ContentElementTestCase extends TestCase
         );
 
         $environment->enableStrictVariables();
-        $environment->addGlobal('app', ['request' => new Request()]);
 
         return $environment;
     }
