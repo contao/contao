@@ -35,7 +35,7 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class SymlinksCommand extends Command
 {
-    public const PACKAGES = [
+    final public const PACKAGES = [
         'scrivo/highlight.php' => 'vendor/scrivo/highlight.php/styles',
     ];
 
