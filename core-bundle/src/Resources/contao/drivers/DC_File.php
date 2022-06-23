@@ -216,18 +216,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 						{
 							$this->varValue = StringUtil::deserialize($this->varValue);
 						}
-
-						if (!\is_array($this->varValue))
-						{
-							$this->varValue = htmlspecialchars($this->varValue);
-						}
-						else
-						{
-							foreach ($this->varValue as $key=>$val)
-							{
-								$this->varValue[$key] = htmlspecialchars($val);
-							}
-						}
 					}
 
 					// Call load_callback
