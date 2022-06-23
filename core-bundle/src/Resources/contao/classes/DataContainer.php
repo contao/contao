@@ -1714,7 +1714,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function preloadCurrentRecords(array $ids, string $table): void
 	{
-                // Clear current cache to make sure records are gone if they cannot be loaded from the database below
+		// Clear current cache to make sure records are gone if they cannot be loaded from the database below
 		foreach ($ids as $id)
 		{
 			$this->setCurrentRecordCache($id, $table, null);

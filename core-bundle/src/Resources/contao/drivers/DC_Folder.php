@@ -708,6 +708,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Calculate the destination path
 		$destination = str_replace(\dirname($source), $strFolder, $source);
 
+		$this->denyAccessUnlessGranted(
+			ContaoCorePermissions::DC_PREFIX . $this->strTable,
+			new UpdateAction($this->strTable, array('id' => $source, 'pid' => \dirname($source)), array('pid' => $strFolder))
+		);
+
 		// Do not move if the target exists and would be overriden (not possible for folders anyway)
 		if (file_exists($this->strRootDir . '/' . $destination))
 		{
@@ -715,11 +720,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 		else
 		{
-			$this->denyAccessUnlessGranted(
-				ContaoCorePermissions::DC_PREFIX . $this->strTable,
-				new UpdateAction($this->strTable, array('id' => $source, 'pid' => \dirname($source)), array('pid' => $strFolder))
-			);
-
 			$this->Files->rename($source, $destination);
 
 			// Update the database AFTER the file has been moved
@@ -1700,7 +1700,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$objModel = Dbafs::addResource($id);
 					}
 
-					$this->objActivUpdateActioneRecord = $objModel;
+					$this->objActiveRecord = $objModel;
 					$this->blnCreateNewVersion = false;
 
 					/** @var FilesModel $objModel */
