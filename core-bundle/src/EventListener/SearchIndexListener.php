@@ -57,6 +57,11 @@ class SearchIndexListener
     {
         $request = $event->getRequest();
         $response = $event->getResponse();
+
+        if ($response->isRedirection()) {
+            return;
+        }
+
         $document = Document::createFromRequestResponse($request, $response);
         $needsIndex = $this->needsIndex($request, $response, $document);
 
