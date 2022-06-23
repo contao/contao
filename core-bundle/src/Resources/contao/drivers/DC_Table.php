@@ -737,6 +737,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect($this->getReferer());
 		}
 
+		// Load current record before calculating new position etc. in case the user does not have read access
+		$currentRecord = $this->getCurrentRecord();
+
 		// Get the new position
 		$this->getNewPosition('cut', Input::get('pid'), Input::get('mode') == '2');
 
@@ -768,8 +771,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$this->set['ptable'] = $this->ptable;
 		}
-
-		$currentRecord = $this->getCurrentRecord();
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord, $this->set));
 
