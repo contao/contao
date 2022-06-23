@@ -1743,7 +1743,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * @param array|null $row Pass null to remove a given cache entry
 	 */
-	protected function setCurrentRecordCache(string|int $id, string $table, ?array $row): void
+	protected function setCurrentRecordCache(string|int $id, string $table, array|null $row): void
 	{
 		if (null === $row)
 		{
