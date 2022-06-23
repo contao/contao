@@ -383,7 +383,14 @@ class Calendar extends Frontend
 		switch ($objEvent->source)
 		{
 			case 'external':
-				$link = System::getContainer()->get('contao.routing.base_path_prefixer')->prefix($objEvent->url);
+				$url = $objEvent->url;
+
+				if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $url))
+				{
+					$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
+				}
+
+				$link = $url;
 				break;
 
 			case 'internal':

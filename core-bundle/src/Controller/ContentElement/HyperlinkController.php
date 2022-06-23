@@ -15,10 +15,10 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
-use Contao\CoreBundle\Routing\BasePathPrefixer;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
+use Symfony\Component\Asset\Context\RequestStackContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -30,7 +30,7 @@ class HyperlinkController extends AbstractContentElementController
     public function __construct(
         private readonly Studio $studio,
         private readonly InsertTagParser $insertTagParser,
-        private readonly BasePathPrefixer $basePathPrefixer,
+        private readonly RequestStackContext $requestStackContext,
     ) {
     }
 
@@ -38,7 +38,10 @@ class HyperlinkController extends AbstractContentElementController
     {
         // Link with attributes
         $href = $this->insertTagParser->replaceInline($model->url);
-        $href = $this->basePathPrefixer->prefix($href);
+
+        if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $href)) {
+            $href = $this->requestStackContext->getBasePath().'/'.$href;
+        }
 
         $linkAttributes = (new HtmlAttributes())
             ->set('href', $href)

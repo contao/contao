@@ -313,7 +313,14 @@ class News extends Frontend
 				}
 				else
 				{
-					self::$arrUrlCache[$strCacheKey] = System::getContainer()->get('contao.routing.base_path_prefixer')->prefix(StringUtil::ampersand($objItem->url));
+					$url = $objItem->url;
+
+					if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $url))
+					{
+						$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
+					}
+
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
 				}
 				break;
 
@@ -415,7 +422,14 @@ class News extends Frontend
 		{
 			// Link to an external page
 			case 'external':
-				return System::getContainer()->get('contao.routing.base_path_prefixer')->prefix($objItem->url);
+				$url = $objItem->url;
+
+				if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $url))
+				{
+					$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
+				}
+
+				return $url;
 
 			// Link to an internal page
 			case 'internal':

@@ -423,7 +423,14 @@ abstract class Events extends Module
 				}
 				else
 				{
-					self::$arrUrlCache[$strCacheKey] = System::getContainer()->get('contao.routing.base_path_prefixer')->prefix(StringUtil::ampersand($objEvent->url));
+					$url = $objEvent->url;
+
+					if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $url))
+					{
+						$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
+					}
+
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
 				}
 				break;
 
