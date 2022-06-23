@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authenticator;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -92,6 +93,10 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         }
 
         $page->loadDetails();
+        $page->protected = false;
+
+        $route = $this->pageRegistry->getRoute($page);
+        $subRequest = $request->duplicate(null, null, $route->getDefaults());
 
         if (null === $this->tokenStorage->getToken()) {
             $pageAdapter = $this->framework->getAdapter(PageModel::class);
@@ -106,16 +111,13 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
             $route = $this->pageRegistry->getRoute($errorPage);
             $subRequest = $request->duplicate(null, null, $route->getDefaults());
-
-            return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
         }
 
-        $page->protected = false;
-
-        $route = $this->pageRegistry->getRoute($page);
-        $subRequest = $request->duplicate(null, null, $route->getDefaults());
-
-        return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
+        try {
+            return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
+        } catch (ResponseException $e) {
+            return $e->getResponse();
+        }
     }
 
     public function supports(Request $request): ?bool
