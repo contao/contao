@@ -148,12 +148,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	protected $roles = array();
 
 	/**
-	 * Salt
-	 * @var string
-	 */
-	protected $salt;
-
-	/**
 	 * Import the database object
 	 */
 	protected function __construct()
@@ -381,21 +375,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getUsername()
-	{
-		return $this->getUserIdentifier();
-	}
-
-	public function setUsername($username)
-	{
-		$this->username = $username;
-
-		return $this;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
 	public function getUserIdentifier(): string
 	{
 		if (null === $this->username)
@@ -424,14 +403,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		$this->password = $password;
 
 		return $this;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getSalt(): ?string
-	{
-		return null;
 	}
 
 	public function __serialize(): array
