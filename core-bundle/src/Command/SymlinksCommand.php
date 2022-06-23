@@ -35,10 +35,6 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class SymlinksCommand extends Command
 {
-    final public const PACKAGES = [
-        'scrivo/highlight.php' => 'vendor/scrivo/highlight.php/styles',
-    ];
-
     protected static $defaultName = 'contao:symlinks';
     protected static $defaultDescription = 'Symlinks the public resources into the public directory.';
 
@@ -99,11 +95,12 @@ class SymlinksCommand extends Command
         // Symlinks the logs directory
         $this->symlink($this->getRelativePath($this->logsDir), 'system/logs');
 
-        // Symlink vendor packages
-        foreach (self::PACKAGES as $path) {
-            if ($fs->exists(Path::join($this->projectDir, $path))) {
-                $this->symlink($path, Path::join($this->webDir, $path));
-            }
+        // Symlink the highlight.php styles
+        if ($fs->exists(Path::join($this->projectDir, 'vendor/scrivo/highlight.php/styles'))) {
+            $this->symlink(
+                'vendor/scrivo/highlight.php/styles',
+                Path::join($this->webDir, 'vendor/scrivo/highlight_php/styles')
+            );
         }
 
         $this->triggerSymlinkEvent();

@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Composer\InstalledVersions;
-use Contao\CoreBundle\Command\SymlinksCommand;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -35,7 +34,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
         $this->addBundles($container);
         $this->addComponents($container);
-        $this->addSymlinkedPackages($container);
+        $this->addHighlightPhp($container);
     }
 
     /**
@@ -96,18 +95,19 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         }
     }
 
-    private function addSymlinkedPackages(ContainerBuilder $container): void
+    private function addHighlightPhp(ContainerBuilder $container): void
     {
         $packages = $container->getDefinition('assets.packages');
-        $context = new Reference('contao.assets.assets_context');
+        $serviceId = 'assets._package_scrivo/highlight.php';
 
-        foreach (SymlinksCommand::PACKAGES as $name => $basePath) {
-            $serviceId = 'assets._package_'.$name;
-            $version = $this->createVersionStrategy($container, $name);
+        $definition = $this->createPackageDefinition(
+            'vendor/scrivo/highlight_php/styles',
+            $this->createVersionStrategy($container, 'scrivo/highlight.php'),
+            new Reference('contao.assets.assets_context')
+        );
 
-            $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $version, $context));
-            $packages->addMethodCall('addPackage', [$name, new Reference($serviceId)]);
-        }
+        $container->setDefinition($serviceId, $definition);
+        $packages->addMethodCall('addPackage', ['scrivo/highlight.php', new Reference($serviceId)]);
     }
 
     private function createPackageDefinition(string $basePath, Reference $version, Reference $context): Definition

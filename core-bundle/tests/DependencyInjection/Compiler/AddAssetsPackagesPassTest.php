@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use Composer\InstalledVersions;
-use Contao\CoreBundle\Command\SymlinksCommand;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Asset\Packages;
@@ -196,11 +195,8 @@ class AddAssetsPackagesPassTest extends TestCase
         $this->assertTrue($container->hasDefinition('assets._version_contao-components/contao'));
         $this->assertFalse($container->hasDefinition('assets._package_contao/image'));
         $this->assertFalse($container->hasDefinition('assets._version_contao/image'));
-
-        foreach (array_keys(SymlinksCommand::PACKAGES) as $package) {
-            $this->assertTrue($container->hasDefinition('assets._package_'.$package));
-            $this->assertTrue($container->hasDefinition('assets._version_'.$package));
-        }
+        $this->assertTrue($container->hasDefinition('assets._package_scrivo/highlight.php'));
+        $this->assertTrue($container->hasDefinition('assets._version_scrivo/highlight.php'));
 
         $service = $container->getDefinition('assets._package_contao-components/contao');
 
