@@ -36,7 +36,7 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 remember_me_parameter: autologin
-                service: contao.security.expiring_token_based_remember_me_handler
+                service: contao.security.persistent_remember_me_handler
 
             logout:
                 path: contao_frontend_logout
