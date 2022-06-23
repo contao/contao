@@ -459,14 +459,19 @@ class Versions extends Controller
 							continue;
 						}
 
-						if (\is_array($arrFields[$k]))
+						$blnIsBinary = false;
+
+						if (isset($arrFields[$k]))
 						{
-							// Detect binary fields using Doctrine's built-in types or Contao's BinaryStringType (see #3665)
-							$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB, BinaryStringType::NAME), true);
-						}
-						else
-						{
-							$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+							if (\is_array($arrFields[$k]))
+							{
+								// Detect binary fields using Doctrine's built-in types or Contao's BinaryStringType (see #3665)
+								$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB, BinaryStringType::NAME), true);
+							}
+							else
+							{
+								$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+							}
 						}
 
 						// Decrypt the values
