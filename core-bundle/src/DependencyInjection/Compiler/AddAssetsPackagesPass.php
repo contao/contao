@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DependencyInjection\Compiler;
 
 use Composer\InstalledVersions;
+use Contao\CoreBundle\Command\SymlinksCommand;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Container;
@@ -34,6 +35,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
         $this->addBundles($container);
         $this->addComponents($container);
+        $this->addSymlinkedPackages($container);
     }
 
     /**
@@ -87,6 +89,20 @@ class AddAssetsPackagesPass implements CompilerPassInterface
         foreach (InstalledVersions::getInstalledPackagesByType('contao-component') as $name) {
             $serviceId = 'assets._package_'.$name;
             $basePath = Path::join('assets', Path::makeRelative($name, 'contao-components'));
+            $version = $this->createVersionStrategy($container, $name);
+
+            $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $version, $context));
+            $packages->addMethodCall('addPackage', [$name, new Reference($serviceId)]);
+        }
+    }
+
+    private function addSymlinkedPackages(ContainerBuilder $container): void
+    {
+        $packages = $container->getDefinition('assets.packages');
+        $context = new Reference('contao.assets.assets_context');
+
+        foreach (SymlinksCommand::PACKAGES as $name => $basePath) {
+            $serviceId = 'assets._package_'.$name;
             $version = $this->createVersionStrategy($container, $name);
 
             $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $version, $context));
