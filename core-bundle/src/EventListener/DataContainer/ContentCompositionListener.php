@@ -89,8 +89,10 @@ class ContentCompositionListener
         $request = $this->requestStack->getCurrentRequest();
         $user = $this->security->getUser();
 
+        $currentRecord = $dc->getCurrentRecord();
+
         // Return if there is no current record (override all)
-        if (null === ($currentRecord = $dc->getCurrentRecord()) || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
+        if (null === $currentRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
             return;
         }
 
