@@ -40,7 +40,13 @@ trait ModelMetadataTrait
         }
 
         if (isset($data['imageUrl'])) {
-            $data[Metadata::VALUE_URL] = $data['imageUrl'];
+            $url = $data['imageUrl'];
+
+            if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', (string) $url)) {
+                $url = System::getContainer()->get('assets.context')->getBasePath().'/'.$url;
+            }
+
+            $data[Metadata::VALUE_URL] = $url;
         }
 
         unset($data['imageTitle'], $data['imageUrl']);

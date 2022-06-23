@@ -28,7 +28,14 @@ class PageRedirect extends Frontend
 	{
 		$this->prepare($objPage);
 
-		return new RedirectResponse(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url), $this->getRedirectStatusCode($objPage));
+		$url = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objPage->url);
+
+		if (!preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $url))
+		{
+			$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
+		}
+
+		return new RedirectResponse($url, $this->getRedirectStatusCode($objPage));
 	}
 
 	/**
