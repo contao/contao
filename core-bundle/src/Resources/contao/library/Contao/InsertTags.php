@@ -1017,7 +1017,7 @@ class InsertTags extends Controller
 
 						if ($objFile !== null)
 						{
-							$arrCache[$strTag] = System::urlEncode(System::getContainer()->get('contao.assets.files_context')->getStaticUrl() . $objFile->path);
+							$arrCache[$strTag] = System::getContainer()->get('contao.assets.files_context')->getStaticUrl() . System::urlEncode($objFile->path);
 							break;
 						}
 					}
