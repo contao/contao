@@ -338,7 +338,7 @@ class tl_calendar_feed extends Backend
 	/**
 	 * Add the new calendar feed to the permissions
 	 *
-	 * @param $insertId
+	 * @param string|int $insertId
 	 */
 	public function adjustPermissions($insertId)
 	{
