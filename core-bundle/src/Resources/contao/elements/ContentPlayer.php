@@ -144,7 +144,7 @@ class ContentPlayer extends ContentElement
 
 			$objFile = new File($objFileModel->path);
 
-			$arrFiles[$objFile->extension] = array
+			$arrFiles[$objFile->extension] = (object) array
 			(
 				'title' => StringUtil::specialchars($strTitle ?: $objFile->name),
 				'path' => System::getContainer()->get('contao.assets.files_context')->getStaticUrl() . $objFileModel->path,
