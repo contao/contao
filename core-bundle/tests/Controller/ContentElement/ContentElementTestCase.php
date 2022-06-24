@@ -59,9 +59,9 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class ContentElementTestCase extends TestCase
 {
-    public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
-    public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
-    public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
+    final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
+    final public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
+    final public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
 
     protected function tearDown(): void
     {

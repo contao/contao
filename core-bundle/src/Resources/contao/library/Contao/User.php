@@ -545,9 +545,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Trigger the importUser hook
 	 *
-	 * @param $username
-	 * @param $password
-	 * @param $strTable
+	 * @param string $username
+	 * @param string $password
+	 * @param string $strTable
 	 *
 	 * @return bool|static
 	 */

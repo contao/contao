@@ -301,7 +301,7 @@ class tl_news_archive extends Backend
 	/**
 	 * Add the new archive to the permissions
 	 *
-	 * @param $insertId
+	 * @param string|int $insertId
 	 */
 	public function adjustPermissions($insertId)
 	{
