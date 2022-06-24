@@ -1,5 +1,10 @@
 # Deprecated features
 
+## Base tag
+
+Relying on the `<base>` tag has been deprecated in Contao 5.0 and will no
+longer work in Contao 6. Use absolute paths for links and assets instead.
+
 ## kernel.packages
 
 The `kernel.packages` parameter has been deprecated in Contao 4.5 and will be

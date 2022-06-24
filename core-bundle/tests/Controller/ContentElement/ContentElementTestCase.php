@@ -45,7 +45,9 @@ use Contao\InsertTags;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -219,12 +221,6 @@ class ContentElementTestCase extends TestCase
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader): Environment
     {
-        $environment = new Environment($contaoFilesystemLoader);
-
-        // Contao extension
-        $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader, $this->createMock(ContaoCsrfTokenManager::class)));
-
-        // Symfony extensions
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
@@ -238,7 +234,16 @@ class ContentElementTestCase extends TestCase
             )
         ;
 
+        $packages = $this->createMock(Packages::class);
+        $packages
+            ->method('getUrl')
+            ->willReturnCallback(static fn (string $url): string => '/'.$url)
+        ;
+
+        $environment = new Environment($contaoFilesystemLoader);
+        $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader, $this->createMock(ContaoCsrfTokenManager::class)));
         $environment->addExtension(new TranslationExtension($translator));
+        $environment->addExtension(new AssetExtension($packages));
 
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();

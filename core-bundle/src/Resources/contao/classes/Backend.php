@@ -588,7 +588,7 @@ abstract class Backend extends Controller
 			}
 
 			$objSession->set($strKey, Input::get('pn', true));
-			Controller::redirect(preg_replace('/&pn=[^&]*/', '', Environment::get('request')));
+			Controller::redirect(preg_replace('/&pn=[^&]*/', '', Environment::get('requestUri')));
 		}
 
 		$intNode = $objSession->get($strKey);
@@ -781,7 +781,7 @@ abstract class Backend extends Controller
 			}
 
 			$objSession->set($strKey, Input::get('fn', true));
-			Controller::redirect(preg_replace('/[?&]fn=[^&]*/', '', Environment::get('request')));
+			Controller::redirect(preg_replace('/[?&]fn=[^&]*/', '', Environment::get('requestUri')));
 		}
 
 		$strNode = $objSession->get($strKey);

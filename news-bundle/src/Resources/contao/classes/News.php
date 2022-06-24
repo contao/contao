@@ -218,15 +218,15 @@ class News extends Frontend
 					if ($objElement !== null)
 					{
 						// Overwrite the request (see #7756)
-						$strRequest = Environment::get('request');
-						Environment::set('request', $objItem->link);
+						$strRequest = Environment::get('requestUri');
+						Environment::set('requestUri', $objItem->link);
 
 						while ($objElement->next())
 						{
 							$strDescription .= $this->getContentElement($objElement->current());
 						}
 
-						Environment::set('request', $strRequest);
+						Environment::set('requestUri', $strRequest);
 					}
 				}
 				else
@@ -313,7 +313,14 @@ class News extends Frontend
 				}
 				else
 				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objItem->url);
+					$url = $objItem->url;
+
+					if (Validator::isRelativeUrl($url))
+					{
+						$url = Environment::get('path') . '/' . $url;
+					}
+
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
 				}
 				break;
 
@@ -345,7 +352,7 @@ class News extends Frontend
 
 			if (!$objPage instanceof PageModel)
 			{
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('request'));
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('requestUri'));
 			}
 			else
 			{
@@ -415,7 +422,14 @@ class News extends Frontend
 		{
 			// Link to an external page
 			case 'external':
-				return $objItem->url;
+				$url = $objItem->url;
+
+				if (Validator::isRelativeUrl($url))
+				{
+					$url = Environment::get('path') . '/' . $url;
+				}
+
+				return $url;
 
 			// Link to an internal page
 			case 'internal':

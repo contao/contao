@@ -164,6 +164,18 @@ class Validator
 	}
 
 	/**
+	 * Valid relative URL
+	 *
+	 * @param mixed $varValue The value to be validated
+	 *
+	 * @return boolean True if the value is a relative URL
+	 */
+	public static function isRelativeUrl($varValue)
+	{
+		return static::isUrl($varValue) && !preg_match('(^([0-9a-z+.-]+:|#|/|\{\{))i', $varValue);
+	}
+
+	/**
 	 * Valid alias name
 	 *
 	 * @param mixed $varValue The value to be validated

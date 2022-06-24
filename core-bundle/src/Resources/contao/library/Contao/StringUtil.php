@@ -636,6 +636,67 @@ class StringUtil
 	}
 
 	/**
+	 * Adds {{env::base_path}} to relative links
+	 *
+	 * @param string $data The markup string
+	 *
+	 * @return string
+	 */
+	public static function addBasePath($data)
+	{
+		$return = '';
+		$paths = preg_split('/((src|href)="([^"]+)")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+		for ($i=0, $c=\count($paths); $i<$c; $i+=4)
+		{
+			$return .= $paths[$i];
+
+			if (!isset($paths[$i+1]))
+			{
+				continue;
+			}
+
+			if (Validator::isRelativeUrl($paths[$i+3]))
+			{
+				$return .= $paths[$i+2] . '="{{env::base_path}}/' . $paths[$i+3] . '"';
+			}
+			else
+			{
+				$return .= $paths[$i+2] . '="' . $paths[$i+3] . '"';
+			}
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Removes {{env::base_path}} from relative links
+	 *
+	 * @param string $data The markup string
+	 *
+	 * @return string
+	 */
+	public static function removeBasePath($data)
+	{
+		$return = '';
+		$paths = preg_split('/((src|href)="\{\{env::base_path}}\/([^"]+)")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+		for ($i=0, $c=\count($paths); $i<$c; $i+=4)
+		{
+			$return .= $paths[$i];
+
+			if (!isset($paths[$i+1]))
+			{
+				continue;
+			}
+
+			$return .= $paths[$i+2] . '="' . $paths[$i+3] . '"';
+		}
+
+		return $return;
+	}
+
+	/**
 	 * Sanitize a file name
 	 *
 	 * @param string $strName The file name

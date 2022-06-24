@@ -155,7 +155,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		}
 		catch (InvalidJobIdException $e)
 		{
-			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('request')));
+			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('requestUri')));
 		}
 
 		// Configure with sane defaults for the back end (maybe we should make this configurable one day)
