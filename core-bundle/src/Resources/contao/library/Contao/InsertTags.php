@@ -192,7 +192,7 @@ class InsertTags extends Controller
 						new ControllerReference(
 							InsertTagsController::class . '::renderAction',
 							$attributes,
-							array('clientCache' => (int) ($objPage->clientCache ?? 0), 'pageId' => ($objPage->id ?? null), 'request' => Environment::get('request'))
+							array('clientCache' => (int) ($objPage->clientCache ?? 0), 'pageId' => ($objPage->id ?? null), 'request' => Environment::get('requestUri'))
 						),
 						'esi',
 						array('ignore_errors'=>false) // see #48
@@ -541,15 +541,15 @@ class InsertTags extends Controller
 					switch (strtolower($elements[0]))
 					{
 						case 'link':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName);
 							break;
 
 						case 'link_open':
-							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl ?: './', StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget);
+							$arrCache[$strTag] = sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget);
 							break;
 
 						case 'link_url':
-							$arrCache[$strTag] = $strUrl ?: './';
+							$arrCache[$strTag] = $strUrl;
 							break;
 
 						case 'link_title':
@@ -729,7 +729,11 @@ class InsertTags extends Controller
 							$arrCache[$strTag] = Idna::decode(Environment::get('url'));
 							break;
 
+						// As the "env::path" insert tag returned the base URL ever since, we
+						// keep it as an alias to the "env::base" tag. Use "env::base_path" to
+						// output the actual base path.
 						case 'path':
+						case 'base':
 							$arrCache[$strTag] = Idna::decode(Environment::get('base'));
 							break;
 
@@ -757,6 +761,10 @@ class InsertTags extends Controller
 
 						case 'base_url':
 							$arrCache[$strTag] = $container->get('request_stack')->getCurrentRequest()->getBaseUrl();
+							break;
+
+						case 'base_path':
+							$arrCache[$strTag] = $container->get('request_stack')->getCurrentRequest()->getBasePath();
 							break;
 					}
 					break;
@@ -1009,7 +1017,7 @@ class InsertTags extends Controller
 
 						if ($objFile !== null)
 						{
-							$arrCache[$strTag] = System::urlEncode($objFile->path);
+							$arrCache[$strTag] = System::getContainer()->get('contao.assets.files_context')->getStaticUrl() . System::urlEncode($objFile->path);
 							break;
 						}
 					}

@@ -136,7 +136,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			if (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt'))))
 			{
-				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));
+				$objSession->set('INVALID_TOKEN_URL', Environment::get('requestUri'));
 				$this->redirect($container->get('router')->generate('contao_backend_confirm'));
 			}
 		}
@@ -182,11 +182,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if (Input::post('edit') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('request')));
+				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('requestUri')));
 			}
 			elseif (Input::post('delete') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('request')));
+				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('requestUri')));
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null)
 			{
@@ -321,7 +321,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$objSessionBag->replace($session);
-			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', Environment::get('request')));
+			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
 		$blnClipboard = false;
@@ -1909,7 +1909,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			// Return the select menu
 			$return .= '
-<form action="' . StringUtil::ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
+<form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . ($blnIsError ? '
@@ -2512,7 +2512,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			$session['filetree'][Input::get('tg')] = (isset($session['filetree'][Input::get('tg')]) && $session['filetree'][Input::get('tg')] == 1) ? 0 : 1;
 			$objSessionBag->replace($session);
-			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', Environment::get('request')));
+			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
 		$return = '';
@@ -2696,6 +2696,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return $return;
 		}
 
+		$staticUrl = System::getContainer()->get('contao.assets.files_context')->getStaticUrl();
+
 		// Process files
 		for ($h=0, $c=\count($files); $h<$c; $h++)
 		{
@@ -2763,7 +2765,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
-				$return .= '<a href="' . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $objFile->mime) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= '<a href="' . $staticUrl . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $objFile->mime) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
 			}
 
 			// Buttons

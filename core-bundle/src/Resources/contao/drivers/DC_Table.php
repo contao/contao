@@ -122,7 +122,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt'))))
 			{
-				$objSession->set('INVALID_TOKEN_URL', Environment::get('request'));
+				$objSession->set('INVALID_TOKEN_URL', Environment::get('requestUri'));
 				$this->redirect($container->get('router')->generate('contao_backend_confirm'));
 			}
 		}
@@ -159,15 +159,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (Input::post('edit') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('request')));
+				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('requestUri')));
 			}
 			elseif (Input::post('delete') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('request')));
+				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('requestUri')));
 			}
 			elseif (Input::post('override') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=overrideAll', Environment::get('request')));
+				$this->redirect(str_replace('act=select', 'act=overrideAll', Environment::get('requestUri')));
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null)
 			{
@@ -184,7 +184,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Support copyAll in the list view (see #7499)
 				if (Input::post('copy') !== null && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
 				{
-					$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('request')));
+					$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('requestUri')));
 				}
 
 				$this->redirect($this->getReferer());
@@ -227,7 +227,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$strRefererId = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 			$session = $objSession->get($strKey);
-			$session[$strRefererId][$this->strTable] = substr(Environment::get('requestUri'), \strlen(Environment::get('path')) + 1);
+			$session[$strRefererId][$this->strTable] = Environment::get('requestUri');
 			$objSession->set($strKey, $session);
 		}
 	}
@@ -2016,12 +2016,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versionConflict']);
 				$objTemplate->theme = Backend::getTheme();
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
-				$objTemplate->base = Environment::get('base');
 				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
 				$objTemplate->explain1 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, Input::post('VERSION_NUMBER'));
 				$objTemplate->explain2 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict2'], $intLatestVersion + 1, $intLatestVersion);
 				$objTemplate->diff = $objVersions->compare(true);
-				$objTemplate->href = Environment::get('request');
+				$objTemplate->href = Environment::get('requestUri');
 				$objTemplate->button = $GLOBALS['TL_LANG']['MSC']['continue'];
 
 				throw new ResponseException($objTemplate->getResponse());
@@ -2596,7 +2595,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Return the select menu
 			$return .= '
 
-<form action="' . StringUtil::ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
+<form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . ($blnIsError ? '
@@ -2950,7 +2949,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// Return the select menu
 			$return .= '
-<form action="' . StringUtil::ampersand(Environment::get('request')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
+<form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
 <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . ($blnIsError ? '
@@ -3569,7 +3568,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$objSessionBag->replace($session);
-			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('request')));
+			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
 		// Return if a mandatory field (id, pid, sorting) is missing
@@ -3958,7 +3957,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$session[$node][Input::get('ptg')] = (isset($session[$node][Input::get('ptg')]) && $session[$node][Input::get('ptg')] == 1) ? 0 : 1;
 			$objSessionBag->replace($session);
-			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('request')));
+			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
 		$objRow = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
@@ -6002,7 +6001,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objSessionBag->replace($session);
 			}
 
-			$this->redirect(preg_replace('/&(amp;)?lp=[^&]+/i', '', Environment::get('request')));
+			$this->redirect(preg_replace('/&(amp;)?lp=[^&]+/i', '', Environment::get('requestUri')));
 		}
 
 		if ($limit)

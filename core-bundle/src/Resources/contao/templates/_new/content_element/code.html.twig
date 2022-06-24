@@ -1,7 +1,7 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
-{% set highlighter_css_file = 'vendor/scrivo/highlight_php/styles/foundation.css' %}
+{% set highlighter_css_file = asset('foundation.css', 'scrivo/highlight.php') %}
 
 {% block content %}
     {% if as_editor_view %}

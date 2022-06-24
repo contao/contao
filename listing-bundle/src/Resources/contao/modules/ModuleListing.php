@@ -230,7 +230,7 @@ class ModuleListing extends Module
 		$objData = $objDataStmt->execute(...$varKeyword);
 
 		// Prepare the URL
-		$strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
+		$strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 		$blnQuery = false;
 
 		foreach (preg_split('/&(amp;)?/', Environment::get('queryString')) as $fragment)

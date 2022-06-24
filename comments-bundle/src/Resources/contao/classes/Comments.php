@@ -372,7 +372,7 @@ class Comments extends Frontend
 				$GLOBALS['TL_LANG']['MSC']['com_message'],
 				$arrSet['name'] . ' (' . $arrSet['email'] . ')',
 				$strComment,
-				Idna::decode(Environment::get('base')) . Environment::get('request'),
+				Idna::decode(Environment::get('url')) . Environment::get('requestUri'),
 				Idna::decode(Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id
 			);
 
@@ -546,7 +546,7 @@ class Comments extends Frontend
 		$time = time();
 
 		// Ensure that the URL only contains ASCII characters (see #4708)
-		$request = (string) (new Uri(Environment::get('request')));
+		$request = (string) (new Uri(Environment::get('requestUri')));
 
 		// Prepare the record
 		$arrSet = array
@@ -661,9 +661,9 @@ class Comments extends Frontend
 				}
 
 				// Update the notification URL if it has changed (see #373)
-				if ($isFrontend && $objNotify->url != Environment::get('request'))
+				if ($isFrontend && $objNotify->url != Environment::get('requestUri'))
 				{
-					$objNotify->url = Environment::get('request');
+					$objNotify->url = Environment::get('requestUri');
 					$objNotify->save();
 				}
 

@@ -110,7 +110,7 @@ class Newsletter extends Backend
 		// Send newsletter
 		if ($token && $token == $objSession->get('tl_newsletter_send'))
 		{
-			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('request'));
+			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('requestUri'));
 
 			// Preview
 			if (Input::get('preview') !== null)
@@ -246,7 +246,7 @@ class Newsletter extends Backend
 			// Redirect to the next cycle
 			else
 			{
-				$url = preg_replace('/&(amp;)?(start|mpc|recipient)=[^&]*/', '', Environment::get('request')) . '&start=' . ($intStart + $intPages) . '&mpc=' . $intPages;
+				$url = preg_replace('/&(amp;)?(start|mpc|recipient)=[^&]*/', '', Environment::get('requestUri')) . '&start=' . ($intStart + $intPages) . '&mpc=' . $intPages;
 
 				echo '<script>setTimeout(\'window.location="' . Environment::get('base') . $url . '"\',' . ($intTimeout * 1000) . ')</script>';
 				echo '<a href="' . Environment::get('base') . $url . '">Please click here to proceed if you are not using JavaScript</a>';
@@ -582,7 +582,7 @@ class Newsletter extends Backend
 		// Return form
 		return '
 <div id="tl_buttons">
-<a href="' . StringUtil::ampersand(str_replace('&key=import', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=import', '', Environment::get('requestUri'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 ' . Message::generate() . '
 <form id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">

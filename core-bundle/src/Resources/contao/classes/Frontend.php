@@ -137,10 +137,7 @@ abstract class Frontend extends Controller
 			}
 		}
 
-		$strUrl = System::getContainer()->get('router')->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $objPage, 'parameters' => $strParams));
-		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
-
-		return $strUrl;
+		return System::getContainer()->get('router')->generate(RouteObjectInterface::OBJECT_BASED_ROUTE_NAME, array(RouteObjectInterface::CONTENT_OBJECT => $objPage, 'parameters' => $strParams));
 	}
 
 	/**

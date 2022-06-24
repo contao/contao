@@ -69,7 +69,7 @@ class ModuleNewsMenu extends ModuleNews
 			return '';
 		}
 
-		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
+		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
 		{

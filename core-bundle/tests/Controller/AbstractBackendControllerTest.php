@@ -87,7 +87,6 @@ class AbstractBackendControllerTest extends TestCase
             'headline' => 'dashboard',
             'title' => '',
             'theme' => 'flexible',
-            'base' => 'http://localhost/',
             'language' => 'en',
             'host' => 'localhost',
             'charset' => 'UTF-8',

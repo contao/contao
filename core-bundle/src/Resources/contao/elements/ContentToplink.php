@@ -33,6 +33,6 @@ class ContentToplink extends ContentElement
 
 		$this->Template->label = $this->linkTitle;
 		$this->Template->title = StringUtil::specialchars($this->linkTitle);
-		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
+		$this->Template->request = StringUtil::ampersand(Environment::get('requestUri'));
 	}
 }

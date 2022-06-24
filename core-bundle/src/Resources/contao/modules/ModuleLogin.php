@@ -106,7 +106,7 @@ class ModuleLogin extends Module
 		{
 			$this->import(FrontendUser::class, 'User');
 
-			$strRedirect = Environment::get('base') . Environment::get('request');
+			$strRedirect = Environment::get('uri');
 
 			// Redirect to last page visited
 			if ($this->redirectBack && $this->targetPath)
@@ -152,7 +152,7 @@ class ModuleLogin extends Module
 		}
 
 		$blnRedirectBack = false;
-		$strRedirect = Environment::get('base') . Environment::get('request');
+		$strRedirect = Environment::get('uri');
 
 		// Redirect to the last page visited
 		if ($this->redirectBack && $this->targetPath)

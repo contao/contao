@@ -65,7 +65,7 @@ class StoreRefererListenerTest extends TestCase
             [
                 'newRefererId' => [
                     'last' => '',
-                    'current' => 'path/of/contao?having&query&string=1',
+                    'current' => '/path/of/contao?having&query&string=1',
                 ],
             ],
         ];
@@ -81,7 +81,7 @@ class StoreRefererListenerTest extends TestCase
             [
                 'newRefererId' => [
                     'last' => '',
-                    'current' => 'path/of/contao?having&query&string=1',
+                    'current' => '/path/of/contao?having&query&string=1',
                 ],
             ],
         ];
@@ -105,7 +105,7 @@ class StoreRefererListenerTest extends TestCase
                 ],
                 'newRefererId' => [
                     'last' => 'hi/I/am/your_current_referer.html',
-                    'current' => 'path/of/contao?having&query&string=1',
+                    'current' => '/path/of/contao?having&query&string=1',
                 ],
             ],
         ];
@@ -130,7 +130,7 @@ class StoreRefererListenerTest extends TestCase
                 ],
                 'newRefererId' => [
                     'last' => 'hi/I/am/your_current_referer.html',
-                    'current' => 'path/of/contao?having&query&string=1',
+                    'current' => '/path/of/contao?having&query&string=1',
                     'tl_foobar' => 'contao?do=foobar&table=tl_foobar&id=2',
                 ],
             ],
