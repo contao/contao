@@ -14,21 +14,14 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\HyperlinkController;
 use Contao\StringUtil;
-use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class HyperlinkControllerTest extends ContentElementTestCase
 {
     public function testOutputsSimpleLink(): void
     {
-        $requestStackContext = $this->createMock(RequestStackContext::class);
-        $requestStackContext
-            ->expects($this->once())
-            ->method('getBasePath')
-            ->willReturn('')
-        ;
-
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), $requestStackContext),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
             [
                 'type' => 'hyperlink',
                 'url' => 'my-link.html',
@@ -53,14 +46,8 @@ class HyperlinkControllerTest extends ContentElementTestCase
 
     public function testOutputsLinkWithBeforeAndAfterText(): void
     {
-        $requestStackContext = $this->createMock(RequestStackContext::class);
-        $requestStackContext
-            ->expects($this->never())
-            ->method('getBasePath')
-        ;
-
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), $requestStackContext),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
             [
                 'type' => 'hyperlink',
                 'url' => 'https://www.php.net/manual/en/function.sprintf.php',
@@ -86,15 +73,8 @@ class HyperlinkControllerTest extends ContentElementTestCase
 
     public function testOutputsImageLink(): void
     {
-        $requestStackContext = $this->createMock(RequestStackContext::class);
-        $requestStackContext
-            ->expects($this->once())
-            ->method('getBasePath')
-            ->willReturn('')
-        ;
-
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), $requestStackContext),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
             [
                 'type' => 'hyperlink',
                 'url' => 'foo.html#{{demo}}',

@@ -44,7 +44,7 @@ trait ModelMetadataTrait
             $url = $data['imageUrl'];
 
             if (Validator::isRelativeUrl($url)) {
-                $url = System::getContainer()->get('assets.context')->getBasePath().'/'.$url;
+                $url = System::getContainer()->get('contao.assets.files_context')->getStaticUrl().$url;
             }
 
             $data[Metadata::VALUE_URL] = $url;

@@ -24,7 +24,6 @@ class MakeServicesPublicPassTest extends TestCase
         $container = new ContainerBuilder();
 
         // Definitions
-        $container->setDefinition('assets.context', (new Definition())->setPublic(false));
         $container->setDefinition('assets.packages', (new Definition())->setPublic(false));
         $container->setDefinition('fragment.handler', (new Definition())->setPublic(false));
         $container->setDefinition('monolog.logger.contao', (new Definition())->setPublic(false));
@@ -47,7 +46,6 @@ class MakeServicesPublicPassTest extends TestCase
         $pass->process($container);
 
         // Definitions
-        $this->assertTrue($container->getDefinition('assets.context')->isPublic());
         $this->assertTrue($container->getDefinition('assets.packages')->isPublic());
         $this->assertTrue($container->getDefinition('fragment.handler')->isPublic());
         $this->assertTrue($container->getDefinition('monolog.logger.contao')->isPublic());

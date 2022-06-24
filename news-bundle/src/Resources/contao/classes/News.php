@@ -317,7 +317,7 @@ class News extends Frontend
 
 					if (Validator::isRelativeUrl($url))
 					{
-						$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
+						$url = Environment::get('path') . '/' . $url;
 					}
 
 					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
@@ -426,7 +426,7 @@ class News extends Frontend
 
 				if (Validator::isRelativeUrl($url))
 				{
-					$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
+					$url = Environment::get('path') . '/' . $url;
 				}
 
 				return $url;

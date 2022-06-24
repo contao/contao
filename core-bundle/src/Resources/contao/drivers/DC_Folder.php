@@ -2696,6 +2696,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			return $return;
 		}
 
+		$staticUrl = System::getContainer()->get('contao.assets.files_context')->getStaticUrl();
+
 		// Process files
 		for ($h=0, $c=\count($files); $h<$c; $h++)
 		{
@@ -2763,7 +2765,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
-				$return .= '<a href="' . Environment::get('path') . '/' . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $objFile->mime) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= '<a href="' . $staticUrl . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $objFile->mime) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
 			}
 
 			// Buttons

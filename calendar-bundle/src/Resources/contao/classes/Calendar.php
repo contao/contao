@@ -387,7 +387,7 @@ class Calendar extends Frontend
 
 				if (Validator::isRelativeUrl($url))
 				{
-					$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
+					$url = Environment::get('path') . '/' . $url;
 				}
 
 				$link = $url;

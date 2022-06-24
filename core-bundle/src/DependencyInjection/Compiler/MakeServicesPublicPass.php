@@ -23,7 +23,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class MakeServicesPublicPass implements CompilerPassInterface
 {
     private const IDS = [
-        'assets.context',
         'assets.packages',
         'database_connection',
         'debug.stopwatch',

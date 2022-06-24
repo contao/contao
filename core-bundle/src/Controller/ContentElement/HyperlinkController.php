@@ -19,8 +19,8 @@ use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\Validator;
-use Symfony\Component\Asset\Context\RequestStackContext;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -31,7 +31,7 @@ class HyperlinkController extends AbstractContentElementController
     public function __construct(
         private readonly Studio $studio,
         private readonly InsertTagParser $insertTagParser,
-        private readonly RequestStackContext $requestStackContext,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -41,7 +41,7 @@ class HyperlinkController extends AbstractContentElementController
         $href = $this->insertTagParser->replaceInline($model->url);
 
         if (Validator::isRelativeUrl($href)) {
-            $href = $this->requestStackContext->getBasePath().'/'.$href;
+            $href = $this->requestStack->getMainRequest()?->getBasePath().'/'.$href;
         }
 
         $linkAttributes = (new HtmlAttributes())

@@ -32,7 +32,7 @@ class PageRedirect extends Frontend
 
 		if (Validator::isRelativeUrl($url))
 		{
-			$url = System::getContainer()->get('assets.context')->getBasePath() . '/' . $url;
+			$url = Environment::get('path') . '/' . $url;
 		}
 
 		return new RedirectResponse($url, $this->getRedirectStatusCode($objPage));

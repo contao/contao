@@ -66,7 +66,7 @@ services:
         arguments:
             - '@contao.image.studio'
             - '@contao.insert_tag.parser'
-            - '@assets.context'
+            - '@request_stack'
 
     Contao\CoreBundle\Controller\ContentElement\ImagesController:
         arguments:
