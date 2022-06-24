@@ -157,7 +157,7 @@
                         }
 
                         const script = document.createElement('script');
-                        script.src = 'bundles/contaocore/tablesort/tablesort.min.js';
+                        script.src = '{{ asset('js/tablesort.min.js', 'contao-components/tristen-tablesort') }}';
                         script.async = true;
 
                         script.addEventListener('load', () => {
