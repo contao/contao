@@ -17,6 +17,7 @@ abstract class AbstractAction implements \Stringable
     /**
      * This allows for performance optimizations when voting on many data sets so voters are given
      * the chance to preload voting information all at once.
+     *
      * Intended usage:.
      *
      * $allRecords = [
@@ -32,14 +33,13 @@ abstract class AbstractAction implements \Stringable
      *     $this->denyAccessUnlessGranted('contao_dc.<table>', $action);
      * }
      *
-     * This ensures, every record is checked individually for maximum security, but it also allows voters to optimize
-     * for performance (entirely optional though).
+     * This ensures that every record is checked individually for maximum security, but it also allows voters to
+     * optimize for performance (entirely optional though).
      */
-    private ?array $preloadHints = null;
+    private array|null $preloadHints = null;
 
-    public function __construct(
-        private string $dataSource,
-    ) {
+    public function __construct(private string $dataSource)
+    {
     }
 
     public function __toString(): string
@@ -47,7 +47,7 @@ abstract class AbstractAction implements \Stringable
         return sprintf('[Subject: %s]', implode('; ', $this->getSubjectInfo()));
     }
 
-    public function getPreloadHints(): ?array
+    public function getPreloadHints(): array|null
     {
         return $this->preloadHints;
     }
@@ -57,6 +57,7 @@ abstract class AbstractAction implements \Stringable
         if (null !== $this->preloadHints) {
             throw new \InvalidArgumentException('Cannot override configured preload hints.');
         }
+
         $this->preloadHints = $preloadHints;
 
         return $this;

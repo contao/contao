@@ -860,6 +860,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			ContaoCorePermissions::DC_PREFIX . $this->strTable,
 			new ReadAction($this->strTable, array('id' => $source))
 		);
+
 		$this->denyAccessUnlessGranted(
 			ContaoCorePermissions::DC_PREFIX . $this->strTable,
 			new CreateAction($this->strTable, array('id' => $destination, 'pid' => $strFolder))

@@ -217,7 +217,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * Active record
 	 * @var \stdClass|null
-	 * @deprecated The active record has been deprecated and will be removed in Contao 6. Use $dc->getCurrentRecord() instead.
+	 * @deprecated Deprecated since Contao 5.0 to be removed in Contao 6. Use $dc->getCurrentRecord() instead.
 	 */
 	protected $objActiveRecord;
 
@@ -1761,7 +1761,6 @@ abstract class DataContainer extends Backend
 	{
 		$id = $id ?: $this->intId;
 		$table = $table ?: $this->strTable;
-
 		$key = $table . '.' . $id;
 
 		if ($noCache || !isset($this->arrCurrentRecordCache[$key]))

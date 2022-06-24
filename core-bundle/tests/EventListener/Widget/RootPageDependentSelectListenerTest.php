@@ -127,6 +127,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
+
         $dataContainer
             ->expects($this->once())
             ->method('getCurrentRecord')
@@ -170,6 +171,7 @@ class RootPageDependentSelectListenerTest extends TestCase
         $dataContainer = $this->mockClassWithProperties(DataContainer::class);
         $dataContainer->table = 'tl_module';
         $dataContainer->field = 'field';
+
         $dataContainer
             ->expects($this->once())
             ->method('getCurrentRecord')

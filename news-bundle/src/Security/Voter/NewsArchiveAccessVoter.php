@@ -39,22 +39,23 @@ class NewsArchiveAccessVoter implements VoterInterface, CacheableVoterInterface
         return \in_array($subjectType, [CreateAction::class, ReadAction::class, UpdateAction::class, DeleteAction::class], true);
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes)
+    public function vote(TokenInterface $token, $subject, array $attributes): int
     {
         foreach ($attributes as $attribute) {
             if (!$this->supportsAttribute($attribute)) {
                 continue;
             }
 
-            return match (true) {
+            $isGranted = match (true) {
                 $subject instanceof CreateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES),
                 $subject instanceof ReadAction,
                 $subject instanceof UpdateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId()),
                 $subject instanceof DeleteAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId())
                     && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
                 default => false,
-            }
-            ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
+            };
+
+            return $isGranted ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
         }
 
         return self::ACCESS_ABSTAIN;

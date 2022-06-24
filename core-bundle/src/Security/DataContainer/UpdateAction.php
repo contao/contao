@@ -17,11 +17,8 @@ class UpdateAction extends AbstractAction
     use CurrentTrait;
     use NewTrait;
 
-    public function __construct(
-        string $dataSource,
-        private array $current,
-        private ?array $new = null,
-    ) {
+    public function __construct(string $dataSource, private array $current, private array|null $new = null)
+    {
         parent::__construct($dataSource);
     }
 

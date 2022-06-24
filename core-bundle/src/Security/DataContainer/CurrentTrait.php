@@ -14,17 +14,17 @@ namespace Contao\CoreBundle\Security\DataContainer;
 
 trait CurrentTrait
 {
-    public function getCurrent(): ?array
+    public function getCurrent(): array|null
     {
         return $this->current;
     }
 
-    public function getCurrentId(): ?string
+    public function getCurrentId(): string|null
     {
         return isset($this->current['id']) ? (string) $this->current['id'] : null;
     }
 
-    public function getCurrentPid(): ?string
+    public function getCurrentPid(): string|null
     {
         return isset($this->current['pid']) ? (string) $this->current['pid'] : null;
     }

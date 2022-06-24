@@ -1517,7 +1517,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$data[$table][$k] = $objSave->row();
 
-					// Store the active record (BC)
+					// Store the active record (backwards compatibility)
 					if ($table == $this->strTable && $v == $this->intId)
 					{
 						$this->objActiveRecord = $objSave;
@@ -1658,6 +1658,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($objDelete->numRows && !($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null) && \strlen($v))
 			{
 				$rows = $objDelete->fetchAllAssoc();
+
 				$this->preloadCurrentRecords(array_column($rows, 'id'), $v);
 
 				foreach ($rows as $row)
@@ -1825,7 +1826,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
-		// Store the active record (BC)
+		// Store the active record (backwards compatibility)
 		$this->objActiveRecord = (object) $currentRecord;
 
 		$return = '';
@@ -4147,6 +4148,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($objChilds->numRows)
 			{
 				$ids = $objChilds->fetchEach('id');
+
 				$this->preloadCurrentRecords($ids, $this->strTable);
 
 				for ($j=0, $c=\count($ids); $j<$c; $j++)

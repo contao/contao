@@ -38,7 +38,6 @@ class NewsArchiveAccessVoterTest extends WebTestCase
                 false
             )
         ;
-        $token = $this->createMock(TokenInterface::class);
 
         $voter = new NewsArchiveAccessVoter($security);
 
@@ -50,6 +49,8 @@ class NewsArchiveAccessVoterTest extends WebTestCase
         $this->assertTrue($voter->supportsType(DeleteAction::class));
         $this->assertFalse($voter->supportsType(NewsArchiveAccessVoter::class));
 
+        $token = $this->createMock(TokenInterface::class);
+
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
@@ -58,6 +59,7 @@ class NewsArchiveAccessVoterTest extends WebTestCase
                 ['whatever']
             )
         );
+
         $this->assertSame(
             VoterInterface::ACCESS_GRANTED,
             $voter->vote(
@@ -66,6 +68,7 @@ class NewsArchiveAccessVoterTest extends WebTestCase
                 [ContaoCorePermissions::DC_PREFIX.'tl_news_archive']
             )
         );
+
         $this->assertSame(
             VoterInterface::ACCESS_DENIED,
             $voter->vote(

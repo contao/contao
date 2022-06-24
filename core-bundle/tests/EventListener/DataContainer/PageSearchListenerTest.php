@@ -37,12 +37,7 @@ class PageSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 17,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['alias' => 'foo'])
@@ -70,12 +65,7 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 17,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['alias' => 'foo'])
@@ -106,12 +96,7 @@ class PageSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 17,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['noSearch' => ''])
@@ -139,12 +124,7 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 17,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['noSearch' => '1'])
@@ -172,12 +152,7 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 17,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['noSearch' => '1'])
@@ -208,12 +183,7 @@ class PageSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 17,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['robots' => 'index,follow'])
@@ -241,12 +211,7 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 17,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['robots' => 'noindex,follow'])
@@ -274,12 +239,7 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 17,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['robots' => 'noindex,follow'])
@@ -310,12 +270,7 @@ class PageSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 17,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),
@@ -339,12 +294,7 @@ class PageSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => null,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => null]);
 
         $listener = new PageSearchListener(
             $this->mockContaoFramework([Search::class => $search]),

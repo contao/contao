@@ -14,17 +14,17 @@ namespace Contao\CoreBundle\Security\DataContainer;
 
 trait NewTrait
 {
-    public function getNew(): ?array
+    public function getNew(): array|null
     {
         return $this->new;
     }
 
-    public function getNewId(): ?string
+    public function getNewId(): string|null
     {
         return isset($this->new['id']) ? (string) $this->new['id'] : null;
     }
 
-    public function getNewPid(): ?string
+    public function getNewPid(): string|null
     {
         return isset($this->new['pid']) ? (string) $this->new['pid'] : null;
     }

@@ -63,12 +63,7 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($page->alias)
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => $page->id,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $page->id]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($currentRecord)
@@ -180,12 +175,7 @@ class PageUrlListenerTest extends TestCase
             ->willReturn($generated)
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => $currentRecord['id'],
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $currentRecord['id']]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($currentRecord)
@@ -251,12 +241,7 @@ class PageUrlListenerTest extends TestCase
             ->method('generate')
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => $currentRecord['id'],
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $currentRecord['id']]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($currentRecord)
@@ -316,12 +301,7 @@ class PageUrlListenerTest extends TestCase
             ->method('generate')
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => $currentRecord['id'],
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $currentRecord['id']]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($currentRecord)
@@ -385,12 +365,7 @@ class PageUrlListenerTest extends TestCase
             ->method('generate')
         ;
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => $currentRecord['id'],
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $currentRecord['id']]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn($currentRecord)
@@ -1016,12 +991,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''])
@@ -1055,12 +1025,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn([
@@ -1160,12 +1125,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''])
@@ -1256,12 +1216,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['type' => 'root', 'dns' => '', 'urlPrefix' => 'de', 'urlSuffix' => ''])
@@ -1290,12 +1245,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn([
@@ -1327,12 +1277,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn([
@@ -1366,12 +1311,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn([
@@ -1421,12 +1361,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''])
@@ -1517,12 +1452,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn(['type' => 'root', 'urlPrefix' => 'de', 'urlSuffix' => ''])
@@ -1551,12 +1481,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn([
@@ -1588,12 +1513,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn([
@@ -1627,12 +1547,7 @@ class PageUrlListenerTest extends TestCase
             new UrlMatcher()
         );
 
-        $dc = $this->mockClassWithProperties(
-            DataContainer::class,
-            [
-                'id' => 1,
-            ]
-        );
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 1]);
         $dc
             ->method('getCurrentRecord')
             ->willReturn([
