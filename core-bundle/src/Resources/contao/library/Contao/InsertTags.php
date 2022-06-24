@@ -729,10 +729,10 @@ class InsertTags extends Controller
 							$arrCache[$strTag] = Idna::decode(Environment::get('url'));
 							break;
 
+						// As the "env::path" insert tag returned the base URL ever since, we
+						// keep it as an alias to the "env::base" tag. Use "env::base_path" to
+						// output the actual base path.
 						case 'path':
-							trigger_deprecation('contao/core-bundle', '5.0', 'Using the "env::path" insert has been deprecated and will no longer work in Contao 6.0. Use the "env::base" insert tag instead.');
-							// no break
-
 						case 'base':
 							$arrCache[$strTag] = Idna::decode(Environment::get('base'));
 							break;
