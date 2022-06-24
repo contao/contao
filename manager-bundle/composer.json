@@ -59,7 +59,7 @@
         "symfony/process": "^5.4",
         "symfony/proxy-manager-bridge": "^5.4",
         "symfony/routing": "^5.4",
-        "symfony/security-bundle": "^6.0",
+        "symfony/security-bundle": "^6.0.2",
         "symfony/stopwatch": "^5.4",
         "symfony/twig-bundle": "^5.4",
         "symfony/web-profiler-bundle": "^5.4",
