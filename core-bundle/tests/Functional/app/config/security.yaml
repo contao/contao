@@ -1,6 +1,6 @@
 security:
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
+        Contao\User: auto
 
     providers:
         contao.security.backend_user_provider:
