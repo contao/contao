@@ -30,7 +30,7 @@ class AssetListenerTest extends TestCase
 
         $listener = new AssetListener($packages);
 
-        $this->assertSame('foo/bar', $listener->onReplaceInsertTags('asset::foo/bar::package'));
+        $this->assertSame('/foo/bar', $listener->onReplaceInsertTags('asset::foo/bar::package'));
     }
 
     public function testReplacesInsertTagsWithoutPackageName(): void
@@ -45,7 +45,7 @@ class AssetListenerTest extends TestCase
 
         $listener = new AssetListener($packages);
 
-        $this->assertSame('foo/bar', $listener->onReplaceInsertTags('asset::foo/bar'));
+        $this->assertSame('/foo/bar', $listener->onReplaceInsertTags('asset::foo/bar'));
     }
 
     public function testIgnoresOtherInsertTags(): void

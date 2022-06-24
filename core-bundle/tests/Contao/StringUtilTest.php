@@ -390,4 +390,56 @@ class StringUtilTest extends TestCase
             'UTF-8',
         ];
     }
+
+    /**
+     * @dataProvider getAddBasePathData
+     */
+    public function testAddsTheBasePath(string $expected, string $data): void
+    {
+        $this->assertSame($expected, StringUtil::addBasePath($data));
+    }
+
+    public function getAddBasePathData(): \Generator
+    {
+        yield [
+            '<p><a href="{{env::base_path}}/en/foo.html"><img src="{{env::base_path}}/files/img.jpg" alt></a></p>',
+            '<p><a href="en/foo.html"><img src="files/img.jpg" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="#top"><img src="data:img" alt></a></p>',
+            '<p><a href="#top"><img src="data:img" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+            '<p><a href="/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+        ];
+    }
+
+    /**
+     * @dataProvider getRemoveBasePathData
+     */
+    public function testRemovesTheBasePath(string $expected, string $data): void
+    {
+        $this->assertSame($expected, StringUtil::removeBasePath($data));
+    }
+
+    public function getRemoveBasePathData(): \Generator
+    {
+        yield [
+            '<p><a href="en/foo.html"><img src="files/img.jpg" alt></a></p>',
+            '<p><a href="{{env::base_path}}/en/foo.html"><img src="{{env::base_path}}/files/img.jpg" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="/en/foo.html"><img src="data:img" alt></a></p>',
+            '<p><a href="/en/foo.html"><img src="data:img" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="{{env::path}}/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+            '<p><a href="{{env::path}}/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+        ];
+    }
 }

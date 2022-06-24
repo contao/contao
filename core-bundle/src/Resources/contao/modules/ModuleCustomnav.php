@@ -140,7 +140,7 @@ class ModuleCustomnav extends Module
 				$trail = \in_array($objModel->id, $objPage->trail);
 
 				// Use the path without query string to check for active pages (see #480)
-				list($path) = explode('?', Environment::get('request'), 2);
+				list($path) = explode('?', Environment::get('requestUri'), 2);
 
 				// Active page
 				if ($objPage->id == $objModel->id && $href == $path)
@@ -220,7 +220,7 @@ class ModuleCustomnav extends Module
 
 		$objTemplate->items = $items;
 
-		$this->Template->request = Environment::get('indexFreeRequest');
+		$this->Template->request = Environment::get('requestUri');
 		$this->Template->skipId = 'skipNavigation' . $this->id;
 		$this->Template->skipNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
 		$this->Template->items = !empty($items) ? $objTemplate->parse() : '';

@@ -73,7 +73,7 @@ class ModuleNewsletterList extends Module
 		$arrJumpTo = array();
 		$arrNewsletter = array();
 
-		$strRequest = StringUtil::ampersand(Environment::get('request'));
+		$strRequest = StringUtil::ampersand(Environment::get('requestUri'));
 		$objNewsletter = NewsletterModel::findSentByPids($this->nl_channels);
 
 		if ($objNewsletter !== null)

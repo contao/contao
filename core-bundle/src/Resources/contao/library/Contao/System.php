@@ -378,7 +378,7 @@ abstract class System
 			};
 
 			// Determine current or last
-			$strUrl = ($cleanUrl($session['current'] ?? null) != $cleanUrl(Environment::get('request'))) ? ($session['current'] ?? null) : ($session['last'] ?? null);
+			$strUrl = ($cleanUrl($session['current'] ?? null) != $cleanUrl(Environment::get('requestUri'))) ? ($session['current'] ?? null) : ($session['last'] ?? null);
 
 			// Remove the "toggle" and "toggle all" parameters
 			$return = $cleanUrl($strUrl, array('tg', 'ptg'));

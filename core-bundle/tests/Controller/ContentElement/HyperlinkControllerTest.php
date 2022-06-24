@@ -14,13 +14,14 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\HyperlinkController;
 use Contao\StringUtil;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class HyperlinkControllerTest extends ContentElementTestCase
 {
     public function testOutputsSimpleLink(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
             [
                 'type' => 'hyperlink',
                 'url' => 'my-link.html',
@@ -36,7 +37,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content_element/hyperlink">
-                <a href="my-link.html">my-link.html</a>
+                <a href="/my-link.html">/my-link.html</a>
             </div>
             HTML;
 
@@ -46,7 +47,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsLinkWithBeforeAndAfterText(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
             [
                 'type' => 'hyperlink',
                 'url' => 'https://www.php.net/manual/en/function.sprintf.php',
@@ -73,7 +74,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsImageLink(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
             [
                 'type' => 'hyperlink',
                 'url' => 'foo.html#{{demo}}',
@@ -91,7 +92,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
             <div class="content_element/hyperlink">
                 <figure>
                     This is me…
-                    <a href="foo.html#demo" data-lightbox="bar">
+                    <a href="/foo.html#demo" data-lightbox="bar">
                         <img src="files/image1.jpg" alt>
                     </a>
                     …waving to the camera.

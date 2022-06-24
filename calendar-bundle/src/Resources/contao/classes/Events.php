@@ -423,7 +423,14 @@ abstract class Events extends Module
 				}
 				else
 				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objEvent->url);
+					$url = $objEvent->url;
+
+					if (Validator::isRelativeUrl($url))
+					{
+						$url = Environment::get('path') . '/' . $url;
+					}
+
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
 				}
 				break;
 
@@ -455,7 +462,7 @@ abstract class Events extends Module
 
 			if (!$objPage instanceof PageModel)
 			{
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('request'));
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('requestUri'));
 			}
 			else
 			{

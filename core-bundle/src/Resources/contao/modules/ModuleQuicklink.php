@@ -143,7 +143,7 @@ class ModuleQuicklink extends Module
 
 		$this->Template->items = $items;
 		$this->Template->formId = 'tl_quicklink_' . $this->id;
-		$this->Template->request = StringUtil::ampersand(Environment::get('request'));
+		$this->Template->request = StringUtil::ampersand(Environment::get('requestUri'));
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
 	}

@@ -55,7 +55,7 @@ class DebugController
             $referer = '?'.base64_decode($request->query->get('referer'), true);
         }
 
-        $response = new RedirectResponse($request->getSchemeAndHttpHost().$request->getPathInfo().$referer);
+        $response = new RedirectResponse($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().$referer);
 
         $this->jwtManager->addResponseCookie($response, ['debug' => $debug]);
 
