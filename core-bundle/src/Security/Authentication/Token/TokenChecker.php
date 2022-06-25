@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\FrontendUser;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
@@ -103,11 +104,11 @@ class TokenChecker
 
         $session = $request->getSession();
 
-        if (!$session->has('_contao_frontend_preview')) {
+        if (!$session->has(FrontendPreviewAuthenticator::SESSION_NAME)) {
             return false;
         }
 
-        $preview = $session->get('_contao_frontend_preview');
+        $preview = $session->get(FrontendPreviewAuthenticator::SESSION_NAME);
 
         return (bool) $preview['showUnpublished'];
     }

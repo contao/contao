@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Authentication\Token;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
@@ -391,14 +392,14 @@ class TokenCheckerTest extends TestCase
         $session
             ->expects($isPreview ? $this->once() : $this->never())
             ->method('has')
-            ->with('_contao_frontend_preview')
+            ->with(FrontendPreviewAuthenticator::SESSION_NAME)
             ->willReturn(true)
         ;
 
         $session
             ->expects($isPreview ? $this->once() : $this->never())
             ->method('get')
-            ->with('_contao_frontend_preview')
+            ->with(FrontendPreviewAuthenticator::SESSION_NAME)
             ->willReturn(['showUnpublished' => $isPreview])
         ;
 

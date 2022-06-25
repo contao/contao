@@ -51,13 +51,13 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $this->assertTrue($authenticator->authenticateFrontendUser('foobar', $showUnpublished));
         $this->assertTrue($session->has('_security_contao_frontend'));
-        $this->assertTrue($session->has('_contao_frontend_preview'));
+        $this->assertTrue($session->has(FrontendPreviewAuthenticator::SESSION_NAME));
 
         $token = unserialize($session->get('_security_contao_frontend'), ['allowed_classes' => true]);
 
         $this->assertInstanceOf(UsernamePasswordToken::class, $token);
         $this->assertInstanceOf(FrontendUser::class, $token->getUser());
-        $this->assertSame($showUnpublished, $session->get('_contao_frontend_preview')['showUnpublished']);
+        $this->assertSame($showUnpublished, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['showUnpublished']);
     }
 
     public function getShowUnpublishedData(): \Generator
@@ -136,9 +136,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $this->assertTrue($authenticator->authenticateFrontendGuest($showUnpublished));
         $this->assertFalse($session->has('_security_contao_frontend'));
-        $this->assertTrue($session->has('_contao_frontend_preview'));
+        $this->assertTrue($session->has(FrontendPreviewAuthenticator::SESSION_NAME));
 
-        $this->assertSame($showUnpublished, $session->get('_contao_frontend_preview')['showUnpublished']);
+        $this->assertSame($showUnpublished, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['showUnpublished']);
     }
 
     public function testRemovesTheAuthenticationFromTheSession(): void
@@ -153,14 +153,14 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session
             ->expects($this->atMost(2))
             ->method('has')
-            ->withConsecutive(['_security_contao_frontend'], ['_contao_frontend_preview'])
+            ->withConsecutive(['_security_contao_frontend'], [FrontendPreviewAuthenticator::SESSION_NAME])
             ->willReturn(true)
         ;
 
         $session
             ->expects($this->exactly(2))
             ->method('remove')
-            ->withConsecutive(['_security_contao_frontend'], ['_contao_frontend_preview'])
+            ->withConsecutive(['_security_contao_frontend'], [FrontendPreviewAuthenticator::SESSION_NAME])
         ;
 
         $authenticator = $this->getAuthenticator(null, $session);
@@ -194,7 +194,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session
             ->expects($this->exactly(2))
             ->method('has')
-            ->withConsecutive(['_security_contao_frontend'], ['_contao_frontend_preview'])
+            ->withConsecutive(['_security_contao_frontend'], [FrontendPreviewAuthenticator::SESSION_NAME])
             ->willReturn(false)
         ;
 

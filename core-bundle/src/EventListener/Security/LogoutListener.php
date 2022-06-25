@@ -14,10 +14,12 @@ namespace Contao\CoreBundle\EventListener\Security;
 
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\User;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
@@ -71,6 +73,10 @@ class LogoutListener
     private function logout(Request $request): void
     {
         $token = $this->security->getToken();
+
+        if ($request->hasSession() && null !== $request->getSession()->get(FrontendPreviewAuthenticator::SESSION_NAME)) {
+            $request->getSession()->remove(FrontendPreviewAuthenticator::SESSION_NAME);
+        }
 
         if ($token instanceof TokenInterface) {
             if ($request->hasSession() && method_exists($token, 'getFirewallName')) {

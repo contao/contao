@@ -24,6 +24,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticator
 {
+    public const SESSION_NAME = '_contao_frontend_preview';
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.frontend_preview_authenticator" service instead
      */
@@ -46,14 +47,14 @@ class FrontendPreviewAuthenticator
         $token = new UsernamePasswordToken($user, 'contao_frontend');
 
         $this->session->set('_security_contao_frontend', serialize($token));
-        $this->session->set('_contao_frontend_preview', ['showUnpublished' => $showUnpublished]);
+        $this->session->set(self::SESSION_NAME, ['showUnpublished' => $showUnpublished]);
 
         return true;
     }
 
     public function authenticateFrontendGuest(bool $showUnpublished): bool
     {
-        $this->session->set('_contao_frontend_preview', ['showUnpublished' => $showUnpublished]);
+        $this->session->set(self::SESSION_NAME, ['showUnpublished' => $showUnpublished]);
 
         return true;
     }
@@ -63,12 +64,12 @@ class FrontendPreviewAuthenticator
      */
     public function removeFrontendAuthentication(): bool
     {
-        if (!$this->session->isStarted() || (!$this->session->has('_security_contao_frontend') && !$this->session->has('_contao_frontend_preview'))) {
+        if (!$this->session->isStarted() || (!$this->session->has('_security_contao_frontend') && !$this->session->has(self::SESSION_NAME))) {
             return false;
         }
 
         $this->session->remove('_security_contao_frontend');
-        $this->session->remove('_contao_frontend_preview');
+        $this->session->remove(self::SESSION_NAME);
 
         return true;
     }
