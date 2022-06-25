@@ -160,20 +160,20 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     {
         $credentialsBadge = $passport->getBadge(TwoFactorCodeCredentials::class);
 
-        if ($credentialsBadge instanceof TwoFactorCodeCredentials) {
-            $twoFactorToken = $credentialsBadge->getTwoFactorToken();
-
-            if ($this->isTwoFactorAuthenticationComplete($twoFactorToken)) {
-                $authenticatedToken = $twoFactorToken->getAuthenticatedToken(); // Authentication complete, unwrap the token
-                $authenticatedToken->setAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE, true);
-
-                return $authenticatedToken;
-            }
-
-            return $twoFactorToken;
+        if (!$credentialsBadge instanceof TwoFactorCodeCredentials) {
+            return parent::createToken($passport, $firewallName);
         }
 
-        return parent::createToken($passport, $firewallName);
+        $twoFactorToken = $credentialsBadge->getTwoFactorToken();
+
+        if ($this->isTwoFactorAuthenticationComplete($twoFactorToken)) {
+            $authenticatedToken = $twoFactorToken->getAuthenticatedToken(); // Authentication complete, unwrap the token
+            $authenticatedToken->setAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE, true);
+
+            return $authenticatedToken;
+        }
+
+        return $twoFactorToken;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
