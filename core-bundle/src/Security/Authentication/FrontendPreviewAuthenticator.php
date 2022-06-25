@@ -25,6 +25,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class FrontendPreviewAuthenticator
 {
     final public const SESSION_NAME = '_contao_frontend_preview';
+
     /**
      * @internal Do not inherit from this class; decorate the "contao.security.frontend_preview_authenticator" service instead
      */
