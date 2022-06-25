@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### postLogout hook
+
+The `postLogout` hook has been removed. Use the `LogoutEvent` instead.
+
 ### Contao 4 migrations
 
 Contao 5 does not include any Contao 4 migrations, so make sure to upgrade to Contao 4.13 before upgrading to Contao 5!
