@@ -386,7 +386,7 @@ class TokenCheckerTest extends TestCase
     /**
      * @return SessionInterface&MockObject
      */
-    private function  mockSessionWithPreview(bool $isPreview): SessionInterface
+    private function mockSessionWithPreview(bool $isPreview): SessionInterface
     {
         $session = $this->createMock(SessionInterface::class);
 
