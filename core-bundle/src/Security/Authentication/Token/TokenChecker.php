@@ -129,7 +129,7 @@ class TokenChecker
             return null;
         }
 
-        if (!$this->trustResolver->isAuthenticated($token) || !$this->trustResolver->isFullFledged($token)) {
+        if (!$this->trustResolver->isAuthenticated($token) && !$this->trustResolver->isFullFledged($token) && !$this->trustResolver->isRememberMe($token)) {
             return null;
         }
 
