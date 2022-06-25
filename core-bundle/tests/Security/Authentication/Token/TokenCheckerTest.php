@@ -171,6 +171,7 @@ class TokenCheckerTest extends TestCase
 
         if ($isPreview) {
             $request->attributes->set('_preview', true);
+            $request->cookies->set($session->getName(), 'foo');
         }
 
         $request->setSession($session);
@@ -385,7 +386,7 @@ class TokenCheckerTest extends TestCase
     /**
      * @return SessionInterface&MockObject
      */
-    private function mockSessionWithPreview(bool $isPreview): SessionInterface
+    private function  mockSessionWithPreview(bool $isPreview): SessionInterface
     {
         $session = $this->createMock(SessionInterface::class);
 
@@ -394,6 +395,12 @@ class TokenCheckerTest extends TestCase
             ->method('has')
             ->with(FrontendPreviewAuthenticator::SESSION_NAME)
             ->willReturn(true)
+        ;
+
+        $session
+            ->expects($isPreview ? $this->exactly(2) : $this->never())
+            ->method('getName')
+            ->willReturn('foo')
         ;
 
         $session

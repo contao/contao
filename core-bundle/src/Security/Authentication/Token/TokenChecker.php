@@ -102,6 +102,10 @@ class TokenChecker
             return false;
         }
 
+        if (!$request->hasPreviousSession()) {
+            return false;
+        }
+
         $session = $request->getSession();
 
         if (!$session->has(FrontendPreviewAuthenticator::SESSION_NAME)) {
