@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### postAuthenticate hook
+
+The `postAuthenticate` hook has been removed. Use the `LoginSuccessEvent` instead.
+
 ### postLogout hook
 
 The `postLogout` hook has been removed. Use the `LogoutEvent` instead.
