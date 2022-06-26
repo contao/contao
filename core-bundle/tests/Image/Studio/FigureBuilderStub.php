@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Image\Studio;
 
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Image\Studio\ImageResult;
@@ -21,6 +22,7 @@ use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\StringUtil;
+use Symfony\Component\Uid\Uuid;
 
 class FigureBuilderStub extends FigureBuilder
 {
@@ -65,6 +67,17 @@ class FigureBuilderStub extends FigureBuilder
     public function fromImage(ImageInterface $image): FigureBuilder
     {
         throw new \RuntimeException('not implemented');
+    }
+
+    public function fromStorage(VirtualFilesystemInterface $storage, Uuid|string $location): FigureBuilder
+    {
+        if (!\is_string($location)) {
+            throw new \RuntimeException('not implemented');
+        }
+
+        $this->path = "files/$location";
+
+        return $this;
     }
 
     public function setMetadata(?Metadata $metadata): FigureBuilder
