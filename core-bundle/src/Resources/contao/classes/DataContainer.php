@@ -263,7 +263,7 @@ abstract class DataContainer extends Backend
 	protected $intCurrentPid;
 
 	/**
-	 * Active record cache
+	 * Current record cache
 	 * @var array<int|string, array>
 	 */
 	private $arrCurrentRecordCache = array();
