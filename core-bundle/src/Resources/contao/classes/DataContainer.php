@@ -1757,6 +1757,9 @@ abstract class DataContainer extends Backend
 		$this->arrCurrentRecordCache[$table . '.' . $id] = $row;
 	}
 
+	/**
+	 * @throws AccessDeniedException if the current user has no read permission
+	 */
 	public function getCurrentRecord(string|int $id = null, string $table = null, bool $noCache = false): ?array
 	{
 		$id = $id ?: $this->intId;
