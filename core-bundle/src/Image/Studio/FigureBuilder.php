@@ -287,8 +287,8 @@ class FigureBuilder
         //       by reading the local file path from stream's meta data.
         $metadata = stream_get_meta_data($stream);
 
-        if ('STDIO' !== ($type = $metadata['stream_type'])) {
-            $this->lastException = new InvalidResourceException(sprintf('Only streaming from STDIO is currently supported when reading an image from a storage, got "%s".', $type));
+        if ('STDIO' !== $metadata['stream_type'] || 'plainfile' !== $metadata['wrapper_type']) {
+            $this->lastException = new InvalidResourceException(sprintf('Only streams of type STDIO/plainfile are currently supported when reading an image from a storage, got "%s/%s".', $metadata['stream_type'], $metadata['wrapper_type']));
 
             return $this;
         }
