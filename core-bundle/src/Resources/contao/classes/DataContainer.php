@@ -1728,7 +1728,7 @@ abstract class DataContainer extends Backend
 		$stmt = $connection->executeQuery(
 			'SELECT * FROM ' . $table . ' WHERE id IN (?)',
 			array($ids),
-			array(is_numeric(array_shift($ids)) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY)
+			array(is_numeric(array_values($ids)[0]) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY)
 		);
 
 		foreach ($stmt->iterateAssociative() as $row)
