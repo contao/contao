@@ -69,6 +69,7 @@ services:
             - '@contao.twig.filesystem_loader_warmer'
             - '@contao.twig.loader.theme_namespace'
             - '%kernel.project_dir%'
+            - '@contao.twig.inspector'
 
     contao.command.filesync:
         class: Contao\CoreBundle\Command\FilesyncCommand
