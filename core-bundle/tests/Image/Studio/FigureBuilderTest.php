@@ -394,7 +394,7 @@ class FigureBuilderTest extends TestCase
         $exception = $figureBuilder->getLastException();
 
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
-        $this->assertSame('Only streams of type STDIO/plainfile are currently supported when reading an image from a storage, got "TEMP/PHP".', $exception->getMessage());
+        $this->assertSame('Only streams of type STDIO/plainfile pointing to an absolute path are currently supported when reading an image from a storage, got "TEMP/PHP" with URI "php://temp".', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
 
         $this->expectExceptionObject($exception);

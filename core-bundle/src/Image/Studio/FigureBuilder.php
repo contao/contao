@@ -286,14 +286,15 @@ class FigureBuilder
         //       in case of STDIO streams, we can already be forward compatible
         //       by reading the local file path from stream's meta data.
         $metadata = stream_get_meta_data($stream);
+        $uri = $metadata['uri'];
 
-        if ('STDIO' !== $metadata['stream_type'] || 'plainfile' !== $metadata['wrapper_type']) {
-            $this->lastException = new InvalidResourceException(sprintf('Only streams of type STDIO/plainfile are currently supported when reading an image from a storage, got "%s/%s".', $metadata['stream_type'], $metadata['wrapper_type']));
+        if ('STDIO' !== $metadata['stream_type'] || 'plainfile' !== $metadata['wrapper_type'] || !Path::isAbsolute($uri)) {
+            $this->lastException = new InvalidResourceException(sprintf('Only streams of type STDIO/plainfile pointing to an absolute path are currently supported when reading an image from a storage, got "%s/%s" with URI "%s".', $metadata['stream_type'], $metadata['wrapper_type'], $uri));
 
             return $this;
         }
 
-        return $this->fromPath($metadata['uri']);
+        return $this->fromPath($uri);
     }
 
     /**
