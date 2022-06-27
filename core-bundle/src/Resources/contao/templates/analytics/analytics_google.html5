@@ -6,6 +6,7 @@ $GoogleAnalyticsId = 'G-XXXXXXXXXX';
 // DO NOT EDIT ANYTHING BELOW THIS LINE UNLESS YOU KNOW WHAT YOU ARE DOING!
 if ('G-XXXXXXXXXX' != $GoogleAnalyticsId && !BE_USER_LOGGED_IN && !$this->hasAuthenticatedBackendUser()): ?>
 
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?= $GoogleAnalyticsId ?>"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
