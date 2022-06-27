@@ -47,15 +47,14 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertArrayHasKey('ALTER_TABLE', $commands);
-
-        $this->assertHasStatement(
-            $commands['ALTER_TABLE'],
-            'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC'
+        $this->assertContains(
+            'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
+            $commands
         );
-        $this->assertHasStatement(
-            $commands['ALTER_TABLE'],
-            'ALTER TABLE tl_foo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci'
+
+        $this->assertContains(
+            'ALTER TABLE tl_foo CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci',
+            $commands
         );
     }
 
@@ -91,7 +90,10 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertHasStatement($commands['ALTER_TABLE'], 'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC');
+        $this->assertContains(
+            'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
+            $commands
+        );
     }
 
     public function testResetsTheKeyBlockSizeWhenChangingTheDatabaseEngine(): void
@@ -127,7 +129,10 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertHasStatement($commands['ALTER_TABLE'], 'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC KEY_BLOCK_SIZE = 0');
+        $this->assertContains(
+            'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC KEY_BLOCK_SIZE = 0',
+            $commands
+        );
     }
 
     public function testDeletesTheIndexesWhenChangingTheDatabaseEngine(): void
@@ -169,7 +174,10 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertHasStatement($commands['ALTER_TABLE'], 'DROP INDEX foo_idx ON tl_foo');
+        $this->assertContains(
+            'DROP INDEX foo_idx ON tl_foo',
+            $commands
+        );
     }
 
     public function testDeletesTheIndexesWhenChangingTheCollation(): void
@@ -211,7 +219,10 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertHasStatement($commands['ALTER_TABLE'], 'DROP INDEX foo_idx ON tl_foo');
+        $this->assertContains(
+            'DROP INDEX foo_idx ON tl_foo',
+            $commands
+        );
     }
 
     public function testChangesTheRowFormatIfInnodbIsUsed(): void
@@ -239,11 +250,9 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertArrayHasKey('ALTER_TABLE', $commands);
-
-        $this->assertHasStatement(
-            $commands['ALTER_TABLE'],
-            'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC'
+        $this->assertContains(
+            'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
+            $commands
         );
     }
 
@@ -272,11 +281,9 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
         $commands = $installer->getCommands();
 
-        $this->assertArrayHasKey('ALTER_TABLE', $commands);
-
-        $this->assertHasStatement(
-            $commands['ALTER_TABLE'],
-            'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC KEY_BLOCK_SIZE = 0'
+        $this->assertContains(
+            'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC KEY_BLOCK_SIZE = 0',
+            $commands
         );
     }
 
@@ -304,10 +311,10 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo'], 'OFF');
         $commands = $installer->getCommands();
 
-        $this->assertArrayHasKey('ALTER_TABLE', $commands);
-        $this->assertArrayHasKey('537747ae8a3a53e6277dfccf354bc7da', $commands['ALTER_TABLE']);
-
-        $this->assertHasStatement($commands['ALTER_TABLE'], 'ALTER TABLE tl_foo ENGINE = InnoDB');
+        $this->assertContains(
+            'ALTER TABLE tl_foo ENGINE = InnoDB',
+            $commands
+        );
     }
 
     public function testDoesNotChangeTheRowFormatIfTableOptionsAreNotAvailable(): void
@@ -358,8 +365,10 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
-        $this->assertArrayHasKey('ALTER_DROP', $commands);
-        $this->assertHasStatement($commands['ALTER_DROP'], 'ALTER TABLE tl_foo DROP bar');
+        $this->assertContains(
+            'ALTER TABLE tl_foo DROP bar',
+            $commands
+        );
     }
 
     public function testReturnsTheAddColumnCommands(): void
@@ -387,8 +396,10 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
-        $this->assertArrayHasKey('ALTER_ADD', $commands);
-        $this->assertHasStatement($commands['ALTER_ADD'], 'ALTER TABLE tl_foo ADD bar VARCHAR(255) NOT NULL');
+        $this->assertContains(
+            'ALTER TABLE tl_foo ADD bar VARCHAR(255) NOT NULL',
+            $commands
+        );
     }
 
     public function testHandlesDecimalsInTheAddColumnCommands(): void
@@ -410,8 +421,10 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
-        $this->assertArrayHasKey('ALTER_ADD', $commands);
-        $this->assertHasStatement($commands['ALTER_ADD'], 'ALTER TABLE tl_foo ADD foo NUMERIC(9,2) NOT NULL');
+        $this->assertContains(
+            'ALTER TABLE tl_foo ADD foo NUMERIC(9, 2) NOT NULL',
+            $commands
+        );
     }
 
     public function testHandlesDefaultsInTheAddColumnCommands(): void
@@ -433,10 +446,9 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
-        $this->assertArrayHasKey('ALTER_ADD', $commands);
-        $this->assertHasStatement(
-            $commands['ALTER_ADD'],
-            "ALTER TABLE tl_foo ADD foo VARCHAR(255) DEFAULT ',' NOT NULL"
+        $this->assertContains(
+            "ALTER TABLE tl_foo ADD foo VARCHAR(255) DEFAULT ',' NOT NULL",
+            $commands
         );
     }
 
@@ -474,11 +486,14 @@ class CommandCompilerTest extends TestCase
         $installer = $this->getInstaller($fromSchema, $toSchema);
         $commands = $installer->getCommands();
 
-        $this->assertArrayHasKey('ALTER_ADD', $commands);
-        $this->assertHasStatement($commands['ALTER_ADD'], 'ALTER TABLE tl_foo ADD foo1 VARCHAR(255) NOT NULL');
-        $this->assertHasStatement($commands['ALTER_ADD'], 'ALTER TABLE tl_foo ADD foo2 INT NOT NULL');
-        $this->assertHasStatement($commands['ALTER_ADD'], 'ALTER TABLE tl_foo ADD foo3 NUMERIC(9,2) NOT NULL');
-        $this->assertHasStatement($commands['ALTER_ADD'], "ALTER TABLE tl_foo ADD foo4 VARCHAR(255) DEFAULT ',' NOT NULL");
+        $this->assertContains(
+            'ALTER TABLE tl_foo '.
+                'ADD foo1 VARCHAR(255) NOT NULL, '.
+                'ADD foo2 INT NOT NULL, '.
+                'ADD foo3 NUMERIC(9, 2) NOT NULL, '.
+                "ADD foo4 VARCHAR(255) DEFAULT ',' NOT NULL",
+            $commands
+        );
     }
 
     public function testReturnsNoCommandsIfTheSchemasAreIdentical(): void

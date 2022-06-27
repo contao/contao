@@ -264,9 +264,7 @@ class MigrateCommand extends Command
         $commandsByHash = [];
 
         while (true) {
-            $this->commandCompiler->compileCommands();
-
-            $commands = $this->commandCompiler->getCommands(false);
+            $commands = $this->commandCompiler->getCommands();
 
             $hasNewCommands = \count(array_filter(
                 array_keys($commands),

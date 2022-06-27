@@ -13,193 +13,88 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Migration;
 
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
-use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 
 class CommandCompiler
 {
+    /**
+     * @var array<string, string>|null
+     */
     private array|null $commands = null;
-    private array $commandOrder;
 
     /**
      * @internal Do not inherit from this class; decorate the "contao.migration.command_compiler" service instead
      */
-    public function __construct(private Connection $connection, private SchemaProvider $schemaProvider)
+    public function __construct(private readonly Connection $connection, private readonly SchemaProvider $schemaProvider)
     {
     }
 
     /**
-     * @return array<string>
+     * Returns a list of SQL commands indexed by a unique hash.
+     *
+     * @return array<string, string>
      */
-    public function getCommands(bool $byGroup = true): array
+    public function getCommands(): array
     {
-        if (null === $this->commands) {
-            $this->compileCommands();
-        }
-
-        if ($byGroup || !$this->commands) {
-            return $this->commands;
-        }
-
-        $commandsByHash = array_merge(...array_values($this->commands));
-
-        uksort(
-            $commandsByHash,
-            function ($a, $b) {
-                $indexA = array_search($a, $this->commandOrder, true);
-                $indexB = array_search($b, $this->commandOrder, true);
-
-                if (false === $indexA) {
-                    $indexA = \count($this->commandOrder);
-                }
-
-                if (false === $indexB) {
-                    $indexB = \count($this->commandOrder);
-                }
-
-                return $indexA - $indexB;
-            }
-        );
-
-        return $commandsByHash;
+        return $this->commands ?? ($this->commands = $this->compileCommands());
     }
 
     /**
+     * Execute a SQL command identified by its hash.
+     *
      * @throws \InvalidArgumentException
      */
     public function execCommand(string $hash): void
     {
-        if (null === $this->commands) {
-            $this->compileCommands();
-        }
+        $command = $this->commands[$hash] ?? throw new \InvalidArgumentException(sprintf('Invalid hash: %s', $hash));
 
-        foreach ($this->commands as $commands) {
-            if (isset($commands[$hash])) {
-                $this->connection->executeStatement($commands[$hash]);
-
-                return;
-            }
-        }
-
-        throw new \InvalidArgumentException(sprintf('Invalid hash: %s', $hash));
+        $this->connection->executeStatement($command);
     }
 
     /**
-     * Compiles the command required to update the database.
+     * @return array<string, string>
      */
-    public function compileCommands(): void
+    private function compileCommands(): array
     {
-        $return = [
-            'CREATE' => [],
-            'ALTER_TABLE' => [],
-            'ALTER_CHANGE' => [],
-            'ALTER_ADD' => [],
-            'DROP' => [],
-            'ALTER_DROP' => [],
-        ];
-
-        $order = [];
-
-        // Create the from and to schema
+        // Get a list of SQL commands from the schema diff
         $schemaManager = $this->connection->createSchemaManager();
         $fromSchema = $schemaManager->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
 
-        $diff = $schemaManager
+        $diffCommands = $schemaManager
             ->createComparator()
             ->compareSchemas($fromSchema, $toSchema)
             ->toSql($this->connection->getDatabasePlatform())
         ;
 
-        foreach ($diff as $sql) {
-            switch (true) {
-                case str_starts_with($sql, 'CREATE TABLE '):
-                    $return['CREATE'][md5($sql)] = $sql;
-                    $order[] = md5($sql);
-                    break;
+        // Get a list of SQL commands that adjust the engine and collation options
+        $engineAndCollationCommands = $this->compileEngineAndCollationCommands($fromSchema, $toSchema);
 
-                case str_starts_with($sql, 'DROP TABLE '):
-                    $return['DROP'][md5($sql)] = $sql;
-                    $order[] = md5($sql);
-                    break;
+        // Return commands indexed by a unique hash
+        $commands = [];
 
-                case str_starts_with($sql, 'CREATE INDEX '):
-                case str_starts_with($sql, 'CREATE UNIQUE INDEX '):
-                case str_starts_with($sql, 'CREATE FULLTEXT INDEX '):
-                    $return['ALTER_ADD'][md5($sql)] = $sql;
-                    $order[] = md5($sql);
-                    break;
-
-                case str_starts_with($sql, 'DROP INDEX'):
-                    $return['ALTER_CHANGE'][md5($sql)] = $sql;
-                    $order[] = md5($sql);
-                    break;
-
-                case preg_match('/^(ALTER TABLE [^ ]+) /', $sql, $matches):
-                    $prefix = $matches[1];
-                    $sql = substr($sql, \strlen((string) $prefix));
-                    $parts = array_reverse(array_map('trim', explode(',', $sql)));
-
-                    for ($i = 0, $count = \count($parts); $i < $count; ++$i) {
-                        $part = $parts[$i];
-                        $command = $prefix.' '.$part;
-
-                        switch (true) {
-                            case str_starts_with($part, 'DROP '):
-                                $return['ALTER_DROP'][md5($command)] = $command;
-                                $order[] = md5($command);
-                                break;
-
-                            case str_starts_with($part, 'ADD '):
-                                $return['ALTER_ADD'][md5($command)] = $command;
-                                $order[] = md5($command);
-                                break;
-
-                            case str_starts_with($part, 'CHANGE '):
-                            case str_starts_with($part, 'RENAME '):
-                                $return['ALTER_CHANGE'][md5($command)] = $command;
-                                $order[] = md5($command);
-                                break;
-
-                            default:
-                                $parts[$i + 1] .= ','.$part;
-                                break;
-                        }
-                    }
-                    break;
-
-                default:
-                    throw new \RuntimeException(sprintf('Unsupported SQL schema diff: %s', $sql));
-            }
+        foreach ([...$diffCommands, ...$engineAndCollationCommands] as $command) {
+            $commands[md5($command)] = $command;
         }
 
-        $this->checkEngineAndCollation($return, $order, $fromSchema, $toSchema);
-
-        $return = array_filter($return);
-
-        // HOOK: allow third-party developers to modify the array (see #3281)
-        if (isset($GLOBALS['TL_HOOKS']['sqlCompileCommands']) && \is_array($GLOBALS['TL_HOOKS']['sqlCompileCommands'])) {
-            foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback) {
-                $return = System::importStatic($callback[0])->{$callback[1]}($return);
-            }
-        }
-
-        $this->commands = $return;
-        $this->commandOrder = $order;
+        return $commands;
     }
 
     /**
      * Checks engine and collation and adds the ALTER TABLE queries.
+     *
+     * @return list<string>
      */
-    private function checkEngineAndCollation(array &$sql, array &$order, Schema $fromSchema, Schema $toSchema): void
+    private function compileEngineAndCollationCommands(Schema $fromSchema, Schema $toSchema): array
     {
         $tables = $toSchema->getTables();
         $dynamic = $this->hasDynamicRowFormat();
 
+        $commands = [];
+
         foreach ($tables as $table) {
             $tableName = $table->getName();
-            $alterTables = [];
             $deleteIndexes = false;
 
             if (!str_starts_with($tableName, 'tl_')) {
@@ -230,7 +125,7 @@ class CommandCompiler
                 }
 
                 $deleteIndexes = true;
-                $alterTables[md5($command)] = $command;
+                $commands[] = $command;
             } elseif ($innodb && $dynamic) {
                 if (false === stripos($tableOptions['Create_options'], 'row_format=dynamic')) {
                     $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
@@ -239,7 +134,7 @@ class CommandCompiler
                         $command .= ' KEY_BLOCK_SIZE = 0';
                     }
 
-                    $alterTables[md5($command)] = $command;
+                    $commands[] = $command;
                 }
             }
 
@@ -255,11 +150,11 @@ class CommandCompiler
             if ($tableOptions['Collation'] !== $collate && '' !== $charset) {
                 $command = 'ALTER TABLE '.$tableName.' CONVERT TO CHARACTER SET '.$charset.' COLLATE '.$collate;
                 $deleteIndexes = true;
-                $alterTables[md5($command)] = $command;
+                $commands[] = $command;
             }
 
             // Delete the indexes if the engine changes in case the existing
-            // indexes are too long. The migration then needs to be run muliple
+            // indexes are too long. The migration then needs to be run multiple
             // times to re-create the indexes with the correct length.
             if ($deleteIndexes) {
                 if (!$fromSchema->hasTable($tableName)) {
@@ -275,21 +170,12 @@ class CommandCompiler
                         continue;
                     }
 
-                    $indexCommand = $platform->getDropIndexSQL($indexName, $tableName);
-                    $strKey = md5($indexCommand);
-
-                    if (!isset($sql['ALTER_CHANGE'][$strKey])) {
-                        $sql['ALTER_TABLE'][$strKey] = $indexCommand;
-                        $order[] = $strKey;
-                    }
+                    $commands[] = $platform->getDropIndexSQL($indexName, $tableName);
                 }
             }
-
-            foreach ($alterTables as $k => $alterTable) {
-                $sql['ALTER_TABLE'][$k] = $alterTable;
-                $order[] = $k;
-            }
         }
+
+        return $commands;
     }
 
     private function hasDynamicRowFormat(): bool

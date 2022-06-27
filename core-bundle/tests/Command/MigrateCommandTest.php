@@ -146,13 +146,7 @@ class MigrateCommandTest extends TestCase
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->atLeastOnce())
-            ->method('compileCommands')
-        ;
-
-        $commandCompiler
-            ->expects($this->atLeastOnce())
             ->method('getCommands')
-            ->with(false)
             ->willReturn(
                 [
                     'hash1' => 'First call QUERY 1',
@@ -215,13 +209,7 @@ class MigrateCommandTest extends TestCase
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->once())
-            ->method('compileCommands')
-        ;
-
-        $commandCompiler
-            ->expects($this->once())
             ->method('getCommands')
-            ->with(false)
             ->willReturn(
                 [
                     'hash1' => 'First call QUERY 1',
@@ -343,7 +331,7 @@ class MigrateCommandTest extends TestCase
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->atLeastOnce())
-            ->method('compileCommands')
+            ->method('getCommands')
             ->willThrowException(new \Exception('Fatal'))
         ;
 
