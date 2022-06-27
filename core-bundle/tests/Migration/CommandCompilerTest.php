@@ -522,13 +522,6 @@ class CommandCompilerTest extends TestCase
         $this->assertEmpty($commands);
     }
 
-    private function assertHasStatement(array $commands, string $expected): void
-    {
-        $key = md5($expected);
-        $this->assertArrayHasKey($key, $commands, 'Expected key '.$key.' for statement "'.$expected.'"');
-        $this->assertSame($expected, $commands[$key]);
-    }
-
     private function getInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): CommandCompiler
     {
         $platform = new MySQLPlatform();
