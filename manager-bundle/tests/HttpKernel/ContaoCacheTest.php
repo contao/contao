@@ -78,15 +78,18 @@ class ContaoCacheTest extends ContaoTestCase
         $kernel
             ->expects($this->once())
             ->method('getContainer')
-            ->willReturn(new Container());
+            ->willReturn(new Container())
+        ;
         $kernel
             ->expects($this->once()) // Second is coming from the cache
             ->method('handle')
-            ->willReturnOnConsecutiveCalls($response, $response);
+            ->willReturnOnConsecutiveCalls($response, $response)
+        ;
         $kernel
             ->expects($this->once()) // Second is coming from the cache
             ->method('terminate')
-            ->willReturnOnConsecutiveCalls($response, $response);
+            ->willReturnOnConsecutiveCalls($response, $response)
+        ;
 
         $cache = new ContaoCache($kernel, $this->getTempDir());
         $request = Request::create('/foobar');
