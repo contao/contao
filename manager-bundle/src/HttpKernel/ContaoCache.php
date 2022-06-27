@@ -51,9 +51,9 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     /**
      * Override default terminate method in order to never call the kernel.terminate
      * event on cache hit. This can be removed once symfony/http-kernel is required
-     * in at least ^6.2
+     * in at least ^6.2.
      */
-    public function terminate(Request $request, Response $response)
+    public function terminate(Request $request, Response $response): void
     {
         $traces = $this->getTraces();
 
@@ -91,11 +91,12 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     /**
      * Unfortunately, we need to copy this from the parent as it is private.
      * This can be removed once symfony/http-kernel is required
-     * in at least ^6.2
+     * in at least ^6.2.
      */
     private function getTraceKey(Request $request): string
     {
         $path = $request->getPathInfo();
+
         if ($qs = $request->getQueryString()) {
             $path .= '?'.$qs;
         }
