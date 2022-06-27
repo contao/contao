@@ -18,6 +18,7 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * Converts empty string values of boolean fields to zeros.
@@ -79,7 +80,7 @@ class BooleanFieldsMigration extends AbstractMigration
             }
 
             foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
-                if ('boolean' !== ($fieldConfig['sql']['type'] ?? null)) {
+                if (Types::BOOLEAN !== ($fieldConfig['sql']['type'] ?? null)) {
                     continue;
                 }
 
