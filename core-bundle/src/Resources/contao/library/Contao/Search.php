@@ -194,130 +194,144 @@ class Search
 		// Prevent deadlocks
 		$objDatabase->query("LOCK TABLES tl_search WRITE, tl_search_index WRITE, tl_search_term WRITE");
 
-		$objIndex = $objDatabase->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
-								->limit(1)
-								->execute($arrSet['checksum'], $arrSet['pid']);
-
-		if ($objIndex->numRows)
+		try
 		{
-			// The new URL is more canonical (shorter and/or fewer fragments)
-			if (self::compareUrls($arrSet['url'], $objIndex->url) < 0)
+			$objIndex = $objDatabase->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
+				->limit(1)
+				->execute($arrSet['checksum'], $arrSet['pid']);
+
+			if ($objIndex->numRows)
 			{
-				self::removeEntry($arrSet['url']);
+				// The new URL is more canonical (shorter and/or fewer fragments)
+				if (self::compareUrls($arrSet['url'], $objIndex->url) < 0)
+				{
+					self::removeEntry($arrSet['url']);
 
-				$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
-							->set($arrSet)
-							->execute($objIndex->id);
-			}
-
-			$objDatabase->query("UNLOCK TABLES");
-
-			// The same page has been indexed under a different URL already (see #8460)
-			return false;
-		}
-
-		$objIndex = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
-								->limit(1)
-								->execute($arrSet['url']);
-
-		// Add the page to the tl_search table
-		if ($objIndex->numRows)
-		{
-			$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
+					$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
 						->set($arrSet)
 						->execute($objIndex->id);
+				}
 
-			$intInsertId = $objIndex->id;
-		}
-		else
-		{
-			$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
-										 ->set($arrSet)
-										 ->execute();
-
-			$intInsertId = $objInsertStmt->insertId;
-		}
-
-		// Remove quotes
-		$strText = str_replace(array('´', '`'), "'", $arrSet['text']);
-
-		unset($arrSet);
-
-		// Split words
-		$arrWords = self::splitIntoWords($strText, $arrData['language']);
-		$arrIndex = array();
-
-		// Index words
-		foreach ($arrWords as $strWord)
-		{
-			if (isset($arrIndex[$strWord]))
-			{
-				$arrIndex[$strWord]++;
-				continue;
+				// The same page has been indexed under a different URL already (see #8460)
+				return false;
 			}
 
-			$arrIndex[$strWord] = 1;
-		}
+			$objIndex = $objDatabase->prepare("SELECT id FROM tl_search WHERE url=?")
+				->limit(1)
+				->execute($arrSet['url']);
 
-		// Decrement document frequency counts
-		$objDatabase
-			->prepare("
-				UPDATE tl_search_term
-				INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
-				SET documentFrequency = GREATEST(1, documentFrequency) - 1
-			")
-			->execute($intInsertId);
-
-		// Remove the existing index
-		$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
-					->execute($intInsertId);
-
-		// Add new terms and increment frequency counts of existing terms
-		$objDatabase
-			->prepare("
-				INSERT INTO tl_search_term (term, documentFrequency)
-				VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
-				ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
-			")
-			->execute(array_map('strval', array_keys($arrIndex)));
-
-		// Remove obsolete terms
-		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
-
-		$objTermIds = $objDatabase
-			->prepare("
-				SELECT term, id AS termId
-				FROM tl_search_term
-				WHERE term IN (" . implode(',', array_fill(0, \count($arrIndex), '?')) . ")
-			")
-			->execute(array_map('strval', array_keys($arrIndex)));
-
-		$arrTermIds = array();
-
-		foreach ($objTermIds->fetchAllAssoc() as $arrTermId)
-		{
-			$arrTermIds[$arrTermId['term']] = (int) $arrTermId['termId'];
-		}
-
-		$arrQuery = array();
-		$arrValues = array();
-
-		foreach ($arrIndex as $k=>$v)
-		{
-			if (empty($arrTermIds[$k]))
+			// Add the page to the tl_search table
+			if ($objIndex->numRows)
 			{
-				continue;
+				$objDatabase->prepare("UPDATE tl_search %s WHERE id=?")
+					->set($arrSet)
+					->execute($objIndex->id);
+
+				$intInsertId = $objIndex->id;
+			}
+			else
+			{
+				$objInsertStmt = $objDatabase->prepare("INSERT INTO tl_search %s")
+					->set($arrSet)
+					->execute();
+
+				$intInsertId = $objInsertStmt->insertId;
 			}
 
-			$arrQuery[] = '(?, ?, ?)';
-			$arrValues[] = $intInsertId;
-			$arrValues[] = $arrTermIds[$k];
-			$arrValues[] = $v;
+			// Remove quotes
+			$strText = str_replace(array('´', '`'), "'", $arrSet['text']);
+
+			unset($arrSet);
+
+			// Split words
+			$arrWords = self::splitIntoWords($strText, $arrData['language']);
+			$arrIndex = array();
+
+			// Index words
+			foreach ($arrWords as $strWord)
+			{
+				if (isset($arrIndex[$strWord]))
+				{
+					$arrIndex[$strWord]++;
+					continue;
+				}
+
+				$arrIndex[$strWord] = 1;
+			}
+
+			// Decrement document frequency counts
+			$objDatabase
+				->prepare("
+					UPDATE tl_search_term
+					INNER JOIN tl_search_index ON tl_search_term.id = tl_search_index.termId AND tl_search_index.pid = ?
+					SET documentFrequency = GREATEST(1, documentFrequency) - 1
+				")
+				->execute($intInsertId);
+
+			// Remove the existing index
+			$objDatabase->prepare("DELETE FROM tl_search_index WHERE pid=?")
+				->execute($intInsertId);
+
+			// Add new terms and increment frequency counts of existing terms
+			$objDatabase
+				->prepare("
+					INSERT INTO tl_search_term (term, documentFrequency)
+					VALUES " . implode(', ', array_fill(0, \count($arrIndex), '(?, 1)')) . "
+					ON DUPLICATE KEY UPDATE documentFrequency = documentFrequency + 1
+				")
+				->execute(array_map('strval', array_keys($arrIndex)));
+
+			// Remove obsolete terms
+			$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
+
+			$objTermIds = $objDatabase
+				->prepare("
+					SELECT term, id AS termId
+					FROM tl_search_term
+					WHERE term IN (" . implode(',', array_fill(0, \count($arrIndex), '?')) . ")
+				")
+				->execute(array_map('strval', array_keys($arrIndex)));
+
+			$arrTermIds = array();
+
+			foreach ($objTermIds->fetchAllAssoc() as $arrTermId)
+			{
+				$arrTermIds[$arrTermId['term']] = (int) $arrTermId['termId'];
+			}
+
+			$arrQuery = array();
+			$arrValues = array();
+
+			foreach ($arrIndex as $k => $v)
+			{
+				if (empty($arrTermIds[$k]))
+				{
+					continue;
+				}
+
+				$arrQuery[] = '(?, ?, ?)';
+				$arrValues[] = $intInsertId;
+				$arrValues[] = $arrTermIds[$k];
+				$arrValues[] = $v;
+			}
+
+			// Create the new index
+			$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
+				->execute($arrValues);
+		}
+		finally
+		{
+			$objDatabase->query("UNLOCK TABLES");
 		}
 
-		// Create the new index
-		$objDatabase->prepare("INSERT INTO tl_search_index (pid, termId, relevance) VALUES " . implode(', ', $arrQuery))
-					->execute($arrValues);
+		self::updateVectorLengths((int) $intInsertId);
+
+		return true;
+	}
+
+	private static function updateVectorLengths(int $intInsertId): void
+	{
+		$objDatabase = Database::getInstance();
 
 		$row = $objDatabase->query("SELECT IFNULL(MIN(id), 0), IFNULL(MAX(id), 0), COUNT(*) FROM tl_search")->fetchRow();
 
@@ -364,10 +378,6 @@ class Search
 			) si ON si.pid = tl_search.id
 			SET tl_search.vectorLength = si.vectorLength
 		");
-
-		$objDatabase->query("UNLOCK TABLES");
-
-		return true;
 	}
 
 	/**
