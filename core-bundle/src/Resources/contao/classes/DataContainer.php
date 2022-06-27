@@ -316,6 +316,10 @@ abstract class DataContainer extends Backend
 
 			case 'createNewVersion':
 				return $this->blnCreateNewVersion;
+
+			// Forward compatibility with Contao 5.0
+			case 'currentPid':
+				return ((int) (\defined('CURRENT_ID') ? CURRENT_ID : 0)) ?: null;
 		}
 
 		return parent::__get($strKey);
