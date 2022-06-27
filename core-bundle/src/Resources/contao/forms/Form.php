@@ -383,8 +383,8 @@ class Form extends Hybrid
 			// Get subject and message
 			if ($this->format == 'email')
 			{
-				$message = $arrSubmitted['message'];
-				$email->subject = $arrSubmitted['subject'];
+				$message = $arrSubmitted['message'] ?? '';
+				$email->subject = $arrSubmitted['subject'] ?? '';
 			}
 
 			// Set the admin e-mail as "from" address
