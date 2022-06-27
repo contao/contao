@@ -93,12 +93,19 @@ class ImagesController extends AbstractContentElementController
      */
     private function getSources(ContentModel $model): string|array
     {
-        // Depending on the selected mode, we read from tl_content.singleSRC,
-        // tl_content.multiSRC or the user's home directory (tl_user.homeDir)
-        return match (true) {
-            'image' === $model->type => [$model->singleSRC],
-            $model->useHomeDir && ($user = $this->security->getUser()) instanceof FrontendUser && $user->assignDir && ($homeDir = $user->homeDir) => $homeDir,
-            default => $model->multiSRC,
-        };
+        if ('image' === $model->type) {
+            return [$model->singleSRC];
+        }
+
+        if (
+            $model->useHomeDir
+            && ($user = $this->security->getUser()) instanceof FrontendUser
+            && $user->assignDir
+            && $user->homeDir
+        ) {
+            return $user->homeDir;
+        }
+
+        return $model->multiSRC;
     }
 }
