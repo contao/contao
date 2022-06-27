@@ -269,7 +269,7 @@ class TwoFactorFrontendListenerTest extends TestCase
         $pageModel->twoFactorJumpTo = 1;
 
         $page401 = $this->mockClassWithProperties(PageModel::class);
-        $page401->autoforward = 1;
+        $page401->autoforward = true;
 
         $session = $this->createMock(SessionInterface::class);
         $session
