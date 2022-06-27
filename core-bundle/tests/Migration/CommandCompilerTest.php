@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\InstallationBundle\Tests\Database;
+namespace Contao\CoreBundle\Tests\Migration;
 
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
-use Contao\InstallationBundle\Database\Installer;
+use Contao\CoreBundle\Migration\CommandCompiler;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQL\Comparator;
@@ -22,7 +22,7 @@ use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\TestCase;
 
-class InstallerTest extends TestCase
+class CommandCompilerTest extends TestCase
 {
     public function testReturnsTheAlterTableCommands(): void
     {
@@ -514,7 +514,7 @@ class InstallerTest extends TestCase
         $this->assertSame($expected, $commands[$key]);
     }
 
-    private function getInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): Installer
+    private function getInstaller(Schema $fromSchema = null, Schema $toSchema = null, array $tables = [], string $filePerTable = 'ON'): CommandCompiler
     {
         $platform = new MySQLPlatform();
         $comparator = new Comparator($platform);
@@ -587,6 +587,6 @@ class InstallerTest extends TestCase
             ->willReturn($toSchema)
         ;
 
-        return new Installer($connection, $schemaProvider);
+        return new CommandCompiler($connection, $schemaProvider);
     }
 }

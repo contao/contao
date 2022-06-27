@@ -19,10 +19,10 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
+use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -143,13 +143,13 @@ class MigrateCommandTest extends TestCase
      */
     public function testExecutesSchemaDiff(string $format): void
     {
-        $installer = $this->createMock(Installer::class);
-        $installer
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
             ->expects($this->atLeastOnce())
             ->method('compileCommands')
         ;
 
-        $installer
+        $commandCompiler
             ->expects($this->atLeastOnce())
             ->method('getCommands')
             ->with(false)
@@ -167,7 +167,7 @@ class MigrateCommandTest extends TestCase
             )
         ;
 
-        $command = $this->getCommand([], [], $installer);
+        $command = $this->getCommand([], [], $commandCompiler);
 
         $tester = new CommandTester($command);
         $tester->setInputs(['yes', 'yes']);
@@ -212,13 +212,13 @@ class MigrateCommandTest extends TestCase
      */
     public function testDoesNotExecuteWithDryRun(string $format): void
     {
-        $installer = $this->createMock(Installer::class);
-        $installer
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
             ->expects($this->once())
             ->method('compileCommands')
         ;
 
-        $installer
+        $commandCompiler
             ->expects($this->once())
             ->method('getCommands')
             ->with(false)
@@ -233,7 +233,7 @@ class MigrateCommandTest extends TestCase
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
-            $installer
+            $commandCompiler
         );
 
         $tester = new CommandTester($command);
@@ -340,14 +340,14 @@ class MigrateCommandTest extends TestCase
      */
     public function testDoesAbortOnFatalError(string $format): void
     {
-        $installer = $this->createMock(Installer::class);
-        $installer
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
             ->expects($this->atLeastOnce())
             ->method('compileCommands')
             ->willThrowException(new \Exception('Fatal'))
         ;
 
-        $command = $this->getCommand([], [], $installer);
+        $command = $this->getCommand([], [], $commandCompiler);
         $tester = new CommandTester($command);
 
         if ('ndjson' !== $format) {
@@ -383,7 +383,7 @@ class MigrateCommandTest extends TestCase
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], Installer $installer = null, BackupManager $backupManager = null): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler $commandCompiler = null, BackupManager $backupManager = null): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
 
@@ -410,11 +410,11 @@ class MigrateCommandTest extends TestCase
         ;
 
         return new MigrateCommand(
+            $commandCompiler ?? $this->createMock(CommandCompiler::class),
             $migrations,
             $backupManager ?? $this->createBackupManager(false),
             $schemaProvider,
-            $this->createMock(MysqlInnodbRowSizeCalculator::class),
-            $installer ?? $this->createMock(Installer::class)
+            $this->createMock(MysqlInnodbRowSizeCalculator::class)
         );
     }
 

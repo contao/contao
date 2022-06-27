@@ -15,9 +15,9 @@ namespace Contao\CoreBundle\Command;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
+use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
-use Contao\InstallationBundle\Database\Installer;
 use Doctrine\DBAL\Schema\Table;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -34,11 +34,11 @@ class MigrateCommand extends Command
     private SymfonyStyle|null $io = null;
 
     public function __construct(
+        private CommandCompiler $commandCompiler,
         private MigrationCollection $migrations,
         private BackupManager $backupManager,
         private SchemaProvider $schemaProvider,
         private MysqlInnodbRowSizeCalculator $rowSizeCalculator,
-        private Installer|null $installer = null,
     ) {
         parent::__construct();
     }
@@ -253,12 +253,6 @@ class MigrateCommand extends Command
 
     private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string $specifiedHash = null): bool
     {
-        if (null === $this->installer) {
-            $this->io->error('Service "contao_installation.database.installer" not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
-
-            return false;
-        }
-
         if ($schemaWarnings = $this->compileSchemaWarnings()) {
             $this->io->warning(implode("\n\n", $schemaWarnings));
 
@@ -270,9 +264,9 @@ class MigrateCommand extends Command
         $commandsByHash = [];
 
         while (true) {
-            $this->installer->compileCommands();
+            $this->commandCompiler->compileCommands();
 
-            $commands = $this->installer->getCommands(false);
+            $commands = $this->commandCompiler->getCommands(false);
 
             $hasNewCommands = \count(array_filter(
                 array_keys($commands),
@@ -341,7 +335,7 @@ class MigrateCommand extends Command
                     }
 
                     try {
-                        $this->installer->execCommand($hash);
+                        $this->commandCompiler->execCommand($hash);
 
                         ++$count;
                         $commandExecuted = true;

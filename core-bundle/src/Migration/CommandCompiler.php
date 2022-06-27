@@ -10,20 +10,20 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\InstallationBundle\Database;
+namespace Contao\CoreBundle\Migration;
 
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 
-class Installer
+class CommandCompiler
 {
     private array|null $commands = null;
     private array $commandOrder;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao_installation.database.installer" service instead
+     * @internal Do not inherit from this class; decorate the "contao.migration.command_compiler" service instead
      */
     public function __construct(private Connection $connection, private SchemaProvider $schemaProvider)
     {
