@@ -73,7 +73,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => 1,
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -103,7 +103,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => 1,
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -133,7 +133,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => 1,
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -148,7 +148,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'groups' => [],
-            'published' => 1,
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -191,7 +191,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => 0,
+            'published' => false,
             'rootLanguage' => 'en',
         ]);
 
@@ -205,7 +205,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'groups' => [],
-            'published' => 1,
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -245,8 +245,8 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => 1,
-            'requireItem' => 1,
+            'published' => true,
+            'requireItem' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -260,7 +260,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'groups' => [],
-            'published' => 1,
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -300,7 +300,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'forward',
             'groups' => [],
-            'published' => 1,
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -314,7 +314,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'groups' => [],
-            'published' => 1,
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -368,7 +368,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'error_404',
             'groups' => [],
-            'published' => 1,
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -382,7 +382,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'groups' => [],
-            'published' => 1,
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
