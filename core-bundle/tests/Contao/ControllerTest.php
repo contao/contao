@@ -142,11 +142,11 @@ class ControllerTest extends TestCase
         yield 'Published' => [
             $this->mockClassWithProperties(PageModel::class, [
                 'type' => 'regular',
-                'hide' => 0,
-                'protected' => 0,
+                'hide' => false,
+                'protected' => false,
                 'start' => '',
                 'stop' => '',
-                'published' => 1,
+                'published' => true,
             ]),
             'regular.svg',
         ];
