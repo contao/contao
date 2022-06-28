@@ -22,7 +22,6 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Security;
@@ -75,8 +74,7 @@ class ImagesController extends AbstractContentElementController
 
         $imageList = array_map(
             fn (FilesystemItem $filesystemItem): Figure => $figureBuilder
-                // TODO: As soon as our image libraries support this case, read from the public path instead.
-                ->fromPath(Path::join($this->filesStorage->getPrefix(), $filesystemItem->getPath()))
+                ->fromStorage($this->filesStorage, $filesystemItem->getPath())
                 ->build(),
             iterator_to_array($filesystemItems)
         );
