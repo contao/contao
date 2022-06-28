@@ -17,13 +17,6 @@ services:
         arguments:
             - '%kernel.project_dir%/var/install_lock'
 
-    contao_installation.database.installer:
-        class: Contao\InstallationBundle\Database\Installer
-        public: true
-        arguments:
-            - '@database_connection'
-            - '@contao.doctrine.schema_provider'
-
     contao_installation.install_tool:
         class: Contao\InstallationBundle\InstallTool
         public: true
