@@ -396,4 +396,4 @@ back to an array representation. If you are just using array access, nothing nee
 The ability to run execute migrations has been removed from the Install Tool, use the `contao:migrate` command or the
 Contao Manager instead.
 
-The `sqlCompileCommands` hook hasd been removed, use a custom schema provider instead.
+The `sqlCompileCommands` hook has been removed, use the Doctrine DBAL `postGenerateSchema` event instead.
