@@ -13,36 +13,51 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Security\Voter;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
+use Contao\CoreBundle\Security\DataContainer\DeleteAction;
+use Contao\CoreBundle\Security\DataContainer\ReadAction;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Security;
 
-class NewsArchiveAccessVoter extends Voter
+class NewsArchiveAccessVoter implements VoterInterface, CacheableVoterInterface
 {
     public function __construct(private Security $security)
     {
     }
 
-    protected function supports(string $attribute, $subject): bool
+    public function supportsAttribute(string $attribute): bool
     {
-        return $subject instanceof DataContainerSubject
-            && 'tl_news_archive' === $subject->table
-            && str_starts_with($attribute, ContaoCorePermissions::DC_ACTION_PREFIX);
+        return $attribute === ContaoCorePermissions::DC_PREFIX.'tl_news_archive';
     }
 
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
+    public function supportsType(string $subjectType): bool
     {
-        return match ($attribute) {
-            ContaoCorePermissions::DC_ACTION_CREATE => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES),
-            ContaoCorePermissions::DC_ACTION_COPY => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES)
-                && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id),
-            ContaoCorePermissions::DC_ACTION_EDIT,
-            ContaoCorePermissions::DC_ACTION_VIEW => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id),
-            ContaoCorePermissions::DC_ACTION_DELETE => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->id)
-                && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
-            default => false,
-        };
+        return \in_array($subjectType, [CreateAction::class, ReadAction::class, UpdateAction::class, DeleteAction::class], true);
+    }
+
+    public function vote(TokenInterface $token, $subject, array $attributes): int
+    {
+        foreach ($attributes as $attribute) {
+            if (!$this->supportsAttribute($attribute)) {
+                continue;
+            }
+
+            $isGranted = match (true) {
+                $subject instanceof CreateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_CREATE_ARCHIVES),
+                $subject instanceof ReadAction,
+                $subject instanceof UpdateAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId()),
+                $subject instanceof DeleteAction => $this->security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $subject->getCurrentId())
+                    && $this->security->isGranted(ContaoNewsPermissions::USER_CAN_DELETE_ARCHIVES),
+                default => false,
+            };
+
+            return $isGranted ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
+        }
+
+        return self::ACCESS_ABSTAIN;
     }
 }
