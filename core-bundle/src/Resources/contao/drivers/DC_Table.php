@@ -2372,7 +2372,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$currentRecord = $this->getCurrentRecord($id);
 
-					// Store the active record (BC)
+					// Store the active record (backwards compatibility)
 					$this->objActiveRecord = (object) $currentRecord;
 
 					foreach ($this->strPalette as $v)
@@ -2689,7 +2689,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
-		// Store the active record (BC)
+		// Store the active record (backwards compatibility)
 		$this->objActiveRecord = (object) $currentRecord;
 
 		$this->procedure = array('id=?');
@@ -2763,7 +2763,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->arrSubmit = array();
 						$this->blnCreateNewVersion = false;
 
-						// Store the active record (BC)
+						// Store the active record (backwards compatibility)
 						$this->objActiveRecord = (object) $this->getCurrentRecord();
 
 						$objVersions = new Versions($this->strTable, $this->intId);

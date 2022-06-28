@@ -69,8 +69,7 @@ class TemplateOptionsListener
             return null;
         }
 
-        $currentRecord = $dc->getCurrentRecord();
-        $class = $this->proxyClass::findClass($currentRecord['type']);
+        $class = $this->proxyClass::findClass($dc->getCurrentRecord()['type']);
 
         if (empty($class) || $class === $this->proxyClass) {
             return null;
