@@ -2,6 +2,13 @@
 
 ## Version 4.* to 5.0
 
+### Install tool
+
+The ability to execute migrations in the install tool has been removed. Use the `contao:migrate` command
+or the Contao Manager instead.
+
+The `sqlCompileCommands` hook has been removed. Use the Doctrine DBAL `postGenerateSchema` event instead.
+
 ### CURRENT_ID
 
 The `CURRENT_ID` constant and session variable have been removed. Use

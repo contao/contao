@@ -42,13 +42,18 @@ class RootPageDependentSelectListener
         $options = [];
         $types = $GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['modules'] ?? [];
         $hasTypes = \count($types) > 0;
+        $pid = $dc->getCurrentRecord()['pid'] ?? null;
+
+        if (null === $pid) {
+            return [];
+        }
 
         $rows = $this->connection->executeQuery(
             "SELECT m.id, m.name, m.type
             FROM tl_module m
             WHERE m.type != 'root_page_dependent_modules' AND m.pid = ?
             ORDER BY m.name",
-            [$dc->activeRecord->pid]
+            [$pid]
         );
 
         foreach ($rows->iterateAssociative() as $module) {
