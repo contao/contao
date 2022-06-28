@@ -392,7 +392,7 @@ class tl_form extends Backend
 	/**
 	 * Add the new form to the permissions
 	 *
-	 * @param $insertId
+	 * @param string|int $insertId
 	 */
 	public function adjustPermissions($insertId)
 	{

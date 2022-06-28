@@ -301,7 +301,7 @@ class tl_newsletter_channel extends Backend
 	/**
 	 * Add the new channel to the permissions
 	 *
-	 * @param $insertId
+	 * @param string|int $insertId
 	 */
 	public function adjustPermissions($insertId)
 	{

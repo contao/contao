@@ -123,6 +123,9 @@ class MetaWizard extends Widget
 			}
 		}
 
+		// Sort the metadata by key (see #3818)
+		ksort($varInput);
+
 		return $varInput;
 	}
 
@@ -162,48 +165,63 @@ class MetaWizard extends Widget
 		// Add the existing entries
 		if (!empty($this->varValue))
 		{
-			$return = '<ul id="ctrl_' . $this->strId . '" class="tl_metawizard dcapicker">';
 			$languages = System::getContainer()->get('contao.intl.locales')->getDisplayNames(array_keys($this->varValue));
+			$items = array();
 
 			// Add the input fields
 			foreach ($this->varValue as $lang=>$meta)
 			{
-				$return .= '
-    <li data-language="' . $lang . '"><span class="lang">' . ($languages[$lang] ?? $lang) . ' ' . Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" data-delete') . '</span>';
+				$item = '<li data-language="' . $lang . '"><span class="lang">' . ($languages[$lang] ?? $lang) . ' ' . Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" data-delete') . '</span>';
 
 				// Take the fields from the DCA (see #4327)
 				foreach ($this->metaFields as $field=>$fieldConfig)
 				{
-					$return .= '<label' . (isset($this->arrFieldErrors[$lang][$field]) ? ' class="error"' : '') . ' for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
+					$item .= '<label' . (isset($this->arrFieldErrors[$lang][$field]) ? ' class="error"' : '') . ' for="ctrl_' . $this->strId . '_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label>';
 
 					if (isset($fieldConfig['type']) && 'textarea' === $fieldConfig['type'])
 					{
-						$return .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>' . ($meta[$field] ?? '') . '</textarea>';
+						$item .= '<textarea name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_textarea"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>' . ($meta[$field] ?? '') . '</textarea>';
 					}
 					else
 					{
-						$return .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . self::specialcharsValue($meta[$field] ?? '') . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>';
+						$item .= '<input type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $this->strId . '_' . $field . '_' . $count . '" class="tl_text" value="' . self::specialcharsValue($meta[$field] ?? '') . '"' . (!empty($fieldConfig['attributes']) ? ' ' . $fieldConfig['attributes'] : '') . '>';
 					}
 
 					// DCA picker
 					if (isset($fieldConfig['dcaPicker']) && (\is_array($fieldConfig['dcaPicker']) || $fieldConfig['dcaPicker'] === true))
 					{
-						$return .= Backend::getDcaPickerWizard($fieldConfig['dcaPicker'], $this->strTable, $this->strField, $this->strId . '_' . $field . '_' . $count);
+						$item .= Backend::getDcaPickerWizard($fieldConfig['dcaPicker'], $this->strTable, $this->strField, $this->strId . '_' . $field . '_' . $count);
 					}
 
-					$return .= '<br>';
+					$item .= '<br>';
 				}
 
-				$return .= '
-    </li>';
+				$item .= '</li>';
+
+				$items[$lang] = $item;
 
 				++$count;
 			}
 
-			$return .= '
-  </ul>';
+			// Sort the items by language name with the user language on top (see #3818)
+			uksort($items, function ($a, $b) use ($languages)
+			{
+				if ($this->User->language === $a)
+				{
+					return -1;
+				}
+
+				if ($this->User->language === $b)
+				{
+					return 1;
+				}
+
+				return ($languages[$a] ?? $a) <=> ($languages[$b] ?? $b);
+			});
+
+			$return = implode('', $items);
 		}
 
-		return $return;
+		return '<ul id="ctrl_' . $this->strId . '" class="tl_metawizard dcapicker">' . $return . '</ul>';
 	}
 }
