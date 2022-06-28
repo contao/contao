@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Migration\Version500;
 
 use Contao\Controller;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -25,19 +26,13 @@ use Doctrine\DBAL\Types\Types;
  */
 class BooleanFieldsMigration extends AbstractMigration
 {
-    public function __construct(private Connection $connection, private ContaoFramework $framework)
+    public function __construct(private Connection $connection, private ContaoFramework $framework, private ResourceFinder $resourceFinder)
     {
     }
 
     public function shouldRun(): bool
     {
-        $schemaManager = $this->connection->createSchemaManager();
-
         foreach ($this->getTargets() as [$table, $column]) {
-            if (!$schemaManager->tablesExist([$table]) || !isset($schemaManager->listTableColumns($table)[$column])) {
-                continue;
-            }
-
             $test = $this->connection->fetchOne("SELECT TRUE FROM $table WHERE `$column` = '' LIMIT 1;");
 
             if (false !== $test) {
@@ -50,13 +45,7 @@ class BooleanFieldsMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $schemaManager = $this->connection->createSchemaManager();
-
         foreach ($this->getTargets() as [$table, $column]) {
-            if (!$schemaManager->tablesExist([$table]) || !isset($schemaManager->listTableColumns($table)[$column])) {
-                continue;
-            }
-
             $this->connection->update($table, [$column => '0'], [$column => '']);
         }
 
@@ -69,22 +58,34 @@ class BooleanFieldsMigration extends AbstractMigration
 
         $schemaManager = $this->connection->createSchemaManager();
         $targets = [];
+        $processed = [];
 
-        foreach ($schemaManager->listTables() as $table) {
-            $tableName = $table->getName();
+        /** @var array<SplFileInfo> $files */
+        $files = $this->resourceFinder->findIn('dca')->depth(0)->files()->name('*.php');
 
-            try {
-                Controller::loadDataContainer($tableName);
-            } catch (\Throwable) {
+        foreach ($files as $file) {
+            $tableName = $file->getBasename('.php');
+
+            if (\in_array($tableName, $processed, true)) {
                 continue;
             }
 
+            $processed[] = $tableName;
+
+            if (!$schemaManager->tablesExist([$tableName])) {
+                continue;
+            }
+
+            $columns = $schemaManager->listTableColumns($tableName);
+
+            Controller::loadDataContainer($tableName);
+
             foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
-                if (Types::BOOLEAN !== ($fieldConfig['sql']['type'] ?? null)) {
+                if (!isset($columns[strtolower($fieldName)]) || Types::BOOLEAN !== ($fieldConfig['sql']['type'] ?? null)) {
                     continue;
                 }
 
-                $field = $table->getColumn(strtolower($fieldName));
+                $field = $columns[strtolower($fieldName)];
 
                 if ($field->getType() instanceof StringType) {
                     $targets[] = [$tableName, strtolower($fieldName)];
