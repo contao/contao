@@ -316,13 +316,17 @@ class MigrateCommand extends Command
             }
 
             $count = 0;
-            $filteredCommands = $this->filterCommands($commands, 'yes, with deletes' === $answer);
+
+            // If deletes should not be processed, recompile the commands without drops
+            if ('yes, with deletes' !== $answer) {
+                $commands = $this->commandCompiler->compileCommands(true);
+            }
 
             do {
                 $commandExecuted = false;
                 $exceptions = [];
 
-                foreach ($filteredCommands as $key => $command) {
+                foreach ($commands as $key => $command) {
                     if ($asJson) {
                         $this->writeNdjson('schema-execute', [
                             'command' => $command,
@@ -336,7 +340,7 @@ class MigrateCommand extends Command
 
                         ++$count;
                         $commandExecuted = true;
-                        unset($filteredCommands[$key]);
+                        unset($commands[$key]);
 
                         if ($asJson) {
                             $this->writeNdjson('schema-result', [
@@ -383,27 +387,6 @@ class MigrateCommand extends Command
         }
 
         return true;
-    }
-
-    /**
-     * @param array<int,string> $commands
-     *
-     * @return array<int,string>
-     */
-    private function filterCommands(array $commands, bool $withDrops): array
-    {
-        if (!$withDrops) {
-            foreach ($commands as $key => $command) {
-                if (
-                    preg_match('/^ALTER TABLE [^ ]+ DROP /', (string) $command)
-                    || (str_starts_with($command, 'DROP ') && !str_starts_with($command, 'DROP INDEX'))
-                ) {
-                    unset($commands[$key]);
-                }
-            }
-        }
-
-        return $commands;
     }
 
     private function writeNdjson(string $type, array $data): void

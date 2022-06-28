@@ -28,12 +28,44 @@ class CommandCompiler
     /**
      * @return list<string>
      */
-    public function compileCommands(): array
+    public function compileCommands(bool $doNotDropColumns = false): array
     {
         // Get a list of SQL commands from the schema diff
         $schemaManager = $this->connection->createSchemaManager();
         $fromSchema = $schemaManager->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
+
+        // If columns should not get dropped, we copy missing definitions
+        // over to the $toSchema, so that they won't appear in the diff
+        if ($doNotDropColumns) {
+            foreach ($fromSchema->getTables() as $table) {
+                $toSchemaTable = $toSchema->getTable($table->getName());
+
+                foreach ($table->getColumns() as $column) {
+                    if ($toSchemaTable->hasColumn($column->getName())) {
+                        continue;
+                    }
+
+                    $options = [
+                        'autoincrement' => $column->getAutoincrement(),
+                        'columnDefinition' => $column->getColumnDefinition(),
+                        'comment' => $column->getComment(),
+                        'customSchemaOptions' => $column->getCustomSchemaOptions(),
+                        'default' => $column->getDefault(),
+                        'fixed' => $column->getFixed(),
+                        'length' => $column->getLength(),
+                        'notnull' => $column->getNotnull(),
+                        'platformOptions' => $column->getPlatformOptions(),
+                        'precision' => $column->getPrecision(),
+                        'scale' => $column->getScale(),
+                        'type' => $column->getType(),
+                        'unsigned' => $column->getUnsigned(),
+                    ];
+
+                    $toSchemaTable->addColumn($column->getName(), $column->getType()->getName(), $options);
+                }
+            }
+        }
 
         $diffCommands = $schemaManager
             ->createComparator()

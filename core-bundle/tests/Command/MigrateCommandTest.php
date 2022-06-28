@@ -144,21 +144,41 @@ class MigrateCommandTest extends TestCase
      */
     public function testExecutesSchemaDiff(string $format): void
     {
+        $returnedCommands = [
+            [
+                'First call QUERY 1',
+                'First call QUERY 2',
+            ],
+            [
+                'Second call QUERY 1',
+                'Second call QUERY 2',
+                'DROP QUERY',
+            ],
+            [],
+        ];
+
+        $returnedCommandsWithoutDrops = [
+            [
+                'First call QUERY 1',
+                'First call QUERY 2',
+            ],
+            [
+                'Second call QUERY 1',
+                'Second call QUERY 2',
+            ],
+            [],
+        ];
+
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->atLeastOnce())
             ->method('compileCommands')
-            ->willReturn(
-                [
-                    'First call QUERY 1',
-                    'First call QUERY 2',
-                ],
-                [
-                    'Second call QUERY 1',
-                    'Second call QUERY 2',
-                    'DROP QUERY',
-                ],
-                []
+            ->willReturnCallback(
+                static function (bool $doNotDropColumns = false) use (&$returnedCommandsWithoutDrops, &$returnedCommands): array {
+                    return $doNotDropColumns ?
+                        array_shift($returnedCommandsWithoutDrops) :
+                        array_shift($returnedCommands);
+                }
             )
         ;
 
