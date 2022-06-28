@@ -263,27 +263,20 @@ class MigrateCommand extends Command
             }
         }
 
-        $commandsByHash = [];
+        $lastCommands = [];
 
         while (true) {
-            $commands = [];
+            $commands = $this->commandCompiler->compileCommands();
 
-            foreach ($this->commandCompiler->compileCommands() as $command) {
-                $commands[md5($command)] = $command;
-            }
+            $hasNewCommands = \count(array_diff($commands, $lastCommands)) > 0;
+            $lastCommands = $commands;
 
-            $hasNewCommands = \count(array_filter(
-                array_keys($commands),
-                static fn ($hash) => !isset($commandsByHash[$hash])
-            ));
-
-            $commandsByHash = $commands;
-            $actualHash = hash('sha256', json_encode($commands));
+            $commandsHash = hash('sha256', json_encode($commands));
 
             if ($asJson) {
                 $this->writeNdjson('schema-pending', [
-                    'commands' => array_values($commandsByHash),
-                    'hash' => $actualHash,
+                    'commands' => $commands,
+                    'hash' => $commandsHash,
                 ]);
             }
 
@@ -292,16 +285,16 @@ class MigrateCommand extends Command
             }
 
             if (!$asJson) {
-                $this->io->section("Pending database migrations ($actualHash)");
-                $this->io->listing($commandsByHash);
+                $this->io->section("Pending database migrations ($commandsHash)");
+                $this->io->listing($commands);
             }
 
             if ($dryRun) {
                 return true;
             }
 
-            if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
-                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
+            if (null !== $specifiedHash && $specifiedHash !== $commandsHash) {
+                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $commandsHash));
             }
 
             $options = $withDeletesOption
@@ -323,31 +316,31 @@ class MigrateCommand extends Command
             }
 
             $count = 0;
-            $commandHashes = $this->getCommandHashes($commands, 'yes, with deletes' === $answer);
+            $filteredCommands = $this->filterCommands($commands, 'yes, with deletes' === $answer);
 
             do {
                 $commandExecuted = false;
                 $exceptions = [];
 
-                foreach ($commandHashes as $key => $hash) {
+                foreach ($filteredCommands as $key => $command) {
                     if ($asJson) {
                         $this->writeNdjson('schema-execute', [
-                            'command' => $commandsByHash[$hash],
+                            'command' => $command,
                         ]);
                     } else {
-                        $this->io->write(' * '.$commandsByHash[$hash]);
+                        $this->io->write(' * '.$command);
                     }
 
                     try {
-                        $this->connection->executeQuery($commands[$hash]);
+                        $this->connection->executeQuery($command);
 
                         ++$count;
                         $commandExecuted = true;
-                        unset($commandHashes[$key]);
+                        unset($filteredCommands[$key]);
 
                         if ($asJson) {
                             $this->writeNdjson('schema-result', [
-                                'command' => $commandsByHash[$hash],
+                                'command' => $command,
                                 'isSuccessful' => true,
                             ]);
                         } else {
@@ -358,7 +351,7 @@ class MigrateCommand extends Command
 
                         if ($asJson) {
                             $this->writeNdjson('schema-result', [
-                                'command' => $commandsByHash[$hash],
+                                'command' => $command,
                                 'isSuccessful' => false,
                                 'message' => $e->getMessage(),
                             ]);
@@ -392,20 +385,25 @@ class MigrateCommand extends Command
         return true;
     }
 
-    private function getCommandHashes(array $commands, bool $withDrops): array
+    /**
+     * @param array<int,string> $commands
+     *
+     * @return array<int,string>
+     */
+    private function filterCommands(array $commands, bool $withDrops): array
     {
         if (!$withDrops) {
-            foreach ($commands as $hash => $command) {
+            foreach ($commands as $key => $command) {
                 if (
                     preg_match('/^ALTER TABLE [^ ]+ DROP /', (string) $command)
                     || (str_starts_with($command, 'DROP ') && !str_starts_with($command, 'DROP INDEX'))
                 ) {
-                    unset($commands[$hash]);
+                    unset($commands[$key]);
                 }
             }
         }
 
-        return array_keys($commands);
+        return $commands;
     }
 
     private function writeNdjson(string $type, array $data): void

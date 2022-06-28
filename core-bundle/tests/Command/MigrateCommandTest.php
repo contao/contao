@@ -176,12 +176,12 @@ class MigrateCommandTest extends TestCase
             $this->assertSame(
                 [
                     ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2'], 'hash' => 'be35e3af2818550349d5c39723b082493e21a9851ceca3cd3b5fd29abdd0a9f0'],
+                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2'], 'hash' => '06b103d878d056ea88d30fba6a88782227a7c34160bca50a6e63320ee104af5f'],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 2'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 2', 'isSuccessful' => true],
-                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '004c59c456c93d157b6ff4f13c52ee2f569ae986829556693126ab87a20f69a6'],
+                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '929210d967bc630ef187795ca91759f9e27906fc16316b205600ff7b40cbfd1b'],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'Second call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 2'],
@@ -252,7 +252,7 @@ class MigrateCommandTest extends TestCase
                     [
                         'type' => 'schema-pending',
                         'commands' => ['First call QUERY 1', 'First call QUERY 2'],
-                        'hash' => 'be35e3af2818550349d5c39723b082493e21a9851ceca3cd3b5fd29abdd0a9f0',
+                        'hash' => '06b103d878d056ea88d30fba6a88782227a7c34160bca50a6e63320ee104af5f',
                     ],
                 ],
                 $this->jsonArrayFromNdjson($display)
