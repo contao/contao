@@ -18,6 +18,7 @@ use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Table;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -35,6 +36,7 @@ class MigrateCommand extends Command
 
     public function __construct(
         private CommandCompiler $commandCompiler,
+        private Connection $connection,
         private MigrationCollection $migrations,
         private BackupManager $backupManager,
         private SchemaProvider $schemaProvider,
@@ -264,7 +266,11 @@ class MigrateCommand extends Command
         $commandsByHash = [];
 
         while (true) {
-            $commands = $this->commandCompiler->getCommands();
+            $commands = [];
+
+            foreach ($this->commandCompiler->compileCommands() as $command) {
+                $commands[md5($command)] = $command;
+            }
 
             $hasNewCommands = \count(array_filter(
                 array_keys($commands),
@@ -333,7 +339,7 @@ class MigrateCommand extends Command
                     }
 
                     try {
-                        $this->commandCompiler->execCommand($hash);
+                        $this->connection->executeQuery($commands[$hash]);
 
                         ++$count;
                         $commandExecuted = true;

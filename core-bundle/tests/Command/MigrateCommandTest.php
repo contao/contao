@@ -23,6 +23,7 @@ use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -146,16 +147,16 @@ class MigrateCommandTest extends TestCase
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->atLeastOnce())
-            ->method('getCommands')
+            ->method('compileCommands')
             ->willReturn(
                 [
-                    'hash1' => 'First call QUERY 1',
-                    'hash2' => 'First call QUERY 2',
+                    'First call QUERY 1',
+                    'First call QUERY 2',
                 ],
                 [
-                    'hash3' => 'Second call QUERY 1',
-                    'hash4' => 'Second call QUERY 2',
-                    'hash5' => 'DROP QUERY',
+                    'Second call QUERY 1',
+                    'Second call QUERY 2',
+                    'DROP QUERY',
                 ],
                 []
             )
@@ -175,12 +176,12 @@ class MigrateCommandTest extends TestCase
             $this->assertSame(
                 [
                     ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2'], 'hash' => 'f8e23e09e1009f794eabb39a6883800162ff828f9a1ccf0c5920fd646204fe58'],
+                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2'], 'hash' => 'be35e3af2818550349d5c39723b082493e21a9851ceca3cd3b5fd29abdd0a9f0'],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 2'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 2', 'isSuccessful' => true],
-                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '1cde239fb3063750c8594c21d522b2372d86547d96672f1823f782083f70c788'],
+                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '004c59c456c93d157b6ff4f13c52ee2f569ae986829556693126ab87a20f69a6'],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'Second call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 2'],
@@ -209,19 +210,27 @@ class MigrateCommandTest extends TestCase
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->once())
-            ->method('getCommands')
+            ->method('compileCommands')
             ->willReturn(
                 [
-                    'hash1' => 'First call QUERY 1',
-                    'hash2' => 'First call QUERY 2',
+                    'First call QUERY 1',
+                    'First call QUERY 2',
                 ]
             )
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method('executeQuery')
         ;
 
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
-            $commandCompiler
+            $commandCompiler,
+            null,
+            $connection
         );
 
         $tester = new CommandTester($command);
@@ -243,7 +252,7 @@ class MigrateCommandTest extends TestCase
                     [
                         'type' => 'schema-pending',
                         'commands' => ['First call QUERY 1', 'First call QUERY 2'],
-                        'hash' => 'f8e23e09e1009f794eabb39a6883800162ff828f9a1ccf0c5920fd646204fe58',
+                        'hash' => 'be35e3af2818550349d5c39723b082493e21a9851ceca3cd3b5fd29abdd0a9f0',
                     ],
                 ],
                 $this->jsonArrayFromNdjson($display)
@@ -331,7 +340,7 @@ class MigrateCommandTest extends TestCase
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->atLeastOnce())
-            ->method('getCommands')
+            ->method('compileCommands')
             ->willThrowException(new \Exception('Fatal'))
         ;
 
@@ -371,7 +380,7 @@ class MigrateCommandTest extends TestCase
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler $commandCompiler = null, BackupManager $backupManager = null): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler $commandCompiler = null, BackupManager $backupManager = null, Connection $connection = null): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
 
@@ -399,6 +408,7 @@ class MigrateCommandTest extends TestCase
 
         return new MigrateCommand(
             $commandCompiler ?? $this->createMock(CommandCompiler::class),
+            $connection ?? $this->createMock(Connection::class),
             $migrations,
             $backupManager ?? $this->createBackupManager(false),
             $schemaProvider,

@@ -87,6 +87,7 @@ services:
         class: Contao\CoreBundle\Command\MigrateCommand
         arguments:
             - '@contao.migration.command_compiler'
+            - '@database_connection'
             - '@contao.migration.collection'
             - '@contao.doctrine.backup_manager'
             - '@contao.doctrine.schema_provider'

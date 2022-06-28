@@ -45,7 +45,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
@@ -88,7 +88,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
@@ -127,7 +127,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'ALTER TABLE tl_foo ENGINE = InnoDB ROW_FORMAT = DYNAMIC KEY_BLOCK_SIZE = 0',
@@ -172,7 +172,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'DROP INDEX foo_idx ON tl_foo',
@@ -217,7 +217,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'DROP INDEX foo_idx ON tl_foo',
@@ -248,7 +248,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC',
@@ -279,7 +279,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'ALTER TABLE tl_bar ENGINE = InnoDB ROW_FORMAT = DYNAMIC KEY_BLOCK_SIZE = 0',
@@ -309,7 +309,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo'], 'OFF');
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'ALTER TABLE tl_foo ENGINE = InnoDB',
@@ -337,7 +337,7 @@ class CommandCompilerTest extends TestCase
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo_view']);
 
-        $this->assertEmpty($installer->getCommands());
+        $this->assertEmpty($installer->compileCommands());
     }
 
     public function testReturnsTheDropColumnCommands(): void
@@ -363,7 +363,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'ALTER TABLE tl_foo DROP bar',
@@ -394,7 +394,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'ALTER TABLE tl_foo ADD bar VARCHAR(255) NOT NULL',
@@ -419,7 +419,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'ALTER TABLE tl_foo ADD foo NUMERIC(9, 2) NOT NULL',
@@ -444,7 +444,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             "ALTER TABLE tl_foo ADD foo VARCHAR(255) DEFAULT ',' NOT NULL",
@@ -484,7 +484,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertContains(
             'ALTER TABLE tl_foo '.
@@ -517,7 +517,7 @@ class CommandCompilerTest extends TestCase
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
-        $commands = $installer->getCommands();
+        $commands = $installer->compileCommands();
 
         $this->assertEmpty($commands);
     }

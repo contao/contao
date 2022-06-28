@@ -19,11 +19,6 @@ use Doctrine\DBAL\Schema\Schema;
 class CommandCompiler
 {
     /**
-     * @var array<string, string>|null
-     */
-    private array|null $commands = null;
-
-    /**
      * @internal Do not inherit from this class; decorate the "contao.migration.command_compiler" service instead
      */
     public function __construct(private readonly Connection $connection, private readonly SchemaProvider $schemaProvider)
@@ -31,31 +26,9 @@ class CommandCompiler
     }
 
     /**
-     * Returns a list of SQL commands indexed by a unique hash.
-     *
-     * @return array<string, string>
+     * @return list<string>
      */
-    public function getCommands(): array
-    {
-        return $this->commands ?? ($this->commands = $this->compileCommands());
-    }
-
-    /**
-     * Execute a SQL command identified by its hash.
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function execCommand(string $hash): void
-    {
-        $command = $this->commands[$hash] ?? throw new \InvalidArgumentException(sprintf('Invalid hash: %s', $hash));
-
-        $this->connection->executeStatement($command);
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function compileCommands(): array
+    public function compileCommands(): array
     {
         // Get a list of SQL commands from the schema diff
         $schemaManager = $this->connection->createSchemaManager();
@@ -71,14 +44,7 @@ class CommandCompiler
         // Get a list of SQL commands that adjust the engine and collation options
         $engineAndCollationCommands = $this->compileEngineAndCollationCommands($fromSchema, $toSchema);
 
-        // Return commands indexed by a unique hash
-        $commands = [];
-
-        foreach ([...$diffCommands, ...$engineAndCollationCommands] as $command) {
-            $commands[md5($command)] = $command;
-        }
-
-        return $commands;
+        return array_unique([...$diffCommands, ...$engineAndCollationCommands]);
     }
 
     /**
