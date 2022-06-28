@@ -264,7 +264,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Current record cache
-	 * @var array<int|string, array>
+	 * @var array<int|string, array<string,mixed>|AccessDeniedException>
 	 */
 	private $arrCurrentRecordCache = array();
 
@@ -1743,7 +1743,7 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * @param array|null $row Pass null to remove a given cache entry
+	 * @param array<string, mixed>|null $row Pass null to remove a given cache entry
 	 */
 	protected function setCurrentRecordCache(string|int $id, string $table, array|null $row): void
 	{
@@ -1759,6 +1759,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * @throws AccessDeniedException if the current user has no read permission
+	 * @return array<string, mixed>|null
 	 */
 	public function getCurrentRecord(string|int $id = null, string $table = null, bool $noCache = false): ?array
 	{
