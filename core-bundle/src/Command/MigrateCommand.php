@@ -317,7 +317,7 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            // If deletes should not be processed, recompile the commands without drop statements
+            // If deletes should not be processed, recompile the commands without DROP statements
             if ('yes, with deletes' !== $answer) {
                 $commands = $this->commandCompiler->compileCommands(true);
             }
@@ -328,9 +328,7 @@ class MigrateCommand extends Command
 
                 foreach ($commands as $key => $command) {
                     if ($asJson) {
-                        $this->writeNdjson('schema-execute', [
-                            'command' => $command,
-                        ]);
+                        $this->writeNdjson('schema-execute', ['command' => $command]);
                     } else {
                         $this->io->write(' * '.$command);
                     }
@@ -340,6 +338,7 @@ class MigrateCommand extends Command
 
                         ++$count;
                         $commandExecuted = true;
+
                         unset($commands[$key]);
 
                         if ($asJson) {

@@ -2,6 +2,13 @@
 
 ## Version 4.* to 5.0
 
+### Install tool
+
+The ability to execute migrations in the install tool has been removed. Use the `contao:migrate` command
+or the Contao Manager instead.
+
+The `sqlCompileCommands` hook has been removed. Use the Doctrine DBAL `postGenerateSchema` event instead.
+
 ### CURRENT_ID
 
 The `CURRENT_ID` constant and session variable have been removed. Use
@@ -390,10 +397,3 @@ The public folder is now called `public` by default. It can be renamed in the `c
 The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
 `Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
 back to an array representation. If you are just using array access, nothing needs to be changed.
-
-### Install Tool
-
-The ability to execute migrations has been removed from the Install Tool, use the `contao:migrate` command or the
-Contao Manager instead.
-
-The `sqlCompileCommands` hook has been removed, use the Doctrine DBAL `postGenerateSchema` event instead.
