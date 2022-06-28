@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
+use Contao\ArticleModel;
+use Contao\ArticleModel;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
@@ -44,6 +46,8 @@ use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\Input;
 use Contao\InsertTags;
+use Contao\PageModel;
+use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
@@ -64,6 +68,8 @@ class ContentElementTestCase extends TestCase
     final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
     final public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
     final public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
+    final public const ARTICLE1 = 123;
+    final public const PAGE1 = 5;
 
     protected function tearDown(): void
     {
@@ -329,12 +335,6 @@ class ContentElementTestCase extends TestCase
 
     protected function getDefaultInsertTagParser(): InsertTagParser
     {
-        $replaceDemo = static fn (string $input): string => str_replace(
-            ['{{demo}}', '{{br}}'],
-            ['demo', '<br>'],
-            $input
-        );
-
         $insertTagParser = $this->createMock(InsertTagParser::class);
 
         $replaceDemo = static fn (string $input): string => str_replace(
@@ -391,9 +391,40 @@ class ContentElementTestCase extends TestCase
             ->willReturnArgument(0)
         ;
 
+        $page1 = $this->mockClassWithProperties(PageModel::class);
+        $page1->id = self::PAGE1;
+
+        $pageAdapter = $this->mockAdapter(['findPublishedById']);
+        $pageAdapter
+            ->method('findPublishedById')
+            ->willReturnCallback(
+                static fn (int $id) => [
+                        self::PAGE1 => $page1,
+                    ][$id] ?? null
+            )
+        ;
+
+        $article1 = $this->mockClassWithProperties(ArticleModel::class);
+        $article1->id = self::ARTICLE1;
+        $article1->pid = self::PAGE1;
+        $article1->title = 'A title';
+        $article1->teaser = '<p>This will tease you to read article 1.</p>';
+
+        $articleAdapter = $this->mockAdapter(['findPublishedById']);
+        $articleAdapter
+            ->method('findPublishedById')
+            ->willReturnCallback(
+                static fn (int $id) => [
+                        self::ARTICLE1 => $article1,
+                    ][$id] ?? null
+            )
+        ;
+
         return $this->mockContaoFramework([
             Config::class => $configAdapter,
             Input::class => $inputAdapter,
+            PageModel::class => $pageAdapter,
+            ArticleModel::class => $articleAdapter,
         ]);
     }
 }

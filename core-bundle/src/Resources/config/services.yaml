@@ -939,6 +939,11 @@ services:
         arguments:
             - '@contao.image.studio.figure_renderer'
 
+    contao.twig.formatter_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\FormatterRuntime
+        arguments:
+            - '@contao.framework'
+
     contao.twig.filesystem_loader:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
         public: true
