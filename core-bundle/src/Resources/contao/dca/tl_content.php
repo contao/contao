@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\ContentModel;
+use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
@@ -1244,7 +1245,7 @@ class tl_content extends Backend
 				break;
 
 			case 'table':
-				if ($objCte->sortable)
+				if ($objCte->sortable && ($GLOBALS['TL_CTE']['texts']['table'] ?? null) === ContentTable::class)
 				{
 					Message::addInfo(sprintf($GLOBALS['TL_LANG']['tl_content']['includeTemplates'], 'moo_tablesort', 'j_tablesort'));
 				}
