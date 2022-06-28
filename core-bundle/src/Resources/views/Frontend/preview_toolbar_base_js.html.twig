@@ -269,9 +269,7 @@
                 request('POST', form.action, formData, function () {
                     if (422 !== this.status) {
                         location.reload();
-                    }
-
-                    if (userField) {
+                    } else if (userField) {
                         userField.setCustomValidity(this.responseText || 'An unknown error occurred.');
                         userField.reportValidity();
                     }

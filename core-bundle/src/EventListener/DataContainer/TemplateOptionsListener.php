@@ -45,10 +45,11 @@ class TemplateOptionsListener
             return array_merge(['' => '-'], $this->controller->getTemplateGroup($this->templatePrefix));
         }
 
-        $defaultTemplate = $this->customTemplates[$dc->activeRecord->type] ?? $this->getLegacyDefaultTemplate($dc);
+        $type = $dc->getCurrentRecord()['type'] ?? null;
+        $defaultTemplate = $this->customTemplates[$type] ?? $this->getLegacyDefaultTemplate($dc);
 
         if (empty($defaultTemplate)) {
-            $defaultTemplate = $this->templatePrefix.$dc->activeRecord->type;
+            $defaultTemplate = $this->templatePrefix.$type;
         }
 
         return $this->controller->getTemplateGroup($defaultTemplate.'_', [], $defaultTemplate);
@@ -68,7 +69,7 @@ class TemplateOptionsListener
             return null;
         }
 
-        $class = $this->proxyClass::findClass($dc->activeRecord->type);
+        $class = $this->proxyClass::findClass($dc->getCurrentRecord()['type'] ?? null);
 
         if (empty($class) || $class === $this->proxyClass) {
             return null;
