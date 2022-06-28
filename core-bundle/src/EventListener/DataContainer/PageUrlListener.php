@@ -85,8 +85,8 @@ class PageUrlListener
 
         // Generate an alias if there is none
         $value = $this->slug->generate(
-            $currentRecord['title'],
-            $currentRecord['id'],
+            $currentRecord['title'] ?? null,
+            $currentRecord['id'] ?? null,
             fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
         );
 
@@ -105,7 +105,7 @@ class PageUrlListener
     {
         $currentRecord = $dc->getCurrentRecord();
 
-        if (null === $currentRecord || 'root' !== $currentRecord['type'] || $currentRecord['urlPrefix'] === $value) {
+        if (null === $currentRecord || 'root' !== ($currentRecord['type'] ?? null) || ($currentRecord['urlPrefix'] ?? null) === $value) {
             return $value;
         }
 
@@ -114,7 +114,7 @@ class PageUrlListener
             "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
             [
                 'urlPrefix' => $value,
-                'dns' => $currentRecord['dns'],
+                'dns' => $currentRecord['dns'] ?? null,
                 'rootId' => $dc->id,
             ]
         );
@@ -148,7 +148,7 @@ class PageUrlListener
     {
         $currentRecord = $dc->getCurrentRecord();
 
-        if (null === $currentRecord || 'root' !== $currentRecord['type'] || $currentRecord['urlSuffix'] === $value) {
+        if (null === $currentRecord || 'root' !== ($currentRecord['type'] ?? null) || ($currentRecord['urlSuffix'] ?? null) === $value) {
             return $value;
         }
 

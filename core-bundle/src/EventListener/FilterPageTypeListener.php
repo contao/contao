@@ -42,7 +42,7 @@ class FilterPageTypeListener
 
         $event->removeOption('root');
 
-        $parentType = $this->connection->fetchOne('SELECT type FROM tl_page WHERE id=?', [$currentRecord['pid']]);
+        $parentType = $this->connection->fetchOne('SELECT type FROM tl_page WHERE id=?', [$currentRecord['pid'] ?? null]);
 
         // Error pages can only be placed directly inside root pages
         if ('root' !== $parentType) {
@@ -56,7 +56,7 @@ class FilterPageTypeListener
 
         $siblingTypes = $this->connection->fetchFirstColumn(
             'SELECT DISTINCT(type) FROM tl_page WHERE pid=? AND id!=?',
-            [$currentRecord['pid'], $currentRecord['id']]
+            [$currentRecord['pid'] ?? null, $currentRecord['id'] ?? null]
         );
 
         foreach (array_intersect(['error_401', 'error_403', 'error_404', 'error_503'], $siblingTypes) as $type) {

@@ -1391,7 +1391,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				if (null !== $currentRecord)
 				{
 					$newSorting = null;
-					$curSorting = $currentRecord['sorting'];
+					$curSorting = $currentRecord['sorting'] ?? null;
 
 					$objNextSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE sorting>?")
 													 ->execute($curSorting);
@@ -1692,8 +1692,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$error = false;
-		$query = $currentRecord['query'];
-		$data = StringUtil::deserialize($currentRecord['data']);
+		$query = $currentRecord['query'] ?? null;
+		$data = StringUtil::deserialize($currentRecord['data'] ?? null);
 
 		if (!\is_array($data))
 		{
@@ -2085,7 +2085,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Parent view
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . $currentRecord['pid'];
+					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . ($currentRecord['pid'] ?? null);
 				}
 
 				// List view
@@ -2419,9 +2419,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$this->varValue = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) ? serialize($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default']) : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['default'];
 						}
 
-						if ($currentRecord[$v] !== false)
+						if (($currentRecord[$v] ?? null) !== false)
 						{
-							$this->varValue = $currentRecord[$v];
+							$this->varValue = $currentRecord[$v] ?? null;
 						}
 
 						// Convert CSV fields (see #2890)
@@ -2700,7 +2700,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objVersions->initialize();
 
 		Input::setPost('FORM_SUBMIT', $this->strTable);
-		$this->varValue = $currentRecord[$this->strField];
+		$this->varValue = $currentRecord[$this->strField] ?? null;
 
 		$this->save($this->varValue ? '' : '1');
 		$this->submit();
@@ -3017,7 +3017,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if ($currentRecord !== null && (($arrData['inputType'] ?? null) == 'checkbox' || ($arrData['inputType'] ?? null) == 'checkboxWizard') && ($arrData['eval']['multiple'] ?? null) && Input::get('act') == 'overrideAll')
 		{
 			$new = StringUtil::deserialize($varValue, true);
-			$old = StringUtil::deserialize($currentRecord[$this->strField], true);
+			$old = StringUtil::deserialize($currentRecord[$this->strField] ?? null, true);
 
 			// Call load_callback
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['load_callback'] ?? null))
@@ -3089,7 +3089,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make sure unique fields are unique
-		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $currentRecord['id']))
+		if ((\is_array($varValue) || (string) $varValue !== '') && ($arrData['eval']['unique'] ?? null) && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $currentRecord['id'] ?? null))
 		{
 			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
 		}
@@ -3182,7 +3182,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$this->Database
 						->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($this->strField) . "=? WHERE pid=?")
-						->query('', array($varEmpty, $currentRecord['pid']), $arrType);
+						->query('', array($varEmpty, $currentRecord['pid'] ?? null), $arrType);
 				}
 				else
 				{
@@ -3994,7 +3994,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add the ID to the list of current IDs
 		if ($this->strTable == $table)
 		{
-			$this->current[] = $currentRecord['id'];
+			$this->current[] = $currentRecord['id'] ?? null;
 		}
 
 		// Check whether there are child records
@@ -4017,7 +4017,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check whether the page is protected
 		if ($table == 'tl_page')
 		{
-			$blnProtected = ($currentRecord['protected'] || $protectedPage);
+			$blnProtected = (($currentRecord['protected'] ?? null) || $protectedPage);
 		}
 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
@@ -4033,7 +4033,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$mouseover = ' hover-div';
 		}
 
-		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $currentRecord['type'] == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
+		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
 		$level = ($intMargin / $intSpacing + 1);
@@ -4064,7 +4064,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Check either the ID (tree mode or parent table) or the parent ID (child table)
-		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($currentRecord['pid'], $this->visibleRootTrails);
+		$isVisibleRootTrailPage = $checkIdAllowed ? \in_array($id, $this->visibleRootTrails) : \in_array($currentRecord['pid'] ?? null, $this->visibleRootTrails);
 
 		$return .= $this->generateRecordLabel($currentRecord, $table, $blnProtected, $isVisibleRootTrailPage);
 		$return .= '</div> <div class="tl_right">';
