@@ -88,13 +88,7 @@ class InstallationController implements ContainerAwareInterface
             return $this->render('configuration_error.html.twig');
         }
 
-        $this->runDatabaseUpdates();
-
         $installTool->checkStrictMode($this->context);
-
-        if (null !== ($response = $this->adjustDatabaseTables())) {
-            return $response;
-        }
 
         if (null !== ($response = $this->importExampleWebsite())) {
             return $response;
@@ -317,44 +311,6 @@ class InstallationController implements ContainerAwareInterface
         $dumper->dump();
 
         $this->purgeSymfonyCache();
-
-        return $this->getRedirectResponse();
-    }
-
-    private function runDatabaseUpdates(): void
-    {
-        $this->context['sql_message'] = implode(
-            '<br>',
-            array_map('htmlspecialchars', $this->container->get('contao_installation.install_tool')->runMigrations())
-        );
-    }
-
-    /**
-     * Renders a form to adjust the database tables.
-     */
-    private function adjustDatabaseTables(): RedirectResponse|null
-    {
-        $installer = $this->container->get('contao_installation.database.installer');
-
-        $this->context['sql_form'] = $installer->getCommands();
-
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-
-        if (null === $request) {
-            throw new \RuntimeException('The request stack did not contain a request');
-        }
-
-        if ('tl_database_update' !== $request->request->get('FORM_SUBMIT')) {
-            return null;
-        }
-
-        $sql = $request->request->get('sql');
-
-        if (!empty($sql) && \is_array($sql)) {
-            foreach ($sql as $hash) {
-                $installer->execCommand($hash);
-            }
-        }
 
         return $this->getRedirectResponse();
     }

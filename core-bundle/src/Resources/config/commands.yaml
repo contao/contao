@@ -86,11 +86,12 @@ services:
     contao.command.migrate:
         class: Contao\CoreBundle\Command\MigrateCommand
         arguments:
+            - '@contao.migration.command_compiler'
+            - '@database_connection'
             - '@contao.migration.collection'
             - '@contao.doctrine.backup_manager'
             - '@contao.doctrine.schema_provider'
             - '@contao.doctrine.schema.mysql_innodb_row_size_calculator'
-            - '@?contao_installation.database.installer'
 
     contao.command.resize_images:
         class: Contao\CoreBundle\Command\ResizeImagesCommand
