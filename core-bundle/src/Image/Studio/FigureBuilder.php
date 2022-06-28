@@ -282,9 +282,9 @@ class FigureBuilder
             return $this;
         }
 
-        // TODO: Our image libraries cannot deal with streams, yet. However,
-        //       in case of STDIO streams, we can already be forward compatible
-        //       by reading the local file path from stream's meta data.
+        // TODO: After stream support is added to contao/image, remove this
+        // workaround and type restriction and directly pass on the stream to
+        // the resizer.
         $metadata = stream_get_meta_data($stream);
         $uri = $metadata['uri'];
 

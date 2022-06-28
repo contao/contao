@@ -371,11 +371,7 @@ class FigureBuilderTest extends TestCase
         $mountManager = new MountManager();
         $mountManager->mount(new LocalFilesystemAdapter($basePath), 'files');
 
-        $storage = new VirtualFilesystem(
-            $mountManager,
-            $this->createMock(DbafsManager::class),
-            'files'
-        );
+        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class), 'files');
 
         $this->getFigureBuilder($studio, $framework)->fromStorage($storage, 'public/foo.jpg')->build();
     }
