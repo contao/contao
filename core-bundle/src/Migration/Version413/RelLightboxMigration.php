@@ -93,13 +93,14 @@ class RelLightboxMigration extends AbstractMigration
         $files = $this->resourceFinder->findIn('dca')->depth(0)->files()->name('*.php');
 
         foreach ($files as $file) {
-            if (\in_array($file->getBasename(), $processed, true)) {
+            $tableName = $file->getBasename('.php');
+
+            if (\in_array($tableName, $processed, true)) {
                 continue;
             }
 
-            $processed[] = $file->getBasename();
+            $processed[] = $tableName;
 
-            $tableName = $file->getBasename('.php');
             Controller::loadDataContainer($tableName);
 
             foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
