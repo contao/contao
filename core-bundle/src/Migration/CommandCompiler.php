@@ -32,7 +32,6 @@ class CommandCompiler
      */
     public function compileCommands(bool $skipDropStatements = false): array
     {
-        // Get a list of SQL commands from the schema diff
         $schemaManager = $this->connection->createSchemaManager();
         $fromSchema = $schemaManager->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
@@ -58,13 +57,14 @@ class CommandCompiler
             }
         }
 
+        // Get a list of SQL statements from the schema diff
         $diffCommands = $schemaManager
             ->createComparator()
             ->compareSchemas($fromSchema, $toSchema)
             ->toSql($this->connection->getDatabasePlatform())
         ;
 
-        // Get a list of SQL commands that adjust the engine and collation options
+        // Get a list of SQL statements that adjust the engine and collation options
         $engineAndCollationCommands = $this->compileEngineAndCollationCommands($fromSchema, $toSchema);
 
         return array_unique([...$diffCommands, ...$engineAndCollationCommands]);

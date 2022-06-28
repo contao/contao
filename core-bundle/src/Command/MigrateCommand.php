@@ -317,7 +317,7 @@ class MigrateCommand extends Command
 
             $count = 0;
 
-            // If deletes should not be processed, recompile the commands without drops
+            // If deletes should not be processed, recompile the commands without drop statements
             if ('yes, with deletes' !== $answer) {
                 $commands = $this->commandCompiler->compileCommands(true);
             }
