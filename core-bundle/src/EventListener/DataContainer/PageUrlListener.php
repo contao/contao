@@ -105,7 +105,7 @@ class PageUrlListener
     {
         $currentRecord = $dc->getCurrentRecord();
 
-        if (null === $currentRecord || 'root' !== ($currentRecord['type'] ?? null) || ($currentRecord['urlPrefix'] ?? null) === $value) {
+        if ('root' !== ($currentRecord['type'] ?? null) || ($currentRecord['urlPrefix'] ?? null) === $value) {
             return $value;
         }
 
@@ -148,7 +148,7 @@ class PageUrlListener
     {
         $currentRecord = $dc->getCurrentRecord();
 
-        if (null === $currentRecord || 'root' !== ($currentRecord['type'] ?? null) || ($currentRecord['urlSuffix'] ?? null) === $value) {
+        if ('root' !== ($currentRecord['type'] ?? null) || ($currentRecord['urlSuffix'] ?? null) === $value) {
             return $value;
         }
 
