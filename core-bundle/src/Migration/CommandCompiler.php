@@ -14,7 +14,9 @@ namespace Contao\CoreBundle\Migration;
 
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\Table;
 
 class CommandCompiler
 {
@@ -28,41 +30,30 @@ class CommandCompiler
     /**
      * @return list<string>
      */
-    public function compileCommands(bool $doNotDropColumns = false): array
+    public function compileCommands(bool $doNotExecuteDrops = false): array
     {
         // Get a list of SQL commands from the schema diff
         $schemaManager = $this->connection->createSchemaManager();
         $fromSchema = $schemaManager->createSchema();
         $toSchema = $this->schemaProvider->createSchema();
 
-        // If columns should not get dropped, we copy missing definitions
-        // over to the $toSchema, so that they won't appear in the diff
-        if ($doNotDropColumns) {
+        // If tables or columns should be preserved, we copy the missing
+        // definitions over to the $toSchema, so that no DROP commands
+        // will be issued in the diff.
+        if ($doNotExecuteDrops) {
             foreach ($fromSchema->getTables() as $table) {
+                if (!$toSchema->hasTable($table->getName())) {
+                    $this->copyTableDefinition($toSchema, $table);
+
+                    continue;
+                }
+
                 $toSchemaTable = $toSchema->getTable($table->getName());
 
                 foreach ($table->getColumns() as $column) {
-                    if ($toSchemaTable->hasColumn($column->getName())) {
-                        continue;
+                    if (!$toSchemaTable->hasColumn($column->getName())) {
+                        $this->copyColumnDefinition($toSchemaTable, $column);
                     }
-
-                    $options = [
-                        'autoincrement' => $column->getAutoincrement(),
-                        'columnDefinition' => $column->getColumnDefinition(),
-                        'comment' => $column->getComment(),
-                        'customSchemaOptions' => $column->getCustomSchemaOptions(),
-                        'default' => $column->getDefault(),
-                        'fixed' => $column->getFixed(),
-                        'length' => $column->getLength(),
-                        'notnull' => $column->getNotnull(),
-                        'platformOptions' => $column->getPlatformOptions(),
-                        'precision' => $column->getPrecision(),
-                        'scale' => $column->getScale(),
-                        'type' => $column->getType(),
-                        'unsigned' => $column->getUnsigned(),
-                    ];
-
-                    $toSchemaTable->addColumn($column->getName(), $column->getType()->getName(), $options);
                 }
             }
         }
@@ -77,6 +68,22 @@ class CommandCompiler
         $engineAndCollationCommands = $this->compileEngineAndCollationCommands($fromSchema, $toSchema);
 
         return array_unique([...$diffCommands, ...$engineAndCollationCommands]);
+    }
+
+    private function copyTableDefinition(Schema $targetSchema, Table $table): void
+    {
+        (new \ReflectionClass(Schema::class))
+            ->getMethod('_addTable')
+            ->invoke($targetSchema, $table)
+        ;
+    }
+
+    private function copyColumnDefinition(Table $targetTable, Column $column): void
+    {
+        (new \ReflectionClass(Table::class))
+            ->getMethod('_addColumn')
+            ->invoke($targetTable, $column)
+        ;
     }
 
     /**
