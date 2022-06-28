@@ -275,16 +275,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$id = $pid;
 		}
 
-		if (!$id || !$this->Database->fieldExists('pid', $this->strTable))
+		if (!$id)
 		{
 			return null;
 		}
 
-		$objPid = $this->Database->prepare("SELECT pid FROM `$this->strTable` WHERE id=?")
-								 ->limit(1)
-								 ->execute($id);
+		$currentRecord = $this->getCurrentRecord($id);
 
-		return ((int) $objPid->pid) ?: null;
+		if (!empty($currentRecord['pid']))
+		{
+			return (int) $currentRecord['pid'];
+		}
+
+		return null;
 	}
 
 	/**
