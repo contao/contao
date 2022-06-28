@@ -1758,7 +1758,7 @@ abstract class DataContainer extends Backend
 	}
 
 	/**
-	 * @throws AccessDeniedException if the current user has no read permission
+	 * @throws AccessDeniedException     if the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
 	public function getCurrentRecord(string|int $id = null, string $table = null, bool $noCache = false): ?array
