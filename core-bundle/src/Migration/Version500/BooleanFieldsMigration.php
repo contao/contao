@@ -20,6 +20,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Converts empty string values of boolean fields to zeros.
