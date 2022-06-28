@@ -341,7 +341,7 @@ class tl_faq_category extends Backend
 	/**
 	 * Add the new FAQ category to the permissions
 	 *
-	 * @param $insertId
+	 * @param string|int $insertId
 	 */
 	public function adjustPermissions($insertId)
 	{

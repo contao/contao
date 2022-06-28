@@ -371,7 +371,7 @@ class tl_calendar extends Backend
 	/**
 	 * Add the new calendar to the permissions
 	 *
-	 * @param $insertId
+	 * @param string|int $insertId
 	 */
 	public function adjustPermissions($insertId)
 	{
