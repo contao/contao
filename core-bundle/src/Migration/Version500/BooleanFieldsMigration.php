@@ -57,7 +57,7 @@ class BooleanFieldsMigration extends AbstractMigration
                 continue;
             }
 
-            $this->connection->update($table, [$column => 0], [$column => '']);
+            $this->connection->update($table, [$column => '0'], [$column => '']);
         }
 
         return $this->createResult(true);
