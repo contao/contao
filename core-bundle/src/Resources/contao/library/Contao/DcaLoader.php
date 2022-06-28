@@ -65,7 +65,16 @@ class DcaLoader extends Controller
 	 */
 	public function load($blnNoCache=false)
 	{
-		$this->loadDcaFiles($blnNoCache);
+		try
+		{
+			$this->loadDcaFiles($blnNoCache);
+		}
+		catch (\Throwable $e)
+		{
+			unset(static::$arrLoaded['dcaFiles'][$this->strTable]);
+
+			throw $e;
+		}
 	}
 
 	/**

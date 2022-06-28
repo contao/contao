@@ -119,6 +119,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+            - '@contao.resource_finder'
 
     # Backwards compatibility
     Contao\CoreBundle\Migration\MigrationCollection:
