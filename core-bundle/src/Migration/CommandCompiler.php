@@ -30,7 +30,7 @@ class CommandCompiler
     /**
      * @return list<string>
      */
-    public function compileCommands(bool $doNotExecuteDrops = false): array
+    public function compileCommands(bool $skipDropStatements = false): array
     {
         // Get a list of SQL commands from the schema diff
         $schemaManager = $this->connection->createSchemaManager();
@@ -40,7 +40,7 @@ class CommandCompiler
         // If tables or columns should be preserved, we copy the missing
         // definitions over to the $toSchema, so that no DROP commands
         // will be issued in the diff.
-        if ($doNotExecuteDrops) {
+        if ($skipDropStatements) {
             foreach ($fromSchema->getTables() as $table) {
                 if (!$toSchema->hasTable($table->getName())) {
                     $this->copyTableDefinition($toSchema, $table);
