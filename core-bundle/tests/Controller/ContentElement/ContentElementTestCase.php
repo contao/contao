@@ -142,10 +142,10 @@ class ContentElementTestCase extends TestCase
         $response = $controller(new Request(), $model, 'main');
 
         // Record response context data
-        $responseContextData = [
+        $responseContextData = array_filter([
             DocumentLocation::head->value => $GLOBALS['TL_HEAD'] ?? [],
             DocumentLocation::endOfBody->value => $GLOBALS['TL_BODY'] ?? [],
-        ];
+        ]);
 
         // Reset state
         unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_BODY']);

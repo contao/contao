@@ -250,44 +250,56 @@ class HtmlAttributesTest extends TestCase
 
     public function testSetAndUnsetConditionalProperties(): void
     {
-        $attributes = new HtmlAttributes();
+        $truthyValues = [
+            true,
+            1,
+            'true',
+            '1',
+            ['test'],
+            new \stdClass(),
+            new class() implements \Stringable {
+                public function __toString(): string
+                {
+                    return 'foo';
+                }
+            },
+        ];
 
-        $attributes->set('data-feature1', condition: null);
-        $attributes->set('data-feature2', condition: false);
-        $attributes->set('data-feature3', condition: 0);
-
-        $attributes->set(
-            'data-feature5',
-            condition: new class() implements \Stringable {
+        $falsyValues = [
+            null,
+            false,
+            0,
+            '',
+            [],
+            new class() implements \Stringable {
                 public function __toString(): string
                 {
                     return '';
                 }
             },
-        );
+        ];
 
-        $this->assertSame([], iterator_to_array($attributes));
+        // Test truthy values fulfil the condition
+        foreach ($truthyValues as $value) {
+            $attributes = new HtmlAttributes();
 
-        $attributes->set('data-feature1', condition: true);
-        $attributes->set('data-feature2', condition: 1);
-        $attributes->set('data-feature3', condition: 'true');
-        $attributes->set('data-feature4', condition: '1');
+            $attributes->set('data-feature', condition: $value);
+            $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
 
-        $this->assertSame(['data-feature1' => '', 'data-feature2' => '', 'data-feature3' => '', 'data-feature4' => ''], iterator_to_array($attributes));
+            $attributes->unset('data-feature', condition: $value);
+            $this->assertSame([], iterator_to_array($attributes));
+        }
 
-        $attributes->unset('data-feature1', null);
-        $attributes->unset('data-feature2', false);
-        $attributes->unset('data-feature3', 0);
-        $attributes->unset('data-feature4', '');
+        // Test falsy values do not fulfil the condition
+        foreach ($falsyValues as $value) {
+            $attributes = new HtmlAttributes(['data-feature' => '']);
 
-        $this->assertSame(['data-feature1' => '', 'data-feature2' => '', 'data-feature3' => '', 'data-feature4' => ''], iterator_to_array($attributes));
+            $attributes->set('data-foo', condition: $value);
+            $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
 
-        $attributes->unset('data-feature1', true);
-        $attributes->unset('data-feature2', 1);
-        $attributes->unset('data-feature3', 'true');
-        $attributes->unset('data-feature4', '1');
-
-        $this->assertSame([], iterator_to_array($attributes));
+            $attributes->unset('data-feature', condition: $value);
+            $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
+        }
     }
 
     public function testAddAndRemoveClasses(): void
@@ -298,10 +310,47 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame('foo bar other1 other2', $attributes['class']);
 
         // And remove classes
-        $attributes->addClass('baz', 'foo foobar');
-        $attributes->removeClass(' other1', 'thing other2');
+        $attributes->addClass('baz');
+        $attributes->addClass('foo foobar');
+        $attributes->addClass(['foo2', 'foobar2']);
+        $attributes->removeClass(' other1');
+        $attributes->removeClass('thing other2');
+        $attributes->removeClass(['foo2', ' foobar ']);
 
-        $this->assertSame('foo bar baz foobar', $attributes['class']);
+        $this->assertSame('foo bar baz foobar2', $attributes['class']);
+    }
+
+    public function testAddAndRemoveConditionalClasses(): void
+    {
+        $attributes = new HtmlAttributes();
+
+        $attributes->addClass('a', null);
+        $attributes->addClass('b', false);
+        $attributes->addClass('c', 0);
+        $attributes->addClass('d', '');
+
+        $this->assertSame([], iterator_to_array($attributes));
+
+        $attributes->addClass('a', condition: true);
+        $attributes->addClass('b', condition: 1);
+        $attributes->addClass('c', condition: 'true');
+        $attributes->addClass('d', condition: '1');
+
+        $this->assertSame(['class' => 'a b c d'], iterator_to_array($attributes));
+
+        $attributes->removeClass('a', null);
+        $attributes->removeClass('b', false);
+        $attributes->removeClass('c', 0);
+        $attributes->removeClass('d', '');
+
+        $this->assertSame(['class' => 'a b c d'], iterator_to_array($attributes));
+
+        $attributes->removeClass('a', condition: true);
+        $attributes->removeClass('b', condition: 1);
+        $attributes->removeClass('c', condition: 'true');
+        $attributes->removeClass('d', condition: '1');
+
+        $this->assertSame([], iterator_to_array($attributes));
     }
 
     public function testDoesNotOutputEmptyClassAttribute(): void
@@ -320,7 +369,7 @@ class HtmlAttributesTest extends TestCase
     public function testAllowsChaining(): void
     {
         $attributes = (new HtmlAttributes())
-            ->addClass('block', 'headline', 'foo')
+            ->addClass('block headline foo')
             ->removeClass('foo')
             ->set('style', 'color: red;')
             ->setIfExists('data-foo', null)

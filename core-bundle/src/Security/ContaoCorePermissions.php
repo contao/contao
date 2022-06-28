@@ -189,41 +189,7 @@ final class ContaoCorePermissions
 
     /**
      * Prefix for all DCA related permission attributes.
+     * Supposed to be followed by the table (e.g. "contao_dc.tl_content").
      */
     public const DC_PREFIX = 'contao_dc.';
-
-    /**
-     * [Action] Prefix for all DCA action related permissions.
-     */
-    public const DC_ACTION_PREFIX = self::DC_PREFIX.'action.';
-
-    /**
-     * [Action] Create action DC permission.
-     */
-    public const DC_ACTION_CREATE = self::DC_ACTION_PREFIX.'create';
-
-    /**
-     * [Action] Edit action DC permission.
-     */
-    public const DC_ACTION_EDIT = self::DC_ACTION_PREFIX.'edit';
-
-    /**
-     * [Action] Delete action DC permission.
-     */
-    public const DC_ACTION_DELETE = self::DC_ACTION_PREFIX.'delete';
-
-    /**
-     * [Action] View action DC permission.
-     */
-    public const DC_ACTION_VIEW = self::DC_ACTION_PREFIX.'view';
-
-    /**
-     * [Action] Copy action DC permission.
-     */
-    public const DC_ACTION_COPY = self::DC_ACTION_PREFIX.'copy';
-
-    /**
-     * [Action] Move action DC permission.
-     */
-    public const DC_ACTION_MOVE = self::DC_ACTION_PREFIX.'move';
 }

@@ -7,6 +7,13 @@ services:
         arguments:
             - ~
 
+    contao.migration.command_compiler:
+        class: Contao\CoreBundle\Migration\CommandCompiler
+        public: true
+        arguments:
+            - '@database_connection'
+            - '@contao.doctrine.schema_provider'
+
     contao.migration.version_400.version_400_update:
         class: Contao\CoreBundle\Migration\Version400\Version400Update
         arguments:
@@ -66,6 +73,11 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+
+    contao.migration.version_409.player_color:
+        class: Contao\CoreBundle\Migration\Version409\PlayerColorMigration
+        arguments:
+            - '@database_connection'
 
     contao.migration.version_410.drop_search:
         class: Contao\CoreBundle\Migration\Version410\DropSearchMigration
