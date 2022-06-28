@@ -15,8 +15,10 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
+use Contao\CoreBundle\Security\DataContainer\AbstractAction;
+use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\Image\ResizeConfiguration;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -28,7 +30,6 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $field
  * @property string         $inputName
  * @property string         $palette
- * @property object|null    $activeRecord
  * @property array          $rootIds
  * @property int            $currentPid
  */
@@ -215,7 +216,8 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Active record
-	 * @var Model|FilesModel
+	 * @var \stdClass|null
+	 * @deprecated Deprecated since Contao 5.0 to be removed in Contao 6. Use $dc->getCurrentRecord() instead.
 	 */
 	protected $objActiveRecord;
 
@@ -261,6 +263,12 @@ abstract class DataContainer extends Backend
 	protected $intCurrentPid;
 
 	/**
+	 * Current record cache
+	 * @var array<int|string, array<string,mixed>|AccessDeniedException>
+	 */
+	private $arrCurrentRecordCache = array();
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey
@@ -271,6 +279,7 @@ abstract class DataContainer extends Backend
 		switch ($strKey)
 		{
 			case 'activeRecord':
+				trigger_deprecation('contao/core-bundle', '5.0', 'Setting the active record has been deprecated and will be removed in Contao 6.');
 				$this->objActiveRecord = $varValue;
 				break;
 
@@ -318,6 +327,8 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use ' . __CLASS__ . '::getCurrentRecord() instead.');
+
 				return $this->objActiveRecord;
 
 			case 'createNewVersion':
@@ -804,7 +815,7 @@ abstract class DataContainer extends Backend
 
 		$message = 'Access denied.';
 
-		if ($subject instanceof DataContainerSubject)
+		if ($subject instanceof AbstractAction)
 		{
 			$message = sprintf('Access denied to %s [%s].', $subject, $attribute);
 		}
@@ -1698,5 +1709,94 @@ abstract class DataContainer extends Backend
 		}
 
 		return $label;
+	}
+
+	/**
+	 * @param array<int|string> $ids
+	 */
+	protected function preloadCurrentRecords(array $ids, string $table): void
+	{
+		// Clear current cache to make sure records are gone if they cannot be loaded from the database below
+		foreach ($ids as $id)
+		{
+			$this->setCurrentRecordCache($id, $table, null);
+		}
+
+		/** @var Connection $connection */
+		$connection = System::getContainer()->get('database_connection');
+
+		$stmt = $connection->executeQuery(
+			'SELECT * FROM ' . $table . ' WHERE id IN (?)',
+			array($ids),
+			array(is_numeric(array_values($ids)[0]) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY)
+		);
+
+		foreach ($stmt->iterateAssociative() as $row)
+		{
+			if (!\is_array($row))
+			{
+				continue;
+			}
+
+			$this->setCurrentRecordCache($row['id'], $table, $row);
+		}
+	}
+
+	/**
+	 * @param array<string, mixed>|null $row Pass null to remove a given cache entry
+	 */
+	protected function setCurrentRecordCache(string|int $id, string $table, array|null $row): void
+	{
+		if (null === $row)
+		{
+			unset($this->arrCurrentRecordCache[$table . '.' . $id]);
+
+			return;
+		}
+
+		$this->arrCurrentRecordCache[$table . '.' . $id] = $row;
+	}
+
+	/**
+	 * @throws AccessDeniedException     if the current user has no read permission
+	 * @return array<string, mixed>|null
+	 */
+	public function getCurrentRecord(string|int $id = null, string $table = null, bool $noCache = false): ?array
+	{
+		$id = $id ?: $this->intId;
+		$table = $table ?: $this->strTable;
+		$key = $table . '.' . $id;
+
+		if ($noCache || !isset($this->arrCurrentRecordCache[$key]))
+		{
+			$this->preloadCurrentRecords(array($id), $table);
+		}
+
+		// In case this record was not part of the preloaded result, we don't need to apply any permission checks
+		if (!isset($key, $this->arrCurrentRecordCache))
+		{
+			return null;
+		}
+
+		// In case this record has been checked before, we don't ask the voters again but instead throw the previous
+		// exception
+		if ($this->arrCurrentRecordCache[$key] instanceof AccessDeniedException)
+		{
+			throw $this->arrCurrentRecordCache[$key];
+		}
+
+		try
+		{
+			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new ReadAction($table, $this->arrCurrentRecordCache[$key]));
+		}
+		catch (AccessDeniedException $e)
+		{
+			// Remember the exception for this key for the next call
+			$this->arrCurrentRecordCache[$key] = $e;
+
+			throw $e;
+		}
+
+		return $this->arrCurrentRecordCache[$key];
 	}
 }
