@@ -544,8 +544,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options'                 => array(0=>'http://', 1=>'https://'),
-			'eval'                    => array('tl_class'=>'w50'),
+			'options'                 => array(1=>'https://'),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true, 'blankOptionLabel' => 'http://'),
 			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'autoforward' => array
