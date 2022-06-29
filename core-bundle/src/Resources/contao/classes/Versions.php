@@ -320,6 +320,7 @@ class Versions extends Controller
 		}
 		catch (\Exception $e)
 		{
+			System::log(sprintf('Could not restore version %d of %s.%d due to the following exception: %s.', $intVersion, $this->strTable, $this->intPid, $e->getMessage()), __METHOD__, TL_ERROR);
 			Message::addError(sprintf($GLOBALS['TL_LANG']['MSC']['versionNotRestored'], $intVersion));
 			Controller::reload();
 		}
