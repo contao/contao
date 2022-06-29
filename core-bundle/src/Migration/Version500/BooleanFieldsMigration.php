@@ -34,7 +34,7 @@ class BooleanFieldsMigration extends AbstractMigration
     public function shouldRun(): bool
     {
         foreach ($this->getTargets() as [$table, $column]) {
-            $test = $this->connection->fetchOne("SELECT TRUE FROM $table WHERE `$column` = '' LIMIT 1;");
+            $test = $this->connection->fetchOne("SELECT TRUE FROM $table WHERE `$column` = '' LIMIT 1");
 
             if (false !== $test) {
                 return true;
@@ -82,14 +82,16 @@ class BooleanFieldsMigration extends AbstractMigration
             Controller::loadDataContainer($tableName);
 
             foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
-                if (!isset($columns[strtolower($fieldName)]) || Types::BOOLEAN !== ($fieldConfig['sql']['type'] ?? null)) {
+                $fieldName = strtolower($fieldName);
+
+                if (!isset($columns[$fieldName]) || Types::BOOLEAN !== ($fieldConfig['sql']['type'] ?? null)) {
                     continue;
                 }
 
-                $field = $columns[strtolower($fieldName)];
+                $field = $columns[$fieldName];
 
                 if ($field->getType() instanceof StringType) {
-                    $targets[] = [$tableName, strtolower($fieldName)];
+                    $targets[] = [$tableName, $fieldName];
                 }
             }
         }
