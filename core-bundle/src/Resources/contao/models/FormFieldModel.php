@@ -198,7 +198,7 @@ class FormFieldModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.invisible=''";
+			$arrColumns[] = "$t.invisible=0";
 		}
 
 		// Skip unsaved elements (see #2708)

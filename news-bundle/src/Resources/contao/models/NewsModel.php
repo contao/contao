@@ -235,7 +235,7 @@ class NewsModel extends Model
 		}
 		elseif ($blnFeatured === false)
 		{
-			$arrColumns[] = "$t.featured=''";
+			$arrColumns[] = "$t.featured=0";
 		}
 
 		if (!static::isPreviewMode($arrOptions))

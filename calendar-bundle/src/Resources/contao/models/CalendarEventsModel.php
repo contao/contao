@@ -266,7 +266,7 @@ class CalendarEventsModel extends Model
 			}
 			elseif ($arrOptions['showFeatured'] === false)
 			{
-				$arrColumns[] = "$t.featured=''";
+				$arrColumns[] = "$t.featured=0";
 			}
 		}
 
