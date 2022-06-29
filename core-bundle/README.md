@@ -3,28 +3,24 @@
 [![](https://img.shields.io/packagist/v/contao/core-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/core-bundle)
 [![](https://img.shields.io/packagist/dt/contao/core-bundle.svg?style=flat-square)](https://packagist.org/packages/contao/core-bundle)
 
-Contao is an Open Source PHP Content Management System for people who want a
-professional website that is easy to maintain. Visit the [project website][1]
-for more information.
+Contao is an Open Source PHP Content Management System for people who want a professional website that is easy to
+maintain. Visit the [project website][1] for more information.
 
-Contao 4 has been designed as a [Symfony][2] bundle, which can be used to add
-CMS functionality to any Symfony application. If you do not have an existing
-Symfony application yet, we recommend using the [Contao managed edition][3] as
-basis for your application.
+Contao 4 has been designed as a [Symfony][2] bundle, which can be used to add CMS functionality to any Symfony
+application. If you do not have an existing Symfony application yet, we recommend using the [Contao managed edition][3]
+as basis for your application.
 
 ## Prerequisites
 
-The Contao core bundle has a recipe in the [symfony/recipes-contrib][6]
-repository. Be sure to either enable contrib recipes for your project by
-running the following command or follow the instructions to use the contrib
-recipe during the installation process.
+The Contao core bundle has a recipe in the [symfony/recipes-contrib][6] repository. Be sure to either enable contrib
+recipes for your project by running the following command or follow the instructions to use the contrib recipe during
+the installation process.
 
 ```
 composer config extra.symfony.allow-contrib true
 ```
 
-Add the `contao-component-dir` to the `extra` section of your `composer.json`
-file.
+Add the `contao-component-dir` to the `extra` section of your `composer.json` file.
 
 ```
 composer config extra.contao-component-dir assets
@@ -41,14 +37,13 @@ composer require \
     php-http/guzzle6-adapter:^1.1
 ```
 
-Note that you can exchange the `php-http/guzzle6-adapter` package with any
-other [HTTP client implementation][4]. If you already have an HTTP client
-implementation, you can omit the package entirely.
+Note that you can exchange the `php-http/guzzle6-adapter` package with any other [HTTP client implementation][4]. If you
+already have an HTTP client implementation, you can omit the package entirely.
 
 ## Configuration
 
-Configure the `DATABASE_URL` in your environment, either using environment
-variables or by using the [Dotenv component][7].
+Configure the `DATABASE_URL` in your environment, either using environment variables or by using the
+[Dotenv component][7].
 
 Enable ESI in the `config/packages/framework.yaml` file.
 
@@ -57,17 +52,16 @@ framework:
     esi: true
 ```
 
-Add the Contao routes to your `config/routing.yaml` file, and be sure to load
-the `ContaoCoreBundle` at the very end, so the catch-all route does not catch
-your application routes.
+Add the Contao routes to your `config/routing.yaml` file, and be sure to load the `ContaoCoreBundle` at the very end, so
+the catch-all route does not catch your application routes.
 
 ```yml
 ContaoCoreBundle:
     resource: "@ContaoCoreBundle/Resources/config/routes.yaml"
 ```
 
-Edit your `config/security.yaml` file and merge all the `providers`, `encoders`,
-`firewalls` and `access_control` sections:
+Edit your `config/security.yaml` file and merge all the `providers`, `encoders`, `firewalls` and `access_control`
+sections:
 
 ```yml
 security:
@@ -123,9 +117,8 @@ security:
         - { path: ^/, roles: [PUBLIC_ACCESS] }
 ```
 
-The Contao core-bundle as well as the installation-bundle are now installed and
-activated. Use the Contao install tool to complete the installation by opening
-the `/contao/install` route in your browser.
+The Contao core-bundle as well as the installation-bundle are now installed and activated. Use the Contao install tool
+to complete the installation by opening the `/contao/install` route in your browser.
 
 ## License
 
