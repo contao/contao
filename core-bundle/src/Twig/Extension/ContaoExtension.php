@@ -25,7 +25,7 @@ use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
-use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -151,8 +151,12 @@ final class ContaoExtension extends AbstractExtension
                 static fn (iterable|string|HtmlAttributes|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes),
             ),
             new TwigFunction(
+                'figure',
+                [FigureRuntime::class, 'buildFigure'],
+            ),
+            new TwigFunction(
                 'contao_figure',
-                [FigureRendererRuntime::class, 'render'],
+                [FigureRuntime::class, 'renderFigure'],
                 ['is_safe' => ['html']]
             ),
             new TwigFunction(
