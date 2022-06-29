@@ -877,7 +877,7 @@ class PageModel extends Model
 		$this->layout = $this->includeLayout ? $this->layout : 0;
 		$this->cache = $this->includeCache ? $this->cache : 0;
 		$this->alwaysLoadFromCache = $this->includeCache ? $this->alwaysLoadFromCache : false;
-		$this->clientCache = $this->includeCache ? $this->clientCache : false;
+		$this->clientCache = $this->includeCache ? $this->clientCache : 0;
 
 		$pid = $this->pid;
 		$type = $this->type;
