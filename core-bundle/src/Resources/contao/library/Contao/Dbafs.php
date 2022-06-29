@@ -513,7 +513,7 @@ class Dbafs
 		$objDatabase->beginTransaction();
 
 		// Reset the "found" flag
-		$objDatabase->query("UPDATE tl_files SET found=''");
+		$objDatabase->query("UPDATE tl_files SET found=0");
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 

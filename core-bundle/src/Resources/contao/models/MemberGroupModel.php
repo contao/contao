@@ -18,9 +18,9 @@ use Contao\Model\Collection;
  * @property integer        $id
  * @property integer        $tstamp
  * @property string         $name
- * @property string|boolean $redirect
+ * @property boolean        $redirect
  * @property integer        $jumpTo
- * @property string|boolean $disable
+ * @property boolean        $disable
  * @property string|integer $start
  * @property string|integer $stop
  *
@@ -80,7 +80,7 @@ class MemberGroupModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.disable='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.disable=0 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findOneBy($arrColumns, $intId, $arrOptions);
@@ -98,6 +98,6 @@ class MemberGroupModel extends Model
 		$t = static::$strTable;
 		$time = Date::floorToMinute();
 
-		return static::findBy(array("$t.disable='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')"), null, $arrOptions);
+		return static::findBy(array("$t.disable=0 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')"), null, $arrOptions);
 	}
 }

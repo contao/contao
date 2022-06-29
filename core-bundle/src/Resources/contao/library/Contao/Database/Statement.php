@@ -251,9 +251,16 @@ class Statement
 		}
 
 		$arrParams = array_map(
-			static function ($varParam)
+			static function ($varParam) use ($arrTypes)
 			{
-				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
+				// Automatically cast boolean to integer when no types are defined, otherwise
+				// PDO will convert "false" to an empty string (see https://bugs.php.net/bug.php?id=57157)
+				if (empty($arrTypes) && \is_bool($varParam))
+				{
+					return (int) $varParam;
+				}
+
+				if (\is_string($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
 				{
 					return $varParam;
 				}

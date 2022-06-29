@@ -23,24 +23,24 @@ use Contao\Model\Collection;
  * @property string            $type
  * @property integer           $levelOffset
  * @property integer           $showLevel
- * @property string|boolean    $hardLimit
- * @property string|boolean    $showProtected
- * @property string|boolean    $defineRoot
+ * @property boolean           $hardLimit
+ * @property boolean           $showProtected
+ * @property boolean           $defineRoot
  * @property integer           $rootPage
  * @property string            $navigationTpl
  * @property string            $customTpl
  * @property string|array|null $pages
- * @property string|boolean    $showHidden
+ * @property boolean           $showHidden
  * @property string            $customLabel
- * @property string|boolean    $autologin
+ * @property boolean           $autologin
  * @property integer           $jumpTo
  * @property integer           $overviewPage
- * @property string|boolean    $redirectBack
+ * @property boolean           $redirectBack
  * @property string|array|null $editable
  * @property string            $memberTpl
  * @property integer           $form
  * @property string            $queryType
- * @property string|boolean    $fuzzy
+ * @property boolean           $fuzzy
  * @property string|array      $contextLength
  * @property integer           $minKeywordLength
  * @property integer           $perPage
@@ -48,12 +48,12 @@ use Contao\Model\Collection;
  * @property string            $searchTpl
  * @property string            $inColumn
  * @property integer           $skipFirst
- * @property string|boolean    $loadFirst
+ * @property boolean           $loadFirst
  * @property string|null       $singleSRC
  * @property string            $url
  * @property string|integer    $imgSize
- * @property string|boolean    $useCaption
- * @property string|boolean    $fullsize
+ * @property boolean           $useCaption
+ * @property boolean           $fullsize
  * @property string|array|null $multiSRC
  * @property string|null       $html
  * @property string|null       $unfilteredHtml
@@ -61,19 +61,19 @@ use Contao\Model\Collection;
  * @property string|null       $rss_feed
  * @property string            $rss_template
  * @property integer           $numberOfItems
- * @property string|boolean    $disableCaptcha
+ * @property boolean           $disableCaptcha
  * @property string|array|null $reg_groups
- * @property string|boolean    $reg_allowLogin
- * @property string|boolean    $reg_skipName
+ * @property boolean           $reg_allowLogin
+ * @property boolean           $reg_skipName
  * @property string            $reg_close
- * @property string|boolean    $reg_deleteDir
- * @property string|boolean    $reg_assignDir
+ * @property boolean           $reg_deleteDir
+ * @property boolean           $reg_assignDir
  * @property string|null       $reg_homeDir
- * @property string|boolean    $reg_activate
+ * @property boolean           $reg_activate
  * @property integer           $reg_jumpTo
  * @property string|null       $reg_text
  * @property string|null       $reg_password
- * @property string|boolean    $protected
+ * @property boolean           $protected
  * @property string|array|null $groups
  * @property string|array      $cssID
  * @property string|array|null $rootPageDependentModules

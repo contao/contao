@@ -207,7 +207,7 @@ class ContaoContextTest extends TestCase
 
         $page = new PageModel();
         $page->type = 'root';
-        $page->fallback = '1';
+        $page->fallback = true;
         $page->staticPlugins = '';
 
         return $page->loadDetails();

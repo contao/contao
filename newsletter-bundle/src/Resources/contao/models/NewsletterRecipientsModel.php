@@ -15,12 +15,12 @@ use Contao\Model\Collection;
 /**
  * Reads and writes newsletter recipients
  *
- * @property integer        $id
- * @property integer        $pid
- * @property integer        $tstamp
- * @property string         $email
- * @property string|boolean $active
- * @property integer        $addedOn
+ * @property integer $id
+ * @property integer $pid
+ * @property integer $tstamp
+ * @property string  $email
+ * @property boolean $active
+ * @property integer $addedOn
  *
  * @method static NewsletterRecipientsModel|null findById($id, array $opt=array())
  * @method static NewsletterRecipientsModel|null findByPk($id, array $opt=array())
@@ -95,7 +95,7 @@ class NewsletterRecipientsModel extends Model
 
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.email=? AND $t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ") AND $t.active=''"), $strEmail, $arrOptions);
+		return static::findBy(array("$t.email=? AND $t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ") AND $t.active=0"), $strEmail, $arrOptions);
 	}
 
 	/**
@@ -110,7 +110,7 @@ class NewsletterRecipientsModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE active='' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE active=0 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
 								 ->execute(strtotime('-24 hours'));
 
 		if ($objResult->numRows < 1)

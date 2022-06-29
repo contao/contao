@@ -24,15 +24,15 @@ use Contao\Model\Collection;
  * @property string            $type
  * @property string            $headline
  * @property string|null       $text
- * @property string|boolean    $addImage
- * @property string|boolean    $inline
- * @property string|boolean    $overwriteMeta
+ * @property boolean           $addImage
+ * @property boolean           $inline
+ * @property boolean           $overwriteMeta
  * @property string|null       $singleSRC
  * @property string            $alt
  * @property string            $imageTitle
  * @property string|integer    $size
  * @property string            $imageUrl
- * @property string|boolean    $fullsize
+ * @property boolean           $fullsize
  * @property string            $caption
  * @property string            $floating
  * @property string|null       $html
@@ -41,10 +41,10 @@ use Contao\Model\Collection;
  * @property string|array|null $listitems
  * @property string|array|null $tableitems
  * @property string            $summary
- * @property string|boolean    $thead
- * @property string|boolean    $tfoot
- * @property string|boolean    $tleft
- * @property string|boolean    $sortable
+ * @property boolean           $thead
+ * @property boolean           $tfoot
+ * @property boolean           $tleft
+ * @property boolean           $sortable
  * @property integer           $sortIndex
  * @property string            $sortOrder
  * @property string            $mooHeadline
@@ -54,20 +54,20 @@ use Contao\Model\Collection;
  * @property string            $markdownSource
  * @property string|null       $code
  * @property string            $url
- * @property string|boolean    $target
- * @property string|boolean    $overwriteLink
+ * @property boolean           $target
+ * @property boolean           $overwriteLink
  * @property string            $titleText
  * @property string            $linkTitle
  * @property string            $embed
  * @property string            $rel
- * @property string|boolean    $useImage
+ * @property boolean           $useImage
  * @property string|array|null $multiSRC
- * @property string|boolean    $useHomeDir
+ * @property boolean           $useHomeDir
  * @property integer           $perRow
  * @property integer           $perPage
  * @property integer           $numberOfItems
  * @property string            $sortBy
- * @property string|boolean    $metaIgnore
+ * @property boolean           $metaIgnore
  * @property string            $galleryTpl
  * @property string            $customTpl
  * @property string|null       $playerSRC
@@ -80,7 +80,7 @@ use Contao\Model\Collection;
  * @property integer           $playerStop
  * @property string            $playerCaption
  * @property string            $playerAspect
- * @property string|boolean    $splashImage
+ * @property boolean           $splashImage
  * @property string            $playerPreload
  * @property string            $playerColor
  * @property string|array|null $youtubeOptions
@@ -88,19 +88,19 @@ use Contao\Model\Collection;
  * @property integer           $sliderDelay
  * @property integer           $sliderSpeed
  * @property integer           $sliderStartSlide
- * @property string|boolean    $sliderContinuous
+ * @property boolean           $sliderContinuous
  * @property integer           $cteAlias
  * @property integer           $articleAlias
  * @property integer           $article
  * @property integer           $form
  * @property integer           $module
- * @property string|boolean    $protected
+ * @property boolean           $protected
  * @property string|array|null $groups
  * @property string|array      $cssID
- * @property string|boolean    $invisible
+ * @property boolean           $invisible
  * @property string|integer    $start
  * @property string|integer    $stop
- * @property string|boolean    $showPreview
+ * @property boolean           $showPreview
  *
  * @property string  $typePrefix
  * @property array   $classes
@@ -399,7 +399,7 @@ class ContentModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.invisible='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.invisible=0 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		// Skip unsaved elements (see #2708)
@@ -430,7 +430,7 @@ class ContentModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.invisible='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.invisible=0 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		// Skip unsaved elements (see #2708)

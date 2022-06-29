@@ -124,7 +124,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
-        $pageModel->enableCanonical = '1';
+        $pageModel->enableCanonical = true;
         $pageModel->canonicalLink = '{{link_url::42}}';
 
         $factory = new CoreResponseContextFactory(

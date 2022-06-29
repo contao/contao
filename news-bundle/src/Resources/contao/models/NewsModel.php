@@ -29,27 +29,27 @@ use Contao\Model\Collection;
  * @property string|null    $description
  * @property string         $subheadline
  * @property string|null    $teaser
- * @property string|boolean $addImage
- * @property string|boolean $overwriteMeta
+ * @property boolean        $addImage
+ * @property boolean        $overwriteMeta
  * @property string|null    $singleSRC
  * @property string         $alt
  * @property string         $imageTitle
  * @property string|integer $size
  * @property string         $imageUrl
- * @property string|boolean $fullsize
+ * @property boolean        $fullsize
  * @property string         $caption
  * @property string         $floating
- * @property string|boolean $addEnclosure
+ * @property boolean        $addEnclosure
  * @property string|null    $enclosure
  * @property string         $source
  * @property integer        $jumpTo
  * @property integer        $articleId
  * @property string         $url
- * @property string|boolean $target
+ * @property boolean        $target
  * @property string         $cssClass
- * @property string|boolean $noComments
- * @property string|boolean $featured
- * @property string|boolean $published
+ * @property boolean        $noComments
+ * @property boolean        $featured
+ * @property boolean        $published
  * @property string|integer $start
  * @property string|integer $stop
  *
@@ -202,7 +202,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
@@ -231,17 +231,17 @@ class NewsModel extends Model
 
 		if ($blnFeatured === true)
 		{
-			$arrColumns[] = "$t.featured='1'";
+			$arrColumns[] = "$t.featured=1";
 		}
 		elseif ($blnFeatured === false)
 		{
-			$arrColumns[] = "$t.featured=''";
+			$arrColumns[] = "$t.featured=0";
 		}
 
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -276,17 +276,17 @@ class NewsModel extends Model
 
 		if ($blnFeatured === true)
 		{
-			$arrColumns[] = "$t.featured='1'";
+			$arrColumns[] = "$t.featured=1";
 		}
 		elseif ($blnFeatured === false)
 		{
-			$arrColumns[] = "$t.featured=''";
+			$arrColumns[] = "$t.featured=0";
 		}
 
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::countBy($arrColumns, null, $arrOptions);
@@ -308,7 +308,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -336,7 +336,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -377,7 +377,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -414,7 +414,7 @@ class NewsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::countBy($arrColumns, array($intFrom, $intTo), $arrOptions);

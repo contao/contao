@@ -111,7 +111,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
-	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $bundles = System::getContainer()->getParameter('kernel.bundles');

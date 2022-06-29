@@ -2705,7 +2705,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		Input::setPost('FORM_SUBMIT', $this->strTable);
 		$this->varValue = $currentRecord[$this->strField] ?? null;
 
-		$this->save($this->varValue ? '' : '1');
+		$this->save(!$this->varValue);
 		$this->submit();
 
 		$this->redirect($this->getReferer());

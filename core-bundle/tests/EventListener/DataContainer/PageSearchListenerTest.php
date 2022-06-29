@@ -99,7 +99,7 @@ class PageSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['noSearch' => ''])
+            ->willReturn(['noSearch' => 0])
         ;
 
         $listener = new PageSearchListener(
@@ -127,7 +127,7 @@ class PageSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['noSearch' => '1'])
+            ->willReturn(['noSearch' => 1])
         ;
 
         $listener = new PageSearchListener(
@@ -155,7 +155,7 @@ class PageSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['noSearch' => '1'])
+            ->willReturn(['noSearch' => 1])
         ;
 
         $listener = new PageSearchListener(

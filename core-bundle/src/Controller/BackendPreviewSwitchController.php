@@ -96,7 +96,7 @@ class BackendPreviewSwitchController
                 [
                     'do' => 'preview_link',
                     'act' => 'create',
-                    'showUnpublished' => $showUnpublished ? '1' : '',
+                    'showUnpublished' => $showUnpublished,
                     'rt' => $this->tokenManager->getDefaultTokenValue(),
                     'nb' => '1', // Do not show the "Save & Close" button
                 ]
@@ -168,8 +168,8 @@ class BackendPreviewSwitchController
                 tl_member
             WHERE
                 username LIKE ? $andWhereGroups
-                AND login='1'
-                AND disable!='1'
+                AND login=1
+                AND disable!=1
                 AND (start='' OR start<='$time')
                 AND (stop='' OR stop>'$time')
             ORDER BY

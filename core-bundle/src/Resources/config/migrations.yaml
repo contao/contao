@@ -125,6 +125,13 @@ services:
         arguments:
             - '@database_connection'
 
+    contao.migration.version_500.boolean_fields:
+        class: Contao\CoreBundle\Migration\Version500\BooleanFieldsMigration
+        arguments:
+            - '@database_connection'
+            - '@contao.framework'
+            - '@contao.resource_finder'
+
     contao.migration.version_500.empty_ptable:
         class: Contao\CoreBundle\Migration\Version500\EmptyPtableMigration
         arguments:

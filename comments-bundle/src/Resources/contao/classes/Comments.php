@@ -558,7 +558,7 @@ class Comments extends Frontend
 			'email'        => $objComment->email,
 			'url'          => $request,
 			'addedOn'      => $time,
-			'active'       => '',
+			'active'       => false,
 			'tokenRemove'  => 'cor-' . bin2hex(random_bytes(10))
 		);
 
@@ -609,7 +609,7 @@ class Comments extends Frontend
 				return;
 			}
 
-			$objNotify->active = '1';
+			$objNotify->active = true;
 			$objNotify->save();
 
 			$optInToken->confirm();
@@ -679,7 +679,7 @@ class Comments extends Frontend
 			}
 		}
 
-		$objComment->notified = '1';
+		$objComment->notified = true;
 		$objComment->save();
 	}
 }

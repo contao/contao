@@ -35,15 +35,15 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string|null       $description
  * @property string            $redirect
  * @property integer           $jumpTo
- * @property string|boolean    $redirectBack
+ * @property boolean           $redirectBack
  * @property string            $url
- * @property string|boolean    $target
+ * @property boolean           $target
  * @property string            $dns
  * @property string            $staticFiles
  * @property string            $staticPlugins
- * @property string|boolean    $fallback
- * @property string|boolean    $disableLanguageRedirect
- * @property string|boolean    $maintenanceMode
+ * @property boolean           $fallback
+ * @property boolean           $disableLanguageRedirect
+ * @property boolean           $maintenanceMode
  * @property string|null       $favicon
  * @property string|null       $robotsTxt
  * @property string            $mailerTransport
@@ -55,62 +55,62 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string            $timeFormat
  * @property string            $datimFormat
  * @property string            $validAliasCharacters
- * @property string|boolean    $useFolderUrl
+ * @property boolean           $useFolderUrl
  * @property string            $urlPrefix
  * @property string            $urlSuffix
- * @property string|boolean    $useSSL
- * @property string|boolean    $autoforward
- * @property string|boolean    $protected
+ * @property boolean           $useSSL
+ * @property boolean           $autoforward
+ * @property boolean           $protected
  * @property string|array|null $groups
- * @property string|boolean    $includeLayout
+ * @property boolean           $includeLayout
  * @property integer           $layout
  * @property integer           $subpageLayout
- * @property string|boolean    $includeCache
+ * @property boolean           $includeCache
  * @property integer           $cache
- * @property string|boolean    $alwaysLoadFromCache
+ * @property boolean           $alwaysLoadFromCache
  * @property integer           $clientCache
- * @property string|boolean    $includeChmod
+ * @property boolean           $includeChmod
  * @property integer           $cuser
  * @property integer           $cgroup
  * @property string            $chmod
- * @property string|boolean    $noSearch
- * @property string|boolean    $requireItem
+ * @property boolean           $noSearch
+ * @property boolean           $requireItem
  * @property string            $cssClass
  * @property string            $sitemap
- * @property string|boolean    $hide
+ * @property boolean           $hide
  * @property string            $accesskey
- * @property string|boolean    $published
+ * @property boolean           $published
  * @property string|integer    $start
  * @property string|integer    $stop
- * @property string|boolean    $enforceTwoFactor
+ * @property boolean           $enforceTwoFactor
  * @property integer           $twoFactorJumpTo
  *
- * @property array          $trail
- * @property string         $mainAlias
- * @property string         $mainTitle
- * @property string         $mainPageTitle
- * @property string         $parentAlias
- * @property string         $parentTitle
- * @property string         $parentPageTitle
- * @property string         $folderUrl
- * @property string|boolean $isPublic
- * @property integer        $rootId
- * @property string         $rootAlias
- * @property string         $rootTitle
- * @property string         $rootPageTitle
- * @property integer        $rootSorting
- * @property string         $domain
- * @property string         $rootLanguage
- * @property string|boolean $rootIsPublic
- * @property string|boolean $rootIsFallback
- * @property string|boolean $rootUseSSL
- * @property string         $rootFallbackLanguage
- * @property string|boolean $minifyMarkup
- * @property integer        $layoutId
- * @property string|boolean $hasJQuery
- * @property string|boolean $hasMooTools
- * @property string         $template
- * @property string         $templateGroup
+ * @property array   $trail
+ * @property string  $mainAlias
+ * @property string  $mainTitle
+ * @property string  $mainPageTitle
+ * @property string  $parentAlias
+ * @property string  $parentTitle
+ * @property string  $parentPageTitle
+ * @property string  $folderUrl
+ * @property boolean $isPublic
+ * @property integer $rootId
+ * @property string  $rootAlias
+ * @property string  $rootTitle
+ * @property string  $rootPageTitle
+ * @property integer $rootSorting
+ * @property string  $domain
+ * @property string  $rootLanguage
+ * @property boolean $rootIsPublic
+ * @property boolean $rootIsFallback
+ * @property boolean $rootUseSSL
+ * @property string  $rootFallbackLanguage
+ * @property boolean $minifyMarkup
+ * @property integer $layoutId
+ * @property boolean $hasJQuery
+ * @property boolean $hasMooTools
+ * @property string  $template
+ * @property string  $templateGroup
  *
  * @method static PageModel|null findById($id, array $opt=array())
  * @method static PageModel|null findByPk($id, array $opt=array())
@@ -336,7 +336,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findOneBy($arrColumns, $intId, $arrOptions);
@@ -358,7 +358,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findBy($arrColumns, $intPid, $arrOptions);
@@ -381,7 +381,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -408,7 +408,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -436,7 +436,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -463,7 +463,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -490,7 +490,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -517,7 +517,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -559,7 +559,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -606,7 +606,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findBy($arrColumns, $varId, $arrOptions);
@@ -639,7 +639,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -667,7 +667,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -700,17 +700,17 @@ class PageModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = array("$t.dns=? AND $t.fallback='1'");
+		$arrColumns = array("$t.dns=? AND $t.fallback=1");
 
 		if (isset($arrOptions['fallbackToEmpty']) && $arrOptions['fallbackToEmpty'] === true)
 		{
-			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback='1'");
+			$arrColumns = array("($t.dns=? OR $t.dns='') AND $t.fallback=1");
 		}
 
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findOneBy($arrColumns, $strHost, $arrOptions);
@@ -736,7 +736,7 @@ class PageModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findBy($arrColumns, $arrOptions['dns'] ?? null, $arrOptions);
@@ -785,7 +785,7 @@ class PageModel extends Model
 		$objDatabase = Database::getInstance();
 		$arrIds = array_map('\intval', $arrIds);
 
-		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect='1' AND g.disable!='1' AND (g.start='' OR g.start<='$time') AND (g.stop='' OR g.stop>'$time') AND p.published='1' AND (p.start='' OR p.start<='$time') AND (p.stop='' OR p.stop>'$time') ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))
+		$objResult = $objDatabase->prepare("SELECT p.* FROM tl_member_group g LEFT JOIN tl_page p ON g.jumpTo=p.id WHERE g.id IN(" . implode(',', $arrIds) . ") AND g.jumpTo>0 AND g.redirect=1 AND g.disable!=1 AND (g.start='' OR g.start<='$time') AND (g.stop='' OR g.stop>'$time') AND p.published=1 AND (p.start='' OR p.start<='$time') AND (p.stop='' OR p.stop>'$time') ORDER BY " . $objDatabase->findInSet('g.id', $arrIds))
 								 ->limit(1)
 								 ->execute();
 
