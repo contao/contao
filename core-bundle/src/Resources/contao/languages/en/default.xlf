@@ -243,7 +243,7 @@
         <source>Unknown username: %s</source>
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
-        <source>Version %d could not be restored! Please consider restoring the data manually.</source>
+        <source>Version %d could not be restored. Previous data is not compatible with the current database definition anymore. Please consider restoring the data manually.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
