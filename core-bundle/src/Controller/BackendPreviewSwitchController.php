@@ -169,7 +169,7 @@ class BackendPreviewSwitchController
             WHERE
                 username LIKE ? $andWhereGroups
                 AND login=1
-                AND disable!=1
+                AND disable=0
                 AND (start='' OR start<='$time')
                 AND (stop='' OR stop>'$time')
             ORDER BY
