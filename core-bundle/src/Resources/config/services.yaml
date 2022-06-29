@@ -960,8 +960,8 @@ services:
         tags:
             - { name: twig.loader, priority: 1 }
 
-    contao.twig.figure_renderer_runtime:
-        class: Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime
+    contao.twig.figure_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\FigureRuntime
         arguments:
             - '@contao.image.studio.figure_renderer'
 
