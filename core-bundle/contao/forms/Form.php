@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Session\Attribute\AutoExpiringAttribute;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Provide methods to handle front end forms.
@@ -62,6 +64,20 @@ class Form extends Hybrid
 	protected $strTemplate = 'form_wrapper';
 
 	/**
+	 * @var Collection<string>
+	 */
+	private Collection $errors;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function __construct($objElement, $strColumn='main')
+	{
+		parent::__construct($objElement, $strColumn);
+		$this->errors = new ArrayCollection();
+	}
+
+	/**
 	 * Remove name attributes in the back end so the form is not validated
 	 *
 	 * @return string
@@ -93,6 +109,36 @@ class Form extends Hybrid
 		}
 
 		return parent::generate();
+	}
+
+	/**
+	 * @return Collection<string>
+	 */
+	public function getErrors(): Collection
+	{
+		return $this->errors;
+	}
+
+	public function hasErrors(): bool
+	{
+		return !$this->errors->isEmpty();
+	}
+
+	/**
+	 * @param Collection<string> $errors
+	 */
+	public function setErrors(Collection $errors): self
+	{
+		$this->errors = $errors;
+
+		return $this;
+	}
+
+	public function addError(string $error): self
+	{
+		$this->errors->add($error);
+
+		return $this;
 	}
 
 	/**
@@ -248,7 +294,7 @@ class Form extends Hybrid
 		}
 
 		// Remove any uploads, if form did not validate (#1185)
-		if ($doNotSubmit && $hasUpload)
+		if (($doNotSubmit || $this->hasErrors()) && $hasUpload)
 		{
 			foreach ($arrFiles as $upload)
 			{
@@ -266,7 +312,7 @@ class Form extends Hybrid
 
 		// Add a warning to the page title
 		if (
-			$doNotSubmit
+			($doNotSubmit || $this->hasErrors())
 			&& !Environment::get('isAjaxRequest')
 			&& ($responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext())
 			&& $responseContext->has(HtmlHeadBag::class)
@@ -289,7 +335,8 @@ class Form extends Hybrid
 			$strAttributes .= ' class="' . $arrAttributes[1] . '"';
 		}
 
-		$this->Template->hasError = $doNotSubmit;
+		$this->Template->hasError = $doNotSubmit || $this->hasErrors();
+		$this->Template->errors = $this->getErrors()->toArray();
 		$this->Template->attributes = $strAttributes;
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->maxFileSize = $hasUpload ? $this->objModel->getMaxUploadFileSize() : false;
@@ -558,6 +605,11 @@ class Form extends Hybrid
 		else
 		{
 			System::getContainer()->get('monolog.logger.contao.forms')->info('Form "' . $this->title . '" has been submitted by a guest.');
+		}
+
+		if ($this->hasErrors())
+		{
+			return;
 		}
 
 		// Check whether there is a jumpTo page
