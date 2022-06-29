@@ -312,9 +312,17 @@ class Versions extends Controller
 			}
 		}
 
-		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
-					   ->set($data)
-					   ->execute($this->intPid);
+		try
+		{
+			$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
+						   ->set($data)
+						   ->execute($this->intPid);
+		}
+		catch (\Exception $e)
+		{
+			Message::addError(sprintf($GLOBALS['TL_LANG']['MSC']['versionNotRestored'], $intVersion));
+			Controller::reload();
+		}
 
 		$this->Database->prepare("UPDATE tl_version SET active='' WHERE fromTable=? AND pid=?")
 					   ->execute($this->strTable, $this->intPid);
