@@ -997,6 +997,11 @@ services:
         arguments:
             - '@contao.insert_tag.parser'
 
+    contao.twig.inspector:
+        class: Contao\CoreBundle\Twig\Inspector\Inspector
+        arguments:
+            - '@twig'
+
     contao.twig.interop.context_factory:
         class: Contao\CoreBundle\Twig\Interop\ContextFactory
         public: true
