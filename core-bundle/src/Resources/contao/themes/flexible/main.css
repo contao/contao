@@ -1089,6 +1089,10 @@ table.tl_listing {
 .cte_type.unpublished,.cte_type.unpublished a {
 	color:#c33;
 }
+.cte_type .visibility {
+	color: #ccc;
+	margin-left: 0.5rem;
+}
 .limit_height {
 	overflow:hidden;
 	line-height:1.25;
@@ -2210,6 +2214,11 @@ fieldset.collapsed > legend {
 	}
 	#tmenu .burger {
 		display:inline;
+	}
+	.cte_type .visibility {
+		display: block;
+		margin-left: 0;
+		clear: right;
 	}
 }
 

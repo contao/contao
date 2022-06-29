@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
+use Contao\Date;
 use Contao\DC_Table;
 use Contao\Image;
 use Contao\Input;
@@ -1325,6 +1326,17 @@ class tl_content extends Backend
 		{
 			$class .=  ' h40';
 		}
+
+		if ($arrRow['start'] || $arrRow['stop']) {
+			if ($arrRow['start']) {
+				$type .= '<span class="visibility">' . $GLOBALS['TL_LANG']['tl_content']['start'][0] . ' ' . Date::parse(Config::get('datimFormat'), $arrRow['start']) . '</span>';
+			}
+
+			if ($arrRow['stop']) {
+				$type .= '<span class="visibility">' . $GLOBALS['TL_LANG']['tl_content']['stop'][0] . ' ' . Date::parse(Config::get('datimFormat'), $arrRow['stop']) . '</span>';
+			}
+		}
+
 
 		$objModel = new ContentModel();
 		$objModel->setRow($arrRow);
