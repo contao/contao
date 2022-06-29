@@ -2,6 +2,26 @@
 
 ## Version 4.* to 5.0
 
+### Figure
+
+The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
+`Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
+back to an array representation. If you are just using array access, nothing needs to be changed.
+
+The `contao_figure` Twig function has been deprecated and replaced with the `figure` Twig function. The new function
+returns a `Figure` object instead of a pre-rendered string which allows a more versatile application. To update existing
+usages, render the `component/_figure.html.twig` template yourself by including or embedding it with the object:
+
+```twig
+{# before #}
+{{ contao_figure('image.jpg', [800, 600]) }}
+
+{# after #}
+{% include "@Contao/component/_figure.html.twig" with {
+    figure: figure('image.jpg', [800, 600])
+} %}
+```
+
 ### Install tool
 
 The ability to execute migrations in the install tool has been removed. Use the `contao:migrate` command
@@ -395,23 +415,3 @@ The back end widgets `pageSelector` and `fileSelector` have been removed. Use th
 ### Public folder
 
 The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
-
-### Figure
-
-The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
-`Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it
-back to an array representation. If you are just using array access, nothing needs to be changed.
-
-The `contao_figure` Twig function has been deprecated and replaced with the `figure` Twig function. The new function
-returns a `Figure` object instead of a pre-rendered string which allows a more versatile application. To update existing
-usages, render the `component/_figure.html.twig` template yourself by including or embedding it with the object:
-
-```twig
-{# before #}
-{{ contao_figure('image.jpg', [800, 600]) }}
-
-{# after #}
-{% include "@Contao/component/_figure.html.twig" with {
-    figure: figure('image.jpg', [800, 600])
-} %}
-```

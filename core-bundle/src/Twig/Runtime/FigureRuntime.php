@@ -29,8 +29,6 @@ final class FigureRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
-     *
      * Renders a figure.
      *
      * The provided configuration array is used to configure a FigureBuilder
@@ -42,6 +40,8 @@ final class FigureRuntime implements RuntimeExtensionInterface
      * @param int|string|FilesModel|ImageInterface       $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
      * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
      * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
+     *
+     * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
      */
     public function renderFigure(FilesModel|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string|null
     {
