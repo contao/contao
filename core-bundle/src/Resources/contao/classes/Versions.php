@@ -222,7 +222,7 @@ class Versions extends Controller
 								->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
 								->insertId;
 
-		$this->Database->prepare("UPDATE tl_version SET active='' WHERE pid=? AND fromTable=? AND id!=?")
+		$this->Database->prepare("UPDATE tl_version SET active=0 WHERE pid=? AND fromTable=? AND id!=?")
 					   ->execute($this->intPid, $this->strTable, $intId);
 
 		$intVersion = $this->Database->prepare("SELECT version FROM tl_version WHERE id=?")
@@ -315,7 +315,7 @@ class Versions extends Controller
 					   ->set($data)
 					   ->execute($this->intPid);
 
-		$this->Database->prepare("UPDATE tl_version SET active='' WHERE fromTable=? AND pid=?")
+		$this->Database->prepare("UPDATE tl_version SET active=0 WHERE fromTable=? AND pid=?")
 					   ->execute($this->strTable, $this->intPid);
 
 		$this->Database->prepare("UPDATE tl_version SET active=1 WHERE fromTable=? AND pid=? AND version=?")

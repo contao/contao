@@ -221,7 +221,7 @@ class Newsletter extends Backend
 
 					foreach ($objSession->get('rejected_recipients', array()) as $strRecipient)
 					{
-						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='' WHERE email=?")
+						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=?")
 									   ->execute($strRecipient);
 
 						System::getContainer()->get('monolog.logger.contao.error')->error('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated');
@@ -641,7 +641,7 @@ class Newsletter extends Backend
 		}
 		else
 		{
-			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='' WHERE email=(SELECT email FROM tl_member WHERE id=?)")
+			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=(SELECT email FROM tl_member WHERE id=?)")
 						   ->execute($intUser);
 		}
 	}
