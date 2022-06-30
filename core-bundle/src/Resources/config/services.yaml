@@ -768,7 +768,7 @@ services:
             - '@contao.framework'
             - Contao\BackendUser
 
-    contao.security.data_container.table_accesss_voter:
+    contao.security.data_container.table_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\TableAccessVoter
         arguments:
             - '@security.helper'
