@@ -156,7 +156,7 @@ class MetaWizard extends Widget
 			}
 		}
 
-		// No languages defined in the site structure
+		// No languages defined in the root pages
 		if (empty($this->varValue) || !\is_array($this->varValue))
 		{
 			return '<p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['metaNoLanguages'] . '</p>';

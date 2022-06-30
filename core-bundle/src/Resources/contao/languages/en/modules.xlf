@@ -27,10 +27,10 @@
         <source>Manage themes, front end modules, page layouts or image sizes</source>
       </trans-unit>
       <trans-unit id="MOD.page.0">
-        <source>Site structure</source>
+        <source>Pages</source>
       </trans-unit>
       <trans-unit id="MOD.page.1">
-        <source>Set up the site structure of your website(s)</source>
+        <source>Set up the pages of your website(s)</source>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -75,7 +75,7 @@
         <source>System</source>
       </trans-unit>
       <trans-unit id="MOD.files.0">
-        <source>File manager</source>
+        <source>Files</source>
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
@@ -162,7 +162,7 @@
         <source>Navigation menu</source>
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
-        <source>Generates a navigation menu from the site structure</source>
+        <source>Generates a navigation menu from the pages</source>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
@@ -180,7 +180,7 @@
         <source>Quick navigation</source>
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
-        <source>Generates a drop-down menu from the site structure</source>
+        <source>Generates a drop-down menu from the pages</source>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -204,7 +204,7 @@
         <source>HTML sitemap</source>
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
-        <source>Generates a list of all pages in the site structure</source>
+        <source>Generates a list of all pages</source>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>

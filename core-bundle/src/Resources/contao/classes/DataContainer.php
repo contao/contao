@@ -61,7 +61,7 @@ abstract class DataContainer extends Backend
 	public const MODE_PARENT = 4;
 
 	/**
-	 * Records are displayed as tree (see site structure)
+	 * Records are displayed as tree (see pages)
 	 */
 	public const MODE_TREE = 5;
 
