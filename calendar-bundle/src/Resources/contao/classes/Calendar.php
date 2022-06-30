@@ -271,15 +271,15 @@ class Calendar extends Frontend
 						if ($objElement !== null)
 						{
 							// Overwrite the request (see #7756)
-							$strRequest = Environment::get('request');
-							Environment::set('request', $objItem->link);
+							$strRequest = Environment::get('requestUri');
+							Environment::set('requestUri', $objItem->link);
 
 							while ($objElement->next())
 							{
 								$strDescription .= $this->getContentElement($objElement->current());
 							}
 
-							Environment::set('request', $strRequest);
+							Environment::set('requestUri', $strRequest);
 						}
 					}
 					else
@@ -383,7 +383,14 @@ class Calendar extends Frontend
 		switch ($objEvent->source)
 		{
 			case 'external':
-				$link = $objEvent->url;
+				$url = $objEvent->url;
+
+				if (Validator::isRelativeUrl($url))
+				{
+					$url = Environment::get('path') . '/' . $url;
+				}
+
+				$link = $url;
 				break;
 
 			case 'internal':

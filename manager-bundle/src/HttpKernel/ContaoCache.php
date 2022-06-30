@@ -27,6 +27,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\TerminableInterface;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
 
 class ContaoCache extends HttpCache implements CacheInvalidation
@@ -37,7 +38,7 @@ class ContaoCache extends HttpCache implements CacheInvalidation
     {
         parent::__construct($kernel, $cacheDir);
 
-        $stripCookies = new StripCookiesSubscriber($this->readEnvCsv('COOKIE_ALLOW_LIST', 'COOKIE_WHITELIST'));
+        $stripCookies = new StripCookiesSubscriber($this->readEnvCsv('COOKIE_ALLOW_LIST'));
         $stripCookies->removeFromDenyList($this->readEnvCsv('COOKIE_REMOVE_FROM_DENY_LIST'));
 
         $stripQueryParams = new StripQueryParametersSubscriber($this->readEnvCsv('QUERY_PARAMS_ALLOW_LIST'));
@@ -65,6 +66,25 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         return parent::fetch($request, $catch);
     }
 
+    /**
+     * Override default terminate method in order to never call the
+     * "kernel.terminate" event on cache hit.
+     *
+     * @todo Remove once symfony/http-kernel is required in at least ^6.2
+     */
+    public function terminate(Request $request, Response $response): void
+    {
+        $traces = $this->getTraces();
+
+        if (\in_array('fresh', $traces[$this->getTraceKey($request)] ?? [], true)) {
+            return;
+        }
+
+        if ($this->getKernel() instanceof TerminableInterface) {
+            $this->getKernel()->terminate($request, $response);
+        }
+    }
+
     protected function getOptions(): array
     {
         $options = parent::getOptions();
@@ -87,14 +107,24 @@ class ContaoCache extends HttpCache implements CacheInvalidation
         ]);
     }
 
-    private function readEnvCsv(string $key, string $oldName = ''): array
+    private function readEnvCsv(string $key): array
     {
-        if ('' !== $oldName && isset($_SERVER[$oldName])) {
-            trigger_deprecation('contao/manager-bundle', '4.10', sprintf('Using the "%s" environment variable has been deprecated. Use "%s" instead.', $oldName, $key));
+        return array_filter(explode(',', (string) ($_SERVER[$key] ?? '')));
+    }
 
-            $key = $oldName;
+    /**
+     * Unfortunately, we need to copy this from the parent as it is private.
+     *
+     * @todo Remove once symfony/http-kernel is required in at least ^6.2
+     */
+    private function getTraceKey(Request $request): string
+    {
+        $path = $request->getPathInfo();
+
+        if ($qs = $request->getQueryString()) {
+            $path .= '?'.$qs;
         }
 
-        return array_filter(explode(',', (string) ($_SERVER[$key] ?? '')));
+        return $request->getMethod().' '.$path;
     }
 }

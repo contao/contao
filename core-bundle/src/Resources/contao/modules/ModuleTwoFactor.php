@@ -110,7 +110,7 @@ class ModuleTwoFactor extends BackendModule
 			if ($authenticator->validateCode($user, Input::post('verify')))
 			{
 				// Enable 2FA
-				$user->useTwoFactor = '1';
+				$user->useTwoFactor = true;
 				$user->save();
 
 				throw new RedirectResponseException($return);
@@ -151,7 +151,7 @@ class ModuleTwoFactor extends BackendModule
 		}
 
 		$user->secret = null;
-		$user->useTwoFactor = '';
+		$user->useTwoFactor = false;
 		$user->backupCodes = null;
 		$user->save();
 

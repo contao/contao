@@ -23,13 +23,13 @@ class PurgeRegistrationsCronTest extends ContaoTestCase
     {
         $memberModel = $this->createMock(MemberModel::class);
         $memberModel
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('delete')
         ;
 
         $memberModelAdapter = $this->mockAdapter(['findExpiredRegistrations']);
         $memberModelAdapter
-            ->expects($this->exactly(1))
+            ->expects($this->once())
             ->method('findExpiredRegistrations')
             ->willReturn(new Collection([$memberModel], MemberModel::getTable()))
         ;

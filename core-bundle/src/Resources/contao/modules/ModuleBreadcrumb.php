@@ -158,7 +158,7 @@ class ModuleBreadcrumb extends Module
 				'data'     => $pages[0]->row(),
 			);
 
-			list($strSection, $strArticle) = explode(':', Input::get('articles'));
+			list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
 
 			if ($strArticle === null)
 			{
@@ -227,7 +227,7 @@ class ModuleBreadcrumb extends Module
 					'@type' => 'ListItem',
 					'position' => ++$position,
 					'item' => array(
-						'@id' => $item['href'] ?: './',
+						'@id' => $item['href'],
 						'name' => $htmlDecoder->inputEncodedToPlainText($item['link'])
 					)
 				);

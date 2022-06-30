@@ -80,14 +80,14 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 		(
 			'edit' => array
 			(
-				'href'                => 'table=tl_faq',
-				'icon'                => 'edit.svg'
-			),
-			'editheader' => array
-			(
 				'href'                => 'act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_faq_category', 'editHeader')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_faq',
+				'icon'                => 'children.svg'
 			),
 			'copy' => array
 			(
@@ -165,7 +165,7 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'notify' => array
 		(
@@ -197,28 +197,28 @@ $GLOBALS['TL_DCA']['tl_faq_category'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'bbcode' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'requireLogin' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'disableCaptcha' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		)
 	)
 );
@@ -341,7 +341,7 @@ class tl_faq_category extends Backend
 	/**
 	 * Add the new FAQ category to the permissions
 	 *
-	 * @param $insertId
+	 * @param string|int $insertId
 	 */
 	public function adjustPermissions($insertId)
 	{

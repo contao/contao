@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Nyholm\Psr7\Uri;
 
 /**
  * Class Comments
@@ -137,7 +138,6 @@ class Comments extends Frontend
 		$objTemplate->email = $GLOBALS['TL_LANG']['MSC']['com_email'];
 		$objTemplate->website = $GLOBALS['TL_LANG']['MSC']['com_website'];
 		$objTemplate->commentsTotal = $limit ? $gtotal : $total;
-		$objTemplate->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		// Add a form to create new comments
 		$this->renderCommentForm($objTemplate, $objConfig, $strSource, $intParent, $varNotifies);
@@ -270,7 +270,6 @@ class Comments extends Frontend
 
 		$objTemplate->fields = $arrWidgets;
 		$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['com_submit'];
-		$objTemplate->messages = ''; // Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;
 
@@ -373,7 +372,7 @@ class Comments extends Frontend
 				$GLOBALS['TL_LANG']['MSC']['com_message'],
 				$arrSet['name'] . ' (' . $arrSet['email'] . ')',
 				$strComment,
-				Idna::decode(Environment::get('base')) . Environment::get('request'),
+				Idna::decode(Environment::get('url')) . Environment::get('requestUri'),
 				Idna::decode(Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id
 			);
 
@@ -546,6 +545,9 @@ class Comments extends Frontend
 
 		$time = time();
 
+		// Ensure that the URL only contains ASCII characters (see #4708)
+		$request = (string) (new Uri(Environment::get('requestUri')));
+
 		// Prepare the record
 		$arrSet = array
 		(
@@ -554,9 +556,9 @@ class Comments extends Frontend
 			'parent'       => $objComment->parent,
 			'name'         => $objComment->name,
 			'email'        => $objComment->email,
-			'url'          => Environment::get('request'),
+			'url'          => $request,
 			'addedOn'      => $time,
-			'active'       => '',
+			'active'       => false,
 			'tokenRemove'  => 'cor-' . bin2hex(random_bytes(10))
 		);
 
@@ -564,7 +566,7 @@ class Comments extends Frontend
 		$objNotify = new CommentsNotifyModel();
 		$objNotify->setRow($arrSet)->save();
 
-		$strUrl = Idna::decode(Environment::get('base')) . Environment::get('request');
+		$strUrl = Idna::decode(Environment::get('base')) . $request;
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
 		$optIn = System::getContainer()->get('contao.opt_in');
@@ -607,7 +609,7 @@ class Comments extends Frontend
 				return;
 			}
 
-			$objNotify->active = '1';
+			$objNotify->active = true;
 			$objNotify->save();
 
 			$optInToken->confirm();
@@ -659,9 +661,9 @@ class Comments extends Frontend
 				}
 
 				// Update the notification URL if it has changed (see #373)
-				if ($isFrontend && $objNotify->url != Environment::get('request'))
+				if ($isFrontend && $objNotify->url != Environment::get('requestUri'))
 				{
-					$objNotify->url = Environment::get('request');
+					$objNotify->url = Environment::get('requestUri');
 					$objNotify->save();
 				}
 
@@ -677,7 +679,7 @@ class Comments extends Frontend
 			}
 		}
 
-		$objComment->notified = '1';
+		$objComment->notified = true;
 		$objComment->save();
 	}
 }

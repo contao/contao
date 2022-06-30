@@ -70,8 +70,6 @@ class ModuleLostPassword extends Module
 			}
 		}
 
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
-
 		// Set new password
 		if (strncmp(Input::get('token'), 'pw-', 3) === 0)
 		{
@@ -304,7 +302,7 @@ class ModuleLostPassword extends Module
 		$arrData = $objMember->row();
 		$arrData['activation'] = $optInToken->getIdentifier();
 		$arrData['domain'] = Idna::decode(Environment::get('host'));
-		$arrData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
+		$arrData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
 		// Send the token
 		$optInToken->send(

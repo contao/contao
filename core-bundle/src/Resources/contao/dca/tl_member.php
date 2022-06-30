@@ -20,6 +20,7 @@ use Contao\MemberGroupModel;
 use Contao\MemberModel;
 use Contao\StringUtil;
 use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
 
 $GLOBALS['TL_DCA']['tl_member'] = array
 (
@@ -218,13 +219,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'sorting'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
-				$countries = System::getContainer()->get('contao.intl.countries')->getCountries();
-
-				// Convert to lower case for backwards compatibility, to be changed in Contao 5.0
-				return array_combine(array_map('strtolower', array_keys($countries)), $countries);
-			},
+			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.countries')->getCountries(),
 			'sql'                     => "varchar(2) NOT NULL default ''"
 		),
 		'phone' => array
@@ -295,7 +290,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'username' => array
 		(
@@ -324,7 +319,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'homeDir' => array
 		(
@@ -339,7 +334,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
@@ -401,7 +396,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'useTwoFactor' => array
 		(
 			'eval'                    => array('isBoolean'=>true, 'doNotCopy'=>true, 'tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'backupCodes' => array
 		(
@@ -417,7 +412,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 );
 
 // Filter disabled groups in the front end (see #6757)
-if (defined('TL_MODE') && TL_MODE == 'FE')
+if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))
 {
 	$GLOBALS['TL_DCA']['tl_member']['fields']['groups']['options_callback'] = array('tl_member', 'getActiveGroups');
 }

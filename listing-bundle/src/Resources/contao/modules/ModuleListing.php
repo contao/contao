@@ -230,7 +230,7 @@ class ModuleListing extends Module
 		$objData = $objDataStmt->execute(...$varKeyword);
 
 		// Prepare the URL
-		$strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
+		$strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 		$blnQuery = false;
 
 		foreach (preg_split('/&(amp;)?/', Environment::get('queryString')) as $fragment)
@@ -313,7 +313,7 @@ class ModuleListing extends Module
 				$arrTd[$i][$k] = array
 				(
 					'raw' => $v,
-					'content' => $value ?: '&nbsp;',
+					'content' => ('' !== (string) $value) ? $value : '&nbsp;',
 					'id' => $arrRows[$i][$this->strPk],
 					'field' => $k,
 					'url' => $strUrl . $strVarConnector . 'show=' . $arrRows[$i][$this->strPk],
@@ -402,6 +402,12 @@ class ModuleListing extends Module
 	protected function formatValue($k, $value, $blnListSingle=false)
 	{
 		$value = StringUtil::deserialize($value);
+
+		// Handle falsy values (see #4858)
+		if ($value === '0' || $value === 0 || $value === false)
+		{
+			return $value;
+		}
 
 		// Return if empty
 		if (empty($value))

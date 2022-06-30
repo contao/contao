@@ -1,6 +1,7 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_stylesheet.html.twig" %}
 
-{% set highlighter_css_file = 'vendor/scrivo/highlight_php/styles/foundation.css' %}
+{% set highlighter_css_file = asset('foundation.css', 'scrivo/highlight.php') %}
 
 {% block content %}
     {% if as_editor_view %}
@@ -9,14 +10,18 @@
         {% block highlighted %}
             {% block style %}
                 {% add "highlighter_css" to head %}
-                    {% include "@Contao/component/_stylesheet.html.twig" with {file: highlighter_css_file} %}
+                    {% with {file: highlighter_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
                 {% endadd %}
             {% endblock %}
 
             {% block code %}
                 {# @var \Contao\CoreBundle\Twig\Runtime\HighlightResult highlighted #}
                 {% set highlighted = code|highlight(language) %}
-                <pre><code{% block code_attributes %}{{ attrs(code_attributes|default).addClass('hljs', highlighted.language) }}{% endblock %}>
+                {% set code_attributes = attrs(code_attributes|default)
+                    .addClass('hljs')
+                    .addClass(highlighted.language)
+                %}
+                <pre><code{% block code_attributes %}{{ code_attributes }}{% endblock %}>
                     {{- highlighted.value|raw -}}
                 </code></pre>
             {% endblock %}

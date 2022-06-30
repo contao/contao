@@ -70,6 +70,10 @@ class PageUrlListener
                 try {
                     $this->aliasExists($value, $pageModel, true);
                 } catch (DuplicateAliasException $exception) {
+                    if ($pageModel = $exception->getPageModel()) {
+                        throw new \RuntimeException($this->translator->trans('ERR.pageUrlNameExists', [$pageModel->title, $pageModel->id], 'contao_default'), $exception->getCode(), $exception);
+                    }
+
                     throw new \RuntimeException($this->translator->trans('ERR.pageUrlExists', [$exception->getUrl()], 'contao_default'), $exception->getCode(), $exception);
                 }
             }
@@ -77,10 +81,12 @@ class PageUrlListener
             return $value;
         }
 
+        $currentRecord = $dc->getCurrentRecord();
+
         // Generate an alias if there is none
         $value = $this->slug->generate(
-            $dc->activeRecord->title,
-            $dc->activeRecord->id,
+            $currentRecord['title'] ?? null,
+            $currentRecord['id'] ?? null,
             fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
         );
 
@@ -97,7 +103,9 @@ class PageUrlListener
      */
     public function validateUrlPrefix(string $value, DataContainer $dc): string
     {
-        if ('root' !== $dc->activeRecord->type || $dc->activeRecord->urlPrefix === $value) {
+        $currentRecord = $dc->getCurrentRecord();
+
+        if ('root' !== ($currentRecord['type'] ?? null) || ($currentRecord['urlPrefix'] ?? null) === $value) {
             return $value;
         }
 
@@ -106,7 +114,7 @@ class PageUrlListener
             "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
             [
                 'urlPrefix' => $value,
-                'dns' => $dc->activeRecord->dns,
+                'dns' => $currentRecord['dns'] ?? null,
                 'rootId' => $dc->id,
             ]
         );
@@ -138,7 +146,9 @@ class PageUrlListener
      */
     public function validateUrlSuffix(mixed $value, DataContainer $dc): mixed
     {
-        if ('root' !== $dc->activeRecord->type || $dc->activeRecord->urlSuffix === $value) {
+        $currentRecord = $dc->getCurrentRecord();
+
+        if ('root' !== ($currentRecord['type'] ?? null) || ($currentRecord['urlSuffix'] ?? null) === $value) {
             return $value;
         }
 
@@ -239,7 +249,10 @@ class PageUrlListener
                 && 0 === ($currentRoute->getRequirements() <=> $aliasRoute->getRequirements())
             ) {
                 if ($throw) {
-                    throw new DuplicateAliasException($currentRoute->getPath());
+                    $exception = new DuplicateAliasException($currentRoute->getPath());
+                    $exception->setPageModel($aliasPage);
+
+                    throw $exception;
                 }
 
                 return true;
@@ -255,13 +268,19 @@ class PageUrlListener
         $request = Request::create($currentUrl);
 
         try {
-            $this->routeMatcher->finalMatch($routeCollection, $request);
+            $attributes = $this->routeMatcher->finalMatch($routeCollection, $request);
         } catch (ResourceNotFoundException) {
             return false;
         }
 
         if ($throw) {
-            throw new DuplicateAliasException($currentUrl);
+            $exception = new DuplicateAliasException($currentUrl);
+
+            if ($attributes['pageModel'] instanceof PageModel) {
+                $exception->setPageModel($attributes['pageModel']);
+            }
+
+            throw $exception;
         }
 
         return true;

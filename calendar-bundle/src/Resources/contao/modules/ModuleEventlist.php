@@ -95,9 +95,9 @@ class ModuleEventlist extends Events
 
 		$blnClearInput = false;
 
-		$intYear = Input::get('year');
-		$intMonth = Input::get('month');
-		$intDay = Input::get('day');
+		$intYear = (int) Input::get('year');
+		$intMonth = (int) Input::get('month');
+		$intDay = (int) Input::get('day');
 
 		// Handle featured events
 		$blnFeatured = null;
@@ -232,6 +232,32 @@ class ModuleEventlist extends Events
 		}
 
 		unset($arrAllEvents);
+
+		// Limit the number of recurrences if both the event list and the event
+		// allow unlimited recurrences (see #4037)
+		if (!$this->numberOfItems)
+		{
+			$unset = array();
+
+			foreach ($arrEvents as $k=>$v)
+			{
+				if ($v['recurring'] && !$v['recurrences'])
+				{
+					if (!isset($unset[$v['id']]))
+					{
+						$unset[$v['id']] = true;
+					}
+					else
+					{
+						unset($arrEvents[$k]);
+					}
+				}
+			}
+
+			unset($unset);
+			$arrEvents = array_values($arrEvents);
+		}
+
 		$total = \count($arrEvents);
 		$limit = $total;
 		$offset = 0;
@@ -266,7 +292,6 @@ class ModuleEventlist extends Events
 		$strDate = '';
 		$strEvents = '';
 		$eventCount = 0;
-		$headerCount = 0;
 
 		$uuids = array();
 
@@ -285,13 +310,6 @@ class ModuleEventlist extends Events
 		for ($i=$offset; $i<$limit; $i++)
 		{
 			$event = $arrEvents[$i];
-			$blnIsLastEvent = false;
-
-			// Last event on the current day
-			if (($i+1) == $limit || !isset($arrEvents[($i+1)]['firstDate']) || $event['firstDate'] != $arrEvents[($i+1)]['firstDate'])
-			{
-				$blnIsLastEvent = true;
-			}
 
 			$objTemplate = new FrontendTemplate($this->cal_template ?: 'event_list');
 			$objTemplate->setData($event);
@@ -306,7 +324,6 @@ class ModuleEventlist extends Events
 			// Day header
 			if ($strDate != $event['firstDate'])
 			{
-				$headerCount = 0;
 				$objTemplate->header = true;
 				$strDate = $event['firstDate'];
 			}
@@ -323,7 +340,7 @@ class ModuleEventlist extends Events
 			$objTemplate->classList = $event['class'] . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ' cal_' . $event['parent'];
 			$objTemplate->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
-			$objTemplate->more = $GLOBALS['TL_LANG']['MSC']['more'];
+			$objTemplate->more = $event['linkText'] ?: $GLOBALS['TL_LANG']['MSC']['more'];
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 
 			// Short view
@@ -379,7 +396,7 @@ class ModuleEventlist extends Events
 							->build();
 					}
 
-					$figure->applyLegacyTemplateData($objTemplate, $eventModel->imagemargin, $eventModel->floating);
+					$figure->applyLegacyTemplateData($objTemplate, null, $eventModel->floating);
 				}
 			}
 
@@ -407,7 +424,6 @@ class ModuleEventlist extends Events
 			$strEvents .= $objTemplate->parse();
 
 			++$eventCount;
-			++$headerCount;
 		}
 
 		// No events found

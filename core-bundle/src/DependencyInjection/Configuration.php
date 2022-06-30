@@ -56,7 +56,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $options): array {
                                 foreach (array_keys($options) as $option) {
                                     if ($newKey = Config::getNewKey($option)) {
-                                        trigger_deprecation('contao/core-bundle', '4.12', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
+                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
                                     }
                                 }
 
@@ -321,7 +321,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('valid_extensions')
                     ->prototype('scalar')->end()
-                    ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'])
+                    ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
                 ->end()
                 ->arrayNode('preview')
                     ->addDefaultsIfNotSet()
@@ -581,16 +581,19 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('custom_css')
                     ->info('Adds custom style sheets to the back end.')
                     ->example(['files/backend/custom.css'])
+                    ->cannotBeEmpty()
                     ->scalarPrototype()->end()
                 ->end()
                 ->arrayNode('custom_js')
                     ->info('Adds custom JavaScript files to the back end.')
                     ->example(['files/backend/custom.js'])
+                    ->cannotBeEmpty()
                     ->scalarPrototype()->end()
                 ->end()
                 ->scalarNode('badge_title')
                     ->info('Configures the title of the badge in the back end.')
                     ->example('develop')
+                    ->cannotBeEmpty()
                     ->defaultValue('')
                 ->end()
                 ->scalarNode('route_prefix')

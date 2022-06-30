@@ -86,7 +86,7 @@ abstract class AbstractGuestsMigration extends AbstractMigration
                 $groups[] = '-1';
 
                 $data = [
-                    'protected' => '1',
+                    'protected' => 1,
                     '`groups`' => serialize($groups),
                 ];
 

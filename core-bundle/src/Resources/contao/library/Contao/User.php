@@ -10,13 +10,10 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 /**
  * Authenticates and initializes user objects
@@ -35,21 +32,21 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  *         echo $user->name;
  *     }
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string|null       $username
  * @property string            $name
  * @property string            $email
  * @property string            $language
  * @property string            $backendTheme
  * @property string            $uploader
- * @property string|boolean    $showHelp
- * @property string|boolean    $thumbnails
- * @property string|boolean    $useRTE
- * @property string|boolean    $useCE
+ * @property boolean           $showHelp
+ * @property boolean           $thumbnails
+ * @property boolean           $useRTE
+ * @property boolean           $useCE
  * @property string            $password
- * @property string|boolean    $pwChange
- * @property string|boolean    $admin
+ * @property boolean           $pwChange
+ * @property boolean           $admin
  * @property string|array|null $groups
  * @property string            $inherit
  * @property string|array|null $modules
@@ -64,22 +61,22 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string|array|null $forms
  * @property string|array|null $formp
  * @property string|array|null $amg
- * @property string|boolean    $disable
+ * @property boolean           $disable
  * @property string|integer    $start
  * @property string|integer    $stop
  * @property string|array|null $session
- * @property string|integer    $dateAdded
+ * @property integer           $dateAdded
  * @property string|null       $secret
- * @property string|boolean    $useTwoFactor
- * @property string|integer    $lastLogin
- * @property string|integer    $currentLogin
- * @property string|integer    $loginAttempts
- * @property string|integer    $locked
+ * @property boolean           $useTwoFactor
+ * @property integer           $lastLogin
+ * @property integer           $currentLogin
+ * @property integer           $loginAttempts
+ * @property integer           $locked
  * @property string|null       $backupCodes
- * @property string|integer    $trustedTokenVersion
+ * @property integer           $trustedTokenVersion
  * @property string            $firstname
  * @property string            $lastname
- * @property string|integer    $dateOfBirth
+ * @property integer           $dateOfBirth
  * @property string            $gender
  * @property string            $company
  * @property string            $street
@@ -91,8 +88,8 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  * @property string            $mobile
  * @property string            $fax
  * @property string            $website
- * @property string|boolean    $login
- * @property string|boolean    $assignDir
+ * @property boolean           $login
+ * @property boolean           $assignDir
  * @property string            $homeDir
  *
  * @property object $objImport
@@ -258,62 +255,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	}
 
 	/**
-	 * Authenticate a user
-	 *
-	 * @return boolean True if the user could be authenticated
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	public function authenticate()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::authenticate()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		return false;
-	}
-
-	/**
-	 * Try to login the current user
-	 *
-	 * @return boolean True if the user could be logged in
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	public function login()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::login()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		return false;
-	}
-
-	/**
-	 * Check the account status and return true if it is active
-	 *
-	 * @return boolean True if the account is active
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony security instead.
-	 */
-	protected function checkAccountStatus()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::checkAccountStatus()" has been deprecated and will no longer work in Contao 5.0. Use Symfony security instead.');
-
-		try
-		{
-			$userChecker = System::getContainer()->get('contao.security.user_checker');
-			$userChecker->checkPreAuth($this);
-			$userChecker->checkPostAuth($this);
-		}
-		catch (AuthenticationException $exception)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Find a user in the database
 	 *
 	 * @param string $strColumn The field name
@@ -329,7 +270,13 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		if ($objResult->numRows > 0)
 		{
-			$this->arrData = $objResult->row();
+			$strModelClass = Model::getClassFromTable($this->strTable);
+			$this->arrData = array();
+
+			foreach ($objResult->row() as $strKey => $varData)
+			{
+				$this->arrData[$strKey] = $strModelClass::convertToPhpValue($strKey, $varData);
+			}
 
 			return true;
 		}
@@ -348,64 +295,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
 					   ->set($arrSet)
 					   ->execute($this->id);
-	}
-
-	/**
-	 * Regenerate the session ID
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony authentication instead.
-	 */
-	protected function regenerateSessionId()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::regenerateSessionId()" has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.');
-
-		$container = System::getContainer();
-		$strategy = $container->getParameter('security.authentication.session_strategy.strategy');
-
-		// Regenerate the session ID to harden against session fixation attacks
-		switch ($strategy)
-		{
-			case SessionAuthenticationStrategy::NONE:
-				break;
-
-			case SessionAuthenticationStrategy::MIGRATE:
-				$container->get('session')->migrate(); // do not destroy the old session
-				break;
-
-			case SessionAuthenticationStrategy::INVALIDATE:
-				$container->get('session')->invalidate();
-				break;
-
-			default:
-				throw new \RuntimeException(sprintf('Invalid session authentication strategy "%s"', $strategy));
-		}
-	}
-
-	/**
-	 * Generate a session
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony authentication instead.
-	 */
-	protected function generateSession()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::generateSession()" has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.');
-	}
-
-	/**
-	 * Remove the authentication cookie and destroy the current session
-	 *
-	 * @throws RedirectResponseException
-	 *
-	 * @deprecated Deprecated since Contao 4.5, to be removed in Contao 5.0.
-	 *             Use Symfony authentication instead.
-	 */
-	public function logout()
-	{
-		trigger_deprecation('contao/core-bundle', '4.5', 'Using "Contao\User::logout()" has been deprecated and will no longer work in Contao 5.0. Use Symfony authentication instead.');
-
-		throw new RedirectResponseException(System::getContainer()->get('security.logout_url_generator')->getLogoutUrl());
 	}
 
 	/**
@@ -656,9 +545,9 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Trigger the importUser hook
 	 *
-	 * @param $username
-	 * @param $password
-	 * @param $strTable
+	 * @param string $username
+	 * @param string $password
+	 * @param string $strTable
 	 *
 	 * @return bool|static
 	 */

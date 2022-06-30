@@ -54,7 +54,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_hideChannels'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
-	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_subscribe'] = array

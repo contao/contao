@@ -13,17 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
+use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
-use Contao\CoreBundle\Twig\Runtime\FigureRendererRuntime;
+use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\HighlightResult;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
@@ -47,7 +49,7 @@ final class ContaoExtension extends AbstractExtension
 {
     private array $contaoEscaperFilterRules = [];
 
-    public function __construct(private Environment $environment, private TemplateHierarchyInterface $hierarchy)
+    public function __construct(private Environment $environment, private TemplateHierarchyInterface $hierarchy, ContaoCsrfTokenManager $tokenManager)
     {
         $contaoEscaper = new ContaoEscaper();
 
@@ -65,6 +67,20 @@ final class ContaoExtension extends AbstractExtension
         // Mark classes as safe for HTML that already escape their output themselves
         $escaperExtension->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
         $escaperExtension->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
+
+        $this->environment->addGlobal(
+            'request_token',
+            new class($tokenManager) implements \Stringable {
+                public function __construct(private ContaoCsrfTokenManager $tokenManager)
+                {
+                }
+
+                public function __toString(): string
+                {
+                    return $this->tokenManager->getDefaultTokenValue();
+                }
+            }
+        );
     }
 
     /**
@@ -103,10 +119,11 @@ final class ContaoExtension extends AbstractExtension
     public function getTokenParsers(): array
     {
         return [
-            // Overwrite the parsers for the "extends" and "include" tags to
-            // additionally support the Contao template hierarchy
+            // Overwrite the parsers for the "extends", "include" and "use"
+            // tags to additionally support the Contao template hierarchy
             new DynamicExtendsTokenParser($this->hierarchy),
             new DynamicIncludeTokenParser($this->hierarchy),
+            new DynamicUseTokenParser($this->hierarchy),
             // Add a parser for the Contao specific "add" tag
             new AddTokenParser(self::class),
         ];
@@ -134,8 +151,12 @@ final class ContaoExtension extends AbstractExtension
                 static fn (iterable|string|HtmlAttributes|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes),
             ),
             new TwigFunction(
+                'figure',
+                [FigureRuntime::class, 'buildFigure'],
+            ),
+            new TwigFunction(
                 'contao_figure',
-                [FigureRendererRuntime::class, 'render'],
+                [FigureRuntime::class, 'renderFigure'],
                 ['is_safe' => ['html']]
             ),
             new TwigFunction(

@@ -537,7 +537,10 @@ abstract class Widget extends Controller
 	 */
 	public function getErrorAsHTML($intIndex=0)
 	{
-		return $this->hasErrors() ? sprintf('<p class="%s">%s</p>', ((TL_MODE == 'BE') ? 'tl_error tl_tip' : 'error'), $this->arrErrors[$intIndex]) : '';
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+
+		return $this->hasErrors() ? sprintf('<p class="%s">%s</p>', ($isBackend ? 'tl_error tl_tip' : 'error'), $this->arrErrors[$intIndex]) : '';
 	}
 
 	/**
@@ -1320,7 +1323,10 @@ abstract class Widget extends Controller
 		// Add default option to single checkbox
 		if (($arrData['inputType'] ?? null) == 'checkbox' && !isset($arrData['options']) && !isset($arrData['options_callback']) && !isset($arrData['foreignKey']))
 		{
-			if (TL_MODE == 'FE' && isset($arrAttributes['description']))
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+
+			if ($isFrontend && isset($arrAttributes['description']))
 			{
 				$arrAttributes['options'][] = array('value'=>1, 'label'=>$arrAttributes['description']);
 			}
@@ -1355,11 +1361,11 @@ abstract class Widget extends Controller
 						unset($unknown[$i]);
 					}
 
-					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$v]) ? ((($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
+					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$v]) ? (($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) ? $ref : $v) : $v));
 					continue;
 				}
 
-				$key = $blnUseReference && isset($arrData['reference'][$k]) ? ((($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) != false) ? $ref : $k) : $k;
+				$key = $blnUseReference && isset($arrData['reference'][$k]) ? (($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) ? $ref : $k) : $k;
 				$blnIsAssoc = ArrayUtil::isAssoc($v);
 
 				foreach ($v as $kk=>$vv)
@@ -1371,7 +1377,7 @@ abstract class Widget extends Controller
 						unset($unknown[$i]);
 					}
 
-					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$vv]) ? ((($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
+					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$vv]) ? (($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) ? $ref : $vv) : $vv));
 				}
 			}
 

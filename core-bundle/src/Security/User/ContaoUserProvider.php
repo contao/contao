@@ -13,14 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\FrontendUser;
 use Contao\System;
 use Contao\User;
-use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -34,9 +30,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
      */
     public function __construct(
         private ContaoFramework $framework,
-        private SessionInterface $session,
         private string $userClass,
-        private LoggerInterface|null $logger = null,
     ) {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
             throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));
@@ -79,7 +73,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 
         $user = $this->loadUserByIdentifier($user->getUserIdentifier());
 
-        $this->validateSessionLifetime($user);
         $this->triggerPostAuthenticateHook($user);
 
         return $user;
@@ -104,30 +97,6 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
 
         $user->password = $newHashedPassword;
         $user->save();
-    }
-
-    /**
-     * Validates the session lifetime and logs the user out if the session has expired.
-     */
-    private function validateSessionLifetime(User $user): void
-    {
-        if (!$this->session->isStarted()) {
-            return;
-        }
-
-        $config = $this->framework->getAdapter(Config::class);
-        $timeout = (int) $config->get('sessionTimeout');
-
-        if ($timeout > 0 && time() - $this->session->getMetadataBag()->getLastUsed() < $timeout) {
-            return;
-        }
-
-        $this->logger?->info(
-            sprintf('User "%s" has been logged out automatically due to inactivity', $user->username),
-            ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $user->username)]
-        );
-
-        throw new UsernameNotFoundException(sprintf('User "%s" has been logged out automatically due to inactivity.', $user->username));
     }
 
     private function triggerPostAuthenticateHook(User $user): void

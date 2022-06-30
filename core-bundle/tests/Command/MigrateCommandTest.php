@@ -19,10 +19,11 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
+use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -143,31 +144,45 @@ class MigrateCommandTest extends TestCase
      */
     public function testExecutesSchemaDiff(string $format): void
     {
-        $installer = $this->createMock(Installer::class);
-        $installer
+        $returnedCommands = [
+            [
+                'First call QUERY 1',
+                'First call QUERY 2',
+            ],
+            [
+                'Second call QUERY 1',
+                'Second call QUERY 2',
+                'DROP QUERY',
+            ],
+            [],
+        ];
+
+        $returnedCommandsWithoutDrops = [
+            [
+                'First call QUERY 1',
+                'First call QUERY 2',
+            ],
+            [
+                'Second call QUERY 1',
+                'Second call QUERY 2',
+            ],
+            [],
+        ];
+
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
             ->expects($this->atLeastOnce())
             ->method('compileCommands')
-        ;
-
-        $installer
-            ->expects($this->atLeastOnce())
-            ->method('getCommands')
-            ->with(false)
-            ->willReturn(
-                [
-                    'hash1' => 'First call QUERY 1',
-                    'hash2' => 'First call QUERY 2',
-                ],
-                [
-                    'hash3' => 'Second call QUERY 1',
-                    'hash4' => 'Second call QUERY 2',
-                    'hash5' => 'DROP QUERY',
-                ],
-                []
+            ->willReturnCallback(
+                static function (bool $doNotDropColumns = false) use (&$returnedCommandsWithoutDrops, &$returnedCommands): array {
+                    return $doNotDropColumns ?
+                        array_shift($returnedCommandsWithoutDrops) :
+                        array_shift($returnedCommands);
+                }
             )
         ;
 
-        $command = $this->getCommand([], [], $installer);
+        $command = $this->getCommand([], [], $commandCompiler);
 
         $tester = new CommandTester($command);
         $tester->setInputs(['yes', 'yes']);
@@ -181,12 +196,12 @@ class MigrateCommandTest extends TestCase
             $this->assertSame(
                 [
                     ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2'], 'hash' => 'f8e23e09e1009f794eabb39a6883800162ff828f9a1ccf0c5920fd646204fe58'],
+                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2'], 'hash' => '06b103d878d056ea88d30fba6a88782227a7c34160bca50a6e63320ee104af5f'],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 2'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 2', 'isSuccessful' => true],
-                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '1cde239fb3063750c8594c21d522b2372d86547d96672f1823f782083f70c788'],
+                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '929210d967bc630ef187795ca91759f9e27906fc16316b205600ff7b40cbfd1b'],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'Second call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 2'],
@@ -212,28 +227,30 @@ class MigrateCommandTest extends TestCase
      */
     public function testDoesNotExecuteWithDryRun(string $format): void
     {
-        $installer = $this->createMock(Installer::class);
-        $installer
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
             ->expects($this->once())
             ->method('compileCommands')
-        ;
-
-        $installer
-            ->expects($this->once())
-            ->method('getCommands')
-            ->with(false)
             ->willReturn(
                 [
-                    'hash1' => 'First call QUERY 1',
-                    'hash2' => 'First call QUERY 2',
+                    'First call QUERY 1',
+                    'First call QUERY 2',
                 ]
             )
+        ;
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method('executeQuery')
         ;
 
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
-            $installer
+            $commandCompiler,
+            null,
+            $connection
         );
 
         $tester = new CommandTester($command);
@@ -255,7 +272,7 @@ class MigrateCommandTest extends TestCase
                     [
                         'type' => 'schema-pending',
                         'commands' => ['First call QUERY 1', 'First call QUERY 2'],
-                        'hash' => 'f8e23e09e1009f794eabb39a6883800162ff828f9a1ccf0c5920fd646204fe58',
+                        'hash' => '06b103d878d056ea88d30fba6a88782227a7c34160bca50a6e63320ee104af5f',
                     ],
                 ],
                 $this->jsonArrayFromNdjson($display)
@@ -340,14 +357,14 @@ class MigrateCommandTest extends TestCase
      */
     public function testDoesAbortOnFatalError(string $format): void
     {
-        $installer = $this->createMock(Installer::class);
-        $installer
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
             ->expects($this->atLeastOnce())
             ->method('compileCommands')
             ->willThrowException(new \Exception('Fatal'))
         ;
 
-        $command = $this->getCommand([], [], $installer);
+        $command = $this->getCommand([], [], $commandCompiler);
         $tester = new CommandTester($command);
 
         if ('ndjson' !== $format) {
@@ -383,7 +400,7 @@ class MigrateCommandTest extends TestCase
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], Installer $installer = null, BackupManager $backupManager = null): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler $commandCompiler = null, BackupManager $backupManager = null, Connection $connection = null): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
 
@@ -410,11 +427,12 @@ class MigrateCommandTest extends TestCase
         ;
 
         return new MigrateCommand(
+            $commandCompiler ?? $this->createMock(CommandCompiler::class),
+            $connection ?? $this->createMock(Connection::class),
             $migrations,
             $backupManager ?? $this->createBackupManager(false),
             $schemaProvider,
-            $this->createMock(MysqlInnodbRowSizeCalculator::class),
-            $installer ?? $this->createMock(Installer::class)
+            $this->createMock(MysqlInnodbRowSizeCalculator::class)
         );
     }
 

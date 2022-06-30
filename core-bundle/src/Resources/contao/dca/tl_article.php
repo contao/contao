@@ -88,15 +88,15 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'edit' => array
 			(
-				'href'                => 'table=tl_content',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_article', 'editArticle')
-			),
-			'editheader' => array
-			(
 				'href'                => 'act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_article', 'editHeader')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_content',
+				'icon'                => 'children.svg',
+				'button_callback'     => array('tl_article', 'editArticle')
 			),
 			'copy' => array
 			(
@@ -226,7 +226,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'teaserCssID' => array
 		(
@@ -269,7 +269,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'groups' => array
 		(
@@ -295,7 +295,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
@@ -396,7 +396,7 @@ class tl_article extends Backend
 		}
 
 		// Set allowed clipboard IDs
-		if (isset($session['CLIPBOARD']['tl_article']) && is_array($session['CLIPBOARD']['tl_article']['id']))
+		if (isset($session['CLIPBOARD']['tl_article']) && is_array($session['CLIPBOARD']['tl_article']['id'] ?? null))
 		{
 			$clipboard = array();
 

@@ -262,14 +262,10 @@ class Ajax extends Backend
 						break;
 
 					case 'reloadPagetree':
-						trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=reloadPagetree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
 						$strKey = 'pageTree';
 						break;
 
 					default:
-						trigger_deprecation('contao/core-bundle', '4.13', 'Calling executePostActions(action=reloadFiletree) has been deprecated and will no longer work in Contao 5.0. Use the picker instead.');
-
 						$strKey = 'fileTree';
 				}
 
@@ -334,7 +330,7 @@ class Ajax extends Backend
 						$objVersions = new Versions($dc->table, $this->strAjaxId);
 						$objVersions->initialize();
 
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
+						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($this->strAjaxId);
 
 						$objVersions->create();
 
@@ -353,7 +349,7 @@ class Ajax extends Backend
 						$objVersions = new Versions($dc->table, $dc->id);
 						$objVersions->initialize();
 
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
+						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($dc->id);
 
 						$objVersions->create();
 
@@ -423,6 +419,6 @@ class Ajax extends Backend
 	 */
 	protected function convertToResponse($str)
 	{
-		return new Response(Controller::replaceOldBePaths($str));
+		return new Response($str);
 	}
 }

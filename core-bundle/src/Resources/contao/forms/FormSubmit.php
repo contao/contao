@@ -100,7 +100,7 @@ class FormSubmit extends Widget
 
 			if ($objModel !== null && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objModel->path))
 			{
-				$this->src = $objModel->path;
+				$this->src = System::getContainer()->get('contao.assets.files_context')->getStaticUrl() . $objModel->path;
 			}
 		}
 

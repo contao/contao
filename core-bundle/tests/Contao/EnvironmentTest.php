@@ -206,7 +206,9 @@ class EnvironmentTest extends TestCase
         $this->assertSame('123.45.67.89', Environment::get('ip'));
         $this->assertSame('127.0.0.1', Environment::get('server'));
         $this->assertSame('index.php', Environment::get('script'));
+        $this->assertSame('/core/index.php', Environment::get('scriptName'));
         $this->assertSame('en/academy.html?do=test', Environment::get('request'));
+        $this->assertSame('/core/en/academy.html?do=test', Environment::get('requestUri'));
         $this->assertSame('en/academy.html?do=test', Environment::get('indexFreeRequest'));
         $this->assertSame('https://localhost'.Environment::get('path').'/', Environment::get('base'));
         $this->assertFalse(Environment::get('isAjaxRequest'));

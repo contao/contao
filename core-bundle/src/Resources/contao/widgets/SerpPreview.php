@@ -245,6 +245,11 @@ class SerpPreview extends Widget
 		$chunks = parse_url($url);
 		$steps = array_filter(explode('/', $chunks['path']));
 
-		return array_merge(array($chunks['host']), $steps);
+		if (isset($chunks['host']))
+		{
+			$steps = array_merge(array($chunks['host']), $steps);
+		}
+
+		return $steps;
 	}
 }

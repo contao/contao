@@ -200,17 +200,7 @@ class ModuleArticle extends Module
 		$this->Template->teaser = $this->teaser;
 		$this->Template->elements = $arrElements;
 
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		if ($this->printable == 1)
-		{
-			trigger_deprecation('contao/core-bundle', '4.0', 'Setting tl_article.printable to "1" has been deprecated and will no longer work in Contao 5.0.');
-
-			$this->Template->printable = !empty($GLOBALS['TL_HOOKS']['printArticleAsPdf']);
-			$this->Template->pdfButton = $this->Template->printable;
-		}
-
-		// New structure
-		elseif ($this->printable)
+		if ($this->printable)
 		{
 			$options = StringUtil::deserialize($this->printable);
 
@@ -236,11 +226,11 @@ class ModuleArticle extends Module
 		// Add syndication variables
 		if ($this->Template->printable)
 		{
-			$request = Environment::get('indexFreeRequest');
+			$request = Environment::get('requestUri');
 
 			// URL encoding will be handled by the Symfony router, so do not apply rawurlencode() here anymore
 			$this->Template->print = '#';
-			$this->Template->encUrl = Environment::get('base') . Environment::get('request');
+			$this->Template->encUrl = Environment::get('uri');
 			$this->Template->encTitle = $objPage->pageTitle;
 			$this->Template->href = $request . ((strpos($request, '?') !== false) ? '&amp;' : '?') . 'pdf=' . $this->id;
 

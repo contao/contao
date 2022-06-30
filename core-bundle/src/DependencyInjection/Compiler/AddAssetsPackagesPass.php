@@ -34,6 +34,7 @@ class AddAssetsPackagesPass implements CompilerPassInterface
 
         $this->addBundles($container);
         $this->addComponents($container);
+        $this->addHighlightPhp($container);
     }
 
     /**
@@ -92,6 +93,21 @@ class AddAssetsPackagesPass implements CompilerPassInterface
             $container->setDefinition($serviceId, $this->createPackageDefinition($basePath, $version, $context));
             $packages->addMethodCall('addPackage', [$name, new Reference($serviceId)]);
         }
+    }
+
+    private function addHighlightPhp(ContainerBuilder $container): void
+    {
+        $packages = $container->getDefinition('assets.packages');
+        $serviceId = 'assets._package_scrivo/highlight.php';
+
+        $definition = $this->createPackageDefinition(
+            'vendor/scrivo/highlight_php/styles',
+            $this->createVersionStrategy($container, 'scrivo/highlight.php'),
+            new Reference('contao.assets.assets_context')
+        );
+
+        $container->setDefinition($serviceId, $definition);
+        $packages->addMethodCall('addPackage', ['scrivo/highlight.php', new Reference($serviceId)]);
     }
 
     private function createPackageDefinition(string $basePath, Reference $version, Reference $context): Definition

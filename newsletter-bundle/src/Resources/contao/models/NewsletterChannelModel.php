@@ -15,14 +15,14 @@ use Contao\Model\Collection;
 /**
  * Reads and writes newsletter channels
  *
- * @property string|integer $id
- * @property string|integer $tstamp
- * @property string         $title
- * @property string|integer $jumpTo
- * @property string         $template
- * @property string         $mailerTransport
- * @property string         $sender
- * @property string         $senderName
+ * @property integer $id
+ * @property integer $tstamp
+ * @property string  $title
+ * @property integer $jumpTo
+ * @property string  $template
+ * @property string  $mailerTransport
+ * @property string  $sender
+ * @property string  $senderName
  *
  * @method static NewsletterChannelModel|null findById($id, array $opt=array())
  * @method static NewsletterChannelModel|null findByPk($id, array $opt=array())

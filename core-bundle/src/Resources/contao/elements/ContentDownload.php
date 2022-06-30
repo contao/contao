@@ -116,7 +116,7 @@ class ContentDownload extends ContentElement
 			$this->titleText = sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
 		}
 
-		$strHref = Environment::get('request');
+		$strHref = Environment::get('requestUri');
 
 		// Remove an existing file parameter (see #5683)
 		if (Input::get('file') !== null)
@@ -164,7 +164,7 @@ class ContentDownload extends ContentElement
 				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
 			}
 
-			$builder->enableLightbox(true)->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxSize($lightboxSize);
+			$builder->enableLightbox()->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxSize($lightboxSize);
 		}
 		else
 		{

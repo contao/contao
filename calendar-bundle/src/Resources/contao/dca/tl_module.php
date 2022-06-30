@@ -40,7 +40,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_noSpan'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_hideRunning'] = array
@@ -48,7 +48,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_hideRunning'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_startDay'] = array
@@ -76,7 +76,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ignoreDynamic'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'clr w50'),
-	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_order'] = array
@@ -136,7 +136,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50 m12'),
-	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_featured'] = array
