@@ -1718,7 +1718,7 @@ abstract class DataContainer extends Backend
 	{
 		if (!$noCache)
 		{
-			$ids = array_filter($ids, fn ($id) => !isset($this->arrCurrentRecordCache[$table.'.'.$id]));
+			$ids = array_filter($ids, fn ($id) => !isset($this->arrCurrentRecordCache[$table . '.' . $id]));
 		}
 
 		if (empty($ids))
