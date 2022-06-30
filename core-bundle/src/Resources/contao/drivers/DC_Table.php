@@ -1769,35 +1769,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * Change the order of two neighbour database records
-	 */
-	public function move()
-	{
-		// Proceed only if all mandatory variables are set
-		if ($this->intId && Input::get('sid') && (!$this->root || !\in_array($this->intId, $this->root)))
-		{
-			$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=? OR id=?")
-									 ->limit(2)
-									 ->execute($this->intId, Input::get('sid'));
-
-			$row = $objRow->fetchAllAssoc();
-
-			if ($row[0]['pid'] == $row[1]['pid'])
-			{
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
-							   ->execute($row[0]['sorting'], $row[1]['id']);
-
-				$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
-							   ->execute($row[1]['sorting'], $row[0]['id']);
-
-				$this->invalidateCacheTags();
-			}
-		}
-
-		$this->redirect($this->getReferer());
-	}
-
-	/**
 	 * Auto-generate a form to edit the current database record
 	 *
 	 * @param integer $intId
