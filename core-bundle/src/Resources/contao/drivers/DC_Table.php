@@ -2378,7 +2378,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$box = '';
 
 					$currentRecord = $this->getCurrentRecord($id);
-				$excludedFields = array();
+					$excludedFields = array();
 
 					// Store the active record (backwards compatibility)
 					$this->objActiveRecord = (object) $currentRecord;
@@ -2387,8 +2387,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						// Check whether field is excluded
 						if (isset($excludedFields[$v]) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v)))
-					{
-						$excludedFields[$v] = true;
+						{
+							$excludedFields[$v] = true;
 
 							continue;
 						}
@@ -2787,8 +2787,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							// Check whether field is excluded
 							if (isset($excludedFields[$v]) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$v]['exclude'] ?? null) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v)))
-						{
-							$excludedFields[$v] = true;
+							{
+								$excludedFields[$v] = true;
 
 								continue;
 							}
