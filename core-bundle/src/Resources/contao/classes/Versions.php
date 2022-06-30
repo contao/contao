@@ -222,7 +222,7 @@ class Versions extends Controller
 								->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
 								->insertId;
 
-		$this->Database->prepare("UPDATE tl_version SET active='' WHERE pid=? AND fromTable=? AND id!=?")
+		$this->Database->prepare("UPDATE tl_version SET active=0 WHERE pid=? AND fromTable=? AND id!=?")
 					   ->execute($this->intPid, $this->strTable, $intId);
 
 		$intVersion = $this->Database->prepare("SELECT version FROM tl_version WHERE id=?")
@@ -315,7 +315,7 @@ class Versions extends Controller
 					   ->set($data)
 					   ->execute($this->intPid);
 
-		$this->Database->prepare("UPDATE tl_version SET active='' WHERE fromTable=? AND pid=?")
+		$this->Database->prepare("UPDATE tl_version SET active=0 WHERE fromTable=? AND pid=?")
 					   ->execute($this->strTable, $this->intPid);
 
 		$this->Database->prepare("UPDATE tl_version SET active=1 WHERE fromTable=? AND pid=? AND version=?")
@@ -428,7 +428,6 @@ class Versions extends Controller
 				// Get the order fields
 				$objDcaExtractor = DcaExtractor::getInstance($this->strTable);
 				$arrFields = $objDcaExtractor->getFields();
-				$arrOrderFields = $objDcaExtractor->getOrderFields();
 
 				// Find the changed fields and highlight the changes
 				foreach ($to as $k=>$v)
@@ -440,17 +439,22 @@ class Versions extends Controller
 							continue;
 						}
 
-						if (\is_array($arrFields[$k]))
+						$blnIsBinary = false;
+
+						if (isset($arrFields[$k]))
 						{
-							// Detect binary fields using Doctrine's built-in types or Contao's BinaryStringType (see #3665)
-							$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB, BinaryStringType::NAME), true);
-						}
-						else
-						{
-							$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+							if (\is_array($arrFields[$k]))
+							{
+								// Detect binary fields using Doctrine's built-in types or Contao's BinaryStringType (see #3665)
+								$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB, BinaryStringType::NAME), true);
+							}
+							else
+							{
+								$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+							}
 						}
 
-						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null) || \in_array($k, $arrOrderFields))
+						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null))
 						{
 							if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['csv']))
 							{
@@ -568,7 +572,6 @@ class Versions extends Controller
 		$objTemplate->from = $intFrom;
 		$objTemplate->showLabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->theme = Backend::getTheme();
-		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
@@ -605,7 +608,7 @@ class Versions extends Controller
 <form id="tl_version" class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['versioning']) . '">
 <div class="tl_formbody">
 <input type="hidden" name="FORM_SUBMIT" value="tl_version">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
 <select name="version" class="tl_select">' . $versions . '
 </select>
 <button type="submit" name="showVersion" id="showVersion" class="tl_submit">' . $GLOBALS['TL_LANG']['MSC']['restore'] . '</button>
@@ -681,7 +684,7 @@ class Versions extends Controller
 					$arrRow['editUrl'] = preg_replace('/id=[^&]+/', 'id=' . $filesModel->path, $arrRow['editUrl']);
 				}
 
-				$arrRow['editUrl'] = preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . REQUEST_TOKEN), StringUtil::ampersand($arrRow['editUrl']));
+				$arrRow['editUrl'] = preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue())), StringUtil::ampersand($arrRow['editUrl']));
 			}
 
 			$arrVersions[] = $arrRow;
@@ -737,7 +740,7 @@ class Versions extends Controller
 		{
 			$pairs['do'] = 'user';
 			$pairs['id'] = BackendUser::getInstance()->id;
-			$pairs['rt'] = REQUEST_TOKEN;
+			$pairs['rt'] = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 		}
 
 		if (isset($pairs['act']))

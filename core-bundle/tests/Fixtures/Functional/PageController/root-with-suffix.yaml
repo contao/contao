@@ -1,0 +1,14 @@
+tl_page:
+    - id: 1
+      pid: 0
+      sorting: 128
+      tstamp: 1539696285
+      title: Test Domain
+      alias: root
+      urlSuffix: .html
+      type: root
+      language: en
+      fallback: 1
+      includeLayout: 1
+      layout: 1
+      published: 1

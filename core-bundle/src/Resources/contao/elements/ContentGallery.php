@@ -161,7 +161,6 @@ class ContentGallery extends ContentElement
 				break;
 
 			case 'custom':
-				$images = ArrayUtil::sortByOrderField($images, $this->orderSRC);
 				break;
 
 			case 'random':
@@ -226,7 +225,7 @@ class ContentGallery extends ContentElement
 						->fromFilesModel($image)
 						->build();
 
-					$cellData = $figure->getLegacyTemplateData($this->imagemargin);
+					$cellData = $figure->getLegacyTemplateData();
 					$cellData['figure'] = $figure;
 				}
 				else

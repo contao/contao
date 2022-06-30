@@ -143,7 +143,6 @@ class BackendHelp extends Backend
 		}
 
 		$objTemplate->theme = Backend::getTheme();
-		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizardTitle']);
 		$objTemplate->host = Backend::getDecodedHostname();

@@ -16,11 +16,11 @@ use Contao\Model\Registry;
 /**
  * Reads and writes members
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string            $firstname
  * @property string            $lastname
- * @property string|integer    $dateOfBirth
+ * @property integer           $dateOfBirth
  * @property string            $gender
  * @property string            $company
  * @property string            $street
@@ -35,24 +35,24 @@ use Contao\Model\Registry;
  * @property string            $website
  * @property string            $language
  * @property string|array|null $groups
- * @property string|boolean    $login
+ * @property boolean           $login
  * @property string|null       $username
  * @property string            $password
- * @property string|boolean    $assignDir
+ * @property boolean           $assignDir
  * @property string|null       $homeDir
- * @property string|boolean    $disable
+ * @property boolean           $disable
  * @property string|integer    $start
  * @property string|integer    $stop
- * @property string|integer    $dateAdded
- * @property string|integer    $lastLogin
- * @property string|integer    $currentLogin
- * @property string|integer    $loginAttempts
- * @property string|integer    $locked
+ * @property integer           $dateAdded
+ * @property integer           $lastLogin
+ * @property integer           $currentLogin
+ * @property integer           $loginAttempts
+ * @property integer           $locked
  * @property string|array|null $session
  * @property string|null       $secret
- * @property string|boolean    $useTwoFactor
+ * @property boolean           $useTwoFactor
  * @property string|null       $backupCodes
- * @property string|integer    $trustedTokenVersion
+ * @property integer           $trustedTokenVersion
  *
  * @method static MemberModel|null findById($id, array $opt=array())
  * @method static MemberModel|null findByPk($id, array $opt=array())
@@ -194,7 +194,7 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$time = Date::floorToMinute();
 
-		$arrColumns = array("$t.email=? AND $t.login='1' AND $t.disable='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')");
+		$arrColumns = array("$t.email=? AND $t.login=1 AND $t.disable=0 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')");
 
 		if ($strUsername !== null)
 		{
@@ -217,7 +217,7 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable='1' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn>? AND o.confirmedOn=0)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn>? AND o.confirmedOn=0)")
 								 ->limit(1)
 								 ->execute($strEmail, strtotime('-24 hours'));
 
@@ -249,7 +249,7 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable='1' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
 								 ->execute(strtotime('-24 hours'));
 
 		if ($objResult->numRows < 1)
@@ -272,7 +272,7 @@ class MemberModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable='1' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
 								 ->limit(1)
 								 ->execute($strEmail, strtotime('-24 hours'));
 

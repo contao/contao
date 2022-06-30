@@ -32,9 +32,9 @@ class RobotsTxtListenerTest extends TestCase
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class);
         $rootPage->id = 42;
-        $rootPage->fallback = '1';
+        $rootPage->fallback = true;
         $rootPage->dns = 'www.foobar.com';
-        $rootPage->useSSL = '1';
+        $rootPage->useSSL = true;
 
         $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
         $pageModelAdapter

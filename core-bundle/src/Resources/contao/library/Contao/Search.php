@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Nyholm\Psr7\Uri;
+
 /**
  * Creates and queries the search index
  *
@@ -46,7 +48,7 @@ class Search
 		$arrSet['meta'] = json_encode((array) $arrData['meta']);
 
 		// Ensure that the URL only contains ASCII characters (see #4260)
-		$arrSet['url'] = preg_replace_callback('/[\x80-\xFF]+/', static fn ($match) => rawurlencode($match[0]), $arrData['url']);
+		$arrSet['url'] = (string) (new Uri($arrData['url']));
 
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
@@ -161,7 +163,7 @@ class Search
 		$strBody = strip_tags($strBody);
 
 		// Put everything together
-		$arrSet['text'] = $strBody . ' ' . $arrData['description'] . "\n" . $arrData['title'] . "\n" . $arrData['keywords'];
+		$arrSet['text'] = $strBody . ' ' . ($arrData['description'] ?? '') . "\n" . $arrData['title'] . "\n" . $arrData['keywords'];
 		$arrSet['text'] = trim(preg_replace('/ +/', ' ', StringUtil::decodeEntities($arrSet['text'])));
 
 		// Calculate the checksum
@@ -496,7 +498,7 @@ class Search
 					if ($strKeyword = trim(substr($strKeyword, 1, -1)))
 					{
 						$arrPhrases[] = $strKeyword;
-						$arrPhrasesRegExp[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword));
+						$arrPhrasesRegExp[] = str_replace(' ', '[^[:alnum:]]+', preg_quote($strKeyword, null));
 					}
 					break;
 
@@ -758,16 +760,6 @@ class Search
 
 		// Remove obsolete terms
 		$objDatabase->query("DELETE FROM tl_search_term WHERE documentFrequency = 0");
-	}
-
-	/**
-	 * Prevent cloning of the object (Singleton)
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             The Search class is now static.
-	 */
-	final public function __clone()
-	{
 	}
 
 	/**

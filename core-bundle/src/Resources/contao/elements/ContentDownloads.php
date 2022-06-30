@@ -152,7 +152,7 @@ class ContentDownloads extends ContentDownload
 					$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 				}
 
-				$strHref = Environment::get('request');
+				$strHref = Environment::get('requestUri');
 
 				// Remove an existing file parameter (see #5683)
 				if (Input::get('file') !== null)
@@ -245,7 +245,7 @@ class ContentDownloads extends ContentDownload
 						$arrMeta['title'] = StringUtil::specialchars($objFile->basename);
 					}
 
-					$strHref = Environment::get('request');
+					$strHref = Environment::get('requestUri');
 
 					// Remove an existing file parameter (see #5683)
 					if (preg_match('/(&(amp;)?|\?)file=/', $strHref))
@@ -306,7 +306,6 @@ class ContentDownloads extends ContentDownload
 				break;
 
 			case 'custom':
-				$files = ArrayUtil::sortByOrderField($files, $this->orderSRC);
 				break;
 
 			case 'random':

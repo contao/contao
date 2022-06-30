@@ -246,7 +246,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'routePath' => array
 		(
@@ -345,7 +345,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'url' => array
 		(
@@ -362,7 +362,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'dns' => array
 		(
@@ -413,14 +413,14 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			(
 				array('tl_page', 'checkFallback')
 			),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'disableLanguageRedirect' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'favicon' => array
 		(
@@ -441,7 +441,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'mailerTransport' => array
 		(
@@ -456,7 +456,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'checkbox',
 			'default'                 => true,
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'canonicalLink' => array
 		(
@@ -521,7 +521,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'urlPrefix' => array
 		(
@@ -540,16 +540,16 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'select',
-			'options'                 => array(''=>'http://', '1'=>'https://'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default '1'"
+			'options'                 => array('http://', 'https://'),
+			'eval'                    => array('tl_class'=>'w50', 'isAssociative' => true),
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'autoforward' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'protected' => array
 		(
@@ -557,7 +557,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'groups' => array
 		(
@@ -574,7 +574,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'layout' => array
 		(
@@ -601,7 +601,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'cache' => array
 		(
@@ -618,7 +618,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'clientCache' => array
 		(
@@ -635,7 +635,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'cuser' => array
 		(
@@ -673,7 +673,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'cssClass' => array
 		(
@@ -697,7 +697,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'accesskey' => array
 		(
@@ -705,7 +705,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alnum', 'maxlength'=>1, 'tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'published' => array
 		(
@@ -714,7 +714,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
@@ -735,7 +735,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'twoFactorJumpTo' => array
 		(
@@ -887,7 +887,7 @@ class tl_page extends Backend
 		if (Input::get('act') && Input::get('act') != 'paste')
 		{
 			$permission = null;
-			$cid = CURRENT_ID ?: Input::get('id');
+			$cid = Input::get('id');
 			$ids = $cid ? array($cid) : array();
 
 			// Set permission

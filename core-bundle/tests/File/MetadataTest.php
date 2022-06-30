@@ -121,7 +121,7 @@ class MetadataTest extends TestCase
         $model->setRow([
             'id' => 100,
             'headline' => 'foobar',
-            'overwriteMeta' => '1',
+            'overwriteMeta' => true,
             'alt' => 'foo alt',
             'imageTitle' => 'foo title',
             'imageUrl' => 'foo://bar',
@@ -146,7 +146,7 @@ class MetadataTest extends TestCase
         $model->setRow([
             'id' => 100,
             'headline' => 'foobar',
-            'overwriteMeta' => '',
+            'overwriteMeta' => false,
             'alt' => 'foo alt',
         ]);
 

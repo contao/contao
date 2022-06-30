@@ -77,13 +77,13 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'operations' => array
 		(
-			'edit',
-			'editheader' => array
+			'edit' => array
 			(
 				'href'                => 'table=tl_image_size&amp;act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_image_size', 'editHeader')
 			),
+			'children',
 			'copy',
 			'cut',
 			'delete',
@@ -190,14 +190,14 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'inputType'               => 'checkbox',
 			'exclude'                 => true,
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'lazyLoading' => array
 		(
 			'inputType'               => 'checkbox',
 			'exclude'                 => true,
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		)
 	)
 );
@@ -239,7 +239,7 @@ class tl_image_size extends Backend
 	/**
 	 * Add the new image size to the permissions
 	 *
-	 * @param $insertId
+	 * @param string|int $insertId
 	 */
 	public function adjustPermissions($insertId)
 	{

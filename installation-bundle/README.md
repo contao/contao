@@ -5,9 +5,8 @@
 
 The installation bundle is required to install and update Contao 4.
 
-Contao is an Open Source PHP Content Management System for people who want a
-professional website that is easy to maintain. Visit the [project website][1]
-for more information.
+Contao is an Open Source PHP Content Management System for people who want a professional website that is easy to
+maintain. Visit the [project website][1] for more information.
 
 ## License
 

@@ -63,9 +63,10 @@ abstract class Controller extends System
 	public static function getTemplate($strTemplate)
 	{
 		$strTemplate = basename($strTemplate);
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		// Check for a theme folder
-		if (\defined('TL_MODE') && TL_MODE == 'FE')
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request))
 		{
 			/** @var PageModel|null $objPage */
 			global $objPage;
@@ -304,7 +305,7 @@ abstract class Controller extends System
 			// Show a particular article only
 			if ($objPage->type == 'regular' && Input::get('articles'))
 			{
-				list($strSection, $strArticle) = explode(':', Input::get('articles'));
+				list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
 
 				if ($strArticle === null)
 				{
@@ -726,9 +727,10 @@ abstract class Controller extends System
 	public static function isVisibleElement(Model $objElement)
 	{
 		$blnReturn = true;
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		// Only apply the restrictions in the front end
-		if (TL_MODE == 'FE' && $objElement->protected)
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request) && $objElement->protected)
 		{
 			$groups = StringUtil::deserialize($objElement->groups, true);
 			$security = System::getContainer()->get('security.helper');
@@ -973,62 +975,6 @@ abstract class Controller extends System
 	}
 
 	/**
-	 * Compile the margin format definition based on an array of values
-	 *
-	 * @param array  $arrValues An array of four values and a unit
-	 * @param string $strType   Either "margin" or "padding"
-	 *
-	 * @return string The CSS markup
-	 */
-	public static function generateMargin($arrValues, $strType='margin')
-	{
-		// Initialize an empty array (see #5217)
-		if (!\is_array($arrValues))
-		{
-			$arrValues = array('top'=>'', 'right'=>'', 'bottom'=>'', 'left'=>'', 'unit'=>'');
-		}
-
-		$top = $arrValues['top'];
-		$right = $arrValues['right'];
-		$bottom = $arrValues['bottom'];
-		$left = $arrValues['left'];
-
-		// Try to shorten the definition
-		if ($top && $right  && $bottom  && $left)
-		{
-			if ($top == $right && $top == $bottom && $top == $left)
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ';';
-			}
-
-			if ($top == $bottom && $right == $left)
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
-			}
-
-			if ($top != $bottom && $right == $left)
-			{
-				return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ';';
-			}
-
-			return $strType . ':' . $top . $arrValues['unit'] . ' ' . $right . $arrValues['unit'] . ' ' . $bottom . $arrValues['unit'] . ' ' . $left . $arrValues['unit'] . ';';
-		}
-
-		$return = array();
-		$arrDir = array('top'=>$top, 'right'=>$right, 'bottom'=>$bottom, 'left'=>$left);
-
-		foreach ($arrDir as $k=>$v)
-		{
-			if ($v)
-			{
-				$return[] = $strType . '-' . $k . ':' . $v . $arrValues['unit'] . ';';
-			}
-		}
-
-		return implode('', $return);
-	}
-
-	/**
 	 * Add a request string to the current URL
 	 *
 	 * @param string  $strRequest The string to be added
@@ -1085,7 +1031,7 @@ abstract class Controller extends System
 			$uri = '?' . http_build_query($pairs, '', '&amp;', PHP_QUERY_RFC3986);
 		}
 
-		return TL_SCRIPT . $uri;
+		return $request->getBaseUrl() . $request->getPathInfo() . $uri;
 	}
 
 	/**
@@ -1105,12 +1051,18 @@ abstract class Controller extends System
 	public static function redirect($strLocation, $intStatus=303)
 	{
 		$strLocation = str_replace('&amp;', '&', $strLocation);
-		$strLocation = static::replaceOldBePaths($strLocation);
 
 		// Make the location an absolute URL
 		if (!preg_match('@^https?://@i', $strLocation))
 		{
-			$strLocation = Environment::get('base') . ltrim($strLocation, '/');
+			if ($strLocation[0] == '/')
+			{
+				$strLocation = Environment::get('url') . $strLocation;
+			}
+			else
+			{
+				$strLocation = Environment::get('base') . $strLocation;
+			}
 		}
 
 		// Ajax request
@@ -1120,48 +1072,6 @@ abstract class Controller extends System
 		}
 
 		throw new RedirectResponseException($strLocation, $intStatus);
-	}
-
-	/**
-	 * Replace the old back end paths
-	 *
-	 * @param string $strContext The context
-	 *
-	 * @return string The modified context
-	 */
-	protected static function replaceOldBePaths($strContext)
-	{
-		$arrCache = &self::$arrOldBePathCache;
-
-		$arrMapper = array
-		(
-			'contao/confirm.php'   => 'contao_backend_confirm',
-			'contao/help.php'      => 'contao_backend_help',
-			'contao/index.php'     => 'contao_backend_login',
-			'contao/main.php'      => 'contao_backend',
-			'contao/password.php'  => 'contao_backend_password',
-			'contao/popup.php'     => 'contao_backend_popup',
-			'contao/preview.php'   => 'contao_backend_preview',
-		);
-
-		$replace = static function ($matches) use ($arrMapper, &$arrCache)
-		{
-			$key = $matches[0];
-
-			if (!isset($arrCache[$key]))
-			{
-				trigger_deprecation('contao/core-bundle', '4.0', 'Using old backend paths has been deprecated in Contao 4.0 and will be removed in Contao 5. Use the backend routes instead.');
-
-				$router = System::getContainer()->get('router');
-				$arrCache[$key] = substr($router->generate($arrMapper[$key]), \strlen(Environment::get('path')) + 1);
-			}
-
-			return $arrCache[$key];
-		};
-
-		$regex = '(' . implode('|', array_map('preg_quote', array_keys($arrMapper))) . ')';
-
-		return preg_replace_callback($regex, $replace, $strContext);
 	}
 
 	/**
@@ -1365,7 +1275,7 @@ abstract class Controller extends System
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
 		}
-		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		while ($intId && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1492,7 +1402,7 @@ abstract class Controller extends System
 				}
 
 				$objFile = new File($objFiles->path);
-				$strHref = Environment::get('request');
+				$strHref = Environment::get('requestUri');
 
 				// Remove an existing file parameter (see #5683)
 				if (preg_match('/(&(amp;)?|\?)file=/', $strHref))

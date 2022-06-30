@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\BackendTemplate;
 use Contao\Config;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -23,7 +24,6 @@ use Contao\System;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\VarDumper\VarDumper;
 
 class TemplateTest extends TestCase
@@ -222,61 +222,6 @@ class TemplateTest extends TestCase
         $this->assertSame($obLevel, ob_get_level());
     }
 
-    public function testStripsLeadingSlashFromAssetUrl(): void
-    {
-        $packages = $this->createMock(Packages::class);
-        $packages
-            ->expects($this->once())
-            ->method('getUrl')
-            ->with('/path/to/asset', 'package_name')
-            ->willReturnArgument(0)
-        ;
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('assets.packages', $packages);
-
-        System::setContainer($container);
-
-        $template = new FrontendTemplate();
-        $url = $template->asset('/path/to/asset', 'package_name');
-
-        $this->assertSame('path/to/asset', $url);
-    }
-
-    public function testStripsTheBasePathFromAssetUrl(): void
-    {
-        $packages = $this->createMock(Packages::class);
-        $packages
-            ->expects($this->once())
-            ->method('getUrl')
-            ->with('/path/to/asset', 'package_name')
-            ->willReturn('/foo/path/to/asset')
-        ;
-
-        $request = Request::create(
-            'https://example.com/foo/index.php',
-            'GET',
-            [],
-            [],
-            [],
-            [
-                'SCRIPT_FILENAME' => '/foo/index.php',
-                'SCRIPT_NAME' => '/foo/index.php',
-            ]
-        );
-
-        $container = $this->getContainerWithContaoConfiguration();
-        $container->set('assets.packages', $packages);
-        $container->get('request_stack')->push($request);
-
-        System::setContainer($container);
-
-        $template = new FrontendTemplate();
-        $url = $template->asset('/path/to/asset', 'package_name');
-
-        $this->assertSame('path/to/asset', $url);
-    }
-
     public function testDoesNotModifyAbsoluteAssetUrl(): void
     {
         $packages = $this->createMock(Packages::class);
@@ -401,7 +346,7 @@ class TemplateTest extends TestCase
 
             public function testCompile(): string
             {
-                $this->compile();
+                $this->getResponse();
 
                 return $this->strBuffer;
             }
@@ -438,5 +383,37 @@ class TemplateTest extends TestCase
             '[{][}]<script>[{][}]</script>[{][}]<script>[{][}]</script>[{][}]',
             '&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;<script>[{][}]</script>&#123;&#123;&#125;&#125;',
         ];
+    }
+
+    public function testUsesGlobalRequestToken(): void
+    {
+        $tokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+        $tokenManager
+            ->expects($this->exactly(2))
+            ->method('getDefaultTokenValue')
+            ->willReturn('tokenValue"<')
+        ;
+
+        System::getContainer()->set('contao.csrf.token_manager', $tokenManager);
+
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/test_template.html5'),
+            '<?php var_export(isset($this->requestToken)) ?>, <?php var_export($this->requestToken) ?>',
+        );
+
+        $this->assertSame("true, 'tokenValue&quot;&lt;'", (new FrontendTemplate('test_template'))->parse());
+        $this->assertSame("true, 'tokenValue&quot;&lt;'", (new BackendTemplate('test_template'))->parse());
+
+        $template = new FrontendTemplate('test_template');
+        $template->setData(['requestToken' => 'custom"<']);
+        $this->assertSame("true, 'custom\"<'", $template->parse());
+
+        $template = new FrontendTemplate('test_template');
+        $template->setData(['requestToken' => ['foo', 'bar']]);
+        $this->assertSame("true, array (\n  0 => 'foo',\n  1 => 'bar',\n)", $template->parse());
+
+        $template = new FrontendTemplate('test_template');
+        $template->setData(['requestToken' => null]);
+        $this->assertSame('false, NULL', $template->parse());
     }
 }

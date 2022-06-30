@@ -1,0 +1,9 @@
+imports:
+    - { resource: config_test.yaml }
+
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                server_version: 5.7

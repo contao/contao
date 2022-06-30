@@ -155,7 +155,7 @@ class UserListCommandTest extends TestCase
         $userModel->id = 1;
         $userModel->username = 'j.doe';
         $userModel->name = 'John Doe';
-        $userModel->admin = '1';
+        $userModel->admin = true;
 
         $userModel
             ->method('row')

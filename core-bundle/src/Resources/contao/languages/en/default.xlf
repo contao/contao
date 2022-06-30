@@ -5,6 +5,9 @@
       <trans-unit id="ERR.general">
         <source>An error occurred!</source>
       </trans-unit>
+      <trans-unit id="ERR.submit">
+        <source>The data could not be saved because an error occurred!</source>
+      </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>
       </trans-unit>
@@ -146,6 +149,9 @@
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL "%s" already exists!</source>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page "%s" (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
       </trans-unit>
@@ -260,6 +266,9 @@
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path "%s" must not contain the following characters: %s</source>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
@@ -292,6 +301,12 @@
       </trans-unit>
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code.</source>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -1311,7 +1326,7 @@
         <source>Save and close</source>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
-        <source>Save and edit</source>
+        <source>Save and edit child elements</source>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
@@ -1985,6 +2000,12 @@
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module "Listing" and its "list_*" fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
       </trans-unit>
+      <trans-unit id="MSC.groupUnfilteredHtml">
+        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userUnfilteredHtml">
+        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
+      </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
       </trans-unit>
@@ -2171,11 +2192,8 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.editheader.0">
-        <source>Edit the element settings</source>
-      </trans-unit>
-      <trans-unit id="DCA.editheader.1">
-        <source>Edit the settings of element ID %s</source>
+      <trans-unit id="DCA.children">
+        <source>Edit the child elements of element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
@@ -2202,7 +2220,7 @@
         <source>Indexed %d URI(s) successfully. %d failed.</source>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

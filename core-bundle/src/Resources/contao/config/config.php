@@ -20,19 +20,12 @@ use Contao\ContentAlias;
 use Contao\ContentArticle;
 use Contao\ContentDownload;
 use Contao\ContentDownloads;
-use Contao\ContentGallery;
-use Contao\ContentHyperlink;
-use Contao\ContentImage;
-use Contao\ContentList;
 use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentPlayer;
 use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
-use Contao\ContentTable;
 use Contao\ContentTeaser;
-use Contao\ContentText;
-use Contao\ContentToplink;
 use Contao\ContentVimeo;
 use Contao\ContentYouTube;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
@@ -46,7 +39,6 @@ use Contao\FormExplanation;
 use Contao\FormFieldModel;
 use Contao\FormFieldsetStart;
 use Contao\FormFieldsetStop;
-use Contao\FormFile;
 use Contao\FormHidden;
 use Contao\FormHtml;
 use Contao\FormModel;
@@ -57,6 +49,7 @@ use Contao\FormSelect;
 use Contao\FormSubmit;
 use Contao\FormText;
 use Contao\FormTextarea;
+use Contao\FormUpload;
 use Contao\ImageSize;
 use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
@@ -77,7 +70,6 @@ use Contao\ModuleCloseAccount;
 use Contao\ModuleCustomnav;
 use Contao\ModuleHtml;
 use Contao\ModuleLogin;
-use Contao\ModuleLogout;
 use Contao\ModuleLostPassword;
 use Contao\ModuleMaintenance;
 use Contao\ModuleModel;
@@ -251,7 +243,6 @@ $GLOBALS['FE_MOD'] = array
 	'user' => array
 	(
 		'login'          => ModuleLogin::class,
-		'logout'         => ModuleLogout::class,
 		'personalData'   => ModulePersonalData::class,
 		'registration'   => ModuleRegistration::class,
 		'changePassword' => ModuleChangePassword::class,
@@ -275,12 +266,6 @@ $GLOBALS['FE_MOD'] = array
 // Content elements
 $GLOBALS['TL_CTE'] = array
 (
-	'texts' => array
-	(
-		'text'            => ContentText::class,
-		'list'            => ContentList::class,
-		'table'           => ContentTable::class,
-	),
 	'accordion' => array
 	(
 		'accordionSingle' => ContentAccordion::class,
@@ -292,15 +277,8 @@ $GLOBALS['TL_CTE'] = array
 		'sliderStart'     => ContentSliderStart::class,
 		'sliderStop'      => ContentSliderStop::class
 	),
-	'links' => array
-	(
-		'hyperlink'       => ContentHyperlink::class,
-		'toplink'         => ContentToplink::class
-	),
 	'media' => array
 	(
-		'image'           => ContentImage::class,
-		'gallery'         => ContentGallery::class,
 		'player'          => ContentPlayer::class,
 		'youtube'         => ContentYouTube::class,
 		'vimeo'           => ContentVimeo::class
@@ -364,7 +342,7 @@ $GLOBALS['TL_FFL'] = array
 	'select'        => FormSelect::class,
 	'radio'         => FormRadio::class,
 	'checkbox'      => FormCheckbox::class,
-	'upload'        => FormFile::class,
+	'upload'        => FormUpload::class,
 	'range'         => FormRange::class,
 	'hidden'        => FormHidden::class,
 	'captcha'       => FormCaptcha::class,

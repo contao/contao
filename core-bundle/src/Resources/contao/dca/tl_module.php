@@ -92,6 +92,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		'articlelist'                 => '{title_legend},name,headline,type;{config_legend},skipFirst,inColumn;{reference_legend:hide},defineRoot;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'randomImage'                 => '{title_legend},name,headline,type;{source_legend},multiSRC,imgSize,fullsize,useCaption;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'html'                        => '{title_legend},name,type;{html_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected',
+		'unfiltered_html'             => '{title_legend},name,type;{html_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected',
 		'template'                    => '{title_legend},name,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'rssReader'                   => '{title_legend},name,headline,type;{config_legend},rss_feed,numberOfItems,perPage,skipFirst,rss_cache;{template_legend:hide},rss_template;{protected_legend:hide},protected;{expert_legend:hide},cssID',
 		'two_factor'                  => '{title_legend},name,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID',
@@ -175,21 +176,21 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'showProtected' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'defineRoot' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'rootPage' => array
 		(
@@ -236,7 +237,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'customLabel' => array
 		(
@@ -249,7 +250,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'jumpTo' => array
 		(
@@ -273,7 +274,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'editable' => array
 		(
@@ -318,7 +319,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'contextLength' => array
 		(
@@ -381,7 +382,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'singleSRC' => array
 		(
@@ -404,29 +405,24 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'fullsize' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'multiSRC' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'orderField'=>'orderSRC', 'files'=>true, 'mandatory'=>true),
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'isSortable'=>true, 'files'=>true, 'mandatory'=>true),
 			'load_callback' => array
 			(
 				array('tl_module', 'setMultiSrcFlags')
 			),
-			'sql'                     => "blob NULL"
-		),
-		'orderSRC' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['sortOrder'],
 			'sql'                     => "blob NULL"
 		),
 		'html' => array
@@ -437,6 +433,15 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'eval'                    => array('allowHtml'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'sql'                     => "text NULL"
+		),
+		'unfilteredHtml' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'textarea',
+			'eval'                    => array('useRawRequestData'=>true, 'class'=>'monospace', 'rte'=>'ace|html', 'helpwizard'=>true),
+			'explanation'             => 'insertTags',
+			'sql'                     => "mediumtext NULL"
 		),
 		'rss_cache' => array
 		(
@@ -477,7 +482,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_groups' => array
 		(
@@ -492,13 +497,13 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_skipName' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_close' => array
 		(
@@ -514,14 +519,14 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_assignDir' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_homeDir' => array
 		(
@@ -535,7 +540,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_jumpTo' => array
 		(
@@ -580,7 +585,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'groups' => array
 		(

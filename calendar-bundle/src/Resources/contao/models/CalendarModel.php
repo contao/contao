@@ -15,20 +15,20 @@ use Contao\Model\Collection;
 /**
  * Reads and writes calendars
  *
- * @property string|integer    $id
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $tstamp
  * @property string            $title
- * @property string|integer    $jumpTo
- * @property string|boolean    $protected
+ * @property integer           $jumpTo
+ * @property boolean           $protected
  * @property string|array|null $groups
- * @property string|boolean    $allowComments
+ * @property boolean           $allowComments
  * @property string            $notify
  * @property string            $sortOrder
- * @property string|integer    $perPage
- * @property string|boolean    $moderate
- * @property string|boolean    $bbcode
- * @property string|boolean    $requireLogin
- * @property string|boolean    $disableCaptcha
+ * @property integer           $perPage
+ * @property boolean           $moderate
+ * @property boolean           $bbcode
+ * @property boolean           $requireLogin
+ * @property boolean           $disableCaptcha
  *
  * @method static CalendarModel|null findById($id, array $opt=array())
  * @method static CalendarModel|null findByPk($id, array $opt=array())

@@ -204,7 +204,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'author' => array
 		(
@@ -235,7 +235,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			(
 				array('tl_comments', 'sendNotifications')
 			),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'ip' => array
 		(
@@ -243,11 +243,11 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'notified' => array
 		(
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'notifiedReply' => array
 		(
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		)
 	)
 );
@@ -365,7 +365,7 @@ class tl_comments extends Backend
 			}
 		}
 
-		$this->Database->prepare("UPDATE tl_comments SET notifiedReply='1' WHERE id=?")->execute($dc->id);
+		$this->Database->prepare("UPDATE tl_comments SET notifiedReply=1 WHERE id=?")->execute($dc->id);
 	}
 
 	/**
@@ -510,7 +510,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id, 'rt'=>REQUEST_TOKEN))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->title . '</a>';
 				}
 				break;
 
@@ -520,7 +520,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>REQUEST_TOKEN))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->title . '</a>';
 				}
 				break;
 
@@ -530,7 +530,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>REQUEST_TOKEN))) . '">' . $objParent->headline . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->headline . '</a>';
 				}
 				break;
 
@@ -540,7 +540,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>REQUEST_TOKEN))) . '">' . $objParent->question . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->question . '</a>';
 				}
 				break;
 
@@ -550,7 +550,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>REQUEST_TOKEN))) . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->title . '</a>';
 				}
 				break;
 

@@ -92,8 +92,6 @@ class ModuleLogin extends Module
 		$exception = null;
 		$lastUsername = '';
 
-		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
-
 		// Only call the authentication utils if there is an active session to prevent starting an empty session
 		if ($request && $request->hasSession() && ($request->hasPreviousSession() || $request->getSession()->isStarted()))
 		{
@@ -108,7 +106,7 @@ class ModuleLogin extends Module
 		{
 			$this->import(FrontendUser::class, 'User');
 
-			$strRedirect = Environment::get('base') . Environment::get('request');
+			$strRedirect = Environment::get('uri');
 
 			// Redirect to last page visited
 			if ($this->redirectBack && $this->targetPath)
@@ -154,7 +152,7 @@ class ModuleLogin extends Module
 		}
 
 		$blnRedirectBack = false;
-		$strRedirect = Environment::get('base') . Environment::get('request');
+		$strRedirect = Environment::get('uri');
 
 		// Redirect to the last page visited
 		if ($this->redirectBack && $this->targetPath)

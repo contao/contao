@@ -97,7 +97,7 @@ class ContentPlayer extends ContentElement
 		// Optional poster
 		if ($this->posterSRC && ($objFile = FilesModel::findByUuid($this->posterSRC)) !== null)
 		{
-			$this->Template->poster = $objFile->path;
+			$this->Template->poster = System::getContainer()->get('contao.assets.files_context')->getStaticUrl() . $objFile->path;
 		}
 
 		$objFiles = $this->objFiles;
@@ -143,9 +143,13 @@ class ContentPlayer extends ContentElement
 			}
 
 			$objFile = new File($objFileModel->path);
-			$objFile->title = StringUtil::specialchars($strTitle ?: $objFile->name);
 
-			$arrFiles[$objFile->extension] = $objFile;
+			$arrFiles[$objFile->extension] = (object) array
+			(
+				'title' => StringUtil::specialchars($strTitle ?: $objFile->name),
+				'path' => System::getContainer()->get('contao.assets.files_context')->getStaticUrl() . $objFileModel->path,
+				'mime' => $objFile->mime,
+			);
 		}
 
 		$size = StringUtil::deserialize($this->playerSize);

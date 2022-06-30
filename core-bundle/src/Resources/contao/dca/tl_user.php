@@ -206,28 +206,28 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default '1'"
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'thumbnails' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default '1'"
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'useRTE' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default '1'"
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'useCE' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default '1'"
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'password' => array
 		(
@@ -243,7 +243,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'filter'                  => true,
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'admin' => array
 		(
@@ -254,7 +254,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			(
 				array('tl_user', 'checkAdminStatus')
 			),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'groups' => array
 		(
@@ -393,7 +393,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			(
 				array('tl_user', 'checkAdminDisable')
 			),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
@@ -433,7 +433,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'useTwoFactor' => array
 		(
 			'eval'                    => array('isBoolean'=>true, 'doNotCopy'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'lastLogin' => array
 		(
@@ -594,7 +594,7 @@ class tl_user extends Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin='' AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin='' AND themes LIKE '%\"theme_import\"%') as showThemeWarning");
+		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin=0 AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin=0 AND themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user WHERE elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
 
 		if ($objResult->showTemplateWarning)
 		{
@@ -604,6 +604,11 @@ class tl_user extends Backend
 		if ($objResult->showThemeWarning)
 		{
 			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userThemeImport']);
+		}
+
+		if ($objResult->showUnfilteredHtmlWarning)
+		{
+			Message::addInfo($GLOBALS['TL_LANG']['MSC']['userUnfilteredHtml']);
 		}
 	}
 
@@ -881,7 +886,7 @@ class tl_user extends Backend
 	{
 		if (!$varValue && $this->User->id == $dc->id)
 		{
-			$varValue = '1';
+			$varValue = true;
 		}
 
 		return $varValue;

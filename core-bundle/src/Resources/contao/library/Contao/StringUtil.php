@@ -466,42 +466,6 @@ class StringUtil
 	}
 
 	/**
-	 * Convert a string to HTML5
-	 *
-	 * @param string $strString The XHTML string
-	 *
-	 * @return string The HTML5 string
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0
-	 */
-	public static function toHtml5($strString)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'The "StringUtil::toHtml5()" method has been deprecated and will no longer work in Contao 5.0.');
-
-		$arrPregReplace = array
-		(
-			'/<(br|hr|img)([^>]*) \/>/i'                  => '<$1$2>',             // Close stand-alone tags
-			'/ (cellpadding|cellspacing|border)="[^"]*"/' => '',                   // Remove deprecated attributes
-			'/ rel="lightbox(\[([^\]]+)\])?"/'            => ' data-lightbox="$2"' // see #4073
-		);
-
-		$arrStrReplace = array
-		(
-			'<u>'                                              => '<span style="text-decoration:underline">',
-			'</u>'                                             => '</span>',
-			' target="_self"'                                  => '',
-			' onclick="window.open(this.href); return false"'  => ' target="_blank"',
-			' onclick="window.open(this.href);return false"'   => ' target="_blank"',
-			' onclick="window.open(this.href); return false;"' => ' target="_blank"'
-		);
-
-		$strString = preg_replace(array_keys($arrPregReplace), $arrPregReplace, $strString);
-		$strString = str_ireplace(array_keys($arrStrReplace), $arrStrReplace, $strString);
-
-		return $strString;
-	}
-
-	/**
 	 * Convert a UUID string to binary data
 	 *
 	 * @param string $uuid The UUID string
@@ -672,6 +636,67 @@ class StringUtil
 	}
 
 	/**
+	 * Adds {{env::base_path}} to relative links
+	 *
+	 * @param string $data The markup string
+	 *
+	 * @return string
+	 */
+	public static function addBasePath($data)
+	{
+		$return = '';
+		$paths = preg_split('/((src|href)="([^"]+)")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+		for ($i=0, $c=\count($paths); $i<$c; $i+=4)
+		{
+			$return .= $paths[$i];
+
+			if (!isset($paths[$i+1]))
+			{
+				continue;
+			}
+
+			if (Validator::isRelativeUrl($paths[$i+3]))
+			{
+				$return .= $paths[$i+2] . '="{{env::base_path}}/' . $paths[$i+3] . '"';
+			}
+			else
+			{
+				$return .= $paths[$i+2] . '="' . $paths[$i+3] . '"';
+			}
+		}
+
+		return $return;
+	}
+
+	/**
+	 * Removes {{env::base_path}} from relative links
+	 *
+	 * @param string $data The markup string
+	 *
+	 * @return string
+	 */
+	public static function removeBasePath($data)
+	{
+		$return = '';
+		$paths = preg_split('/((src|href)="\{\{env::base_path}}\/([^"]+)")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+		for ($i=0, $c=\count($paths); $i<$c; $i+=4)
+		{
+			$return .= $paths[$i];
+
+			if (!isset($paths[$i+1]))
+			{
+				continue;
+			}
+
+			$return .= $paths[$i+2] . '="' . $paths[$i+3] . '"';
+		}
+
+		return $return;
+	}
+
+	/**
 	 * Sanitize a file name
 	 *
 	 * @param string $strName The file name
@@ -777,16 +802,6 @@ class StringUtil
 			return $str;
 		}
 
-		if ($from == 'UTF-8' && $to == 'ISO-8859-1')
-		{
-			return utf8_decode($str);
-		}
-
-		if ($from == 'ISO-8859-1' && $to == 'UTF-8')
-		{
-			return utf8_encode($str);
-		}
-
 		return mb_convert_encoding($str, $to, $from);
 	}
 
@@ -806,7 +821,7 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		return htmlspecialchars((string) $strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8', $blnDoubleEncode);
+		return htmlspecialchars((string) $strString, ENT_QUOTES, 'UTF-8', $blnDoubleEncode);
 	}
 
 	/**
@@ -915,7 +930,7 @@ class StringUtil
 		$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 		$arrReplace = array('', '-');
 
-		$strString = html_entity_decode($strString, ENT_QUOTES, $GLOBALS['TL_CONFIG']['characterSet'] ?? 'UTF-8');
+		$strString = html_entity_decode($strString, ENT_QUOTES, 'UTF-8');
 		$strString = static::stripInsertTags($strString);
 		$strString = preg_replace($arrSearch, $arrReplace, $strString);
 

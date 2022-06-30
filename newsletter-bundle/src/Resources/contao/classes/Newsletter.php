@@ -110,7 +110,7 @@ class Newsletter extends Backend
 		// Send newsletter
 		if ($token && $token == $objSession->get('tl_newsletter_send'))
 		{
-			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('request'));
+			$referer = preg_replace('/&(amp;)?(start|mpc|token|recipient|preview)=[^&]*/', '', Environment::get('requestUri'));
 
 			// Preview
 			if (Input::get('preview') !== null)
@@ -169,7 +169,7 @@ class Newsletter extends Backend
 				// Update status
 				if ($intStart == 0)
 				{
-					$this->Database->prepare("UPDATE tl_newsletter SET sent='1', date=? WHERE id=?")
+					$this->Database->prepare("UPDATE tl_newsletter SET sent=1, date=? WHERE id=?")
 								   ->execute(time(), $objNewsletter->id);
 
 					$objSession->set('rejected_recipients', array());
@@ -221,7 +221,7 @@ class Newsletter extends Backend
 
 					foreach ($objSession->get('rejected_recipients', array()) as $strRecipient)
 					{
-						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='' WHERE email=?")
+						$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=?")
 									   ->execute($strRecipient);
 
 						System::getContainer()->get('monolog.logger.contao.error')->error('Recipient address "' . Idna::decodeEmail($strRecipient) . '" was rejected and has been deactivated');
@@ -246,7 +246,7 @@ class Newsletter extends Backend
 			// Redirect to the next cycle
 			else
 			{
-				$url = preg_replace('/&(amp;)?(start|mpc|recipient)=[^&]*/', '', Environment::get('request')) . '&start=' . ($intStart + $intPages) . '&mpc=' . $intPages;
+				$url = preg_replace('/&(amp;)?(start|mpc|recipient)=[^&]*/', '', Environment::get('requestUri')) . '&start=' . ($intStart + $intPages) . '&mpc=' . $intPages;
 
 				echo '<script>setTimeout(\'window.location="' . Environment::get('base') . $url . '"\',' . ($intTimeout * 1000) . ')</script>';
 				echo '<a href="' . Environment::get('base') . $url . '">Please click here to proceed if you are not using JavaScript</a>';
@@ -266,7 +266,7 @@ class Newsletter extends Backend
 <div id="tl_buttons">
 <a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
-<form action="' . TL_SCRIPT . '" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get">
+<form action="' . $this->route('contao_backend') . '" id="tl_newsletter_send" class="tl_form tl_edit_form" method="get">
 <div class="tl_formbody_edit tl_newsletter_send">
 <input type="hidden" name="do" value="' . Input::get('do') . '">
 <input type="hidden" name="table" value="' . Input::get('table') . '">
@@ -412,9 +412,6 @@ class Newsletter extends Backend
 			$objTemplate->body = $simpleTokenParser->parse($html, $arrRecipient);
 			$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 			$objTemplate->recipient = $arrRecipient['email'];
-
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$objTemplate->css = $css;
 
 			// Parse template
 			$objEmail->html = $objTemplate->parse();
@@ -585,13 +582,13 @@ class Newsletter extends Backend
 		// Return form
 		return '
 <div id="tl_buttons">
-<a href="' . StringUtil::ampersand(str_replace('&key=import', '', Environment::get('request'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=import', '', Environment::get('requestUri'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 ' . Message::generate() . '
 <form id="tl_recipients_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_recipients_import">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
 <input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
 
 <fieldset class="tl_tbox nolegend">
@@ -644,7 +641,7 @@ class Newsletter extends Backend
 		}
 		else
 		{
-			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='' WHERE email=(SELECT email FROM tl_member WHERE id=?)")
+			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=0 WHERE email=(SELECT email FROM tl_member WHERE id=?)")
 						   ->execute($intUser);
 		}
 	}
@@ -713,7 +710,7 @@ class Newsletter extends Backend
 				continue;
 			}
 
-			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active='1' WHERE pid=? AND email=?")
+			$this->Database->prepare("UPDATE tl_newsletter_recipients SET active=1 WHERE pid=? AND email=?")
 						   ->execute($intNewsletter, $objUser->email);
 		}
 	}
@@ -740,7 +737,7 @@ class Newsletter extends Backend
 		if ($objUser->numRows)
 		{
 			$this->Database->prepare("UPDATE tl_newsletter_recipients SET tstamp=?, active=? WHERE email=?")
-						   ->execute(time(), ($blnDisabled ? '' : '1'), $objUser->email);
+						   ->execute(time(), ($blnDisabled ? 0 : 1), $objUser->email);
 		}
 
 		return $blnDisabled;
@@ -837,9 +834,11 @@ class Newsletter extends Backend
 	public function updateAccount()
 	{
 		$intUser = Input::get('id');
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
 		// Front end call
-		if (TL_MODE == 'FE')
+		if ($isFrontend)
 		{
 			$this->import(FrontendUser::class, 'User');
 			$intUser = $this->User->id;
@@ -852,7 +851,7 @@ class Newsletter extends Backend
 		}
 
 		// Edit account
-		if (TL_MODE == 'FE' || Input::get('act') == 'edit')
+		if ($isFrontend || Input::get('act') == 'edit')
 		{
 			$objUser = $this->Database->prepare("SELECT email, disable FROM tl_member WHERE id=?")
 									  ->limit(1)
@@ -899,7 +898,7 @@ class Newsletter extends Backend
 							   ->execute($strNewsletters, $intUser);
 
 				// Update the front end user object
-				if (TL_MODE == 'FE')
+				if ($isFrontend)
 				{
 					$this->User->newsletter = $strNewsletters;
 				}
@@ -971,10 +970,11 @@ class Newsletter extends Backend
 			return array();
 		}
 
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$arrNewsletters = array();
 
 		// Return all channels if $objModule is null (see #5874)
-		if ($objModule === null || TL_MODE == 'BE')
+		if ($objModule === null || ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request)))
 		{
 			while ($objNewsletter->next())
 			{

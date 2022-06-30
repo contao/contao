@@ -96,7 +96,7 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'jumpTo' => array
 		(
@@ -113,7 +113,7 @@ $GLOBALS['TL_DCA']['tl_member_group'] = array
 			'reverseToggle'           => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(

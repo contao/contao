@@ -95,7 +95,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'operations' => array
 		(
 			'edit',
-			'editheader',
+			'children',
 			'copy',
 			'cut',
 			'delete',
@@ -118,17 +118,17 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('source', 'addTime', 'addImage', 'recurring', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend:hide},source;{meta_legend},pageTitle,robots,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
-		'internal'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,jumpTo;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
-		'article'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,articleId;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
-		'external'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,linkText;{meta_legend},pageTitle,robots,description,serpPreview;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
+		'internal'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,jumpTo,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
+		'article'                     => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,articleId,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop',
+		'external'                    => '{title_legend},title,featured,alias,author;{date_legend},addTime,startDate,endDate;{source_legend},source,url,target,linkText;{details_legend},location,address,teaser;{image_legend},addImage;{recurring_legend},recurring;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,noComments;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
 	'subpalettes' => array
 	(
 		'addTime'                     => 'startTime,endTime',
-		'addImage'                    => 'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta',
+		'addImage'                    => 'singleSRC,fullsize,size,floating,overwriteMeta',
 		'recurring'                   => 'repeatEach,recurrences',
 		'addEnclosure'                => 'enclosure',
 		'overwriteMeta'               => 'alt,imageTitle,imageUrl,caption'
@@ -168,7 +168,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'alias' => array
 		(
@@ -201,7 +201,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'doNotCopy'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'startTime' => array
 		(
@@ -310,7 +310,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'overwriteMeta' => array
 		(
@@ -318,7 +318,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true, 'tl_class'=>'w50 clr'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'singleSRC' => array
 		(
@@ -352,21 +352,12 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50 clr'),
 			'options_callback' => static function ()
 			{
 				return System::getContainer()->get('contao.image.sizes')->getOptionsForUser(BackendUser::getInstance());
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
-		),
-		'imagemargin' => array
-		(
-			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imagemargin'],
-			'exclude'                 => true,
-			'inputType'               => 'trbl',
-			'options'                 => array('px', '%', 'em', 'rem'),
-			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(128) NOT NULL default ''"
 		),
 		'imageUrl' => array
 		(
@@ -382,8 +373,8 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_content']['fullsize'],
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'caption' => array
 		(
@@ -410,7 +401,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'repeatEach' => array
 		(
@@ -437,7 +428,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'enclosure' => array
 		(
@@ -455,6 +446,14 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'reference'               => &$GLOBALS['TL_LANG']['tl_calendar_events'],
 			'eval'                    => array('submitOnChange'=>true, 'helpwizard'=>true),
 			'sql'                     => "varchar(32) NOT NULL default 'default'"
+		),
+		'linkText' => array
+		(
+			'exclude'                 => true,
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'jumpTo' => array
 		(
@@ -489,7 +488,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'cssClass' => array
 		(
@@ -503,7 +502,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'published' => array
 		(
@@ -513,7 +512,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_DESC,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
@@ -553,9 +552,11 @@ class tl_calendar_events extends Backend
 	/**
 	 * Check permissions to edit table tl_calendar_events
 	 *
+	 * @param DataContainer $dc
+	 *
 	 * @throws AccessDeniedException
 	 */
-	public function checkPermission()
+	public function checkPermission(DataContainer $dc)
 	{
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
 
@@ -581,15 +582,15 @@ class tl_calendar_events extends Backend
 			$root = $this->User->calendars;
 		}
 
-		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
 
 		// Check current action
 		switch (Input::get('act'))
 		{
 			case 'paste':
 			case 'select':
-				// Check CURRENT_ID here (see #247)
-				if (!in_array(CURRENT_ID, $root))
+				// Check currentPid here (see #247)
+				if (!in_array($dc->currentPid, $root))
 				{
 					throw new AccessDeniedException('Not enough permissions to access calendar ID ' . $id . '.');
 				}
@@ -872,13 +873,11 @@ class tl_calendar_events extends Backend
 				return $arrAlias;
 			}
 
-			$objAlias = $this->Database->prepare("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting")
-									   ->execute($dc->id);
+			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid WHERE a.pid IN(" . implode(',', array_map('\intval', array_unique($arrPids))) . ") ORDER BY parent, a.sorting");
 		}
 		else
 		{
-			$objAlias = $this->Database->prepare("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting")
-									   ->execute($dc->id);
+			$objAlias = $this->Database->execute("SELECT a.id, a.title, a.inColumn, p.title AS parent FROM tl_article a LEFT JOIN tl_page p ON p.id=a.pid ORDER BY parent, a.sorting");
 		}
 
 		if ($objAlias->numRows)

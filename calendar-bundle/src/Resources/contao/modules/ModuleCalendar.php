@@ -69,7 +69,7 @@ class ModuleCalendar extends Events
 			return '';
 		}
 
-		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
+		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 		$this->strLink = $this->strUrl;
 
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
@@ -118,7 +118,7 @@ class ModuleCalendar extends Events
 
 		// Find the boundaries
 		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
-		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!$blnShowUnpublished ? " AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : ""));
+		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!$blnShowUnpublished ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : ""));
 		$dateFrom = $objMinMax->dateFrom;
 		$dateTo = $objMinMax->dateTo;
 		$repeatUntil = $objMinMax->repeatUntil;
@@ -133,8 +133,8 @@ class ModuleCalendar extends Events
 		}
 
 		// Store year and month
-		$intYear = date('Y', $this->Date->tstamp);
-		$intMonth = date('m', $this->Date->tstamp);
+		$intYear = (int) date('Y', $this->Date->tstamp);
+		$intMonth = (int) date('m', $this->Date->tstamp);
 
 		$objTemplate = new FrontendTemplate($this->cal_ctemplate ?: 'cal_default');
 		$objTemplate->intYear = $intYear;
@@ -222,8 +222,8 @@ class ModuleCalendar extends Events
 	 */
 	protected function compileWeeks()
 	{
-		$intDaysInMonth = date('t', $this->Date->monthBegin);
-		$intFirstDayOffset = date('w', $this->Date->monthBegin) - $this->cal_startDay;
+		$intDaysInMonth = (int) date('t', $this->Date->monthBegin);
+		$intFirstDayOffset = (int) date('w', $this->Date->monthBegin) - $this->cal_startDay;
 
 		if ($intFirstDayOffset < 0)
 		{

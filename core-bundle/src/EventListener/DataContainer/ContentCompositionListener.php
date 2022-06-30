@@ -19,7 +19,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
-use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\LayoutModel;
@@ -90,14 +89,16 @@ class ContentCompositionListener
         $request = $this->requestStack->getCurrentRequest();
         $user = $this->security->getUser();
 
-        // Return if there is no active record (override all)
-        if (!$dc->activeRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
+        $currentRecord = $dc->getCurrentRecord();
+
+        // Return if there is no current record (override all)
+        if (null === $currentRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
             return;
         }
 
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
-        $pageModel->setRow($dc->activeRecord instanceof Result ? $dc->activeRecord->row() : (array) $dc->activeRecord);
+        $pageModel->setRow($currentRecord);
 
         if (
             empty($pageModel->title)
@@ -134,9 +135,9 @@ class ContentCompositionListener
             'tstamp' => time(),
             'author' => $user->id,
             'inColumn' => $column,
-            'title' => $dc->activeRecord->title,
-            'alias' => str_replace('/', '-', $dc->activeRecord->alias), // see #516
-            'published' => $dc->activeRecord->published,
+            'title' => $currentRecord['title'] ?? null,
+            'alias' => str_replace('/', '-', $currentRecord['alias'] ?? ''), // see #516
+            'published' => $currentRecord['published'] ?? null,
         ];
 
         $this->connection->insert('tl_article', $article);

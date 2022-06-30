@@ -111,7 +111,6 @@ class Form extends Hybrid
 		$this->Template->hidden = '';
 		$this->Template->formSubmit = $formId;
 		$this->Template->method = ($this->method == 'GET') ? 'get' : 'post';
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		$arrLabels = array();
 		$arrFiles = array();
@@ -384,8 +383,8 @@ class Form extends Hybrid
 			// Get subject and message
 			if ($this->format == 'email')
 			{
-				$message = $arrSubmitted['message'];
-				$email->subject = $arrSubmitted['subject'];
+				$message = $arrSubmitted['message'] ?? '';
+				$email->subject = $arrSubmitted['subject'] ?? '';
 			}
 
 			// Set the admin e-mail as "from" address

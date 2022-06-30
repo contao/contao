@@ -15,12 +15,14 @@ namespace Contao\CoreBundle\Tests\Asset;
 use Contao\Config;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
 use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
+use Doctrine\DBAL\Schema\Schema;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -134,11 +136,11 @@ class ContaoContextTest extends TestCase
         $this->assertSame('https://example.com/foo/', $context->getStaticUrl());
     }
 
-    public function testReturnsAnEmptyStaticUrlIfTheBasePathIsEmpty(): void
+    public function testReturnsASlashIfTheBasePathIsEmpty(): void
     {
         $context = new ContaoContext(new RequestStack(), 'staticPlugins');
 
-        $this->assertSame('', $context->getStaticUrl());
+        $this->assertSame('/', $context->getStaticUrl());
     }
 
     public function testReadsTheSslConfigurationFromThePage(): void
@@ -190,7 +192,14 @@ class ContaoContextTest extends TestCase
     {
         $finder = new ResourceFinder($this->getFixturesDir().'/vendor/contao/test-bundle/Resources/contao');
 
+        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider
+            ->method('createSchema')
+            ->willReturn(new Schema())
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.doctrine.schema_provider', $schemaProvider);
         $container->set('contao.resource_finder', $finder);
         $container->setParameter('kernel.project_dir', $this->getFixturesDir());
 
@@ -198,7 +207,7 @@ class ContaoContextTest extends TestCase
 
         $page = new PageModel();
         $page->type = 'root';
-        $page->fallback = '1';
+        $page->fallback = true;
         $page->staticPlugins = '';
 
         return $page->loadDetails();

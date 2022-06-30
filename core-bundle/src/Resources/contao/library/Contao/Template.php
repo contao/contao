@@ -157,6 +157,11 @@ abstract class Template extends Controller
 			return $this->arrData[$strKey];
 		}
 
+		if ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData))
+		{
+			return htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+		}
+
 		return parent::__get($strKey);
 	}
 
@@ -189,7 +194,7 @@ abstract class Template extends Controller
 	 */
 	public function __isset($strKey)
 	{
-		return isset($this->arrData[$strKey]);
+		return isset($this->arrData[$strKey]) || ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData));
 	}
 
 	/**
@@ -292,7 +297,10 @@ abstract class Template extends Controller
 	 */
 	public function getResponse()
 	{
-		$this->compile();
+		if (!$this->strBuffer)
+		{
+			$this->strBuffer = $this->parse();
+		}
 
 		$response = new Response($this->strBuffer);
 		$response->headers->set('Content-Type', $this->strContentType);
@@ -311,10 +319,7 @@ abstract class Template extends Controller
 	 */
 	public function route($strName, $arrParams=array())
 	{
-		$strUrl = System::getContainer()->get('router')->generate($strName, $arrParams);
-		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
-
-		return StringUtil::ampersand($strUrl);
+		return StringUtil::ampersand(System::getContainer()->get('router')->generate($strName, $arrParams));
 	}
 
 	/**
@@ -340,7 +345,6 @@ abstract class Template extends Controller
 		$context->setBaseUrl($previewScript);
 
 		$strUrl = $router->generate($strName, $arrParams);
-		$strUrl = substr($strUrl, \strlen(Environment::get('path')) + 1);
 
 		$context->setBaseUrl('');
 
@@ -441,23 +445,7 @@ abstract class Template extends Controller
 	 */
 	public function asset($path, $packageName = null)
 	{
-		$url = System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
-
-		$basePath = '/';
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
-
-		if ($request !== null)
-		{
-			$basePath = $request->getBasePath() . '/';
-		}
-
-		if (0 === strncmp($url, $basePath, \strlen($basePath)))
-		{
-			return substr($url, \strlen($basePath));
-		}
-
-		// Contao paths are relative to the <base> tag, so remove leading slashes
-		return $url;
+		return System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
 	}
 
 	/**
@@ -470,19 +458,6 @@ abstract class Template extends Controller
 	public function param($strKey)
 	{
 		return System::getContainer()->getParameter($strKey);
-	}
-
-	/**
-	 * Compile the template
-	 *
-	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
-	 */
-	protected function compile()
-	{
-		if (!$this->strBuffer)
-		{
-			$this->strBuffer = $this->parse();
-		}
 	}
 
 	/**
