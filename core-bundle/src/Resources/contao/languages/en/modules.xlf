@@ -5,6 +5,12 @@
       <trans-unit id="MOD.content">
         <source>Content</source>
       </trans-unit>
+      <trans-unit id="MOD.page.0">
+        <source>Sites</source>
+      </trans-unit>
+      <trans-unit id="MOD.page.1">
+        <source>Set up the site structure of your website(s)</source>
+      </trans-unit>
       <trans-unit id="MOD.article.0">
         <source>Articles</source>
       </trans-unit>
@@ -17,6 +23,12 @@
       <trans-unit id="MOD.form.1">
         <source>Create custom forms and store or send the submitted data</source>
       </trans-unit>
+      <trans-unit id="MOD.files.0">
+        <source>Files</source>
+      </trans-unit>
+      <trans-unit id="MOD.files.1">
+        <source>Manage files and folders</source>
+      </trans-unit>
       <trans-unit id="MOD.design">
         <source>Layout</source>
       </trans-unit>
@@ -25,12 +37,6 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
-      </trans-unit>
-      <trans-unit id="MOD.page.0">
-        <source>Site structure</source>
-      </trans-unit>
-      <trans-unit id="MOD.page.1">
-        <source>Set up the site structure of your website(s)</source>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -73,12 +79,6 @@
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
-      </trans-unit>
-      <trans-unit id="MOD.files.0">
-        <source>File manager</source>
-      </trans-unit>
-      <trans-unit id="MOD.files.1">
-        <source>Manage files and folders</source>
       </trans-unit>
       <trans-unit id="MOD.log.0">
         <source>System log</source>
