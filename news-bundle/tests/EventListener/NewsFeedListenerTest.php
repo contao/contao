@@ -18,6 +18,7 @@ use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\Environment;
+use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Model\Collection;
@@ -36,6 +37,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 class NewsFeedListenerTest extends ContaoTestCase
 {
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        $this->resetStaticProperties([Files::class, System::class]);
+    }
+
     /**
      * @dataProvider featured
      */
