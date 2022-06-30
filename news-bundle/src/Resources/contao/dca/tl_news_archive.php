@@ -10,12 +10,9 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
 use Contao\News;
-use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;

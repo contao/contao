@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
-use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
@@ -163,6 +162,7 @@ class DefaultOperationsListener
         return function (DataContainerOperation $operation) use ($table): void {
             if (!$this->isGranted(CreateAction::class, $table, $operation)) {
                 $this->disableOperation($operation);
+
                 return;
             }
 
