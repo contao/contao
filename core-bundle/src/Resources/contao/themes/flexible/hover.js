@@ -71,13 +71,13 @@ var Theme = {
 
 					if (e.event.shiftKey) {
 						el.getElements('a').each(function(a) {
-							if (a.hasClass('children')) {
+							if (a.hasClass('edit')) {
 								document.location.href = a.href;
 							}
 						});
 					} else {
 						el.getElements('a').each(function(a) {
-							if (a.hasClass('edit')) {
+							if (a.hasClass('children')) {
 								document.location.href = a.href;
 							}
 						});
