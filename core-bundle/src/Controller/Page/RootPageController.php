@@ -32,7 +32,7 @@ class RootPageController extends AbstractController
 
     public function __invoke(PageModel $pageModel): Response
     {
-        $nextPage = $this->getNextPage((int) $pageModel->id);
+        $nextPage = $this->getNextPage($pageModel->id);
 
         return $this->redirect($nextPage->getAbsoluteUrl());
     }
