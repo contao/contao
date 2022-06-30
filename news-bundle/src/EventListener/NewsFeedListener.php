@@ -168,9 +168,6 @@ class NewsFeedListener
             return [];
         }
 
-        $pageModel = $event->getPageModel();
-        $size = StringUtil::deserialize($pageModel->imgSize, true);
-
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
         $files = $filesAdapter->findMultipleByUuids($uuids);
 
@@ -179,6 +176,8 @@ class NewsFeedListener
         }
 
         $baseUrl = $event->getBaseUrl();
+        $pageModel = $event->getPageModel();
+        $size = StringUtil::deserialize($pageModel->imgSize, true);
 
         while ($files->next()) {
             $file = new File($files->path);

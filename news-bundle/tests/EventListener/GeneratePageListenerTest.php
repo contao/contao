@@ -86,10 +86,11 @@ class GeneratePageListenerTest extends ContaoTestCase
         $this->assertEmpty($GLOBALS['TL_HEAD'] ?? null);
     }
 
-    public function testDoesNotAddTheNewsFeedLinkIfThereAreNoModels(): void
+    public function testDoesNotAddTheNewsFeedLinkIfThereAreNoValidModels(): void
     {
+        $collection = new Collection([$this->mockClassWithProperties(PageModel::class, ['type' => 'regular'])], 'tl_page');
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findMultipleByIds' => null]),
+            PageModel::class => $this->mockConfiguredAdapter(['findMultipleByIds' => $collection]),
         ];
 
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
