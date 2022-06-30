@@ -130,7 +130,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             $permission[] = 'g'.$flag;
         }
 
-        if ($cuser === (int) $user->id) {
+        if ($cuser === $user->id) {
             $permission[] = 'u'.$flag;
         }
 

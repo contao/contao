@@ -74,8 +74,8 @@ class PageAccessListener
             isset($GLOBALS['objPage'])
             && $GLOBALS['objPage'] instanceof PageModel
             && (
-                ($pageModel instanceof PageModel && (int) $pageModel->id === (int) $GLOBALS['objPage']->id)
-                || (!$pageModel instanceof PageModel && (int) $GLOBALS['objPage']->id === (int) $pageModel)
+                ($pageModel instanceof PageModel && (int) $pageModel->id === $GLOBALS['objPage']->id)
+                || (!$pageModel instanceof PageModel && $GLOBALS['objPage']->id === (int) $pageModel)
             )
         ) {
             return $GLOBALS['objPage'];

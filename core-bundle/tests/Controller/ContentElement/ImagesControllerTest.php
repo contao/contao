@@ -63,11 +63,11 @@ class ImagesControllerTest extends ContentElementTestCase
                     StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE3),
                 ]),
                 'sortBy' => 'name_desc',
-                'numberOfItems' => '2',
+                'numberOfItems' => 2,
                 'size' => '',
                 'fullsize' => true,
-                'perPage' => '4',
-                'perRow' => '2',
+                'perPage' => 4,
+                'perRow' => 2,
             ],
         );
 

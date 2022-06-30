@@ -54,7 +54,7 @@ class ImagesController extends AbstractContentElementController
 
         // Limit elements; use client-side logic for only displaying the first
         // $limit elements in case we are dealing with a random order
-        if (($limit = (int) $model->numberOfItems) > 0 && !$randomize) {
+        if (($limit = $model->numberOfItems) > 0 && !$randomize) {
             $filesystemItems = $filesystemItems->limit($limit);
         }
 
@@ -65,7 +65,7 @@ class ImagesController extends AbstractContentElementController
             ->createFigureBuilder()
             ->setSize($model->size)
             ->setLightboxGroupIdentifier('lb'.$model->id)
-            ->enableLightbox((bool) $model->fullsize)
+            ->enableLightbox($model->fullsize)
         ;
 
         if ('image' === $model->type) {
@@ -80,8 +80,8 @@ class ImagesController extends AbstractContentElementController
         );
 
         $template->set('images', $imageList);
-        $template->set('items_per_page', (int) $model->perPage ?: null);
-        $template->set('items_per_row', (int) $model->perRow ?: null);
+        $template->set('items_per_page', $model->perPage ?: null);
+        $template->set('items_per_row', $model->perRow ?: null);
 
         return $template->getResponse();
     }
