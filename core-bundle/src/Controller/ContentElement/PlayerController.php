@@ -61,11 +61,7 @@ class PlayerController extends AbstractContentElementController
         $isVideo = \in_array($filesystemItems->first()?->getExtension(true), self::VIDEO_TYPES, true);
 
         if (!$sourceFiles = $this->getSourceFiles($filesystemItems, $isVideo)) {
-            $response = new Response();
-
-            $this->markResponseForInternalCaching($response);
-
-            return $response;
+            return new Response();
         }
 
         // Compile data

@@ -125,11 +125,11 @@ class FilesystemItemIterator implements \IteratorAggregate
 
     public function first(): FilesystemItem|null
     {
-        foreach ($this->listing as $item) {
-            return $item;
+        if (!\is_array($this->listing)) {
+            $this->listing = iterator_to_array($this->listing);
         }
 
-        return null;
+        return $this->listing[0] ?? null;
     }
 
     /**
