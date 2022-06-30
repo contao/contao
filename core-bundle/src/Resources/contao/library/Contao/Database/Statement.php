@@ -260,7 +260,7 @@ class Statement
 					return (int) $varParam;
 				}
 
-				if (\is_string($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
+				if (\is_string($varParam) || \is_bool($varParam) || \is_float($varParam) || \is_int($varParam) || $varParam === null)
 				{
 					return $varParam;
 				}
