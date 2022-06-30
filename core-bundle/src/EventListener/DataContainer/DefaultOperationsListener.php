@@ -14,7 +14,10 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
+use Contao\CoreBundle\Security\DataContainer\DeleteAction;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
@@ -75,20 +78,20 @@ class DefaultOperationsListener
         if ($ctable) {
             $operations += [
                 'edit' => [
-                    'href' => 'table='.$ctable,
-                    'icon' => 'edit.svg',
-                ],
-                'editheader' => [
                     'href' => 'act=edit',
-                    'icon' => 'header.svg',
-                    'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_EDIT, $table),
+                    'icon' => 'edit.svg',
+                    'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                ],
+                'children' => [
+                    'href' => 'table='.$ctable,
+                    'icon' => 'children.svg',
                 ],
             ];
         } else {
             $operations['edit'] = [
                 'href' => 'act=edit',
                 'icon' => 'edit.svg',
-                'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_EDIT, $table),
+                'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
             ];
         }
 
@@ -97,7 +100,7 @@ class DefaultOperationsListener
                 'href' => 'act=paste&amp;mode=copy',
                 'icon' => 'copy.svg',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_COPY, $table),
+                'button_callback' => $this->isGrantedCallback(CreateAction::class, $table),
             ];
 
             if ($isTreeMode) {
@@ -113,13 +116,13 @@ class DefaultOperationsListener
                 'href' => 'act=paste&amp;mode=cut',
                 'icon' => 'cut.svg',
                 'attributes' => 'onclick="Backend.getScrollOffset()"',
-                'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_MOVE, $table),
+                'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
             ];
         } else {
             $operations['copy'] = [
                 'href' => 'act=copy',
                 'icon' => 'copy.svg',
-                'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_COPY, $table),
+                'button_callback' => $this->isGrantedCallback(CreateAction::class, $table),
             ];
         }
 
@@ -127,14 +130,14 @@ class DefaultOperationsListener
             'href' => 'act=delete',
             'icon' => 'delete.svg',
             'attributes' => 'onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false;Backend.getScrollOffset()"',
-            'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_DELETE, $table),
+            'button_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
         ];
 
         if (null !== ($toggleField = $this->getToggleField($table))) {
             $operations['toggle'] = [
                 'href' => 'act=toggle&amp;field='.$toggleField,
                 'icon' => 'visible.svg',
-                'button_callback' => $this->isGrantedCallback(ContaoCorePermissions::DC_ACTION_EDIT, $table),
+                'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
             ];
         }
 
@@ -146,10 +149,10 @@ class DefaultOperationsListener
         ];
     }
 
-    private function isGrantedCallback(string $attribute, string $table): \Closure
+    private function isGrantedCallback(string $actionClass, string $table): \Closure
     {
-        return function (DataContainerOperation $operation) use ($attribute, $table): void {
-            if (!$this->isGranted($attribute, $table, $operation)) {
+        return function (DataContainerOperation $operation) use ($actionClass, $table): void {
+            if (!$this->isGranted($actionClass, $table, $operation)) {
                 $this->disableOperation($operation);
             }
         };
@@ -158,7 +161,7 @@ class DefaultOperationsListener
     private function copyChildsCallback(string $table): \Closure
     {
         return function (DataContainerOperation $operation) use ($table): void {
-            if (!$this->isGranted(ContaoCorePermissions::DC_ACTION_COPY, $table, $operation)) {
+            if (!$this->isGranted(CreateAction::class, $table, $operation)) {
                 $this->disableOperation($operation);
                 return;
             }
@@ -197,11 +200,15 @@ class DefaultOperationsListener
         return $field;
     }
 
-    private function isGranted(string $attribute, string $table, DataContainerOperation $operation): bool
+    private function isGranted(string $actionClass, string $table, DataContainerOperation $operation): bool
     {
-        $subject = new DataContainerSubject($table, rawurldecode((string) $operation->getRecord()['id']));
+        $subject = match ($actionClass) {
+            CreateAction::class => new CreateAction($table),
+            UpdateAction::class => new UpdateAction($table, $operation->getRecord()),
+            DeleteAction::class => new DeleteAction($table, $operation->getRecord())
+        };
 
-        return $this->security->isGranted($attribute, $subject);
+        return $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject);
     }
 
     private function disableOperation(DataContainerOperation $operation): void
