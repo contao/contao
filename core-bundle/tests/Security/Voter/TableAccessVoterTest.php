@@ -93,7 +93,7 @@ class TableAccessVoterTest extends TestCase
             ],
             'bar' => [
                 'inputType' => 'text',
-            ]
+            ],
         ];
 
         $this->security
@@ -116,7 +116,7 @@ class TableAccessVoterTest extends TestCase
             ],
             'bar' => [
                 'inputType' => 'text',
-            ]
+            ],
         ];
 
         $this->security
@@ -141,7 +141,7 @@ class TableAccessVoterTest extends TestCase
             ],
             'bar' => [
                 'inputType' => 'text',
-            ]
+            ],
         ];
 
         $this->security
