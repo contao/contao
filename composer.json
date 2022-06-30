@@ -61,6 +61,7 @@
         "contao/image": "^1.0",
         "contao/imagine-svg": "^1.0",
         "contao/manager-plugin": "^2.6.2",
+        "debril/feed-io": "^6.0",
         "doctrine/collections": "^1.5",
         "doctrine/dbal": "^3.3",
         "doctrine/doctrine-bundle": "^2.4",

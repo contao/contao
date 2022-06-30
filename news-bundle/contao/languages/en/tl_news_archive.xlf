@@ -89,9 +89,6 @@
       <trans-unit id="tl_news_archive.protected_legend">
         <source>Access protection</source>
       </trans-unit>
-      <trans-unit id="tl_news_archive.feed_legend">
-        <source>RSS/Atom feed</source>
-      </trans-unit>
       <trans-unit id="tl_news_archive.notify_admin">
         <source>System administrator</source>
       </trans-unit>

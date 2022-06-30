@@ -14,9 +14,9 @@ namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\News;
-use Contao\NewsFeedModel;
 use Contao\NewsModel;
 use Contao\StringUtil;
+use Psr\Log\LoggerInterface;
 
 /**
  * @internal
@@ -31,7 +31,7 @@ class InsertTagsListener
         'news_teaser',
     ];
 
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework, private LoggerInterface $logger)
     {
     }
 
@@ -41,7 +41,9 @@ class InsertTagsListener
         $key = strtolower($elements[0]);
 
         if ('news_feed' === $key) {
-            return $this->replaceNewsFeedInsertTag($elements[1]);
+            $this->logger->warning('The `news_feed` insert tag has been removed in Contao 5.0. Use `link_url` instead.');
+
+            return false;
         }
 
         if (\in_array($key, self::SUPPORTED_TAGS, true)) {
@@ -49,19 +51,6 @@ class InsertTagsListener
         }
 
         return false;
-    }
-
-    private function replaceNewsFeedInsertTag(string $feedId): string
-    {
-        $this->framework->initialize();
-
-        $adapter = $this->framework->getAdapter(NewsFeedModel::class);
-
-        if (null === ($feed = $adapter->findByPk($feedId))) {
-            return '';
-        }
-
-        return sprintf('%sshare/%s.xml', $feed->feedBase, $feed->alias);
     }
 
     private function replaceNewsInsertTags(string $insertTag, string $idOrAlias, array $arguments): string

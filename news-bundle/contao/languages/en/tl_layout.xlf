@@ -9,7 +9,7 @@
         <source>Please select the news feeds you want to add to the layout.</source>
       </trans-unit>
       <trans-unit id="tl_layout.feed_legend">
-        <source>RSS/Atom feeds</source>
+        <source>RSS/Atom/JSON feeds</source>
       </trans-unit>
     </body>
   </file>

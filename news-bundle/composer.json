@@ -37,6 +37,7 @@
         "symfony/http-kernel": "^5.4 || ^6.0",
         "symfony/polyfill-mbstring": "^1.0",
         "symfony/yaml": "^5.4 || ^6.0"
+        "debril/feed-io": "^6.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",

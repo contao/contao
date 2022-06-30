@@ -7,10 +7,28 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-    contao_news.cron.generate_feeds:
-        class: Contao\NewsBundle\Cron\GenerateFeedsCron
+    contao_news.controller.page.news_feed:
+        class: Contao\NewsBundle\Controller\Page\NewsFeedController
+        arguments:
+            - '@contao.assets.files_context'
+            - '@contao_news.feed_specification'
+
+    contao_news.feed_specification:
+        class: FeedIo\Specification
+        arguments:
+            - '@logger'
+
+    contao_news.listener.data_container.layout_feed_options:
+        class: Contao\NewsBundle\EventListener\DataContainer\LayoutFeedOptionsListener
         arguments:
             - '@contao.framework'
+            - '@translator'
+
+    contao_news.listener.data_container.page:
+        class: Contao\NewsBundle\EventListener\DataContainer\PageListener
+        arguments:
+            - '@database_connection'
+            - '@security.helper'
 
     contao_news.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
@@ -30,8 +48,21 @@ services:
         class: Contao\NewsBundle\EventListener\InsertTagsListener
         arguments:
             - '@contao.framework'
+            - '@logger'
         tags:
             - { name: contao.hook, hook: replaceInsertTags }
+
+    contao_news.listener.news_feed:
+        class: Contao\NewsBundle\EventListener\NewsFeedListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.image.factory'
+            - '@contao.insert_tag.parser'
+            - '%kernel.project_dir%'
+            - '@contao.cache.entity_tags'
+        tags:
+            - { name: kernel.event_listener, event: Contao\NewsBundle\Event\FetchArticlesForFeedEvent, method: onFetchArticlesForFeed }
+            - { name: kernel.event_listener, event: Contao\NewsBundle\Event\TransformArticleForFeedEvent, method: onTransformArticleForFeed }
 
     contao_news.listener.preview_url_convert:
         class: Contao\NewsBundle\EventListener\PreviewUrlConvertListener
@@ -54,6 +85,14 @@ services:
             - '@contao.framework'
         tags:
             - kernel.event_listener
+
+    contao_news.migration.feed:
+        class: Contao\NewsBundle\Migration\FeedMigration
+        arguments:
+            - '@database_connection'
+            - '@logger'
+        tags:
+            - { name: contao.migration }
 
     contao_news.picker.news_provider:
         class: Contao\NewsBundle\Picker\NewsPickerProvider
