@@ -54,6 +54,8 @@ class TableAccessVoter implements CacheableVoterInterface
 
             $hasExcluded = false;
 
+            // Intentionally do not load DCA, it should already be loaded. If DCA is not loaded,
+            // the voter just always abstains because it can't decide.
             foreach (($GLOBALS['TL_DCA'][$subject->getDataSource()]['fields'] ?? []) as $config) {
                 if (($config['exclude'] ?? false)) {
                     $hasExcluded = true;
