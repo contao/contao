@@ -599,6 +599,8 @@ class InsertTagsTest extends TestCase
 
     /**
      * @dataProvider languageInsertTagsProvider
+     *
+     * @group legacy
      */
     public function testRemovesLanguageInsertTags(string $source, string $expected, string $pageLanguage = 'en'): void
     {
@@ -625,6 +627,10 @@ class InsertTagsTest extends TestCase
 
         // Test case insensitivity
         $source = str_replace('lng', 'LnG', $source);
+
+        if (str_contains($source, 'LnG')) {
+            $this->expectDeprecation('%sInsert tags with uppercase letters%s');
+        }
 
         $this->assertSame($expected, $insertTagParser->replaceInline($source));
         $this->assertSame($expected.$expected, $insertTagParser->replaceInline($source.$source));
