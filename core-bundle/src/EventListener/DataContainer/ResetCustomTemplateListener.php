@@ -33,7 +33,7 @@ class ResetCustomTemplateListener
      */
     public function __invoke(mixed $varValue, DataContainer $dc): mixed
     {
-        if ($dc->activeRecord->type === $varValue) {
+        if (($dc->getCurrentRecord()['type'] ?? null) === $varValue) {
             return $varValue;
         }
 

@@ -55,7 +55,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
     protected function getBackendWildcard(ModuleModel $module): Response
     {
         $context = [
-            'id' => (int) $module->id,
+            'id' => $module->id,
             'name' => $module->name,
             'type' => $module->type,
             'title' => StringUtil::deserialize($module->headline, true)['value'] ?? null,

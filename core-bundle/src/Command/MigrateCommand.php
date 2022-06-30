@@ -15,9 +15,10 @@ namespace Contao\CoreBundle\Command;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
+use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
-use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Table;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidOptionException;
@@ -34,11 +35,12 @@ class MigrateCommand extends Command
     private SymfonyStyle|null $io = null;
 
     public function __construct(
+        private CommandCompiler $commandCompiler,
+        private Connection $connection,
         private MigrationCollection $migrations,
         private BackupManager $backupManager,
         private SchemaProvider $schemaProvider,
         private MysqlInnodbRowSizeCalculator $rowSizeCalculator,
-        private Installer|null $installer = null,
     ) {
         parent::__construct();
     }
@@ -253,12 +255,6 @@ class MigrateCommand extends Command
 
     private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string $specifiedHash = null): bool
     {
-        if (null === $this->installer) {
-            $this->io->error('Service "contao_installation.database.installer" not found. The installation bundle needs to be installed in order to execute schema diff migrations.');
-
-            return false;
-        }
-
         if ($schemaWarnings = $this->compileSchemaWarnings()) {
             $this->io->warning(implode("\n\n", $schemaWarnings));
 
@@ -267,25 +263,20 @@ class MigrateCommand extends Command
             }
         }
 
-        $commandsByHash = [];
+        $lastCommands = [];
 
         while (true) {
-            $this->installer->compileCommands();
+            $commands = $this->commandCompiler->compileCommands();
 
-            $commands = $this->installer->getCommands(false);
+            $hasNewCommands = \count(array_diff($commands, $lastCommands)) > 0;
+            $lastCommands = $commands;
 
-            $hasNewCommands = \count(array_filter(
-                array_keys($commands),
-                static fn ($hash) => !isset($commandsByHash[$hash])
-            ));
-
-            $commandsByHash = $commands;
-            $actualHash = hash('sha256', json_encode($commands));
+            $commandsHash = hash('sha256', json_encode($commands));
 
             if ($asJson) {
                 $this->writeNdjson('schema-pending', [
-                    'commands' => array_values($commandsByHash),
-                    'hash' => $actualHash,
+                    'commands' => $commands,
+                    'hash' => $commandsHash,
                 ]);
             }
 
@@ -294,16 +285,16 @@ class MigrateCommand extends Command
             }
 
             if (!$asJson) {
-                $this->io->section("Pending database migrations ($actualHash)");
-                $this->io->listing($commandsByHash);
+                $this->io->section("Pending database migrations ($commandsHash)");
+                $this->io->listing($commands);
             }
 
             if ($dryRun) {
                 return true;
             }
 
-            if (null !== $specifiedHash && $specifiedHash !== $actualHash) {
-                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $actualHash));
+            if (null !== $specifiedHash && $specifiedHash !== $commandsHash) {
+                throw new InvalidOptionException(sprintf('Specified hash "%s" does not match the actual hash "%s"', $specifiedHash, $commandsHash));
             }
 
             $options = $withDeletesOption
@@ -325,31 +316,34 @@ class MigrateCommand extends Command
             }
 
             $count = 0;
-            $commandHashes = $this->getCommandHashes($commands, 'yes, with deletes' === $answer);
+
+            // If deletes should not be processed, recompile the commands without DROP statements
+            if ('yes, with deletes' !== $answer) {
+                $commands = $this->commandCompiler->compileCommands(true);
+            }
 
             do {
                 $commandExecuted = false;
                 $exceptions = [];
 
-                foreach ($commandHashes as $key => $hash) {
+                foreach ($commands as $key => $command) {
                     if ($asJson) {
-                        $this->writeNdjson('schema-execute', [
-                            'command' => $commandsByHash[$hash],
-                        ]);
+                        $this->writeNdjson('schema-execute', ['command' => $command]);
                     } else {
-                        $this->io->write(' * '.$commandsByHash[$hash]);
+                        $this->io->write(' * '.$command);
                     }
 
                     try {
-                        $this->installer->execCommand($hash);
+                        $this->connection->executeQuery($command);
 
                         ++$count;
                         $commandExecuted = true;
-                        unset($commandHashes[$key]);
+
+                        unset($commands[$key]);
 
                         if ($asJson) {
                             $this->writeNdjson('schema-result', [
-                                'command' => $commandsByHash[$hash],
+                                'command' => $command,
                                 'isSuccessful' => true,
                             ]);
                         } else {
@@ -360,7 +354,7 @@ class MigrateCommand extends Command
 
                         if ($asJson) {
                             $this->writeNdjson('schema-result', [
-                                'command' => $commandsByHash[$hash],
+                                'command' => $command,
                                 'isSuccessful' => false,
                                 'message' => $e->getMessage(),
                             ]);
@@ -392,22 +386,6 @@ class MigrateCommand extends Command
         }
 
         return true;
-    }
-
-    private function getCommandHashes(array $commands, bool $withDrops): array
-    {
-        if (!$withDrops) {
-            foreach ($commands as $hash => $command) {
-                if (
-                    preg_match('/^ALTER TABLE [^ ]+ DROP /', (string) $command)
-                    || (str_starts_with($command, 'DROP ') && !str_starts_with($command, 'DROP INDEX'))
-                ) {
-                    unset($commands[$hash]);
-                }
-            }
-        }
-
-        return array_keys($commands);
     }
 
     private function writeNdjson(string $type, array $data): void

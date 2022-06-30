@@ -195,6 +195,8 @@ class AddAssetsPackagesPassTest extends TestCase
         $this->assertTrue($container->hasDefinition('assets._version_contao-components/contao'));
         $this->assertFalse($container->hasDefinition('assets._package_contao/image'));
         $this->assertFalse($container->hasDefinition('assets._version_contao/image'));
+        $this->assertTrue($container->hasDefinition('assets._package_scrivo/highlight.php'));
+        $this->assertTrue($container->hasDefinition('assets._version_scrivo/highlight.php'));
 
         $service = $container->getDefinition('assets._package_contao-components/contao');
 

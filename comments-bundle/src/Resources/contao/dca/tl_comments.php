@@ -208,7 +208,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'author' => array
 		(
@@ -239,7 +239,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			(
 				array('tl_comments', 'sendNotifications')
 			),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'ip' => array
 		(
@@ -247,11 +247,11 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'notified' => array
 		(
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'notifiedReply' => array
 		(
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		)
 	)
 );
@@ -369,7 +369,7 @@ class tl_comments extends Backend
 			}
 		}
 
-		$this->Database->prepare("UPDATE tl_comments SET notifiedReply='1' WHERE id=?")->execute($dc->id);
+		$this->Database->prepare("UPDATE tl_comments SET notifiedReply=1 WHERE id=?")->execute($dc->id);
 	}
 
 	/**

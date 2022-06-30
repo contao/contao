@@ -207,21 +207,21 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'showProtected' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'defineRoot' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'rootPage' => array
 		(
@@ -268,7 +268,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'customLabel' => array
 		(
@@ -281,7 +281,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'jumpTo' => array
 		(
@@ -305,7 +305,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'editable' => array
 		(
@@ -350,7 +350,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'contextLength' => array
 		(
@@ -413,7 +413,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'singleSRC' => array
 		(
@@ -436,14 +436,14 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'fullsize' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'multiSRC' => array
 		(
@@ -513,7 +513,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_groups' => array
 		(
@@ -528,13 +528,13 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_skipName' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_close' => array
 		(
@@ -550,14 +550,14 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_assignDir' => array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_homeDir' => array
 		(
@@ -571,7 +571,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'reg_jumpTo' => array
 		(
@@ -616,7 +616,7 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false),
 		),
 		'groups' => array
 		(

@@ -83,6 +83,7 @@ class ContaoExtensionTest extends TestCase
         $expectedFunctions = [
             'include' => ['all'],
             'attrs' => [],
+            'figure' => [],
             'contao_figure' => ['html'],
             'picture_config' => [],
             'insert_tag' => [],

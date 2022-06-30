@@ -15,20 +15,20 @@ use Contao\Model\Collection;
 /**
  * Reads and writes image sizes
  *
- * @property integer        $id
- * @property integer        $pid
- * @property integer        $tstamp
- * @property string|null    $name
- * @property string         $cssClass
- * @property string         $densities
- * @property string         $sizes
- * @property integer|null   $width
- * @property integer|null   $height
- * @property string         $resizeMode
- * @property integer|null   $zoom
- * @property string         $formats
- * @property string|boolean $skipIfDimensionsMatch
- * @property string|boolean $lazyLoading
+ * @property integer      $id
+ * @property integer      $pid
+ * @property integer      $tstamp
+ * @property string|null  $name
+ * @property string       $cssClass
+ * @property string       $densities
+ * @property string       $sizes
+ * @property integer|null $width
+ * @property integer|null $height
+ * @property string       $resizeMode
+ * @property integer|null $zoom
+ * @property string       $formats
+ * @property boolean      $skipIfDimensionsMatch
+ * @property boolean      $lazyLoading
  *
  * @method static ImageSizeModel|null findById($id, array $opt=array())
  * @method static ImageSizeModel|null findByPk($id, array $opt=array())

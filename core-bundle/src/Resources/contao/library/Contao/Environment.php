@@ -107,7 +107,7 @@ class Environment
 	 *
 	 * @return string The relative path to the script
 	 */
-	protected static function scriptName($request)
+	protected static function scriptName(Request $request)
 	{
 		return $request->getScriptName();
 	}
@@ -117,9 +117,9 @@ class Environment
 	 *
 	 * @return string The script name
 	 */
-	protected static function phpSelf()
+	protected static function phpSelf(Request $request)
 	{
-		return static::scriptName();
+		return static::scriptName($request);
 	}
 
 	/**
@@ -314,6 +314,8 @@ class Environment
 	 */
 	protected static function script()
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0. Use "%s::%s" instead.', __METHOD__, __CLASS__, 'scriptName');
+
 		return preg_replace('/^' . preg_quote(static::get('path'), '/') . '\/?/', '', static::get('scriptName'));
 	}
 
@@ -324,6 +326,8 @@ class Environment
 	 */
 	protected static function request()
 	{
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6.0. Use "%s::%s" instead.', __METHOD__, __CLASS__, 'requestUri');
+
 		return preg_replace('/^' . preg_quote(static::get('path'), '/') . '\/?/', '', static::get('requestUri'));
 	}
 

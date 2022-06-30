@@ -196,7 +196,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'found' => array
 		(
-			'sql'                     => "char(1) NOT NULL default '1'"
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'name' => array
 		(

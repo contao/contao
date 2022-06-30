@@ -132,7 +132,7 @@ class CheckBox extends Widget
 		{
 			$state[Input::get('cbc')] = (isset($state[Input::get('cbc')]) && $state[Input::get('cbc')] == 1) ? 0 : 1;
 			$objSessionBag->set('checkbox_groups', $state);
-			$this->redirect(preg_replace('/(&(amp;)?|\?)cbc=[^& ]*/i', '', Environment::get('request')));
+			$this->redirect(preg_replace('/(&(amp;)?|\?)cbc=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
 		$blnFirst = true;

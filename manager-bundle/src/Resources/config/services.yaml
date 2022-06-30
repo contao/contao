@@ -51,13 +51,6 @@ services:
         tags:
             - { name: doctrine.event_listener, event: onSchemaAlterTableRenameColumn }
 
-    contao_manager.listener.initialize_application:
-        class: Contao\ManagerBundle\EventListener\InitializeApplicationListener
-        arguments:
-            - '%kernel.project_dir%'
-        tags:
-            - { name: kernel.event_listener, priority: -128 }
-
     contao_manager.plugin_loader:
         public: true
         synthetic: true

@@ -14,20 +14,21 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\HyperlinkController;
 use Contao\StringUtil;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class HyperlinkControllerTest extends ContentElementTestCase
 {
     public function testOutputsSimpleLink(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
             [
                 'type' => 'hyperlink',
                 'url' => 'my-link.html',
                 'linkTitle' => '',
-                'target' => '',
+                'target' => false,
                 'embed' => '',
-                'useImage' => '',
+                'useImage' => false,
                 'singleSRC' => '',
                 'size' => '',
                 'rel' => '',
@@ -36,7 +37,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content_element/hyperlink">
-                <a href="my-link.html">my-link.html</a>
+                <a href="/my-link.html">/my-link.html</a>
             </div>
             HTML;
 
@@ -46,14 +47,14 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsLinkWithBeforeAndAfterText(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
             [
                 'type' => 'hyperlink',
                 'url' => 'https://www.php.net/manual/en/function.sprintf.php',
                 'linkTitle' => 'sprintf() documentation',
-                'target' => '1',
+                'target' => true,
                 'embed' => 'See the %s on how to use the %s placeholder.',
-                'useImage' => '',
+                'useImage' => false,
                 'singleSRC' => '',
                 'size' => '',
                 'rel' => '',
@@ -73,14 +74,14 @@ class HyperlinkControllerTest extends ContentElementTestCase
     public function testOutputsImageLink(): void
     {
         $response = $this->renderWithModelData(
-            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser()),
+            new HyperlinkController($this->getDefaultStudio(), $this->getDefaultInsertTagParser(), new RequestStack()),
             [
                 'type' => 'hyperlink',
                 'url' => 'foo.html#{{demo}}',
                 'linkTitle' => '',
-                'target' => '',
+                'target' => false,
                 'embed' => 'This is me… %s …waving to the camera.',
-                'useImage' => '1',
+                'useImage' => true,
                 'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
                 'size' => '',
                 'rel' => 'bar',
@@ -91,7 +92,7 @@ class HyperlinkControllerTest extends ContentElementTestCase
             <div class="content_element/hyperlink">
                 <figure>
                     This is me…
-                    <a href="foo.html#demo" data-lightbox="bar">
+                    <a href="/foo.html#demo" data-lightbox="bar">
                         <img src="files/image1.jpg" alt>
                     </a>
                     …waving to the camera.

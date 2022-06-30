@@ -22,7 +22,6 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Security;
@@ -55,7 +54,7 @@ class ImagesController extends AbstractContentElementController
 
         // Limit elements; use client-side logic for only displaying the first
         // $limit elements in case we are dealing with a random order
-        if (($limit = (int) $model->numberOfItems) > 0 && !$randomize) {
+        if (($limit = $model->numberOfItems) > 0 && !$randomize) {
             $filesystemItems = $filesystemItems->limit($limit);
         }
 
@@ -66,7 +65,7 @@ class ImagesController extends AbstractContentElementController
             ->createFigureBuilder()
             ->setSize($model->size)
             ->setLightboxGroupIdentifier('lb'.$model->id)
-            ->enableLightbox((bool) $model->fullsize)
+            ->enableLightbox($model->fullsize)
         ;
 
         if ('image' === $model->type) {
@@ -75,15 +74,14 @@ class ImagesController extends AbstractContentElementController
 
         $imageList = array_map(
             fn (FilesystemItem $filesystemItem): Figure => $figureBuilder
-                // TODO: As soon as our image libraries support this case, read from the public path instead.
-                ->fromPath(Path::join($this->filesStorage->getPrefix(), $filesystemItem->getPath()))
+                ->fromStorage($this->filesStorage, $filesystemItem->getPath())
                 ->build(),
             iterator_to_array($filesystemItems)
         );
 
         $template->set('images', $imageList);
-        $template->set('items_per_page', (int) $model->perPage ?: null);
-        $template->set('items_per_row', (int) $model->perRow ?: null);
+        $template->set('items_per_page', $model->perPage ?: null);
+        $template->set('items_per_row', $model->perRow ?: null);
 
         return $template->getResponse();
     }
@@ -93,12 +91,19 @@ class ImagesController extends AbstractContentElementController
      */
     private function getSources(ContentModel $model): string|array
     {
-        // Depending on the selected mode, we read from tl_content.singleSRC,
-        // tl_content.multiSRC or the user's home directory (tl_user.homeDir)
-        return match (true) {
-            'image' === $model->type => [$model->singleSRC],
-            $model->useHomeDir && ($user = $this->security->getUser()) instanceof FrontendUser && $user->assignDir && ($homeDir = $user->homeDir) => $homeDir,
-            default => $model->multiSRC,
-        };
+        if ('image' === $model->type) {
+            return [$model->singleSRC];
+        }
+
+        if (
+            $model->useHomeDir
+            && ($user = $this->security->getUser()) instanceof FrontendUser
+            && $user->assignDir
+            && $user->homeDir
+        ) {
+            return $user->homeDir;
+        }
+
+        return $model->multiSRC;
     }
 }

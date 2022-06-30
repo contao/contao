@@ -454,7 +454,7 @@ class ModuleRegistration extends Module
 		$arrTokenData = $arrData;
 		$arrTokenData['activation'] = $optInToken->getIdentifier();
 		$arrTokenData['domain'] = Idna::decode(Environment::get('host'));
-		$arrTokenData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
+		$arrTokenData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 		$arrTokenData['channels'] = '';
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
@@ -528,7 +528,7 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		$objMember->disable = '';
+		$objMember->disable = false;
 		$objMember->save();
 
 		$optInToken->confirm();

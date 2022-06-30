@@ -22,7 +22,7 @@ use Contao\Model\Collection;
  * @property string            $title
  * @property string            $alias
  * @property integer           $author
- * @property string|boolean    $addTime
+ * @property boolean           $addTime
  * @property integer|null      $startTime
  * @property integer|null      $endTime
  * @property integer|null      $startDate
@@ -33,31 +33,31 @@ use Contao\Model\Collection;
  * @property string            $location
  * @property string            $address
  * @property string|null       $teaser
- * @property string|boolean    $addImage
- * @property string|boolean    $overwriteMeta
+ * @property boolean           $addImage
+ * @property boolean           $overwriteMeta
  * @property string|null       $singleSRC
  * @property string            $alt
  * @property string            $imageTitle
  * @property string|integer    $size
  * @property string            $imageUrl
- * @property string|boolean    $fullsize
+ * @property boolean           $fullsize
  * @property string            $caption
  * @property string            $floating
- * @property string|boolean    $recurring
+ * @property boolean           $recurring
  * @property string            $repeatEach
  * @property integer           $repeatEnd
  * @property integer           $recurrences
- * @property string|boolean    $addEnclosure
+ * @property boolean           $addEnclosure
  * @property string|array|null $enclosure
  * @property string            $source
  * @property integer           $jumpTo
  * @property integer           $articleId
  * @property string            $url
- * @property string|boolean    $target
+ * @property boolean           $target
  * @property string            $cssClass
- * @property string|boolean    $noComments
- * @property string|boolean    $featured
- * @property string|boolean    $published
+ * @property boolean           $noComments
+ * @property boolean           $featured
+ * @property boolean           $published
  * @property string|integer    $start
  * @property string|integer    $stop
  *
@@ -234,7 +234,7 @@ class CalendarEventsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
@@ -256,24 +256,24 @@ class CalendarEventsModel extends Model
 		$intStart = (int) $intStart;
 		$intEnd = (int) $intEnd;
 
-		$arrColumns = array("$t.pid=? AND (($t.startTime>=$intStart AND $t.startTime<=$intEnd) OR ($t.endTime>=$intStart AND $t.endTime<=$intEnd) OR ($t.startTime<=$intStart AND $t.endTime>=$intEnd) OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$intStart) AND $t.startTime<=$intEnd))");
+		$arrColumns = array("$t.pid=? AND (($t.startTime>=$intStart AND $t.startTime<=$intEnd) OR ($t.endTime>=$intStart AND $t.endTime<=$intEnd) OR ($t.startTime<=$intStart AND $t.endTime>=$intEnd) OR ($t.recurring=1 AND ($t.recurrences=0 OR $t.repeatEnd>=$intStart) AND $t.startTime<=$intEnd))");
 
 		if (isset($arrOptions['showFeatured']))
 		{
 			if ($arrOptions['showFeatured'] === true)
 			{
-				$arrColumns[] = "$t.featured='1'";
+				$arrColumns[] = "$t.featured=1";
 			}
 			elseif ($arrOptions['showFeatured'] === false)
 			{
-				$arrColumns[] = "$t.featured=''";
+				$arrColumns[] = "$t.featured=0";
 			}
 		}
 
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -300,7 +300,7 @@ class CalendarEventsModel extends Model
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -331,7 +331,7 @@ class CalendarEventsModel extends Model
 		$time = Date::floorToMinute();
 
 		// Get upcoming events using endTime instead of startTime (see #3917)
-		$arrColumns = array("$t.pid IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.published='1' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time') AND ($t.endTime>=$time OR ($t.recurring='1' AND ($t.recurrences=0 OR $t.repeatEnd>=$time)))");
+		$arrColumns = array("$t.pid IN(" . implode(',', array_map('\intval', $arrIds)) . ") AND $t.published=1 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time') AND ($t.endTime>=$time OR ($t.recurring=1 AND ($t.recurrences=0 OR $t.repeatEnd>=$time)))");
 
 		if ($intLimit > 0)
 		{

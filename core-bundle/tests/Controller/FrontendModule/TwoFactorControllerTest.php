@@ -90,7 +90,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -104,7 +104,7 @@ class TwoFactorControllerTest extends TestCase
         $module = $this->mockClassWithProperties(ModuleModel::class);
 
         $page = $this->mockPageModel();
-        $page->enforceTwoFactor = '1';
+        $page->enforceTwoFactor = true;
 
         $response = $controller(new Request(), $module, 'main', null, $page);
 
@@ -115,7 +115,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -141,7 +141,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -177,7 +177,7 @@ class TwoFactorControllerTest extends TestCase
         $response = $controller($request, $module, 'main', null, $page);
 
         $this->assertNull($user->backupCodes);
-        $this->assertSame('', $user->useTwoFactor);
+        $this->assertFalse($user->useTwoFactor);
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('https://localhost.wip/foobar', $response->getTargetUrl());
     }
@@ -186,7 +186,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -217,7 +217,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -247,7 +247,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator($user, false),
@@ -279,7 +279,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $user
             ->expects($this->once())
@@ -318,7 +318,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -345,7 +345,7 @@ class TwoFactorControllerTest extends TestCase
     {
         $user = $this->mockClassWithProperties(FrontendUser::class);
         $user->secret = '';
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $container = $this->getContainerWithFrameworkTemplate(
             $this->mockAuthenticator(),
@@ -452,7 +452,7 @@ class TwoFactorControllerTest extends TestCase
     private function mockPageModel(): PageModel
     {
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->enforceTwoFactor = '';
+        $page->enforceTwoFactor = false;
 
         return $page;
     }

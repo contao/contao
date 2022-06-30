@@ -45,7 +45,9 @@ use Contao\InsertTags;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,9 +59,9 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class ContentElementTestCase extends TestCase
 {
-    public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
-    public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
-    public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
+    final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
+    final public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
+    final public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
 
     protected function tearDown(): void
     {
@@ -140,10 +142,10 @@ class ContentElementTestCase extends TestCase
         $response = $controller(new Request(), $model, 'main');
 
         // Record response context data
-        $responseContextData = [
+        $responseContextData = array_filter([
             DocumentLocation::head->value => $GLOBALS['TL_HEAD'] ?? [],
             DocumentLocation::endOfBody->value => $GLOBALS['TL_BODY'] ?? [],
-        ];
+        ]);
 
         // Reset state
         unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_BODY']);
@@ -219,12 +221,6 @@ class ContentElementTestCase extends TestCase
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader): Environment
     {
-        $environment = new Environment($contaoFilesystemLoader);
-
-        // Contao extension
-        $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader, $this->createMock(ContaoCsrfTokenManager::class)));
-
-        // Symfony extensions
         $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->method('trans')
@@ -238,7 +234,16 @@ class ContentElementTestCase extends TestCase
             )
         ;
 
+        $packages = $this->createMock(Packages::class);
+        $packages
+            ->method('getUrl')
+            ->willReturnCallback(static fn (string $url): string => '/'.$url)
+        ;
+
+        $environment = new Environment($contaoFilesystemLoader);
+        $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader, $this->createMock(ContaoCsrfTokenManager::class)));
         $environment->addExtension(new TranslationExtension($translator));
+        $environment->addExtension(new AssetExtension($packages));
 
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();

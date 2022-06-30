@@ -15,25 +15,25 @@ use Contao\Model\Collection;
 /**
  * Reads and writes forms
  *
- * @property integer        $id
- * @property integer        $tstamp
- * @property string         $title
- * @property string         $alias
- * @property integer        $jumpTo
- * @property string|boolean $sendViaEmail
- * @property string         $mailerTransport
- * @property string         $recipient
- * @property string         $subject
- * @property string         $format
- * @property string|boolean $skipEmpty
- * @property string|boolean $storeValues
- * @property string         $targetTable
- * @property string         $customTpl
- * @property string         $method
- * @property string|boolean $novalidate
- * @property string         $attributes
- * @property string         $formID
- * @property string|boolean $allowTags
+ * @property integer $id
+ * @property integer $tstamp
+ * @property string  $title
+ * @property string  $alias
+ * @property integer $jumpTo
+ * @property boolean $sendViaEmail
+ * @property string  $mailerTransport
+ * @property string  $recipient
+ * @property string  $subject
+ * @property string  $format
+ * @property boolean $skipEmpty
+ * @property boolean $storeValues
+ * @property string  $targetTable
+ * @property string  $customTpl
+ * @property string  $method
+ * @property boolean $novalidate
+ * @property string  $attributes
+ * @property string  $formID
+ * @property boolean $allowTags
  *
  * @method static FormModel|null findById($id, array $opt=array())
  * @method static FormModel|null findByPk($id, array $opt=array())
@@ -118,7 +118,7 @@ class FormModel extends Model
 	 */
 	public function getMaxUploadFileSize()
 	{
-		$objResult = Database::getInstance()->prepare("SELECT MAX(maxlength) AS maxlength FROM tl_form_field WHERE pid=? AND invisible='' AND type='upload' AND maxlength>0")
+		$objResult = Database::getInstance()->prepare("SELECT MAX(maxlength) AS maxlength FROM tl_form_field WHERE pid=? AND invisible=0 AND type='upload' AND maxlength>0")
 											 ->execute($this->id);
 
 		if ($objResult->numRows > 0 && $objResult->maxlength > 0)

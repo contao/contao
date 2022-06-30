@@ -19,16 +19,16 @@ use Contao\Model\Collection;
  * @property integer           $tstamp
  * @property string            $title
  * @property integer           $jumpTo
- * @property string|boolean    $protected
+ * @property boolean           $protected
  * @property string|array|null $groups
- * @property string|boolean    $allowComments
+ * @property boolean           $allowComments
  * @property string            $notify
  * @property string            $sortOrder
  * @property integer           $perPage
- * @property string|boolean    $moderate
- * @property string|boolean    $bbcode
- * @property string|boolean    $requireLogin
- * @property string|boolean    $disableCaptcha
+ * @property boolean           $moderate
+ * @property boolean           $bbcode
+ * @property boolean           $requireLogin
+ * @property boolean           $disableCaptcha
  *
  * @method static NewsArchiveModel|null findById($id, array $opt=array())
  * @method static NewsArchiveModel|null findByPk($id, array $opt=array())

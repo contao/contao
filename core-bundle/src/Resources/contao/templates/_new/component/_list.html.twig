@@ -92,9 +92,9 @@
     {% endif %}
 
     {% if randomize_order or add_pagination or limit_elements %}
-        {% block script %}
+        {% block list_script %}
             {% add "list_script" to body %}
-                <script type="application/javascript">
+                <script>
                     {# Shuffle lists #}
                     document.querySelectorAll('*[data-list-random]').forEach(list => {
                         {# Shuffle order of children by appending them at a random position. #}

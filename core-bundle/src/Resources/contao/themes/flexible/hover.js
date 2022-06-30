@@ -71,7 +71,7 @@ var Theme = {
 
 					if (e.event.shiftKey) {
 						el.getElements('a').each(function(a) {
-							if (a.hasClass('editheader')) {
+							if (a.hasClass('children')) {
 								document.location.href = a.href;
 							}
 						});
