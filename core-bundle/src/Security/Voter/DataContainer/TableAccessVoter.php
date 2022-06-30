@@ -13,7 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\DataContainerSubject;
+use Contao\CoreBundle\Security\DataContainer\CreateAction;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 use Symfony\Component\Security\Core\Security;
@@ -29,20 +30,20 @@ class TableAccessVoter implements CacheableVoterInterface
 
     public function supportsAttribute(string $attribute): bool
     {
-        return \in_array($attribute, [
-            ContaoCorePermissions::DC_ACTION_CREATE,
-            ContaoCorePermissions::DC_ACTION_EDIT,
-            ContaoCorePermissions::DC_ACTION_COPY,
-        ], true);
+        return str_starts_with($attribute, ContaoCorePermissions::DC_PREFIX);
     }
 
     public function supportsType(string $subjectType): bool
     {
-        return DataContainerSubject::class === $subjectType;
+        return match($subjectType) {
+            CreateAction::class,
+            UpdateAction::class => true,
+            default => false,
+        };
     }
 
     /**
-     * @param DataContainerSubject $subject
+     * @param CreateAction|UpdateAction $subject
      */
     public function vote(TokenInterface $token, $subject, array $attributes): int
     {
@@ -51,16 +52,16 @@ class TableAccessVoter implements CacheableVoterInterface
                 continue;
             }
 
-            $hasNotExcluded = false;
+            $hasExcluded = false;
 
-            foreach (($GLOBALS['TL_DCA'][$subject->table]['fields'] ?? []) as $config) {
-                if (!($config['exclude'] ?? false)) {
-                    $hasNotExcluded = true;
+            foreach (($GLOBALS['TL_DCA'][$subject->getDataSource()]['fields'] ?? []) as $config) {
+                if (($config['exclude'] ?? false)) {
+                    $hasExcluded = true;
                     break;
                 }
             }
 
-            if (!$hasNotExcluded && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $subject->table)) {
+            if ($hasExcluded && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $subject->getDataSource())) {
                 return self::ACCESS_DENIED;
             }
         }
