@@ -1942,11 +1942,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							if ($ajaxId == $thisId)
 							{
-								if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-								{
-									$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
-								}
-
 								return $arrAjax[$thisId];
 							}
 
@@ -2017,7 +2012,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Reload the page to prevent _POST variables from being sent twice
-		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
+		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable && Input::post('SUBMIT_TYPE') != 'auto')
 		{
 			// Show a warning if the record has been saved by another user (see #8412)
 			if ($intLatestVersion !== null && Input::post('VERSION_NUMBER') !== null && $intLatestVersion > Input::post('VERSION_NUMBER'))
@@ -2311,7 +2306,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$blnNoReload = false;
 
-				$this->preloadCurrentRecords($ids);
+				$this->preloadCurrentRecords($ids, $this->strTable);
 
 				// Walk through each record
 				foreach ($ids as $id)
@@ -2489,7 +2484,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Reload the page to prevent _POST variables from being sent twice
 			if (Input::post('FORM_SUBMIT') == $this->strTable)
 			{
-				if ($this->noReload)
+				if ($this->noReload || Input::post('SUBMIT_TYPE') == 'auto')
 				{
 					$this->Database->rollbackTransaction();
 				}
@@ -2810,7 +2805,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				// Reload the page to prevent _POST variables from being sent twice
-				if ($this->noReload)
+				if ($this->noReload || Input::post('SUBMIT_TYPE') == 'auto')
 				{
 					$this->Database->rollbackTransaction();
 				}
@@ -3123,7 +3118,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return;
 		}
 
-		if ($this->noReload)
+		if ($this->noReload || Input::post('SUBMIT_TYPE') == 'auto')
 		{
 			// Data should not be submitted due to validation errors
 			$this->arrSubmit = array();
