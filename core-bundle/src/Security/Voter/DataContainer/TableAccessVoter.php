@@ -35,7 +35,7 @@ class TableAccessVoter implements CacheableVoterInterface
 
     public function supportsType(string $subjectType): bool
     {
-        return match($subjectType) {
+        return match ($subjectType) {
             CreateAction::class,
             UpdateAction::class => true,
             default => false,
