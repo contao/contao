@@ -56,6 +56,9 @@ The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now
 `Contao\CoreBundle\String\HtmlAttributes` object instead of an array. Use `iterator_to_array()` to transform it back to
 an array representation. If you are just using array access, nothing needs to be changed.
 
+To ease accessing metadata and lightbox results in a chained manner or in templates, the `getMetadata()` and
+`getLightbox()` methods will now return `null` instead of throwing an exception if no data is available.
+
 The `contao_figure` Twig function has been deprecated and replaced with the `figure` Twig function. The new function
 returns a `Figure` object instead of a pre-rendered string which allows a more versatile application. To update existing
 usages, render the `component/_figure.html.twig` template yourself by including or embedding it with the object:
