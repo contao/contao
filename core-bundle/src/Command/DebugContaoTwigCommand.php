@@ -154,7 +154,7 @@ class DebugContaoTwigCommand extends Command
         $lines = explode("\n", $multilineValue);
         $rows = [];
 
-        for ($i = 0; $i < \count($lines); ++$i) {
+        for ($i = 0, $c = \count($lines); $i < $c; ++$i) {
             $rows[] = [0 === $i ? $attribute : '', new TableCell($lines[$i], ['style' => $style])];
         }
 

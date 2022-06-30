@@ -216,7 +216,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Active record
-	 * @var \stdClass|null
+	 * @var Model|FilesModel|object|null
 	 * @deprecated Deprecated since Contao 5.0 to be removed in Contao 6. Use $dc->getCurrentRecord() instead.
 	 */
 	protected $objActiveRecord;
@@ -958,8 +958,6 @@ abstract class DataContainer extends Backend
 						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
 					}
 				}
-
-				continue;
 			}
 		}
 

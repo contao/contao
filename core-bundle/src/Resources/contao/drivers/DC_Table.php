@@ -2311,7 +2311,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$blnNoReload = false;
 
-				$this->preloadCurrentRecords($ids);
+				$this->preloadCurrentRecords($ids, $this->strTable);
 
 				// Walk through each record
 				foreach ($ids as $id)
