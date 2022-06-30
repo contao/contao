@@ -15,23 +15,23 @@ use Contao\Model\Collection;
 /**
  * Reads and writes newsletters
  *
- * @property integer        $id
- * @property integer        $pid
- * @property integer        $tstamp
- * @property string         $subject
- * @property string         $alias
- * @property string|null    $content
- * @property string|null    $text
- * @property string|boolean $addFile
- * @property string|null    $files
- * @property string         $template
- * @property string|boolean $sendText
- * @property string|boolean $externalImages
- * @property string         $mailerTransport
- * @property string         $sender
- * @property string         $senderName
- * @property string|boolean $sent
- * @property integer        $date
+ * @property integer     $id
+ * @property integer     $pid
+ * @property integer     $tstamp
+ * @property string      $subject
+ * @property string      $alias
+ * @property string|null $content
+ * @property string|null $text
+ * @property boolean     $addFile
+ * @property string|null $files
+ * @property string      $template
+ * @property boolean     $sendText
+ * @property boolean     $externalImages
+ * @property string      $mailerTransport
+ * @property string      $sender
+ * @property string      $senderName
+ * @property boolean     $sent
+ * @property integer     $date
  *
  * @method static NewsletterModel|null findById($id, array $opt=array())
  * @method static NewsletterModel|null findByPk($id, array $opt=array())

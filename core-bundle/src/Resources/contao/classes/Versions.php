@@ -222,7 +222,7 @@ class Versions extends Controller
 								->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
 								->insertId;
 
-		$this->Database->prepare("UPDATE tl_version SET active='' WHERE pid=? AND fromTable=? AND id!=?")
+		$this->Database->prepare("UPDATE tl_version SET active=0 WHERE pid=? AND fromTable=? AND id!=?")
 					   ->execute($this->intPid, $this->strTable, $intId);
 
 		$intVersion = $this->Database->prepare("SELECT version FROM tl_version WHERE id=?")
@@ -315,7 +315,7 @@ class Versions extends Controller
 					   ->set($data)
 					   ->execute($this->intPid);
 
-		$this->Database->prepare("UPDATE tl_version SET active='' WHERE fromTable=? AND pid=?")
+		$this->Database->prepare("UPDATE tl_version SET active=0 WHERE fromTable=? AND pid=?")
 					   ->execute($this->strTable, $this->intPid);
 
 		$this->Database->prepare("UPDATE tl_version SET active=1 WHERE fromTable=? AND pid=? AND version=?")
@@ -439,14 +439,19 @@ class Versions extends Controller
 							continue;
 						}
 
-						if (\is_array($arrFields[$k]))
+						$blnIsBinary = false;
+
+						if (isset($arrFields[$k]))
 						{
-							// Detect binary fields using Doctrine's built-in types or Contao's BinaryStringType (see #3665)
-							$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB, BinaryStringType::NAME), true);
-						}
-						else
-						{
-							$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+							if (\is_array($arrFields[$k]))
+							{
+								// Detect binary fields using Doctrine's built-in types or Contao's BinaryStringType (see #3665)
+								$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB, BinaryStringType::NAME), true);
+							}
+							else
+							{
+								$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+							}
 						}
 
 						if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['multiple'] ?? null))
@@ -567,7 +572,6 @@ class Versions extends Controller
 		$objTemplate->from = $intFrom;
 		$objTemplate->showLabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->theme = Backend::getTheme();
-		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');

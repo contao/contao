@@ -69,7 +69,7 @@ class ModuleCalendar extends Events
 			return '';
 		}
 
-		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('request'));
+		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 		$this->strLink = $this->strUrl;
 
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
@@ -118,7 +118,7 @@ class ModuleCalendar extends Events
 
 		// Find the boundaries
 		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
-		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!$blnShowUnpublished ? " AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : ""));
+		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!$blnShowUnpublished ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : ""));
 		$dateFrom = $objMinMax->dateFrom;
 		$dateTo = $objMinMax->dateTo;
 		$repeatUntil = $objMinMax->repeatUntil;

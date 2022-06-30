@@ -23,13 +23,13 @@ use Contao\Model\Collection;
  * @property string            $language
  * @property string            $backendTheme
  * @property string            $uploader
- * @property string|boolean    $showHelp
- * @property string|boolean    $thumbnails
- * @property string|boolean    $useRTE
- * @property string|boolean    $useCE
+ * @property boolean           $showHelp
+ * @property boolean           $thumbnails
+ * @property boolean           $useRTE
+ * @property boolean           $useCE
  * @property string            $password
- * @property string|boolean    $pwChange
- * @property string|boolean    $admin
+ * @property boolean           $pwChange
+ * @property boolean           $admin
  * @property string|array|null $groups
  * @property string            $inherit
  * @property string|array|null $modules
@@ -44,13 +44,13 @@ use Contao\Model\Collection;
  * @property string|array|null $forms
  * @property string|array|null $formp
  * @property string|array|null $amg
- * @property string|boolean    $disable
+ * @property boolean           $disable
  * @property string|integer    $start
  * @property string|integer    $stop
  * @property string|array|null $session
  * @property integer           $dateAdded
  * @property string|null       $secret
- * @property string|boolean    $useTwoFactor
+ * @property boolean           $useTwoFactor
  * @property integer           $lastLogin
  * @property integer           $currentLogin
  * @property integer           $loginAttempts

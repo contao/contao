@@ -41,7 +41,7 @@ class ProviderTest extends TestCase
         $authenticator = $this->createMock(Authenticator::class);
 
         $user = $this->mockClassWithProperties(User::class);
-        $user->useTwoFactor = '';
+        $user->useTwoFactor = false;
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
@@ -60,7 +60,7 @@ class ProviderTest extends TestCase
         $authenticator = $this->createMock(Authenticator::class);
 
         $user = $this->mockClassWithProperties(User::class);
-        $user->useTwoFactor = '1';
+        $user->useTwoFactor = true;
 
         $context = $this->createMock(AuthenticationContextInterface::class);
         $context
@@ -101,7 +101,7 @@ class ProviderTest extends TestCase
 
     public function testValidatesTheAuthenticationCode(): void
     {
-        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => '1']);
+        $user = $this->mockClassWithProperties(User::class, ['useTwoFactor' => true]);
 
         $authenticator = $this->createMock(Authenticator::class);
         $authenticator

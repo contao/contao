@@ -588,7 +588,7 @@ abstract class Backend extends Controller
 			}
 
 			$objSession->set($strKey, Input::get('pn', true));
-			Controller::redirect(preg_replace('/&pn=[^&]*/', '', Environment::get('request')));
+			Controller::redirect(preg_replace('/&pn=[^&]*/', '', Environment::get('requestUri')));
 		}
 
 		$intNode = $objSession->get($strKey);
@@ -697,7 +697,7 @@ abstract class Backend extends Controller
 		}
 
 		$image = Controller::getPageStatusIcon((object) $row);
-		$imageAttribute = trim($imageAttribute . ' data-icon="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'1')))) . '" data-icon-disabled="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'')))) . '"');
+		$imageAttribute = trim($imageAttribute . ' data-icon="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>1)))) . '" data-icon-disabled="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>0)))) . '"');
 
 		// Return the image only
 		if ($blnReturnImage)
@@ -781,7 +781,7 @@ abstract class Backend extends Controller
 			}
 
 			$objSession->set($strKey, Input::get('fn', true));
-			Controller::redirect(preg_replace('/[?&]fn=[^&]*/', '', Environment::get('request')));
+			Controller::redirect(preg_replace('/[?&]fn=[^&]*/', '', Environment::get('requestUri')));
 		}
 
 		$strNode = $objSession->get($strKey);

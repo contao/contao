@@ -20,16 +20,12 @@ use Contao\ContentAlias;
 use Contao\ContentArticle;
 use Contao\ContentDownload;
 use Contao\ContentDownloads;
-use Contao\ContentHyperlink;
 use Contao\ContentModel;
 use Contao\ContentModule;
 use Contao\ContentPlayer;
 use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
-use Contao\ContentTable;
 use Contao\ContentTeaser;
-use Contao\ContentText;
-use Contao\ContentToplink;
 use Contao\ContentVimeo;
 use Contao\ContentYouTube;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
@@ -270,11 +266,6 @@ $GLOBALS['FE_MOD'] = array
 // Content elements
 $GLOBALS['TL_CTE'] = array
 (
-	'texts' => array
-	(
-		'text'            => ContentText::class,
-		'table'           => ContentTable::class,
-	),
 	'accordion' => array
 	(
 		'accordionSingle' => ContentAccordion::class,
@@ -285,11 +276,6 @@ $GLOBALS['TL_CTE'] = array
 	(
 		'sliderStart'     => ContentSliderStart::class,
 		'sliderStop'      => ContentSliderStop::class
-	),
-	'links' => array
-	(
-		'hyperlink'       => ContentHyperlink::class,
-		'toplink'         => ContentToplink::class
 	),
 	'media' => array
 	(

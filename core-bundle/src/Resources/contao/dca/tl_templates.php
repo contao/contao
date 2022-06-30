@@ -175,7 +175,7 @@ class tl_templates extends Backend
 			}
 
 			$objSessionBag->set('tl_templates_node', Input::get('fn', true));
-			$this->redirect(preg_replace('/[?&]fn=[^&]*/', '', Environment::get('request')));
+			$this->redirect(preg_replace('/[?&]fn=[^&]*/', '', Environment::get('requestUri')));
 		}
 
 		$strNode = $objSessionBag->get('tl_templates_node');
@@ -486,7 +486,6 @@ class tl_templates extends Backend
 		$objTemplate->showLabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->content = $strBuffer;
 		$objTemplate->theme = Backend::getTheme();
-		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showDifferences']);
 		$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');

@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_search'] = array
 		),
 		'protected' => array
 		(
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'groups' => array
 		(

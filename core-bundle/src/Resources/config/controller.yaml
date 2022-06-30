@@ -58,9 +58,15 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\CodeController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
+
     Contao\CoreBundle\Controller\ContentElement\HtmlController: ~
 
-    Contao\CoreBundle\Controller\ContentElement\HeadlineController: ~
+    Contao\CoreBundle\Controller\ContentElement\HyperlinkController:
+        arguments:
+            - '@contao.image.studio'
+            - '@contao.insert_tag.parser'
+            - '@request_stack'
 
     Contao\CoreBundle\Controller\ContentElement\ImagesController:
         arguments:
@@ -72,7 +78,15 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\TableController: ~
+
     Contao\CoreBundle\Controller\ContentElement\TemplateController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\TextController:
+        arguments:
+            - '@contao.image.studio'
+
+    Contao\CoreBundle\Controller\ContentElement\ToplinkController: ~
 
     Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
 

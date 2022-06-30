@@ -233,11 +233,6 @@ hooks:
             langsNative: array
             installedOnly: bool
 
-    getPageIdFromUrl:
-        return_type: array
-        arguments:
-            fragments: array
-
     getPageLayout:
         return_type: void
         arguments:
@@ -250,10 +245,6 @@ hooks:
         arguments:
             page: object
             image: string
-
-    getRootPageFromUrl:
-        return_type: Contao\PageModel
-        arguments: []
 
     getSystemMessages:
         return_type: string

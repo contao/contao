@@ -66,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_comments_notify'] = array
 		),
 		'active' => array
 		(
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'tokenRemove' => array
 		(
