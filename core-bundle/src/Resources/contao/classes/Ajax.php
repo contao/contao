@@ -330,7 +330,7 @@ class Ajax extends Backend
 						$objVersions = new Versions($dc->table, $this->strAjaxId);
 						$objVersions->initialize();
 
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($this->strAjaxId);
+						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($this->strAjaxId);
 
 						$objVersions->create();
 
@@ -349,7 +349,7 @@ class Ajax extends Backend
 						$objVersions = new Versions($dc->table, $dc->id);
 						$objVersions->initialize();
 
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : '') . "' WHERE id=?")->execute($dc->id);
+						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($dc->id);
 
 						$objVersions->create();
 
