@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -134,7 +135,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 						$legends[$k] = substr($vv, 1, -1);
 						unset($boxes[$k][$kk]);
 					}
-					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'] ?? !empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['inputType'])))
+					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv] ?? null) || (DataContainer::isFieldExcluded($this->strTable, $vv) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $vv)))
 					{
 						unset($boxes[$k][$kk]);
 					}

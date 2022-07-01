@@ -1411,7 +1411,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				foreach ($boxes[$k] as $kk=>$vv)
 				{
-					if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]) || (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'] ?? !empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['inputType'])) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $vv)))
+					if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]) || (DataContainer::isFieldExcluded($this->strTable, $vv) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $vv)))
 					{
 						unset($boxes[$k][$kk]);
 					}
@@ -1727,7 +1727,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				foreach ($this->strPalette as $v)
 				{
 					// Check whether field is excluded
-					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['exclude'] ?? !empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'])) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
+					if (DataContainer::isFieldExcluded($this->strTable, $this->strField) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
 					{
 						continue;
 					}
@@ -1916,7 +1916,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Show all non-excluded fields
 			foreach ($fields as $field)
 			{
-				if ((!($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['exclude'] ?? !empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType'])) || $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $field)) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null)))
+				if ((!DataContainer::isFieldExcluded($this->strTable, $field) || $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $field)) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['doNotShow'] ?? null) && (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['inputType']) || \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['input_field_callback'] ?? null)))
 				{
 					$options .= '
   <input type="checkbox" name="all_fields[]" id="all_' . $field . '" class="tl_checkbox" value="' . StringUtil::specialchars($field) . '"> <label for="all_' . $field . '" class="tl_checkbox_label">' . (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] ?? (\is_array($GLOBALS['TL_LANG']['MSC'][$field] ?? null) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : ($GLOBALS['TL_LANG']['MSC'][$field] ?? null) ?? $field)) . ' <span style="color:#999;padding-left:3px">[' . $field . ']</span>') . '</label><br>';
