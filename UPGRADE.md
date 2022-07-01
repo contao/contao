@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+### Unknown insert tags
+
+Unknown insert tags are no longer removed from the resulting text. Instead they are now kept as is and are visible in
+the front end.
+
 ### Insert tag hooks
 
 The `$cache` parameter is no longer passed to the `replaceInsertTags` and the `insertTagFlags` hooks. An empty array is
