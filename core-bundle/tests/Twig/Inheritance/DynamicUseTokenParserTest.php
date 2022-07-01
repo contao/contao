@@ -26,6 +26,7 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 
 class DynamicUseTokenParserTest extends TestCase
@@ -63,7 +64,15 @@ class DynamicUseTokenParserTest extends TestCase
         $warmer->warmUp('');
 
         $environment = new Environment($loader);
-        $environment->addExtension(new ContaoExtension($environment, $loader, $this->createMock(ContaoCsrfTokenManager::class)));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $loader,
+                new RequestStack(),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
 
         // A component is adjusted by overwriting the component's template
         // (here by adding the item "ice" and turning apples into pineapples).

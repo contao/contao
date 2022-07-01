@@ -950,6 +950,7 @@ services:
         arguments:
             - '@twig'
             - '@contao.twig.filesystem_loader'
+            - '@request_stack'
             - '@contao.csrf.token_manager'
 
     contao.twig.fail_tolerant_filesystem_loader:

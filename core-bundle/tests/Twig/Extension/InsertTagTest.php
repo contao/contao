@@ -23,6 +23,7 @@ use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -83,7 +84,15 @@ class InsertTagTest extends TestCase
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class))]);
+
+        $environment->setExtensions([
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                new RequestStack(),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            ),
+        ]);
 
         $tokenChecker = $this->createMock(TokenChecker::class);
         $tokenChecker

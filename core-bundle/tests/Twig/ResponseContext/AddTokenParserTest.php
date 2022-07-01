@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
@@ -43,7 +44,16 @@ class AddTokenParserTest extends TestCase
     public function testAddsContent(string $code, array $expectedHeadContent, array $expectedBodyContent): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addExtension(new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class)));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                new RequestStack(),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
+
         $environment->addTokenParser(new AddTokenParser(ContaoExtension::class));
         $environment->setLoader(new ArrayLoader(['template.html.twig' => $code]));
         $environment->render('template.html.twig');

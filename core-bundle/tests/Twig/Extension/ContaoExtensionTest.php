@@ -30,6 +30,7 @@ use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -90,6 +91,7 @@ class ContaoExtensionTest extends TestCase
             'add_schema_org' => [],
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
+            'prefix_url' => [],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
@@ -167,7 +169,12 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        $extension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class));
+        $extension = new ContaoExtension(
+            $environment,
+            $this->createMock(TemplateHierarchyInterface::class),
+            new RequestStack(),
+            $this->createMock(ContaoCsrfTokenManager::class)
+        );
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The Twig\Extension\CoreExtension class was expected to register the "include" Twig function but did not.');
@@ -365,6 +372,6 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension($environment, $hierarchy, $this->createMock(ContaoCsrfTokenManager::class));
+        return new ContaoExtension($environment, $hierarchy, new RequestStack(), $this->createMock(ContaoCsrfTokenManager::class));
     }
 }

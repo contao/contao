@@ -34,7 +34,9 @@ use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\FrontendTemplateTrait;
 use Contao\Template;
+use Contao\Validator;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -49,8 +51,12 @@ final class ContaoExtension extends AbstractExtension
 {
     private array $contaoEscaperFilterRules = [];
 
-    public function __construct(private Environment $environment, private TemplateHierarchyInterface $hierarchy, ContaoCsrfTokenManager $tokenManager)
-    {
+    public function __construct(
+        private Environment $environment,
+        private TemplateHierarchyInterface $hierarchy,
+        private RequestStack $requestStack,
+        ContaoCsrfTokenManager $tokenManager,
+    ) {
         $contaoEscaper = new ContaoEscaper();
 
         /** @var EscaperExtension $escaperExtension */
@@ -180,6 +186,16 @@ final class ContaoExtension extends AbstractExtension
                 'contao_section',
                 [LegacyTemplateFunctionsRuntime::class, 'renderLayoutSection'],
                 ['needs_context' => true, 'is_safe' => ['html']]
+            ),
+            new TwigFunction(
+                'prefix_url',
+                function (string $url) {
+                    if (!Validator::isRelativeUrl($url)) {
+                        return $url;
+                    }
+
+                    return $this->requestStack->getMainRequest()?->getBasePath().'/'.$url;
+                }
             ),
         ];
     }

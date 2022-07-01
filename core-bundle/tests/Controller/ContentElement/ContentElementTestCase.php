@@ -51,6 +51,7 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -241,9 +242,17 @@ class ContentElementTestCase extends TestCase
         ;
 
         $environment = new Environment($contaoFilesystemLoader);
-        $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader, $this->createMock(ContaoCsrfTokenManager::class)));
         $environment->addExtension(new TranslationExtension($translator));
         $environment->addExtension(new AssetExtension($packages));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $contaoFilesystemLoader,
+                new RequestStack(),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
 
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();
