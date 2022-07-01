@@ -1190,11 +1190,6 @@ class InsertTags extends Controller
 							$arrCache[$strTag] = implode(', ', $result);
 							break;
 
-						case 'uncached':
-							trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag flag "|uncached" has been deprecated and will no longer work in Contao 6.0. use "{{uncached::*}}" instead.');
-							// ignore
-							break;
-
 						case 'refresh':
 							// ignore
 							break;
