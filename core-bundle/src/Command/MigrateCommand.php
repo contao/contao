@@ -64,7 +64,7 @@ class MigrateCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        $asJson = 'ndjson' !== $input->getOption('format');
+        $asJson = 'ndjson' === $input->getOption('format');
 
         if (!$input->getOption('no-check') && $errors = $this->compileConfigurationErrors()) {
             if ($asJson) {
