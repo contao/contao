@@ -356,7 +356,7 @@ abstract class DataContainer extends Backend
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
 		// Check if the field is excluded
-		if (DataContainer::isFieldExcluded($this->strTable, $this->strField) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
+		if (self::isFieldExcluded($this->strTable, $this->strField) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
 		{
 			throw new AccessDeniedException('Field "' . $this->strTable . '.' . $this->strField . '" is excluded from being edited.');
 		}
@@ -1574,7 +1574,8 @@ abstract class DataContainer extends Backend
 	 */
 	public static function isFieldExcluded(string $table, string $field): bool
 	{
-		if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['exclude'])) {
+		if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['exclude']))
+		{
 			return (bool) $GLOBALS['TL_DCA'][$table]['fields'][$field]['exclude'];
 		}
 
