@@ -114,9 +114,6 @@ class TableAccessVoterTest extends TestCase
                 'inputType' => 'text',
                 'exclude' => true,
             ],
-            'bar' => [
-                'inputType' => 'text',
-            ],
         ];
 
         $this->security
@@ -124,6 +121,29 @@ class TableAccessVoterTest extends TestCase
             ->method('isGranted')
             ->with(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_foobar')
             ->willReturn(true)
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_ABSTAIN,
+            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar'])
+        );
+    }
+
+    public function testAbstainsIfNotAllFieldsAreExcluded(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
+            'foo' => [
+                'inputType' => 'text',
+                'exclude' => true,
+            ],
+            'bar' => [
+                'inputType' => 'text',
+            ],
+        ];
+
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
         ;
 
         $this->assertSame(
@@ -141,6 +161,7 @@ class TableAccessVoterTest extends TestCase
             ],
             'bar' => [
                 'inputType' => 'text',
+                'exclude' => true,
             ],
         ];
 

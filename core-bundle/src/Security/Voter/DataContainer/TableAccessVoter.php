@@ -52,18 +52,18 @@ class TableAccessVoter implements CacheableVoterInterface
                 continue;
             }
 
-            $hasExcluded = false;
+            $hasNotExcluded = false;
 
             // Intentionally do not load DCA, it should already be loaded. If DCA is not loaded,
             // the voter just always abstains because it can't decide.
             foreach (($GLOBALS['TL_DCA'][$subject->getDataSource()]['fields'] ?? []) as $config) {
-                if (($config['exclude'] ?? false)) {
-                    $hasExcluded = true;
+                if (!empty($config['inputType']) && !($config['exclude'] ?? false)) {
+                    $hasNotExcluded = true;
                     break;
                 }
             }
 
-            if ($hasExcluded && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $subject->getDataSource())) {
+            if (!$hasNotExcluded && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $subject->getDataSource())) {
                 return self::ACCESS_DENIED;
             }
         }
