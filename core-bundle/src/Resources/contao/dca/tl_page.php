@@ -902,11 +902,6 @@ class tl_page extends Backend
 					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE;
 					break;
 
-				case 'move':
-					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY;
-					$ids[] = Input::get('sid');
-					break;
-
 				case 'create':
 				case 'copy':
 				case 'copyAll':
