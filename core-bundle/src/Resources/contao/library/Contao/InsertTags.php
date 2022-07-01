@@ -205,6 +205,11 @@ class InsertTags extends Controller
 
 			$arrCache[$strTag] = '';
 
+			if (strtolower($elements[0]) !== $elements[0])
+			{
+				trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.0. Use "%s" instead.', $elements[0], strtolower($elements[0]));
+			}
+
 			// Replace the tag
 			switch (strtolower($elements[0]))
 			{
