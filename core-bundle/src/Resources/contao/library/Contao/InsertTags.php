@@ -153,7 +153,10 @@ class InsertTags extends Controller
 				break;
 			}
 
-			$tags[$_rit+1] = (string) $this->replaceInternal($tags[$_rit+1], $blnCache);
+			if (!$blnCache || !str_starts_with(strtolower($tags[$_rit+1]), 'uncached::'))
+			{
+				$tags[$_rit+1] = (string) $this->replaceInternal($tags[$_rit+1], $blnCache);
+			}
 
 			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
@@ -161,7 +164,7 @@ class InsertTags extends Controller
 			$elements = explode('::', $tag);
 
 			// Load the value from cache
-			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
+			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && $elements[0] != 'uncached' && !\in_array('refresh', $flags))
 			{
 				$arrBuffer[$_rit+1] = (string) $arrCache[$strTag];
 				continue;
@@ -177,7 +180,7 @@ class InsertTags extends Controller
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || $elements[0] == 'uncached' || ($elements[1] ?? null) == 'referer' || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -213,6 +216,11 @@ class InsertTags extends Controller
 			// Replace the tag
 			switch (strtolower($elements[0]))
 			{
+				// Uncached (ESI) fragments
+				case 'uncached':
+					$arrCache[$strTag] = substr($strTag, 10);
+					break;
+
 				// Date
 				case 'date':
 					$flags[] = 'attr';
@@ -1182,8 +1190,12 @@ class InsertTags extends Controller
 							$arrCache[$strTag] = implode(', ', $result);
 							break;
 
-						case 'refresh':
 						case 'uncached':
+							trigger_deprecation('contao/core-bundle', '5.0', 'The insert tag flag "|uncached" has been deprecated and will no longer work in Contao 6.0. use "{{uncached::*}}" instead.');
+							// ignore
+							break;
+
+						case 'refresh':
 							// ignore
 							break;
 

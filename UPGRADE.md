@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### Insert tag flag uncached
+
+The `|uncached` insert tag flag was removed. Use the `{{uncached::*}}` insert tag instead.
+
 ### Insert tag hooks
 
 The `$cache` parameter is no longer passed to the `replaceInsertTags` and the `insertTagFlags` hooks. An empty array is
