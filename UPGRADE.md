@@ -4,7 +4,7 @@
 
 ### Insert tag hooks
 
-The `$cache` parameter is no longer passed to the `replaceInsertTags` and the `insertTagFlags` hook. An empty array is
+The `$cache` parameter is no longer passed to the `replaceInsertTags` and the `insertTagFlags` hooks. An empty array is
 passed instead.
 
 ### Figure
