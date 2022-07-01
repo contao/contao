@@ -48,6 +48,7 @@ class DisableAppConfiguredSettingsListener
 
             $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['disabled'] = true;
             $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['helpwizard'] = false;
+            $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['chosen'] = false;
         }
     }
 
