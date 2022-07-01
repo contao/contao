@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+### replaceInsertTags and insertTagFlags hooks
+
+The `$cache` parameter (6th for `replaceInsertTags` and 7th for `insertTagFlags`) is no longer passed to the hooks,
+an empty array gets passed instead.
+
 ### Figure
 
 The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
