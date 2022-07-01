@@ -28,7 +28,6 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenucal_day'] = '{title_legend
 // Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_calendar'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_calendar', 'getCalendars'),
 	'eval'                    => array('mandatory'=>true, 'multiple'=>true),
@@ -37,7 +36,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_calendar'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_noSpan'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -45,7 +43,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_noSpan'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_hideRunning'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -53,7 +50,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_hideRunning'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_startDay'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array(0, 1, 2, 3, 4, 5, 6),
 	'reference'               => &$GLOBALS['TL_LANG']['DAYS'],
@@ -63,7 +59,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_startDay'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_format'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_calendar', 'getFormats'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
@@ -73,7 +68,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_format'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ignoreDynamic'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'clr w50'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -81,7 +75,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ignoreDynamic'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_order'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array('ascending', 'descending'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -91,7 +84,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_order'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_readerModule'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_calendar', 'getReaderModules'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
@@ -101,7 +93,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_readerModule'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_limit'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w50'),
 	'sql'                     => "smallint(5) unsigned NOT NULL default 0"
@@ -109,7 +100,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_limit'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_template'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{
@@ -121,7 +111,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_template'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{
@@ -133,7 +122,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50 m12'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -141,7 +129,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_featured'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => array('all_items', 'featured', 'unfeatured'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module']['events'],

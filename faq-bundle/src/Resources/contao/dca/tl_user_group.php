@@ -21,7 +21,6 @@ PaletteManipulator::create()
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['faqs'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['faqs'],
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_faq_category.title',
 	'eval'                    => array('multiple'=>true),
@@ -31,7 +30,6 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['faqs'] = array
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['faqp'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['faqp'],
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('create', 'delete'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],

@@ -132,7 +132,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'title' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -140,7 +139,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'alias' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'alias', 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
@@ -152,7 +150,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'language' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
@@ -161,7 +158,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'archives' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_news_feed', 'getAllowedArchives'),
@@ -170,7 +166,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'format' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'options'                 => array('rss'=>'RSS 2.0', 'atom'=>'Atom'),
@@ -179,7 +174,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'source' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('source_teaser', 'source_text'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_news_feed'],
@@ -188,14 +182,12 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'maxItems' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'tl_class'=>'w50'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 25"
 		),
 		'feedBase' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -207,7 +199,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		),
 		'description' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('style'=>'height:60px', 'tl_class'=>'clr'),
@@ -216,7 +207,6 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 		'imgSize' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['imgSize'],
-			'exclude'                 => true,
 			'inputType'               => 'imageSize',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('rgxp'=>'natural', 'includeBlankOption'=>true, 'nospace'=>true, 'helpwizard'=>true, 'tl_class'=>'w50'),

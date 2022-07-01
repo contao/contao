@@ -133,7 +133,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'subject' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
@@ -143,7 +142,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'alias' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'alias', 'doNotCopy'=>true, 'unique'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -155,7 +153,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'content' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('rte'=>'tinyNews', 'helpwizard'=>true),
@@ -172,7 +169,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'text' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'textarea',
 			'eval'                    => array('decodeEntities'=>true, 'class'=>'noresize'),
@@ -180,7 +176,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'addFile' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -188,14 +183,12 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'files' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'mandatory'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'template' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
 			'options_callback' => static function ()
@@ -206,7 +199,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'sendText' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
@@ -214,14 +206,12 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'externalImages' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'mailerTransport' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
 			'options_callback'        => array('contao.mailer.available_transports', 'getTransportOptions'),
@@ -229,7 +219,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'sender' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
@@ -242,7 +231,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'senderName' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,

@@ -135,7 +135,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		),
 		'email' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
@@ -150,7 +149,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		),
 		'active' => array
 		(
-			'exclude'                 => true,
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',

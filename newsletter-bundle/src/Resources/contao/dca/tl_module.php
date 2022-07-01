@@ -25,7 +25,6 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['newsletterreader'] = '{title_legend
 // Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['newsletters'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'eval'                    => array('multiple'=>true),
@@ -34,7 +33,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['newsletters'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_channels'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_newsletter', 'getChannels'),
 	'eval'                    => array('multiple'=>true, 'mandatory'=>true),
@@ -43,7 +41,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_channels'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_text'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'textarea',
 	'eval'                    => array('rte'=>'tinyMCE', 'helpwizard'=>true),
 	'explanation'             => 'insertTags',
@@ -52,14 +49,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_text'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_hideChannels'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_subscribe'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'textarea',
 	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
 	'load_callback' => array
@@ -71,7 +66,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_subscribe'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'textarea',
 	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
 	'load_callback' => array
@@ -83,7 +77,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{

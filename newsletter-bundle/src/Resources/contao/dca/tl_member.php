@@ -22,7 +22,6 @@ $GLOBALS['TL_DCA']['tl_member']['fields']['disable']['save_callback'][] = array(
 // Add field
 $GLOBALS['TL_DCA']['tl_member']['fields']['newsletter'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'options_callback'        => array(Newsletter::class, 'getNewsletters'),

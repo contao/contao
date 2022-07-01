@@ -31,22 +31,26 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 	(
 		'dateFormat' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'helpwizard'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'explanation'             => 'dateFormat'
 		),
 		'timeFormat' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50')
 		),
 		'datimFormat' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'tl_class'=>'w50')
 		),
 		'timeZone' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'select',
 			'options_callback' => static function ()
 			{
@@ -56,36 +60,43 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		),
 		'adminEmail' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'friendly', 'decodeEntities'=>true, 'tl_class'=>'w50')
 		),
 		'disableCron' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50')
 		),
 		'resultsPerPage' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'minval'=>1, 'nospace'=>true, 'tl_class'=>'w50 clr')
 		),
 		'maxResultsPerPage' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
 		),
 		'doNotCollapse' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50')
 		),
 		'allowedTags' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('useRawRequestData'=>true, 'tl_class'=>'long')
 		),
 		'allowedAttributes' => array
 		(
+			'exclude'                 => false,
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['allowedAttributes'],
 			'inputType'               => 'keyValueWizard',
 			'eval'                    => array('tl_class'=>'clr'),
@@ -151,41 +162,51 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		),
 		'allowedDownload' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50')
 		),
 		'uploadTypes' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50')
 		),
 		'maxFileSize' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
 		),
 		'imageWidth' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
 		),
 		'imageHeight' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'rgxp'=>'natural', 'nospace'=>true, 'tl_class'=>'w50')
 		),
-		'defaultUser' => array(
+		'defaultUser' => array
+		(
+			'exclude'                 => false,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user.username',
 			'eval'                    => array('chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50')
 		),
-		'defaultGroup' => array(
+		'defaultGroup' => array
+		(
+			'exclude'                 => false,
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_user_group.name',
 			'eval'                    => array('chosen'=>true, 'includeBlankOption'=>true, 'tl_class'=>'w50')
 		),
 		'defaultChmod' => array
 		(
+			'exclude'                 => false,
 			'inputType'               => 'chmod',
 			'eval'                    => array('tl_class'=>'clr')
 		)

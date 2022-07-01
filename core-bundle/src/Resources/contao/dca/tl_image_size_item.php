@@ -129,7 +129,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		'media' => array
 		(
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'long', 'decodeEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -138,7 +137,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['densities'],
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
-			'exclude'                 => true,
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -147,7 +145,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['sizes'],
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
-			'exclude'                 => true,
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'clr', 'decodeEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -155,7 +152,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['width'],
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'clr w50'),
 			'sql'                     => "int(10) NULL"
 		),
@@ -163,7 +159,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['height'],
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) NULL"
 		),
@@ -173,7 +168,6 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 			'inputType'               => 'select',
 			'options'                 => array('proportional', 'box', 'crop'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
-			'exclude'                 => true,
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'clr w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -181,13 +175,11 @@ $GLOBALS['TL_DCA']['tl_image_size_item'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_image_size']['zoom'],
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) NULL"
 		),
 		'invisible' => array
 		(
-			'exclude'                 => true,
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',

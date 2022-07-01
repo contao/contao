@@ -21,7 +21,6 @@ PaletteManipulator::create()
 // Add fields to tl_user
 $GLOBALS['TL_DCA']['tl_user']['fields']['news'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_news_archive.title',
 	'eval'                    => array('multiple'=>true),
@@ -30,7 +29,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['news'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['newp'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('create', 'delete'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -40,7 +38,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['newp'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['newsfeeds'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_news_feed.title',
 	'eval'                    => array('multiple'=>true),
@@ -49,7 +46,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['newsfeeds'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['newsfeedp'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('create', 'delete'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],

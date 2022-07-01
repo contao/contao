@@ -18,7 +18,6 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['listing'] = '{title_legend},name,he
 // Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_table'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback'        => array('tl_module_listing', 'getAllTables'),
 	'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
@@ -27,7 +26,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_table'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_fields'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('mandatory'=>true, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 	'sql'                     => "tinytext NULL"
@@ -35,7 +33,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_fields'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_where'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('preserveTags'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 	'sql'                     => "tinytext NULL"
@@ -43,7 +40,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_where'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_search'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 	'sql'                     => "tinytext NULL"
@@ -51,7 +47,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_search'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_sort'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 	'sql'                     => "tinytext NULL"
@@ -59,7 +54,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_sort'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 	'sql'                     => "tinytext NULL"
@@ -67,7 +61,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_where'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'text',
 	'eval'                    => array('preserveTags'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 	'sql'                     => "tinytext NULL"
@@ -75,7 +68,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_where'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{
@@ -87,7 +79,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['list_layout'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['list_info_layout'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options_callback' => static function ()
 	{

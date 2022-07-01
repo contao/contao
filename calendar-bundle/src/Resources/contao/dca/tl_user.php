@@ -21,7 +21,6 @@ PaletteManipulator::create()
 // Add fields to tl_user
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendars'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_calendar.title',
 	'eval'                    => array('multiple'=>true),
@@ -30,7 +29,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendars'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarp'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('create', 'delete'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -40,7 +38,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendarp'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_calendar_feed.title',
 	'eval'                    => array('multiple'=>true),
@@ -49,7 +46,6 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeedp'] = array
 (
-	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'options'                 => array('create', 'delete'),
 	'reference'               => &$GLOBALS['TL_LANG']['MSC'],

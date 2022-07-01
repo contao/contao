@@ -134,7 +134,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'firstname' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
@@ -144,7 +143,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'lastname' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
@@ -154,14 +152,12 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'dateOfBirth' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'date', 'datepicker'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(11) NOT NULL default ''"
 		),
 		'gender' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'select',
 			'options'                 => array('male', 'female', 'other'),
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
@@ -170,7 +166,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'company' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
@@ -180,7 +175,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'street' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
@@ -188,7 +182,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'postal' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>32, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
@@ -196,7 +189,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'city' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'search'                  => true,
 			'sorting'                 => true,
@@ -206,7 +198,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'state' => array
 		(
-			'exclude'                 => true,
 			'sorting'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>64, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
@@ -214,7 +205,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'country' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'select',
@@ -224,7 +214,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'phone' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'decodeEntities'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
@@ -232,7 +221,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'mobile' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'decodeEntities'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
@@ -240,7 +228,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'fax' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>64, 'rgxp'=>'phone', 'decodeEntities'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
@@ -248,7 +235,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'email' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'rgxp'=>'email', 'unique'=>true, 'decodeEntities'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
@@ -256,7 +242,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'website' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>HttpUrlListener::RGXP_NAME, 'maxlength'=>255, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'contact', 'tl_class'=>'w50'),
@@ -264,7 +249,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'language' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feViewable'=>true, 'feGroup'=>'personal', 'tl_class'=>'w50'),
@@ -276,7 +260,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'groups' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkboxWizard',
 			'foreignKey'              => 'tl_member_group.name',
@@ -286,7 +269,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'login' => array
 		(
-			'exclude'                 => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
@@ -294,7 +276,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'username' => array
 		(
-			'exclude'                 => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
@@ -305,7 +286,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		'password' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['password'],
-			'exclude'                 => true,
 			'inputType'               => 'password',
 			'eval'                    => array('mandatory'=>true, 'preserveTags'=>true, 'minlength'=>Config::get('minPasswordLength'), 'feEditable'=>true, 'feGroup'=>'login', 'tl_class'=>'w50'),
 			'save_callback' => array
@@ -316,21 +296,18 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'assignDir' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'homeDir' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'fileTree',
 			'eval'                    => array('fieldType'=>'radio', 'tl_class'=>'clr'),
 			'sql'                     => "binary(16) NULL"
 		),
 		'disable' => array
 		(
-			'exclude'                 => true,
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
@@ -338,14 +315,12 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'start' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) NOT NULL default ''"
 		),
 		'stop' => array
 		(
-			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'datim', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
 			'sql'                     => "varchar(10) NOT NULL default ''"

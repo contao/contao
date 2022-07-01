@@ -139,7 +139,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'name' => array
 		(
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'search'                  => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
@@ -148,7 +147,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'cssClass' => array
 		(
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'search'                  => true,
 			'eval'                    => array('maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
@@ -157,7 +155,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
-			'exclude'                 => true,
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -165,21 +162,18 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'inputType'               => 'text',
 			'explanation'             => 'imageSizeDensities',
-			'exclude'                 => true,
 			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'clr', 'decodeEntities'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'width' => array
 		(
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'clr w50'),
 			'sql'                     => "int(10) NULL"
 		),
 		'height' => array
 		(
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) NULL"
 		),
@@ -188,14 +182,12 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'inputType'               => 'select',
 			'options'                 => array('proportional', 'box', 'crop'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size'],
-			'exclude'                 => true,
 			'eval'                    => array('helpwizard'=>true, 'tl_class'=>'clr w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'zoom' => array
 		(
 			'inputType'               => 'text',
-			'exclude'                 => true,
 			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "int(10) NULL"
 		),
@@ -203,21 +195,18 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		(
 			'inputType'               => 'checkboxWizard',
 			'options_callback'        => array('tl_image_size', 'getFormats'),
-			'exclude'                 => true,
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "varchar(1024) NOT NULL default ''"
 		),
 		'skipIfDimensionsMatch' => array
 		(
 			'inputType'               => 'checkbox',
-			'exclude'                 => true,
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'lazyLoading' => array
 		(
 			'inputType'               => 'checkbox',
-			'exclude'                 => true,
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		)
