@@ -90,6 +90,7 @@ class ContaoExtensionTest extends TestCase
             'add_schema_org' => [],
             'contao_sections' => ['html'],
             'contao_section' => ['html'],
+            'prefix_url' => [],
         ];
 
         $functions = $this->getContaoExtension()->getFunctions();
@@ -167,7 +168,11 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        $extension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class));
+        $extension = new ContaoExtension(
+            $environment,
+            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoCsrfTokenManager::class)
+        );
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The Twig\Extension\CoreExtension class was expected to register the "include" Twig function but did not.');

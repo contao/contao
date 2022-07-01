@@ -241,9 +241,16 @@ class ContentElementTestCase extends TestCase
         ;
 
         $environment = new Environment($contaoFilesystemLoader);
-        $environment->addExtension(new ContaoExtension($environment, $contaoFilesystemLoader, $this->createMock(ContaoCsrfTokenManager::class)));
         $environment->addExtension(new TranslationExtension($translator));
         $environment->addExtension(new AssetExtension($packages));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $contaoFilesystemLoader,
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
 
         // Runtime loaders
         $insertTagParser = $this->getDefaultInsertTagParser();
