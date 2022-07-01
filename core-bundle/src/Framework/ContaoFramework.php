@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Framework;
 
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Environment;
 use Contao\Input;
@@ -163,7 +162,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         $config->getInstance();
 
         $this->registerHookListeners();
-        $this->validateInstallation();
 
         Input::initialize();
         TemplateLoader::initialize();
@@ -200,29 +198,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
         // Deprecated since Contao 4.0, to be removed in Contao 5.0
         $GLOBALS['TL_LANGUAGE'] = $language;
-    }
-
-    /**
-     * Redirects to the install tool if the installation is incomplete.
-     */
-    private function validateInstallation(): void
-    {
-        if (null === $this->request) {
-            return;
-        }
-
-        static $installRoutes = [
-            'contao_install',
-            'contao_install_redirect',
-        ];
-
-        if (\in_array($this->request->attributes->get('_route'), $installRoutes, true)) {
-            return;
-        }
-
-        if (!$this->getAdapter(Config::class)->isComplete()) {
-            throw new RedirectResponseException($this->urlGenerator->generate('contao_install', [], UrlGeneratorInterface::ABSOLUTE_URL));
-        }
     }
 
     private function setTimezone(): void

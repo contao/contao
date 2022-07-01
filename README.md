@@ -61,8 +61,7 @@ Next, install the dependencies:
 composer update
 ```
 
-Composer will automatically clone the Git repo into the `vendor/contao/contao` folder. You can finish your setup by
-opening `https://your-domain.local/contao/install` in your browser.
+Composer will automatically clone the Git repo into the `vendor/contao/contao` folder.
 
 All the changes you make in `vendor/contao/contao` are tracked via Git, so you can submit your pull request directly
 from within your application.
