@@ -394,7 +394,7 @@ class MigrateCommandTest extends TestCase
     /**
      * @dataProvider provideInvalidSqlModes
      */
-    public function testWarnsIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
+    public function testOutputsWarningIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -423,6 +423,45 @@ class MigrateCommandTest extends TestCase
         $this->assertStringContainsString(
             sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey),
             $display
+        );
+    }
+
+    /**
+     * @dataProvider provideInvalidSqlModes
+     */
+    public function testEmitsWarningMessageIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->with('SELECT @@sql_mode')
+            ->willReturn($sqlMode)
+        ;
+
+        $connection
+            ->method('getDriver')
+            ->willReturn($driver)
+        ;
+
+        $command = $this->getCommand(connection: $connection);
+
+        $tester = new CommandTester($command);
+        $tester->execute(['--format' => 'ndjson', '--no-backup' => true, '--no-check' => true], ['interactive' => false]);
+
+        $display = $tester->getDisplay();
+
+        $json = $this->jsonArrayFromNdjson($display)[1];
+
+        $this->assertSame('warning', $json['type']);
+
+        $this->assertStringContainsString(
+            'Running MySQL in non-strict mode can cause corrupt or truncated data.',
+            $json['message']
+        );
+
+        $this->assertStringContainsString(
+            sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey),
+            $json['message']
         );
     }
 

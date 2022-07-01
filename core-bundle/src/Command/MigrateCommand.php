@@ -64,12 +64,22 @@ class MigrateCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        if (!$input->getOption('no-check') && $errors = $this->compileConfigurationErrors()) {
-            foreach ($errors as $error) {
-                $this->io->block($error, '!', 'fg=yellow', ' ', true);
-            }
+        $asJson = 'ndjson' !== $input->getOption('format');
 
-            $this->io->error('The database server is not configured properly. Please resolve the above issue(s) and rerun the command.');
+        if (!$input->getOption('no-check') && $errors = $this->compileConfigurationErrors()) {
+            if ($asJson) {
+                foreach ($errors as $message) {
+                    $this->writeNdjson('error', [
+                        'message' => $message,
+                    ]);
+                }
+            } else {
+                foreach ($errors as $error) {
+                    $this->io->block($error, '!', 'fg=yellow', ' ', true);
+                }
+
+                $this->io->error('The database server is not configured properly. Please resolve the above issue(s) and rerun the command.');
+            }
 
             return Command::FAILURE;
         }
@@ -78,7 +88,7 @@ class MigrateCommand extends Command
             return Command::FAILURE;
         }
 
-        if ('ndjson' !== $input->getOption('format')) {
+        if ($asJson) {
             return $this->executeCommand($input);
         }
 
@@ -268,10 +278,16 @@ class MigrateCommand extends Command
     private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string $specifiedHash = null): bool
     {
         if ($warnings = [...$this->compileConfigurationWarnings(), ...$this->compileSchemaWarnings()]) {
-            $this->io->warning(implode("\n\n", $warnings));
+            if ($asJson) {
+                foreach ($warnings as $message) {
+                    $this->writeNdjson('warning', ['message' => $message]);
+                }
+            } else {
+                $this->io->warning(implode("\n\n", $warnings));
 
-            if (!$this->io->confirm('Continue regardless of the warnings?')) {
-                return false;
+                if (!$this->io->confirm('Continue regardless of the warnings?')) {
+                    return false;
+                }
             }
         }
 
