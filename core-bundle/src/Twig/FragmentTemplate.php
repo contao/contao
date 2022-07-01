@@ -513,6 +513,14 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    public function prefixUrl($strKey): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
     public function minifyHtml($strHtml): never
     {
         self::throwOnAccess();

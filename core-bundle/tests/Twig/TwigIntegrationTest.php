@@ -69,7 +69,14 @@ class TwigIntegrationTest extends TestCase
         TemplateLoader::addFile('form_text', 'templates');
 
         $environment = new Environment(new ArrayLoader(['@Contao/form_text.html.twig' => $content]));
-        $environment->addExtension(new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class)));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
@@ -105,7 +112,14 @@ class TwigIntegrationTest extends TestCase
             TEMPLATE;
 
         $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
-        $environment->addExtension(new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class)));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
 
         $output = $environment->render(
             'test.html.twig',
@@ -150,8 +164,15 @@ class TwigIntegrationTest extends TestCase
             TEMPLATE;
 
         $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
-        $environment->addExtension(new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class)));
         $environment->addRuntimeLoader(new FactoryRuntimeLoader([HighlighterRuntime::class => static fn () => new HighlighterRuntime()]));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
 
         $output = $environment->render(
             'test.html.twig',
