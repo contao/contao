@@ -169,7 +169,8 @@ class InsertTags extends Controller
 
 			if (preg_match(static::$strAllowedTagsRegex, $elements[0]) !== 1)
 			{
-				$arrBuffer[$_rit+1] = '{{' . $strTag . '}}';
+				$arrBuffer[$_rit] .= '{{' . $strTag . '}}';
+				$arrBuffer[$_rit+1] = '';
 				continue;
 			}
 
@@ -1087,7 +1088,12 @@ class InsertTags extends Controller
 					}
 
 					$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
-					break;
+
+					// Output the insert tag as plain string and the cache must not be used
+					unset($arrCache[$strTag]);
+					$arrBuffer[$_rit] .= '{{' . $strTag . '}}';
+					$arrBuffer[$_rit+1] = '';
+					continue 2;
 			}
 
 			// Handle the flags
