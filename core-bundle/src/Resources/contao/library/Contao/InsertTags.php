@@ -177,7 +177,7 @@ class InsertTags extends Controller
 
 			if (!$blnCache || strncasecmp($tags[$_rit+1], 'uncached::', 10) !== 0)
 			{
-				$tags[$_rit + 1] = (string)$this->replaceInternal($tags[$_rit + 1], $blnCache);
+				$tags[$_rit + 1] = (string) $this->replaceInternal($tags[$_rit + 1], $blnCache);
 			}
 
 			$strTag = $tags[$_rit+1];
