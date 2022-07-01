@@ -258,7 +258,6 @@ services:
         public: true
         arguments:
             - '@request_stack'
-            - '@router'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
         tags:

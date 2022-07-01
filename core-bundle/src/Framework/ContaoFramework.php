@@ -27,7 +27,6 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
@@ -46,7 +45,6 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
 
     public function __construct(
         private RequestStack $requestStack,
-        private UrlGeneratorInterface $urlGenerator,
         private string $projectDir,
         private int $errorLevel,
     ) {

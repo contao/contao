@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
@@ -397,7 +396,6 @@ class ContaoFrameworkTest extends TestCase
 
         $framework = new ContaoFramework(
             $requestStack,
-            $this->createMock(UrlGeneratorInterface::class),
             $this->getTempDir(),
             error_reporting()
         );
