@@ -51,7 +51,7 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle the site structure tree
+	 * Toggle the page tree
 	 *
 	 * @param {object} el    The DOM element
 	 * @param {string} id    The ID of the target element
@@ -140,7 +140,7 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle the file manager tree
+	 * Toggle the file tree
 	 *
 	 * @param {object} el     The DOM element
 	 * @param {string} id     The ID of the target element
