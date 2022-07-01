@@ -33,11 +33,13 @@ class InsertTagParserTest extends TestCase
     {
         parent::setUp();
 
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
+
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao.error', $this->createMock(Logger::class));
-        $container->set('request_stack', $stack = new RequestStack());
-        $stack->push(new Request());
+        $container->set('request_stack', $requestStack);
 
         System::setContainer($container);
     }

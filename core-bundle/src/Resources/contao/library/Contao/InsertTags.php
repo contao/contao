@@ -1094,8 +1094,10 @@ class InsertTags extends Controller
 
 					$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
 
-					// Output the insert tag as plain string and the cache must not be used
+					// Do not use the cache
 					unset($arrCache[$strTag]);
+
+					// Output the insert tag as plain string
 					$arrBuffer[$_rit] .= '{{' . $strTag . '}}';
 					$arrBuffer[$_rit+1] = '';
 					continue 2;
