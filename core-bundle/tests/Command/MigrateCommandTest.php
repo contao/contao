@@ -24,6 +24,9 @@ use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\AbstractMySQLDriver;
+use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
+use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoDriver;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -52,7 +55,7 @@ class MigrateCommandTest extends TestCase
 
         $command = $this->getCommand([], [], null, $backupManager);
         $tester = new CommandTester($command);
-        $code = $tester->execute([]);
+        $code = $tester->execute(['--no-check' => true]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
@@ -66,7 +69,7 @@ class MigrateCommandTest extends TestCase
     {
         $command = $this->getCommand();
         $tester = new CommandTester($command);
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true, '--no-check' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -100,7 +103,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['y']);
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => !$backupsEnabled], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => !$backupsEnabled, '--no-check' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -187,7 +190,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['yes', 'yes']);
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true, '--no-check' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -245,6 +248,12 @@ class MigrateCommandTest extends TestCase
             ->method('executeQuery')
         ;
 
+        $connection
+            ->method('fetchOne')
+            ->with('SELECT @@sql_mode')
+            ->willReturn('TRADITIONAL')
+        ;
+
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
@@ -256,7 +265,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
 
         // No --no-backup here because --dry-run should automatically disable backups
-        $code = $tester->execute(['--dry-run' => true, '--format' => $format]);
+        $code = $tester->execute(['--dry-run' => true, '--format' => $format, '--no-check' => true]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -301,7 +310,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['n']);
 
-        $code = $tester->execute(['--no-backup' => true]);
+        $code = $tester->execute(['--no-backup' => true, '--no-check' => true]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
@@ -325,7 +334,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['y']);
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true, '--no-check' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -371,7 +380,7 @@ class MigrateCommandTest extends TestCase
             $this->expectException(\Exception::class);
         }
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true, '--no-check' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
@@ -380,6 +389,41 @@ class MigrateCommandTest extends TestCase
 
         $this->assertSame('error', $json['type']);
         $this->assertSame('Fatal', $json['message']);
+    }
+
+    /**
+     * @dataProvider provideInvalidSqlModes
+     */
+    public function testWarnsIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->with('SELECT @@sql_mode')
+            ->willReturn($sqlMode)
+        ;
+
+        $connection
+            ->method('getDriver')
+            ->willReturn($driver)
+        ;
+
+        $command = $this->getCommand(connection: $connection);
+
+        $tester = new CommandTester($command);
+        $tester->execute(['--no-backup' => true, '--no-check' => true]);
+
+        $display = $tester->getDisplay();
+
+        $this->assertStringContainsString(
+            'Running MySQL in non-strict mode can cause corrupt or truncated data.',
+            $display
+        );
+
+        $this->assertStringContainsString(
+            sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey),
+            $display
+        );
     }
 
     public function getOutputFormats(): \Generator
@@ -394,6 +438,28 @@ class MigrateCommandTest extends TestCase
         yield 'txt and backups disabled' => ['txt', false];
         yield 'ndjson and backups enabled' => ['ndjson', true];
         yield 'ndjson and backups disabled' => ['ndjson', false];
+    }
+
+    public function provideInvalidSqlModes(): \Generator
+    {
+        $pdoDriver = new PdoDriver();
+        $mysqliDriver = new MysqliDriver();
+
+        yield 'empty sql_mode, pdo driver' => [
+            '', $pdoDriver, 1002,
+        ];
+
+        yield 'empty sql_mode, mysqli driver' => [
+            '', $mysqliDriver, 3,
+        ];
+
+        yield 'unrelated values, pdo driver' => [
+            'IGNORE_SPACE,ONLY_FULL_GROUP_BY', $pdoDriver, 1002,
+        ];
+
+        yield 'unrelated values, mysqli driver' => [
+            'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION', $mysqliDriver, 3,
+        ];
     }
 
     /**
@@ -426,9 +492,18 @@ class MigrateCommandTest extends TestCase
             ->willReturn(new Schema())
         ;
 
+        if (null === $connection) {
+            $connection = $this->createMock(Connection::class);
+            $connection
+                ->method('fetchOne')
+                ->with('SELECT @@sql_mode')
+                ->willReturn('TRADITIONAL')
+            ;
+        }
+
         return new MigrateCommand(
             $commandCompiler ?? $this->createMock(CommandCompiler::class),
-            $connection ?? $this->createMock(Connection::class),
+            $connection,
             $migrations,
             $backupManager ?? $this->createBackupManager(false),
             $schemaProvider,
