@@ -670,14 +670,8 @@ class Versions extends Controller
 								->execute($objUser->id);
 
 		$intLast   = ceil($objTotal->count / 30);
-		$intPage   = Input::get('vp') ?? 1;
+		$intPage   = max(1, min(Input::get('vp') ?? 1, $intLast));
 		$intOffset = ($intPage - 1) * 30;
-
-		// Validate the page number
-		if ($intPage < 1 || ($intLast > 0 && $intPage > $intLast))
-		{
-			header('HTTP/1.1 404 Not Found');
-		}
 
 		// Create the pagination menu
 		$objPagination = new Pagination($objTotal->count, 30, 7, 'vp', new BackendTemplate('be_pagination'));
