@@ -88,7 +88,7 @@ class MigrateCommand extends Command
             return Command::FAILURE;
         }
 
-        if ($asJson) {
+        if (!$asJson) {
             return $this->executeCommand($input);
         }
 
