@@ -292,7 +292,8 @@ abstract class DataContainer extends Backend
 				break;
 
 			default:
-				$this->$strKey = $varValue; // backwards compatibility
+				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones has been deprecated and will no longer work in Contao 6.');
+				$this->$strKey = $varValue;
 				break;
 		}
 	}
