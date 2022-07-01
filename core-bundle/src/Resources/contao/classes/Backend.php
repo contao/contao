@@ -408,7 +408,7 @@ abstract class Backend extends Controller
 				case 'cutAll':
 				case 'copy':
 				case 'copyAll':
-				case 'move': // move = upload file in DC_Folder
+				case 'move': // upload a file in DC_Folder
 				case 'edit':
 				case 'editAll':
 				case 'toggle':
