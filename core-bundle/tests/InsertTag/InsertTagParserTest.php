@@ -20,15 +20,24 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
+use Monolog\Logger;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class InsertTagParserTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
+        $container->set('monolog.logger.contao.error', $this->createMock(Logger::class));
+        $container->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request());
 
         System::setContainer($container);
     }
@@ -50,6 +59,14 @@ class InsertTagParserTest extends TestCase
         $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceChunked('{{br}}')));
     }
 
+    public function testReplaceUnknown(): void
+    {
+        $parser = new InsertTagParser($this->createMock(ContaoFramework::class));
+
+        $this->assertSame('{{doesnotexist}}', $parser->replace('{{doesnotexist}}'));
+        $this->assertSame([[ChunkedText::TYPE_TEXT, '{{doesnotexist}}']], iterator_to_array($parser->replaceChunked('{{doesnotexist}}')));
+    }
+
     public function testRender(): void
     {
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class));
@@ -59,5 +76,17 @@ class InsertTagParserTest extends TestCase
         $this->expectExceptionMessage('Rendering a single insert tag has to return a single raw chunk');
 
         $parser->render('br}}foo{{br');
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testRenderMixedCase(): void
+    {
+        $parser = new InsertTagParser($this->createMock(ContaoFramework::class));
+
+        $this->expectDeprecation('%sInsert tags with uppercase letters%s');
+
+        $this->assertSame('<br>', $parser->render('bR'));
     }
 }

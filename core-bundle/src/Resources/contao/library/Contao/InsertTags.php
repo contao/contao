@@ -169,7 +169,8 @@ class InsertTags extends Controller
 
 			if (preg_match(static::$strAllowedTagsRegex, $elements[0]) !== 1)
 			{
-				$arrBuffer[$_rit+1] = '{{' . $strTag . '}}';
+				$arrBuffer[$_rit] .= '{{' . $strTag . '}}';
+				$arrBuffer[$_rit+1] = '';
 				continue;
 			}
 
@@ -203,6 +204,11 @@ class InsertTags extends Controller
 			}
 
 			$arrCache[$strTag] = '';
+
+			if (strtolower($elements[0]) !== $elements[0])
+			{
+				trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.0. Use "%s" instead.', $elements[0], strtolower($elements[0]));
+			}
 
 			// Replace the tag
 			switch (strtolower($elements[0]))
@@ -1075,7 +1081,7 @@ class InsertTags extends Controller
 						foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
 						{
 							$this->import($callback[0]);
-							$varValue = $this->{$callback[0]}->{$callback[1]}($tag, $blnCache, $arrCache[$strTag], $flags, $tags, $arrCache, $_rit, $_cnt); // see #6672
+							$varValue = $this->{$callback[0]}->{$callback[1]}($tag, $blnCache, '', $flags, $tags, array(), $_rit, $_cnt); // see #6672
 
 							// Replace the tag and stop the loop
 							if ($varValue !== false)
@@ -1087,7 +1093,12 @@ class InsertTags extends Controller
 					}
 
 					$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
-					break;
+
+					// Output the insert tag as plain string and the cache must not be used
+					unset($arrCache[$strTag]);
+					$arrBuffer[$_rit] .= '{{' . $strTag . '}}';
+					$arrBuffer[$_rit+1] = '';
+					continue 2;
 			}
 
 			// Handle the flags
@@ -1181,7 +1192,7 @@ class InsertTags extends Controller
 								foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] as $callback)
 								{
 									$this->import($callback[0]);
-									$varValue = $this->{$callback[0]}->{$callback[1]}($flag, $tag, $arrCache[$strTag], $flags, $blnCache, $tags, $arrCache, $_rit, $_cnt); // see #5806
+									$varValue = $this->{$callback[0]}->{$callback[1]}($flag, $tag, $arrCache[$strTag], $flags, $blnCache, $tags, array(), $_rit, $_cnt); // see #5806
 
 									// Replace the tag and stop the loop
 									if ($varValue !== false)

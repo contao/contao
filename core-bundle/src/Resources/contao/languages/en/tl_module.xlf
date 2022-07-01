@@ -54,7 +54,7 @@
         <source>Reference page</source>
       </trans-unit>
       <trans-unit id="tl_module.rootPage.1">
-        <source>Please choose the reference page from the site structure.</source>
+        <source>Please choose the reference page.</source>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
@@ -72,7 +72,7 @@
         <source>Pages</source>
       </trans-unit>
       <trans-unit id="tl_module.pages.1">
-        <source>Please choose one or more pages from the site structure.</source>
+        <source>Please choose one or more pages.</source>
       </trans-unit>
       <trans-unit id="tl_module.showHidden.0">
         <source>Show hidden items</source>
