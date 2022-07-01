@@ -32,11 +32,10 @@ use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
 use Contao\FrontendTemplateTrait;
 use Contao\Template;
-use Contao\Validator;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -54,7 +53,6 @@ final class ContaoExtension extends AbstractExtension
     public function __construct(
         private Environment $environment,
         private TemplateHierarchyInterface $hierarchy,
-        private RequestStack $requestStack,
         ContaoCsrfTokenManager $tokenManager,
     ) {
         $contaoEscaper = new ContaoEscaper();
@@ -189,13 +187,7 @@ final class ContaoExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'prefix_url',
-                function (string $url) {
-                    if (!Validator::isRelativeUrl($url)) {
-                        return $url;
-                    }
-
-                    return $this->requestStack->getMainRequest()?->getBasePath().'/'.$url;
-                }
+                [UrlRuntime::class, 'prefixUrl'],
             ),
         ];
     }

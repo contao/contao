@@ -25,7 +25,6 @@ use Contao\TemplateLoader;
 use Highlight\Highlighter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -75,7 +74,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                new RequestStack(),
                 $this->createMock(ContaoCsrfTokenManager::class)
             )
         );
@@ -119,7 +117,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                new RequestStack(),
                 $this->createMock(ContaoCsrfTokenManager::class)
             )
         );
@@ -173,7 +170,6 @@ class TwigIntegrationTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $this->createMock(TemplateHierarchyInterface::class),
-                new RequestStack(),
                 $this->createMock(ContaoCsrfTokenManager::class)
             )
         );

@@ -30,7 +30,6 @@ use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\System;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -172,7 +171,6 @@ class ContaoExtensionTest extends TestCase
         $extension = new ContaoExtension(
             $environment,
             $this->createMock(TemplateHierarchyInterface::class),
-            new RequestStack(),
             $this->createMock(ContaoCsrfTokenManager::class)
         );
 
@@ -372,6 +370,6 @@ class ContaoExtensionTest extends TestCase
             ])
         ;
 
-        return new ContaoExtension($environment, $hierarchy, new RequestStack(), $this->createMock(ContaoCsrfTokenManager::class));
+        return new ContaoExtension($environment, $hierarchy, $this->createMock(ContaoCsrfTokenManager::class));
     }
 }

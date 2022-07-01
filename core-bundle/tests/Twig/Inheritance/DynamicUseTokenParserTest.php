@@ -26,7 +26,6 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Environment;
 
 class DynamicUseTokenParserTest extends TestCase
@@ -69,7 +68,6 @@ class DynamicUseTokenParserTest extends TestCase
             new ContaoExtension(
                 $environment,
                 $loader,
-                new RequestStack(),
                 $this->createMock(ContaoCsrfTokenManager::class)
             )
         );
