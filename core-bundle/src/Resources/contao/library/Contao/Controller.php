@@ -47,11 +47,6 @@ abstract class Controller extends System
 	protected static $arrQueryCache = array();
 
 	/**
-	 * @var array
-	 */
-	private static $arrOldBePathCache = array();
-
-	/**
 	 * Find a particular template file and return its path
 	 *
 	 * @param string $strTemplate The name of the template
@@ -1190,7 +1185,6 @@ abstract class Controller extends System
 	public static function resetControllerCache()
 	{
 		self::$arrQueryCache = array();
-		self::$arrOldBePathCache = array();
 	}
 
 	/**
