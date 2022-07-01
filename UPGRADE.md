@@ -4,8 +4,8 @@
 
 ### Unknown insert tags
 
-Unknown insert tags are no longer removed from the resulting text. Instead they are now kept as is and are visible in
-the front end.
+Unknown insert tags are no longer removed from the resulting text. Instead, they are now kept unchanged and are visible
+in the front end.
 
 ### Insert tag hooks
 
