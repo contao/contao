@@ -314,7 +314,7 @@ class Config
 	 * Return true if the installation is complete
 	 *
 	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0
-
+	 *
 	 * @return boolean True if the installation is complete
 	 */
 	public static function isComplete()
