@@ -189,6 +189,9 @@ class FormText extends Widget
 					case 'url':
 					case HttpUrlListener::RGXP_NAME:
 						return 'url';
+
+					case 'date':
+						return 'date';
 				}
 
 				return 'text';
