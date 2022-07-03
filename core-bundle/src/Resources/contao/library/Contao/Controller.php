@@ -1048,7 +1048,7 @@ abstract class Controller extends System
 		$strLocation = str_replace('&amp;', '&', $strLocation);
 
 		// Make the location an absolute URL
-		if (!preg_match('@^(https?://|/)@i', $strLocation))
+		if (!preg_match('@^https?://@i', $strLocation))
 		{
 			if ($strLocation[0] == '/')
 			{
