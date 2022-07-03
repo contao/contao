@@ -1382,9 +1382,7 @@ abstract class Controller extends System
 
 		$arrEnclosures = array();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
-		$container = System::getContainer();
-		$request = $container->get('request_stack')->getMainRequest();
-		$projectDir = $container->getParameter('kernel.project_dir');
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add download links
 		while ($objFiles->next())

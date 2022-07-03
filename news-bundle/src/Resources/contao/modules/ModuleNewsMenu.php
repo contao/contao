@@ -49,8 +49,7 @@ class ModuleNewsMenu extends ModuleNews
 	public function generate()
 	{
 		$container = System::getContainer();
-		$requestStack = $container->get('request_stack');
-		$request = $requestStack->getCurrentRequest();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{

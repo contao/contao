@@ -579,8 +579,6 @@ class Newsletter extends Backend
 			$this->reload();
 		}
 
-		$requestUri = System::getContainer()->get('request_stack')->getMainRequest()->getRequestUri();
-
 		// Return form
 		return '
 <div id="tl_buttons">
