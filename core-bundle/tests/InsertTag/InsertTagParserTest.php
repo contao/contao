@@ -94,7 +94,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('<br>', $parser->render('bR'));
     }
 
-    public function testReplaceUncached(): void
+    public function testReplaceFragment(): void
     {
         $handler = $this->createMock(FragmentHandler::class);
         $handler
@@ -106,10 +106,10 @@ class InsertTagParserTest extends TestCase
 
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class));
 
-        $this->assertSame('<esi {{uncached::{{br}}}}>', $parser->replace('{{uncached::{{br}}}}'));
-        $this->assertSame([[ChunkedText::TYPE_RAW, '<esi {{uncached::{{br}}}}>']], iterator_to_array($parser->replaceChunked('{{uncached::{{br}}}}')));
+        $this->assertSame('<esi {{fragment::{{br}}}}>', $parser->replace('{{fragment::{{br}}}}'));
+        $this->assertSame([[ChunkedText::TYPE_RAW, '<esi {{fragment::{{br}}}}>']], iterator_to_array($parser->replaceChunked('{{fragment::{{br}}}}')));
 
-        $this->assertSame('<br>', $parser->replaceInline('{{uncached::{{br}}}}'));
-        $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceInlineChunked('{{uncached::{{br}}}}')));
+        $this->assertSame('<br>', $parser->replaceInline('{{fragment::{{br}}}}'));
+        $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceInlineChunked('{{fragment::{{br}}}}')));
     }
 }
