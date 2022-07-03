@@ -93,12 +93,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 	protected $arrModule = array();
 
 	/**
-	 * Preserve this record when revising tables
-	 * @var int
-	 */
-	protected $intPreserveRecord;
-
-	/**
 	 * Initialize the object
 	 *
 	 * @param string $strTable
@@ -6226,16 +6220,6 @@ class DC_Table extends DataContainer implements \listable, \editable
 			}
 
 			$this->root = $arrRoot;
-		}
-
-		if (isset($attributes['preserveRecord']))
-		{
-			list($table, $id) = explode('.', $attributes['preserveRecord']);
-
-			if ($table == $this->strTable)
-			{
-				$this->intPreserveRecord = $id;
-			}
 		}
 
 		return $attributes;
