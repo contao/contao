@@ -24,8 +24,6 @@ class BackendMain extends Backend
 {
 	/**
 	 * @var Template
-	 *
-	 * @todo Remove in Contao 5.0
 	 */
 	protected $Template;
 
@@ -62,7 +60,7 @@ class BackendMain extends Backend
 		// Password change required
 		if ($this->User->pwChange && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
-			$this->redirect('contao/password.php');
+			$this->redirect($container->get('router')->generate('contao_backend_password'));
 		}
 
 		// Two-factor setup required
@@ -80,7 +78,7 @@ class BackendMain extends Backend
 				'act' => 'edit',
 				'id' => $this->User->id,
 				'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
-				'rt' => REQUEST_TOKEN,
+				'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
 			));
 
 			$this->redirect($strUrl);
@@ -110,7 +108,7 @@ class BackendMain extends Backend
 		$this->Template->main = '';
 
 		// Ajax request
-		if ($_POST && Environment::get('isAjaxRequest'))
+		if (Input::isPost() && Environment::get('isAjaxRequest'))
 		{
 			$this->objAjax = new Ajax(Input::post('action'));
 			$this->objAjax->executePreActions();
@@ -125,7 +123,7 @@ class BackendMain extends Backend
 			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
 			$objSessionBag->replace($session);
 
-			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*/i', '', Environment::get('request')));
+			Controller::redirect(preg_replace('/(&(amp;)?|\?)mtg=[^& ]*$|mtg=[^&]*&(amp;)?/i', '', Environment::get('requestUri')));
 		}
 		// Welcome screen
 		elseif (!Input::get('do') && !Input::get('act'))
@@ -138,7 +136,7 @@ class BackendMain extends Backend
 		{
 			$picker = null;
 
-			if (isset($_GET['picker']))
+			if (Input::get('picker') !== null)
 			{
 				$picker = System::getContainer()->get('contao.picker.builder')->createFromData(Input::get('picker', true));
 
@@ -225,7 +223,6 @@ class BackendMain extends Backend
 		$container = System::getContainer();
 
 		$data['theme'] = Backend::getTheme();
-		$data['base'] = Environment::get('base');
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
 		$data['title'] = StringUtil::specialchars(strip_tags($data['title'] ?? ''));
 		$data['host'] = Backend::getDecodedHostname();

@@ -18,16 +18,10 @@ namespace Contao\CoreBundle\Filesystem;
 class FilesystemItemIterator implements \IteratorAggregate
 {
     /**
-     * @var iterable<FilesystemItem>
-     */
-    private iterable $listing;
-
-    /**
      * @param iterable<FilesystemItem> $listing
      */
-    public function __construct(iterable $listing)
+    public function __construct(private iterable $listing)
     {
-        $this->listing = $listing;
     }
 
     /**
@@ -56,6 +50,74 @@ class FilesystemItemIterator implements \IteratorAggregate
         return $this->filter(static fn (FilesystemItem $item) => !$item->isFile());
     }
 
+    public function sort(SortMode $sortMode = SortMode::pathAscending): self
+    {
+        $listing = $this->toArray();
+
+        usort(
+            $listing,
+            match ($sortMode) {
+                SortMode::pathAscending => static fn (FilesystemItem $a, FilesystemItem $b): int => strcasecmp($a->getPath(), $b->getPath()),
+                SortMode::pathDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => -strcasecmp($a->getPath(), $b->getPath()),
+                SortMode::pathNaturalAscending => static fn (FilesystemItem $a, FilesystemItem $b): int => strnatcasecmp($a->getPath(), $b->getPath()),
+                SortMode::pathNaturalDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => -strnatcasecmp($a->getPath(), $b->getPath()),
+                SortMode::lastModifiedAscending => static fn (FilesystemItem $a, FilesystemItem $b): int => $a->getLastModified() <=> $b->getLastModified(),
+                SortMode::lastModifiedDescending => static fn (FilesystemItem $a, FilesystemItem $b): int => $b->getLastModified() <=> $a->getLastModified(),
+            },
+        );
+
+        return new self($listing);
+    }
+
+    /**
+     * @param callable(FilesystemItem):bool $condition
+     */
+    public function any(callable $condition): bool
+    {
+        foreach ($this as $item) {
+            if ($condition($item)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param callable(FilesystemItem):bool $condition
+     */
+    public function all(callable $condition): bool
+    {
+        foreach ($this as $item) {
+            if (!$condition($item)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function limit(int $numberOfElements): self
+    {
+        if ($numberOfElements < 0) {
+            throw new \OutOfRangeException(sprintf('Illegal limit value "%d", must be greater or equal to zero.', $numberOfElements));
+        }
+
+        $listLimited = static function (iterable $listing) use ($numberOfElements): \Generator {
+            $count = 0;
+
+            foreach ($listing as $item) {
+                if (++$count > $numberOfElements) {
+                    return;
+                }
+
+                yield $item;
+            }
+        };
+
+        return new self($listLimited($this->listing));
+    }
+
     /**
      * @return \Traversable<FilesystemItem>
      */
@@ -64,9 +126,9 @@ class FilesystemItemIterator implements \IteratorAggregate
         foreach ($this->listing as $item) {
             if (!$item instanceof FilesystemItem) {
                 /** @phpstan-ignore-next-line */
-                $type = \is_object($item) ? \get_class($item) : \gettype($item);
+                $type = \is_object($item) ? $item::class : \gettype($item);
 
-                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', __CLASS__, FilesystemItem::class, $type));
+                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', self::class, FilesystemItem::class, $type));
             }
 
             yield $item;

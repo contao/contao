@@ -19,11 +19,11 @@ use Contao\System;
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'news_format';
 
 // Add palettes to tl_module
-$GLOBALS['TL_DCA']['tl_module']['palettes']['newslist']         = '{title_legend},name,headline,type;{config_legend},news_archives,news_readerModule,numberOfItems,news_featured,news_order,skipFirst,perPage;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader']       = '{title_legend},name,headline,type;{config_legend},news_archives,overviewPage,customLabel;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['newsarchive']      = '{title_legend},name,headline,type;{config_legend},news_archives,news_readerModule,news_format,news_order,news_jumpToCurrent,perPage;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['newsmenu']         = '{title_legend},name,headline,type;{config_legend},news_archives,news_showQuantity,news_format,news_order;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['newsmenunews_day'] = '{title_legend},name,headline,type;{config_legend},news_archives,news_showQuantity,news_format,news_startDay;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['newslist']         = '{title_legend},name,headline,type;{config_legend},news_archives,news_readerModule,numberOfItems,news_featured,news_order,skipFirst,perPage;{template_legend:hide},news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['newsreader']       = '{title_legend},name,headline,type;{config_legend},news_archives,overviewPage,customLabel;{template_legend:hide},news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['newsarchive']      = '{title_legend},name,headline,type;{config_legend},news_archives,news_readerModule,news_format,news_order,news_jumpToCurrent,perPage;{template_legend:hide},news_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['newsmenu']         = '{title_legend},name,headline,type;{config_legend},news_archives,news_showQuantity,news_format,news_order;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['newsmenunews_day'] = '{title_legend},name,headline,type;{config_legend},news_archives,news_showQuantity,news_format,news_startDay;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 
 // Add fields to tl_module
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_archives'] = array
@@ -42,7 +42,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_featured'] = array
 	'options'                 => array('all_items', 'featured', 'unfeatured', 'featured_first'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50 clr'),
-	'sql'                     => "varchar(16) NOT NULL default 'all_items'"
+	'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default 'all_items'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_jumpToCurrent'] = array
@@ -52,7 +52,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_jumpToCurrent'] = array
 	'options'                 => array('hide_module', 'show_current', 'all_items'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(16) NOT NULL default ''"
+	'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_readerModule'] = array
@@ -65,16 +65,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_readerModule'] = array
 	'sql'                     => "int(10) unsigned NOT NULL default 0"
 );
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['news_metaFields'] = array
-(
-	'exclude'                 => true,
-	'inputType'               => 'checkbox',
-	'options'                 => array('date', 'author', 'comments'),
-	'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-	'eval'                    => array('multiple'=>true),
-	'sql'                     => "varchar(255) NOT NULL default 'a:2:{i:0;s:4:\"date\";i:1;s:6:\"author\";}'"
-);
-
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 (
 	'exclude'                 => true,
@@ -84,7 +74,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_template'] = array
 		return Controller::getTemplateGroup('news_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "varchar(64) NOT NULL default ''"
+	'sql'                     => "varchar(64) COLLATE ascii_bin NOT NULL default ''"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
@@ -94,7 +84,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_format'] = array
 	'options'                 => array('news_day', 'news_month', 'news_year'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50 clr', 'submitOnChange'=>true),
-	'sql'                     => "varchar(32) NOT NULL default 'news_month'"
+	'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default 'news_month'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_startDay'] = array
@@ -114,14 +104,14 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['news_order'] = array
 	'options_callback'        => array('tl_module_news', 'getSortingOptions'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "varchar(32) NOT NULL default 'order_date_desc'"
+	'sql'                     => "varchar(32) COLLATE ascii_bin NOT NULL default 'order_date_desc'"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['news_showQuantity'] = array
 (
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
-	'sql'                     => "char(1) NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $bundles = System::getContainer()->getParameter('kernel.bundles');
@@ -176,7 +166,7 @@ class tl_module_news extends Backend
 	}
 
 	/**
-	 * Get all news reader modules and return them as array
+	 * Get all newsreader modules and return them as array
 	 *
 	 * @return array
 	 */

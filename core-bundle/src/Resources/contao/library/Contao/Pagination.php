@@ -149,7 +149,7 @@ class Pagination
 
 		if (Input::get($strParameter) > 0)
 		{
-			$this->intPage = Input::get($strParameter);
+			$this->intPage = (int) Input::get($strParameter);
 		}
 
 		$this->strParameter = $strParameter;
@@ -218,10 +218,7 @@ class Pagination
 		}
 
 		$blnQuery = false;
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
-
-		// Get request URL without query string
-		$this->strUrl = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
+		list($this->strUrl) = explode('?', Environment::get('requestUri'), 2);
 
 		// Prepare the URL
 		foreach (preg_split('/&(amp;)?/', Environment::get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment)

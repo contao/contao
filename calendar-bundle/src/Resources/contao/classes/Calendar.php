@@ -12,6 +12,8 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Provide methods regarding calendars.
@@ -171,7 +173,7 @@ class Calendar extends Frontend
 				// Get the jumpTo URL
 				if (!isset($arrUrls[$jumpTo]))
 				{
-					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/events/%s');
+					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl('/%s');
 				}
 
 				$strUrl = $arrUrls[$jumpTo];
@@ -219,6 +221,7 @@ class Calendar extends Frontend
 
 		/** @var RequestStack $requestStack */
 		$requestStack = System::getContainer()->get('request_stack');
+		$currentRequest = $requestStack->getCurrentRequest();
 
 		$origObjPage = $GLOBALS['objPage'] ?? null;
 
@@ -238,7 +241,7 @@ class Calendar extends Frontend
 					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
 
 					// Push a new request to the request stack (#3856)
-					$request = Request::create($event['link']);
+					$request = $this->createSubRequest($event['link'], $currentRequest);
 					$request->attributes->set('_scope', 'frontend');
 					$requestStack->push($request);
 
@@ -268,15 +271,15 @@ class Calendar extends Frontend
 						if ($objElement !== null)
 						{
 							// Overwrite the request (see #7756)
-							$strRequest = Environment::get('request');
-							Environment::set('request', $objItem->link);
+							$strRequest = Environment::get('requestUri');
+							Environment::set('requestUri', $objItem->link);
 
 							while ($objElement->next())
 							{
 								$strDescription .= $this->getContentElement($objElement->current());
 							}
 
-							Environment::set('request', $strRequest);
+							Environment::set('requestUri', $strRequest);
 						}
 					}
 					else
@@ -316,106 +319,6 @@ class Calendar extends Frontend
 
 		// Create the file
 		File::putContent($webDir . '/share/' . $strFile . '.xml', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
-	}
-
-	/**
-	 * Add events to the indexer
-	 *
-	 * @param array   $arrPages
-	 * @param integer $intRoot
-	 * @param boolean $blnIsSitemap
-	 *
-	 * @return array
-	 */
-	public function getSearchablePages($arrPages, $intRoot=0, $blnIsSitemap=false)
-	{
-		$arrRoot = array();
-
-		if ($intRoot > 0)
-		{
-			$arrRoot = $this->Database->getChildRecords($intRoot, 'tl_page');
-		}
-
-		$arrProcessed = array();
-		$time = time();
-
-		// Get all calendars
-		$objCalendar = CalendarModel::findByProtected('');
-
-		// Walk through each calendar
-		if ($objCalendar !== null)
-		{
-			while ($objCalendar->next())
-			{
-				// Skip calendars without target page
-				if (!$objCalendar->jumpTo)
-				{
-					continue;
-				}
-
-				// Skip calendars outside the root nodes
-				if (!empty($arrRoot) && !\in_array($objCalendar->jumpTo, $arrRoot))
-				{
-					continue;
-				}
-
-				// Get the URL of the jumpTo page
-				if (!isset($arrProcessed[$objCalendar->jumpTo]))
-				{
-					$objParent = PageModel::findWithDetails($objCalendar->jumpTo);
-
-					// The target page does not exist
-					if ($objParent === null)
-					{
-						continue;
-					}
-
-					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time))
-					{
-						continue;
-					}
-
-					if ($blnIsSitemap)
-					{
-						// The target page is protected (see #8416)
-						if ($objParent->protected)
-						{
-							continue;
-						}
-
-						// The target page is exempt from the sitemap (see #6418)
-						if ($objParent->robots == 'noindex,nofollow')
-						{
-							continue;
-						}
-					}
-
-					// Generate the URL
-					$arrProcessed[$objCalendar->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/events/%s');
-				}
-
-				$strUrl = $arrProcessed[$objCalendar->jumpTo];
-
-				// Get the items
-				$objEvents = CalendarEventsModel::findPublishedDefaultByPid($objCalendar->id);
-
-				if ($objEvents !== null)
-				{
-					while ($objEvents->next())
-					{
-						if ($blnIsSitemap && $objEvents->robots === 'noindex,nofollow')
-						{
-							continue;
-						}
-
-						$arrPages[] = sprintf(preg_replace('/%(?!s)/', '%%', $strUrl), ($objEvents->alias ?: $objEvents->id));
-					}
-				}
-			}
-		}
-
-		return $arrPages;
 	}
 
 	/**
@@ -480,7 +383,14 @@ class Calendar extends Frontend
 		switch ($objEvent->source)
 		{
 			case 'external':
-				$link = $objEvent->url;
+				$url = $objEvent->url;
+
+				if (Validator::isRelativeUrl($url))
+				{
+					$url = Environment::get('path') . '/' . $url;
+				}
+
+				$link = $url;
 				break;
 
 			case 'internal':
@@ -515,9 +425,6 @@ class Calendar extends Frontend
 		$arrEvent['startDate'] = $intStart;
 		$arrEvent['endDate'] = $intEnd;
 		$arrEvent['isRepeated'] = $isRepeated;
-
-		// Clean the RTE output
-		$arrEvent['teaser'] = StringUtil::toHtml5($objEvent->teaser);
 
 		// Reset the enclosures (see #5685)
 		$arrEvent['enclosure'] = array();
@@ -637,5 +544,36 @@ class Calendar extends Frontend
 		}
 
 		return self::$arrPageCache[$intPageId];
+	}
+
+	/**
+	 * Creates a sub request for the given URI.
+	 */
+	private function createSubRequest(string $uri, Request $request = null): Request
+	{
+		$cookies = null !== $request ? $request->cookies->all() : array();
+		$server = null !== $request ? $request->server->all() : array();
+
+		unset($server['HTTP_IF_MODIFIED_SINCE'], $server['HTTP_IF_NONE_MATCH']);
+
+		$subRequest = Request::create($uri, 'get', array(), $cookies, array(), $server);
+
+		if (null !== $request)
+		{
+			if ($request->get('_format'))
+			{
+				$subRequest->attributes->set('_format', $request->get('_format'));
+			}
+
+			if ($request->getDefaultLocale() !== $request->getLocale())
+			{
+				$subRequest->setLocale($request->getLocale());
+			}
+		}
+
+		// Always set a session (#3856)
+		$subRequest->setSession(new Session(new MockArraySessionStorage()));
+
+		return $subRequest;
 	}
 }

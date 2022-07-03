@@ -15,44 +15,43 @@ use Contao\Model\Collection;
 /**
  * Reads and writes form fields
  *
- * @property string|integer    $id
- * @property string|integer    $pid
- * @property string|integer    $sorting
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $pid
+ * @property integer           $sorting
+ * @property integer           $tstamp
  * @property string            $type
  * @property string            $label
  * @property string            $name
  * @property string|null       $text
  * @property string|null       $html
  * @property string|array|null $options
- * @property string|boolean    $mandatory
+ * @property boolean           $mandatory
  * @property string            $rgxp
  * @property string            $placeholder
  * @property string            $customRgxp
  * @property string            $errorMsg
- * @property string|integer    $minlength
- * @property string|integer    $maxlength
- * @property string|integer    $minval
- * @property string|integer    $maxval
- * @property string|integer    $step
+ * @property integer           $minlength
+ * @property integer           $maxlength
+ * @property integer           $minval
+ * @property integer           $maxval
+ * @property integer           $step
  * @property string|array      $size
- * @property string|boolean    $multiple
- * @property string|integer    $mSize
+ * @property boolean           $multiple
+ * @property integer           $mSize
  * @property string            $extensions
- * @property string|boolean    $storeFile
+ * @property boolean           $storeFile
  * @property string|null       $uploadFolder
- * @property string|boolean    $useHomeDir
- * @property string|boolean    $doNotOverwrite
+ * @property boolean           $useHomeDir
+ * @property boolean           $doNotOverwrite
  * @property string            $class
  * @property string            $value
- * @property string|boolean    $accesskey
- * @property string|integer    $tabindex
- * @property string|integer    $fSize
+ * @property boolean           $accesskey
+ * @property integer           $fSize
  * @property string            $customTpl
  * @property string            $slabel
- * @property string|boolean    $imageSubmit
+ * @property boolean           $imageSubmit
  * @property string|null       $singleSRC
- * @property string|boolean    $invisible
+ * @property boolean           $invisible
  *
  * @method static FormFieldModel|null findById($id, array $opt=array())
  * @method static FormFieldModel|null findByPk($id, array $opt=array())
@@ -88,7 +87,6 @@ use Contao\Model\Collection;
  * @method static FormFieldModel|null findOneByClass($val, array $opt=array())
  * @method static FormFieldModel|null findOneByValue($val, array $opt=array())
  * @method static FormFieldModel|null findOneByAccesskey($val, array $opt=array())
- * @method static FormFieldModel|null findOneByTabindex($val, array $opt=array())
  * @method static FormFieldModel|null findOneByFSize($val, array $opt=array())
  * @method static FormFieldModel|null findOneByCustomTpl($val, array $opt=array())
  * @method static FormFieldModel|null findOneByAddSubmit($val, array $opt=array())
@@ -127,7 +125,6 @@ use Contao\Model\Collection;
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByClass($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByValue($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByAccesskey($val, array $opt=array())
- * @method static Collection|FormFieldModel[]|FormFieldModel|null findByTabindex($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByFSize($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByCustomTpl($val, array $opt=array())
  * @method static Collection|FormFieldModel[]|FormFieldModel|null findByAddSubmit($val, array $opt=array())
@@ -170,7 +167,6 @@ use Contao\Model\Collection;
  * @method static integer countByClass($val, array $opt=array())
  * @method static integer countByValue($val, array $opt=array())
  * @method static integer countByAccesskey($val, array $opt=array())
- * @method static integer countByTabindex($val, array $opt=array())
  * @method static integer countByFSize($val, array $opt=array())
  * @method static integer countByCustomTpl($val, array $opt=array())
  * @method static integer countByAddSubmit($val, array $opt=array())
@@ -202,7 +198,7 @@ class FormFieldModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.invisible=''";
+			$arrColumns[] = "$t.invisible=0";
 		}
 
 		// Skip unsaved elements (see #2708)

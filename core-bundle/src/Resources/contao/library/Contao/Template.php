@@ -30,7 +30,7 @@ use Symfony\Component\VarDumper\VarDumper;
  *
  *     $template = new BackendTemplate();
  *     $template->name = 'Leo Feyer';
- *     $template->output();
+ *     $template->getResponse();
  *
  * @property string       $style
  * @property array|string $cssID
@@ -62,6 +62,9 @@ use Symfony\Component\VarDumper\VarDumper;
  * @property boolean      $trustedDevicesEnabled
  * @property array        $trustedDevices
  * @property string       $currentDevice
+ *
+ * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0;
+ *             use Twig templates instead
  */
 abstract class Template extends Controller
 {
@@ -154,6 +157,11 @@ abstract class Template extends Controller
 			return $this->arrData[$strKey];
 		}
 
+		if ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData))
+		{
+			return htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
+		}
+
 		return parent::__get($strKey);
 	}
 
@@ -186,7 +194,7 @@ abstract class Template extends Controller
 	 */
 	public function __isset($strKey)
 	{
-		return isset($this->arrData[$strKey]);
+		return isset($this->arrData[$strKey]) || ($strKey === 'requestToken' && !\array_key_exists($strKey, $this->arrData));
 	}
 
 	/**
@@ -283,30 +291,16 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Parse the template file and print it to the screen
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 *             Use Template::getResponse() instead.
-	 */
-	public function output()
-	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Template::output()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\Template::getResponse()" instead.');
-
-		$this->compile();
-
-		header('Content-Type: ' . $this->strContentType . '; charset=' . System::getContainer()->getParameter('kernel.charset'));
-
-		echo $this->strBuffer;
-	}
-
-	/**
 	 * Return a response object
 	 *
 	 * @return Response The response object
 	 */
 	public function getResponse()
 	{
-		$this->compile();
+		if (!$this->strBuffer)
+		{
+			$this->strBuffer = $this->parse();
+		}
 
 		$response = new Response($this->strBuffer);
 		$response->headers->set('Content-Type', $this->strContentType);
@@ -325,9 +319,7 @@ abstract class Template extends Controller
 	 */
 	public function route($strName, $arrParams=array())
 	{
-		$strUrl = System::getContainer()->get('router')->generate($strName, $arrParams);
-
-		return StringUtil::ampersand($strUrl);
+		return StringUtil::ampersand(System::getContainer()->get('router')->generate($strName, $arrParams));
 	}
 
 	/**
@@ -453,23 +445,7 @@ abstract class Template extends Controller
 	 */
 	public function asset($path, $packageName = null)
 	{
-		$url = System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
-
-		$basePath = '/';
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
-
-		if ($request !== null)
-		{
-			$basePath = $request->getBasePath() . '/';
-		}
-
-		if (0 === strncmp($url, $basePath, \strlen($basePath)))
-		{
-			return substr($url, \strlen($basePath));
-		}
-
-		// Contao paths are relative to the <base> tag, so remove leading slashes
-		return $url;
+		return System::getContainer()->get('assets.packages')->getUrl($path, $packageName);
 	}
 
 	/**
@@ -485,16 +461,20 @@ abstract class Template extends Controller
 	}
 
 	/**
-	 * Compile the template
+	 * Prefixes a relative URL
 	 *
-	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
+	 * @param string $url
+	 *
+	 * @return string
 	 */
-	protected function compile()
+	public function prefixUrl($url)
 	{
-		if (!$this->strBuffer)
+		if (!Validator::isRelativeUrl($url))
 		{
-			$this->strBuffer = $this->parse();
+			return $url;
 		}
+
+		return Environment::get('path') . '/' . $url;
 	}
 
 	/**
@@ -658,10 +638,11 @@ abstract class Template extends Controller
 	 * @param string|null $hash           An optional integrity hash
 	 * @param string|null $crossorigin    An optional crossorigin attribute
 	 * @param string|null $referrerpolicy An optional referrerpolicy attribute
+	 * @param boolean     $defer          True to add the defer attribute
 	 *
 	 * @return string The markup string
 	 */
-	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null, $referrerpolicy=null)
+	public static function generateScriptTag($src, $async=false, $mtime=false, $hash=null, $crossorigin=null, $referrerpolicy=null, $defer=false)
 	{
 		// Add the filemtime if not given and not an external file
 		if ($mtime === null && !preg_match('@^https?://@', $src))
@@ -690,7 +671,7 @@ abstract class Template extends Controller
 			$src .= '?v=' . substr(md5($mtime), 0, 8);
 		}
 
-		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . ($referrerpolicy ? ' referrerpolicy="' . $referrerpolicy . '"' : '') . '></script>';
+		return '<script src="' . $src . '"' . ($async ? ' async' : '') . ($hash ? ' integrity="' . $hash . '"' : '') . ($crossorigin ? ' crossorigin="' . $crossorigin . '"' : '') . ($referrerpolicy ? ' referrerpolicy="' . $referrerpolicy . '"' : '') . ($defer ? ' defer' : '') . '></script>';
 	}
 
 	/**

@@ -1,0 +1,9 @@
+{% extends "@Contao/element/recipe.html.twig" %}
+
+{% block apple %}{{ parent() }} (from a tin){% endblock %}
+
+{% block other_ingredients %}
+        {{- parent() ~}}
+        <!-- only in the recipe -->
+        <li>secret sauce (don't tell anyone)</li>
+{% endblock %}

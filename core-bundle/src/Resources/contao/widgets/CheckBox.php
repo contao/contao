@@ -132,7 +132,7 @@ class CheckBox extends Widget
 		{
 			$state[Input::get('cbc')] = (isset($state[Input::get('cbc')]) && $state[Input::get('cbc')] == 1) ? 0 : 1;
 			$objSessionBag->set('checkbox_groups', $state);
-			$this->redirect(preg_replace('/(&(amp;)?|\?)cbc=[^& ]*/i', '', Environment::get('request')));
+			$this->redirect(preg_replace('/(&(amp;)?|\?)cbc=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
 		$blnFirst = true;
@@ -162,32 +162,24 @@ class CheckBox extends Widget
 			$img = 'folPlus.svg';
 			$display = 'none';
 
-			if ($this->collapseUncheckedGroups || !isset($state[$id]) || !empty($state[$id]))
+			$blnIsOpen = ($state[$id] ?? null) || ($this->collapseUncheckedGroups && $blnFirst && empty($this->varValue));
+
+			if (!$blnIsOpen && $this->collapseUncheckedGroups && !isset($state[$id]))
 			{
-				$blnIsOpen = !$this->collapseUncheckedGroups && (!isset($state[$id]) || !empty($state[$id]));
-
-				if ($this->collapseUncheckedGroups && $blnFirst && empty($this->varValue))
+				foreach ($arrOption as $v)
 				{
-					$blnIsOpen = true;
-				}
-
-				if (!$blnIsOpen && $this->collapseUncheckedGroups)
-				{
-					foreach ($arrOption as $v)
+					if ($this->isChecked($v))
 					{
-						if ($this->isChecked($v))
-						{
-							$blnIsOpen = true;
-							break;
-						}
+						$blnIsOpen = true;
+						break;
 					}
 				}
+			}
 
-				if ($blnIsOpen)
-				{
-					$img = 'folMinus.svg';
-					$display = 'block';
-				}
+			if ($blnIsOpen)
+			{
+				$img = 'folMinus.svg';
+				$display = 'block';
 			}
 
 			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . Backend::addToUrl('cbc=' . $id) . '" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');Backend.getScrollOffset();return false">' . Image::getHtml($img) . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'' . $id . '\')"> <label for="check_all_' . $id . '" style="color:#a6a6a6"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
@@ -251,7 +243,7 @@ class CheckBox extends Widget
 			'<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s%s%s</label>%s',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
-			($this->multiple ? StringUtil::specialchars($arrOption['value']) : 1),
+			($this->multiple ? self::specialcharsValue($arrOption['value']) : 1),
 			$this->isChecked($arrOption),
 			$this->getAttributes(),
 			$this->strId . '_' . $i,

@@ -38,7 +38,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $collection = new RouteCollection();
         $routes = array_merge($this->getNotFoundRoutes(), $this->getLocaleFallbackRoutes($request));
@@ -54,7 +54,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     public function getRouteByName($name): Route
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $ids = $this->getPageIdsFromNames([$name]);
 
@@ -86,7 +86,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     public function getRoutesByNames($names): array
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
@@ -119,7 +119,7 @@ class Route404Provider extends AbstractPageRouteProvider
 
     private function getNotFoundRoutes(): array
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
         $pages = $pageModel->findByType('error_404');
@@ -149,7 +149,7 @@ class Route404Provider extends AbstractPageRouteProvider
             if (!$page->rootId) {
                 return;
             }
-        } catch (NoRootPageFoundException $e) {
+        } catch (NoRootPageFoundException) {
             return;
         }
 
@@ -157,7 +157,7 @@ class Route404Provider extends AbstractPageRouteProvider
             '_token_check' => true,
             '_controller' => 'Contao\FrontendIndex::renderPage',
             '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-            '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage),
+            '_locale' => LocaleUtil::formatAsLocale($page->rootLanguage ?? ''),
             '_format' => 'html',
             '_canonical_route' => 'tl_page.'.$page->id,
             'pageModel' => $page,
@@ -206,7 +206,7 @@ class Route404Provider extends AbstractPageRouteProvider
         return $routes;
     }
 
-    private function addLocaleRedirectRoute(PageRoute $route, ?Request $request, array &$routes): void
+    private function addLocaleRedirectRoute(PageRoute $route, Request|null $request, array &$routes): void
     {
         $length = \strlen($route->getUrlPrefix());
 
@@ -259,8 +259,8 @@ class Route404Provider extends AbstractPageRouteProvider
                 $nameA = array_search($a, $routes, true);
                 $nameB = array_search($b, $routes, true);
 
-                $errorA = false !== strpos('.error_404', $nameA, -10);
-                $errorB = false !== strpos('.error_404', $nameB, -10);
+                $errorA = str_ends_with($nameA, '.error_404');
+                $errorB = str_ends_with($nameB, '.error_404');
 
                 if ($errorA && !$errorB) {
                     return 1;
@@ -270,8 +270,8 @@ class Route404Provider extends AbstractPageRouteProvider
                     return -1;
                 }
 
-                $localeA = '.locale' === substr($nameA, -7);
-                $localeB = '.locale' === substr($nameB, -7);
+                $localeA = str_ends_with($nameA, '.locale');
+                $localeB = str_ends_with($nameB, '.locale');
 
                 if ($localeA && !$localeB) {
                     return -1;

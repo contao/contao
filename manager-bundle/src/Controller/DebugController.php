@@ -20,18 +20,11 @@ use Symfony\Component\Security\Core\Security;
 
 class DebugController
 {
-    private RequestStack $requestStack;
-    private JwtManager $jwtManager;
-    private Security $security;
-
     /**
      * @internal Do not inherit from this class; decorate the "Contao\ManagerBundle\Controller\DebugController" service instead
      */
-    public function __construct(Security $security, RequestStack $requestStack, JwtManager $jwtManager)
+    public function __construct(private Security $security, private RequestStack $requestStack, private JwtManager $jwtManager)
     {
-        $this->security = $security;
-        $this->requestStack = $requestStack;
-        $this->jwtManager = $jwtManager;
     }
 
     public function enableAction(): RedirectResponse
@@ -62,7 +55,7 @@ class DebugController
             $referer = '?'.base64_decode($request->query->get('referer'), true);
         }
 
-        $response = new RedirectResponse($request->getSchemeAndHttpHost().$request->getPathInfo().$referer);
+        $response = new RedirectResponse($request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo().$referer);
 
         $this->jwtManager->addResponseCookie($response, ['debug' => $debug]);
 

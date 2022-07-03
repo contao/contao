@@ -24,16 +24,17 @@ class ParameterDumper
 
     public function __construct(string $projectDir, Filesystem $filesystem = null)
     {
-        $this->configFile = Path::join($projectDir, 'config/parameters.yml');
+        $this->configFile = Path::join($projectDir, 'config/parameters.yaml');
         $this->filesystem = $filesystem ?: new Filesystem();
 
         if (!$this->filesystem->exists($this->configFile)) {
-            // Fallback to the legacy config file (see #566)
-            $fallbackConfigFile = Path::join($projectDir, 'app/config/parameters.yml');
+            $fallbackConfigFile = Path::join($projectDir, 'config/parameters.yml');
 
             if (!$this->filesystem->exists($fallbackConfigFile)) {
                 return;
             }
+
+            trigger_deprecation('contao/installation-bundle', '5.0', 'Using a parameters.yml file has been deprecated and will no longer work in Contao 6.0. Use a parameters.yaml file instead.');
 
             $this->configFile = $fallbackConfigFile;
         }
@@ -58,7 +59,7 @@ class ParameterDumper
     }
 
     /**
-     * Dumps the parameters into the parameters.yml file.
+     * Dumps the parameters into the parameters.yaml file.
      */
     public function dump(): void
     {
@@ -91,7 +92,7 @@ class ParameterDumper
         $parameters = [];
 
         foreach ($this->parameters['parameters'] as $key => $value) {
-            if (\is_string($value) && 0 === strncmp($value, '@', 1)) {
+            if (\is_string($value) && str_starts_with($value, '@')) {
                 $value = '@'.$value;
             }
 

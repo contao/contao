@@ -22,20 +22,15 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RouteLoader implements RouteLoaderInterface
 {
-    private LoaderInterface $loader;
-    private PluginLoader $pluginLoader;
-    private KernelInterface $kernel;
-    private string $projectDir;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao_manager.routing.route_loader" service instead
      */
-    public function __construct(LoaderInterface $loader, PluginLoader $pluginLoader, KernelInterface $kernel, string $projectDir)
-    {
-        $this->loader = $loader;
-        $this->pluginLoader = $pluginLoader;
-        $this->kernel = $kernel;
-        $this->projectDir = $projectDir;
+    public function __construct(
+        private LoaderInterface $loader,
+        private PluginLoader $pluginLoader,
+        private KernelInterface $kernel,
+        private string $projectDir,
+    ) {
     }
 
     /**
@@ -57,7 +52,7 @@ class RouteLoader implements RouteLoaderInterface
             new RouteCollection()
         );
 
-        // Load the routing.yml file if it exists
+        // Load the routing.yaml file if it exists
         if ($configFile = $this->getConfigFile()) {
             $routes = $this->loader->getResolver()->resolve($configFile)->load($configFile);
 
@@ -76,14 +71,16 @@ class RouteLoader implements RouteLoaderInterface
         return $collection;
     }
 
-    private function getConfigFile(): ?string
+    private function getConfigFile(): string|null
     {
-        foreach (['routes.yaml', 'routes.yml'] as $file) {
-            $path = Path::join($this->projectDir, 'config', $file);
+        if (file_exists($path = Path::join($this->projectDir, 'config/routes.yaml'))) {
+            return $path;
+        }
 
-            if (file_exists($path)) {
-                return $path;
-            }
+        if (file_exists($path = Path::join($this->projectDir, 'config/routes.yml'))) {
+            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a routes.yml file has been deprecated and will no longer work in Contao 6.0. Use a routes.yaml file instead.');
+
+            return $path;
         }
 
         return null;

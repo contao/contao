@@ -24,7 +24,6 @@ use Contao\PageModel;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,15 +32,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SitemapControllerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['TL_HOOKS']);
-
-        parent::tearDown();
-    }
-
     public function testNoSitemapIfNoRootPageFound(): void
     {
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages']);
@@ -76,6 +66,36 @@ class SitemapControllerTest extends TestCase
         $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
     }
 
+    public function testIgnoresRequestPort(): void
+    {
+        $page1 = $this->mockClassWithProperties(PageModel::class, [
+            'id' => 43,
+            'pid' => 42,
+            'type' => 'regular',
+            'groups' => [],
+            'published' => true,
+            'rootLanguage' => 'en',
+        ]);
+
+        $page1
+            ->expects($this->once())
+            ->method('getAbsoluteUrl')
+            ->willReturn('https://www.foobar.com:8000/en/page1.html')
+        ;
+
+        $framework = $this->mockFrameworkWithPages([42 => [$page1], 43 => null, 21 => null], [43 => null]);
+        $container = $this->getContainer($framework, null, 'https://www.foobar.com:8000');
+        $registry = new PageRegistry($this->createMock(Connection::class));
+
+        $controller = new SitemapController($registry);
+        $controller->setContainer($container);
+        $response = $controller(Request::create('https://www.foobar.com:8000/sitemap.xml'));
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertSame('public, s-maxage=2592000', $response->headers->get('Cache-Control'));
+        $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com:8000/en/page1.html']), $response->getContent());
+    }
+
     public function testGeneratesSitemapForRegularPages(): void
     {
         $page1 = $this->mockClassWithProperties(PageModel::class, [
@@ -83,7 +103,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -113,7 +133,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -128,7 +148,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -171,7 +191,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => '',
+            'published' => false,
             'rootLanguage' => 'en',
         ]);
 
@@ -185,7 +205,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -225,8 +245,8 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => '1',
-            'requireItem' => '1',
+            'published' => true,
+            'requireItem' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -240,7 +260,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -280,7 +300,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'forward',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -294,7 +314,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -348,7 +368,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'error_404',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -362,7 +382,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'regular',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -412,9 +432,9 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'regular',
-            'protected' => '',
+            'protected' => false,
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -428,9 +448,9 @@ class SitemapControllerTest extends TestCase
             'id' => 44,
             'pid' => 43,
             'type' => 'regular',
-            'protected' => '1',
+            'protected' => true,
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -469,9 +489,9 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'regular',
-            'protected' => '',
+            'protected' => false,
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -507,9 +527,9 @@ class SitemapControllerTest extends TestCase
             'id' => 43,
             'pid' => 42,
             'type' => 'regular',
-            'protected' => '',
+            'protected' => false,
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -546,7 +566,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'robots' => 'index,follow',
             'rootLanguage' => 'en',
         ]);
@@ -562,7 +582,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'regular',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'robots' => 'noindex,nofollow',
             'rootLanguage' => 'en',
         ]);
@@ -592,82 +612,6 @@ class SitemapControllerTest extends TestCase
         $this->assertSame($this->getExpectedSitemapContent(['https://www.foobar.com/en/page1.html']), $response->getContent());
     }
 
-    /**
-     * @group legacy
-     */
-    public function testCallsTheLegacyHookForEachRootPage(): void
-    {
-        $page1 = $this->mockClassWithProperties(PageModel::class, [
-            'id' => 43,
-            'pid' => 42,
-            'type' => 'regular',
-            'protected' => '',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ]);
-
-        $page1
-            ->expects($this->once())
-            ->method('getAbsoluteUrl')
-            ->willReturn('https://www.foobar.com/en/page1.html')
-        ;
-
-        $page2 = $this->mockClassWithProperties(PageModel::class, [
-            'id' => 22,
-            'pid' => 21,
-            'type' => 'regular',
-            'protected' => '',
-            'groups' => [],
-            'published' => '1',
-            'rootLanguage' => 'en',
-        ]);
-
-        $page2
-            ->expects($this->once())
-            ->method('getAbsoluteUrl')
-            ->willReturn('https://www.foobar.com/en/page2.html')
-        ;
-
-        $GLOBALS['TL_HOOKS']['getSearchablePages'] = [['FooClass', 'fooFunction'], ['BarClass', 'barFunction']];
-
-        $hook1 = $this->mockAdapter(['fooFunction']);
-        $hook1
-            ->expects($this->exactly(2))
-            ->method('fooFunction')
-            ->withConsecutive(
-                [['https://www.foobar.com/en/page1.html'], 42, true, 'en'],
-                [['https://www.foobar.com/en/page2.html'], 21, true, 'de']
-            )
-            ->willReturnOnConsecutiveCalls(['page1.html'], ['page2.html'])
-        ;
-
-        $hook2 = $this->mockAdapter(['barFunction']);
-        $hook2
-            ->expects($this->exactly(2))
-            ->method('barFunction')
-            ->withConsecutive([['page1.html'], 42, true, 'en'], [['page2.html'], 21, true, 'de'])
-            ->willReturnArgument(0)
-        ;
-
-        $framework = $this->mockFrameworkWithPages(
-            [42 => [$page1], 43 => null, 21 => [$page2], 22 => null],
-            [43 => null, 22 => null],
-            ['FooClass' => $hook1, 'BarClass' => $hook2]
-        );
-
-        $registry = new PageRegistry($this->createMock(Connection::class));
-
-        $controller = new SitemapController($registry);
-        $controller->setContainer($this->getContainer($framework));
-
-        $this->expectDeprecation('Since contao/core-bundle 4.11: Using the "getSearchablePages" hook is deprecated. Use the "contao.sitemap" event instead.');
-
-        $controller(Request::create('https://www.foobar.com/sitemap.xml'));
-
-        unset($GLOBALS['TL_HOOKS']['getSearchablePages']);
-    }
-
     public function testSkipsNonHtmlPages(): void
     {
         $page1 = $this->mockClassWithProperties(PageModel::class, [
@@ -675,7 +619,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 42,
             'type' => 'custom1',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -689,7 +633,7 @@ class SitemapControllerTest extends TestCase
             'pid' => 43,
             'type' => 'custom2',
             'groups' => [],
-            'published' => '1',
+            'published' => true,
             'rootLanguage' => 'en',
         ]);
 
@@ -752,7 +696,7 @@ class SitemapControllerTest extends TestCase
         $rootPage1->dns = 'www.foobar.com';
         $rootPage1->urlPrefix = 'en';
         $rootPage1->language = 'en';
-        $rootPage1->fallback = '1';
+        $rootPage1->fallback = true;
 
         /** @var PageModel $rootPage2 */
         $rootPage2 = $this->mockClassWithProperties(PageModel::class);
@@ -760,7 +704,7 @@ class SitemapControllerTest extends TestCase
         $rootPage2->dns = 'www.foobar.com';
         $rootPage2->urlPrefix = 'de';
         $rootPage2->language = 'de';
-        $rootPage2->fallback = '';
+        $rootPage2->fallback = false;
 
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
         $pageModelAdapter
@@ -828,15 +772,15 @@ class SitemapControllerTest extends TestCase
     /**
      * @param array<bool> $isGranted
      */
-    private function getContainer(ContaoFramework $framework, array $isGranted = null): ContainerBuilder
+    private function getContainer(ContaoFramework $framework, array $isGranted = null, string $baseUrl = 'https://www.foobar.com'): ContainerBuilder
     {
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(
-                function (SitemapEvent $event) {
-                    $this->assertSame('https://www.foobar.com/sitemap.xml', $event->getRequest()->getUri());
+                function (SitemapEvent $event) use ($baseUrl) {
+                    $this->assertSame($baseUrl.'/sitemap.xml', $event->getRequest()->getUri());
                     $this->assertSame([42, 21], $event->getRootPageIds());
 
                     return true;

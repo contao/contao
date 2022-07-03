@@ -38,7 +38,7 @@ class BackupManagerTest extends ContaoTestCase
         parent::setUp();
 
         $this->vfs = new VirtualFilesystem(
-            new MountManager(new InMemoryFilesystemAdapter()),
+            (new MountManager())->mount(new InMemoryFilesystemAdapter()),
             $this->createMock(DbafsManager::class)
         );
     }
@@ -219,7 +219,7 @@ class BackupManagerTest extends ContaoTestCase
 
         try {
             $manager->create($config);
-        } catch (BackupManagerException $exception) {
+        } catch (BackupManagerException) {
             // irrelevant for this test
         }
     }

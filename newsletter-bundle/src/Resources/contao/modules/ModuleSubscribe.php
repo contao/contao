@@ -43,7 +43,7 @@ class ModuleSubscribe extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -154,7 +154,6 @@ class ModuleSubscribe extends Module
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
 		$this->Template->text = $this->nl_text;
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 
 	/**
@@ -218,7 +217,7 @@ class ModuleSubscribe extends Module
 			$arrCids[] = $objRecipient->pid;
 
 			$objRecipient->tstamp = $time;
-			$objRecipient->active = '1';
+			$objRecipient->active = true;
 			$objRecipient->save();
 		}
 
@@ -287,7 +286,7 @@ class ModuleSubscribe extends Module
 		// Check if there are any new subscriptions
 		$arrSubscriptions = array();
 
-		if (($objSubscription = NewsletterRecipientsModel::findBy(array("email=? AND active='1'"), $varInput)) !== null)
+		if (($objSubscription = NewsletterRecipientsModel::findBy(array("email=? AND active=1"), $varInput)) !== null)
 		{
 			$arrSubscriptions = $objSubscription->fetchEach('pid');
 		}
@@ -343,7 +342,7 @@ class ModuleSubscribe extends Module
 			$objRecipient->pid = $id;
 			$objRecipient->tstamp = $time;
 			$objRecipient->email = $strEmail;
-			$objRecipient->active = '';
+			$objRecipient->active = false;
 			$objRecipient->addedOn = $time;
 			$objRecipient->save();
 
@@ -366,7 +365,7 @@ class ModuleSubscribe extends Module
 		$arrData = array();
 		$arrData['token'] = $optInToken->getIdentifier();
 		$arrData['domain'] = Idna::decode(Environment::get('host'));
-		$arrData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
+		$arrData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 		$arrData['channel'] = $arrData['channels'] = implode("\n", $objChannel->fetchEach('title'));
 
 		// Send the token

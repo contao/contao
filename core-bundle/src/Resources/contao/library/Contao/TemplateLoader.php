@@ -75,6 +75,8 @@ class TemplateLoader
 	 */
 	public static function getPrefixedFiles($prefix)
 	{
+		$prefix = preg_quote($prefix, '/');
+
 		if (substr($prefix, -1) != '_')
 		{
 			$prefix .= '($|_)';

@@ -88,15 +88,15 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'edit' => array
 			(
-				'href'                => 'table=tl_content',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_article', 'editArticle')
-			),
-			'editheader' => array
-			(
 				'href'                => 'act=edit',
-				'icon'                => 'header.svg',
+				'icon'                => 'edit.svg',
 				'button_callback'     => array('tl_article', 'editHeader')
+			),
+			'children' => array
+			(
+				'href'                => 'table=tl_content',
+				'icon'                => 'children.svg',
+				'button_callback'     => array('tl_article', 'editArticle')
 			),
 			'copy' => array
 			(
@@ -147,7 +147,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('protected'),
-		'default'                     => '{title_legend},title,alias,author;{layout_legend},inColumn;{teaser_legend:hide},teaserCssID,showTeaser,teaser;{syndication_legend},printable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{publish_legend},published,start,stop'
+		'default'                     => '{title_legend},title,alias,author;{layout_legend},inColumn;{teaser_legend:hide},teaserCssID,showTeaser,teaser;{syndication_legend},printable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{publish_legend},published,start,stop'
 	),
 
 	// Subpalettes
@@ -226,7 +226,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'teaserCssID' => array
 		(
@@ -269,7 +269,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'groups' => array
 		(
@@ -280,14 +280,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'eval'                    => array('mandatory'=>true, 'multiple'=>true),
 			'sql'                     => "blob NULL",
 			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
-		),
-		'guests' => array
-		(
-			'exclude'                 => true,
-			'filter'                  => true,
-			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "char(1) NOT NULL default ''"
 		),
 		'cssID' => array
 		(
@@ -303,7 +295,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('doNotCopy'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'start' => array
 		(
@@ -404,7 +396,7 @@ class tl_article extends Backend
 		}
 
 		// Set allowed clipboard IDs
-		if (isset($session['CLIPBOARD']['tl_article']) && is_array($session['CLIPBOARD']['tl_article']['id']))
+		if (isset($session['CLIPBOARD']['tl_article']) && is_array($session['CLIPBOARD']['tl_article']['id'] ?? null))
 		{
 			$clipboard = array();
 
@@ -449,11 +441,6 @@ class tl_article extends Backend
 				case 'edit':
 				case 'toggle':
 					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLES;
-					break;
-
-				case 'move':
-					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY;
-					$ids[] = Input::get('sid');
 					break;
 
 				// Do not insert articles into a website root page
@@ -558,7 +545,9 @@ class tl_article extends Backend
 			Image::getPath(rtrim($image, '_') . '_')
 		);
 
-		return '<a href="contao/preview.php?page=' . $row['pid'] . '&amp;article=' . ($row['alias'] ?: $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image . '.svg', '', $attributes) . '</a> ' . $label;
+		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
+
+		return '<a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image . '.svg', '', $attributes) . '</a> ' . $label;
 	}
 
 	/**
@@ -793,7 +782,7 @@ class tl_article extends Backend
 		}
 
 		// Generate the aliases
-		if (isset($_POST['alias']) && Input::post('FORM_SUBMIT') == 'tl_select')
+		if (Input::post('alias') !== null && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
 			$objSession = System::getContainer()->get('session');
 			$session = $objSession->all();

@@ -105,7 +105,7 @@ class BackendPassword extends Backend
 					$objUser->save();
 
 					Message::addConfirmation($GLOBALS['TL_LANG']['MSC']['pw_changed']);
-					$this->redirect('contao/main.php');
+					$this->redirect(System::getContainer()->get('router')->generate('contao_backend'));
 				}
 			}
 
@@ -114,7 +114,6 @@ class BackendPassword extends Backend
 
 		$objTemplate->theme = Backend::getTheme();
 		$objTemplate->messages = Message::generate();
-		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pw_new']);
 		$objTemplate->host = Backend::getDecodedHostname();

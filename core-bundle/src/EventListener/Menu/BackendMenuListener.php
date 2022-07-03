@@ -27,19 +27,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class BackendMenuListener
 {
-    private Security $security;
-    private RouterInterface $router;
-    private RequestStack $requestStack;
-    private TranslatorInterface $translator;
-    private ContaoFramework $framework;
-
-    public function __construct(Security $security, RouterInterface $router, RequestStack $requestStack, TranslatorInterface $translator, ContaoFramework $framework)
-    {
-        $this->security = $security;
-        $this->router = $router;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
-        $this->framework = $framework;
+    public function __construct(
+        private Security $security,
+        private RouterInterface $router,
+        private RequestStack $requestStack,
+        private TranslatorInterface $translator,
+        private ContaoFramework $framework,
+    ) {
     }
 
     public function __invoke(MenuEvent $event): void
@@ -77,12 +71,16 @@ class BackendMenuListener
                     ->setLinkAttribute('class', $this->getClassFromAttributes($categoryData))
                     ->setLinkAttribute('title', $categoryData['title'])
                     ->setLinkAttribute('onclick', "return AjaxRequest.toggleNavigation(this, '".$categoryName."', '".$path."')")
+                    ->setLinkAttribute('aria-controls', $categoryName)
                     ->setChildrenAttribute('id', $categoryName)
                     ->setExtra('translation_domain', false)
                 ;
 
-                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', $categoryData['class'])) {
+                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', (string) $categoryData['class'])) {
                     $categoryNode->setAttribute('class', 'collapsed');
+                    $categoryNode->setLinkAttribute('aria-expanded', 'false');
+                } else {
+                    $categoryNode->setLinkAttribute('aria-expanded', 'true');
                 }
 
                 $tree->addChild($categoryNode);
@@ -143,9 +141,10 @@ class BackendMenuListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel($this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username)
+            ->setLabel('<button type="button">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
-            ->setLabelAttribute('class', 'h2')
+            ->setExtra('safe_label', true)
+            ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
         ;
 
@@ -219,7 +218,7 @@ class BackendMenuListener
 
         // Remove the default CSS classes and keep potentially existing custom ones (see #1357)
         if (isset($attributes['class'])) {
-            $classes = array_flip(array_filter(explode(' ', $attributes['class'])));
+            $classes = array_flip(array_filter(explode(' ', (string) $attributes['class'])));
             unset($classes['node-expanded'], $classes['node-collapsed'], $classes['trail']);
         }
 

@@ -61,14 +61,14 @@ class ContentDownload extends ContentElement
 		$file = Input::get('file', true);
 
 		// Send the file to the browser (see #4632 and #8375)
-		if ($file && (!isset($_GET['cid']) || Input::get('cid') == $this->id))
+		if ($file && (Input::get('cid') === null || Input::get('cid') == $this->id))
 		{
 			if ($file == $objFile->path)
 			{
 				Controller::sendFileToBrowser($file, (bool) $this->inline);
 			}
 
-			if (isset($_GET['cid']))
+			if (Input::get('cid') !== null)
 			{
 				throw new PageNotFoundException('Invalid file name');
 			}
@@ -118,16 +118,15 @@ class ContentDownload extends ContentElement
 			$this->titleText = sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
 		}
 
-		$mainRequest = $requestStack->getMainRequest();
-		$strHref = null !== $mainRequest ? $mainRequest->getBasePath() . $mainRequest->getPathInfo() : '';
+		$strHref = Environment::get('requestUri');
 
 		// Remove an existing file parameter (see #5683)
-		if (isset($_GET['file']))
+		if (Input::get('file') !== null)
 		{
 			$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 		}
 
-		if (isset($_GET['cid']))
+		if (Input::get('cid') !== null)
 		{
 			$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
 		}
@@ -167,7 +166,7 @@ class ContentDownload extends ContentElement
 				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
 			}
 
-			$builder->enableLightbox(true)->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxSize($lightboxSize);
+			$builder->enableLightbox()->setLightboxGroupIdentifier('lb' . $this->id)->setLightboxSize($lightboxSize);
 		}
 		else
 		{

@@ -15,18 +15,20 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\MigrateCommand;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
+use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
-use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
+use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
+use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\InstallationBundle\Database\Installer;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Schema;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 
 class MigrateCommandTest extends TestCase
 {
@@ -37,6 +39,24 @@ class MigrateCommandTest extends TestCase
         $this->resetStaticProperties([Terminal::class]);
 
         parent::tearDown();
+    }
+
+    public function testAbortsEarlyIfTheBackupFails(): void
+    {
+        $backupManager = $this->createBackupManager(true);
+        $backupManager
+            ->expects($this->once())
+            ->method('create')
+            ->willThrowException(new BackupManagerException('Something went terribly wrong.'))
+        ;
+
+        $command = $this->getCommand([], [], null, $backupManager);
+        $tester = new CommandTester($command);
+        $code = $tester->execute([]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(1, $code);
+        $this->assertDoesNotMatchRegularExpression('/All migrations completed/', $display);
     }
 
     /**
@@ -52,7 +72,14 @@ class MigrateCommandTest extends TestCase
         $this->assertSame(0, $code);
 
         if ('ndjson' === $format) {
-            $this->assertEmpty(trim($display));
+            $this->assertSame(
+                [
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                ],
+                $this->jsonArrayFromNdjson($display)
+            );
         } else {
             $this->assertMatchesRegularExpression('/All migrations completed/', $display);
         }
@@ -66,9 +93,8 @@ class MigrateCommandTest extends TestCase
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
-            [],
             null,
-            $backupsEnabled
+            $this->createBackupManager($backupsEnabled)
         );
 
         $tester = new CommandTester($command);
@@ -89,11 +115,13 @@ class MigrateCommandTest extends TestCase
             $expected = array_merge(
                 $expected,
                 [
-                    ['type' => 'migration-pending', 'name' => 'Migration 1'],
-                    ['type' => 'migration-pending', 'name' => 'Migration 2'],
+                    ['type' => 'migration-pending', 'names' => ['Migration 1', 'Migration 2'], 'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd'],
                     ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => true],
                     ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
-                ]
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                ],
             );
 
             $this->assertSame($expected, $this->jsonArrayFromNdjson($display));
@@ -112,76 +140,49 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
-     * @group legacy
-     * @dataProvider getOutputFormats
-     */
-    public function testExecutesRunOnceFiles(string $format): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Using "runonce.php" files has been deprecated %s.');
-
-        $runOnceFile = Path::join($this->getTempDir(), 'runonceFile.php');
-
-        (new Filesystem())->dumpFile($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
-
-        $command = $this->getCommand([], [], [[$runOnceFile]]);
-
-        $tester = new CommandTester($command);
-        $tester->setInputs(['y']);
-
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
-        $display = $tester->getDisplay();
-
-        $this->assertSame('executed', $GLOBALS['test_'.self::class]);
-
-        unset($GLOBALS['test_'.self::class]);
-
-        $this->assertSame(0, $code);
-
-        if ('ndjson' === $format) {
-            $this->assertSame(
-                [
-                    ['type' => 'migration-pending', 'name' => 'Runonce file: runonceFile.php'],
-                    ['type' => 'migration-result', 'message' => 'Executed runonce file: runonceFile.php', 'isSuccessful' => true],
-                ],
-                $this->jsonArrayFromNdjson($display)
-            );
-        } else {
-            $this->assertMatchesRegularExpression('/runonceFile.php/', $display);
-            $this->assertMatchesRegularExpression('/All migrations completed/', $display);
-            $this->assertFileDoesNotExist($runOnceFile, 'File should be gone once executed');
-        }
-    }
-
-    /**
      * @dataProvider getOutputFormats
      */
     public function testExecutesSchemaDiff(string $format): void
     {
-        $installer = $this->createMock(Installer::class);
-        $installer
+        $returnedCommands = [
+            [
+                'First call QUERY 1',
+                'First call QUERY 2',
+            ],
+            [
+                'Second call QUERY 1',
+                'Second call QUERY 2',
+                'DROP QUERY',
+            ],
+            [],
+        ];
+
+        $returnedCommandsWithoutDrops = [
+            [
+                'First call QUERY 1',
+                'First call QUERY 2',
+            ],
+            [
+                'Second call QUERY 1',
+                'Second call QUERY 2',
+            ],
+            [],
+        ];
+
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
             ->expects($this->atLeastOnce())
             ->method('compileCommands')
-        ;
-
-        $installer
-            ->expects($this->atLeastOnce())
-            ->method('getCommands')
-            ->with(false)
-            ->willReturn(
-                [
-                    'hash1' => 'First call QUERY 1',
-                    'hash2' => 'First call QUERY 2',
-                ],
-                [
-                    'hash3' => 'Second call QUERY 1',
-                    'hash4' => 'Second call QUERY 2',
-                    'hash5' => 'DROP QUERY',
-                ],
-                []
+            ->willReturnCallback(
+                static function (bool $doNotDropColumns = false) use (&$returnedCommandsWithoutDrops, &$returnedCommands): array {
+                    return $doNotDropColumns ?
+                        array_shift($returnedCommandsWithoutDrops) :
+                        array_shift($returnedCommands);
+                }
             )
         ;
 
-        $command = $this->getCommand([], [], [], $installer);
+        $command = $this->getCommand([], [], $commandCompiler);
 
         $tester = new CommandTester($command);
         $tester->setInputs(['yes', 'yes']);
@@ -194,16 +195,19 @@ class MigrateCommandTest extends TestCase
         if ('ndjson' === $format) {
             $this->assertSame(
                 [
-                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2']],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'schema-pending', 'commands' => ['First call QUERY 1', 'First call QUERY 2'], 'hash' => '06b103d878d056ea88d30fba6a88782227a7c34160bca50a6e63320ee104af5f'],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'First call QUERY 2'],
                     ['type' => 'schema-result', 'command' => 'First call QUERY 2', 'isSuccessful' => true],
-                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY']],
+                    ['type' => 'schema-pending', 'commands' => ['Second call QUERY 1', 'Second call QUERY 2', 'DROP QUERY'], 'hash' => '929210d967bc630ef187795ca91759f9e27906fc16316b205600ff7b40cbfd1b'],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 1'],
                     ['type' => 'schema-result', 'command' => 'Second call QUERY 1', 'isSuccessful' => true],
                     ['type' => 'schema-execute', 'command' => 'Second call QUERY 2'],
                     ['type' => 'schema-result', 'command' => 'Second call QUERY 2', 'isSuccessful' => true],
+                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                 ],
                 $this->jsonArrayFromNdjson($display)
             );
@@ -219,40 +223,34 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
-     * @group legacy
      * @dataProvider getOutputFormats
      */
     public function testDoesNotExecuteWithDryRun(string $format): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Using "runonce.php" files has been deprecated %s.');
-
-        $installer = $this->createMock(Installer::class);
-        $installer
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
             ->expects($this->once())
             ->method('compileCommands')
-        ;
-
-        $installer
-            ->expects($this->once())
-            ->method('getCommands')
-            ->with(false)
             ->willReturn(
                 [
-                    'hash1' => 'First call QUERY 1',
-                    'hash2' => 'First call QUERY 2',
+                    'First call QUERY 1',
+                    'First call QUERY 2',
                 ]
             )
         ;
 
-        $runOnceFile = Path::join($this->getTempDir(), 'runonceFile.php');
-
-        (new Filesystem())->dumpFile($runOnceFile, '<?php $GLOBALS["test_'.self::class.'"] = "executed";');
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method('executeQuery')
+        ;
 
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
-            [[$runOnceFile]],
-            $installer
+            $commandCompiler,
+            null,
+            $connection
         );
 
         $tester = new CommandTester($command);
@@ -266,12 +264,15 @@ class MigrateCommandTest extends TestCase
         if ('ndjson' === $format) {
             $this->assertSame(
                 [
-                    ['type' => 'migration-pending', 'name' => 'Migration 1'],
-                    ['type' => 'migration-pending', 'name' => 'Migration 2'],
-                    ['type' => 'migration-pending', 'name' => 'Runonce file: runonceFile.php'],
+                    [
+                        'type' => 'migration-pending',
+                        'names' => ['Migration 1', 'Migration 2'],
+                        'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd',
+                    ],
                     [
                         'type' => 'schema-pending',
                         'commands' => ['First call QUERY 1', 'First call QUERY 2'],
+                        'hash' => '06b103d878d056ea88d30fba6a88782227a7c34160bca50a6e63320ee104af5f',
                     ],
                 ],
                 $this->jsonArrayFromNdjson($display)
@@ -281,9 +282,6 @@ class MigrateCommandTest extends TestCase
             $this->assertMatchesRegularExpression('/Migration 2/', $display);
             $this->assertDoesNotMatchRegularExpression('/Result 1/', $display);
             $this->assertDoesNotMatchRegularExpression('/Result 2/', $display);
-
-            $this->assertMatchesRegularExpression('/runonceFile.php/', $display);
-            $this->assertFileExists($runOnceFile, 'File should not be gone in dry-run mode');
 
             $this->assertMatchesRegularExpression('/First call QUERY 1/', $display);
             $this->assertMatchesRegularExpression('/First call QUERY 2/', $display);
@@ -335,10 +333,12 @@ class MigrateCommandTest extends TestCase
         if ('ndjson' === $format) {
             $this->assertSame(
                 [
-                    ['type' => 'migration-pending', 'name' => 'Migration 1'],
-                    ['type' => 'migration-pending', 'name' => 'Migration 2'],
+                    ['type' => 'migration-pending', 'names' => ['Migration 1', 'Migration 2'], 'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd'],
                     ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => false],
                     ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                 ],
                 $this->jsonArrayFromNdjson($display)
             );
@@ -357,14 +357,14 @@ class MigrateCommandTest extends TestCase
      */
     public function testDoesAbortOnFatalError(string $format): void
     {
-        $installer = $this->createMock(Installer::class);
-        $installer
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
             ->expects($this->atLeastOnce())
             ->method('compileCommands')
             ->willThrowException(new \Exception('Fatal'))
         ;
 
-        $command = $this->getCommand([], [], [], $installer);
+        $command = $this->getCommand([], [], $commandCompiler);
         $tester = new CommandTester($command);
 
         if ('ndjson' !== $format) {
@@ -376,7 +376,7 @@ class MigrateCommandTest extends TestCase
 
         $this->assertSame(1, $code);
 
-        $json = $this->jsonArrayFromNdjson($display)[0];
+        $json = $this->jsonArrayFromNdjson($display)[1];
 
         $this->assertSame('error', $json['type']);
         $this->assertSame('Fatal', $json['message']);
@@ -399,9 +399,8 @@ class MigrateCommandTest extends TestCase
     /**
      * @param array<array<string>>          $pendingMigrations
      * @param array<array<MigrationResult>> $migrationResults
-     * @param array<array<string>>          $runonceFiles
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null, bool $backupsEnabled = false): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler $commandCompiler = null, BackupManager $backupManager = null, Connection $connection = null): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
 
@@ -421,22 +420,27 @@ class MigrateCommandTest extends TestCase
             ->willReturn(...$migrationResults)
         ;
 
-        $runonceFiles[] = [];
-        $runonceFiles[] = [];
-        $duplicatedRunonceFiles = [];
-
-        foreach ($runonceFiles as $runonceFile) {
-            $duplicatedRunonceFiles[] = $runonceFile;
-            $duplicatedRunonceFiles[] = $runonceFile;
-        }
-
-        $fileLocator = $this->createMock(FileLocator::class);
-        $fileLocator
-            ->method('locate')
-            ->with('config/runonce.php', null, false)
-            ->willReturn(...$duplicatedRunonceFiles)
+        $schemaProvider = $this->createMock(SchemaProvider::class);
+        $schemaProvider
+            ->method('createSchema')
+            ->willReturn(new Schema())
         ;
 
+        return new MigrateCommand(
+            $commandCompiler ?? $this->createMock(CommandCompiler::class),
+            $connection ?? $this->createMock(Connection::class),
+            $migrations,
+            $backupManager ?? $this->createBackupManager(false),
+            $schemaProvider,
+            $this->createMock(MysqlInnodbRowSizeCalculator::class)
+        );
+    }
+
+    /**
+     * @return BackupManager&MockObject
+     */
+    private function createBackupManager(bool $backupsEnabled): BackupManager
+    {
         $backupManager = $this->createMock(BackupManager::class);
         $backupManager
             ->expects($backupsEnabled ? $this->once() : $this->never())
@@ -449,14 +453,7 @@ class MigrateCommandTest extends TestCase
             ->method('create')
         ;
 
-        return new MigrateCommand(
-            $migrations,
-            $fileLocator,
-            $this->getTempDir(),
-            $this->createMock(ContaoFramework::class),
-            $backupManager,
-            $installer ?? $this->createMock(Installer::class)
-        );
+        return $backupManager;
     }
 
     private function jsonArrayFromNdjson(string $ndjson): array

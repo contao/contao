@@ -15,6 +15,8 @@ use Contao\Database\Statement;
 use Contao\Model\Collection;
 use Contao\Model\QueryBuilder;
 use Contao\Model\Registry;
+use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Reads objects from and writes them to the database
@@ -67,12 +69,6 @@ abstract class Model
 	protected static $strPk = 'id';
 
 	/**
-	 * Class name cache
-	 * @var array
-	 */
-	protected static $arrClassNames = array();
-
-	/**
 	 * Data
 	 * @var array
 	 */
@@ -101,6 +97,11 @@ abstract class Model
 	 * @var boolean
 	 */
 	protected $blnPreventSaving = false;
+
+	/**
+	 * @var array<string,array<string,string>>
+	 */
+	private static $arrColumnCastTypes = array();
 
 	/**
 	 * Load the relations and optionally process a result set
@@ -227,6 +228,11 @@ abstract class Model
 		$this->arrData[$strKey] = $varValue;
 
 		unset($this->arrRelated[$strKey]);
+
+		if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
+		{
+			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6.0. Use type %s instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+		}
 	}
 
 	/**
@@ -346,6 +352,11 @@ abstract class Model
 			}
 		}
 
+		foreach ($arrData as $strKey => $varValue)
+		{
+			$arrData[$strKey] = static::convertToPhpValue($strKey, $varValue);
+		}
+
 		$this->arrData = $arrData;
 
 		return $this;
@@ -369,11 +380,73 @@ abstract class Model
 
 			if (!isset($this->arrModified[$k]))
 			{
-				$this->arrData[$k] = $v;
+				$this->arrData[$k] = static::convertToPhpValue($k, $v);
 			}
 		}
 
 		return $this;
+	}
+
+	/**
+	 * @internal
+	 *
+	 * @return array<string,array<string,string>>
+	 */
+	public static function getColumnCastTypes(): array
+	{
+		$types = array();
+		$tables = System::getContainer()->get('contao.doctrine.schema_provider')->createSchema()->getTables();
+
+		foreach ($tables as $table)
+		{
+			foreach ($table->getColumns() as $column)
+			{
+				$type = strtolower($column->getType()->getName());
+
+				if (\in_array($type, array(Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN), true))
+				{
+					$types[strtolower($table->getName())][strtolower($column->getName())] = $type;
+				}
+			}
+		}
+
+		return $types;
+	}
+
+	/**
+	 * Convert a value from the database to the correct PHP type as defined in
+	 * the schema for the given column.
+	 *
+	 * @internal
+	 *
+	 * @param string $strKey   The column name
+	 * @param mixed  $varValue The value as it was retrieved from the database
+	 *
+	 * @return mixed The value cast to the corresponding PHP type
+	 */
+	public static function convertToPhpValue(string $strKey, mixed $varValue): mixed
+	{
+		if (!self::$arrColumnCastTypes)
+		{
+			$path = Path::join(System::getContainer()->getParameter('kernel.cache_dir'), 'contao/config/column-types.php');
+
+			if (!System::getContainer()->getParameter('kernel.debug') && file_exists($path))
+			{
+				self::$arrColumnCastTypes = include $path;
+			}
+			else
+			{
+				self::$arrColumnCastTypes = self::getColumnCastTypes();
+			}
+		}
+
+		return match (self::$arrColumnCastTypes[strtolower(static::$strTable)][strtolower($strKey)] ?? null)
+		{
+			Types::INTEGER, Types::SMALLINT => (int) $varValue,
+			Types::FLOAT => (float) $varValue,
+			Types::BOOLEAN => (bool) $varValue,
+			default => $varValue,
+		};
 	}
 
 	/**
@@ -409,12 +482,6 @@ abstract class Model
 	 */
 	public function save()
 	{
-		// Deprecated call
-		if (\func_num_args() > 0)
-		{
-			throw new \InvalidArgumentException('The $blnForceInsert argument has been removed (see system/docs/UPGRADE.md)');
-		}
-
 		// The instance cannot be saved
 		if ($this->blnPreventSaving)
 		{
@@ -741,8 +808,8 @@ abstract class Model
 	/**
 	 * Find a single record by its primary key
 	 *
-	 * @param mixed $varValue   The property value
-	 * @param array $arrOptions An optional options array
+	 * @param int|string $varValue   The property value
+	 * @param array      $arrOptions An optional options array
 	 *
 	 * @return static The model or null if the result is empty
 	 */
@@ -750,9 +817,7 @@ abstract class Model
 	{
 		if ($varValue === null)
 		{
-			trigger_deprecation('contao/core-bundle', '4.13', 'Passing "null" as primary key has been deprecated and will no longer work in Contao 5.0.', __CLASS__);
-
-			return null;
+			throw new \TypeError('Model::findByPk(): Argument #1 ($varValue) must be of type int|string, got null');
 		}
 
 		// Try to load from the registry
@@ -937,9 +1002,7 @@ abstract class Model
 
 			if ($varValue === null && $arrColumn[0] === static::getPk())
 			{
-				trigger_deprecation('contao/core-bundle', '4.13', 'Passing "null" as primary key has been deprecated and will no longer work in Contao 5.0.', __CLASS__);
-
-				return null;
+				throw new \TypeError('Model::findBy(): Argument #2 ($varValue) must be of type int|string when querying for the primary key, got null');
 			}
 		}
 
@@ -1082,13 +1145,13 @@ abstract class Model
 			$objStatement->limit($arrOptions['limit'], $arrOptions['offset']);
 		}
 
-		if (!\array_key_exists('value', $arrOptions))
+		if (!isset($arrOptions['value']))
 		{
 			$arrOptions['value'] = array();
 		}
 
 		$objStatement = static::preFind($objStatement);
-		$objResult = $objStatement->execute(...(\is_array($arrOptions['value']) ? $arrOptions['value'] : array($arrOptions['value'])));
+		$objResult = $objStatement->execute(...(array) ($arrOptions['value']));
 
 		if ($objResult->numRows < 1)
 		{
@@ -1193,30 +1256,12 @@ abstract class Model
 	 */
 	public static function getClassFromTable($strTable)
 	{
-		if (isset(static::$arrClassNames[$strTable]))
+		if (!isset($GLOBALS['TL_MODELS'][$strTable]))
 		{
-			return static::$arrClassNames[$strTable];
+			throw new \RuntimeException(sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
 		}
 
-		if (isset($GLOBALS['TL_MODELS'][$strTable]))
-		{
-			static::$arrClassNames[$strTable] = $GLOBALS['TL_MODELS'][$strTable]; // see 4796
-
-			return static::$arrClassNames[$strTable];
-		}
-
-		trigger_deprecation('contao/core-bundle', '4.10', sprintf('Not registering table "%s" in $GLOBALS[\'TL_MODELS\'] has been deprecated and will no longer work in Contao 5.0.', $strTable));
-
-		$arrChunks = explode('_', $strTable);
-
-		if ($arrChunks[0] == 'tl')
-		{
-			array_shift($arrChunks);
-		}
-
-		static::$arrClassNames[$strTable] = implode('', array_map('ucfirst', $arrChunks)) . 'Model';
-
-		return static::$arrClassNames[$strTable];
+		return $GLOBALS['TL_MODELS'][$strTable];
 	}
 
 	/**

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" colors="true" defaultTestSuite="unit" bootstrap="vendor/autoload.php" beStrictAboutChangesToGlobalState="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd" colors="true" defaultTestSuite="unit" bootstrap="vendor/autoload.php" beStrictAboutChangesToGlobalState="true">
   <coverage>
     <include>
       <directory>./calendar-bundle/src</directory>
+      <directory>./comments-bundle/src</directory>
       <directory>./core-bundle/src</directory>
       <directory>./faq-bundle/src</directory>
       <directory>./maker-bundle/src</directory>
@@ -12,6 +13,7 @@
     </include>
     <exclude>
       <directory>./calendar-bundle/src/Resources</directory>
+      <directory>./comments-bundle/src/Resources</directory>
       <directory>./core-bundle/src/Resources</directory>
       <directory>./faq-bundle/src/Resources</directory>
       <directory>./maker-bundle/src/Resources</directory>
@@ -32,7 +34,10 @@
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"/>
     <env name="SYMFONY_PATCH_TYPE_DECLARATIONS" value="deprecations=0"/>
     <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel"/>
+    <env name="DISABLE_HTTP_CACHE" value="1"/>
     <env name="APP_SECRET" value="foobar"/>
+    <env name="APP_ENV" value="test"/>
+    <env name="APP_DEBUG" value=""/>
     <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test"/>
   </php>
   <testsuites>
@@ -79,5 +84,7 @@
   <extensions>
     <extension class="Contao\CoreBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
     <extension class="Contao\ManagerBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
+    <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>
+    <extension class="Contao\TestCase\WarnXdebugPhpunitExtension"/>
   </extensions>
 </phpunit>

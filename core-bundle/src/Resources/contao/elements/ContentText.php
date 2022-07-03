@@ -26,8 +26,6 @@ class ContentText extends ContentElement
 	 */
 	protected function compile()
 	{
-		$this->text = StringUtil::toHtml5($this->text);
-
 		// Add the static files URL to images
 		if ($staticUrl = System::getContainer()->get('contao.assets.files_context')->getStaticUrl())
 		{
@@ -53,7 +51,7 @@ class ContentText extends ContentElement
 
 			if (null !== $figure)
 			{
-				$figure->applyLegacyTemplateData($this->Template, $this->imagemargin, $this->floating);
+				$figure->applyLegacyTemplateData($this->Template, null, $this->floating);
 			}
 		}
 	}

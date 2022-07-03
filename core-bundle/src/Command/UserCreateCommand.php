@@ -39,16 +39,14 @@ class UserCreateCommand extends Command
     protected static $defaultName = 'contao:user:create';
     protected static $defaultDescription = 'Create a new Contao back end user.';
 
-    private ContaoFramework $framework;
-    private Connection $connection;
-    private PasswordHasherFactoryInterface $passwordHasherFactory;
     private array $locales;
 
-    public function __construct(ContaoFramework $framework, Connection $connection, PasswordHasherFactoryInterface $passwordHasherFactory, Locales $locales)
-    {
-        $this->framework = $framework;
-        $this->connection = $connection;
-        $this->passwordHasherFactory = $passwordHasherFactory;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Connection $connection,
+        private PasswordHasherFactoryInterface $passwordHasherFactory,
+        Locales $locales,
+    ) {
         $this->locales = $locales->getEnabledLocaleIds();
 
         parent::__construct();
@@ -172,7 +170,7 @@ class UserCreateCommand extends Command
         ) {
             $io->error('Please provide at least and each of: username, name, email, password');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $isAdmin = $input->getOption('admin');
@@ -190,7 +188,7 @@ class UserCreateCommand extends Command
 
         $io->success(sprintf('User %s%s created.', $username, $isAdmin ? ' with admin permissions' : ''));
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function ask(string $label, InputInterface $input, OutputInterface $output, callable $callback = null): string

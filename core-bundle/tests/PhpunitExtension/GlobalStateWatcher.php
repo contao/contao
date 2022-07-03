@@ -84,8 +84,10 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'error_reporting' => error_reporting(),
                 'date_default_timezone_get' => date_default_timezone_get(),
                 'mb_internal_encoding' => mb_internal_encoding(),
+                'mb_substitute_character' => mb_substitute_character(),
                 'umask' => umask(),
                 'getcwd' => getcwd(),
+                'get_include_path' => get_include_path(),
                 'ob_get_level' => ob_get_level(),
                 'libxml_get_errors' => libxml_get_errors(),
                 'stream_get_wrappers' => stream_get_wrappers(),
@@ -181,12 +183,16 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                     continue;
                 }
 
+                if ($value instanceof \WeakMap && 0 === $value->count() && $property->hasType() && !$property->getType()->allowsNull()) {
+                    continue;
+                }
+
                 if (\is_array($value)) {
                     $value = 'array('.\count($value).')';
                 }
 
                 if (\is_object($value)) {
-                    $value = \get_class($value);
+                    $value = $value::class;
                 }
 
                 $data["$class::$property->name"] = $value;

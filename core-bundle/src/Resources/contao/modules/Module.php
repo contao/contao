@@ -58,7 +58,6 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property boolean $useCaption
  * @property boolean $fullsize
  * @property string  $multiSRC
- * @property string  $orderSRC
  * @property string  $html
  * @property integer $rss_cache
  * @property string  $rss_feed
@@ -151,8 +150,8 @@ abstract class Module extends Frontend
 		}
 
 		$arrHeadline = StringUtil::deserialize($objModule->headline);
-		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] ?? '' : $arrHeadline;
+		$this->hl = $arrHeadline['unit'] ?? 'h1';
 		$this->strColumn = $strColumn;
 	}
 
@@ -315,18 +314,6 @@ abstract class Module extends Frontend
 				$objSubpage->domain = $host;
 			}
 
-			if ($objSubpage->tabindex > 0)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
-			}
-
-			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				continue;
-			}
-
 			$subitems = '';
 
 			// PageModel->groups is an array after calling loadDetails()
@@ -372,8 +359,6 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;
@@ -385,8 +370,6 @@ abstract class Module extends Frontend
 						}
 						catch (ExceptionInterface $exception)
 						{
-							System::getContainer()->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;
@@ -394,15 +377,6 @@ abstract class Module extends Frontend
 
 				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);
 			}
-		}
-
-		// Add classes first and last
-		if (!empty($items))
-		{
-			$last = \count($items) - 1;
-
-			$items[0]['class'] = trim($items[0]['class'] . ' first');
-			$items[$last]['class'] = trim($items[$last]['class'] . ' last');
 		}
 
 		$objTemplate->items = $items;
@@ -425,10 +399,8 @@ abstract class Module extends Frontend
 		$row = $objSubpage->row();
 		$trail = \in_array($objSubpage->id, $objPage->trail);
 
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
-
 		// Use the path without query string to check for active pages (see #480)
-		$path = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
+		list($path) = explode('?', Environment::get('requestUri'), 2);
 
 		// Active page
 		if (($objPage->id == $objSubpage->id || ($objSubpage->type == 'forward' && $objPage->id == $objSubpage->jumpTo)) && !($this instanceof ModuleSitemap) && $href == $path)
@@ -462,16 +434,10 @@ abstract class Module extends Frontend
 		$row['link'] = $objSubpage->title;
 		$row['href'] = $href;
 		$row['rel'] = '';
-		$row['nofollow'] = (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0); // backwards compatibility
 		$row['target'] = '';
 		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
 
 		$arrRel = array();
-
-		if (strncmp($objSubpage->robots, 'noindex,nofollow', 16) === 0)
-		{
-			$arrRel[] = 'nofollow';
-		}
 
 		// Override the link target
 		if ($objSubpage->type == 'redirect' && $objSubpage->target)
@@ -500,14 +466,14 @@ abstract class Module extends Frontend
 	 *
 	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
 	 */
-	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): ?array
+	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): array|null
 	{
 		$time = Date::floorToMinute();
 		$tokenChecker = System::getContainer()->get('contao.security.token_checker');
 		$blnBeUserLoggedIn = $tokenChecker->isPreviewMode();
 		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
 
-		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide='' OR sitemap='map_always')" : " AND p2.hide=''") : "") . (!$blnBeUserLoggedIn ? " AND p2.published='1' AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide='' OR sitemap='map_always')" : " AND p1.hide=''") : "") . (!$blnBeUserLoggedIn ? " AND p1.published='1' AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide=0 OR sitemap='map_always')" : " AND p2.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p2.published=1 AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide=0 OR sitemap='map_always')" : " AND p1.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p1.published=1 AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
 										   ->execute($intPid)
 										   ->fetchAllAssoc();
 

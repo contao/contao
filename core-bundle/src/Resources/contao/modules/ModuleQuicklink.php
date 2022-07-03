@@ -40,7 +40,7 @@ class ModuleQuicklink extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -89,13 +89,6 @@ class ModuleQuicklink extends Module
 		{
 			$objSubpage->loadDetails();
 
-			// Hide the page if it is not protected and only visible to guests (backwards compatibility)
-			if ($objSubpage->guests && !$objSubpage->protected && $isMember)
-			{
-				trigger_deprecation('contao/core-bundle', '4.12', 'Using the "show to guests only" feature has been deprecated an will no longer work in Contao 5.0. Use the "protect page" function instead.');
-				continue;
-			}
-
 			// PageModel->groups is an array after calling loadDetails()
 			if (!$objSubpage->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
 			{
@@ -133,8 +126,6 @@ class ModuleQuicklink extends Module
 						}
 						catch (ExceptionInterface $exception)
 						{
-							$container->get('monolog.logger.contao.error')->error('Unable to generate URL for page ID ' . $objSubpage->id . ': ' . $exception->getMessage());
-
 							continue 2;
 						}
 						break;
@@ -150,13 +141,10 @@ class ModuleQuicklink extends Module
 			}
 		}
 
-		$request = $container->get('request_stack')->getMainRequest();
-
 		$this->Template->items = $items;
 		$this->Template->formId = 'tl_quicklink_' . $this->id;
-		$this->Template->request = null !== $request ? StringUtil::ampersand($request->getRequestUri()) : '';
+		$this->Template->request = StringUtil::ampersand(Environment::get('requestUri'));
 		$this->Template->title = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['quicklink'];
 		$this->Template->button = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['go']);
-		$this->Template->requestToken = $container->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 }

@@ -15,42 +15,6 @@ var Theme = {
 	isWebkit: (Browser.chrome || Browser.safari || navigator.userAgent.match(/(?:webkit|khtml)/i)),
 
 	/**
-	 * Colorize a table row when hovering over it
-	 *
-	 * @param {object} el    The DOM element
-	 * @param {int}    state The current state
-	 *
-	 * @deprecated The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5.
-	 *             Assign the CSS class "hover-row" instead.
-	 */
-	hoverRow: function(el, state) {
-		var items = $(el).getChildren();
-		for (var i=0; i<items.length; i++) {
-			if (items[i].nodeName.toLowerCase() == 'td') {
-				items[i].setStyle('background-color', (state ? '#fffce1' : ''));
-			}
-		}
-		window.console && console.warn('The Theme.hoverRow() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-row" instead.');
-	},
-
-	/**
-	 * Colorize a layer when hovering over it
-	 *
-	 * @param {object} el    The DOM element
-	 * @param {int}    state The current state
-	 *
-	 * @deprecated The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5.
-	 *             Assign the CSS class "hover-div" instead.
-	 */
-	hoverDiv: function(el, state) {
-		if (!state) {
-			el.removeAttribute('data-visited');
-		}
-		$(el).setStyle('background-color', (state ? '#fffce1' : ''));
-		window.console && console.warn('The Theme.hoverDiv() function has been deprecated in Contao 4 and will be removed in Contao 5. Assign the CSS class "hover-div" instead.');
-	},
-
-	/**
 	 * Stop the propagation of click events of certain elements
 	 */
 	stopClickPropagation: function() {
@@ -107,7 +71,7 @@ var Theme = {
 
 					if (e.event.shiftKey) {
 						el.getElements('a').each(function(a) {
-							if (a.hasClass('editheader')) {
+							if (a.hasClass('children')) {
 								document.location.href = a.href;
 							}
 						});
@@ -181,6 +145,7 @@ var Theme = {
 		burger
 			.addEvent('click', function() {
 				document.body.toggleClass('show-navigation');
+				burger.setAttribute('aria-expanded', document.body.hasClass('show-navigation') ? 'true' : 'false')
 			})
 			.addEvent('keydown', function(e) {
 				if (e.event.keyCode == 27) {
@@ -188,6 +153,21 @@ var Theme = {
 				}
 			})
 		;
+
+		if (window.matchMedia) {
+			var matchMedia = window.matchMedia('(max-width:991px)');
+			var setAriaControls = function () {
+				if (matchMedia.matches) {
+					burger.setAttribute('aria-controls', 'left')
+					burger.setAttribute('aria-expanded', document.body.hasClass('show-navigation') ? 'true' : 'false')
+				} else {
+					burger.removeAttribute('aria-controls');
+					burger.removeAttribute('aria-expanded');
+				}
+			};
+			matchMedia.addEventListener('change', setAriaControls);
+			setAriaControls();
+		}
 	},
 
 	/**
@@ -198,14 +178,22 @@ var Theme = {
 		if (!tmenu) return;
 
 		var li = tmenu.getElement('.submenu'),
-			span = li.getFirst('span');
-		if (!li || !span) return;
+			button = li.getFirst('span').getFirst('button'),
+			menu = li.getFirst('ul');
+		if (!li || !button || !menu) return;
 
-		span.addEvent('click', function(e) {
+		button.setAttribute('aria-controls', 'tmenu__profile');
+		button.setAttribute('aria-expanded', 'false');
+
+		menu.id = 'tmenu__profile';
+
+		button.addEvent('click', function(e) {
 			if (li.hasClass('active')) {
 				li.removeClass('active');
+				button.setAttribute('aria-expanded', 'false');
 			} else {
 				li.addClass('active');
+				button.setAttribute('aria-expanded', 'true');
 			}
 			e.stopPropagation();
 		});

@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Asset;
 
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 use Symfony\Component\Asset\Context\ContextInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -22,17 +21,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ContaoContext implements ContextInterface
 {
-    private RequestStack $requestStack;
-    private ContaoFramework $framework;
-    private string $field;
-    private bool $debug;
-
-    public function __construct(RequestStack $requestStack, ContaoFramework $framework, string $field, bool $debug = false)
+    public function __construct(private RequestStack $requestStack, private string $field, private bool $debug = false)
     {
-        $this->requestStack = $requestStack;
-        $this->framework = $framework;
-        $this->field = $field;
-        $this->debug = $debug;
     }
 
     public function getBasePath(): string
@@ -56,7 +46,7 @@ class ContaoContext implements ContextInterface
         $page = $this->getPageModel();
 
         if (null !== $page) {
-            return (bool) $page->loadDetails()->rootUseSSL;
+            return $page->loadDetails()->rootUseSSL;
         }
 
         $request = $this->requestStack->getMainRequest();
@@ -69,57 +59,29 @@ class ContaoContext implements ContextInterface
     }
 
     /**
-     * Returns the base path with a trailing slash if not empty.
+     * Returns the base path with a trailing slash.
      */
     public function getStaticUrl(): string
     {
-        if ($path = $this->getBasePath()) {
-            return $path.'/';
-        }
-
-        return '';
+        return $this->getBasePath().'/';
     }
 
-    private function getPageModel(): ?PageModel
+    private function getPageModel(): PageModel|null
     {
         $request = $this->requestStack->getMainRequest();
 
-        if (null === $request || !$request->attributes->has('pageModel')) {
-            if (isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel) {
-                return $GLOBALS['objPage'];
-            }
-
-            return null;
-        }
-
-        $pageModel = $request->attributes->get('pageModel');
-
-        if ($pageModel instanceof PageModel) {
+        if ($request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
             return $pageModel;
         }
 
-        if (
-            isset($GLOBALS['objPage'])
-            && $GLOBALS['objPage'] instanceof PageModel
-            && (int) $GLOBALS['objPage']->id === (int) $pageModel
-        ) {
-            return $GLOBALS['objPage'];
-        }
-
-        $this->framework->initialize();
-
-        return $this->framework->getAdapter(PageModel::class)->findByPk((int) $pageModel);
+        return null;
     }
 
     /**
      * Returns a field value from the page model.
      */
-    private function getFieldValue(?PageModel $page): string
+    private function getFieldValue(PageModel|null $page): string
     {
-        if (null === $page) {
-            return '';
-        }
-
-        return (string) $page->{$this->field};
+        return (string) $page?->{$this->field};
     }
 }

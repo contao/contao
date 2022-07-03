@@ -16,36 +16,36 @@ use Contao\Model\Collection;
 /**
  * Reads and writes content elements
  *
- * @property string|integer    $id
- * @property string|integer    $pid
+ * @property integer           $id
+ * @property integer           $pid
  * @property string            $ptable
- * @property string|integer    $sorting
- * @property string|integer    $tstamp
+ * @property integer           $sorting
+ * @property integer           $tstamp
  * @property string            $type
  * @property string            $headline
  * @property string|null       $text
- * @property string|boolean    $addImage
- * @property string|boolean    $inline
- * @property string|boolean    $overwriteMeta
+ * @property boolean           $addImage
+ * @property boolean           $inline
+ * @property boolean           $overwriteMeta
  * @property string|null       $singleSRC
  * @property string            $alt
  * @property string            $imageTitle
  * @property string|integer    $size
- * @property string|array      $imagemargin
  * @property string            $imageUrl
- * @property string|boolean    $fullsize
+ * @property boolean           $fullsize
  * @property string            $caption
  * @property string            $floating
  * @property string|null       $html
+ * @property string|null       $unfilteredHtml
  * @property string            $listtype
  * @property string|array|null $listitems
  * @property string|array|null $tableitems
  * @property string            $summary
- * @property string|boolean    $thead
- * @property string|boolean    $tfoot
- * @property string|boolean    $tleft
- * @property string|boolean    $sortable
- * @property string|integer    $sortIndex
+ * @property boolean           $thead
+ * @property boolean           $tfoot
+ * @property boolean           $tleft
+ * @property boolean           $sortable
+ * @property integer           $sortIndex
  * @property string            $sortOrder
  * @property string            $mooHeadline
  * @property string            $mooStyle
@@ -54,21 +54,20 @@ use Contao\Model\Collection;
  * @property string            $markdownSource
  * @property string|null       $code
  * @property string            $url
- * @property string|boolean    $target
- * @property string|boolean    $overwriteLink
+ * @property boolean           $target
+ * @property boolean           $overwriteLink
  * @property string            $titleText
  * @property string            $linkTitle
  * @property string            $embed
  * @property string            $rel
- * @property string|boolean    $useImage
+ * @property boolean           $useImage
  * @property string|array|null $multiSRC
- * @property string|array|null $orderSRC
- * @property string|boolean    $useHomeDir
- * @property string|integer    $perRow
- * @property string|integer    $perPage
- * @property string|integer    $numberOfItems
+ * @property boolean           $useHomeDir
+ * @property integer           $perRow
+ * @property integer           $perPage
+ * @property integer           $numberOfItems
  * @property string            $sortBy
- * @property string|boolean    $metaIgnore
+ * @property boolean           $metaIgnore
  * @property string            $galleryTpl
  * @property string            $customTpl
  * @property string|null       $playerSRC
@@ -77,35 +76,35 @@ use Contao\Model\Collection;
  * @property string|null       $posterSRC
  * @property string|array      $playerSize
  * @property string|array|null $playerOptions
- * @property string|integer    $playerStart
- * @property string|integer    $playerStop
+ * @property integer           $playerStart
+ * @property integer           $playerStop
  * @property string            $playerCaption
  * @property string            $playerAspect
- * @property string|boolean    $splashImage
+ * @property boolean           $splashImage
  * @property string            $playerPreload
  * @property string            $playerColor
  * @property string|array|null $youtubeOptions
  * @property string|array|null $vimeoOptions
- * @property string|integer    $sliderDelay
- * @property string|integer    $sliderSpeed
- * @property string|integer    $sliderStartSlide
- * @property string|boolean    $sliderContinuous
- * @property string|integer    $cteAlias
- * @property string|integer    $articleAlias
- * @property string|integer    $article
- * @property string|integer    $form
- * @property string|integer    $module
- * @property string|boolean    $protected
+ * @property integer           $sliderDelay
+ * @property integer           $sliderSpeed
+ * @property integer           $sliderStartSlide
+ * @property boolean           $sliderContinuous
+ * @property integer           $cteAlias
+ * @property integer           $articleAlias
+ * @property integer           $article
+ * @property integer           $form
+ * @property integer           $module
+ * @property boolean           $protected
  * @property string|array|null $groups
- * @property string|boolean    $guests
  * @property string|array      $cssID
- * @property string|boolean    $invisible
+ * @property boolean           $invisible
  * @property string|integer    $start
  * @property string|integer    $stop
+ * @property boolean           $showPreview
  *
- * @property string         $typePrefix
- * @property array          $classes
- * @property string|integer $origId
+ * @property string  $typePrefix
+ * @property array   $classes
+ * @property integer $origId
  *
  * @method static ContentModel|null findById($id, array $opt=array())
  * @method static ContentModel|null findByPk($id, array $opt=array())
@@ -125,12 +124,12 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByAlt($val, array $opt=array())
  * @method static ContentModel|null findOneByImageTitle($val, array $opt=array())
  * @method static ContentModel|null findOneBySize($val, array $opt=array())
- * @method static ContentModel|null findOneByImagemargin($val, array $opt=array())
  * @method static ContentModel|null findOneByImageUrl($val, array $opt=array())
  * @method static ContentModel|null findOneByFullsize($val, array $opt=array())
  * @method static ContentModel|null findOneByCaption($val, array $opt=array())
  * @method static ContentModel|null findOneByFloating($val, array $opt=array())
  * @method static ContentModel|null findOneByHtml($val, array $opt=array())
+ * @method static ContentModel|null findOneByUnfilteredHtml($val, array $opt=array())
  * @method static ContentModel|null findOneByListtype($val, array $opt=array())
  * @method static ContentModel|null findOneByListitems($val, array $opt=array())
  * @method static ContentModel|null findOneByTableitems($val, array $opt=array())
@@ -156,7 +155,6 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByRel($val, array $opt=array())
  * @method static ContentModel|null findOneByUseImage($val, array $opt=array())
  * @method static ContentModel|null findOneByMultiSRC($val, array $opt=array())
- * @method static ContentModel|null findOneByOrderSRC($val, array $opt=array())
  * @method static ContentModel|null findOneByUseHomeDir($val, array $opt=array())
  * @method static ContentModel|null findOneByPerRow($val, array $opt=array())
  * @method static ContentModel|null findOneByPerPage($val, array $opt=array())
@@ -191,12 +189,12 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByModule($val, array $opt=array())
  * @method static ContentModel|null findOneByProtected($val, array $opt=array())
  * @method static ContentModel|null findOneByGroups($val, array $opt=array())
- * @method static ContentModel|null findOneByGuests($val, array $opt=array())
  * @method static ContentModel|null findOneByCssID($val, array $opt=array())
  * @method static ContentModel|null findOneBySpace($val, array $opt=array())
  * @method static ContentModel|null findOneByInvisible($val, array $opt=array())
  * @method static ContentModel|null findOneByStart($val, array $opt=array())
  * @method static ContentModel|null findOneByStop($val, array $opt=array())
+ * @method static ContentModel|null findOneByShowPreview($val, array $opt=array())
  *
  * @method static Collection|ContentModel[]|ContentModel|null findByPid($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPtable($val, array $opt=array())
@@ -212,12 +210,12 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByAlt($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByImageTitle($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBySize($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByImagemargin($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByImageUrl($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByFullsize($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByCaption($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByFloating($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByHtml($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByUnfilteredHtml($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByListtype($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByListitems($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByTableitems($val, array $opt=array())
@@ -243,7 +241,6 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByRel($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByUseImage($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByMultiSRC($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByOrderSRC($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByUseHomeDir($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPerRow($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByPerPage($val, array $opt=array())
@@ -278,12 +275,12 @@ use Contao\Model\Collection;
  * @method static Collection|ContentModel[]|ContentModel|null findByModule($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByProtected($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByGroups($val, array $opt=array())
- * @method static Collection|ContentModel[]|ContentModel|null findByGuests($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByCssID($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBySpace($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByInvisible($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByStart($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findByStop($val, array $opt=array())
+ * @method static Collection|ContentModel[]|ContentModel|null findByShowPreview($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findMultipleByIds($val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findBy($col, $val, array $opt=array())
  * @method static Collection|ContentModel[]|ContentModel|null findAll(array $opt=array())
@@ -303,12 +300,12 @@ use Contao\Model\Collection;
  * @method static integer countByAlt($val, array $opt=array())
  * @method static integer countByImageTitle($val, array $opt=array())
  * @method static integer countBySize($val, array $opt=array())
- * @method static integer countByImagemargin($val, array $opt=array())
  * @method static integer countByImageUrl($val, array $opt=array())
  * @method static integer countByFullsize($val, array $opt=array())
  * @method static integer countByCaption($val, array $opt=array())
  * @method static integer countByFloating($val, array $opt=array())
  * @method static integer countByHtml($val, array $opt=array())
+ * @method static integer countByUnfilteredHtml($val, array $opt=array())
  * @method static integer countByListtype($val, array $opt=array())
  * @method static integer countByListitems($val, array $opt=array())
  * @method static integer countByTableitems($val, array $opt=array())
@@ -334,7 +331,6 @@ use Contao\Model\Collection;
  * @method static integer countByRel($val, array $opt=array())
  * @method static integer countByUseImage($val, array $opt=array())
  * @method static integer countByMultiSRC($val, array $opt=array())
- * @method static integer countByOrderSRC($val, array $opt=array())
  * @method static integer countByUseHomeDir($val, array $opt=array())
  * @method static integer countByPerRow($val, array $opt=array())
  * @method static integer countByPerPage($val, array $opt=array())
@@ -369,12 +365,12 @@ use Contao\Model\Collection;
  * @method static integer countByModule($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
- * @method static integer countByGuests($val, array $opt=array())
  * @method static integer countByCssID($val, array $opt=array())
  * @method static integer countBySpace($val, array $opt=array())
  * @method static integer countByInvisible($val, array $opt=array())
  * @method static integer countByStart($val, array $opt=array())
  * @method static integer countByStop($val, array $opt=array())
+ * @method static integer countByShowPreview($val, array $opt=array())
  */
 class ContentModel extends Model
 {
@@ -398,21 +394,12 @@ class ContentModel extends Model
 	public static function findPublishedByPidAndTable($intPid, $strParentTable, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-
-		// Also handle empty ptable fields
-		if ($strParentTable == 'tl_article')
-		{
-			$arrColumns = array("$t.pid=? AND ($t.ptable=? OR $t.ptable='')");
-		}
-		else
-		{
-			$arrColumns = array("$t.pid=? AND $t.ptable=?");
-		}
+		$arrColumns = array("$t.pid=? AND $t.ptable=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.invisible='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.invisible=0 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		// Skip unsaved elements (see #2708)
@@ -438,21 +425,12 @@ class ContentModel extends Model
 	public static function countPublishedByPidAndTable($intPid, $strParentTable, array $arrOptions=array())
 	{
 		$t = static::$strTable;
-
-		// Also handle empty ptable fields (backwards compatibility)
-		if ($strParentTable == 'tl_article')
-		{
-			$arrColumns = array("$t.pid=? AND ($t.ptable=? OR $t.ptable='')");
-		}
-		else
-		{
-			$arrColumns = array("$t.pid=? AND $t.ptable=?");
-		}
+		$arrColumns = array("$t.pid=? AND $t.ptable=?");
 
 		if (!static::isPreviewMode($arrOptions))
 		{
 			$time = Date::floorToMinute();
-			$arrColumns[] = "$t.invisible='' AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
+			$arrColumns[] = "$t.invisible=0 AND ($t.start='' OR $t.start<='$time') AND ($t.stop='' OR $t.stop>'$time')";
 		}
 
 		// Skip unsaved elements (see #2708)

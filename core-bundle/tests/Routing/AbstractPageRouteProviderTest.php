@@ -23,20 +23,17 @@ class AbstractPageRouteProviderTest extends TestCase
     /**
      * @dataProvider compareRoutesProvider
      */
-    public function testCompareRoutes(Route $a, Route $b, ?array $languages, int $expected): void
+    public function testCompareRoutes(Route $a, Route $b, array|null $languages, int $expected): void
     {
         $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);
         $class = new \ReflectionClass($instance);
 
         if (null !== $languages) {
             $method = $class->getMethod('convertLanguagesForSorting');
-            $method->setAccessible(true);
             $languages = $method->invoke($instance, $languages);
         }
 
         $method = $class->getMethod('compareRoutes');
-        $method->setAccessible(true);
-
         $result = $method->invoke($instance, $a, $b, $languages);
 
         $this->assertSame($expected, $result);
@@ -192,7 +189,7 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
 
         yield 'Sorts route with required parameters first (1)' => [
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
             new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '(/.+?)?']),
             ['de', 'de'],
             -1,
@@ -200,14 +197,14 @@ class AbstractPageRouteProviderTest extends TestCase
 
         yield 'Sorts route with required parameters first (2)' => [
             new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '(/.+?)?']),
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
             ['de', 'de'],
             1,
         ];
 
         yield 'Ignores required parameters with equal requirement' => [
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
             ['de', 'de'],
             0,
         ];
@@ -278,12 +275,9 @@ class AbstractPageRouteProviderTest extends TestCase
         $class = new \ReflectionClass($instance);
 
         $method = $class->getMethod('convertLanguagesForSorting');
-        $method->setAccessible(true);
         $preferredLanguages = $method->invoke($instance, $preferredLanguages);
 
         $method = $class->getMethod('compareRoutes');
-        $method->setAccessible(true);
-
         $sorting = 0;
 
         $routes = array_map(
@@ -394,8 +388,6 @@ class AbstractPageRouteProviderTest extends TestCase
 
         $class = new \ReflectionClass($instance);
         $method = $class->getMethod('convertLanguagesForSorting');
-        $method->setAccessible(true);
-
         $result = $method->invoke($instance, $languages);
 
         $this->assertSame($expected, $result);

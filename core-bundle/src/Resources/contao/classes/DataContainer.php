@@ -15,8 +15,10 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\AbstractAction;
+use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\Image\ResizeConfiguration;
-use Imagine\Gd\Imagine;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
@@ -28,8 +30,8 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
  * @property string         $field
  * @property string         $inputName
  * @property string         $palette
- * @property object|null    $activeRecord
  * @property array          $rootIds
+ * @property int            $currentPid
  */
 abstract class DataContainer extends Backend
 {
@@ -59,7 +61,7 @@ abstract class DataContainer extends Backend
 	public const MODE_PARENT = 4;
 
 	/**
-	 * Records are displayed as tree (see site structure)
+	 * Records are displayed as tree (see pages)
 	 */
 	public const MODE_TREE = 5;
 
@@ -214,7 +216,8 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Active record
-	 * @var Model|FilesModel
+	 * @var Model|object|null
+	 * @deprecated Deprecated since Contao 5.0 to be removed in Contao 6. Use $dc->getCurrentRecord() instead.
 	 */
 	protected $objActiveRecord;
 
@@ -255,6 +258,17 @@ abstract class DataContainer extends Backend
 	protected $blnCreateNewVersion = false;
 
 	/**
+	 * @var int
+	 */
+	protected $intCurrentPid;
+
+	/**
+	 * Current record cache
+	 * @var array<int|string, array<string,mixed>|AccessDeniedException>
+	 */
+	private $arrCurrentRecordCache = array();
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey
@@ -265,6 +279,7 @@ abstract class DataContainer extends Backend
 		switch ($strKey)
 		{
 			case 'activeRecord':
+				trigger_deprecation('contao/core-bundle', '5.0', 'Setting the active record has been deprecated and will be removed in Contao 6.');
 				$this->objActiveRecord = $varValue;
 				break;
 
@@ -277,7 +292,8 @@ abstract class DataContainer extends Backend
 				break;
 
 			default:
-				$this->$strKey = $varValue; // backwards compatibility
+				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones has been deprecated and will no longer work in Contao 6.');
+				$this->$strKey = $varValue;
 				break;
 		}
 	}
@@ -312,10 +328,15 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use ' . __CLASS__ . '::getCurrentRecord() instead.');
+
 				return $this->objActiveRecord;
 
 			case 'createNewVersion':
 				return $this->blnCreateNewVersion;
+
+			case 'currentPid':
+				return $this->intCurrentPid;
 		}
 
 		return parent::__get($strKey);
@@ -343,16 +364,10 @@ abstract class DataContainer extends Backend
 
 		$xlabel = '';
 
-		// Toggle line wrap (textarea)
-		if (($arrData['inputType'] ?? null) == 'textarea' && !isset($arrData['eval']['rte']))
-		{
-			$xlabel .= ' ' . Image::getHtml('wrap.svg', $GLOBALS['TL_LANG']['MSC']['wordWrap'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['wordWrap']) . '" class="toggleWrap" onclick="Backend.toggleWrap(\'ctrl_' . $this->strInputName . '\')"');
-		}
-
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="contao/help.php?table=' . $this->strTable . '&amp;field=' . $this->strField . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('about.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -414,6 +429,7 @@ abstract class DataContainer extends Backend
 		// Convert insert tags in src attributes (see #5965)
 		if (isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
 		{
+			$this->varValue = StringUtil::removeBasePath($this->varValue);
 			$this->varValue = StringUtil::insertTagToSrc($this->varValue);
 		}
 
@@ -432,101 +448,51 @@ abstract class DataContainer extends Backend
 		$objWidget->xlabel = $xlabel;
 		$objWidget->currentRecord = $this->intId;
 
-		// Validate the field
-		if (Input::post('FORM_SUBMIT') == $this->strTable)
+		// Validate and save the field
+		if (Input::post('FORM_SUBMIT') == $this->strTable && $objWidget->submitInput() && Input::post($this->strInputName) !== null)
 		{
-			$suffix = $this->getFormFieldSuffix();
-			$key = (Input::get('act') == 'editAll') ? 'FORM_FIELDS_' . $suffix : 'FORM_FIELDS';
+			$objWidget->validate();
 
-			// Calculate the current palette
-			$postPaletteFields = implode(',', Input::post($key));
-			$postPaletteFields = array_unique(StringUtil::trimsplit('[,;]', $postPaletteFields));
-
-			// Compile the palette if there is none
-			if ($strPalette === null)
+			if ($objWidget->hasErrors())
 			{
-				$newPaletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
-			}
-			else
-			{
-				// Use the given palette ($strPalette is an array in editAll mode)
-				$newPaletteFields = \is_array($strPalette) ? $strPalette : StringUtil::trimsplit('[,;]', $strPalette);
-
-				// Recompile the palette if the current field is a selector field and the value has changed
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']) && $this->varValue != Input::post($this->strInputName) && \in_array($this->strField, $GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
+				// Skip mandatory fields on auto-submit (see #4077)
+				if (!$objWidget->mandatory || $objWidget->value || Input::post('SUBMIT_TYPE') != 'auto')
 				{
-					$newPaletteFields = StringUtil::trimsplit('[,;]', $this->getPalette());
+					$this->noReload = true;
 				}
 			}
-
-			// Adjust the names in editAll mode
-			if (Input::get('act') == 'editAll')
+			// The return value of submitInput() might have changed, therefore check it again here (see #2383)
+			elseif ($objWidget->submitInput())
 			{
-				foreach ($newPaletteFields as $k=>$v)
+				$varValue = $objWidget->value;
+
+				// Sort array by key (fix for JavaScript wizards)
+				if (\is_array($varValue))
 				{
-					$newPaletteFields[$k] = $v . '_' . $suffix;
+					ksort($varValue);
+					$varValue = serialize($varValue);
 				}
 
-				if ($this->User->isAdmin)
+				// Convert file paths in src attributes (see #5965)
+				if ($varValue && isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
 				{
-					$newPaletteFields['pid'] = 'pid_' . $suffix;
-					$newPaletteFields['sorting'] = 'sorting_' . $suffix;
+					$varValue = StringUtil::srcToInsertTag($varValue);
+					$varValue = StringUtil::addBasePath($varValue);
 				}
-			}
 
-			$paletteFields = array_intersect($postPaletteFields, $newPaletteFields);
-
-			// Deprecated since Contao 4.2, to be removed in Contao 5.0
-			if (!isset($_POST[$this->strInputName]) && \in_array($this->strInputName, $paletteFields))
-			{
-				trigger_deprecation('contao/core-bundle', '4.2', 'Using $_POST[\'FORM_FIELDS\'] has been deprecated and will no longer work in Contao 5.0. Make sure to always submit at least an empty string in your widget.');
-			}
-
-			// Validate and save the field
-			if ($objWidget->submitInput() && (\in_array($this->strInputName, $paletteFields) || Input::get('act') == 'overrideAll'))
-			{
-				$objWidget->validate();
-
-				if ($objWidget->hasErrors())
+				// Save the current value
+				try
 				{
-					// Skip mandatory fields on auto-submit (see #4077)
-					if (!$objWidget->mandatory || $objWidget->value || Input::post('SUBMIT_TYPE') != 'auto')
-					{
-						$this->noReload = true;
-					}
+					$this->save($varValue);
 				}
-				// The return value of submitInput() might have changed, therefore check it again here (see #2383)
-				elseif ($objWidget->submitInput())
+				catch (ResponseException $e)
 				{
-					$varValue = $objWidget->value;
-
-					// Sort array by key (fix for JavaScript wizards)
-					if (\is_array($varValue))
-					{
-						ksort($varValue);
-						$varValue = serialize($varValue);
-					}
-
-					// Convert file paths in src attributes (see #5965)
-					if ($varValue && isset($arrData['eval']['rte']) && strncmp($arrData['eval']['rte'], 'tiny', 4) === 0)
-					{
-						$varValue = StringUtil::srcToInsertTag($varValue);
-					}
-
-					// Save the current value
-					try
-					{
-						$this->save($varValue);
-					}
-					catch (ResponseException $e)
-					{
-						throw $e;
-					}
-					catch (\Exception $e)
-					{
-						$this->noReload = true;
-						$objWidget->addError($e->getMessage());
-					}
+					throw $e;
+				}
+				catch (\Exception $e)
+				{
+					$this->noReload = true;
+					$objWidget->addError($e->getMessage());
 				}
 			}
 		}
@@ -693,11 +659,8 @@ abstract class DataContainer extends Backend
 			$objTemplate = new BackendTemplate('be_' . $file);
 			$objTemplate->selector = 'ctrl_' . $this->strInputName;
 			$objTemplate->type = $type;
-			$objTemplate->fileBrowserTypes = $fileBrowserTypes;
+			$objTemplate->fileBrowserTypes = implode(' ', $fileBrowserTypes);
 			$objTemplate->source = $this->strTable . '.' . $this->intId;
-
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$objTemplate->language = Backend::getTinyMceLanguage();
 
 			$updateMode = $objTemplate->parse();
 
@@ -727,26 +690,7 @@ abstract class DataContainer extends Backend
 
 			if ($objFile->isImage)
 			{
-				$blnCanResize = true;
-
-				if ($objFile->isSvgImage)
-				{
-					// SVG images with undefined sizes cannot be resized
-					if (!$objFile->viewWidth || !$objFile->viewHeight)
-					{
-						$blnCanResize= false;
-					}
-				}
-				elseif (System::getContainer()->get('contao.image.imagine') instanceof Imagine)
-				{
-					// Check the maximum width and height if the GDlib is used to resize images
-					if ($objFile->height > Config::get('gdMaxImgHeight') || $objFile->width > Config::get('gdMaxImgWidth'))
-					{
-						$blnCanResize = false;
-					}
-				}
-
-				if ($blnCanResize)
+				if (!$objFile->isSvgImage || ($objFile->viewWidth && $objFile->viewHeight))
 				{
 					$container = System::getContainer();
 					$projectDir = $container->getParameter('kernel.project_dir');
@@ -845,7 +789,7 @@ abstract class DataContainer extends Backend
 		$arrKeys = array();
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid');
 
-		foreach (array_keys($_GET) as $strKey)
+		foreach (Input::getKeys() as $strKey)
 		{
 			if (!\in_array($strKey, $arrUnset))
 			{
@@ -853,9 +797,35 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		$strUrl = TL_SCRIPT . '?' . implode('&', $arrKeys);
+		$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?' . implode('&', $arrKeys);
 
 		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+	}
+
+	/**
+	 * @throws AccessDeniedException
+	 */
+	protected function denyAccessUnlessGranted($attribute, $subject): void
+	{
+		$security = System::getContainer()->get('security.helper');
+
+		if ($security->isGranted($attribute, $subject))
+		{
+			return;
+		}
+
+		$message = 'Access denied.';
+
+		if ($subject instanceof AbstractAction)
+		{
+			$message = sprintf('Access denied to %s [%s].', $subject, $attribute);
+		}
+
+		$exception = new AccessDeniedException($message);
+		$exception->setAttributes($attribute);
+		$exception->setSubject($subject);
+
+		throw $exception;
 	}
 
 	/**
@@ -925,92 +895,65 @@ abstract class DataContainer extends Backend
 				continue;
 			}
 
-			// Generate all buttons except "move up" and "move down" buttons
-			if ($k != 'move' && $v != 'move')
+			if ($k == 'show')
 			{
-				if ($k == 'show')
+				if (!empty($v['route']))
 				{
-					if (!empty($v['route']))
-					{
-						$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id'], 'popup' => '1'));
-					}
-					else
-					{
-						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
-					}
-
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $label)) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+					$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id'], 'popup' => '1'));
 				}
 				else
 				{
-					if (!empty($v['route']))
-					{
-						$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
-					}
-					else
-					{
-						$href = $this->addToUrl($v['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
-					}
-
-					parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
-
-					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
-					{
-						// Hide the toggle icon if the user does not have access to the field
-						if (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field']))
-						{
-							continue;
-						}
-
-						$icon = $v['icon'];
-						$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
-
-						if (false !== strpos($v['icon'], '/'))
-						{
-							$_icon = \dirname($v['icon']) . '/' . $_icon;
-						}
-
-						if ($icon == 'visible.svg')
-						{
-							$_icon = 'invisible.svg';
-						}
-
-						$state = $arrRow[$params['field']] ? 1 : 0;
-
-						if ($v['reverse'] ?? false)
-						{
-							$state = $arrRow[$params['field']] ? 0 : 1;
-						}
-
-						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
-					}
-					else
-					{
-						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
-					}
+					$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
 				}
 
-				continue;
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $label)) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
 			}
-
-			$arrDirections = array('up', 'down');
-			$arrRootIds = \is_array($arrRootIds) ? $arrRootIds : array($arrRootIds);
-
-			foreach ($arrDirections as $dir)
+			else
 			{
-				$label = !empty($GLOBALS['TL_LANG'][$strTable][$dir][0]) ? $GLOBALS['TL_LANG'][$strTable][$dir][0] : $dir;
-				$title = !empty($GLOBALS['TL_LANG'][$strTable][$dir][1]) ? $GLOBALS['TL_LANG'][$strTable][$dir][1] : $dir;
-
-				$label = Image::getHtml($dir . '.svg', $label);
-				$href = !empty($v['href']) ? $v['href'] : '&amp;act=move';
-
-				if ($dir == 'up')
+				if (!empty($v['route']))
 				{
-					$return .= ((is_numeric($strPrevious) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $arrRow['id']) . '&amp;sid=' . (int) $strPrevious . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml('up_.svg')) . ' ';
+					$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
 				}
 				else
 				{
-					$return .= ((is_numeric($strNext) && (empty($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['root']) || !\in_array($arrRow['id'], $arrRootIds))) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $arrRow['id']) . '&amp;sid=' . (int) $strNext . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : Image::getHtml('down_.svg')) . ' ';
+					$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
+				}
+
+				parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
+
+				if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
+				{
+					// Hide the toggle icon if the user does not have access to the field
+					if (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field']))
+					{
+						continue;
+					}
+
+					$icon = $v['icon'];
+					$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
+
+					if (false !== strpos($v['icon'], '/'))
+					{
+						$_icon = \dirname($v['icon']) . '/' . $_icon;
+					}
+
+					if ($icon == 'visible.svg')
+					{
+						$_icon = 'invisible.svg';
+					}
+
+					$state = $arrRow[$params['field']] ? 1 : 0;
+
+					if ($v['reverse'] ?? false)
+					{
+						$state = $arrRow[$params['field']] ? 0 : 1;
+					}
+
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+				}
+				else
+				{
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
 				}
 			}
 		}
@@ -1078,7 +1021,7 @@ abstract class DataContainer extends Backend
 			if (\is_array($v['button_callback'] ?? null))
 			{
 				$this->import($v['button_callback'][0]);
-				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'], $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
+				$return .= $this->{$v['button_callback'][0]}->{$v['button_callback'][1]}($v['href'] ?? '', $label, $title, $v['class'], $attributes, $this->strTable, $this->root);
 				continue;
 			}
 
@@ -1094,7 +1037,7 @@ abstract class DataContainer extends Backend
 			}
 			else
 			{
-				$href = $this->addToUrl($v['href']);
+				$href = $this->addToUrl($v['href'] ?? '');
 			}
 
 			$return .= '<a href="' . $href . '" class="' . $v['class'] . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
@@ -1338,7 +1281,7 @@ abstract class DataContainer extends Backend
 		}
 
 		// Reset all filters
-		if (isset($_POST['filter_reset']) && Input::post('FORM_SUBMIT') == 'tl_filters')
+		if (Input::post('filter_reset') !== null && Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
 			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
@@ -1346,7 +1289,7 @@ abstract class DataContainer extends Backend
 
 			unset(
 				$data['filter'][$this->strTable],
-				$data['filter'][$this->strTable . '_' . CURRENT_ID],
+				$data['filter'][$this->strTable . '_' . $this->currentPid],
 				$data['sorting'][$this->strTable],
 				$data['search'][$this->strTable]
 			);
@@ -1468,7 +1411,7 @@ abstract class DataContainer extends Backend
 <form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
-  <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+  <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
   ' . $return . '
 </div>
 </form>';
@@ -1611,7 +1554,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return string
 	 */
-	public static function getDriverForTable(string $table): ?string
+	public static function getDriverForTable(string $table): string|null
 	{
 		return $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? null;
 	}
@@ -1761,5 +1704,94 @@ abstract class DataContainer extends Backend
 		}
 
 		return $label;
+	}
+
+	/**
+	 * @param array<int|string> $ids
+	 */
+	protected function preloadCurrentRecords(array $ids, string $table): void
+	{
+		// Clear current cache to make sure records are gone if they cannot be loaded from the database below
+		foreach ($ids as $id)
+		{
+			$this->setCurrentRecordCache($id, $table, null);
+		}
+
+		/** @var Connection $connection */
+		$connection = System::getContainer()->get('database_connection');
+
+		$stmt = $connection->executeQuery(
+			'SELECT * FROM ' . $table . ' WHERE id IN (?)',
+			array($ids),
+			array(is_numeric(array_values($ids)[0]) ? Connection::PARAM_INT_ARRAY : Connection::PARAM_STR_ARRAY)
+		);
+
+		foreach ($stmt->iterateAssociative() as $row)
+		{
+			if (!\is_array($row))
+			{
+				continue;
+			}
+
+			$this->setCurrentRecordCache($row['id'], $table, $row);
+		}
+	}
+
+	/**
+	 * @param array<string, mixed>|null $row Pass null to remove a given cache entry
+	 */
+	protected function setCurrentRecordCache(string|int $id, string $table, array|null $row): void
+	{
+		if (null === $row)
+		{
+			unset($this->arrCurrentRecordCache[$table . '.' . $id]);
+
+			return;
+		}
+
+		$this->arrCurrentRecordCache[$table . '.' . $id] = $row;
+	}
+
+	/**
+	 * @throws AccessDeniedException     if the current user has no read permission
+	 * @return array<string, mixed>|null
+	 */
+	public function getCurrentRecord(string|int $id = null, string $table = null, bool $noCache = false): ?array
+	{
+		$id = $id ?: $this->intId;
+		$table = $table ?: $this->strTable;
+		$key = $table . '.' . $id;
+
+		if ($noCache || !isset($this->arrCurrentRecordCache[$key]))
+		{
+			$this->preloadCurrentRecords(array($id), $table);
+		}
+
+		// In case this record was not part of the preloaded result, we don't need to apply any permission checks
+		if (!isset($key, $this->arrCurrentRecordCache))
+		{
+			return null;
+		}
+
+		// In case this record has been checked before, we don't ask the voters again but instead throw the previous
+		// exception
+		if ($this->arrCurrentRecordCache[$key] instanceof AccessDeniedException)
+		{
+			throw $this->arrCurrentRecordCache[$key];
+		}
+
+		try
+		{
+			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new ReadAction($table, $this->arrCurrentRecordCache[$key]));
+		}
+		catch (AccessDeniedException $e)
+		{
+			// Remember the exception for this key for the next call
+			$this->arrCurrentRecordCache[$key] = $e;
+
+			throw $e;
+		}
+
+		return $this->arrCurrentRecordCache[$key];
 	}
 }

@@ -19,15 +19,8 @@ use webignition\RobotsTxt\File\File;
 
 class RobotsTxtEvent extends Event
 {
-    private File $file;
-    private Request $request;
-    private PageModel $rootPage;
-
-    public function __construct(File $file, Request $request, PageModel $rootPage)
+    public function __construct(private File $file, private Request $request, private PageModel $rootPage)
     {
-        $this->file = $file;
-        $this->request = $request;
-        $this->rootPage = $rootPage;
     }
 
     public function getFile(): File

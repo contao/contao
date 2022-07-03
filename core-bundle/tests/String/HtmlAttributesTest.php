@@ -248,6 +248,60 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame(['e' => ' ', 'f' => 'abc'], iterator_to_array($attributes));
     }
 
+    public function testSetAndUnsetConditionalProperties(): void
+    {
+        $truthyValues = [
+            true,
+            1,
+            'true',
+            '1',
+            ['test'],
+            new \stdClass(),
+            new class() implements \Stringable {
+                public function __toString(): string
+                {
+                    return 'foo';
+                }
+            },
+        ];
+
+        $falsyValues = [
+            null,
+            false,
+            0,
+            '',
+            [],
+            new class() implements \Stringable {
+                public function __toString(): string
+                {
+                    return '';
+                }
+            },
+        ];
+
+        // Test truthy values fulfil the condition
+        foreach ($truthyValues as $value) {
+            $attributes = new HtmlAttributes();
+
+            $attributes->set('data-feature', condition: $value);
+            $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
+
+            $attributes->unset('data-feature', condition: $value);
+            $this->assertSame([], iterator_to_array($attributes));
+        }
+
+        // Test falsy values do not fulfil the condition
+        foreach ($falsyValues as $value) {
+            $attributes = new HtmlAttributes(['data-feature' => '']);
+
+            $attributes->set('data-foo', condition: $value);
+            $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
+
+            $attributes->unset('data-feature', condition: $value);
+            $this->assertSame(['data-feature' => ''], iterator_to_array($attributes));
+        }
+    }
+
     public function testAddAndRemoveClasses(): void
     {
         // Whitespaces should get normalized by default
@@ -256,16 +310,66 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame('foo bar other1 other2', $attributes['class']);
 
         // And remove classes
-        $attributes->addClass('baz', 'foo foobar');
-        $attributes->removeClass(' other1', 'thing other2');
+        $attributes->addClass('baz');
+        $attributes->addClass('foo foobar');
+        $attributes->addClass(['foo2', 'foobar2']);
+        $attributes->removeClass(' other1');
+        $attributes->removeClass('thing other2');
+        $attributes->removeClass(['foo2', ' foobar ']);
 
-        $this->assertSame('foo bar baz foobar', $attributes['class']);
+        $this->assertSame('foo bar baz foobar2', $attributes['class']);
+    }
+
+    public function testAddAndRemoveConditionalClasses(): void
+    {
+        $attributes = new HtmlAttributes();
+
+        $attributes->addClass('a', null);
+        $attributes->addClass('b', false);
+        $attributes->addClass('c', 0);
+        $attributes->addClass('d', '');
+
+        $this->assertSame([], iterator_to_array($attributes));
+
+        $attributes->addClass('a', condition: true);
+        $attributes->addClass('b', condition: 1);
+        $attributes->addClass('c', condition: 'true');
+        $attributes->addClass('d', condition: '1');
+
+        $this->assertSame(['class' => 'a b c d'], iterator_to_array($attributes));
+
+        $attributes->removeClass('a', null);
+        $attributes->removeClass('b', false);
+        $attributes->removeClass('c', 0);
+        $attributes->removeClass('d', '');
+
+        $this->assertSame(['class' => 'a b c d'], iterator_to_array($attributes));
+
+        $attributes->removeClass('a', condition: true);
+        $attributes->removeClass('b', condition: 1);
+        $attributes->removeClass('c', condition: 'true');
+        $attributes->removeClass('d', condition: '1');
+
+        $this->assertSame([], iterator_to_array($attributes));
+    }
+
+    public function testDoesNotOutputEmptyClassAttribute(): void
+    {
+        $attributes = new HtmlAttributes();
+        $attributes->addClass('');
+
+        $this->assertSame('', $attributes->toString());
+
+        $attributes->addClass('foo');
+        $attributes->removeClass('foo');
+
+        $this->assertSame('', $attributes->toString());
     }
 
     public function testAllowsChaining(): void
     {
         $attributes = (new HtmlAttributes())
-            ->addClass('block', 'headline', 'foo')
+            ->addClass('block headline foo')
             ->removeClass('foo')
             ->set('style', 'color: red;')
             ->setIfExists('data-foo', null)
@@ -343,5 +447,12 @@ class HtmlAttributesTest extends TestCase
 
         /** @phpstan-ignore-next-line */
         $attributes['foo'];
+    }
+
+    public function testCanBeJsonSerialized(): void
+    {
+        $attributes = new HtmlAttributes(['foo' => 'bar', 'baz' => 42]);
+
+        $this->assertSame('{"foo":"bar","baz":"42"}', json_encode($attributes, JSON_THROW_ON_ERROR));
     }
 }

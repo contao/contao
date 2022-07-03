@@ -98,7 +98,6 @@ class ConfigurationTest extends TestCase
     {
         $params = [
             'contao' => [
-                'encryption_key' => 's3cr3t',
                 'upload_path' => $uploadPath,
             ],
         ];
@@ -239,24 +238,6 @@ class ConfigurationTest extends TestCase
 
         $this->expectException(InvalidConfigurationException::class);
         $this->expectExceptionMessage('Invalid configuration for path "contao.backup.keep_intervals": ["foobar"]');
-
-        (new Processor())->processConfiguration($this->configuration, $params);
-    }
-
-    /**
-     * @group legacy
-     */
-    public function testTriggersContaoLocalconfigDeprecations(): void
-    {
-        $this->expectDeprecation('Since contao/core-bundle 4.12: Setting "contao.localconfig.enableSearch" has been deprecated. Use "contao.search.default_indexer.enable" instead.');
-
-        $params = [
-            'contao' => [
-                'localconfig' => [
-                    'enableSearch' => false,
-                ],
-            ],
-        ];
 
         (new Processor())->processConfiguration($this->configuration, $params);
     }

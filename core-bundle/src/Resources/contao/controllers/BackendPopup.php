@@ -189,9 +189,7 @@ class BackendPopup extends Backend
 				}
 			}
 
-			$request = $container->get('request_stack')->getMainRequest();
-
-			$objTemplate->href = StringUtil::ampersand($request->getRequestUri()) . '&amp;download=1';
+			$objTemplate->href = StringUtil::ampersand(Environment::get('requestUri')) . '&amp;download=1';
 			$objTemplate->filesize = $this->getReadableSize($objFile->filesize) . ' (' . number_format($objFile->filesize, 0, $GLOBALS['TL_LANG']['MSC']['decimalSeparator'], $GLOBALS['TL_LANG']['MSC']['thousandsSeparator']) . ' Byte)';
 		}
 
@@ -202,7 +200,6 @@ class BackendPopup extends Backend
 		$objTemplate->atime = Date::parse(Config::get('datimFormat'), $objFile->atime);
 		$objTemplate->path = StringUtil::specialchars($this->strFile);
 		$objTemplate->theme = Backend::getTheme();
-		$objTemplate->base = Environment::get('base');
 		$objTemplate->language = $GLOBALS['TL_LANGUAGE'];
 		$objTemplate->title = StringUtil::specialchars($this->strFile);
 		$objTemplate->host = Backend::getDecodedHostname();

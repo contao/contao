@@ -45,22 +45,21 @@ class ResizeImagesCommand extends Command
     protected static $defaultName = 'contao:resize-images';
     protected static $defaultDescription = 'Resizes deferred images that have not been processed yet.';
 
-    private ImageFactoryInterface $imageFactory;
-    private ?DeferredResizerInterface $resizer;
-    private string $targetDir;
-    private DeferredImageStorageInterface $storage;
+    private DeferredResizerInterface|null $resizer;
     private Filesystem $filesystem;
     private int $terminalWidth;
-    private ?SymfonyStyle $io = null;
-    private ?ConsoleSectionOutput $tableOutput = null;
-    private ?Table $table = null;
+    private SymfonyStyle|null $io = null;
+    private ConsoleSectionOutput|null $tableOutput = null;
+    private Table|null $table = null;
 
-    public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, DeferredImageStorageInterface $storage, Filesystem $filesystem = null)
-    {
-        $this->imageFactory = $imageFactory;
+    public function __construct(
+        private ImageFactoryInterface $imageFactory,
+        ResizerInterface $resizer,
+        private string $targetDir,
+        private DeferredImageStorageInterface $storage,
+        Filesystem $filesystem = null,
+    ) {
         $this->resizer = $resizer instanceof DeferredResizerInterface ? $resizer : null;
-        $this->targetDir = $targetDir;
-        $this->storage = $storage;
         $this->filesystem = $filesystem ?? new Filesystem();
         $this->terminalWidth = (new Terminal())->getWidth();
 
@@ -118,7 +117,7 @@ class ResizeImagesCommand extends Command
     private function resizeImage(string $path, bool $preserveMissing, bool $quiet = false): int
     {
         if ($this->filesystem->exists(Path::join($this->targetDir, $path))) {
-            return 0;
+            return Command::SUCCESS;
         }
 
         try {
@@ -143,16 +142,18 @@ class ResizeImagesCommand extends Command
                 }
 
                 $this->io->writeln('Image "'.$path.'" does not exist anymore, deleted deferred image reference');
+
+                return 0;
             }
 
-            return 1;
+            return Command::FAILURE;
         }
 
         if (!$quiet) {
             $this->io->writeln('Image "'.$path.'" resized successfully');
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function resizeImages(float $timeLimit, float $concurrent, bool $noSubProcess, bool $preserveMissing): int
@@ -223,11 +224,11 @@ class ResizeImagesCommand extends Command
             if (0 !== $failedCount && $count - $failedCount <= 0) {
                 $this->io->error('No image could be resized successfully.');
 
-                return 1;
+                return Command::FAILURE;
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function executeConcurrent(float $timeLimit, float $concurrent): int
@@ -317,10 +318,10 @@ class ResizeImagesCommand extends Command
         if (0 !== $failedCount && $count - $failedCount <= 0) {
             $this->io->error('No image could be resized successfully.');
 
-            return 1;
+            return Command::FAILURE;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function updateOutput(array $processes, array $counts, array $paths): void

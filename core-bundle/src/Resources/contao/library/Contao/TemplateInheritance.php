@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Provides the template inheritance logic
@@ -139,6 +140,12 @@ trait TemplateInheritance
 		if ($blnDebug === null)
 		{
 			$blnDebug = System::getContainer()->getParameter('kernel.debug');
+		}
+
+		// Replace insert tags
+		if ($this instanceof FrontendTemplate)
+		{
+			$strBuffer = System::getContainer()->get('contao.insert_tag.parser')->replace($strBuffer);
 		}
 
 		// Add start and end markers in debug mode
@@ -308,7 +315,7 @@ trait TemplateInheritance
 		{
 			$tpl = new static($name);
 		}
-		elseif (TL_MODE == 'BE')
+		elseif (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))
 		{
 			$tpl = new BackendTemplate($name);
 		}
@@ -347,7 +354,7 @@ trait TemplateInheritance
 	/**
 	 * Render a Twig template if one exists
 	 */
-	protected function renderTwigSurrogateIfExists(): ?string
+	protected function renderTwigSurrogateIfExists(): string|null
 	{
 		$container = System::getContainer();
 

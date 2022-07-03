@@ -29,19 +29,19 @@ var AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
-		el.blur();
-
 		var item = $(id),
 			parent = $(el).getParent('li');
 
 		if (item) {
 			if (parent.hasClass('collapsed')) {
 				parent.removeClass('collapsed');
-				$(el).store('tip:title', Contao.lang.collapse);
+				$(el).setAttribute('aria-expanded', 'true');
+				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				parent.addClass('collapsed');
-				$(el).store('tip:title', Contao.lang.expand);
+				$(el).setAttribute('aria-expanded', 'false');
+				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
@@ -51,7 +51,7 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle the site structure tree
+	 * Toggle the page tree
 	 *
 	 * @param {object} el    The DOM element
 	 * @param {string} id    The ID of the target element
@@ -70,12 +70,12 @@ var AjaxRequest =
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
-				$(el).store('tip:title', Contao.lang.collapse);
+				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
 				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
-				$(el).store('tip:title', Contao.lang.expand);
+				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
@@ -126,7 +126,7 @@ var AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
-				$(el).store('tip:title', Contao.lang.collapse);
+				$(el).setAttribute('title', Contao.lang.collapse);
 				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
 				window.fireEvent('structure');
 				AjaxRequest.hideBox();
@@ -140,7 +140,7 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle the file manager tree
+	 * Toggle the file tree
 	 *
 	 * @param {object} el     The DOM element
 	 * @param {string} id     The ID of the target element
@@ -159,12 +159,12 @@ var AjaxRequest =
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
 				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
-				$(el).store('tip:title', Contao.lang.collapse);
+				$(el).setAttribute('title', Contao.lang.collapse);
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
 				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
-				$(el).store('tip:title', Contao.lang.expand);
+				$(el).setAttribute('title', Contao.lang.expand);
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
@@ -195,7 +195,7 @@ var AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
-				$(el).store('tip:title', Contao.lang.collapse);
+				$(el).setAttribute('title', Contao.lang.collapse);
 				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
 				AjaxRequest.hideBox();
 
@@ -226,7 +226,7 @@ var AjaxRequest =
 				item.getElements('[data-required]').each(function(el) {
 					el.set('required', '').set('data-required', null);
 				});
-				new Request.Contao({field:el}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+				new Request.Contao({field: el, onSuccess:updateVersionNumber}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				el.value = '';
 				el.checked = '';
@@ -234,7 +234,7 @@ var AjaxRequest =
 				item.getElements('[required]').each(function(el) {
 					el.set('required', null).set('data-required', '');
 				});
-				new Request.Contao({field:el}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
+				new Request.Contao({field: el, onSuccess:updateVersionNumber}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return;
 		}
@@ -281,13 +281,19 @@ var AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
-				AjaxRequest.hideBox();
+				updateVersionNumber(txt);
 
-				// HOOK
-				window.fireEvent('subpalette'); // Backwards compatibility
+				AjaxRequest.hideBox();
 				window.fireEvent('ajax_change');
 			}
 		}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'load':1, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+
+		function updateVersionNumber(html) {
+			if (!el.form.elements.VERSION_NUMBER) {
+				return;
+			}
+			el.form.elements.VERSION_NUMBER.value = /<input\s+[^>]*?name="VERSION_NUMBER"\s+[^>]*?value="([^"]*)"/i.exec(html)[1];
+		}
 	},
 
 	/**
@@ -372,47 +378,6 @@ var AjaxRequest =
 		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
 
 		// Return false to stop the click event on link
-		return false;
-	},
-
-	/**
-	 * Toggle the visibility of a fieldset
-	 *
-	 * @param {object} el    The DOM element
-	 * @param {string} id    The ID of the target element
-	 * @param {string} table The table name
-	 *
-	 * @returns {boolean}
-	 */
-	toggleFieldset: function(el, id, table) {
-		el.blur();
-		Backend.getScrollOffset();
-
-		var fs = $('pal_' + id);
-
-		if (fs.hasClass('collapsed')) {
-			fs.removeClass('collapsed');
-			new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
-		} else {
-			var form = fs.getParent('form'),
-				inp = fs.getElements('[required]'),
-				collapse = true;
-
-			for (var i=0; i<inp.length; i++) {
-				if (!inp[i].get('value')) {
-					collapse = false;
-					break;
-				}
-			}
-
-			if (!collapse) {
-				if (typeof(form.checkValidity) == 'function') form.getElement('button[type="submit"]').click();
-			} else {
-				fs.addClass('collapsed');
-				new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
-			}
-		}
-
 		return false;
 	},
 
@@ -784,55 +749,6 @@ var Backend =
 	},
 
 	/**
-	 * Limit the height of the preview pane
-	 */
-	limitPreviewHeight: function() {
-		var hgt = 0;
-
-		$$('div.limit_height').each(function(div) {
-			var parent = div.getParent('.tl_content'),
-				toggler, button, size, style;
-
-			// Return if the element is a wrapper
-			if (parent && (parent.hasClass('wrapper_start') || parent.hasClass('wrapper_stop'))) return;
-
-			if (hgt === 0) {
-				hgt = div.className.replace(/[^0-9]*/, '').toInt();
-			}
-
-			// Return if there is no height value
-			if (!hgt) return;
-
-			toggler = new Element('div', {
-				'class': 'limit_toggler'
-			});
-
-			button = new Element('button', {
-				'type': 'button',
-				'html': '<span>...</span>',
-				'class': 'unselectable',
-				'data-state': 0
-			}).inject(toggler);
-
-			size = div.getCoordinates();
-			div.setStyle('height', hgt);
-
-			// Disable the function if the preview height is below the max-height
-			if (size.height <= hgt) {
-				return;
-			}
-
-			button.addEvent('click', function() {
-				style = toggler.getPrevious('div').getStyle('height').toInt();
-				toggler.getPrevious('div').setStyle('height', ((style > hgt) ? hgt : ''));
-				button.set('data-state', button.get('data-state') ? 0 : 1);
-			});
-
-			toggler.inject(div, 'after');
-		});
-	},
-
-	/**
 	 * Toggle checkboxes
 	 *
 	 * @param {object} el   The DOM element
@@ -893,118 +809,6 @@ var Backend =
 		});
 
 		Backend.getScrollOffset();
-	},
-
-	/**
-	 * Toggle the line wrapping mode of a textarea
-	 *
-	 * @param {string} id The ID of the target element
-	 */
-	toggleWrap: function(id) {
-		var textarea = $(id),
-			status = (textarea.getProperty('wrap') == 'off') ? 'soft' : 'off';
-		textarea.setProperty('wrap', status);
-	},
-
-	/**
-	 * Toggle the synchronization results
-	 */
-	toggleUnchanged: function() {
-		$$('#result-list .tl_confirm').each(function(el) {
-			el.toggleClass('hidden');
-		});
-	},
-
-	/**
-	 * Collapse all palettes
-	 */
-	collapsePalettes: function() {
-		$$('fieldset.hide').each(function(el) {
-			el.addClass('collapsed');
-		});
-		$$('label.error, label.mandatory').each(function(el) {
-			var fs = el.getParent('fieldset');
-			fs && fs.removeClass('collapsed');
-		});
-	},
-
-	/**
-	 * Add the interactive help
-	 */
-	addInteractiveHelp: function() {
-		new Tips.Contao('p.tl_tip', {
-			offset: {x:9, y:23},
-			text: function(e) {
-				return e.get('html');
-			}
-		});
-
-		// Home
-		new Tips.Contao($('home'), {
-			offset: {x:15, y:42}
-		});
-
-		// Top navigation links
-		new Tips.Contao($$('#tmenu a[title]').filter(function(i) {
-			return i.title != '';
-		}), {
-			offset: {x:9, y:42}
-		});
-
-		// Navigation groups
-		new Tips.Contao($$('a[title][class^="group-"]').filter(function(i) {
-			return i.title != '';
-		}), {
-			offset: {x:3, y:27}
-		});
-
-		// Navigation links
-		new Tips.Contao($$('a[title].navigation').filter(function(i) {
-			return i.title != '';
-		}), {
-			offset: {x:34, y:32}
-		});
-
-		// Images
-		$$('img[title]').filter(function(i) {
-			return i.title != '';
-		}).each(function(el) {
-			new Tips.Contao(el, {
-				offset: {x:0, y:((el.get('class') == 'gimage') ? 60 : 30)}
-			});
-		});
-
-		// Links and input elements
-		['a[title]', 'input[title]', 'button[title]', 'time[title]', 'span[title]'].each(function(el) {
-			new Tips.Contao($$(el).filter(function(i) {
-				return i.title != ''
-			}), {
-				offset: {x:0, y:((el == 'time[title]' || el == 'span[title]') ? 26 : 30)}
-			});
-		});
-	},
-
-	/**
-	 * Retrieve the interactive help
-	 */
-	retrieveInteractiveHelp: function (elements) {
-		elements && elements.each(function (element) {
-			var title = element.retrieve('tip:title');
-			title && element.set('title', title);
-		});
-	},
-
-	/**
-	 * Hide the interactive help
-	 */
-	hideInteractiveHelp: function () {
-		var hideTips = function () {
-			document.querySelectorAll('.tip-wrap').forEach(function (tip) {
-				tip.setStyle('display', 'none');
-			});
-		};
-		hideTips();
-		setTimeout(hideTips, (new Tips.Contao).options.showDelay); // hide delayed tips
 	},
 
 	/**
@@ -1114,6 +918,13 @@ var Backend =
 				i;
 			for (i=0; i<lis.length; i++) {
 				els.push(lis[i].get('data-id'));
+			}
+			if (oid === val) {
+				$(val).value.split(',').forEach(function(j) {
+					if (els.indexOf(j) === -1) {
+						els.push(j);
+					}
+				});
 			}
 			$(oid).value = els.join(',');
 		});
@@ -1402,7 +1213,6 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (textarea = childs[i].getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1411,7 +1221,6 @@ var Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
-								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'rdelete':
@@ -1421,7 +1230,6 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
 							});
 							break;
 						case 'ccopy':
@@ -1431,7 +1239,6 @@ var Backend =
 								childs = tbody.getChildren();
 								for (i=0; i<childs.length; i++) {
 									current = childs[i].getChildren()[index];
-									Backend.retrieveInteractiveHelp(current.getElements('button,a'));
 									next = current.clone(true).inject(current, 'after');
 									if (textarea = current.getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1439,11 +1246,9 @@ var Backend =
 									addEventsTo(next);
 								}
 								var headFirst = head.getFirst('td');
-								Backend.retrieveInteractiveHelp(headFirst.getElements('button,a'));
 								next = headFirst.clone(true).inject(head.getLast('td'), 'before');
 								addEventsTo(next);
 								makeSortable(tbody);
-								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'cmovel':
@@ -1496,7 +1301,6 @@ var Backend =
 									head.getFirst('td').destroy();
 								}
 								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
 							});
 							break;
 						case null:
@@ -1591,125 +1395,6 @@ var Backend =
 	},
 
 	/**
-	 * Module wizard
-	 *
-	 * @param {string} id The ID of the target element
-	 */
-	moduleWizard: function(id) {
-		var table = $(id),
-			tbody = table.getElement('tbody'),
-			makeSortable = function(tbody) {
-				var rows = tbody.getChildren(),
-					childs, i, j, select, input;
-
-				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (select = childs[j].getElement('select')) {
-							select.name = select.name.replace(/\[[0-9]+]/g, '[' + i + ']');
-						}
-						if (input = childs[j].getElement('input[type="checkbox"]')) {
-							input.set('tabindex', -1);
-							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']');
-						}
-					}
-				}
-
-				new Sortables(tbody, {
-					constrain: true,
-					opacity: 0.6,
-					handle: '.drag-handle',
-					onComplete: function() {
-						makeSortable(tbody);
-					}
-				});
-			},
-			addEventsTo = function(tr) {
-				var command, select, next, ntr, childs, cbx, i;
-				tr.getElements('button').each(function(bt) {
-					if (bt.hasEvent('click')) return;
-					command = bt.getProperty('data-command');
-
-					switch (command) {
-						case 'copy':
-							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
-								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (select = childs[i].getElement('select')) {
-										next.getElement('select').value = select.value;
-									}
-								}
-								ntr.inject(tr, 'after');
-								ntr.getElement('.chzn-container').destroy();
-								new Chosen(ntr.getElement('select.tl_select'));
-								addEventsTo(ntr);
-								makeSortable(tbody);
-								Backend.addInteractiveHelp();
-							});
-							break;
-						case 'delete':
-							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
-								if (tbody.getChildren().length > 1) {
-									tr.destroy();
-								}
-								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
-							});
-							break;
-						case 'enable':
-							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
-								cbx = bt.getNext('input[type="checkbox"]');
-								if (cbx.checked) {
-									cbx.checked = '';
-									bt.getElement('img').src = Backend.themePath + 'icons/invisible.svg';
-								} else {
-									cbx.checked = 'checked';
-									bt.getElement('img').src = Backend.themePath + 'icons/visible.svg';
-								}
-								makeSortable(tbody);
-							});
-							break;
-						case null:
-							bt.addEvent('keydown', function(e) {
-								if (e.event.keyCode == 38) {
-									e.preventDefault();
-									if (ntr = tr.getPrevious('tr')) {
-										tr.inject(ntr, 'before');
-									} else {
-										tr.inject(tbody, 'bottom');
-									}
-									bt.focus();
-									makeSortable(tbody);
-								} else if (e.event.keyCode == 40) {
-									e.preventDefault();
-									if (ntr = tr.getNext('tr')) {
-										tr.inject(ntr, 'after');
-									} else {
-										tr.inject(tbody, 'top');
-									}
-									bt.focus();
-									makeSortable(tbody);
-								}
-							});
-							break;
-					}
-				});
-			};
-
-		makeSortable(tbody);
-
-		tbody.getChildren().each(function(tr) {
-			addEventsTo(tr);
-		});
-	},
-
-	/**
 	 * Options wizard
 	 *
 	 * @param {string} id The ID of the target element
@@ -1756,7 +1441,6 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (input = childs[i].getFirst('input')) {
 										next.getFirst('input').value = input.value;
@@ -1768,7 +1452,6 @@ var Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
-								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'delete':
@@ -1778,7 +1461,6 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
 							});
 							break;
 						case null:
@@ -1858,7 +1540,6 @@ var Backend =
 								ntr = new Element('tr');
 								childs = tr.getChildren();
 								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
 									next = childs[i].clone(true).inject(ntr, 'bottom');
 									if (input = childs[i].getFirst('input')) {
 										next.getFirst().value = input.value;
@@ -1867,7 +1548,6 @@ var Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
-								Backend.addInteractiveHelp();
 							});
 							break;
 						case 'delete':
@@ -1877,7 +1557,6 @@ var Backend =
 									tr.destroy();
 								}
 								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
 							});
 							break;
 						case null:
@@ -1959,162 +1638,6 @@ var Backend =
 		container.getChildren().each(function(span) {
 			addEventsTo(span);
 		});
-	},
-
-	/**
-	 * Remove a meta entry
-	 *
-	 * @param {object} el The DOM element
-	 */
-	metaDelete: function(el) {
-		var li = el.getParent('li');
-
-		// Empty the last element instead of removing it (see #4858)
-		if (li.getPrevious() === null && li.getNext() === null) {
-			li.getElements('input').each(function(input) {
-				input.value = '';
-			});
-		} else {
-			li.destroy();
-		}
-	},
-
-	/**
-	 * Toggle the "add language" button
-	 *
-	 * @param {object} el The DOM element
-	 */
-	toggleAddLanguageButton: function(el) {
-		var inp = el.getParent('div').getElement('input[type="button"]');
-		if (el.value != '') {
-			inp.removeProperty('disabled');
-		} else {
-			inp.setProperty('disabled', true);
-		}
-	},
-
-	/**
-	 * Section wizard
-	 *
-	 * @param {string} id The ID of the target element
-	 */
-	sectionWizard: function(id) {
-		var table = $(id),
-			tbody = table.getElement('tbody'),
-			makeSortable = function(tbody) {
-				var rows = tbody.getChildren(),
-					childs, i, j;
-
-				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						childs[j].getElements('input').each(function(input) {
-							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']')
-						});
-						childs[j].getElements('select').each(function(select) {
-							select.name = select.name.replace(/\[[0-9]+]/g, '[' + i + ']');
-						});
-					}
-				}
-
-				new Sortables(tbody, {
-					constrain: true,
-					opacity: 0.6,
-					handle: '.drag-handle',
-					onComplete: function() {
-						makeSortable(tbody);
-					}
-				});
-			},
-			addEventsTo = function(tr) {
-				var command, next, ntr, childs, selects, nselects, i, j;
-				tr.getElements('button').each(function(bt) {
-					if (bt.hasEvent('click')) return;
-					command = bt.getProperty('data-command');
-
-					switch (command) {
-						case 'copy':
-							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
-								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									Backend.retrieveInteractiveHelp(childs[i].getElements('button,a'));
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									selects = childs[i].getElements('select');
-									nselects = next.getElements('select');
-									for (j=0; j<selects.length; j++) {
-										nselects[j].value = selects[j].value;
-									}
-								}
-								ntr.inject(tr, 'after');
-								addEventsTo(ntr);
-								makeSortable(tbody);
-								Backend.addInteractiveHelp();
-							});
-							break;
-						case 'delete':
-							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
-								if (tbody.getChildren().length > 1) {
-									tr.destroy();
-								}
-								makeSortable(tbody);
-								Backend.hideInteractiveHelp();
-							});
-							break;
-						case null:
-							bt.addEvent('keydown', function(e) {
-								if (e.event.keyCode == 38) {
-									e.preventDefault();
-									if (ntr = tr.getPrevious('tr')) {
-										tr.inject(ntr, 'before');
-									} else {
-										tr.inject(tbody, 'bottom');
-									}
-									bt.focus();
-									makeSortable(tbody);
-								} else if (e.event.keyCode == 40) {
-									e.preventDefault();
-									if (ntr = tr.getNext('tr')) {
-										tr.inject(ntr, 'after');
-									} else {
-										tr.inject(tbody, 'top');
-									}
-									bt.focus();
-									makeSortable(tbody);
-								}
-							});
-							break;
-					}
-				});
-			};
-
-		makeSortable(tbody);
-
-		tbody.getChildren().each(function(tr) {
-			addEventsTo(tr);
-		});
-	},
-
-	/**
-	 * Update the "edit module" links in the module wizard
-	 *
-	 * @param {object} el The DOM element
-	 */
-	updateModuleLink: function(el) {
-		var td = el.getParent('tr').getLast('td'),
-			a = td.getElement('a.module_link');
-
-		a.href = a.href.replace(/id=[0-9]+/, 'id=' + el.value);
-
-		if (el.value > 0) {
-			td.getElement('a.module_link').setStyle('display', null);
-			td.getElement('img.module_image').setStyle('display', 'none');
-		} else {
-			td.getElement('a.module_link').setStyle('display', 'none');
-			td.getElement('img.module_image').setStyle('display', null);
-		}
 	},
 
 	/**
@@ -2235,24 +1758,6 @@ var Backend =
 				start = this;
 			});
 		});
-	},
-
-	/**
-	 * Try to focus the first input field in the main section.
-	 *
-	 * @author Yanick Witschi
-	 */
-	autoFocusFirstInputField: function() {
-		var edit = document.id('main').getElement('.tl_formbody_edit');
-		if (!edit) return;
-
-		var inputs = edit
-			.getElements('input, textarea')
-			.filter(function(item) {
-				return !item.get('disabled') && !item.get('readonly') && item.isVisible() && item.get('type') !== 'checkbox' && item.get('type') !== 'radio' && item.get('type') !== 'submit' && item.get('type') !== 'image' && (!item.get('autocomplete') || item.get('autocomplete') === 'off' || !item.get('value'));
-			});
-
-		if (inputs[0]) inputs[0].focus();
 	},
 
 	/**
@@ -2561,22 +2066,14 @@ window.addEvent('domready', function() {
 		$(document.body).addClass('touch');
 	}
 
-	Backend.collapsePalettes();
-	Backend.addInteractiveHelp();
 	Backend.tableWizardSetWidth();
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
-	Backend.autoFocusFirstInputField();
 
 	// Chosen
 	if (Elements.chosen != undefined) {
 		$$('select.tl_chosen').chosen();
 	}
-
-	// Remove line wraps from textareas
-	$$('textarea.monospace').each(function(el) {
-		Backend.toggleWrap(el);
-	});
 });
 
 // Resize the table wizard
@@ -2584,14 +2081,8 @@ window.addEvent('resize', function() {
 	Backend.tableWizardSetWidth();
 });
 
-// Limit the height of the preview fields
-window.addEvent('load', function() {
-	Backend.limitPreviewHeight();
-});
-
 // Re-apply certain changes upon ajax_change
 window.addEvent('ajax_change', function() {
-	Backend.addInteractiveHelp();
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 

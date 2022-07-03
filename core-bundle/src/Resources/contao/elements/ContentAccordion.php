@@ -26,9 +26,6 @@ class ContentAccordion extends ContentElement
 	 */
 	protected function compile()
 	{
-		// Clean the RTE output
-		$this->text = StringUtil::toHtml5($this->text);
-
 		$this->Template->text = StringUtil::encodeEmail($this->text);
 		$this->Template->addImage = false;
 		$this->Template->addBefore = false;
@@ -47,7 +44,7 @@ class ContentAccordion extends ContentElement
 
 			if (null !== $figure)
 			{
-				$figure->applyLegacyTemplateData($this->Template, $this->imagemargin, $this->floating);
+				$figure->applyLegacyTemplateData($this->Template, null, $this->floating);
 			}
 		}
 

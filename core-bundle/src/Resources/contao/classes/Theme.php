@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\Database\Result;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\String\UnicodeString;
 
 /**
@@ -39,6 +40,8 @@ class Theme extends Backend
 	 */
 	public function importTheme()
 	{
+		Config::set('uploadTypes', Config::get('uploadTypes') . ',cto,sql');
+
 		$objUploader = new FileUpload();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_theme_import')
@@ -68,8 +71,8 @@ class Theme extends Backend
 
 					$objFile = new File($strFile);
 
-					// Skip anything but .cto files
-					if ($objFile->extension != 'cto')
+					// Skip anything but .cto and .sql files
+					if ($objFile->extension != 'cto' && $objFile->extension != 'sql')
 					{
 						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 						continue;
@@ -114,17 +117,15 @@ class Theme extends Backend
 			}
 		}
 
-		$requestUri = System::getContainer()->get('request_stack')->getMainRequest()->getRequestUri();
-
 		// Return the form
 		return Message::generate() . '
 <div id="tl_buttons">
-<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', $requestUri)) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', Environment::get('requestUri'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post" enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_theme_import">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
 <input type="hidden" name="MAX_FILE_SIZE" value="' . Config::get('maxFileSize') . '">
 
 <div class="tl_tbox">
@@ -156,26 +157,34 @@ class Theme extends Backend
 	 */
 	protected function compareThemeFiles($arrFiles, $arrDbFields)
 	{
-		$requestUri = System::getContainer()->get('request_stack')->getMainRequest()->getRequestUri();
-
 		$return = Message::generate() . '
 <div id="tl_buttons">
-<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', $requestUri)) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+<a href="' . StringUtil::ampersand(str_replace('&key=importTheme', '', Environment::get('requestUri'))) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
 </div>
 <form id="tl_theme_import" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_theme_import">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">
 <input type="hidden" name="confirm" value="1">';
 
 		$count = 0;
+		$exampleWebsites = array();
 
 		// Check the theme data
 		foreach ($arrFiles as $strFile)
 		{
+			if ((new File($strFile))->extension === 'sql')
+			{
+				$exampleWebsites[] = basename($strFile);
+
+				continue;
+			}
+
+			++$count;
+
 			$return .= '
 
-<div class="tl_' . (($count++ < 1) ? 't' : '') . 'box theme_import">
+<div class="tl_tbox theme_import">
   <h3>' . basename($strFile) . '</h3>
   <h4>' . $GLOBALS['TL_LANG']['tl_theme']['tables_fields'] . '</h4>';
 
@@ -258,6 +267,11 @@ class Theme extends Backend
 					continue;
 				}
 
+				if (strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
+				{
+					$exampleWebsites[] = substr($objArchive->file_name, 10);
+				}
+
 				if (file_exists($this->strRootDir . '/' . $objArchive->file_name))
 				{
 					$blnTplExists = true;
@@ -284,6 +298,35 @@ class Theme extends Backend
 </div>';
 		}
 
+		if ($exampleWebsites)
+		{
+			$return .= '<br class="clr"><div class="w50 clr widget">
+  <h3><label>' . ($GLOBALS['TL_LANG']['tl_theme']['selectExampleWebsite'][0] ?? '') . '</label></h3>
+  <select name="example_website" class="tl_select" onchange="document.querySelector(\'#ctrl_example_website_import\').style.display = this.value ? \'\' : \'none\'">';
+
+			if ($count)
+			{
+				$return .= '<option value="">-</option>';
+			}
+
+			foreach ($exampleWebsites as $exampleWebsite)
+			{
+				$return .= '<option value="' . htmlspecialchars($exampleWebsite) . '">' . htmlspecialchars($exampleWebsite) . '</option>';
+			}
+
+			$return .= '</select>
+  <p class="tl_help tl_tip" title="">' . ($GLOBALS['TL_LANG']['tl_theme']['selectExampleWebsite'][1] ?? '') . '</p>
+</div><div class="w50 widget"' . ($count ? ' style="display: none"' : '') . ' id="ctrl_example_website_import">
+  <h3><label>' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][0] ?? '') . '</label></h3>
+  <select name="example_website_import" class="tl_select">
+    <option value="full">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['full'] ?? '') . '</option>
+    <option value="data">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['data'] ?? '') . '</option>
+    <option value="data_no_truncate">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImport']['data_no_truncate'] ?? '') . '</option>
+  </select>
+  <p class="tl_help tl_tip" title="">' . ($GLOBALS['TL_LANG']['tl_theme']['exampleWebsiteImportType'][1] ?? '') . '</p>
+</div><br class="clr">';
+		}
+
 		// Return the form
 		return $return . '
 
@@ -307,8 +350,17 @@ class Theme extends Backend
 	 */
 	protected function extractThemeFiles($arrFiles, $arrDbFields)
 	{
+		$exampleWebsites = array();
+
 		foreach ($arrFiles as $strZipFile)
 		{
+			if ((new File($strZipFile))->extension === 'sql')
+			{
+				$exampleWebsites[basename($strZipFile)] = $strZipFile;
+
+				continue;
+			}
+
 			$xml = null;
 
 			// Open the archive
@@ -337,6 +389,11 @@ class Theme extends Backend
 				try
 				{
 					File::putContent($this->customizeUploadPath($objArchive->file_name), $objArchive->unzip());
+
+					if (strncmp($objArchive->file_name, 'templates/', 10) === 0 && strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
+					{
+						$exampleWebsites[substr($objArchive->file_name, 10)] = $objArchive->file_name;
+					}
 				}
 				catch (\Exception $e)
 				{
@@ -458,10 +515,6 @@ class Theme extends Backend
 					continue;
 				}
 
-				// Get the order fields
-				$objDcaExtractor = DcaExtractor::getInstance($table);
-				$arrOrder = $objDcaExtractor->getOrderFields();
-
 				// Loop through the rows
 				for ($j=0; $j<$rows->length; $j++)
 				{
@@ -576,7 +629,7 @@ class Theme extends Backend
 						}
 
 						// Replace the file paths in multiSRC fields with their tl_files ID
-						elseif (($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] ?? null) == 'fileTree' || \in_array($name, $arrOrder))
+						elseif (($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] ?? null) == 'fileTree')
 						{
 							$tmp = StringUtil::deserialize($value);
 
@@ -665,9 +718,53 @@ class Theme extends Backend
 		$this->import(Automator::class, 'Automator');
 		$this->Automator->generateSymlinks();
 
-		$requestUri = System::getContainer()->get('request_stack')->getMainRequest()->getRequestUri();
+		if (($exampleWebsite = Input::post('example_website')) && isset($exampleWebsites[$exampleWebsite]))
+		{
+			$importType = Input::post('example_website_import');
+			$this->importExampleWebsite($exampleWebsites[$exampleWebsite], $importType === 'data_no_truncate', $importType !== 'full');
+		}
 
-		$this->redirect(str_replace('&key=importTheme', '', $requestUri));
+		$this->redirect(str_replace('&key=importTheme', '', Environment::get('requestUri')));
+	}
+
+	private function importExampleWebsite(string $exampleWebsite, bool $preserveData, bool $insertOnly): void
+	{
+		$connection = System::getContainer()->get('database_connection');
+		$userRow = $connection->fetchAssociative('SELECT * FROM tl_user WHERE id = ?', array((int) BackendUser::getInstance()->id));
+
+		if (!$preserveData && $insertOnly)
+		{
+			$tables = $connection->createSchemaManager()->listTableNames();
+
+			foreach ($tables as $table)
+			{
+				if (0 === strncmp($table, 'tl_', 3))
+				{
+					$connection->executeStatement('TRUNCATE TABLE ' . $connection->quoteIdentifier($table));
+				}
+			}
+		}
+
+		$data = file(Path::join(System::getContainer()->getParameter('kernel.project_dir'), $exampleWebsite));
+
+		try
+		{
+			foreach ($insertOnly ? preg_grep('/^INSERT /', $data) : $data as $query)
+			{
+				$connection->executeStatement($query);
+			}
+		}
+		finally
+		{
+			// Restore backend user
+			if ((int) $connection->fetchOne('SELECT COUNT(*) FROM tl_user') < 1)
+			{
+				$connection->insert(
+					'tl_user',
+					array_combine(array_map($connection->quoteIdentifier(...), array_keys($userRow)), $userRow),
+				);
+			}
+		}
 	}
 
 	/**
@@ -754,12 +851,8 @@ class Theme extends Backend
 		// Load the DCA
 		$this->loadDataContainer('tl_theme');
 
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_theme');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
 		// Add the row
-		$this->addDataRow($xml, $table, $objTheme->row(), $arrOrder);
+		$this->addDataRow($xml, $table, $objTheme->row());
 	}
 
 	/**
@@ -779,10 +872,6 @@ class Theme extends Backend
 		// Load the DCA
 		$this->loadDataContainer('tl_module');
 
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_module');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
 		// Get all modules
 		$objModule = $this->Database->prepare("SELECT * FROM tl_module WHERE pid=? ORDER BY name")
 									->execute($objTheme->id);
@@ -790,7 +879,7 @@ class Theme extends Backend
 		// Add the rows
 		while ($objModule->next())
 		{
-			$this->addDataRow($xml, $table, $objModule->row(), $arrOrder);
+			$this->addDataRow($xml, $table, $objModule->row());
 		}
 	}
 
@@ -811,10 +900,6 @@ class Theme extends Backend
 		// Load the DCA
 		$this->loadDataContainer('tl_layout');
 
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_layout');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
 		// Get all layouts
 		$objLayout = $this->Database->prepare("SELECT * FROM tl_layout WHERE pid=? ORDER BY name")
 									->execute($objTheme->id);
@@ -822,7 +907,7 @@ class Theme extends Backend
 		// Add the rows
 		while ($objLayout->next())
 		{
-			$this->addDataRow($xml, $table, $objLayout->row(), $arrOrder);
+			$this->addDataRow($xml, $table, $objLayout->row());
 		}
 	}
 
@@ -882,10 +967,6 @@ class Theme extends Backend
 		// Load the DCA
 		$this->loadDataContainer('tl_files');
 
-		// Get the order fields
-		$objDcaExtractor = DcaExtractor::getInstance('tl_files');
-		$arrOrder = $objDcaExtractor->getOrderFields();
-
 		// Add the folders
 		$arrFolders = StringUtil::deserialize($objTheme->folders);
 
@@ -897,7 +978,7 @@ class Theme extends Backend
 			{
 				foreach ($this->eliminateNestedPaths($objFolders->fetchEach('path')) as $strFolder)
 				{
-					$this->addFolderToArchive($objArchive, $strFolder, $xml, $table, $arrOrder);
+					$this->addFolderToArchive($objArchive, $strFolder, $xml, $table);
 				}
 			}
 		}
@@ -908,9 +989,8 @@ class Theme extends Backend
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $table
 	 * @param array                $arrRow
-	 * @param array                $arrOrder
 	 */
-	protected function addDataRow(\DOMDocument $xml, \DOMElement $table, array $arrRow, array $arrOrder=array())
+	protected function addDataRow(\DOMDocument $xml, \DOMElement $table, array $arrRow)
 	{
 		$t = $table->getAttribute('name');
 
@@ -944,7 +1024,7 @@ class Theme extends Backend
 			}
 
 			// Replace the IDs of multiSRC fields with their paths (see #4952)
-			elseif (($GLOBALS['TL_DCA'][$t]['fields'][$k]['inputType'] ?? null) == 'fileTree' || \in_array($k, $arrOrder))
+			elseif (($GLOBALS['TL_DCA'][$t]['fields'][$k]['inputType'] ?? null) == 'fileTree')
 			{
 				$arrFiles = StringUtil::deserialize($v);
 
@@ -982,11 +1062,10 @@ class Theme extends Backend
 	 * @param string               $strFolder
 	 * @param \DOMDocument         $xml
 	 * @param \DOMNode|\DOMElement $table
-	 * @param array                $arrOrder
 	 *
 	 * @throws \Exception If the folder path is insecure
 	 */
-	protected function addFolderToArchive(ZipWriter $objArchive, $strFolder, \DOMDocument $xml, \DOMElement $table, array $arrOrder=array())
+	protected function addFolderToArchive(ZipWriter $objArchive, $strFolder, \DOMDocument $xml, \DOMElement $table)
 	{
 		$strUploadPath = System::getContainer()->getParameter('contao.upload_path');
 
@@ -1027,7 +1106,7 @@ class Theme extends Backend
 
 			if (is_dir($this->strRootDir . '/' . $strFolder . '/' . $strFile))
 			{
-				$this->addFolderToArchive($objArchive, $strFolder . '/' . $strFile, $xml, $table, $arrOrder);
+				$this->addFolderToArchive($objArchive, $strFolder . '/' . $strFile, $xml, $table);
 			}
 			else
 			{
@@ -1053,7 +1132,7 @@ class Theme extends Backend
 				$arrRow['hash'] = $objFile->hash;
 
 				// Add the row
-				$this->addDataRow($xml, $table, $arrRow, $arrOrder);
+				$this->addDataRow($xml, $table, $arrRow);
 			}
 		}
 	}

@@ -16,7 +16,7 @@ namespace Contao\CoreBundle\String;
  * @implements \IteratorAggregate<string, string>
  * @implements \ArrayAccess<string, string|int|bool|\Stringable|null>
  */
-class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
+class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
     /**
      * @var array<string, string>
@@ -26,7 +26,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     /**
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public function __construct(iterable|string|self|null $attributes = null)
+    public function __construct(self|iterable|string|null $attributes = null)
     {
         $this->mergeWith($attributes);
     }
@@ -45,10 +45,16 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
      * Merges these instance's attributes with those of another
      * instance/string/array of attributes.
      *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
      * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
      */
-    public function mergeWith(iterable|string|self|null $attributes = null): self
+    public function mergeWith(self|iterable|string|null $attributes = null, mixed $condition = true): self
     {
+        if (empty($attributes) || !$this->test($condition)) {
+            return $this;
+        }
+
         // Merge values if possible, set them otherwise
         $mergeSet = function (string $name, string|int|bool|\Stringable|null $value): void {
             if ('class' === $name) {
@@ -70,7 +76,7 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
             return $this;
         }
 
-        foreach ($attributes ?? [] as $name => $value) {
+        foreach ($attributes as $name => $value) {
             $mergeSet($name, $value);
         }
 
@@ -81,9 +87,15 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
      * Sets a property and validates the name. If the given $value is false the
      * property will be unset instead. All values will be coerced to strings,
      * whereby null and true will result in an empty string.
+     *
+     * If a falsy $condition is specified, the method is a no-op.
      */
-    public function set(string $name, string|int|bool|\Stringable|null $value): self
+    public function set(string $name, \Stringable|bool|int|string|null $value = true, mixed $condition = true): self
     {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
         $name = strtolower($name);
 
         if (1 !== preg_match('/^[a-z](?:[_-]?[a-z0-9])*$/', $name)) {
@@ -101,13 +113,16 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
 
         // Normalize class names
         if ('class' === $name) {
-            $this->addClass();
+            $this->addClass('');
         }
 
         return $this;
     }
 
-    public function setIfExists(string $name, string|int|bool|\Stringable|null $value): self
+    /**
+     * Set the property $name to $value if the value is truthy.
+     */
+    public function setIfExists(string $name, \Stringable|bool|int|string|null $value): self
     {
         if (!empty($value)) {
             $this->set($name, $value);
@@ -116,32 +131,79 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
         return $this;
     }
 
-    public function unset(string $key): self
+    /**
+     * Unset the property $name.
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     */
+    public function unset(string $name, mixed $condition = true): self
     {
-        unset($this->attributes[$key]);
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        unset($this->attributes[$name]);
 
         return $this;
     }
 
-    public function addClass(string ...$classes): self
+    /**
+     * Add a single class ("foo") or multiple from a class string ("foo bar baz").
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param string|array<string> $classes
+     */
+    public function addClass(string|array $classes, mixed $condition = true): self
     {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        if (\is_array($classes)) {
+            $classes = implode(' ', $classes);
+        }
+
         $this->attributes['class'] = implode(
             ' ',
-            array_unique($this->split(($this->attributes['class'] ?? '').' '.implode(' ', $classes)))
+            array_unique($this->split(($this->attributes['class'] ?? '').' '.$classes))
         );
+
+        if (empty($this->attributes['class'])) {
+            unset($this->attributes['class']);
+        }
 
         return $this;
     }
 
-    public function removeClass(string ...$classes): self
+    /**
+     * Remove a single class ("foo") or multiple from a class string ("foo bar baz").
+     *
+     * If a falsy $condition is specified, the method is a no-op.
+     *
+     * @param string|array<string> $classes
+     */
+    public function removeClass(string|array $classes, mixed $condition = true): self
     {
+        if (!$this->test($condition)) {
+            return $this;
+        }
+
+        if (\is_array($classes)) {
+            $classes = implode(' ', $classes);
+        }
+
         $this->attributes['class'] = implode(
             ' ',
             array_diff(
                 $this->split($this->attributes['class'] ?? ''),
-                $this->split(implode(' ', $classes))
+                $this->split($classes)
             )
         );
+
+        if (empty($this->attributes['class'])) {
+            unset($this->attributes['class']);
+        }
 
         return $this;
     }
@@ -194,6 +256,23 @@ class HtmlAttributes implements \Stringable, \IteratorAggregate, \ArrayAccess
     public function offsetUnset(mixed $offset): void
     {
         unset($this->attributes[$offset]);
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->attributes;
+    }
+
+    /**
+     * Returns true if the argument is truthy.
+     */
+    private function test(mixed $condition): bool
+    {
+        if ($condition instanceof \Stringable) {
+            $condition = $condition->__toString();
+        }
+
+        return (bool) $condition;
     }
 
     /**

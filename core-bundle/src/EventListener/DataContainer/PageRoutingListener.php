@@ -24,15 +24,8 @@ use Twig\Environment;
 
 class PageRoutingListener
 {
-    private ContaoFramework $framework;
-    private PageRegistry $pageRegistry;
-    private Environment $twig;
-
-    public function __construct(ContaoFramework $framework, PageRegistry $pageRegistry, Environment $twig)
+    public function __construct(private ContaoFramework $framework, private PageRegistry $pageRegistry, private Environment $twig)
     {
-        $this->framework = $framework;
-        $this->pageRegistry = $pageRegistry;
-        $this->twig = $twig;
     }
 
     /**
@@ -129,7 +122,7 @@ class PageRoutingListener
         $path = $route->getPath();
 
         foreach ($route->getRequirements() as $name => $regexp) {
-            $path = preg_replace('/{[!]?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'">$1</span>}', $path);
+            $path = preg_replace('/{!?('.preg_quote($name, '/').')}/', '{<span class="tl_tip" title="'.StringUtil::specialchars($regexp).'">$1</span>}', $path);
         }
 
         return $path;

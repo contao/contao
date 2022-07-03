@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Nyholm\Psr7\Uri;
 
 /**
  * Class Comments
@@ -90,7 +91,6 @@ class Comments extends Frontend
 		// Parse the comments
 		if ($objComments !== null && ($total = $objComments->count()) > 0)
 		{
-			$count = 0;
 			$tags = array();
 			$objPartial = new FrontendTemplate($objConfig->template ?: 'com_default');
 
@@ -99,12 +99,11 @@ class Comments extends Frontend
 				$objPartial->setData($objComments->row());
 
 				// Clean the RTE output
-				$objPartial->comment = StringUtil::toHtml5($objComments->comment);
+				$objPartial->comment = $objComments->comment;
 				$objPartial->comment = trim(str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), $objPartial->comment));
 
 				$objPartial->datim = Date::parse($objPage->datimFormat, $objComments->date);
 				$objPartial->date = Date::parse($objPage->dateFormat, $objComments->date);
-				$objPartial->class = (($count < 1) ? ' first' : '') . (($count >= ($total - 1)) ? ' last' : '') . (($count % 2 == 0) ? ' even' : ' odd');
 				$objPartial->by = $GLOBALS['TL_LANG']['MSC']['com_by'];
 				$objPartial->id = 'c' . $objComments->id;
 				$objPartial->timestamp = $objComments->date;
@@ -118,15 +117,10 @@ class Comments extends Frontend
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
 					$objPartial->reply = System::getContainer()->get('contao.insert_tag.parser')->replace($objComments->reply);
 					$objPartial->author = $objAuthor;
-
-					// Clean the RTE output
-					$objPartial->reply = StringUtil::toHtml5($objPartial->reply);
 				}
 
 				$arrComments[] = $objPartial->parse();
 				$tags[] = 'contao.db.tl_comments.' . $objComments->id;
-
-				++$count;
 			}
 
 			// Tag the comments (see #2137)
@@ -144,7 +138,6 @@ class Comments extends Frontend
 		$objTemplate->email = $GLOBALS['TL_LANG']['MSC']['com_email'];
 		$objTemplate->website = $GLOBALS['TL_LANG']['MSC']['com_website'];
 		$objTemplate->commentsTotal = $limit ? $gtotal : $total;
-		$objTemplate->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 
 		// Add a form to create new comments
 		$this->renderCommentForm($objTemplate, $objConfig, $strSource, $intParent, $varNotifies);
@@ -277,7 +270,6 @@ class Comments extends Frontend
 
 		$objTemplate->fields = $arrWidgets;
 		$objTemplate->submit = $GLOBALS['TL_LANG']['MSC']['com_submit'];
-		$objTemplate->messages = ''; // Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$objTemplate->formId = $strFormId;
 		$objTemplate->hasError = $doNotSubmit;
 
@@ -307,7 +299,6 @@ class Comments extends Frontend
 
 			// Do not parse any tags in the comment
 			$strComment = StringUtil::specialchars(trim($arrWidgets['comment']->value));
-			$strComment = str_replace(array('&amp;', '&lt;', '&gt;'), array('[&]', '[lt]', '[gt]'), $strComment);
 
 			// Remove multiple line feeds
 			$strComment = preg_replace('@\n\n+@', "\n\n", $strComment);
@@ -375,14 +366,13 @@ class Comments extends Frontend
 			// Convert the comment to plain text
 			$strComment = strip_tags($strComment);
 			$strComment = StringUtil::decodeEntities($strComment);
-			$strComment = str_replace(array('[&]', '[lt]', '[gt]'), array('&', '<', '>'), $strComment);
 
 			// Add the comment details
 			$objEmail->text = sprintf(
 				$GLOBALS['TL_LANG']['MSC']['com_message'],
 				$arrSet['name'] . ' (' . $arrSet['email'] . ')',
 				$strComment,
-				Idna::decode(Environment::get('base')) . Environment::get('request'),
+				Idna::decode(Environment::get('url')) . Environment::get('requestUri'),
 				Idna::decode(Environment::get('base')) . 'contao?do=comments&act=edit&id=' . $objComment->id
 			);
 
@@ -515,9 +505,14 @@ class Comments extends Frontend
 
 	/**
 	 * Purge subscriptions that have not been activated within 24 hours
+	 *
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 *             Use CommentsNotifyModel::findExpiredSubscriptions() instead.
 	 */
 	public function purgeSubscriptions()
 	{
+		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use CommentsNotifyModel::findExpiredSubscriptions() instead.', __METHOD__);
+
 		$objNotify = CommentsNotifyModel::findExpiredSubscriptions();
 
 		if ($objNotify === null)
@@ -550,6 +545,9 @@ class Comments extends Frontend
 
 		$time = time();
 
+		// Ensure that the URL only contains ASCII characters (see #4708)
+		$request = (string) (new Uri(Environment::get('requestUri')));
+
 		// Prepare the record
 		$arrSet = array
 		(
@@ -558,9 +556,9 @@ class Comments extends Frontend
 			'parent'       => $objComment->parent,
 			'name'         => $objComment->name,
 			'email'        => $objComment->email,
-			'url'          => Environment::get('request'),
+			'url'          => $request,
 			'addedOn'      => $time,
-			'active'       => '',
+			'active'       => false,
 			'tokenRemove'  => 'cor-' . bin2hex(random_bytes(10))
 		);
 
@@ -568,7 +566,7 @@ class Comments extends Frontend
 		$objNotify = new CommentsNotifyModel();
 		$objNotify->setRow($arrSet)->save();
 
-		$strUrl = Idna::decode(Environment::get('base')) . Environment::get('request');
+		$strUrl = Idna::decode(Environment::get('base')) . $request;
 		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
 
 		$optIn = System::getContainer()->get('contao.opt_in');
@@ -611,7 +609,7 @@ class Comments extends Frontend
 				return;
 			}
 
-			$objNotify->active = '1';
+			$objNotify->active = true;
 			$objNotify->save();
 
 			$optInToken->confirm();
@@ -663,9 +661,9 @@ class Comments extends Frontend
 				}
 
 				// Update the notification URL if it has changed (see #373)
-				if ($isFrontend && $objNotify->url != Environment::get('request'))
+				if ($isFrontend && $objNotify->url != Environment::get('requestUri'))
 				{
-					$objNotify->url = Environment::get('request');
+					$objNotify->url = Environment::get('requestUri');
 					$objNotify->save();
 				}
 
@@ -681,7 +679,7 @@ class Comments extends Frontend
 			}
 		}
 
-		$objComment->notified = '1';
+		$objComment->notified = true;
 		$objComment->save();
 	}
 }

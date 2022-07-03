@@ -10,10 +10,11 @@
 
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
-use Contao\ModuleFaq;
 use Contao\ModuleFaqList;
 use Contao\ModuleFaqPage;
 use Contao\ModuleFaqReader;
+use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
 
 // Add back end modules
 $GLOBALS['BE_MOD']['content']['faq'] = array
@@ -30,13 +31,10 @@ $GLOBALS['FE_MOD']['faq'] = array
 );
 
 // Style sheet
-if (defined('TL_MODE') && TL_MODE == 'BE')
+if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))
 {
 	$GLOBALS['TL_CSS'][] = 'bundles/contaofaq/faq.min.css|static';
 }
-
-// Register hooks
-$GLOBALS['TL_HOOKS']['getSearchablePages'][] = array(ModuleFaq::class, 'getSearchablePages');
 
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'faqs';

@@ -45,7 +45,7 @@ class PickerBuilderTest extends ContaoTestCase
         $router = $this->createMock(RouterInterface::class);
         $translator = $this->createMock(TranslatorInterface::class);
 
-        $pageProvider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
+        $pageProvider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
 
         $this->builder->addProvider($pageProvider);
 
@@ -73,8 +73,9 @@ class PickerBuilderTest extends ContaoTestCase
     {
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
+        $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
 
         $this->builder->addProvider($provider);
 
@@ -88,8 +89,9 @@ class PickerBuilderTest extends ContaoTestCase
     {
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
+        $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
 
         $this->builder->addProvider($provider);
 
@@ -100,8 +102,9 @@ class PickerBuilderTest extends ContaoTestCase
     {
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
+        $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
 
         $this->builder->addProvider($provider);
 
@@ -114,8 +117,9 @@ class PickerBuilderTest extends ContaoTestCase
     {
         $factory = new MenuFactory();
         $router = $this->createMock(RouterInterface::class);
+        $translator = $this->createMock(TranslatorInterface::class);
 
-        $provider = new PagePickerProvider($factory, $router, null, $this->getSecurityHelper());
+        $provider = new PagePickerProvider($factory, $router, $translator, $this->getSecurityHelper());
 
         $this->builder->addProvider($provider);
 

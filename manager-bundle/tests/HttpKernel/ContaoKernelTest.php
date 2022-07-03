@@ -37,13 +37,15 @@ class ContaoKernelTest extends ContaoTestCase
 {
     use ExpectDeprecationTrait;
 
-    private $shellVerbosityBackup;
+    private array|string|false $shellVerbosityBackup;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->backupServerEnvGetPost();
+
+        $_ENV['APP_ENV'] = $_SERVER['APP_ENV'] = 'prod';
 
         $this->shellVerbosityBackup = getenv('SHELL_VERBOSITY');
     }
@@ -213,25 +215,25 @@ class ContaoKernelTest extends ContaoTestCase
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',
             'prod',
-            ['parameters.yml', 'parameters.yml'],
+            ['parameters.yaml', 'parameters.yaml'],
         ];
 
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithConfigDevYml',
             'dev',
-            ['config_dev.yml'],
+            ['config_dev.yaml'],
         ];
 
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithConfigYml',
             'prod',
-            ['config.yml'],
+            ['config.yaml'],
         ];
 
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithConfigsYml',
             'prod',
-            ['config_prod.yml', 'services.yml'],
+            ['config_prod.yaml', 'services.yaml'],
         ];
 
         yield [
@@ -369,7 +371,7 @@ class ContaoKernelTest extends ContaoTestCase
      */
     public function testReturnsTheContaoCacheInProdMode(): void
     {
-        unset($_SERVER['APP_ENV']);
+        unset($_SERVER['APP_ENV'], $_ENV['APP_ENV'], $_ENV['DISABLE_HTTP_CACHE'], $_SERVER['DISABLE_HTTP_CACHE']);
 
         $tempDir = realpath($this->getTempDir());
         $kernel = ContaoKernel::fromRequest($tempDir, Request::create('/'));

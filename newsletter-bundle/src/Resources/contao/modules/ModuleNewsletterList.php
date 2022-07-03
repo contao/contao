@@ -39,7 +39,7 @@ class ModuleNewsletterList extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -73,10 +73,7 @@ class ModuleNewsletterList extends Module
 		$arrJumpTo = array();
 		$arrNewsletter = array();
 
-		$container = System::getContainer();
-		$request = $container->get('request_stack')->getMainRequest();
-
-		$strRequest = null !== $request ? StringUtil::ampersand($request->getRequestUri()) : '';
+		$strRequest = StringUtil::ampersand(Environment::get('requestUri'));
 		$objNewsletter = NewsletterModel::findSentByPids($this->nl_channels);
 
 		if ($objNewsletter !== null)
@@ -106,7 +103,7 @@ class ModuleNewsletterList extends Module
 					if (($objJumpTo = $objTarget->getRelated('jumpTo')) instanceof PageModel)
 					{
 						/** @var PageModel $objJumpTo */
-						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
+						$arrJumpTo[$objTarget->jumpTo] = $objJumpTo->getFrontendUrl('/%s');
 					}
 					else
 					{

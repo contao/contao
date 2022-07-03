@@ -21,21 +21,15 @@ use Doctrine\DBAL\Connection;
  */
 class DropSearchMigration extends AbstractMigration
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function shouldRun(): bool
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        if (
-            !$schemaManager->tablesExist('tl_search_index')
-            || $schemaManager->tablesExist('tl_search_term')
-        ) {
+        if (!$schemaManager->tablesExist('tl_search_index')) {
             return false;
         }
 

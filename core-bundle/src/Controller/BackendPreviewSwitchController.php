@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Error\Error as TwigError;
 
@@ -40,27 +41,18 @@ use Twig\Error\Error as TwigError;
  */
 class BackendPreviewSwitchController
 {
-    private FrontendPreviewAuthenticator $previewAuthenticator;
-    private TokenChecker $tokenChecker;
-    private Connection $connection;
-    private Security $security;
-    private TwigEnvironment $twig;
-    private ContaoCsrfTokenManager $tokenManager;
-    private RouterInterface $router;
-    private array $backendAttributes;
-    private string $backendBadgeTitle;
-
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, TokenChecker $tokenChecker, Connection $connection, Security $security, TwigEnvironment $twig, RouterInterface $router, ContaoCsrfTokenManager $tokenManager, array $attributes = [], string $badgeTitle = '')
-    {
-        $this->previewAuthenticator = $previewAuthenticator;
-        $this->tokenChecker = $tokenChecker;
-        $this->connection = $connection;
-        $this->security = $security;
-        $this->twig = $twig;
-        $this->router = $router;
-        $this->tokenManager = $tokenManager;
-        $this->backendAttributes = $attributes;
-        $this->backendBadgeTitle = $badgeTitle;
+    public function __construct(
+        private FrontendPreviewAuthenticator $previewAuthenticator,
+        private TokenChecker $tokenChecker,
+        private Connection $connection,
+        private Security $security,
+        private TwigEnvironment $twig,
+        private RouterInterface $router,
+        private ContaoCsrfTokenManager $tokenManager,
+        private TranslatorInterface $translator,
+        private array $backendAttributes = [],
+        private string $backendBadgeTitle = '',
+    ) {
     }
 
     /**
@@ -79,9 +71,7 @@ class BackendPreviewSwitchController
         }
 
         if ('tl_switch' === $request->request->get('FORM_SUBMIT')) {
-            $this->authenticatePreview($request);
-
-            return new Response('', Response::HTTP_NO_CONTENT);
+            return $this->authenticatePreview($request);
         }
 
         if ('datalist_members' === $request->request->get('FORM_SUBMIT')) {
@@ -106,7 +96,7 @@ class BackendPreviewSwitchController
                 [
                     'do' => 'preview_link',
                     'act' => 'create',
-                    'showUnpublished' => $showUnpublished ? '1' : '',
+                    'showUnpublished' => $showUnpublished,
                     'rt' => $this->tokenManager->getDefaultTokenValue(),
                     'nb' => '1', // Do not show the "Save & Close" button
                 ]
@@ -132,7 +122,7 @@ class BackendPreviewSwitchController
         }
     }
 
-    private function authenticatePreview(Request $request): void
+    private function authenticatePreview(Request $request): Response
     {
         $frontendUsername = $this->tokenChecker->getFrontendUsername();
 
@@ -143,10 +133,16 @@ class BackendPreviewSwitchController
         $showUnpublished = 'hide' !== $request->request->get('unpublished');
 
         if ($frontendUsername) {
-            $this->previewAuthenticator->authenticateFrontendUser((string) $frontendUsername, $showUnpublished);
+            if (!$this->previewAuthenticator->authenticateFrontendUser((string) $frontendUsername, $showUnpublished)) {
+                $message = $this->translator->trans('ERR.previewSwitchInvalidUsername', [$frontendUsername], 'contao_default');
+
+                return new Response($message, Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
         } else {
             $this->previewAuthenticator->authenticateFrontendGuest($showUnpublished);
         }
+
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
     private function getMembersDataList(BackendUser $user, Request $request): array
@@ -172,8 +168,8 @@ class BackendPreviewSwitchController
                 tl_member
             WHERE
                 username LIKE ? $andWhereGroups
-                AND login='1'
-                AND disable!='1'
+                AND login=1
+                AND disable=0
                 AND (start='' OR start<='$time')
                 AND (stop='' OR stop>'$time')
             ORDER BY

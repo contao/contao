@@ -19,16 +19,11 @@ use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
  */
 class VirtualFilesystemFactory
 {
-    private MountManager $mountManager;
-    private DbafsManager $dbafsManager;
-
     /**
      * @internal
      */
-    public function __construct(MountManager $mountManager, DbafsManager $dbafsManager)
+    public function __construct(private MountManager $mountManager, private DbafsManager $dbafsManager)
     {
-        $this->mountManager = $mountManager;
-        $this->dbafsManager = $dbafsManager;
     }
 
     public function __invoke(string $prefix = '', bool $readonly = false): VirtualFilesystem

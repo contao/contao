@@ -31,10 +31,8 @@ class ContentToplink extends ContentElement
 			$this->linkTitle = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 		}
 
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
-
 		$this->Template->label = $this->linkTitle;
 		$this->Template->title = StringUtil::specialchars($this->linkTitle);
-		$this->Template->request = null !== $request ? StringUtil::ampersand($request->getRequestUri()) : '';
+		$this->Template->request = StringUtil::ampersand(Environment::get('requestUri'));
 	}
 }

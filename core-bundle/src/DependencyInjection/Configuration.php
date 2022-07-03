@@ -24,11 +24,8 @@ use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    private string $projectDir;
-
-    public function __construct(string $projectDir)
+    public function __construct(private string $projectDir)
     {
-        $this->projectDir = $projectDir;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder
@@ -45,10 +42,6 @@ class Configuration implements ConfigurationInterface
                     ->cannotBeEmpty()
                     ->defaultValue('contao_csrf_token')
                 ->end()
-                ->scalarNode('encryption_key')
-                    ->cannotBeEmpty()
-                    ->defaultValue('%kernel.secret%')
-                ->end()
                 ->integerNode('error_level')
                     ->info('The error reporting level set when the framework is initialized. Defaults to E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_USER_DEPRECATED.')
                     ->min(-1)
@@ -63,7 +56,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $options): array {
                                 foreach (array_keys($options) as $option) {
                                     if ($newKey = Config::getNewKey($option)) {
-                                        trigger_deprecation('contao/core-bundle', '4.12', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
+                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
                                     }
                                 }
 
@@ -179,7 +172,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->booleanNode('reject_large_uploads')
-                    ->info('Reject uploaded images exceeding the localconfig.gdMaxImgWidth and localconfig.gdMaxImgHeight dimensions.')
+                    ->info('Reject uploaded images exceeding the localconfig.imageWidth and localconfig.imageHeight dimensions.')
                     ->defaultValue(false)
                 ->end()
                 ->arrayNode('sizes')
@@ -328,7 +321,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('valid_extensions')
                     ->prototype('scalar')->end()
-                    ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp'])
+                    ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
                 ->end()
                 ->arrayNode('preview')
                     ->addDefaultsIfNotSet()
@@ -530,7 +523,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('default_http_client_options')
                     ->info('Allows to configure the default HttpClient options (useful for proxy settings, SSL certificate validation and more).')
-                    ->prototype('scalar')->end()
+                    ->prototype('variable')->end()
                     ->defaultValue([])
                 ->end()
             ->end()
@@ -588,16 +581,19 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('custom_css')
                     ->info('Adds custom style sheets to the back end.')
                     ->example(['files/backend/custom.css'])
+                    ->cannotBeEmpty()
                     ->scalarPrototype()->end()
                 ->end()
                 ->arrayNode('custom_js')
                     ->info('Adds custom JavaScript files to the back end.')
                     ->example(['files/backend/custom.js'])
+                    ->cannotBeEmpty()
                     ->scalarPrototype()->end()
                 ->end()
                 ->scalarNode('badge_title')
                     ->info('Configures the title of the badge in the back end.')
                     ->example('develop')
+                    ->cannotBeEmpty()
                     ->defaultValue('')
                 ->end()
                 ->scalarNode('route_prefix')
@@ -652,7 +648,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $intervals) {
                                 try {
                                     RetentionPolicy::validateAndSortIntervals($intervals);
-                                } catch (\Exception $e) {
+                                } catch (\Exception) {
                                     return true;
                                 }
 

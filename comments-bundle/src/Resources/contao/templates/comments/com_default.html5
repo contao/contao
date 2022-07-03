@@ -1,5 +1,5 @@
 
-<div class="comment_default<?= $this->class ?>" id="<?= $this->id ?>">
+<div class="comment_default" id="<?= $this->id ?>">
   <p class="info"><?= $this->by ?> <?php if ($this->website): ?><a href="<?= $this->website ?>" target="_blank" rel="nofollow noreferrer noopener"><?= $this->name ?></a><?php else: ?><?= $this->name ?><?php endif; ?> | <time datetime="<?= $this->datetime ?>" class="date"><?= $this->date ?></time></p>
   <div class="comment">
     <?= $this->comment ?>

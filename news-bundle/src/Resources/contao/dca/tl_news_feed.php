@@ -338,7 +338,7 @@ class tl_news_feed extends Backend
 	/**
 	 * Add the new feed to the permissions
 	 *
-	 * @param $insertId
+	 * @param string|int $insertId
 	 */
 	public function adjustPermissions($insertId)
 	{

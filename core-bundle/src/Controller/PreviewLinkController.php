@@ -28,15 +28,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PreviewLinkController
 {
-    private FrontendPreviewAuthenticator $previewAuthenticator;
-    private UriSigner $uriSigner;
-    private Connection $connection;
-
-    public function __construct(FrontendPreviewAuthenticator $previewAuthenticator, UriSigner $uriSigner, Connection $connection)
+    public function __construct(private FrontendPreviewAuthenticator $previewAuthenticator, private UriSigner $uriSigner, private Connection $connection)
     {
-        $this->previewAuthenticator = $previewAuthenticator;
-        $this->uriSigner = $uriSigner;
-        $this->connection = $connection;
     }
 
     /**
@@ -49,7 +42,7 @@ class PreviewLinkController
         }
 
         $link = $this->connection->fetchAssociative(
-            "SELECT * FROM tl_preview_link WHERE id=? AND published='1' AND expiresAt>UNIX_TIMESTAMP()",
+            'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
             [$id]
         );
 

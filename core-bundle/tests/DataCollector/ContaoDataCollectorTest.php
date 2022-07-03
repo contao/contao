@@ -85,6 +85,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 
@@ -124,6 +125,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 
@@ -157,9 +159,7 @@ class ContaoDataCollectorTest extends TestCase
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
     {
         $collector = new ContaoDataCollector($this->createMock(TokenChecker::class));
-
         $method = new \ReflectionMethod($collector, 'getData');
-        $method->setAccessible(true);
 
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));
     }

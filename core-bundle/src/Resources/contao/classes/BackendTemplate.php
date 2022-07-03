@@ -16,8 +16,8 @@ use Symfony\Component\HttpFoundation\Response;
  * Provide methods to handle back end templates.
  *
  * @property string $ua
- * @property array  $javascripts
- * @property array  $stylesheets
+ * @property string $javascripts
+ * @property string $stylesheets
  * @property string $mootools
  * @property string $attributes
  * @property string $badgeTitle
@@ -55,6 +55,8 @@ class BackendTemplate extends Template
 	 */
 	public function getResponse()
 	{
+		$this->compile();
+
 		$response = parent::getResponse();
 		$response->headers->set('Cache-Control', 'no-cache, no-store');
 
@@ -63,19 +65,9 @@ class BackendTemplate extends Template
 
 	/**
 	 * Compile the template
-	 *
-	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
 	 */
-	protected function compile()
+	private function compile()
 	{
-		// Backwards compatibility (see #3074 and #6277)
-		$this->ua = Environment::get('agent')->class;
-
-		if (Config::get('fullscreen'))
-		{
-			$this->ua .= ' fullscreen';
-		}
-
 		$this->addBackendConfig();
 
 		// Style sheets
@@ -147,7 +139,6 @@ class BackendTemplate extends Template
 		}
 
 		$strBuffer = $this->parse();
-		$strBuffer = static::replaceOldBePaths($strBuffer);
 
 		// HOOK: add custom output filter
 		if (isset($GLOBALS['TL_HOOKS']['outputBackendTemplate']) && \is_array($GLOBALS['TL_HOOKS']['outputBackendTemplate']))
@@ -160,8 +151,6 @@ class BackendTemplate extends Template
 		}
 
 		$this->strBuffer = $strBuffer;
-
-		parent::compile();
 	}
 
 	/**

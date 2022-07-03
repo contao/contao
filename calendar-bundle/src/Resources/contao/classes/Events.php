@@ -292,7 +292,6 @@ abstract class Events extends Module
 		$arrEvent['begin'] = $intStart;
 		$arrEvent['end'] = $intEnd;
 		$arrEvent['details'] = '';
-		$arrEvent['hasDetails'] = false;
 		$arrEvent['hasTeaser'] = false;
 
 		// Override the link target
@@ -305,7 +304,6 @@ abstract class Events extends Module
 		if ($arrEvent['teaser'])
 		{
 			$arrEvent['hasTeaser'] = true;
-			$arrEvent['teaser'] = StringUtil::toHtml5($arrEvent['teaser']);
 			$arrEvent['teaser'] = StringUtil::encodeEmail($arrEvent['teaser']);
 		}
 
@@ -425,7 +423,14 @@ abstract class Events extends Module
 				}
 				else
 				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objEvent->url);
+					$url = $objEvent->url;
+
+					if (Validator::isRelativeUrl($url))
+					{
+						$url = Environment::get('path') . '/' . $url;
+					}
+
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
 				}
 				break;
 
@@ -457,13 +462,11 @@ abstract class Events extends Module
 
 			if (!$objPage instanceof PageModel)
 			{
-				$request = System::getContainer()->get('request_stack')->getMainRequest();
-
-				self::$arrUrlCache[$strCacheKey] = null !== $request ? StringUtil::ampersand($request->getRequestUri()) : '';
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('requestUri'));
 			}
 			else
 			{
-				$params = (Config::get('useAutoItem') ? '/' : '/events/') . ($objEvent->alias ?: $objEvent->id);
+				$params = '/' . ($objEvent->alias ?: $objEvent->id);
 
 				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}

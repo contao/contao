@@ -26,13 +26,6 @@ hooks:
             input: ''
             widget: Contao\Widget
 
-    addLogEntry:
-        return_type: void
-        arguments:
-            message: string
-            func: string
-            action: string
-
     checkCredentials:
         return_type: bool
         arguments:
@@ -240,11 +233,6 @@ hooks:
             langsNative: array
             installedOnly: bool
 
-    getPageIdFromUrl:
-        return_type: array
-        arguments:
-            fragments: array
-
     getPageLayout:
         return_type: void
         arguments:
@@ -257,18 +245,6 @@ hooks:
         arguments:
             page: object
             image: string
-
-    getRootPageFromUrl:
-        return_type: Contao\PageModel
-        arguments: []
-
-    getSearchablePages:
-        return_type: array
-        arguments:
-            pages: array
-            rootId: [int, 'null']
-            isSitemap: [bool, 'false']
-            language: [string, 'null']
 
     getSystemMessages:
         return_type: string

@@ -25,12 +25,12 @@ class RouteProvider extends AbstractPageRouteProvider
 {
     public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pathInfo = rawurldecode($request->getPathInfo());
 
         // The request string must not contain "auto_item" (see #4012)
-        if (false !== strpos($pathInfo, '/auto_item/')) {
+        if (str_contains($pathInfo, '/auto_item/')) {
             return new RouteCollection();
         }
 
@@ -55,7 +55,7 @@ class RouteProvider extends AbstractPageRouteProvider
 
     public function getRouteByName($name): Route
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $ids = $this->getPageIdsFromNames([$name]);
 
@@ -83,7 +83,7 @@ class RouteProvider extends AbstractPageRouteProvider
 
     public function getRoutesByNames($names): array
     {
-        $this->framework->initialize(true);
+        $this->framework->initialize();
 
         $pageModel = $this->framework->getAdapter(PageModel::class);
 
@@ -157,7 +157,7 @@ class RouteProvider extends AbstractPageRouteProvider
             if (!$page->rootId) {
                 return;
             }
-        } catch (NoRootPageFoundException $e) {
+        } catch (NoRootPageFoundException) {
             return;
         }
 
@@ -230,8 +230,8 @@ class RouteProvider extends AbstractPageRouteProvider
                 $nameA = array_search($a, $routes, true);
                 $nameB = array_search($b, $routes, true);
 
-                $fallbackA = 0 === substr_compare($nameA, '.fallback', -9);
-                $fallbackB = 0 === substr_compare($nameB, '.fallback', -9);
+                $fallbackA = str_ends_with($nameA, '.fallback');
+                $fallbackB = str_ends_with($nameB, '.fallback');
 
                 if ($fallbackA && !$fallbackB) {
                     return 1;
@@ -239,6 +239,14 @@ class RouteProvider extends AbstractPageRouteProvider
 
                 if ($fallbackB && !$fallbackA) {
                     return -1;
+                }
+
+                if ('/' === $a->getPath() && '/' !== $b->getPath()) {
+                    return -1;
+                }
+
+                if ('/' === $b->getPath() && '/' !== $a->getPath()) {
+                    return 1;
                 }
 
                 return $this->compareRoutes($a, $b, $languages);

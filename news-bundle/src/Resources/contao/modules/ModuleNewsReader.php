@@ -16,7 +16,7 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 
 /**
- * Front end module "news reader".
+ * Front end module "newsreader".
  *
  * @property Comments $Comments
  * @property string   $com_template
@@ -48,28 +48,16 @@ class ModuleNewsReader extends ModuleNews
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
-		}
-
-		// Set the item from the auto_item parameter
-		if (!isset($_GET['items']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
-		{
-			Input::setGet('items', Input::get('auto_item'));
-		}
-
-		// Return an empty string if "items" is not set (to combine list and reader on same page)
-		if (!Input::get('items'))
-		{
-			return '';
 		}
 
 		$this->news_archives = $this->sortOutProtected(StringUtil::deserialize($this->news_archives));
 
 		if (empty($this->news_archives) || !\is_array($this->news_archives))
 		{
-			throw new InternalServerErrorException('The news reader ID ' . $this->id . ' has no archives specified.');
+			throw new InternalServerErrorException('The newsreader ID ' . $this->id . ' has no archives specified.');
 		}
 
 		return parent::generate();
@@ -89,7 +77,7 @@ class ModuleNewsReader extends ModuleNews
 		}
 
 		// Get the news item
-		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('items'), $this->news_archives);
+		$objArticle = NewsModel::findPublishedByParentAndIdOrAlias(Input::get('auto_item'), $this->news_archives);
 
 		// The news item does not exist (see #33)
 		if ($objArticle === null)

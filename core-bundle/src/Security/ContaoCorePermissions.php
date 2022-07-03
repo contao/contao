@@ -186,4 +186,10 @@ final class ContaoCorePermissions
      * Subject must be a corresponding group ID or an array of group IDs.
      */
     public const MEMBER_IN_GROUPS = 'contao_member.groups';
+
+    /**
+     * Prefix for all DCA related permission attributes.
+     * Supposed to be followed by the table (e.g. "contao_dc.tl_content").
+     */
+    public const DC_PREFIX = 'contao_dc.';
 }

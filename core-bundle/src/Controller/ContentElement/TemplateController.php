@@ -13,18 +13,28 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
+use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @ContentElement(category="includes")
+ */
 class TemplateController extends AbstractContentElementController
 {
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
-        $this->initializeContaoFramework();
+        $data = StringUtil::deserialize($model->data, true);
 
-        $template->data = StringUtil::deserialize($model->data, true);
+        $template->keys = array_combine(
+            array_column($data, 'key'),
+            array_column($data, 'value')
+        );
+
+        // Backwards compatibililty
+        $template->data = $data;
 
         return $template->getResponse();
     }

@@ -24,23 +24,16 @@ use Doctrine\DBAL\Connection;
  */
 class ResetCustomTemplateListener
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**
      * Resets the custom template if the element type changes.
-     *
-     * @param mixed $varValue
-     *
-     * @return mixed
      */
-    public function __invoke($varValue, DataContainer $dc)
+    public function __invoke(mixed $varValue, DataContainer $dc): mixed
     {
-        if ($dc->activeRecord->type === $varValue) {
+        if (($dc->getCurrentRecord()['type'] ?? null) === $varValue) {
             return $varValue;
         }
 

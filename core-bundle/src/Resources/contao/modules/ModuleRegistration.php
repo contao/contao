@@ -39,7 +39,7 @@ class ModuleRegistration extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -80,6 +80,14 @@ class ModuleRegistration extends Module
 			}
 		}
 
+		$strFormId = 'tl_registration_' . $this->id;
+
+		// Remove expired registration (#3709)
+		if (Input::post('FORM_SUBMIT') == $strFormId && ($email = Input::post('email')) && ($member = MemberModel::findExpiredRegistrationByEmail($email)))
+		{
+			$member->delete();
+		}
+
 		// Activate account
 		if (strncmp(Input::get('token'), 'reg-', 4) === 0)
 		{
@@ -98,7 +106,6 @@ class ModuleRegistration extends Module
 
 		$objCaptcha = null;
 		$doNotSubmit = false;
-		$strFormId = 'tl_registration_' . $this->id;
 
 		// Predefine the group order (other groups will be appended automatically)
 		$arrGroups = array
@@ -157,7 +164,6 @@ class ModuleRegistration extends Module
 		$arrUser = array();
 		$arrFields = array();
 		$hasUpload = false;
-		$i = 0;
 
 		// Build the form
 		foreach ($this->editable as $field)
@@ -197,13 +203,6 @@ class ModuleRegistration extends Module
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
-			$objWidget->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
-
-			// Increase the row count if it's a password field
-			if ($objWidget instanceof FormPassword)
-			{
-				$objWidget->rowClassConfirm = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
-			}
 
 			// Validate input
 			if (Input::post('FORM_SUBMIT') == $strFormId)
@@ -303,21 +302,17 @@ class ModuleRegistration extends Module
 			}
 
 			$arrFields[$arrData['eval']['feGroup']][$field] .= $temp;
-
-			++$i;
 		}
 
 		// Captcha
 		if (!$this->disableCaptcha)
 		{
-			$objCaptcha->rowClass = 'row_' . $i . (($i == 0) ? ' row_first' : '') . ((($i % 2) == 0) ? ' even' : ' odd');
 			$strCaptcha = $objCaptcha->parse();
 
 			$this->Template->fields .= $strCaptcha;
 			$arrFields['captcha']['captcha'] = ($arrFields['captcha']['captcha'] ?? '') . $strCaptcha;
 		}
 
-		$this->Template->rowLast = 'row_' . ++$i . ((($i % 2) == 0) ? ' even' : ' odd');
 		$this->Template->enctype = $hasUpload ? 'multipart/form-data' : 'application/x-www-form-urlencoded';
 		$this->Template->hasError = $doNotSubmit;
 
@@ -330,26 +325,19 @@ class ModuleRegistration extends Module
 		$this->Template->loginDetails = $GLOBALS['TL_LANG']['tl_member']['loginDetails'];
 		$this->Template->addressDetails = $GLOBALS['TL_LANG']['tl_member']['addressDetails'];
 		$this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];
-		$this->Template->personalData = $GLOBALS['TL_LANG']['tl_member']['personalData'];
+		$this->Template->personalDetails = $GLOBALS['TL_LANG']['tl_member']['personalDetails'];
 		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['MSC']['securityQuestion'];
 
 		// Add the groups
 		foreach ($arrFields as $k=>$v)
 		{
-			// Deprecated since Contao 4.0, to be removed in Contao 5.0
-			$this->Template->$k = $v;
-
-			$key = $k . (($k == 'personal') ? 'Data' : 'Details');
-			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key] ?? ''] = $v;
+			$key = $k . 'Details';
+			$arrGroups[$GLOBALS['TL_LANG']['tl_member'][$key] ?? $key] = $v;
 		}
 
 		$this->Template->categories = array_filter($arrGroups);
 		$this->Template->formId = $strFormId;
 		$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['register']);
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$this->Template->captcha = $arrFields['captcha']['captcha'];
 	}
 
 	/**
@@ -434,7 +422,7 @@ class ModuleRegistration extends Module
 		$objVersions = new Versions('tl_member', $objNewUser->id);
 		$objVersions->setUsername($objNewUser->username);
 		$objVersions->setUserId(0);
-		$objVersions->setEditUrl('contao/main.php?do=member&act=edit&id=%s&rt=1');
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>'%s', 'rt'=>'1')));
 		$objVersions->initialize();
 
 		// Inform admin if no activation link is sent
@@ -466,7 +454,7 @@ class ModuleRegistration extends Module
 		$arrTokenData = $arrData;
 		$arrTokenData['activation'] = $optInToken->getIdentifier();
 		$arrTokenData['domain'] = Idna::decode(Environment::get('host'));
-		$arrTokenData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
+		$arrTokenData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 		$arrTokenData['channels'] = '';
 
 		$bundles = System::getContainer()->getParameter('kernel.bundles');
@@ -497,9 +485,6 @@ class ModuleRegistration extends Module
 				}
 			}
 		}
-
-		// Deprecated since Contao 4.0, to be removed in Contao 5.0
-		$arrTokenData['channel'] = $arrTokenData['channels'];
 
 		// Send the token
 		$optInToken->send(
@@ -543,7 +528,7 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		$objMember->disable = '';
+		$objMember->disable = false;
 		$objMember->save();
 
 		$optInToken->confirm();

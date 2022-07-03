@@ -13,16 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\User;
 
 use Contao\BackendUser;
-use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\System;
-use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpFoundation\Session\Storage\MetadataBag;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -69,123 +65,13 @@ class ContaoUserProviderTest extends TestCase
         $this->assertSame($user, $provider->refreshUser($user));
     }
 
-    public function testValidatesTheSessionLifetime(): void
-    {
-        $user = $this->mockClassWithProperties(BackendUser::class);
-        $user->username = 'foobar';
-
-        $userAdapter = $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]);
-
-        $configAdapter = $this->mockAdapter(['get']);
-        $configAdapter
-            ->expects($this->once())
-            ->method('get')
-            ->with('sessionTimeout')
-            ->willReturn(3600)
-        ;
-
-        $adapters = [
-            BackendUser::class => $userAdapter,
-            Config::class => $configAdapter,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $metadata = $this->createMock(MetadataBag::class);
-        $metadata
-            ->expects($this->once())
-            ->method('getLastUsed')
-            ->willReturn(time() - 1800)
-        ;
-
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->once())
-            ->method('isStarted')
-            ->willReturn(true)
-        ;
-
-        $session
-            ->expects($this->once())
-            ->method('getMetadataBag')
-            ->willReturn($metadata)
-        ;
-
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($this->never())
-            ->method('info')
-        ;
-
-        $userProvider = new ContaoUserProvider($framework, $session, BackendUser::class, $logger);
-
-        $this->assertSame($user, $userProvider->refreshUser($user));
-    }
-
-    public function testLogsOutUsersWhoHaveBeenInactiveForTooLong(): void
-    {
-        $user = $this->mockClassWithProperties(BackendUser::class);
-        $user->username = 'foobar';
-
-        $userAdapter = $this->mockConfiguredAdapter(['loadUserByIdentifier' => $user]);
-
-        $configAdapter = $this->mockAdapter(['get']);
-        $configAdapter
-            ->expects($this->once())
-            ->method('get')
-            ->with('sessionTimeout')
-            ->willReturn(3600)
-        ;
-
-        $adapters = [
-            BackendUser::class => $userAdapter,
-            Config::class => $configAdapter,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $metadata = $this->createMock(MetadataBag::class);
-        $metadata
-            ->expects($this->once())
-            ->method('getLastUsed')
-            ->willReturn(time() - 7200)
-        ;
-
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->expects($this->once())
-            ->method('isStarted')
-            ->willReturn(true)
-        ;
-
-        $session
-            ->expects($this->once())
-            ->method('getMetadataBag')
-            ->willReturn($metadata)
-        ;
-
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($this->once())
-            ->method('info')
-            ->with('User "foobar" has been logged out automatically due to inactivity')
-        ;
-
-        $userProvider = new ContaoUserProvider($framework, $session, BackendUser::class, $logger);
-
-        $this->expectException(UsernameNotFoundException::class);
-        $this->expectExceptionMessage('User "foobar" has been logged out automatically due to inactivity.');
-
-        $this->assertSame($user, $userProvider->refreshUser($user));
-    }
-
     public function testFailsToRefreshUnsupportedUsers(): void
     {
         $user = $this->createMock(UserInterface::class);
         $provider = $this->getProvider();
 
         $this->expectException(UnsupportedUserException::class);
-        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', \get_class($user)));
+        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', $user::class));
 
         $provider->refreshUser($user);
     }
@@ -229,7 +115,7 @@ class ContaoUserProviderTest extends TestCase
         $provider = $this->getProvider();
 
         $this->expectException(UnsupportedUserException::class);
-        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', \get_class($user)));
+        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', $user::class));
 
         /** @phpstan-ignore-next-line */
         $provider->upgradePassword($user, 'newsuperhash');
@@ -280,9 +166,7 @@ class ContaoUserProviderTest extends TestCase
     private function getProvider(ContaoFramework $framework = null, string $userClass = BackendUser::class): ContaoUserProvider
     {
         $framework ??= $this->mockContaoFramework();
-        $session = $this->createMock(SessionInterface::class);
-        $logger = $this->createMock(LoggerInterface::class);
 
-        return new ContaoUserProvider($framework, $session, $userClass, $logger);
+        return new ContaoUserProvider($framework, $userClass);
     }
 }

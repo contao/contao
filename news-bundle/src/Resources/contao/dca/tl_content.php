@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\DataContainer;
 use Contao\Input;
 use Contao\News;
 use Contao\System;
@@ -42,8 +43,10 @@ class tl_content_news extends Backend
 
 	/**
 	 * Check permissions to edit table tl_content
+	 *
+	 * @param DataContainer $dc
 	 */
-	public function checkPermission()
+	public function checkPermission(DataContainer $dc)
 	{
 		if ($this->User->isAdmin)
 		{
@@ -65,10 +68,14 @@ class tl_content_news extends Backend
 		{
 			case '': // empty
 			case 'paste':
-			case 'create':
 			case 'select':
 				// Check access to the news item
-				$this->checkAccessToElement(CURRENT_ID, $root, true);
+				$this->checkAccessToElement($dc->currentPid, $root, true);
+				break;
+
+			case 'create':
+				// Check access to the parent element if a content element is created
+				$this->checkAccessToElement(Input::get('pid'), $root, (Input::get('mode') == 2));
 				break;
 
 			case 'editAll':
@@ -83,7 +90,7 @@ class tl_content_news extends Backend
 				}
 
 				$objCes = $this->Database->prepare("SELECT id FROM tl_content WHERE ptable='tl_news' AND pid=?")
-										 ->execute(CURRENT_ID);
+										 ->execute($dc->currentPid);
 
 				$objSession = System::getContainer()->get('session');
 

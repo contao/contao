@@ -116,13 +116,12 @@ class MetadataTest extends TestCase
 
     public function testCreatesMetadataContainerFromContentModel(): void
     {
-        /** @var ContentModel $model */
-        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
+        $model = $this->mockClassWithProperties(ContentModel::class, except: ['getOverwriteMetadata']);
 
         $model->setRow([
             'id' => 100,
             'headline' => 'foobar',
-            'overwriteMeta' => '1',
+            'overwriteMeta' => true,
             'alt' => 'foo alt',
             'imageTitle' => 'foo title',
             'imageUrl' => 'foo://bar',
@@ -142,13 +141,12 @@ class MetadataTest extends TestCase
 
     public function testDoesNotCreateMetadataContainerFromContentModelIfOverwriteIsDisabled(): void
     {
-        /** @var ContentModel $model */
-        $model = (new \ReflectionClass(ContentModel::class))->newInstanceWithoutConstructor();
+        $model = $this->mockClassWithProperties(ContentModel::class, except: ['getOverwriteMetadata']);
 
         $model->setRow([
             'id' => 100,
             'headline' => 'foobar',
-            'overwriteMeta' => '',
+            'overwriteMeta' => false,
             'alt' => 'foo alt',
         ]);
 
@@ -157,8 +155,7 @@ class MetadataTest extends TestCase
 
     public function testCreatesMetadataContainerFromFilesModel(): void
     {
-        /** @var FilesModel $model */
-        $model = (new \ReflectionClass(FilesModel::class))->newInstanceWithoutConstructor();
+        $model = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
 
         $model->setRow([
             'id' => 100,

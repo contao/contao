@@ -19,14 +19,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class WebsiteRootsConfigProvider implements ProviderInterface
 {
-    private Connection $connection;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.cors.website_roots_config_provider" service instead
      */
-    public function __construct(Connection $connection)
+    public function __construct(private Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     public function getOptions(Request $request): array
@@ -75,7 +72,7 @@ class WebsiteRootsConfigProvider implements ProviderInterface
     {
         try {
             return $this->connection->createSchemaManager()->tablesExist(['tl_page']);
-        } catch (DriverException $e) {
+        } catch (DriverException) {
             return false;
         }
     }

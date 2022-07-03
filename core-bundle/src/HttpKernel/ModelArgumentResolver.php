@@ -22,16 +22,11 @@ use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
 class ModelArgumentResolver implements ArgumentValueResolverInterface
 {
-    private ContaoFramework $framework;
-    private ScopeMatcher $scopeMatcher;
-
     /**
      * @internal Do not inherit from this class; decorate the "contao.model_argument_resolver" service instead
      */
-    public function __construct(ContaoFramework $framework, ScopeMatcher $scopeMatcher)
+    public function __construct(private ContaoFramework $framework, private ScopeMatcher $scopeMatcher)
     {
-        $this->framework = $framework;
-        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function supports(Request $request, ArgumentMetadata $argument): bool
@@ -58,7 +53,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
         yield $this->fetchModel($request, $argument);
     }
 
-    private function fetchModel(Request $request, ArgumentMetadata $argument): ?Model
+    private function fetchModel(Request $request, ArgumentMetadata $argument): Model|null
     {
         $name = $this->getArgumentName($request, $argument);
 
@@ -78,7 +73,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
         if (
             isset($GLOBALS['objPage'])
             && $GLOBALS['objPage'] instanceof PageModel
-            && (int) $GLOBALS['objPage']->id === (int) $value
+            && $GLOBALS['objPage']->id === (int) $value
             && is_a($type, PageModel::class, true)
         ) {
             return $GLOBALS['objPage'];
@@ -93,7 +88,7 @@ class ModelArgumentResolver implements ArgumentValueResolverInterface
     /**
      * Returns the argument name from the model class.
      */
-    private function getArgumentName(Request $request, ArgumentMetadata $argument): ?string
+    private function getArgumentName(Request $request, ArgumentMetadata $argument): string|null
     {
         if ($request->attributes->has($argument->getName())) {
             return $argument->getName();

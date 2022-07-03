@@ -10,7 +10,6 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\Cache;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Comments;
 use Contao\CommentsModel;
@@ -209,7 +208,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('submitOnChange'=>true),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'author' => array
 		(
@@ -240,7 +239,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			(
 				array('tl_comments', 'sendNotifications')
 			),
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'ip' => array
 		(
@@ -248,11 +247,11 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 		),
 		'notified' => array
 		(
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'notifiedReply' => array
 		(
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		)
 	)
 );
@@ -370,7 +369,7 @@ class tl_comments extends Backend
 			}
 		}
 
-		$this->Database->prepare("UPDATE tl_comments SET notifiedReply='1' WHERE id=?")->execute($dc->id);
+		$this->Database->prepare("UPDATE tl_comments SET notifiedReply=1 WHERE id=?")->execute($dc->id);
 	}
 
 	/**
@@ -388,16 +387,18 @@ class tl_comments extends Backend
 			return true;
 		}
 
+		static $cache = array();
+
 		$strKey = __METHOD__ . '-' . $strSource . '-' . $intParent;
 
 		// Load cached result
-		if (Cache::has($strKey))
+		if (isset($cache[$strKey]))
 		{
-			return Cache::get($strKey);
+			return $cache[$strKey];
 		}
 
 		// Order deny,allow
-		Cache::set($strKey, false);
+		$cache[$strKey] = false;
 		$security = System::getContainer()->get('security.helper');
 
 		switch ($strSource)
@@ -410,7 +411,7 @@ class tl_comments extends Backend
 				// Do not check whether the page is mounted (see #5174)
 				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
 				{
-					Cache::set($strKey, true);
+					$cache[$strKey] = true;
 				}
 				break;
 
@@ -422,7 +423,7 @@ class tl_comments extends Backend
 				// Do not check whether the page is mounted (see #5174)
 				if ($objPage->numRows > 0 && $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_PAGE, $objPage->row()))
 				{
-					Cache::set($strKey, true);
+					$cache[$strKey] = true;
 				}
 				break;
 
@@ -434,7 +435,7 @@ class tl_comments extends Backend
 				// Do not check the access to the news module (see #5174)
 				if ($objArchive->numRows > 0 && $security->isGranted(ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE, $objArchive->pid))
 				{
-					Cache::set($strKey, true);
+					$cache[$strKey] = true;
 				}
 				break;
 
@@ -446,13 +447,13 @@ class tl_comments extends Backend
 				// Do not check the access to the calendar module (see #5174)
 				if ($objCalendar->numRows > 0 && $security->isGranted(ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR, $objCalendar->pid))
 				{
-					Cache::set($strKey, true);
+					$cache[$strKey] = true;
 				}
 				break;
 
 			case 'tl_faq':
 				// Do not check access to the FAQ module (see #5174)
-				Cache::set($strKey, true);
+				$cache[$strKey] = true;
 				break;
 
 			default:
@@ -465,7 +466,7 @@ class tl_comments extends Backend
 
 						if ($this->{$callback[0]}->{$callback[1]}($intParent, $strSource) === true)
 						{
-							Cache::set($strKey, true);
+							$cache[$strKey] = true;
 							break;
 						}
 					}
@@ -473,7 +474,7 @@ class tl_comments extends Backend
 				break;
 		}
 
-		return Cache::get($strKey);
+		return $cache[$strKey];
 	}
 
 	/**
@@ -502,6 +503,7 @@ class tl_comments extends Backend
 	 */
 	public function listComments($arrRow)
 	{
+		$router = System::getContainer()->get('router');
 		$title = $GLOBALS['TL_LANG']['tl_comments'][$arrRow['source']] . ' ' . $arrRow['parent'];
 
 		switch ($arrRow['source'])
@@ -512,7 +514,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="contao/main.php?do=article&amp;table=tl_content&amp;id=' . $objParent->id . '&amp;rt=' . REQUEST_TOKEN . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'article', 'table'=>'tl_content', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->title . '</a>';
 				}
 				break;
 
@@ -522,7 +524,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="contao/main.php?do=page&amp;act=edit&amp;id=' . $objParent->id . '&amp;rt=' . REQUEST_TOKEN . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->title . '</a>';
 				}
 				break;
 
@@ -532,7 +534,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="contao/main.php?do=news&amp;table=tl_news&amp;act=edit&amp;id=' . $objParent->id . '&amp;rt=' . REQUEST_TOKEN . '">' . $objParent->headline . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'news', 'table'=>'tl_news', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->headline . '</a>';
 				}
 				break;
 
@@ -542,7 +544,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="contao/main.php?do=faq&amp;table=tl_faq&amp;act=edit&amp;id=' . $objParent->id . '&amp;rt=' . REQUEST_TOKEN . '">' . $objParent->question . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'faq', 'table'=>'tl_faq', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->question . '</a>';
 				}
 				break;
 
@@ -552,7 +554,7 @@ class tl_comments extends Backend
 
 				if ($objParent->numRows)
 				{
-					$title .= ' – <a href="contao/main.php?do=calendar&amp;table=tl_calendar_events&amp;act=edit&amp;id=' . $objParent->id . '&amp;rt=' . REQUEST_TOKEN . '">' . $objParent->title . '</a>';
+					$title .= ' – <a href="' . StringUtil::specialcharsUrl($router->generate('contao_backend', array('do'=>'calendar', 'table'=>'tl_calendar_events', 'act'=>'edit', 'id'=>$objParent->id, 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()))) . '">' . $objParent->title . '</a>';
 				}
 				break;
 

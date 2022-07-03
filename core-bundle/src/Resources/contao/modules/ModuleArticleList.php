@@ -37,7 +37,7 @@ class ModuleArticleList extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -63,9 +63,7 @@ class ModuleArticleList extends Module
 		$id = $objPage->id;
 		$objTarget = null;
 
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
-
-		$this->Template->request = null !== $request ? $request->getRequestUri() : '';
+		$this->Template->request = Environment::get('requestUri');
 
 		// Show the articles of a different page
 		if ($this->defineRoot && ($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)
@@ -104,7 +102,7 @@ class ModuleArticleList extends Module
 			(
 				'link' => $objArticles->title,
 				'title' => StringUtil::specialchars($objArticles->title),
-				'id' => $cssID[0] ?: 'article-' . $objArticles->id,
+				'id' => ($cssID[0] ?? null) ?: 'article-' . $objArticles->id,
 				'articleId' => $objArticles->id,
 				'href' => $objHelper->getFrontendUrl('/articles/' . ($objArticles->alias ?: $objArticles->id))
 			);

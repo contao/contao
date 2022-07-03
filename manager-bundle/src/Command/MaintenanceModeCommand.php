@@ -29,14 +29,10 @@ class MaintenanceModeCommand extends Command
     protected static $defaultName = 'contao:maintenance-mode';
     protected static $defaultDescription = 'Changes the state of the system maintenance mode.';
 
-    private string $maintenanceFilePath;
-    private Environment $twig;
     private Filesystem $filesystem;
 
-    public function __construct(string $maintenanceFilePath, Environment $twig, Filesystem $filesystem = null)
+    public function __construct(private string $maintenanceFilePath, private Environment $twig, Filesystem $filesystem = null)
     {
-        $this->maintenanceFilePath = $maintenanceFilePath;
-        $this->twig = $twig;
         $this->filesystem = $filesystem ?? new Filesystem();
 
         parent::__construct();
@@ -60,21 +56,21 @@ class MaintenanceModeCommand extends Command
             $this->enable($input->getOption('template'), $input->getOption('templateVars'));
             $this->outputResult($input, $output, true, true);
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         if (\in_array($state, ['disable', 'off'], true)) {
             $this->disable();
             $this->outputResult($input, $output, false, true);
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $isEnabled = $this->filesystem->exists($this->maintenanceFilePath);
 
         $this->outputResult($input, $output, $isEnabled, false);
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function enable(string $templateName, string $templateVars): void

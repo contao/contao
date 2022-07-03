@@ -42,7 +42,7 @@ class ModuleUnsubscribe extends Module
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -145,7 +145,6 @@ class ModuleUnsubscribe extends Module
 		$this->Template->emailLabel = $GLOBALS['TL_LANG']['MSC']['emailAddress'];
 		$this->Template->formId = $strFormId;
 		$this->Template->id = $this->id;
-		$this->Template->requestToken = System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
 	}
 
 	/**
@@ -196,7 +195,7 @@ class ModuleUnsubscribe extends Module
 		// Check if there are any new subscriptions
 		$arrSubscriptions = array();
 
-		if (($objSubscription = NewsletterRecipientsModel::findBy(array("email=? AND active='1'"), $varInput)) !== null)
+		if (($objSubscription = NewsletterRecipientsModel::findBy(array("email=? AND active=1"), $varInput)) !== null)
 		{
 			$arrSubscriptions = $objSubscription->fetchEach('pid');
 		}

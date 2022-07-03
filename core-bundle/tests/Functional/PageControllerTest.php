@@ -17,36 +17,16 @@ use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\RouteConfig;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Route;
 
 class PageControllerTest extends FunctionalTestCase
 {
-    private static ?array $lastImport = null;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        static::bootKernel();
-        static::resetDatabaseSchema();
-        static::ensureKernelShutdown();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        (new Filesystem())->remove(Path::canonicalize(__DIR__.'/../../var'));
-    }
+    private static array|null $lastImport = null;
 
     /**
-     * @param string|false|null $path
-     *
      * @dataProvider getPageController
      */
-    public function testResolvesPageController(array $fixtures, string $request, $path, array $requirements, array $defaults): void
+    public function testResolvesPageController(array $fixtures, string $request, string|false|null $path, array $requirements, array $defaults): void
     {
         $_SERVER['REQUEST_URI'] = $request;
         $_SERVER['HTTP_HOST'] = 'example.com';
@@ -63,7 +43,7 @@ class PageControllerTest extends FunctionalTestCase
 
         $pathRegex = null;
 
-        if (\is_string($path) && 0 === strncmp($path, '/', 1)) {
+        if (\is_string($path) && str_starts_with($path, '/')) {
             $compiledRoute = (new Route($path, $defaults, $requirements))->compile();
             $pathRegex = $compiledRoute->getRegex();
         }
@@ -117,7 +97,7 @@ class PageControllerTest extends FunctionalTestCase
         self::$lastImport = $fileNames;
 
         static::loadFixtures(array_map(
-            static fn ($file) => __DIR__.'/../Fixtures/Functional/PageController/'.$file.'.yml',
+            static fn ($file) => __DIR__.'/../Fixtures/Functional/PageController/'.$file.'.yaml',
             $fileNames
         ));
     }

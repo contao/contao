@@ -31,12 +31,8 @@ class UserListCommand extends Command
     protected static $defaultName = 'contao:user:list';
     protected static $defaultDescription = 'Lists Contao back end users.';
 
-    private ContaoFramework $framework;
-
-    public function __construct(ContaoFramework $framework)
+    public function __construct(private ContaoFramework $framework)
     {
-        $this->framework = $framework;
-
         parent::__construct();
     }
 
@@ -65,7 +61,7 @@ class UserListCommand extends Command
                 if (!$users || 0 === $users->count()) {
                     $io->note('No accounts found.');
 
-                    return 0;
+                    return Command::SUCCESS;
                 }
 
                 $rows = $this->formatTableRows($users, $columns);
@@ -83,17 +79,17 @@ class UserListCommand extends Command
                 throw new \LogicException('Invalid format: '.$input->getOption('format'));
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
-    private function getUsers(bool $onlyAdmins = false): ?Collection
+    private function getUsers(bool $onlyAdmins = false): Collection|null
     {
         $this->framework->initialize();
 
         $userModel = $this->framework->getAdapter(UserModel::class);
 
         if ($onlyAdmins) {
-            return $userModel->findBy('admin', '1');
+            return $userModel->findBy('admin', true);
         }
 
         return $userModel->findAll();
@@ -129,7 +125,7 @@ class UserListCommand extends Command
         return $rows;
     }
 
-    private function formatJson(?Collection $users, array $columns): array
+    private function formatJson(Collection|null $users, array $columns): array
     {
         if (!$users) {
             return [];

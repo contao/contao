@@ -56,7 +56,7 @@ class ModuleEventlist extends Events
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -70,7 +70,7 @@ class ModuleEventlist extends Events
 		}
 
 		// Show the event reader if an item has been selected
-		if ($this->cal_readerModule > 0  && (isset($_GET['events']) || (Config::get('useAutoItem') && isset($_GET['auto_item']))))
+		if ($this->cal_readerModule > 0 && Input::get('auto_item') !== null)
 		{
 			return $this->getFrontendModule($this->cal_readerModule, $this->strColumn);
 		}
@@ -95,9 +95,9 @@ class ModuleEventlist extends Events
 
 		$blnClearInput = false;
 
-		$intYear = Input::get('year');
-		$intMonth = Input::get('month');
-		$intDay = Input::get('day');
+		$intYear = (int) Input::get('year');
+		$intMonth = (int) Input::get('month');
+		$intDay = (int) Input::get('day');
 
 		// Handle featured events
 		$blnFeatured = null;
@@ -112,7 +112,7 @@ class ModuleEventlist extends Events
 		}
 
 		// Jump to the current period
-		if (!isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']))
+		if (Input::get('year') === null && Input::get('month') === null && Input::get('day') === null)
 		{
 			switch ($this->cal_format)
 			{
@@ -222,7 +222,7 @@ class ModuleEventlist extends Events
 						continue;
 					}
 
-					$event['firstDay'] = $GLOBALS['TL_LANG']['DAYS'][date('w', $day)];
+					$event['firstDay'] = $GLOBALS['TL_LANG']['DAYS'][date('w', (int) $day)];
 					$event['firstDate'] = Date::parse($objPage->dateFormat, $day);
 					$event['count'] = ++$intCount; // see #74
 
@@ -232,6 +232,32 @@ class ModuleEventlist extends Events
 		}
 
 		unset($arrAllEvents);
+
+		// Limit the number of recurrences if both the event list and the event
+		// allow unlimited recurrences (see #4037)
+		if (!$this->numberOfItems)
+		{
+			$unset = array();
+
+			foreach ($arrEvents as $k=>$v)
+			{
+				if ($v['recurring'] && !$v['recurrences'])
+				{
+					if (!isset($unset[$v['id']]))
+					{
+						$unset[$v['id']] = true;
+					}
+					else
+					{
+						unset($arrEvents[$k]);
+					}
+				}
+			}
+
+			unset($unset);
+			$arrEvents = array_values($arrEvents);
+		}
+
 		$total = \count($arrEvents);
 		$limit = $total;
 		$offset = 0;
@@ -265,9 +291,7 @@ class ModuleEventlist extends Events
 		$strMonth = '';
 		$strDate = '';
 		$strEvents = '';
-		$dayCount = 0;
 		$eventCount = 0;
-		$headerCount = 0;
 
 		$uuids = array();
 
@@ -286,13 +310,6 @@ class ModuleEventlist extends Events
 		for ($i=$offset; $i<$limit; $i++)
 		{
 			$event = $arrEvents[$i];
-			$blnIsLastEvent = false;
-
-			// Last event on the current day
-			if (($i+1) == $limit || !isset($arrEvents[($i+1)]['firstDate']) || $event['firstDate'] != $arrEvents[($i+1)]['firstDate'])
-			{
-				$blnIsLastEvent = true;
-			}
 
 			$objTemplate = new FrontendTemplate($this->cal_template ?: 'event_list');
 			$objTemplate->setData($event);
@@ -307,12 +324,8 @@ class ModuleEventlist extends Events
 			// Day header
 			if ($strDate != $event['firstDate'])
 			{
-				$headerCount = 0;
 				$objTemplate->header = true;
-				$objTemplate->classHeader = ((($dayCount % 2) == 0) ? ' even' : ' odd') . (($dayCount == 0) ? ' first' : '') . (($event['firstDate'] == $arrEvents[($limit-1)]['firstDate']) ? ' last' : '');
 				$strDate = $event['firstDate'];
-
-				++$dayCount;
 			}
 
 			// Show the teaser text of redirect events (see #6315)
@@ -324,10 +337,10 @@ class ModuleEventlist extends Events
 			$objTemplate->hasReader = $event['source'] == 'default';
 
 			// Add the template variables
-			$objTemplate->classList = $event['class'] . ((($headerCount % 2) == 0) ? ' even' : ' odd') . (($headerCount == 0) ? ' first' : '') . ($blnIsLastEvent ? ' last' : '') . ' cal_' . $event['parent'];
-			$objTemplate->classUpcoming = $event['class'] . ((($eventCount % 2) == 0) ? ' even' : ' odd') . (($eventCount == 0) ? ' first' : '') . ((($offset + $eventCount + 1) >= $limit) ? ' last' : '') . ' cal_' . $event['parent'];
+			$objTemplate->classList = $event['class'] . ' cal_' . $event['parent'];
+			$objTemplate->classUpcoming = $event['class'] . ' cal_' . $event['parent'];
 			$objTemplate->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
-			$objTemplate->more = $GLOBALS['TL_LANG']['MSC']['more'];
+			$objTemplate->more = $event['linkText'] ?: $GLOBALS['TL_LANG']['MSC']['more'];
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 
 			// Short view
@@ -383,7 +396,7 @@ class ModuleEventlist extends Events
 							->build();
 					}
 
-					$figure->applyLegacyTemplateData($objTemplate, $eventModel->imagemargin, $eventModel->floating);
+					$figure->applyLegacyTemplateData($objTemplate, null, $eventModel->floating);
 				}
 			}
 
@@ -411,7 +424,6 @@ class ModuleEventlist extends Events
 			$strEvents .= $objTemplate->parse();
 
 			++$eventCount;
-			++$headerCount;
 		}
 
 		// No events found

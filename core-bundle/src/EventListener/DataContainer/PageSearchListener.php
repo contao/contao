@@ -23,13 +23,8 @@ use Doctrine\DBAL\Connection;
  */
 class PageSearchListener
 {
-    private ContaoFramework $framework;
-    private Connection $connection;
-
-    public function __construct(ContaoFramework $framework, Connection $connection)
+    public function __construct(private ContaoFramework $framework, private Connection $connection)
     {
-        $this->framework = $framework;
-        $this->connection = $connection;
     }
 
     /**
@@ -37,7 +32,7 @@ class PageSearchListener
      */
     public function onSaveAlias(string $value, DataContainer $dc): string
     {
-        if ($value === $dc->activeRecord->alias) {
+        if ($value === ($dc->getCurrentRecord()['alias'] ?? null)) {
             return $value;
         }
 
@@ -51,7 +46,7 @@ class PageSearchListener
      */
     public function onSaveNoSearch(string $value, DataContainer $dc): string
     {
-        if (!$value || $value === $dc->activeRecord->noSearch) {
+        if (!$value || (bool) $value === (bool) ($dc->getCurrentRecord()['noSearch'] ?? false)) {
             return $value;
         }
 
@@ -65,7 +60,7 @@ class PageSearchListener
      */
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($value === $dc->activeRecord->robots || 0 !== strncmp($value, 'noindex', 7)) {
+        if ($value === ($dc->getCurrentRecord()['robots'] ?? null) || !str_starts_with($value, 'noindex')) {
             return $value;
         }
 

@@ -5,7 +5,6 @@
   <?php $this->block('head'); ?>
     <meta charset="<?= $this->charset ?>">
     <title><?= $this->title ?> | <?= $this->host ?></title>
-    <base href="<?= $this->base ?>">
 
     <?php $this->block('meta'); ?>
       <meta name="generator" content="Contao Open Source CMS">
@@ -35,7 +34,14 @@
       $objCombiner->add('assets/simplemodal/js/simplemodal.min.js');
       $objCombiner->add('assets/datepicker/js/datepicker.min.js');
       $objCombiner->add('bundles/contaocore/mootao.min.js');
+      $objCombiner->add('bundles/contaocore/metawizard.min.js');
       $objCombiner->add('bundles/contaocore/core.min.js');
+      $objCombiner->add('bundles/contaocore/autofocus.min.js');
+      $objCombiner->add('bundles/contaocore/limit-height.min.js');
+      $objCombiner->add('bundles/contaocore/tips.min.js');
+      $objCombiner->add('bundles/contaocore/sectionwizard.min.js');
+      $objCombiner->add('bundles/contaocore/modulewizard.min.js');
+      $objCombiner->add('bundles/contaocore/toggle-fieldset.min.js');
       $objCombiner->add('system/themes/'.$this->theme.'/hover.min.js');
       echo $objCombiner->getCombinedFile();
     ?>"></script>
@@ -44,7 +50,7 @@
   <?php $this->endblock(); ?>
 
 </head>
-<body id="top" class="<?= $this->ua ?><?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?>>
+<body id="top"<?php if ($this->isPopup): ?> class="popup"<?php endif; ?><?= $this->attributes ?>>
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>

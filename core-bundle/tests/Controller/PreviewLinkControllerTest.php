@@ -34,7 +34,7 @@ class PreviewLinkControllerTest extends TestCase
         $listener = new PreviewLinkController(
             $this->mockAuthenticator($showUnpublished),
             $this->mockUriSigner(true),
-            $this->mockConnection(compact('url', 'showUnpublished'))
+            $this->mockConnection(['url' => $url, 'showUnpublished' => $showUnpublished])
         );
 
         $response = $listener($request, 42);
@@ -82,7 +82,7 @@ class PreviewLinkControllerTest extends TestCase
     /**
      * @return FrontendPreviewAuthenticator&MockObject
      */
-    private function mockAuthenticator(?bool $showUnpublished): FrontendPreviewAuthenticator
+    private function mockAuthenticator(bool|null $showUnpublished): FrontendPreviewAuthenticator
     {
         $authenticator = $this->createMock(FrontendPreviewAuthenticator::class);
         $authenticator
@@ -111,18 +111,16 @@ class PreviewLinkControllerTest extends TestCase
     }
 
     /**
-     * @param array|bool|null $link
-     *
      * @return Connection&MockObject
      */
-    private function mockConnection($link): Connection
+    private function mockConnection(array|bool|null $link): Connection
     {
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects(null === $link ? $this->never() : $this->once())
             ->method('fetchAssociative')
             ->with(
-                "SELECT * FROM tl_preview_link WHERE id=? AND published='1' AND expiresAt>UNIX_TIMESTAMP()",
+                'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
                 $this->isType('array')
             )
             ->willReturn($link)

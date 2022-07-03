@@ -21,34 +21,20 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\TestCase\FunctionalTestCase;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
 
 class DbafsTest extends FunctionalTestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        static::bootKernel();
-        static::resetDatabaseSchema();
-        static::ensureKernelShutdown();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        (new Filesystem())->remove(Path::canonicalize(__DIR__.'/../../var'));
-    }
-
     public function testAlterFilesystemAndSync(): void
     {
         $client = $this->createClient();
         $container = $client->getContainer();
+        $container->get('request_stack')->push(new Request());
+
+        static::resetDatabaseSchema();
 
         $filesystem = new VirtualFilesystem(
-            new MountManager($adapter = new InMemoryFilesystemAdapter()),
+            (new MountManager())->mount($adapter = new InMemoryFilesystemAdapter()),
             $dbafsManager = new DbafsManager()
         );
 

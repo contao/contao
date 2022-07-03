@@ -49,21 +49,9 @@ class ModuleEventReader extends Events
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
-		}
-
-		// Set the item from the auto_item parameter
-		if (!isset($_GET['events']) && isset($_GET['auto_item']) && Config::get('useAutoItem'))
-		{
-			Input::setGet('events', Input::get('auto_item'));
-		}
-
-		// Return an empty string if "events" is not set (to combine list and reader on same page)
-		if (!Input::get('events'))
-		{
-			return '';
 		}
 
 		$this->cal_calendar = $this->sortOutProtected(StringUtil::deserialize($this->cal_calendar));
@@ -93,7 +81,7 @@ class ModuleEventReader extends Events
 		}
 
 		// Get the current event
-		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('events'), $this->cal_calendar);
+		$objEvent = CalendarEventsModel::findPublishedByParentAndIdOrAlias(Input::get('auto_item'), $this->cal_calendar);
 
 		// The event does not exist (see #33)
 		if ($objEvent === null)
@@ -250,7 +238,6 @@ class ModuleEventReader extends Events
 		$objTemplate->calendar = $objEvent->getRelated('pid');
 		$objTemplate->count = 0; // see #74
 		$objTemplate->details = '';
-		$objTemplate->hasDetails = false;
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
 
@@ -258,8 +245,7 @@ class ModuleEventReader extends Events
 		if ($objEvent->teaser)
 		{
 			$objTemplate->hasTeaser = true;
-			$objTemplate->teaser = StringUtil::toHtml5($objEvent->teaser);
-			$objTemplate->teaser = StringUtil::encodeEmail($objTemplate->teaser);
+			$objTemplate->teaser = StringUtil::encodeEmail($objEvent->teaser);
 		}
 
 		// Display the "read more" button for external/article links
@@ -326,7 +312,7 @@ class ModuleEventReader extends Events
 
 			if (null !== $figure)
 			{
-				$figure->applyLegacyTemplateData($objTemplate, $objEvent->imagemargin, $objEvent->floating);
+				$figure->applyLegacyTemplateData($objTemplate, null, $objEvent->floating);
 			}
 		}
 

@@ -5,6 +5,9 @@
       <trans-unit id="ERR.general">
         <source>An error occurred!</source>
       </trans-unit>
+      <trans-unit id="ERR.submit">
+        <source>The data could not be saved because an error occurred!</source>
+      </trans-unit>
       <trans-unit id="ERR.unique">
         <source>This entry already exists!</source>
       </trans-unit>
@@ -146,6 +149,9 @@
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL "%s" already exists!</source>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page "%s" (ID %s)!</source>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
       </trans-unit>
@@ -204,7 +210,7 @@
         <source>Top-level pages must be website root pages!</source>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are top-level pages in the site structure which are not website root pages.</source>
+        <source>There are top-level pages which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -260,6 +266,9 @@
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path "%s" must not contain the following characters: %s</source>
       </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
@@ -292,6 +301,12 @@
       </trans-unit>
       <trans-unit id="CTE.html.1">
         <source>Allows you to add custom HTML code.</source>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.0">
+        <source>Unfiltered HTML</source>
+      </trans-unit>
+      <trans-unit id="CTE.unfiltered_html.1">
+        <source>Allows you to add custom, unfiltered HTML code.</source>
       </trans-unit>
       <trans-unit id="CTE.list.0">
         <source>List</source>
@@ -561,13 +576,13 @@
         <source>Internal redirect</source>
       </trans-unit>
       <trans-unit id="PTY.forward.1">
-        <source>This type of page automatically forwards visitors to another page within the site structure.</source>
+        <source>This type of page automatically forwards visitors to another page.</source>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
       </trans-unit>
       <trans-unit id="PTY.root.1">
-        <source>This type of page marks the starting point of a new website within the site structure.</source>
+        <source>This type of page marks the starting point of a new website.</source>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -987,7 +1002,7 @@
         <source>Caption</source>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
+        <source>License URL</source>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -1004,8 +1019,11 @@
       <trans-unit id="MSC.image_sizes">
         <source>Predefined dimensions</source>
       </trans-unit>
-      <trans-unit id="MSC.relative">
-        <source>Relative dimensions</source>
+      <trans-unit id="MSC.custom.0">
+        <source>Custom dimensions</source>
+      </trans-unit>
+      <trans-unit id="MSC.custom.1">
+        <source>The image will be resized to the given dimensions.</source>
       </trans-unit>
       <trans-unit id="MSC.proportional.0">
         <source>Proportional</source>
@@ -1019,17 +1037,11 @@
       <trans-unit id="MSC.box.1">
         <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
       </trans-unit>
-      <trans-unit id="MSC.exact.0">
-        <source>Exact dimensions</source>
-      </trans-unit>
-      <trans-unit id="MSC.exact.1">
-        <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
-      </trans-unit>
       <trans-unit id="MSC.crop.0">
-        <source>Important part</source>
+        <source>Crop (important part)</source>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
+        <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -1314,7 +1326,7 @@
         <source>Save and close</source>
       </trans-unit>
       <trans-unit id="MSC.saveNedit">
-        <source>Save and edit</source>
+        <source>Save and edit child elements</source>
       </trans-unit>
       <trans-unit id="MSC.saveNback">
         <source>Save and go back</source>
@@ -1471,9 +1483,6 @@
       </trans-unit>
       <trans-unit id="MSC.updateVersion">
         <source>Contao version %s is available.</source>
-      </trans-unit>
-      <trans-unit id="MSC.wordWrap">
-        <source>Word wrap</source>
       </trans-unit>
       <trans-unit id="MSC.saveAlert">
         <source>ATTENTION! You will lose any unsaved changes. Continue?</source>
@@ -1899,7 +1908,7 @@
         <source>Download %s</source>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file metadata.</source>
+        <source>You have to add a root page to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>
@@ -1990,6 +1999,12 @@
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
         <source>There is at least one user group granting permission to the front end module "Listing" and its "list_*" fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.groupUnfilteredHtml">
+        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+      </trans-unit>
+      <trans-unit id="MSC.userUnfilteredHtml">
+        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2177,11 +2192,8 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.editheader.0">
-        <source>Edit the element settings</source>
-      </trans-unit>
-      <trans-unit id="DCA.editheader.1">
-        <source>Edit the settings of element ID %s</source>
+      <trans-unit id="DCA.children">
+        <source>Edit the child elements of element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.toggle">
         <source>Publish/unpublish element ID %s</source>
@@ -2208,7 +2220,7 @@
         <source>Indexed %d URI(s) successfully. %d failed.</source>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

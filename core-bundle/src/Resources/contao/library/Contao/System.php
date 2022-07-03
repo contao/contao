@@ -11,11 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Config\Loader\XliffFileLoader;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Database\Installer;
-use Contao\Database\Updater;
-use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -39,19 +36,16 @@ use Symfony\Component\HttpFoundation\Session\Session;
  *         }
  *     }
  *
- * @property Automator                        $Automator   The automator object
- * @property Config                           $Config      The config object
- * @property Database                         $Database    The database object
- * @property Environment                      $Environment The environment object
- * @property Files                            $Files       The files object
- * @property Input                            $Input       The input object
- * @property Installer                        $Installer   The database installer object
- * @property Updater                          $Updater     The database updater object
- * @property Messages                         $Messages    The messages object
- * @property Session                          $Session     The session object
- * @property StyleSheets                      $StyleSheets The style sheets object
- * @property BackendTemplate|FrontendTemplate $Template    The template object (TODO: remove this line in Contao 5.0)
- * @property BackendUser|FrontendUser         $User        The user object
+ * @property Automator                $Automator   The automator object
+ * @property Config                   $Config      The config object
+ * @property Database                 $Database    The database object
+ * @property Environment              $Environment The environment object
+ * @property Files                    $Files       The files object
+ * @property Input                    $Input       The input object
+ * @property Installer                $Installer   The database installer object
+ * @property Messages                 $Messages    The messages object
+ * @property Session                  $Session     The session object
+ * @property BackendUser|FrontendUser $User        The user object
  */
 abstract class System
 {
@@ -65,13 +59,6 @@ abstract class System
 	 * @var array|null
 	 */
 	private static $removedServiceIds;
-
-	/**
-	 * Cache
-	 * @var array
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	protected $arrCache = array();
 
 	/**
 	 * Default libraries
@@ -329,26 +316,6 @@ abstract class System
 	}
 
 	/**
-	 * Add a log entry to the database
-	 *
-	 * @param string $strText     The log message
-	 * @param string $strFunction The function name
-	 * @param string $strCategory The category name
-	 *
-	 * @deprecated Deprecated since Contao 4.2, to be removed in Contao 5.
-	 *             Use the logger service with your context or any of the predefined monolog.logger.contao services instead.
-	 */
-	public static function log($strText, $strFunction, $strCategory)
-	{
-		trigger_deprecation('contao/core-bundle', '4.2', 'Using "Contao\System::log()" has been deprecated and will no longer work in Contao 5.0. Use the "logger" service or any of the predefined "monolog.logger.contao" services instead.');
-
-		$level = 'ERROR' === $strCategory ? LogLevel::ERROR : LogLevel::INFO;
-		$logger = static::getContainer()->get('monolog.logger.contao');
-
-		$logger->log($level, $strText, array('contao' => new ContaoContext($strFunction, $strCategory)));
-	}
-
-	/**
 	 * Return the referer URL and optionally encode ampersands
 	 *
 	 * @param boolean $blnEncodeAmpersands If true, ampersands will be encoded
@@ -363,6 +330,9 @@ abstract class System
 		$key = Input::get('popup') ? 'popupReferer' : 'referer';
 		$session = $objSession->get($key);
 		$return = null;
+		$request = static::getContainer()->get('request_stack')->getCurrentRequest();
+		$isBackend = $request && static::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+		$isFrontend = $request && static::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
 
 		if (null !== $session)
 		{
@@ -371,7 +341,7 @@ abstract class System
 			{
 				$session = $session[$ref];
 			}
-			elseif (\defined('TL_MODE') && TL_MODE == 'BE' && \is_array($session))
+			elseif ($isBackend && \is_array($session))
 			{
 				$session = end($session);
 			}
@@ -407,17 +377,15 @@ abstract class System
 				return $path . '?' . http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
 			};
 
-			$request = self::getContainer()->get('request_stack')->getMainRequest();
-
 			// Determine current or last
-			$strUrl = ($cleanUrl($session['current'] ?? null) != $cleanUrl($request->getRequestUri())) ? ($session['current'] ?? null) : ($session['last'] ?? null);
+			$strUrl = ($cleanUrl($session['current'] ?? null) != $cleanUrl(Environment::get('requestUri'))) ? ($session['current'] ?? null) : ($session['last'] ?? null);
 
 			// Remove the "toggle" and "toggle all" parameters
 			$return = $cleanUrl($strUrl, array('tg', 'ptg'));
 		}
 
 		// Fallback to the generic referer in the front end
-		if (!$return && \defined('TL_MODE') && TL_MODE == 'FE')
+		if (!$return && $isFrontend)
 		{
 			$return = Environment::get('httpReferer');
 		}
@@ -425,7 +393,14 @@ abstract class System
 		// Fallback to the current URL if there is no referer
 		if (!$return)
 		{
-			$return = (\defined('TL_MODE') && TL_MODE == 'BE') ? 'contao/main.php' : Environment::get('url');
+			if ($isBackend)
+			{
+				$return = static::getContainer()->get('router')->generate('contao_backend');
+			}
+			else
+			{
+				$return = Environment::get('url');
+			}
 		}
 
 		// Do not urldecode here!
@@ -488,36 +463,6 @@ abstract class System
 
 		// Use a global cache variable to support nested calls
 		static::$arrLanguageFiles[$strName][$strCacheKey] = $strLanguage;
-
-		// Backwards compatibility
-		if ('languages' === $strName)
-		{
-			// Reset previously loaded languages without destroying references
-			foreach (array_keys($GLOBALS['TL_LANG']['LNG'] ?? array()) as $strLocale)
-			{
-				$GLOBALS['TL_LANG']['LNG'][$strLocale] = null;
-			}
-
-			foreach (self::getContainer()->get('contao.intl.locales')->getLocales($strCacheKey) as $strLocale => $strLabel)
-			{
-				$GLOBALS['TL_LANG']['LNG'][$strLocale] = $strLabel;
-			}
-		}
-
-		// Backwards compatibility
-		if ('countries' === $strName)
-		{
-			// Reset previously loaded countries without destroying references
-			foreach (array_keys($GLOBALS['TL_LANG']['CNT'] ?? array()) as $strLocale)
-			{
-				$GLOBALS['TL_LANG']['CNT'][$strLocale] = null;
-			}
-
-			foreach (self::getContainer()->get('contao.intl.countries')->getCountries($strLanguage) as $strCountryCode => $strLabel)
-			{
-				$GLOBALS['TL_LANG']['CNT'][strtolower($strCountryCode)] = $strLabel;
-			}
-		}
 
 		// Fall back to English
 		$arrCreateLangs = ($strLanguage == 'en') ? array('en') : array('en', $strLanguage);
@@ -614,70 +559,6 @@ abstract class System
 		}
 
 		return static::$arrLanguages[$strLanguage];
-	}
-
-	/**
-	 * Return the countries as array
-	 *
-	 * @return array An array of country names
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5;
-	 *             use the Contao\CoreBundle\Intl\Countries service instead
-	 */
-	public static function getCountries()
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the "contao.intl.countries" service instead.', __METHOD__);
-
-		$arrCountries = self::getContainer()->get('contao.intl.countries')->getCountries();
-
-		return array_combine(array_map('strtolower', array_keys($arrCountries)), $arrCountries);
-	}
-
-	/**
-	 * Return the available languages as array
-	 *
-	 * @param boolean $blnInstalledOnly If true, return only installed languages
-	 *
-	 * @return array An array of languages
-	 *
-	 * @deprecated Deprecated since Contao 4.12, to be removed in Contao 5;
-	 *             use the Contao\CoreBundle\Intl\Locales service instead
-	 */
-	public static function getLanguages($blnInstalledOnly=false)
-	{
-		trigger_deprecation('contao/core-bundle', '4.12', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the "contao.intl.locales" service instead.', __METHOD__);
-
-		if ($blnInstalledOnly)
-		{
-			return self::getContainer()->get('contao.intl.locales')->getEnabledLocales(null, true);
-		}
-
-		return self::getContainer()->get('contao.intl.locales')->getLocales(null, true);
-	}
-
-	/**
-	 * Return the timezones as array
-	 *
-	 * @return array An array of timezones
-	 */
-	public static function getTimeZones()
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using the %s method has been deprecated and will no longer work in Contao 5.0. Use the DateTimeZone::listIdentifiers() instead.', __METHOD__);
-
-		$arrReturn = array();
-		$timezones = array();
-
-		require __DIR__ . '/../../config/timezones.php';
-
-		foreach ($timezones as $strGroup=>$arrTimezones)
-		{
-			foreach ($arrTimezones as $strTimezone)
-			{
-				$arrReturn[$strGroup][] = $strTimezone;
-			}
-		}
-
-		return $arrReturn;
 	}
 
 	/**

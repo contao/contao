@@ -15,67 +15,66 @@ use Contao\Model\Collection;
 /**
  * Reads and writes front end modules
  *
- * @property string|integer    $id
- * @property string|integer    $pid
- * @property string|integer    $tstamp
+ * @property integer           $id
+ * @property integer           $pid
+ * @property integer           $tstamp
  * @property string            $name
  * @property string            $headline
  * @property string            $type
- * @property string|integer    $levelOffset
- * @property string|integer    $showLevel
- * @property string|boolean    $hardLimit
- * @property string|boolean    $showProtected
- * @property string|boolean    $defineRoot
- * @property string|integer    $rootPage
+ * @property integer           $levelOffset
+ * @property integer           $showLevel
+ * @property boolean           $hardLimit
+ * @property boolean           $showProtected
+ * @property boolean           $defineRoot
+ * @property integer           $rootPage
  * @property string            $navigationTpl
  * @property string            $customTpl
  * @property string|array|null $pages
- * @property string|boolean    $showHidden
+ * @property boolean           $showHidden
  * @property string            $customLabel
- * @property string|boolean    $autologin
- * @property string|integer    $jumpTo
- * @property string|integer    $overviewPage
- * @property string|boolean    $redirectBack
+ * @property boolean           $autologin
+ * @property integer           $jumpTo
+ * @property integer           $overviewPage
+ * @property boolean           $redirectBack
  * @property string|array|null $editable
  * @property string            $memberTpl
- * @property string|integer    $form
+ * @property integer           $form
  * @property string            $queryType
- * @property string|boolean    $fuzzy
+ * @property boolean           $fuzzy
  * @property string|array      $contextLength
- * @property string|integer    $minKeywordLength
- * @property string|integer    $perPage
+ * @property integer           $minKeywordLength
+ * @property integer           $perPage
  * @property string            $searchType
  * @property string            $searchTpl
  * @property string            $inColumn
- * @property string|integer    $skipFirst
- * @property string|boolean    $loadFirst
+ * @property integer           $skipFirst
+ * @property boolean           $loadFirst
  * @property string|null       $singleSRC
  * @property string            $url
  * @property string|integer    $imgSize
- * @property string|boolean    $useCaption
- * @property string|boolean    $fullsize
+ * @property boolean           $useCaption
+ * @property boolean           $fullsize
  * @property string|array|null $multiSRC
- * @property string|array|null $orderSRC
  * @property string|null       $html
- * @property string|integer    $rss_cache
+ * @property string|null       $unfilteredHtml
+ * @property integer           $rss_cache
  * @property string|null       $rss_feed
  * @property string            $rss_template
- * @property string|integer    $numberOfItems
- * @property string|boolean    $disableCaptcha
+ * @property integer           $numberOfItems
+ * @property boolean           $disableCaptcha
  * @property string|array|null $reg_groups
- * @property string|boolean    $reg_allowLogin
- * @property string|boolean    $reg_skipName
+ * @property boolean           $reg_allowLogin
+ * @property boolean           $reg_skipName
  * @property string            $reg_close
- * @property string|boolean    $reg_deleteDir
- * @property string|boolean    $reg_assignDir
+ * @property boolean           $reg_deleteDir
+ * @property boolean           $reg_assignDir
  * @property string|null       $reg_homeDir
- * @property string|boolean    $reg_activate
- * @property string|integer    $reg_jumpTo
+ * @property boolean           $reg_activate
+ * @property integer           $reg_jumpTo
  * @property string|null       $reg_text
  * @property string|null       $reg_password
- * @property string|boolean    $protected
+ * @property boolean           $protected
  * @property string|array|null $groups
- * @property string|boolean    $guests
  * @property string|array      $cssID
  * @property string|array|null $rootPageDependentModules
  *
@@ -126,8 +125,8 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByUseCaption($val, array $opt=array())
  * @method static ModuleModel|null findOneByFullsize($val, array $opt=array())
  * @method static ModuleModel|null findOneByMultiSRC($val, array $opt=array())
- * @method static ModuleModel|null findOneByOrderSRC($val, array $opt=array())
  * @method static ModuleModel|null findOneByHtml($val, array $opt=array())
+ * @method static ModuleModel|null findOneByUnfilteredHtml($val, array $opt=array())
  * @method static ModuleModel|null findOneByRss_cache($val, array $opt=array())
  * @method static ModuleModel|null findOneByRss_feed($val, array $opt=array())
  * @method static ModuleModel|null findOneByRss_template($val, array $opt=array())
@@ -146,7 +145,6 @@ use Contao\Model\Collection;
  * @method static ModuleModel|null findOneByReg_password($val, array $opt=array())
  * @method static ModuleModel|null findOneByProtected($val, array $opt=array())
  * @method static ModuleModel|null findOneByGroups($val, array $opt=array())
- * @method static ModuleModel|null findOneByGuests($val, array $opt=array())
  * @method static ModuleModel|null findOneByCssID($val, array $opt=array())
  * @method static ModuleModel|null findOneBySpace($val, array $opt=array())
  *
@@ -190,8 +188,8 @@ use Contao\Model\Collection;
  * @method static Collection|ModuleModel[]|ModuleModel|null findByUseCaption($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByFullsize($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByMultiSRC($val, array $opt=array())
- * @method static Collection|ModuleModel[]|ModuleModel|null findByOrderSRC($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByHtml($val, array $opt=array())
+ * @method static Collection|ModuleModel[]|ModuleModel|null findByUnfilteredHtml($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_cache($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_feed($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByRss_template($val, array $opt=array())
@@ -210,7 +208,6 @@ use Contao\Model\Collection;
  * @method static Collection|ModuleModel[]|ModuleModel|null findByReg_password($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByProtected($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByGroups($val, array $opt=array())
- * @method static Collection|ModuleModel[]|ModuleModel|null findByGuests($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findByCssID($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findBySpace($val, array $opt=array())
  * @method static Collection|ModuleModel[]|ModuleModel|null findMultipleByIds($val, array $opt=array())
@@ -258,8 +255,8 @@ use Contao\Model\Collection;
  * @method static integer countByUseCaption($val, array $opt=array())
  * @method static integer countByFullsize($val, array $opt=array())
  * @method static integer countByMultiSRC($val, array $opt=array())
- * @method static integer countByOrderSRC($val, array $opt=array())
  * @method static integer countByHtml($val, array $opt=array())
+ * @method static integer countByUnfilteredHtml($val, array $opt=array())
  * @method static integer countByRss_cache($val, array $opt=array())
  * @method static integer countByRss_feed($val, array $opt=array())
  * @method static integer countByRss_template($val, array $opt=array())
@@ -278,7 +275,6 @@ use Contao\Model\Collection;
  * @method static integer countByReg_password($val, array $opt=array())
  * @method static integer countByProtected($val, array $opt=array())
  * @method static integer countByGroups($val, array $opt=array())
- * @method static integer countByGuests($val, array $opt=array())
  * @method static integer countByCssID($val, array $opt=array())
  * @method static integer countBySpace($val, array $opt=array())
  */

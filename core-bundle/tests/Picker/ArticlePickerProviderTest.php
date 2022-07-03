@@ -21,6 +21,7 @@ use Knp\Menu\MenuItem;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ArticlePickerProviderTest extends ContaoTestCase
 {
@@ -40,13 +41,8 @@ class ArticlePickerProviderTest extends ContaoTestCase
         parent::tearDown();
     }
 
-    /**
-     * @group legacy
-     */
     public function testCreatesTheMenuItem(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.4: Using a picker provider without injecting the translator service has been deprecated %s.');
-
         $config = json_encode([
             'context' => 'link',
             'extras' => [],
@@ -58,7 +54,15 @@ class ArticlePickerProviderTest extends ContaoTestCase
             $config = $encoded;
         }
 
-        $picker = $this->getPicker();
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('trans')
+            ->with('MSC.articlePicker', [], 'contao_default')
+            ->willReturn('Article picker')
+        ;
+
+        $picker = $this->getPicker(null, $translator);
         $item = $picker->createMenuItem(new PickerConfig('link', [], '', 'articlePicker'));
         $uri = 'contao_backend?do=article&popup=1&picker='.strtr(base64_encode($config), '+/=', '-_,');
 
@@ -154,7 +158,7 @@ class ArticlePickerProviderTest extends ContaoTestCase
         );
     }
 
-    private function getPicker(bool $accessGranted = null): ArticlePickerProvider
+    private function getPicker(bool $accessGranted = null, TranslatorInterface $translator = null): ArticlePickerProvider
     {
         $security = $this->createMock(Security::class);
         $security
@@ -185,6 +189,8 @@ class ArticlePickerProviderTest extends ContaoTestCase
             ->willReturnCallback(static fn (string $name, array $params): string => $name.'?'.http_build_query($params))
         ;
 
-        return new ArticlePickerProvider($menuFactory, $router, null, $security);
+        $translator ??= $this->createMock(TranslatorInterface::class);
+
+        return new ArticlePickerProvider($menuFactory, $router, $translator, $security);
     }
 }

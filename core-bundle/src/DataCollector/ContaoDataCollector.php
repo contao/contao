@@ -31,11 +31,8 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 {
     use FrameworkAwareTrait;
 
-    private TokenChecker $tokenChecker;
-
-    public function __construct(TokenChecker $tokenChecker)
+    public function __construct(private TokenChecker $tokenChecker)
     {
-        $this->tokenChecker = $tokenChecker;
     }
 
     public function collect(Request $request, Response $response, \Throwable $exception = null): void
@@ -179,7 +176,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         return $layout->template;
     }
 
-    private function getLayout(): ?LayoutModel
+    private function getLayout(): LayoutModel|null
     {
         if (!isset($GLOBALS['objPage'])) {
             return null;
@@ -187,6 +184,10 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
 
         /** @var PageModel $objPage */
         $objPage = $GLOBALS['objPage'];
+
+        if (!$objPage->layoutId) {
+            return null;
+        }
 
         return $this->framework->getAdapter(LayoutModel::class)->findByPk($objPage->layoutId);
     }

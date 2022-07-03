@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Interop;
 
 use Contao\Config;
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -125,10 +126,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         unset($GLOBALS['TL_HOOKS']);
     }
 
-    /**
-     * @return string|false
-     */
-    public function executeReplaceInsertTagsCallback(string $tag)
+    public function executeReplaceInsertTagsCallback(string $tag): string|false
     {
         return 'flavor' === $tag ? 'vanilla' : false;
     }
@@ -142,7 +140,12 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $environment = new Environment($loader);
 
-        $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class));
+        $contaoExtension = new ContaoExtension(
+            $environment,
+            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoCsrfTokenManager::class)
+        );
+
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
 
         $environment->addExtension($contaoExtension);

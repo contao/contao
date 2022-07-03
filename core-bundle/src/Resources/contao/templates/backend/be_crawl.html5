@@ -16,11 +16,13 @@
             <p class="spinner show-when-running"></p>
             <p class="summary show-when-finished"></p>
             <p class="warning show-when-finished"></p>
-            <p class="subscriber-log"><a href="<?= $this->subscriberLogHrefs[$subscriber->getName()] ?>" class="tl_submit"><?= $this->trans('tl_maintenance.crawlDownloadSubscriberLog') ?></a></p>
+            <p class="subscriber-log"><a href="<?= $this->subscriberLogHrefs[$subscriber->getName()] ?>" class="tl_submit"><?= $this->trans('tl_maintenance.crawlDownloadLog') ?></a></p>
           </div>
         <?php endforeach; ?>
         <p class="wait show-when-running"><?= $this->trans('tl_maintenance.crawlWaitToBeFinished') ?></p>
-        <p class="debug-log"><a href="<?= $this->debugLogHref ?>" title="<?= Contao\StringUtil::specialchars($this->trans('tl_maintenance.crawlDownloadDebugLog')) ?>" target="_blank"><?= Contao\Image::getHtml('theme_import.svg') ?></a></p>
+        <h3 class="show-when-finished"><?= $this->trans('tl_maintenance.crawlDebugLog') ?></h3>
+        <p class="show-when-finished"><?= $this->trans('tl_maintenance.crawlDebugLogExplain') ?></p>
+        <p class="subscriber-log show-when-finished"><a href="<?= $this->debugLogHref ?>" class="tl_submit"><?= $this->trans('tl_maintenance.crawlDownloadLog') ?></a></p>
       </div>
       <script>Backend.crawl()</script>
     </div>
@@ -29,7 +31,7 @@
       <div class="tl_formbody_edit">
         <input type="hidden" name="do" value="maintenance">
         <input type="hidden" name="act" value="crawl">
-        <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
+        <input type="hidden" name="rt" value="<?= $this->requestToken ?>">
         <div class="tl_tbox">
           <div>
             <?= $this->subscribersWidget->parse() ?>

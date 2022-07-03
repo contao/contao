@@ -30,7 +30,7 @@ class StoreRefererListenerTest extends TestCase
     /**
      * @dataProvider refererStoredOnKernelResponseProvider
      */
-    public function testStoresTheReferer(Request $request, ?array $currentReferer, ?array $expectedReferer): void
+    public function testStoresTheReferer(Request $request, array|null $currentReferer, array|null $expectedReferer): void
     {
         // Set the current referer URLs
         $session = $this->mockSession();

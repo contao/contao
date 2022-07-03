@@ -12,6 +12,8 @@ namespace Contao;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 /**
  * Provide methods regarding news archives.
@@ -151,6 +153,7 @@ class News extends Frontend
 
 			/** @var RequestStack $requestStack */
 			$requestStack = $container->get('request_stack');
+			$currentRequest = $requestStack->getCurrentRequest();
 
 			$time = time();
 			$origObjPage = $GLOBALS['objPage'] ?? null;
@@ -185,7 +188,7 @@ class News extends Frontend
 				// Get the jumpTo URL
 				if (!isset($arrUrls[$jumpTo]))
 				{
-					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
+					$arrUrls[$jumpTo] = $objParent->getAbsoluteUrl('/%s');
 				}
 
 				$strUrl = $arrUrls[$jumpTo];
@@ -196,7 +199,7 @@ class News extends Frontend
 				$objItem->published = $objArticle->date;
 
 				// Push a new request to the request stack (#3856)
-				$request = Request::create($objItem->link);
+				$request = $this->createSubRequest($objItem->link, $currentRequest);
 				$request->attributes->set('_scope', 'frontend');
 				$requestStack->push($request);
 
@@ -215,15 +218,15 @@ class News extends Frontend
 					if ($objElement !== null)
 					{
 						// Overwrite the request (see #7756)
-						$strRequest = Environment::get('request');
-						Environment::set('request', $objItem->link);
+						$strRequest = Environment::get('requestUri');
+						Environment::set('requestUri', $objItem->link);
 
 						while ($objElement->next())
 						{
 							$strDescription .= $this->getContentElement($objElement->current());
 						}
 
-						Environment::set('request', $strRequest);
+						Environment::set('requestUri', $strRequest);
 					}
 				}
 				else
@@ -279,106 +282,6 @@ class News extends Frontend
 	}
 
 	/**
-	 * Add news items to the indexer
-	 *
-	 * @param array   $arrPages
-	 * @param integer $intRoot
-	 * @param boolean $blnIsSitemap
-	 *
-	 * @return array
-	 */
-	public function getSearchablePages($arrPages, $intRoot=0, $blnIsSitemap=false)
-	{
-		$arrRoot = array();
-
-		if ($intRoot > 0)
-		{
-			$arrRoot = $this->Database->getChildRecords($intRoot, 'tl_page');
-		}
-
-		$arrProcessed = array();
-		$time = time();
-
-		// Get all news archives
-		$objArchive = NewsArchiveModel::findByProtected('');
-
-		// Walk through each archive
-		if ($objArchive !== null)
-		{
-			while ($objArchive->next())
-			{
-				// Skip news archives without target page
-				if (!$objArchive->jumpTo)
-				{
-					continue;
-				}
-
-				// Skip news archives outside the root nodes
-				if (!empty($arrRoot) && !\in_array($objArchive->jumpTo, $arrRoot))
-				{
-					continue;
-				}
-
-				// Get the URL of the jumpTo page
-				if (!isset($arrProcessed[$objArchive->jumpTo]))
-				{
-					$objParent = PageModel::findWithDetails($objArchive->jumpTo);
-
-					// The target page does not exist
-					if ($objParent === null)
-					{
-						continue;
-					}
-
-					// The target page has not been published (see #5520)
-					if (!$objParent->published || ($objParent->start && $objParent->start > $time) || ($objParent->stop && $objParent->stop <= $time))
-					{
-						continue;
-					}
-
-					if ($blnIsSitemap)
-					{
-						// The target page is protected (see #8416)
-						if ($objParent->protected)
-						{
-							continue;
-						}
-
-						// The target page is exempt from the sitemap (see #6418)
-						if ($objParent->robots == 'noindex,nofollow')
-						{
-							continue;
-						}
-					}
-
-					// Generate the URL
-					$arrProcessed[$objArchive->jumpTo] = $objParent->getAbsoluteUrl(Config::get('useAutoItem') ? '/%s' : '/items/%s');
-				}
-
-				$strUrl = $arrProcessed[$objArchive->jumpTo];
-
-				// Get the items
-				$objArticle = NewsModel::findPublishedDefaultByPid($objArchive->id);
-
-				if ($objArticle !== null)
-				{
-					while ($objArticle->next())
-					{
-						if ($blnIsSitemap && $objArticle->robots === 'noindex,nofollow')
-						{
-							continue;
-						}
-
-						$arrPages[] = $this->getLink($objArticle, $strUrl);
-					}
-				}
-			}
-		}
-
-		return $arrPages;
-	}
-
-	/**
 	 * Generate a URL and return it as string
 	 *
 	 * @param NewsModel $objItem
@@ -410,7 +313,14 @@ class News extends Frontend
 				}
 				else
 				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($objItem->url);
+					$url = $objItem->url;
+
+					if (Validator::isRelativeUrl($url))
+					{
+						$url = Environment::get('path') . '/' . $url;
+					}
+
+					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
 				}
 				break;
 
@@ -442,13 +352,11 @@ class News extends Frontend
 
 			if (!$objPage instanceof PageModel)
 			{
-				$request = System::getContainer()->get('request_stack')->getMainRequest();
-
-				self::$arrUrlCache[$strCacheKey] = null !== $request ? StringUtil::ampersand($request->getRequestUri()) : '';
+				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('requestUri'));
 			}
 			else
 			{
-				$params = (Config::get('useAutoItem') ? '/' : '/items/') . ($objItem->alias ?: $objItem->id);
+				$params = '/' . ($objItem->alias ?: $objItem->id);
 
 				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
 			}
@@ -514,7 +422,14 @@ class News extends Frontend
 		{
 			// Link to an external page
 			case 'external':
-				return $objItem->url;
+				$url = $objItem->url;
+
+				if (Validator::isRelativeUrl($url))
+				{
+					$url = Environment::get('path') . '/' . $url;
+				}
+
+				return $url;
 
 			// Link to an internal page
 			case 'internal':
@@ -580,5 +495,36 @@ class News extends Frontend
 		}
 
 		return self::$arrPageCache[$intPageId];
+	}
+
+	/**
+	 * Creates a sub request for the given URI.
+	 */
+	private function createSubRequest(string $uri, Request $request = null): Request
+	{
+		$cookies = null !== $request ? $request->cookies->all() : array();
+		$server = null !== $request ? $request->server->all() : array();
+
+		unset($server['HTTP_IF_MODIFIED_SINCE'], $server['HTTP_IF_NONE_MATCH']);
+
+		$subRequest = Request::create($uri, 'get', array(), $cookies, array(), $server);
+
+		if (null !== $request)
+		{
+			if ($request->get('_format'))
+			{
+				$subRequest->attributes->set('_format', $request->get('_format'));
+			}
+
+			if ($request->getDefaultLocale() !== $request->getLocale())
+			{
+				$subRequest->setLocale($request->getLocale());
+			}
+		}
+
+		// Always set a session (#3856)
+		$subRequest->setSession(new Session(new MockArraySessionStorage()));
+
+		return $subRequest;
 	}
 }

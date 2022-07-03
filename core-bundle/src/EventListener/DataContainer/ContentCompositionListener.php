@@ -19,7 +19,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\ServiceAnnotation\Callback;
-use Contao\Database\Result;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\LayoutModel;
@@ -33,13 +32,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListener
 {
-    private ContaoFramework $framework;
-    private Security $security;
-    private PageRegistry $pageRegistry;
-    private TranslatorInterface $translator;
-    private Connection $connection;
-    private RequestStack $requestStack;
-
     /**
      * @var Adapter<Image>
      */
@@ -50,14 +42,14 @@ class ContentCompositionListener
      */
     private Adapter $backend;
 
-    public function __construct(ContaoFramework $framework, Security $security, PageRegistry $pageRegistry, TranslatorInterface $translator, Connection $connection, RequestStack $requestStack)
-    {
-        $this->framework = $framework;
-        $this->security = $security;
-        $this->pageRegistry = $pageRegistry;
-        $this->translator = $translator;
-        $this->connection = $connection;
-        $this->requestStack = $requestStack;
+    public function __construct(
+        private ContaoFramework $framework,
+        private Security $security,
+        private PageRegistry $pageRegistry,
+        private TranslatorInterface $translator,
+        private Connection $connection,
+        private RequestStack $requestStack,
+    ) {
         $this->image = $this->framework->getAdapter(Image::class);
         $this->backend = $this->framework->getAdapter(Backend::class);
     }
@@ -65,7 +57,7 @@ class ContentCompositionListener
     /**
      * @Callback(table="tl_page", target="list.operations.articles.button")
      */
-    public function renderPageArticlesOperation(array $row, ?string $href, string $label, string $title, ?string $icon): string
+    public function renderPageArticlesOperation(array $row, string|null $href, string $label, string $title, string|null $icon): string
     {
         if ((null === $href && null === $icon) || !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')) {
             return '';
@@ -97,14 +89,16 @@ class ContentCompositionListener
         $request = $this->requestStack->getCurrentRequest();
         $user = $this->security->getUser();
 
-        // Return if there is no active record (override all)
-        if (!$dc->activeRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
+        $currentRecord = $dc->getCurrentRecord();
+
+        // Return if there is no current record (override all)
+        if (null === $currentRecord || null === $request || !$user instanceof BackendUser || !$request->hasSession()) {
             return;
         }
 
         $pageModel = $this->framework->createInstance(PageModel::class);
         $pageModel->preventSaving(false);
-        $pageModel->setRow($dc->activeRecord instanceof Result ? $dc->activeRecord->row() : (array) $dc->activeRecord);
+        $pageModel->setRow($currentRecord);
 
         if (
             empty($pageModel->title)
@@ -141,9 +135,9 @@ class ContentCompositionListener
             'tstamp' => time(),
             'author' => $user->id,
             'inColumn' => $column,
-            'title' => $dc->activeRecord->title,
-            'alias' => str_replace('/', '-', $dc->activeRecord->alias), // see #516
-            'published' => $dc->activeRecord->published,
+            'title' => $currentRecord['title'] ?? null,
+            'alias' => str_replace('/', '-', $currentRecord['alias'] ?? ''), // see #516
+            'published' => $currentRecord['published'] ?? null,
         ];
 
         $this->connection->insert('tl_article', $article);
@@ -220,7 +214,7 @@ class ContentCompositionListener
         return null !== $this->getArticleColumnInLayout($pageModel);
     }
 
-    private function getArticleColumnInLayout(PageModel $pageModel): ?string
+    private function getArticleColumnInLayout(PageModel $pageModel): string|null
     {
         $pageModel->loadDetails();
 
@@ -228,7 +222,7 @@ class ContentCompositionListener
         $layout = $pageModel->getRelated('layout');
 
         if (null === $layout) {
-            return null;
+            return 'main';
         }
 
         $columns = [];

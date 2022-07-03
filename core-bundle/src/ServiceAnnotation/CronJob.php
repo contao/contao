@@ -28,7 +28,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
  */
 final class CronJob implements ServiceTagInterface
 {
-    public ?string $value = null;
+    public string|null $value = null;
 
     public function getName(): string
     {

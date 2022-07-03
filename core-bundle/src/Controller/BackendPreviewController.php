@@ -31,17 +31,12 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class BackendPreviewController
 {
-    private string $previewScript;
-    private FrontendPreviewAuthenticator $previewAuthenticator;
-    private EventDispatcherInterface $dispatcher;
-    private AuthorizationCheckerInterface $authorizationChecker;
-
-    public function __construct(string $previewScript, FrontendPreviewAuthenticator $previewAuthenticator, EventDispatcherInterface $dispatcher, AuthorizationCheckerInterface $authorizationChecker)
-    {
-        $this->previewScript = $previewScript;
-        $this->previewAuthenticator = $previewAuthenticator;
-        $this->dispatcher = $dispatcher;
-        $this->authorizationChecker = $authorizationChecker;
+    public function __construct(
+        private string $previewScript,
+        private FrontendPreviewAuthenticator $previewAuthenticator,
+        private EventDispatcherInterface $dispatcher,
+        private AuthorizationCheckerInterface $authorizationChecker,
+    ) {
     }
 
     /**
@@ -49,16 +44,10 @@ class BackendPreviewController
      */
     public function __invoke(Request $request): Response
     {
-        $qs = $request->getQueryString();
-
-        if (null !== $qs) {
-            $qs = '?'.$qs;
-        }
-
         // Skip the redirect if there is no preview script, otherwise we will
         // end up in an endless loop (see #1511)
-        if ($this->previewScript && !preg_match('@'.$this->previewScript.'$@', $request->getScriptName())) {
-            return new RedirectResponse($request->getBasePath().$this->previewScript.$request->getPathInfo().$qs);
+        if ($this->previewScript && substr($request->getScriptName(), \strlen($request->getBasePath())) !== $this->previewScript) {
+            return new RedirectResponse($request->getBasePath().$this->previewScript.$request->getPathInfo());
         }
 
         if (!$this->authorizationChecker->isGranted('ROLE_USER')) {

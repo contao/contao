@@ -20,9 +20,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class TemplateOptionsListener
 {
-    private RequestStack $requestStack;
-    private string $templatePrefix;
-    private ?string $proxyClass;
     private array $customTemplates = [];
 
     /**
@@ -30,14 +27,15 @@ class TemplateOptionsListener
      */
     private Adapter $controller;
 
-    public function __construct(ContaoFramework $framework, RequestStack $requestStack, string $templatePrefix, string $proxyClass = null)
-    {
+    public function __construct(
+        ContaoFramework $framework,
+        private RequestStack $requestStack,
+        private string $templatePrefix,
+        private string|null $proxyClass = null,
+    ) {
         $controller = $framework->getAdapter(Controller::class);
 
         $this->controller = $controller;
-        $this->requestStack = $requestStack;
-        $this->templatePrefix = $templatePrefix;
-        $this->proxyClass = $proxyClass;
     }
 
     public function __invoke(DataContainer $dc): array
@@ -47,10 +45,11 @@ class TemplateOptionsListener
             return array_merge(['' => '-'], $this->controller->getTemplateGroup($this->templatePrefix));
         }
 
-        $defaultTemplate = $this->customTemplates[$dc->activeRecord->type] ?? $this->getLegacyDefaultTemplate($dc);
+        $type = $dc->getCurrentRecord()['type'] ?? null;
+        $defaultTemplate = $this->customTemplates[$type] ?? $this->getLegacyDefaultTemplate($dc);
 
         if (empty($defaultTemplate)) {
-            $defaultTemplate = $this->templatePrefix.$dc->activeRecord->type;
+            $defaultTemplate = $this->templatePrefix.$type;
         }
 
         return $this->controller->getTemplateGroup($defaultTemplate.'_', [], $defaultTemplate);
@@ -64,13 +63,13 @@ class TemplateOptionsListener
     /**
      * Uses the reflection API to return the default template from a legacy class.
      */
-    private function getLegacyDefaultTemplate(DataContainer $dc): ?string
+    private function getLegacyDefaultTemplate(DataContainer $dc): string|null
     {
         if (null === $this->proxyClass || !method_exists($this->proxyClass, 'findClass')) {
             return null;
         }
 
-        $class = $this->proxyClass::findClass($dc->activeRecord->type);
+        $class = $this->proxyClass::findClass($dc->getCurrentRecord()['type'] ?? null);
 
         if (empty($class) || $class === $this->proxyClass) {
             return null;

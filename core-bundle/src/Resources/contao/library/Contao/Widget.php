@@ -47,7 +47,6 @@ use Doctrine\DBAL\Types\Types;
  * @property string        $alt                The alternative text
  * @property string        $style              The style attribute
  * @property string        $accesskey          The key to focus the field
- * @property integer       $tabindex           The tabindex of the field
  * @property boolean       $disabled           Adds the disabled attribute
  * @property boolean       $readonly           Adds the readonly attribute
  * @property boolean       $autofocus          Adds the autofocus attribute
@@ -95,11 +94,10 @@ use Doctrine\DBAL\Types\Types;
  * @property string        $customRgxp
  * @property string        $errorMsg
  * @property integer       $currentRecord
- * @property integer       $rowClass
- * @property integer       $rowClassConfirm
  * @property integer       $storeValues
  * @property boolean       $includeBlankOption
  * @property string        $blankOptionLabel
+ * @property boolean       $basicEntities
  */
 abstract class Widget extends Controller
 {
@@ -282,14 +280,6 @@ abstract class Widget extends Controller
 				$this->arrAttributes[$strKey] = $varValue;
 				break;
 
-			case 'tabindex':
-				if ($varValue > 0)
-				{
-					trigger_deprecation('contao/core-bundle', '4.12', 'Using a tabindex value greater than 0 has been deprecated and will no longer work in Contao 5.0.');
-					$this->arrAttributes['tabindex'] = $varValue;
-				}
-				break;
-
 			case 'disabled':
 			case 'readonly':
 				$this->blnSubmitInput = $varValue ? false : true;
@@ -369,6 +359,11 @@ abstract class Widget extends Controller
 				if ($this->varValue === '')
 				{
 					return $this->getEmptyStringOrNull();
+				}
+
+				if ($this->basicEntities)
+				{
+					return StringUtil::restoreBasicEntities($this->varValue);
 				}
 
 				return $this->varValue;
@@ -542,7 +537,10 @@ abstract class Widget extends Controller
 	 */
 	public function getErrorAsHTML($intIndex=0)
 	{
-		return $this->hasErrors() ? sprintf('<p class="%s">%s</p>', ((TL_MODE == 'BE') ? 'tl_error tl_tip' : 'error'), $this->arrErrors[$intIndex]) : '';
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+
+		return $this->hasErrors() ? sprintf('<p class="%s">%s</p>', ($isBackend ? 'tl_error tl_tip' : 'error'), $this->arrErrors[$intIndex]) : '';
 	}
 
 	/**
@@ -1101,7 +1099,7 @@ abstract class Widget extends Controller
 	 */
 	protected function isChecked($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
+		if (empty($this->varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
 		{
 			return static::optionChecked(1, 1);
 		}
@@ -1118,7 +1116,7 @@ abstract class Widget extends Controller
 	 */
 	protected function isSelected($arrOption)
 	{
-		if (empty($this->varValue) && empty($_POST) && ($arrOption['default'] ?? null))
+		if (empty($this->varValue) && !Input::isPost() && ($arrOption['default'] ?? null))
 		{
 			return static::optionSelected(1, 1);
 		}
@@ -1257,6 +1255,11 @@ abstract class Widget extends Controller
 		$arrAttributes['dataContainer'] = $objDca;
 		$arrAttributes['value'] = StringUtil::deserialize($varValue);
 
+		if ($arrData['eval']['basicEntities'] ?? null)
+		{
+			$arrAttributes['value'] = StringUtil::convertBasicEntities($arrAttributes['value']);
+		}
+
 		// Internet Explorer does not support onchange for checkboxes and radio buttons
 		if ($arrData['eval']['submitOnChange'] ?? null)
 		{
@@ -1320,7 +1323,10 @@ abstract class Widget extends Controller
 		// Add default option to single checkbox
 		if (($arrData['inputType'] ?? null) == 'checkbox' && !isset($arrData['options']) && !isset($arrData['options_callback']) && !isset($arrData['foreignKey']))
 		{
-			if (TL_MODE == 'FE' && isset($arrAttributes['description']))
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+
+			if ($isFrontend && isset($arrAttributes['description']))
 			{
 				$arrAttributes['options'][] = array('value'=>1, 'label'=>$arrAttributes['description']);
 			}
@@ -1355,11 +1361,11 @@ abstract class Widget extends Controller
 						unset($unknown[$i]);
 					}
 
-					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$v]) ? ((($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) != false) ? $ref : $v) : $v));
+					$arrAttributes['options'][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$v]) ? (($ref = (\is_array($arrData['reference'][$v]) ? $arrData['reference'][$v][0] : $arrData['reference'][$v])) ? $ref : $v) : $v));
 					continue;
 				}
 
-				$key = $blnUseReference && isset($arrData['reference'][$k]) ? ((($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) != false) ? $ref : $k) : $k;
+				$key = $blnUseReference && isset($arrData['reference'][$k]) ? (($ref = (\is_array($arrData['reference'][$k]) ? $arrData['reference'][$k][0] : $arrData['reference'][$k])) ? $ref : $k) : $k;
 				$blnIsAssoc = ArrayUtil::isAssoc($v);
 
 				foreach ($v as $kk=>$vv)
@@ -1371,7 +1377,7 @@ abstract class Widget extends Controller
 						unset($unknown[$i]);
 					}
 
-					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$vv]) ? ((($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) != false) ? $ref : $vv) : $vv));
+					$arrAttributes['options'][$key][] = array('value'=>$value, 'label'=>($blnUseReference && isset($arrData['reference'][$vv]) ? (($ref = (\is_array($arrData['reference'][$vv]) ? $arrData['reference'][$vv][0] : $arrData['reference'][$vv])) ? $ref : $vv) : $vv));
 				}
 			}
 
@@ -1525,17 +1531,12 @@ abstract class Widget extends Controller
 		return static::getEmptyValueByFieldType($sql) === null ? null : '';
 	}
 
-	/**
-	 * Generate a submit button
-	 *
-	 * @return string The submit button markup
-	 *
-	 * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0.
-	 */
-	protected function addSubmit()
+	protected static function specialcharsValue($strString): string
 	{
-		trigger_deprecation('contao/core-bundle', '4.0', 'Using "Contao\Widget::addSubmit()" has been deprecated and will no longer work in Contao 5.0.');
-
-		return '';
+		return str_replace(
+			array('&amp;#35;', '&amp;#60;', '&amp;#62;', '&amp;#40;', '&amp;#41;', '&amp;#92;', '&amp;#61;', '&amp;#34;', '&amp;#39;'),
+			array('&#35;', '&#60;', '&#62;', '&#40;', '&#41;', '&#92;', '&#61;', '&#34;', '&#39;'),
+			StringUtil::specialchars((string) $strString, false, true),
+		);
 	}
 }

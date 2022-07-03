@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Studio;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Figure;
 use Contao\CoreBundle\Image\Studio\ImageResult;
@@ -104,7 +105,7 @@ class TwigMacrosTest extends TestCase
     /**
      * @dataProvider provideImgData
      */
-    public function testImgMacro(array $imageData, ?Metadata $metadata, string $expected): void
+    public function testImgMacro(array $imageData, Metadata|null $metadata, string $expected): void
     {
         $image = $this->createMock(ImageResult::class);
         $image
@@ -368,7 +369,7 @@ class TwigMacrosTest extends TestCase
     /**
      * @dataProvider provideFigureData
      */
-    public function testFigureMacro(?Metadata $metadata, array $linkAttributes, ?LightboxResult $lightbox, string $expected): void
+    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, LightboxResult|null $lightbox, string $expected): void
     {
         $figure = new Figure(
             $this->createMock(ImageResult::class),
@@ -579,7 +580,14 @@ class TwigMacrosTest extends TestCase
         ];
 
         $environment = new Environment(new ArrayLoader($templates));
-        $environment->setExtensions([new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class))]);
+
+        $environment->setExtensions([
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            ),
+        ]);
 
         $responseContextAccessor ??= $this->createMock(ResponseContextAccessor::class);
 

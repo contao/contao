@@ -30,7 +30,6 @@ use Contao\Model\Collection;
  * @property string  $alt
  * @property string  $title
  * @property string  $size
- * @property string  $imagemargin
  * @property string  $imageUrl
  * @property boolean $fullsize
  * @property string  $caption
@@ -60,7 +59,6 @@ use Contao\Model\Collection;
  * @property string  $rel
  * @property boolean $useImage
  * @property string  $multiSRC
- * @property string  $orderSRC
  * @property boolean $useHomeDir
  * @property integer $perRow
  * @property integer $perPage
@@ -95,7 +93,6 @@ use Contao\Model\Collection;
  * @property integer $module
  * @property boolean $protected
  * @property string  $groups
- * @property boolean $guests
  * @property string  $cssID
  * @property boolean $invisible
  * @property string  $start
@@ -182,8 +179,8 @@ abstract class ContentElement extends Frontend
 		}
 
 		$arrHeadline = StringUtil::deserialize($objElement->headline);
-		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] : $arrHeadline;
-		$this->hl = \is_array($arrHeadline) ? $arrHeadline['unit'] : 'h1';
+		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] ?? '' : $arrHeadline;
+		$this->hl = $arrHeadline['unit'] ?? 'h1';
 		$this->strColumn = $strColumn;
 	}
 

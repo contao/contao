@@ -166,7 +166,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 				{
 					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
 
-					$legend = "\n" . '<legend onclick="AjaxRequest.toggleFieldset(this, \'' . $key . '\', \'' . $this->strTable . '\')">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
+					$legend = "\n" . '<legend data-toggle-fieldset="' . StringUtil::specialcharsAttribute(json_encode(array('id' => $key, 'table' => $this->strTable))) . '">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
 				}
 
 				if (isset($fs[$this->strTable][$key]))
@@ -187,7 +187,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 					{
 						if ($blnAjax && Environment::get('isAjaxRequest'))
 						{
-							return $strAjax . '<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">';
+							return $strAjax;
 						}
 
 						$blnAjax = false;
@@ -215,18 +215,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 						if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['eval']['multiple'] ?? null)
 						{
 							$this->varValue = StringUtil::deserialize($this->varValue);
-						}
-
-						if (!\is_array($this->varValue))
-						{
-							$this->varValue = htmlspecialchars($this->varValue);
-						}
-						else
-						{
-							foreach ($this->varValue as $key=>$val)
-							{
-								$this->varValue[$key] = htmlspecialchars($val);
-							}
 						}
 					}
 
@@ -305,8 +293,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
-<input type="hidden" name="FORM_FIELDS[]" value="' . StringUtil::specialchars($this->strPalette) . '">' . $return;
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $return;
 
 		// Reload the page to prevent _POST variables from being sent twice
 		if (!$this->noReload && Input::post('FORM_SUBMIT') == $this->strTable)
@@ -329,7 +316,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			}
 
 			// Reload
-			if (isset($_POST['saveNclose']))
+			if (Input::post('saveNclose') !== null)
 			{
 				Message::reset();
 				$this->redirect($this->getReferer());
@@ -400,15 +387,6 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			if (($arrData['inputType'] ?? null) == 'text' || ($arrData['inputType'] ?? null) == 'textarea')
 			{
 				$varValue = StringUtil::deserialize($varValue);
-
-				if (!\is_array($varValue))
-				{
-					$varValue = StringUtil::restoreBasicEntities($varValue);
-				}
-				else
-				{
-					$varValue = serialize(array_map('\Contao\StringUtil::restoreBasicEntities', $varValue));
-				}
 			}
 		}
 
@@ -452,7 +430,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			// Add a log entry
 			if (!\is_array($deserialize) && !\is_array(StringUtil::deserialize($prior)))
 			{
-				if (($arrData['inputType'] ?? null) == 'password' || ($arrData['inputType'] ?? null) == 'textStore')
+				if (($arrData['inputType'] ?? null) == 'password')
 				{
 					System::getContainer()->get('monolog.logger.contao.configuration')->info('The global configuration variable "' . $this->strField . '" has been changed');
 				}

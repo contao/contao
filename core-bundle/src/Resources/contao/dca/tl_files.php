@@ -35,8 +35,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'dataContainer'               => DC_Folder::class,
 		'enableVersioning'            => true,
 		'databaseAssisted'            => true,
-		'uploadPath'                  => $GLOBALS['TL_CONFIG']['uploadPath'] ?? System::getContainer()->getParameter('contao.upload_path'),
-		'editableFileTypes'           => $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files'),
+		'uploadPath'                  => System::getContainer()->getParameter('contao.upload_path'),
+		'editableFileTypes'           => System::getContainer()->getParameter('contao.editable_files'),
 		'onload_callback' => array
 		(
 			array('tl_files', 'checkPermission'),
@@ -196,7 +196,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		),
 		'found' => array
 		(
-			'sql'                     => "char(1) NOT NULL default '1'"
+			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'name' => array
 		(
@@ -267,7 +267,12 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 					'alt'             => 'maxlength="255"',
 					'link'            => array('attributes'=>'maxlength="2048"', 'dcaPicker'=>true),
 					'caption'         => array('type'=>'textarea'),
-					'license'         => array('attributes'=>'maxlength="255"', 'dcaPicker'=>true)
+					'license'         => array(
+						'attributes'  => 'maxlength="255"',
+						'dcaPicker'   => true,
+						'rgxp'        => '#(^$|^{{link_url::.+$|^https?://.+$)#',
+						'rgxpErrMsg'  => &$GLOBALS['TL_LANG']['tl_files']['licenseRgxpError']
+					)
 				)
 			),
 			'sql'                     => "blob NULL"
@@ -514,7 +519,7 @@ class tl_files extends Backend
 	{
 		$model = FilesModel::findByPk($pid);
 
-		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
+		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return;
 		}
@@ -546,7 +551,7 @@ class tl_files extends Backend
 	{
 		$model = FilesModel::findByPk($pid);
 
-		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
+		if ($model === null || !in_array($model->extension, StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA'][$table]['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return;
 		}
@@ -827,7 +832,7 @@ class tl_files extends Backend
 		/** @var DC_Folder $dc */
 		$dc = (func_num_args() <= 12 ? null : func_get_arg(12));
 
-		if (!in_array($objFile->extension, $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_files']['config']['editableFileTypes'] ?? $GLOBALS['TL_CONFIG']['editableFiles'] ?? System::getContainer()->getParameter('contao.editable_files')))))
+		if (!in_array($objFile->extension, $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_files']['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')))))
 		{
 			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
 		}
@@ -854,7 +859,7 @@ class tl_files extends Backend
 			return '';
 		}
 
-		return '<a href="contao/popup.php?src=' . base64_encode($row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' onclick="Backend.openModalIframe({\'title\':\'' . str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_popup', array('src' => base64_encode($row['id'])))) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' onclick="Backend.openModalIframe({\'title\':\'' . str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**

@@ -22,6 +22,7 @@ use Contao\System;
 use Psr\Log\NullLogger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class StringUtilTest extends TestCase
@@ -265,9 +266,10 @@ class StringUtilTest extends TestCase
      */
     public function testRevertInputEncoding(string $source, string $expected = null): void
     {
-        Input::setGet('value', $source);
+        System::getContainer()->set('request_stack', $stack = new RequestStack());
+        $stack->push(new Request(['value' => $source]));
+
         $inputEncoded = Input::get('value');
-        Input::setGet('value', null);
 
         // Test input encoding round trip
         $this->assertSame($expected ?? $source, StringUtil::revertInputEncoding($inputEncoded));
@@ -282,16 +284,14 @@ class StringUtilTest extends TestCase
         yield ['I <3 Contao'];
         yield ['Remove unexpected <span>HTML tags'];
         yield ['Keep non-HTML <tags> intact'];
-        yield ['Basic [&] entities [nbsp]', "Basic & entities \u{A0}"];
+        yield ['Basic &amp; entities &nbsp;', "Basic & entities \u{A0}"];
         yield ["Cont\xE4o invalid UTF-8", "Cont\u{FFFD}o invalid UTF-8"];
     }
 
     /**
-     * @param mixed $string
-     *
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString($string, string $toEncoding, string $expected, string $fromEncoding = null): void
+    public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string $fromEncoding = null): void
     {
         $result = StringUtil::convertEncoding($string, $toEncoding, $fromEncoding);
 
@@ -303,14 +303,14 @@ class StringUtilTest extends TestCase
         yield 'From UTF-8 to ISO-8859-1' => [
             '𝚏ōȏճăᴦ',
             'ISO-8859-1',
-            utf8_decode('𝚏ōȏճăᴦ'),
+            '??????',
             'UTF-8',
         ];
 
         yield 'From ISO-8859-1 to UTF-8' => [
             '𝚏ōȏճăᴦ',
             'UTF-8',
-            utf8_encode('𝚏ōȏճăᴦ'),
+            'ðÅÈÕ³Äá´¦',
             'ISO-8859-1',
         ];
 
@@ -375,12 +375,9 @@ class StringUtilTest extends TestCase
         ];
 
         yield 'Stringable argument' => [
-            new class('foobar') {
-                private string $value;
-
-                public function __construct(string $value)
+            new class('foobar') implements \Stringable {
+                public function __construct(private string $value)
                 {
-                    $this->value = $value;
                 }
 
                 public function __toString(): string
@@ -395,25 +392,54 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @param array|object $value
-     *
-     * @group legacy
-     *
-     * @dataProvider invalidEncodingsProvider
+     * @dataProvider getAddBasePathData
      */
-    public function testReturnsEmptyStringAndTriggersDeprecationWhenEncodingNonStringableValues($value): void
+    public function testAddsTheBasePath(string $expected, string $data): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 4.9: Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated %s.');
-
-        /** @phpstan-ignore-next-line */
-        $result = StringUtil::convertEncoding($value, 'UTF-8');
-
-        $this->assertSame('', $result);
+        $this->assertSame($expected, StringUtil::addBasePath($data));
     }
 
-    public function invalidEncodingsProvider(): \Generator
+    public function getAddBasePathData(): \Generator
     {
-        yield 'Array' => [[]];
-        yield 'Non-stringable object' => [new \stdClass()];
+        yield [
+            '<p><a href="{{env::base_path}}/en/foo.html"><img src="{{env::base_path}}/files/img.jpg" alt></a></p>',
+            '<p><a href="en/foo.html"><img src="files/img.jpg" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="#top"><img src="data:img" alt></a></p>',
+            '<p><a href="#top"><img src="data:img" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+            '<p><a href="/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+        ];
+    }
+
+    /**
+     * @dataProvider getRemoveBasePathData
+     */
+    public function testRemovesTheBasePath(string $expected, string $data): void
+    {
+        $this->assertSame($expected, StringUtil::removeBasePath($data));
+    }
+
+    public function getRemoveBasePathData(): \Generator
+    {
+        yield [
+            '<p><a href="en/foo.html"><img src="files/img.jpg" alt></a></p>',
+            '<p><a href="{{env::base_path}}/en/foo.html"><img src="{{env::base_path}}/files/img.jpg" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="/en/foo.html"><img src="data:img" alt></a></p>',
+            '<p><a href="/en/foo.html"><img src="data:img" alt></a></p>',
+        ];
+
+        yield [
+            '<p><a href="{{env::path}}/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+            '<p><a href="{{env::path}}/en/foo.html"><img src="https://localhost/files/img.jpg" alt></a></p>',
+        ];
     }
 }

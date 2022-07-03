@@ -56,7 +56,7 @@ class ModuleCalendar extends Events
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = 'contao/main.php?do=themes&amp;table=tl_module&amp;act=edit&amp;id=' . $this->id;
+			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -69,10 +69,7 @@ class ModuleCalendar extends Events
 			return '';
 		}
 
-		$request = System::getContainer()->get('request_stack')->getMainRequest();
-
-		// Get request URL without query string
-		$this->strUrl = null !== $request ? $request->getBaseUrl() . $request->getPathInfo() : '';
+		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 		$this->strLink = $this->strUrl;
 
 		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
@@ -121,7 +118,7 @@ class ModuleCalendar extends Events
 
 		// Find the boundaries
 		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
-		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!$blnShowUnpublished ? " AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : ""));
+		$objMinMax = $this->Database->query("SELECT MIN(startTime) AS dateFrom, MAX(endTime) AS dateTo, MAX(repeatEnd) AS repeatUntil FROM tl_calendar_events WHERE pid IN(" . implode(',', array_map('\intval', $this->cal_calendar)) . ")" . (!$blnShowUnpublished ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : ""));
 		$dateFrom = $objMinMax->dateFrom;
 		$dateTo = $objMinMax->dateTo;
 		$repeatUntil = $objMinMax->repeatUntil;
@@ -136,8 +133,8 @@ class ModuleCalendar extends Events
 		}
 
 		// Store year and month
-		$intYear = date('Y', $this->Date->tstamp);
-		$intMonth = date('m', $this->Date->tstamp);
+		$intYear = (int) date('Y', $this->Date->tstamp);
+		$intMonth = (int) date('m', $this->Date->tstamp);
 
 		$objTemplate = new FrontendTemplate($this->cal_ctemplate ?: 'cal_default');
 		$objTemplate->intYear = $intYear;
@@ -203,18 +200,9 @@ class ModuleCalendar extends Events
 			$strClass = '';
 			$intCurrentDay = ($i + $this->cal_startDay) % 7;
 
-			if ($i == 0)
-			{
-				$strClass .= ' col_first';
-			}
-			elseif ($i == 6)
-			{
-				$strClass .= ' col_last';
-			}
-
 			if ($intCurrentDay == 0 || $intCurrentDay == 6)
 			{
-				$strClass .= ' weekend';
+				$strClass = ' weekend';
 			}
 
 			$arrDays[$intCurrentDay] = array
@@ -234,8 +222,8 @@ class ModuleCalendar extends Events
 	 */
 	protected function compileWeeks()
 	{
-		$intDaysInMonth = date('t', $this->Date->monthBegin);
-		$intFirstDayOffset = date('w', $this->Date->monthBegin) - $this->cal_startDay;
+		$intDaysInMonth = (int) date('t', $this->Date->monthBegin);
+		$intFirstDayOffset = (int) date('w', $this->Date->monthBegin) - $this->cal_startDay;
 
 		if ($intFirstDayOffset < 0)
 		{
@@ -265,24 +253,17 @@ class ModuleCalendar extends Events
 			$intWeek = floor(++$intColumnCount / 7);
 			$intDay = $i - $intFirstDayOffset;
 			$intCurrentDay = ($i + $this->cal_startDay) % 7;
-
-			$strWeekClass = 'week_' . $intWeek;
-			$strWeekClass .= ($intWeek == 0) ? ' first' : '';
-			$strWeekClass .= ($intWeek == ($intNumberOfRows - 1)) ? ' last' : '';
-
 			$strClass = ($intCurrentDay < 2) ? ' weekend' : '';
-			$strClass .= ($i == 1 || $i == 8 || $i == 15 || $i == 22 || $i == 29 || $i == 36) ? ' col_first' : '';
-			$strClass .= ($i == 7 || $i == 14 || $i == 21 || $i == 28 || $i == 35 || $i == 42) ? ' col_last' : '';
 
 			// Add timestamp to all cells
-			$arrDays[$strWeekClass][$i]['timestamp'] = strtotime(($intDay - 1) . ' day', $this->Date->monthBegin);
+			$arrDays[$intWeek][$i]['timestamp'] = strtotime(($intDay - 1) . ' day', $this->Date->monthBegin);
 
 			// Empty cell
 			if ($intDay < 1 || $intDay > $intDaysInMonth)
 			{
-				$arrDays[$strWeekClass][$i]['label'] = '&nbsp;';
-				$arrDays[$strWeekClass][$i]['class'] = 'days empty' . $strClass;
-				$arrDays[$strWeekClass][$i]['events'] = array();
+				$arrDays[$intWeek][$i]['label'] = '&nbsp;';
+				$arrDays[$intWeek][$i]['class'] = 'empty' . $strClass;
+				$arrDays[$intWeek][$i]['events'] = array();
 
 				continue;
 			}
@@ -299,9 +280,9 @@ class ModuleCalendar extends Events
 			// Inactive days
 			if (empty($intKey) || !isset($arrAllEvents[$intKey]))
 			{
-				$arrDays[$strWeekClass][$i]['label'] = $intDay;
-				$arrDays[$strWeekClass][$i]['class'] = 'days' . $strClass;
-				$arrDays[$strWeekClass][$i]['events'] = array();
+				$arrDays[$intWeek][$i]['label'] = $intDay;
+				$arrDays[$intWeek][$i]['class'] = trim($strClass);
+				$arrDays[$intWeek][$i]['events'] = array();
 
 				continue;
 			}
@@ -317,11 +298,11 @@ class ModuleCalendar extends Events
 				}
 			}
 
-			$arrDays[$strWeekClass][$i]['label'] = $intDay;
-			$arrDays[$strWeekClass][$i]['class'] = 'days active' . $strClass;
-			$arrDays[$strWeekClass][$i]['href'] = $this->strLink . '?day=' . $intKey;
-			$arrDays[$strWeekClass][$i]['title'] = sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
-			$arrDays[$strWeekClass][$i]['events'] = $arrEvents;
+			$arrDays[$intWeek][$i]['label'] = $intDay;
+			$arrDays[$intWeek][$i]['class'] = 'active' . $strClass;
+			$arrDays[$intWeek][$i]['href'] = $this->strLink . '?day=' . $intKey;
+			$arrDays[$intWeek][$i]['title'] = sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
+			$arrDays[$intWeek][$i]['events'] = $arrEvents;
 		}
 
 		return $arrDays;
