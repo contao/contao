@@ -3908,7 +3908,13 @@ class DC_Table extends DataContainer implements \listable, \editable
 			$mouseover = ' hover-div';
 		}
 
-		$return .= "\n  " . '<li class="' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) $objRow->tstamp === '0' ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
+		$blnDraft = (string) $objRow->tstamp === '0';
+		$return .= "\n  " . '<li class="' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] == 5 && $objRow->type == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ($blnDraft ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
+
+		if ($blnDraft)
+		{
+			$return .= '<em>' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</em> ';
+		}
 
 		// Calculate label and add a toggle button
 		$args = array();
@@ -4554,11 +4560,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
 
 						$this->import($strClass);
-						$return .= '</div>' . $this->$strClass->$strMethod($row[$i]) . '</div>';
+						$return .= '</div>' . ($blnDraft ? '<em>' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</em> ' : '') . $this->$strClass->$strMethod($row[$i]) . '</div>';
 					}
 					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']))
 					{
-						$return .= '</div>' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
+						$return .= '</div>' . ($blnDraft ? '<em>' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</em> ' : '') . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
 					}
 
 					// Make items sortable
@@ -4989,11 +4995,14 @@ class DC_Table extends DataContainer implements \listable, \editable
 					}
 				}
 
+				$blnDraft = (string) ($row['tstamp'] ?? null) === '0';
+
 				$return .= '
-  <tr class="' . ((++$eoCount % 2 == 0) ? 'even' : 'odd') . ((string) ($row['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit toggle_select hover-row">
+  <tr class="' . ((++$eoCount % 2 == 0) ? 'even' : 'odd') . ($blnDraft ? ' draft' : '') . ' click2edit toggle_select hover-row">
     ';
 
 				$colspan = 1;
+				$label = ($blnDraft ? '<em>' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</em> ' : '') . $label;
 
 				// Call the label_callback ($row, $label, $this)
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))

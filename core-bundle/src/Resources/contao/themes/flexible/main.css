@@ -999,7 +999,12 @@ table.tl_listing {
 .tl_file.draft,
 .hover-row.draft > td {
 	font-style: italic;
-	background-color: #fbb;
+}
+.tl_content.draft > *,
+.tl_folder.draft > *,
+.tl_file.draft > *,
+.hover-row.draft > td > * {
+	opacity: 0.5;
 }
 .parent_view > ul {
 	background:#f3f3f5;
