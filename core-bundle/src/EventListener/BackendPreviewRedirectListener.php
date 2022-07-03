@@ -42,6 +42,6 @@ class BackendPreviewRedirectListener
             return;
         }
 
-        $event->setResponse(new RedirectResponse($request->getSchemeAndHttpHost().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : '')));
+        $event->setResponse(new RedirectResponse($request->getSchemeAndHttpHost().$request->getBasePath().$request->getPathInfo().(null !== ($qs = $request->server->get('QUERY_STRING')) ? '?'.$qs : '')));
     }
 }
