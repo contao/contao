@@ -99,15 +99,14 @@ class ContentDownloads extends ContentDownload
 		$auxDate = array();
 
 		$objFiles = $this->objFiles;
-		$container = System::getContainer();
-		$request = $container->get('request_stack')->getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 
 		// Get all files
 		while ($objFiles->next())
 		{
 			// Continue if the files has been processed or does not exist
-			if (isset($files[$objFiles->path]) || !file_exists($container->getParameter('kernel.project_dir') . '/' . $objFiles->path))
+			if (isset($files[$objFiles->path]) || !file_exists(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objFiles->path))
 			{
 				continue;
 			}
@@ -122,7 +121,7 @@ class ContentDownloads extends ContentDownload
 					continue;
 				}
 
-				if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
+				if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 				{
 					$arrMeta = $this->getMetaData($objFiles->meta, $GLOBALS['TL_LANGUAGE']);
 				}
@@ -215,7 +214,7 @@ class ContentDownloads extends ContentDownload
 						continue;
 					}
 
-					if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
+					if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 					{
 						$arrMeta = $this->getMetaData($objSubfiles->meta, $GLOBALS['TL_LANGUAGE']);
 					}

@@ -129,9 +129,9 @@ class ModuleNewsletterList extends Module
 			}
 
 			// Tag the newsletters (see #2137)
-			if ($container->has('fos_http_cache.http.symfony_response_tagger'))
+			if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
 			{
-				$responseTagger = $container->get('fos_http_cache.http.symfony_response_tagger');
+				$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 				$responseTagger->addTags($tags);
 			}
 		}

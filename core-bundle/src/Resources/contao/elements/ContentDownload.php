@@ -86,10 +86,9 @@ class ContentDownload extends ContentElement
 	protected function compile()
 	{
 		$objFile = new File($this->singleSRC);
-		$container = System::getContainer();
-		$request = $container->get('request_stack')->getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$arrMeta = Frontend::getMetaData($this->objFile->meta, $GLOBALS['TL_LANGUAGE']);
 		}

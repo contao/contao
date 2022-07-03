@@ -48,10 +48,9 @@ class ModuleNewsMenu extends ModuleNews
 	 */
 	public function generate()
 	{
-		$container = System::getContainer();
-		$request = $container->get('request_stack')->getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
-		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['newsmenu'][0] . ' ###';
