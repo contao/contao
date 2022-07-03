@@ -100,9 +100,7 @@ class ContentDownloads extends ContentDownload
 
 		$objFiles = $this->objFiles;
 		$container = System::getContainer();
-		$requestStack = $container->get('request_stack');
-		$request = $requestStack->getCurrentRequest();
-		$mainRequest = $requestStack->getMainRequest();
+		$request = $container->get('request_stack')->getCurrentRequest();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
 
 		// Get all files
