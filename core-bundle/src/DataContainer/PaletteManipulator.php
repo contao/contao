@@ -83,7 +83,7 @@ class PaletteManipulator
             'fields' => (array) $name,
             'parents' => (array) $parent,
             'position' => $position,
-            'fallback' => is_scalar($fallback) ? [$fallback] : $fallback,
+            'fallback' => \is_scalar($fallback) ? [$fallback] : $fallback,
             'fallbackPosition' => $fallbackPosition,
         ];
 

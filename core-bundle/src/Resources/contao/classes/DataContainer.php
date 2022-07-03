@@ -205,6 +205,10 @@ abstract class DataContainer extends Backend
 
 			case 'createNewVersion':
 				return $this->blnCreateNewVersion;
+
+			// Forward compatibility with Contao 5.0
+			case 'currentPid':
+				return ((int) (\defined('CURRENT_ID') ? CURRENT_ID : 0)) ?: null;
 		}
 
 		return parent::__get($strKey);
@@ -1430,11 +1434,20 @@ abstract class DataContainer extends Backend
 	 */
 	public static function getDriverForTable(string $table): string
 	{
-		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'];
+		$dataContainer = $GLOBALS['TL_DCA'][$table]['config']['dataContainer'] ?? '';
 
-		if (false === strpos($dataContainer, '\\'))
+		if ('' !== $dataContainer && false === strpos($dataContainer, '\\'))
 		{
+			trigger_deprecation('contao/core-bundle', '4.9', 'The usage of a non fully qualified class name "%s" for table "%s" as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.', $dataContainer, $table);
+
 			$dataContainer = 'DC_' . $dataContainer;
+
+			if (class_exists($dataContainer))
+			{
+				$ref = new \ReflectionClass($dataContainer);
+
+				return $ref->getName();
+			}
 		}
 
 		return $dataContainer;

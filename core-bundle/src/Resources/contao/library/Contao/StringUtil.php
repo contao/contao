@@ -21,7 +21,7 @@ use Webmozart\PathUtil\Path;
  *
  *     $short = StringUtil::substr($str, 32);
  *     $html  = StringUtil::substrHtml($str, 32);
- *     $xhtml = StringUtil::toXhtml($html5);
+ *     $decoded = StringUtil::decodeEntities($str);
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
@@ -484,9 +484,13 @@ class StringUtil
 	 * @param string $strString The HTML5 string
 	 *
 	 * @return string The XHTML string
+	 *
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
 	 */
 	public static function toXhtml($strString)
 	{
+		trigger_deprecation('contao/core-bundle', '4.9', 'The "StringUtil::toXhtml()" method has been deprecated and will no longer work in Contao 5.0.');
+
 		$arrPregReplace = array
 		(
 			'/<(br|hr|img)([^>]*)>/i' => '<$1$2 />', // Close stand-alone tags
@@ -917,7 +921,7 @@ class StringUtil
 	 */
 	public static function convertEncoding($str, $to, $from=null)
 	{
-		if ($str !== null && !is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
+		if ($str !== null && !\is_scalar($str) && !(\is_object($str) && method_exists($str, '__toString')))
 		{
 			@trigger_error('Passing a non-stringable argument to StringUtil::convertEncoding() has been deprecated an will no longer work in Contao 5.0.', E_USER_DEPRECATED);
 

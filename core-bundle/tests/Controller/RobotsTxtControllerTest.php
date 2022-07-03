@@ -78,4 +78,35 @@ class RobotsTxtControllerTest extends TestCase
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
     }
+
+    public function testRobotsTxtIgnoresRequestPort(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class);
+
+        $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
+        $pageModelAdapter
+            ->expects($this->once())
+            ->method('findPublishedFallbackByHostname')
+            ->with('localhost')
+            ->willReturn($pageModel)
+        ;
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
+
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+        ;
+
+        $request = Request::create('https://localhost:8000/robots.txt');
+        $controller = new RobotsTxtController($framework, $eventDispatcher);
+        $response = $controller($request);
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
 }

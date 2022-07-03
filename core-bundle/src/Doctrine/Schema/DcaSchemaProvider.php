@@ -37,6 +37,11 @@ class DcaSchemaProvider
     private $doctrine;
 
     /**
+     * @var int|null
+     */
+    private $defaultIndexLength;
+
+    /**
      * @internal Do not inherit from this class; decorate the "contao.doctrine.schema_provider" service instead
      */
     public function __construct(ContaoFramework $framework, Registry $doctrine)
@@ -59,6 +64,8 @@ class DcaSchemaProvider
      */
     public function appendToSchema(Schema $schema): void
     {
+        $this->defaultIndexLength = null;
+
         $config = $this->getSqlDefinitions();
 
         foreach ($config as $tableName => $definitions) {
@@ -92,6 +99,18 @@ class DcaSchemaProvider
                     // Use the binary collation if the "case_sensitive" option is set
                     if ($this->isCaseSensitive($config)) {
                         $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
+                    }
+
+                    if (isset($options['customSchemaOptions']['charset'])) {
+                        $options['platformOptions']['charset'] = $options['customSchemaOptions']['charset'];
+                    }
+
+                    if (isset($options['customSchemaOptions']['collation'])) {
+                        if (!isset($options['customSchemaOptions']['charset'])) {
+                            $options['platformOptions']['charset'] = explode('_', $options['customSchemaOptions']['collation'], 2)[0];
+                        }
+
+                        $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
                     }
 
                     $table->addColumn($config['name'], $config['type'], $options);
@@ -178,6 +197,7 @@ class DcaSchemaProvider
         $scale = null;
         $precision = null;
         $default = null;
+        $charset = null;
         $collation = null;
         $unsigned = false;
         $notnull = false;
@@ -202,6 +222,7 @@ class DcaSchemaProvider
             }
 
             if (preg_match('/collate ([^ ]+)/i', $def, $match)) {
+                $charset = explode('_', $match[1], 2)[0];
                 $collation = $match[1];
             }
 
@@ -232,8 +253,18 @@ class DcaSchemaProvider
             $options['precision'] = $precision;
         }
 
+        $platformOptions = [];
+
+        if (null !== $charset) {
+            $platformOptions['charset'] = $charset;
+        }
+
         if (null !== $collation) {
-            $options['platformOptions'] = ['collation' => $collation];
+            $platformOptions['collation'] = $collation;
+        }
+
+        if (!empty($platformOptions)) {
+            $options['platformOptions'] = $platformOptions;
         }
 
         $table->addColumn($columnName, $type, $options);
@@ -420,6 +451,10 @@ class DcaSchemaProvider
             return 1000;
         }
 
+        if (null !== $this->defaultIndexLength) {
+            return $this->defaultIndexLength;
+        }
+
         $largePrefix = $this->doctrine
             ->getConnection()
             ->query("SHOW VARIABLES LIKE 'innodb_large_prefix'")
@@ -428,7 +463,7 @@ class DcaSchemaProvider
 
         // The variable no longer exists as of MySQL 8 and MariaDB 10.3
         if (false === $largePrefix || '' === $largePrefix->Value) {
-            return 3072;
+            return $this->defaultIndexLength = 3072;
         }
 
         $version = $this->doctrine
@@ -446,12 +481,12 @@ class DcaSchemaProvider
 
         // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2
         if (version_compare($ver, $vok, '>=')) {
-            return 3072;
+            return $this->defaultIndexLength = 3072;
         }
 
         // The innodb_large_prefix option is disabled
         if (!\in_array(strtolower((string) $largePrefix->Value), ['1', 'on'], true)) {
-            return 767;
+            return $this->defaultIndexLength = 767;
         }
 
         $filePerTable = $this->doctrine
@@ -462,7 +497,7 @@ class DcaSchemaProvider
 
         // The innodb_file_per_table option is disabled
         if (!\in_array(strtolower((string) $filePerTable->Value), ['1', 'on'], true)) {
-            return 767;
+            return $this->defaultIndexLength = 767;
         }
 
         $fileFormat = $this->doctrine
@@ -473,10 +508,10 @@ class DcaSchemaProvider
 
         // The InnoDB file format is not Barracuda
         if ('' !== $fileFormat->Value && 'barracuda' !== strtolower((string) $fileFormat->Value)) {
-            return 767;
+            return $this->defaultIndexLength = 767;
         }
 
-        return 3072;
+        return $this->defaultIndexLength = 3072;
     }
 
     private function isCaseSensitive(array $config): bool

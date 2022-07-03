@@ -28,7 +28,7 @@ class BackendAccessVoter extends Voter
         $user = $token->getUser();
         [, $field] = explode('.', $attribute, 2);
 
-        if (!$user instanceof BackendUser || (!is_scalar($subject) && !\is_array($subject))) {
+        if (!$user instanceof BackendUser || (!\is_scalar($subject) && !\is_array($subject))) {
             return false;
         }
 

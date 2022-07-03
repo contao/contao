@@ -28,7 +28,7 @@ class ControllerTest extends TestCase
     {
         parent::setUp();
 
-        Controller::reset();
+        Controller::resetControllerCache();
     }
 
     public function testReturnsTheTimeZones(): void

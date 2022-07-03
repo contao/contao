@@ -30,7 +30,7 @@ class PageForward extends Frontend
 	 */
 	public function generate($objPage)
 	{
-		@trigger_error('Using PageForward::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageForward::getResponse() method instead.');
+		@trigger_error('Using PageForward::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageForward::getResponse() method instead.', E_USER_DEPRECATED);
 
 		$this->redirect($this->getForwardUrl($objPage), $this->getRedirectStatusCode($objPage));
 	}

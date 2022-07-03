@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="MOD.form.0">
         <source>Forms</source>
+        <target>Formulários</target>
       </trans-unit>
       <trans-unit id="MOD.form.1">
         <source>Create custom forms and store or send the submitted data</source>
@@ -30,6 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
+        <target>Gerir temas, módulos front-end, layouts de página ou tamanhos de imagem</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Site structure</source>
@@ -45,6 +47,7 @@
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
         <source>Add or edit custom templates</source>
+        <target>Adicionar ou editar modelos personalizados</target>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Account manager</source>
@@ -56,6 +59,7 @@
       </trans-unit>
       <trans-unit id="MOD.member.1">
         <source>Manage member accounts (front end)</source>
+        <target>Gerir as contas dos membros (front end)</target>
       </trans-unit>
       <trans-unit id="MOD.mgroup.0">
         <source>Member groups</source>
@@ -63,6 +67,7 @@
       </trans-unit>
       <trans-unit id="MOD.mgroup.1">
         <source>Manage member groups (front end)</source>
+        <target>Gerir grupos de membros (front end)</target>
       </trans-unit>
       <trans-unit id="MOD.user.0">
         <source>Users</source>
@@ -70,6 +75,7 @@
       </trans-unit>
       <trans-unit id="MOD.user.1">
         <source>Manage user accounts (back end)</source>
+        <target>Gerir contas de utilizador (back end)</target>
       </trans-unit>
       <trans-unit id="MOD.group.0">
         <source>User groups</source>
@@ -77,6 +83,7 @@
       </trans-unit>
       <trans-unit id="MOD.group.1">
         <source>Manage user groups (back end)</source>
+        <target>Gerir grupos de utilizadores (back end)</target>
       </trans-unit>
       <trans-unit id="MOD.opt_in.0">
         <source>Double opt-in</source>
@@ -84,6 +91,7 @@
       </trans-unit>
       <trans-unit id="MOD.opt_in.1">
         <source>Manage double opt-in tokens</source>
+        <target>Gerir fichas de dupla opção de inclusão</target>
       </trans-unit>
       <trans-unit id="MOD.system">
         <source>System</source>
@@ -95,6 +103,7 @@
       </trans-unit>
       <trans-unit id="MOD.files.1">
         <source>Manage files and folders</source>
+        <target>Gerir ficheiros e pastas</target>
       </trans-unit>
       <trans-unit id="MOD.log.0">
         <source>System log</source>
@@ -102,6 +111,7 @@
       </trans-unit>
       <trans-unit id="MOD.log.1">
         <source>Browse the system log</source>
+        <target>Navegar no registo do sistema</target>
       </trans-unit>
       <trans-unit id="MOD.settings.0">
         <source>Settings</source>
@@ -109,6 +119,7 @@
       </trans-unit>
       <trans-unit id="MOD.settings.1">
         <source>Adjust the Contao configuration</source>
+        <target>Ajustar a configuração do Contao</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -116,6 +127,7 @@
       </trans-unit>
       <trans-unit id="MOD.maintenance.1">
         <source>Crawl the website or purge generated data</source>
+        <target>Rastejar o website ou purgar os dados gerados</target>
       </trans-unit>
       <trans-unit id="MOD.security.0">
         <source>Security</source>
@@ -283,6 +295,7 @@
       </trans-unit>
       <trans-unit id="FMD.logout.1">
         <source>Automatically logs out a member</source>
+        <target>Automatizar o logout de um membro</target>
       </trans-unit>
       <trans-unit id="FMD.personalData.0">
         <source>Personal data</source>
@@ -290,6 +303,7 @@
       </trans-unit>
       <trans-unit id="FMD.personalData.1">
         <source>Generates a form to edit a member's personal data</source>
+        <target>Gera um formulário para editar os dados pessoais de um membro</target>
       </trans-unit>
       <trans-unit id="FMD.registration.0">
         <source>Registration</source>
@@ -297,6 +311,7 @@
       </trans-unit>
       <trans-unit id="FMD.registration.1">
         <source>Generates a member registration form</source>
+        <target>Gera um formulário de registo de membro</target>
       </trans-unit>
       <trans-unit id="FMD.changePassword.0">
         <source>Change password</source>

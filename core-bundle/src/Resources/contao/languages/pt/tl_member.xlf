@@ -183,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_member.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Se quiser evitar que a conta esteja activa antes de uma determinada data/hora, pode introduzi-la aqui. Caso contrário, deixe o campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
@@ -190,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Se quiser evitar que a conta esteja activa após uma determinada data/hora, pode introduzi-la aqui. Caso contrário, deixe o campo em branco.</target>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>

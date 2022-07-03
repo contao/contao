@@ -78,6 +78,7 @@ class ContaoDataCollectorTest extends TestCase
         /** @var PageModel&MockObject $page */
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 
@@ -94,6 +95,47 @@ class ContaoDataCollectorTest extends TestCase
                 'preview' => false,
                 'layout' => 'Default (ID 2)',
                 'template' => 'fe_page',
+            ],
+            $collector->getSummary()
+        );
+
+        $collector->reset();
+
+        $this->assertSame([], $collector->getSummary());
+
+        unset($GLOBALS['objPage']);
+    }
+
+    public function testHandlesMissingLayoutIdGracefully(): void
+    {
+        /** @var LayoutModel&MockObject $layout */
+        $layout = $this->mockClassWithProperties(LayoutModel::class);
+        $layout->name = 'Default';
+        $layout->id = 2;
+        $layout->template = 'fe_page';
+
+        $adapter = $this->mockConfiguredAdapter(['findByPk' => $layout]);
+        $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
+
+        /** @var PageModel&MockObject $page */
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 2;
+
+        $GLOBALS['objPage'] = $page;
+
+        $collector = new ContaoDataCollector();
+        $collector->setFramework($framework);
+        $collector->collect(new Request(), new Response());
+
+        $this->assertSame(
+            [
+                'version' => PackageUtil::getContaoVersion(),
+                'framework' => false,
+                'models' => 0,
+                'frontend' => true,
+                'preview' => false,
+                'layout' => '',
+                'template' => '',
             ],
             $collector->getSummary()
         );

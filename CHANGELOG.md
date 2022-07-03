@@ -2,6 +2,81 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.30] (2022-06-03)
+
+**Fixed issues:**
+
+- [#4766] Exclude the ModuleWizard checkbox from keyboard access ([aschempp])
+- [#4711] Correctly support legacy DC names in picker provider ([aschempp])
+- [#4718] Fix DBAFS when upload_path contains subfolders ([fritzmg])
+- [#4708] Increase the tl_comments_notify.url length ([fritzmg])
+- [#4727] Deprecate REQUEST_TOKEN ([ausi])
+- [#3742] Show error if preview settings could not be applied ([fritzmg])
+- [#4690] Handle cases when layoutId is not set on page model ([bezin])
+- [#4698] Fix broken filemanager for unsupported images ([ausi])
+- [#4686] Always delete indexed page for unsuccessful responses ([fritzmg])
+- [#4693] Reduce the row sizes of tl_module and tl_content ([ausi])
+- [#4680] Fix the non-JS navigation toggle on backend dashboard ([aschempp])
+- [#4670] Fix type warning in event list ([fritzmg])
+- [#4633] Undeprecate contao.csrf.token_manager ([fritzmg])
+- [#4647] Improve the news archive permission labels ([Toflar])
+- [#4638] Deprecate Frontend::getCronTimeout ([fritzmg])
+- [#4622] Always set a mock session when creating feeds ([fritzmg])
+- [#4621] Correctly handle rgxp natural text field attributes ([aschempp])
+
+## [4.9.29] (2022-05-05)
+
+**Fixed issues:**
+
+- [#4519] Fix ESI fragments with inline attributes ([aschempp])
+- [#3711] Fix being unable to re-register after token expired ([fritzmg])
+- [#4605] Ignore port in Favicon and RobotsTxt controller ([bezin])
+- [#3887] Make sure the parent directory exists when writing files ([aschempp])
+- [#4596] Fix upload directory check in ImageFactory on Windows ([fritzmg])
+- [#4595] Support more widgets in DC_Folder ([fritzmg])
+- [#4590] Require symfony/deprecation-contracts ([leofeyer])
+- [#4586] Also ignore the Resources folder ([aschempp])
+- [#4588] Backport loop as an option to YouTube videos to 4.9 ([fritzmg])
+- [#4497] Revert the DcaExtractor changes ([fritzmg])
+- [#4500] Fix header fields for blank option ([rabauss])
+- [#4477] Fix undefined value/unit for empty array in headline ([rabauss])
+- [#4463] Sort the selectable templates in install tool ([cliffparnitzky])
+- [#4570] Allow 0 in option wizard as valid input ([bezin])
+- [#4481] Fix AbstractTablePickerProvider ([bytehead])
+- [#4528] Only save personal data if there is no error ([aschempp])
+- [#4195] Set a session for the fake request ([fritzmg])
+- [#4470] Update version number in toggleSubpalette ([ausi])
+- [#4493] Use fixed subject string for List-Unsubscribe header ([aschempp])
+- [#4509] Fix bug with hash comparison in migrate command ([ausi])
+- [#4487] Remove rel="nofollow" for internal pages ([fritzmg])
+- [#4192] Shorten the version description to the length of the DB column ([cliffparnitzky])
+- [#4320] Fix missing hash option for migrate command ([ausi])
+- [#4455] Fix Atom feed generation ([fritzmg])
+
+## [4.9.28] (2022-03-31)
+
+**Fixed issues:**
+
+- [#4427] Handle long page titles and URLs in the search table ([leofeyer])
+- [#4424] Also hover over the parent records in "paste" mode ([leofeyer])
+- [#4423] Decode the folder name when checking for circular references ([leofeyer])
+- [#4219] Make the contao:install:lock command idempotent ([richardhj])
+- [#4408] Improve insert tags speed ([ausi])
+- [#4252] Fix the trigger_error() calls ([leofeyer])
+- [#4402] Fixed nested http client options not supported ([Toflar])
+- [#4357] Fix srcToInsertTag() for URL encoded paths ([fritzmg])
+- [#4294] Rename the Controller::reset() method ([aschempp])
+- [#4331] Fix typos in the Environment class ([fritzmg])
+- [#4293] Revert 'Do not use the `.tl_confirm` CSS class in the front end' ([leofeyer])
+- [#4299] Fix invalid news content element ID ([ausi])
+- [#4263] Make the search accent insensitive ([ausi])
+- [#4256] Allow fragment reference with fake model instance ([aschempp])
+- [#4236] Also create a new version if a checkbox is auto-submitted ([leofeyer])
+- [#4373] Also clean textarea of caption for last metawizard ([aschempp])
+- [#4322] Use FQCN instead of aliased class name ([bytehead])
+- [#4266] Forward IO to Composer filesystem in ScriptHandler ([aschempp])
+- [#4285] Fix DCA extractor wrongly assuming every DCA is database driven ([fritzmg])
+
 ## [4.9.27] (2022-03-09)
 
 **Fixed issues:**
@@ -861,6 +936,9 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.30]: https://github.com/contao/contao/releases/tag/4.9.30
+[4.9.29]: https://github.com/contao/contao/releases/tag/4.9.29
+[4.9.28]: https://github.com/contao/contao/releases/tag/4.9.28
 [4.9.27]: https://github.com/contao/contao/releases/tag/4.9.27
 [4.9.26]: https://github.com/contao/contao/releases/tag/4.9.26
 [4.9.25]: https://github.com/contao/contao/releases/tag/4.9.25
@@ -928,6 +1006,66 @@ This project adheres to [Semantic Versioning].
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
 [zonky2]: https://github.com/zonky2
+[#4766]: https://github.com/contao/contao/pull/4766
+[#4711]: https://github.com/contao/contao/pull/4711
+[#4718]: https://github.com/contao/contao/pull/4718
+[#4708]: https://github.com/contao/contao/pull/4708
+[#4727]: https://github.com/contao/contao/pull/4727
+[#3742]: https://github.com/contao/contao/pull/3742
+[#4690]: https://github.com/contao/contao/pull/4690
+[#4698]: https://github.com/contao/contao/pull/4698
+[#4686]: https://github.com/contao/contao/pull/4686
+[#4693]: https://github.com/contao/contao/pull/4693
+[#4680]: https://github.com/contao/contao/pull/4680
+[#4670]: https://github.com/contao/contao/pull/4670
+[#4633]: https://github.com/contao/contao/pull/4633
+[#4647]: https://github.com/contao/contao/pull/4647
+[#4638]: https://github.com/contao/contao/pull/4638
+[#4622]: https://github.com/contao/contao/pull/4622
+[#4621]: https://github.com/contao/contao/pull/4621
+[#4519]: https://github.com/contao/contao/pull/4519
+[#3711]: https://github.com/contao/contao/pull/3711
+[#4605]: https://github.com/contao/contao/pull/4605
+[#3887]: https://github.com/contao/contao/pull/3887
+[#4596]: https://github.com/contao/contao/pull/4596
+[#4595]: https://github.com/contao/contao/pull/4595
+[#4590]: https://github.com/contao/contao/pull/4590
+[#4586]: https://github.com/contao/contao/pull/4586
+[#4588]: https://github.com/contao/contao/pull/4588
+[#4497]: https://github.com/contao/contao/pull/4497
+[#4500]: https://github.com/contao/contao/pull/4500
+[#4477]: https://github.com/contao/contao/pull/4477
+[#4463]: https://github.com/contao/contao/pull/4463
+[#4570]: https://github.com/contao/contao/pull/4570
+[#4481]: https://github.com/contao/contao/pull/4481
+[#4528]: https://github.com/contao/contao/pull/4528
+[#4195]: https://github.com/contao/contao/pull/4195
+[#4470]: https://github.com/contao/contao/pull/4470
+[#4493]: https://github.com/contao/contao/pull/4493
+[#4509]: https://github.com/contao/contao/pull/4509
+[#4487]: https://github.com/contao/contao/pull/4487
+[#4192]: https://github.com/contao/contao/pull/4192
+[#4320]: https://github.com/contao/contao/pull/4320
+[#4455]: https://github.com/contao/contao/pull/4455
+[#4427]: https://github.com/contao/contao/pull/4427
+[#4424]: https://github.com/contao/contao/pull/4424
+[#4423]: https://github.com/contao/contao/pull/4423
+[#4219]: https://github.com/contao/contao/pull/4219
+[#4408]: https://github.com/contao/contao/pull/4408
+[#4252]: https://github.com/contao/contao/pull/4252
+[#4402]: https://github.com/contao/contao/pull/4402
+[#4357]: https://github.com/contao/contao/pull/4357
+[#4294]: https://github.com/contao/contao/pull/4294
+[#4331]: https://github.com/contao/contao/pull/4331
+[#4293]: https://github.com/contao/contao/pull/4293
+[#4299]: https://github.com/contao/contao/pull/4299
+[#4263]: https://github.com/contao/contao/pull/4263
+[#4256]: https://github.com/contao/contao/pull/4256
+[#4236]: https://github.com/contao/contao/pull/4236
+[#4373]: https://github.com/contao/contao/pull/4373
+[#4322]: https://github.com/contao/contao/pull/4322
+[#4266]: https://github.com/contao/contao/pull/4266
+[#4285]: https://github.com/contao/contao/pull/4285
 [#4248]: https://github.com/contao/contao/pull/4248
 [#4241]: https://github.com/contao/contao/pull/4241
 [#4235]: https://github.com/contao/contao/pull/4235

@@ -33,7 +33,7 @@ class PageRegular extends Frontend
 	 */
 	public function generate($objPage, $blnCheckRequest=false)
 	{
-		@trigger_error('Using PageRegular::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRegular::getResponse() method instead.');
+		@trigger_error('Using PageRegular::generate() has been deprecated in Contao 4.9 and will be removed in Contao 5.0. Use the PageRegular::getResponse() method instead.', E_USER_DEPRECATED);
 
 		$this->prepare($objPage);
 

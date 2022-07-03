@@ -973,6 +973,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('twig'),
                 new Reference('router'),
                 new Reference(ContaoCsrfTokenManager::class),
+                new Reference('translator'),
                 new Reference('%contao.csrf_token_name%'),
             ],
             $definition->getArguments()
@@ -1671,7 +1672,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoCsrfTokenManager::class, (string) $alias);
         $this->assertTrue($alias->isPublic());
-        $this->assertTrue($alias->isDeprecated());
+        $this->assertFalse($alias->isDeprecated());
     }
 
     public function testRegistersTheCsrfTokenStorage(): void
@@ -3492,6 +3493,9 @@ class ContaoCoreExtensionTest extends TestCase
                         ],
                         'default_http_client_options' => [
                             'proxy' => 'http://localhost:7080',
+                            'headers' => [
+                                'Foo' => 'Bar',
+                            ],
                         ],
                     ],
                 ],
@@ -3506,7 +3510,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('database_connection'),
                 new Reference('contao.framework'),
                 ['https://example.com'],
-                ['proxy' => 'http://localhost:7080'],
+                ['proxy' => 'http://localhost:7080', 'headers' => ['Foo' => 'Bar']],
             ],
             $definition->getArguments()
         );
