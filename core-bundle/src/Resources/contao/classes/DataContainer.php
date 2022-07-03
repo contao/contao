@@ -354,6 +354,23 @@ abstract class DataContainer extends Backend
 	 */
 	protected function row($strPalette=null)
 	{
+		list($render) = $this->prepareRow($strPalette);
+
+		return $render();
+	}
+
+	/**
+	 * Prepare a row of a box and return a render function and the widget object
+	 *
+	 * @param string|array|null $strPalette
+	 *
+	 * @return array{0: \Closure(): string, 1: Widget|null}
+	 *
+	 * @throws AccessDeniedException
+	 * @throws \Exception
+	 */
+	protected function prepareRow($strPalette=null): array
+	{
 		$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField] ?? array();
 
 		// Check if the field is excluded
@@ -392,12 +409,12 @@ abstract class DataContainer extends Backend
 		{
 			$this->import($arrData['input_field_callback'][0]);
 
-			return $this->{$arrData['input_field_callback'][0]}->{$arrData['input_field_callback'][1]}($this, $xlabel);
+			return array(fn () => $this->{$arrData['input_field_callback'][0]}->{$arrData['input_field_callback'][1]}($this, $xlabel), null);
 		}
 
 		if (\is_callable($arrData['input_field_callback'] ?? null))
 		{
-			return $arrData['input_field_callback']($this, $xlabel);
+			return array(fn () => $arrData['input_field_callback']($this, $xlabel), null);
 		}
 
 		$strClass = $GLOBALS['BE_FFL'][($arrData['inputType'] ?? null)] ?? null;
@@ -405,7 +422,7 @@ abstract class DataContainer extends Backend
 		// Return if the widget class does not exist
 		if (!class_exists($strClass))
 		{
-			return '';
+			return array(static fn () => '', null);
 		}
 
 		$arrData['eval']['required'] = false;
@@ -724,9 +741,12 @@ abstract class DataContainer extends Backend
 			}
 		}
 
-		return $strPreview . '
+		return array(
+			fn () => $strPreview . '
 <div' . (!empty($arrData['eval']['tl_class']) ? ' class="' . trim($arrData['eval']['tl_class']) . '"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass) : '') . '
-</div>';
+</div>',
+			$objWidget,
+		);
 	}
 
 	/**

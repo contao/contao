@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\Exception\ValidationErrorException;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
@@ -1839,6 +1840,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!empty($boxes))
 		{
+			$return = array($return);
+
 			foreach ($boxes as $k=>$v)
 			{
 				$eCount = 1;
@@ -1901,7 +1904,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$class .= (($cls && $legend) ? ' ' . $cls : '');
 				}
 
-				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
+				$return[] = "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
 				$thisId = '';
 
 				// Build rows of the current box
@@ -1931,7 +1934,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							}
 						}
 
-						$return .= "\n" . '</div>';
+						$return[] = "\n" . '</div>';
 
 						continue;
 					}
@@ -1941,7 +1944,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$arrAjax[$thisId] = '';
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
-						$return .= "\n" . '<div id="' . $thisId . '" class="subpal cf">';
+						$return[] = "\n" . '<div id="' . $thisId . '" class="subpal cf">';
 
 						continue;
 					}
@@ -1977,14 +1980,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
+					if ($blnAjax)
+					{
+						$arrAjax[$thisId] .= $this->row($this->strPalette);
+					}
+					else
+					{
+						$return[isset($return[$this->strField]) ? \count($return) : $this->strField] = $this->prepareRow($this->strPalette);
+					}
 				}
 
 				$class = 'tl_box';
-				$return .= "\n" . '</fieldset>';
+				$return[] = "\n" . '</fieldset>';
 			}
 
-			$this->submit();
+			$return = $this->submit($return);
+			$return = implode('', array_map(static fn ($val) => \is_string($val) ? $val : $val[0](), $return));
 		}
 
 		// Reload the page to prevent _POST variables from being sent twice
@@ -3087,11 +3098,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 	}
 
-	protected function submit()
+	protected function submit(array $return = array()): array
 	{
 		if (empty($this->arrSubmit) || Input::post('FORM_SUBMIT') != $this->strTable)
 		{
-			return;
+			return $return;
 		}
 
 		if ($this->noReload)
@@ -3099,7 +3110,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Data should not be submitted due to validation errors
 			$this->arrSubmit = array();
 
-			return;
+			return $return;
 		}
 
 		$arrValues = $this->arrSubmit;
@@ -3130,9 +3141,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				catch (\Exception $e)
 				{
 					$this->noReload = true;
+
+					if ($e instanceof ValidationErrorException && array_intersect($e->propertyPaths, array_keys($return)))
+					{
+						foreach ($e->propertyPaths as $propertyPath)
+						{
+							$return[$propertyPath][1]->addError($e->getMessage());
+						}
+					}
+
 					Message::addError($e->getMessage());
 
-					return;
+					return $return;
 				}
 			}
 		}
@@ -3232,6 +3252,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$objVersions = new Versions($this->strTable, $this->intId);
 			$objVersions->create();
 		}
+
+		return $return;
 	}
 
 	/**
