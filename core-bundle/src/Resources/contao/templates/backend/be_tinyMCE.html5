@@ -14,13 +14,6 @@ window.tinymce && tinymce.init({
   language: '<?= Backend::getTinyMceLanguage() ?>',
   element_format: 'html',
   document_base_url: '<?= Environment::get('base') ?>',
-  urlconverter_callback: function(url, node, on_save, name) {
-    if (url.match(/^{{[a-zA-Z0-9\x80-\xFF][^{}]*}}/)) {
-      return url;
-    }
-
-    return this.documentBaseURI.toAbsolute(url, true);
-  },
   entities: '160,nbsp,60,lt,62,gt,173,shy',
   branding: false,
   skin: 'tinymce-5',
