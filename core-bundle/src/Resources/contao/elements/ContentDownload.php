@@ -87,8 +87,7 @@ class ContentDownload extends ContentElement
 	{
 		$objFile = new File($this->singleSRC);
 		$container = System::getContainer();
-		$requestStack = $container->get('request_stack');
-		$request = $requestStack->getCurrentRequest();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
