@@ -104,8 +104,13 @@ class InheritanceTest extends TestCase
 
         $environment = new Environment($loader);
 
-        $contaoExtension = new ContaoExtension($environment, $loader, $this->createMock(ContaoCsrfTokenManager::class));
-        $environment->addExtension($contaoExtension);
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $loader,
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
 
         return $environment;
     }

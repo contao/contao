@@ -1031,6 +1031,11 @@ services:
         arguments:
             - '@contao.routing.response_context_accessor'
 
+    contao.twig.url_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
+        arguments:
+            - '@request_stack'
+
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
