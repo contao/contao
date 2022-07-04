@@ -149,9 +149,11 @@ class Pagination
 		$this->lblLast = $GLOBALS['TL_LANG']['MSC']['last'];
 		$this->lblTotal = $GLOBALS['TL_LANG']['MSC']['totalPages'];
 
-		if (Input::get($strParameter) > 0)
+		$input = System::getContainer()->get('contao.framework')->getAdapter(Input::class);
+
+		if ($input->get($strParameter) > 0)
 		{
-			$this->intPage = (int) Input::get($strParameter);
+			$this->intPage = (int) $input->get($strParameter);
 		}
 
 		$this->strParameter = $strParameter;
@@ -260,10 +262,11 @@ class Pagination
 		}
 
 		$blnQuery = false;
-		list($this->strUrl) = explode('?', Environment::get('requestUri'), 2);
+		$environment = System::getContainer()->get('contao.framework')->getAdapter(Environment::class);
+		list($this->strUrl) = explode('?', $environment->get('requestUri'), 2);
 
 		// Prepare the URL
-		foreach (preg_split('/&(amp;)?/', Environment::get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment)
+		foreach (preg_split('/&(amp;)?/', $environment->get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment)
 		{
 			if (strpos($fragment, $this->strParameter . '=') === false)
 			{

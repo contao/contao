@@ -18,6 +18,8 @@ use Contao\CoreBundle\Controller\FrontendModule\FeedReaderController;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
+use Contao\Environment;
+use Contao\Input;
 use Contao\ModuleModel;
 use Contao\System;
 use Contao\TemplateLoader;
@@ -34,7 +36,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Cache\CacheInterface;
-use Twig\Environment;
+use Twig\Environment as TwigEnvironment;
 use Twig\Loader\LoaderInterface;
 
 class FeedReaderControllerTest extends TestCase
@@ -170,6 +172,51 @@ class FeedReaderControllerTest extends TestCase
         $this->assertSame('rendered frontend_module/feed_reader', $response->getContent());
     }
 
+    public function testHandlesPaginatedList(): void
+    {
+        $GLOBALS['TL_LANG']['MSC'] = ['first' => '', 'next' => '', 'previous' => '', 'last' => '', 'totalPages' => '', 'pagination' => '', 'goToPage' => ''];
+
+        $feedUrl = 'htts://example.org/feed';
+        $feed = $this->getDummyFeed();
+
+        $feedIo = $this->createMock(FeedIo::class);
+        $feedIo
+            ->expects($this->once())
+            ->method('read')
+            ->with($feedUrl, new Feed())
+            ->willReturn(new Result($this->createMock(Document::class), $feed, new \DateTime(), $this->createMock(ResponseInterface::class), $feedUrl))
+        ;
+
+        $cache = new NullAdapter();
+
+        $model = $this->mockClassWithProperties(ModuleModel::class, [
+            'id' => 42,
+            'feed_urls' => $feedUrl,
+            'feed_cache' => 3600,
+            'skipFirst' => 0,
+            'numberOfItems' => 0,
+            'perPage' => 1,
+        ]);
+
+        $request = new Request(['page_r42' => 2], [], ['_scope' => 'frontend']);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $assertTwigContext = function (array $context) {
+            $this->assertCount(1, $context['items']);
+            $this->assertCount(2, $context['pagination']['pages']);
+
+            return true;
+        };
+
+        $container = $this->mockContainer(null, $assertTwigContext);
+
+        $controller = $this->getController($feedIo, $cache, $requestStack, null, $container);
+
+        $response = $controller($request, $model, 'main');
+        $this->assertSame('rendered frontend_module/feed_reader', $response->getContent());
+    }
+
     public function testThrowExceptionIfRequestedPageIsOutOfBounds(): void
     {
         $GLOBALS['TL_LANG']['MSC'] = ['first' => '', 'next' => '', 'previous' => '', 'last' => '', 'totalPages' => '', 'pagination' => '', 'goToPage' => ''];
@@ -248,7 +295,7 @@ class FeedReaderControllerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $twig = $this->createMock(Environment::class);
+        $twig = $this->createMock(TwigEnvironment::class);
 
         if ($assertTwigContext) {
             $twig
@@ -277,7 +324,15 @@ class FeedReaderControllerTest extends TestCase
             ->with('maxPaginationLinks')
             ->willReturn(7)
         ;
-        $framework = $this->mockContaoFramework([Config::class => $configAdapter]);
+        $environmentAdapter = $this->mockAdapter(['get']);
+        $environmentAdapter
+            ->method('get')
+            ->willReturnMap([
+                ['requestUri', ''],
+                ['queryString', ''],
+            ])
+        ;
+        $framework = $this->mockContaoFramework([Config::class => $configAdapter, Environment::class => $environmentAdapter, Input::class => $this->mockAdapter(['get'])]);
 
         $this->container->set('contao.framework', $framework);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
@@ -286,6 +341,8 @@ class FeedReaderControllerTest extends TestCase
         if ($requestStack instanceof RequestStack) {
             $this->container->set('request_stack', $requestStack);
         }
+
+        System::setContainer($this->container);
 
         return $this->container;
     }
