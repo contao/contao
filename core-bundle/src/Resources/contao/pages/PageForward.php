@@ -101,28 +101,25 @@ class PageForward extends Frontend
 					continue;
 				}
 
+				if (is_array($_GET[$key]))
+				{
+					$key .= '[]';
+				}
+
 				// Ignore the query string parameters (see #5867)
 				if (\in_array($key, $arrQuery))
 				{
 					continue;
 				}
 
-				$paramValue = Input::get($key);
-
-				// Convert the array to string
-				if (is_array($paramValue))
-				{
-					$paramValue = http_build_query([$key => $paramValue], '', '&', PHP_QUERY_RFC3986);
-				}
-
 				// Ignore the auto_item parameter (see #5886)
 				if ($key == 'auto_item')
 				{
-					$strGet .= '/' . $paramValue;
+					$strGet .= '/' . Input::get($key);
 				}
 				else
 				{
-					$strGet .= '/' . $key . '/' . $paramValue;
+					$strGet .= '/' . $key . '/' . Input::get($key);
 				}
 			}
 		}
