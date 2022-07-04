@@ -4,7 +4,7 @@
 
 ### Insert tag flag uncached
 
-The `|uncached` insert tag flag was removed. Use the `{{uncached::*}}` insert tag instead.
+The `|uncached` insert tag flag was removed. Use the `{{fragment::*}}` insert tag instead.
 
 ### Insert tag hooks
 
