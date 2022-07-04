@@ -15,14 +15,18 @@ namespace Contao\CoreBundle\DataContainer;
 use Contao\DataContainer;
 use Contao\StringUtil;
 
+/**
+ * @implements \ArrayAccess<string, mixed>
+ */
 class DataContainerOperation implements \ArrayAccess
 {
+    private array $operation;
     private string|null $html = null;
 
     /**
      * @internal
      */
-    public function __construct(private readonly string $name, private array $operation, private readonly array $record, private readonly DataContainer $dataContainer)
+    public function __construct(private readonly string $name, array $operation, private readonly array $record, private readonly DataContainer $dataContainer)
     {
         $id = StringUtil::specialchars(rawurldecode((string) $record['id']));
 
