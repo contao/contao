@@ -211,7 +211,7 @@ abstract class Controller extends System
 					}
 				}
 
-				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'];
+				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'] ?? 'global';
 			}
 		}
 
