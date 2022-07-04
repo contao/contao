@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### Insert tag flag uncached
+
+The `|uncached` insert tag flag was removed. Use the `{{fragment::*}}` insert tag instead.
+
 ### Unknown insert tags
 
 Unknown insert tags are no longer removed from the resulting text. Instead, they are now kept unchanged and are visible
