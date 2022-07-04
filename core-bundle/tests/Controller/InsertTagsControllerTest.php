@@ -50,6 +50,7 @@ class InsertTagsControllerTest extends TestCase
 
     public function testSpecialDateInsertTagHandling(): void
     {
+        ini_set('date.timezone', 'UTC');
         $year = date('Y');
 
         $insertTagParser = $this->createMock(InsertTagParser::class);
