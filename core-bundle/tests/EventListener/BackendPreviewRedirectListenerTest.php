@@ -27,6 +27,11 @@ class BackendPreviewRedirectListenerTest extends TestCase
     {
         $request = new Request();
         $request->attributes->set('_preview', true);
+        $request->server->set('SERVER_PORT', '80');
+        $request->server->set('SERVER_NAME', 'example.com');
+        $request->server->set('SCRIPT_NAME', '/path/to/contao/public/index.php');
+        $request->server->set('SCRIPT_FILENAME', 'index.php');
+        $request->server->set('REQUEST_URI', '/path/to/contao/public/contao/preview?page=1');
 
         $kernel = $this->createMock(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
@@ -43,6 +48,7 @@ class BackendPreviewRedirectListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertInstanceOf(RedirectResponse::class, $event->getResponse());
+        $this->assertSame('http://example.com/path/to/contao/public/contao/preview', $event->getResponse()->headers->get('location'));
     }
 
     public function testDoesNotRedirectUponSubrequests(): void
