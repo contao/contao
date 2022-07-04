@@ -101,9 +101,10 @@ class PageForward extends Frontend
 					continue;
 				}
 
+				// Ignore arrays (see #4895)
 				if (is_array($_GET[$key]))
 				{
-					$key .= '[]';
+					continue;
 				}
 
 				// Ignore the query string parameters (see #5867)
