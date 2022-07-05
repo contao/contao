@@ -1062,6 +1062,8 @@ table.tl_listing {
 	line-height:16px;
 }
 .tl_content_right {
+	position: relative;
+	z-index: 1;
 	float:right;
 	text-align:right;
 	margin-left:12px;
