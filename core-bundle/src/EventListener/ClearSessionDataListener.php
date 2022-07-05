@@ -41,9 +41,13 @@ class ClearSessionDataListener
             return;
         }
 
+        $session = $request->getSession();
+
         if ($event->getResponse()->isSuccessful()) {
-            $this->clearLoginData($request->getSession());
+            $this->clearLoginData($session);
         }
+
+        $session->remove('CURRENT_ID');
 
         $this->clearLegacyAttributeBags('FE_DATA');
         $this->clearLegacyAttributeBags('BE_DATA');

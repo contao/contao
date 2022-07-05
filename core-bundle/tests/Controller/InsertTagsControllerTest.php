@@ -63,7 +63,7 @@ class InsertTagsControllerTest extends TestCase
         $response = $controller->renderAction(new Request(), '{{date::Y}}');
 
         $this->assertTrue($response->headers->hasCacheControlDirective('public'));
-        $this->assertSame($year.'-12-31 23:59:59', $response->getExpires()->format('Y-m-d H:i:s'));
+        $this->assertSame((new \DateTimeImmutable($year.'-12-31 23:59:59'))->getTimestamp(), $response->getExpires()->getTimestamp());
         $this->assertSame($year, $response->getContent());
     }
 }

@@ -316,6 +316,10 @@ abstract class DataContainer extends Backend
 
 			case 'createNewVersion':
 				return $this->blnCreateNewVersion;
+
+			// Forward compatibility with Contao 5.0
+			case 'currentPid':
+				return ((int) (\defined('CURRENT_ID') ? CURRENT_ID : 0)) ?: null;
 		}
 
 		return parent::__get($strKey);
@@ -1626,7 +1630,7 @@ abstract class DataContainer extends Backend
 
 		if ('' !== $dataContainer && false === strpos($dataContainer, '\\'))
 		{
-			trigger_deprecation('contao/core-bundle', '4.9', 'The usage of a non fully qualified class name as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.');
+			trigger_deprecation('contao/core-bundle', '4.9', 'The usage of a non fully qualified class name "%s" for table "%s" as DataContainer name has been deprecated and will no longer work in Contao 5.0. Use the fully qualified class name instead, e.g. Contao\DC_Table::class.', $dataContainer, $table);
 
 			$dataContainer = 'DC_' . $dataContainer;
 
