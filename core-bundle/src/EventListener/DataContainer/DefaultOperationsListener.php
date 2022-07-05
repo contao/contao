@@ -50,7 +50,7 @@ class DefaultOperationsListener
         $operations = [];
 
         // If none of the defined operations are name-only, we append the operations to the defaults.
-        if (empty(array_filter($dca, static fn ($v) => \is_string($v) && isset($defaults[$v])))) {
+        if (empty(array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH))) {
             $operations = $defaults;
         }
 
@@ -184,7 +184,7 @@ class DefaultOperationsListener
     {
         $field = null;
 
-        foreach ($GLOBALS['TL_DCA'][$table]['fields'] as $name => $config) {
+        foreach (($GLOBALS['TL_DCA'][$table]['fields'] ?? []) as $name => $config) {
             if (!($config['toggle'] ?? false) && !($config['reverseToggle'] ?? false)) {
                 continue;
             }
