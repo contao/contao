@@ -29,7 +29,7 @@ class FilesystemItemIterator implements \IteratorAggregate
      */
     public function __construct(iterable $listing)
     {
-        $this->listing = is_array($listing) ? $listing : new CachingTraversable($listing);
+        $this->listing = \is_array($listing) ? $listing : new CachingTraversable($listing);
     }
 
     /**

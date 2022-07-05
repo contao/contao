@@ -78,7 +78,6 @@ class FilesystemItemIteratorTest extends TestCase
         $this->expectExceptionMessage('Contao\CoreBundle\Filesystem\FilesystemItemIterator can only iterate over elements of type Contao\CoreBundle\Filesystem\FilesystemItem, got '.$expectedType);
 
         iterator_to_array($iterator);
-
     }
 
     public function provideInvalidItems(): \Generator
