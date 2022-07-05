@@ -119,6 +119,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+            - '@contao.resource_finder'
 
     contao.migration.version_500.basic_entities:
         class: Contao\CoreBundle\Migration\Version500\BasicEntitiesMigration
