@@ -4147,7 +4147,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
 						}
 					}
-
 				}
 			}
 		}
