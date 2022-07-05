@@ -2088,10 +2088,12 @@ class DC_Table extends DataContainer implements \listable, \editable
 		if ((string) $this->objActiveRecord->tstamp === '0')
 		{
 			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
-			$return .= '<script>
-				history.pushState({}, "");
-				window.addEventListener("popstate", () => fetch(document.querySelector(".header_back").href).then(() => history.back()));
-			</script>';
+
+			$return .= '
+<script>
+  history.pushState({}, "");
+  window.addEventListener("popstate", () => fetch(document.querySelector(".header_back").href).then(() => history.back()));
+</script>';
 		}
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
@@ -3913,7 +3915,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 		if ($blnDraft)
 		{
-			$return .= '<em>' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</em> ';
+			$return .= '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ';
 		}
 
 		// Calculate label and add a toggle button
@@ -4560,11 +4562,11 @@ class DC_Table extends DataContainer implements \listable, \editable
 						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
 
 						$this->import($strClass);
-						$return .= '</div>' . ($blnDraft ? '<em>' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</em> ' : '') . $this->$strClass->$strMethod($row[$i]) . '</div>';
+						$return .= '</div>' . ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $this->$strClass->$strMethod($row[$i]) . '</div>';
 					}
 					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']))
 					{
-						$return .= '</div>' . ($blnDraft ? '<em>' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</em> ' : '') . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
+						$return .= '</div>' . ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback']($row[$i]) . '</div>';
 					}
 
 					// Make items sortable
@@ -5002,7 +5004,7 @@ class DC_Table extends DataContainer implements \listable, \editable
     ';
 
 				$colspan = 1;
-				$label = ($blnDraft ? '<em>' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</em> ' : '') . $label;
+				$label = ($blnDraft ? '<p class="draft-label">' . $GLOBALS['TL_LANG']['MSC']['draft'] . '</p> ' : '') . $label;
 
 				// Call the label_callback ($row, $label, $this)
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']) || \is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['label_callback']))

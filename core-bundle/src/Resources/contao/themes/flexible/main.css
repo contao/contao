@@ -994,17 +994,18 @@ table.tl_listing {
 	position:relative;
 	background-color:#fff;
 }
-.tl_content.draft,
-.tl_folder.draft,
-.tl_file.draft,
-.hover-row.draft > td {
-	font-style: italic;
-}
 .tl_content.draft > *,
 .tl_folder.draft > *,
 .tl_file.draft > *,
 .hover-row.draft > td > * {
-	opacity: 0.5;
+	opacity:0.5;
+}
+.draft-label {
+	position:absolute;
+	width:100%;
+	top:calc(50% - 7px);
+	left:0;
+	text-align:center;
 }
 .parent_view > ul {
 	background:#f3f3f5;
