@@ -1306,7 +1306,6 @@ abstract class DataContainer extends Backend
 		$tags = array('contao.db.' . $this->table . '.' . $this->id);
 
 		$this->addPtableTags($this->table, $this->id, $tags);
-		$this->addCtableTags($this->table, $this->id, $tags);
 
 		// Trigger the oninvalidate_cache_tags_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->table]['config']['oninvalidate_cache_tags_callback']))
@@ -1351,16 +1350,20 @@ abstract class DataContainer extends Backend
 
 		if (!$objPid->numRows || $objPid->pid == 0)
 		{
+			$tags[] = 'contao.db.' . $strTable;
+
 			return;
 		}
 
 		$tags[] = 'contao.db.' . $ptable . '.' . $objPid->pid;
 
-		$this->addPtableTags($ptable, $objPid->pid, $tags);
+		// Do not call recursively (see #4777)
 	}
 
 	public function addCtableTags($strTable, $intId, &$tags)
 	{
+		trigger_deprecation('contao/core-bundle', '4.9', 'Calling "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
+
 		$ctables = $GLOBALS['TL_DCA'][$strTable]['config']['ctable'] ?? array();
 
 		if ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] == 5)
