@@ -302,7 +302,7 @@ class FileUpload extends Backend
 		$arrImageSize = $objFile->imageSize;
 
 		// Image size could not be determined
-		if (count($arrImageSize) < 2)
+		if (!isset($arrImageSize[0], $arrImageSize[1]))
 		{
 			return false;
 		}
