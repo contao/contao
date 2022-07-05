@@ -129,6 +129,7 @@
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
+        <target>Pārskata lapa</target>
       </trans-unit>
       <trans-unit id="tl_module.overviewPage.1">
         <source>Select an overview page to include a link to it in the template.</source>
@@ -436,9 +437,11 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_deleteDir.0">
         <source>Delete home directory</source>
+        <target>Dzēst mājas direktoriju</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_deleteDir.1">
         <source>Delete the home directory when the account is deleted.</source>
+        <target>Dzēst mājas direktoriju, kad konts tiek dzēsts.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_assignDir.0">
         <source>Create a home directory</source>
@@ -470,6 +473,7 @@
       </trans-unit>
       <trans-unit id="tl_module.reg_jumpTo.1">
         <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>Lūdzu, izvēlieties lapu, uz kuru biedri tiks novirzīti pēc pieprasījuma pabeigšanas.</target>
       </trans-unit>
       <trans-unit id="tl_module.reg_text.0">
         <source>Activation message</source>
@@ -498,9 +502,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every root page.</source>
+        <target>Lūdzu, atlasiet moduli katrai saknes lapai.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot;</source>
+        <target>Izvēlieties moduli &quot;%s&quot;</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

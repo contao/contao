@@ -211,7 +211,7 @@ abstract class Controller extends System
 					}
 				}
 
-				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'];
+				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'] ?? 'global';
 			}
 		}
 
@@ -327,7 +327,7 @@ abstract class Controller extends System
 			// Show a particular article only
 			if ($objPage->type == 'regular' && Input::get('articles'))
 			{
-				list($strSection, $strArticle) = explode(':', Input::get('articles'));
+				list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
 
 				if ($strArticle === null)
 				{
@@ -1047,9 +1047,13 @@ abstract class Controller extends System
 	 * @param string $strType   Either "margin" or "padding"
 	 *
 	 * @return string The CSS markup
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	public static function generateMargin($arrValues, $strType='margin')
 	{
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using Contao\Controller::generateMargin is deprecated since Contao 4.13 and will be removed in Contao 5.');
+
 		// Initialize an empty array (see #5217)
 		if (!\is_array($arrValues))
 		{
@@ -1527,7 +1531,7 @@ abstract class Controller extends System
 			// Load the data container of the parent table
 			$this->loadDataContainer($strTable);
 		}
-		while ($intId && isset($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
+		while ($intId && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']));
 
 		if (empty($arrParent))
 		{
@@ -1853,14 +1857,13 @@ abstract class Controller extends System
 
 		$arrEnclosures = array();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add download links
 		while ($objFiles->next())
 		{
 			if ($objFiles->type == 'file')
 			{
-				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
 				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($projectDir . '/' . $objFiles->path))
 				{
 					continue;

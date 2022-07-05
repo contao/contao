@@ -692,7 +692,7 @@ class File extends System
 		}
 
 		// Reset the object AFTER the database has been updated
-		if ($return != false)
+		if ($return)
 		{
 			$this->strFile = $strNewName;
 			$this->arrImageSize = array();
@@ -879,12 +879,6 @@ class File extends System
 	 */
 	protected function getHash()
 	{
-		// Do not try to hash if bigger than 2 GB
-		if ($this->filesize >= 2147483648)
-		{
-			return '';
-		}
-
 		return md5_file($this->strRootDir . '/' . $this->strFile);
 	}
 

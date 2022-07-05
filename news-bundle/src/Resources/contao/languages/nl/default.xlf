@@ -47,6 +47,7 @@
       </trans-unit>
       <trans-unit id="MSC.newsOverview">
         <source>Back to the news overview</source>
+        <target>Terug naar het nieuwsoverzicht</target>
       </trans-unit>
     </body>
   </file>

@@ -51,7 +51,6 @@ class Dbafs implements DbafsInterface, ResetInterface
 
     private string $table;
     private string $dbPathPrefix = '';
-    private int $maxFileSize = 2147483647; // 2 GiB - 1 byte (see #4208)
     private int $bulkInsertSize = 100;
     private bool $useLastModified = true;
 
@@ -88,9 +87,12 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->dbPathPrefix = Path::canonicalize($prefix);
     }
 
+    /**
+     * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
+     */
     public function setMaxFileSize(int $bytes): void
     {
-        $this->maxFileSize = $bytes;
+        trigger_deprecation('contao/core-bundle', '4.13', 'Setting a maximum file size has no effect anymore. The "%s()" method will be removed in Contao 5.', __METHOD__);
     }
 
     public function setBulkInsertSize(int $chunkSize): void
@@ -740,11 +742,6 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 // Ignore dot files
                 if (0 === strpos(basename($path), '.')) {
-                    continue;
-                }
-
-                // Ignore files that are too big
-                if ($item->getFileSize() > $this->maxFileSize) {
                     continue;
                 }
 

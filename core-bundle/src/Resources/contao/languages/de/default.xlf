@@ -193,6 +193,10 @@
         <source>A page with the URL &quot;%s&quot; already exists!</source>
         <target>Eine Seite mit der URL &quot;%s&quot; existiert bereits!</target>
       </trans-unit>
+      <trans-unit id="ERR.pageUrlNameExists">
+        <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>Dieser Alias führt zu einem Konflikt mit der Seite &quot;%s&quot; (ID %s)!</target>
+      </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
         <target>Dieses URL-Suffix würde zu doppelten URLs führen (z. B. %s)!</target>
@@ -348,6 +352,14 @@
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path &quot;%s&quot; must not contain the following characters: %s</source>
         <target>Der Template-Pfad &quot;%s&quot; darf folgende Zeichen nicht enthalten: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.previewSwitchInvalidUsername">
+        <source>Unknown username: %s</source>
+        <target>Unbekannter Nutzername: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <target>Version %d konnte nicht wiederhergestellt werden, da sie nicht mehr mit der aktuellen Datenbankstruktur kompatibel ist. Bitte stellen Sie die Daten manuell wieder her.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1318,8 +1330,8 @@
         <target>Bildunterschrift</target>
       </trans-unit>
       <trans-unit id="MSC.aw_license">
-        <source>License</source>
-        <target>Lizenz</target>
+        <source>License URL</source>
+        <target>Lizenz-URL</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -2966,8 +2978,8 @@
         <target>%d URL(s) erfolgreich indexiert. %d fehlgeschlagen.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d URL(s) wurde(n) übersprungen (wenn Sie eine URL vermissen, prüfen Sie das Debug-Log).</target>
+        <source>%d URI(s) were skipped.</source>
+        <target>%d URL(s) wurde(n) übersprungen.</target>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

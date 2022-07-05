@@ -90,8 +90,13 @@ class ControllerTest extends TestCase
         $this->assertCount(13, $timeZones['United States']);
     }
 
+    /**
+     * @group legacy
+     */
     public function testGeneratesTheMargin(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 4.13: Using Contao\Controller::generateMargin is deprecated%s');
+
         $margins = [
             'top' => '40px',
             'right' => '10%',

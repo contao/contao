@@ -63,7 +63,7 @@ class Environment
 		{
 			$arrChunks = preg_split('/([A-Z][a-z]*)/', $strKey, -1, PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_NO_EMPTY);
 			$strServerKey = strtoupper(implode('_', $arrChunks));
-			static::$arrCache[$strKey] = $_SERVER[$strServerKey];
+			static::$arrCache[$strKey] = $_SERVER[$strServerKey] ?? null;
 		}
 
 		return static::$arrCache[$strKey];
@@ -204,7 +204,7 @@ class Environment
 			}
 			else
 			{
-				$strRequest = $arrComponents['path'] . (isset($arrComponents['query']) ? '?' . $arrComponents['query'] : '');
+				$strRequest = ($arrComponents['path'] ?? '') . (isset($arrComponents['query']) ? '?' . $arrComponents['query'] : '');
 			}
 		}
 		else
@@ -273,6 +273,11 @@ class Environment
 	 */
 	protected static function httpUserAgent()
 	{
+		if (!isset($_SERVER['HTTP_USER_AGENT']))
+		{
+			return '';
+		}
+
 		$ua = strip_tags($_SERVER['HTTP_USER_AGENT']);
 		$ua = preg_replace('/javascript|vbscri?pt|script|applet|alert|document|write|cookie/i', '', $ua);
 

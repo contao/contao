@@ -2,6 +2,86 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.6] (2022-07-05)
+
+**Fixed issues:**
+
+- [#4941] Reduce System::getContainer and $container->getParameter calls ([fritzmg])
+- [#4932] Deprecate insert tag flag uncached ([ausi])
+- [#4808] Various PHP 8 fixes ([aschempp])
+- [#4945] Hard-code timezone to avoid time deviation ([bezin])
+- [#4926] Allow to exclude all tl_page fields ([aschempp])
+- [#4870] Disable widgets for configured settings ([aschempp])
+- [#4878] Make sure `eval.rte` is a string ([fritzmg])
+- [#4891] Fix the query string being lost during the preview script redirect ([qzminski])
+- [#4889] Fix a potential PHP 8 warning in tl_article callback ([qzminski])
+- [#4881] Use the resource finder in the lightbox migration ([leofeyer])
+- [#4883] Hide the "icon" table header in the user and member module ([leofeyer])
+- [#4886] Always unlock search tables to prevent deadlocks ([ausi])
+- [#4877] Fix a potential PHP 8 warning in the Search class ([qzminski])
+- [#4848] Fix a few potential PHP 8 warnings ([qzminski])
+- [#4850] Show array keys als fallback for sorting dropdowns ([Tastaturberuf])
+- [#4861] Fix a potential version comparison if the field definitions are missing ([qzminski])
+- [#4857] Correctly add the preview script ([leofeyer])
+- [#4849] Show array keys instead of nothing in show column mode ([Tastaturberuf])
+- [#4833] Order the languages in the meta wizard ([leofeyer])
+- [#4778] Fix undefined array key while button generation ([rabauss])
+- [#4838] Improve DropSearchMigration ([fritzmg])
+- [#4836] Fix infinite loop while loading of countries ([rabauss])
+- [#4807] Fix date filtering in DC_Table ([fritzmg])
+- [#4794] Deprecate Controller::generateMargin ([bezin])
+- [#4786] Do not allow empty values for the badge title and custom CSS/JS scripts ([leofeyer])
+- [#4782] Add a cache timeout for the `{{date::Y}}` insert tag ([Toflar])
+- [#4799] Always set both collate and collation to the same value ([fritzmg])
+
+## [4.13.5] (2022-06-03)
+
+**New features:**
+
+- [#3924] Show page name in duplicate alias error ([aschempp])
+- [#4665] Make the template element more flexible ([doishub])
+- [#4672] Add a deprecation helper to detect insert tags in Twig templates ([m-vo])
+
+**Fixed issues:**
+
+- [#4785] Fix the while loop in the `Controller::getParentEntries()` method ([leofeyer])
+- [#4784] Return 0 after deleting a deferred image reference ([leofeyer])
+- [#4757] Fix a potential PHP 8 warning in booknav frontend module ([qzminski])
+- [#4763] Correctly toggle checkbox groups with collapseUncheckedGroups ([aschempp])
+- [#4774] Fix a potential PHP 8 error in the Contao\Environment class ([qzminski])
+- [#4767] Fix a potential PHP 8 warning in the Contao\Controller class ([qzminski])
+- [#4679] Fix several accessibility issues in the back end navigation ([aschempp])
+- [#4752] Deprecate orderField ([ausi])
+- [#4732] Fix a potential PHP 8 warning in the sitemap module ([qzminski])
+- [#4747] Apply the rel=lightbox migration to all rte fields ([ausi])
+- [#4728] Fix DBAFS when upload_path contains subfolders ([fritzmg])
+- [#4733] Undeprecate reload…tree ajax post actions ([ausi])
+- [#4739] Make sure page language is always a string in routing ([aschempp])
+- [#4720] Fix a potential PHP 8 warning in the breadcrumb module ([qzminski])
+- [#4719] Fix the PHP 8 warning if a $_SERVER variable does not exist ([qzminski])
+- [#4713] Also override Return-Path and Sender address ([fritzmg])
+- [#4717] Correctly handle index pages without URL prefix ([aschempp])
+- [#4692] Harden against invalid input ([leofeyer])
+- [#4691] Fix failing backup on contao:migrate must abort the command ([Toflar])
+- [#4683] Drop the DBAFS file size limit ([m-vo])
+- [#4673] Fix undefined array key warning when using an article list ([MarkejN])
+- [#4662] Deprecate the move operation ([aschempp])
+- [#4443] Expose public URIs in the VFS ([m-vo])
+- [#4681] Fix the PHP 8 warning in Contao\Date class ([qzminski])
+- [#4669] Remove all "Unable to generate URL for page" log entries ([leofeyer])
+- [#4668] Fix the hasText/hasDetails usage ([leofeyer])
+- [#4667] Stop using the deprecated VERSION constant ([bezin])
+- [#4656] Unset TL_CONFIG in ContaoTestCase::tearDown() ([fritzmg])
+- [#4643] Remove superfluous class name in deprecation messages ([fritzmg])
+- [#4632] Undeprecate some autowiring aliases ([fritzmg])
+- [#4641] Fix missing PurgePreviewLinksCron registration ([fritzmg])
+- [#4623] Improve how the Contao Twig escaper works ([m-vo])
+- [#4617] Ensure that the license field in the MetaWizard contains a URL ([Toflar])
+- [#4592] Support both `collation:` and `collate:` ([leofeyer])
+- [#4631] Fix the empty URL check in the getCandidates() method ([leofeyer])
+- [#4627] Fix RelLightboxMigration if ContaoCommentsBundle is not installed ([fritzmg])
+- [#4608] Deprecate the Backend::getTinyTemplates() method ([de-es])
+
 ## [4.13.4] (2022-05-05)
 
 **New features:**
@@ -340,6 +420,8 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.6]: https://github.com/contao/contao/releases/tag/4.13.6
+[4.13.5]: https://github.com/contao/contao/releases/tag/4.13.5
 [4.13.4]: https://github.com/contao/contao/releases/tag/4.13.4
 [4.13.3]: https://github.com/contao/contao/releases/tag/4.13.3
 [4.13.2]: https://github.com/contao/contao/releases/tag/4.13.2
@@ -370,9 +452,77 @@ This project adheres to [Semantic Versioning].
 [richardhj]: https://github.com/richardhj
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
 [sheeep]: https://github.com/sheeep
+[Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[#4941]: https://github.com/contao/contao/pull/4941
+[#4932]: https://github.com/contao/contao/pull/4932
+[#4808]: https://github.com/contao/contao/pull/4808
+[#4945]: https://github.com/contao/contao/pull/4945
+[#4926]: https://github.com/contao/contao/pull/4926
+[#4870]: https://github.com/contao/contao/pull/4870
+[#4878]: https://github.com/contao/contao/pull/4878
+[#4891]: https://github.com/contao/contao/pull/4891
+[#4889]: https://github.com/contao/contao/pull/4889
+[#4881]: https://github.com/contao/contao/pull/4881
+[#4883]: https://github.com/contao/contao/pull/4883
+[#4886]: https://github.com/contao/contao/pull/4886
+[#4877]: https://github.com/contao/contao/pull/4877
+[#4848]: https://github.com/contao/contao/pull/4848
+[#4850]: https://github.com/contao/contao/pull/4850
+[#4861]: https://github.com/contao/contao/pull/4861
+[#4857]: https://github.com/contao/contao/pull/4857
+[#4849]: https://github.com/contao/contao/pull/4849
+[#4833]: https://github.com/contao/contao/pull/4833
+[#4778]: https://github.com/contao/contao/pull/4778
+[#4838]: https://github.com/contao/contao/pull/4838
+[#4836]: https://github.com/contao/contao/pull/4836
+[#4807]: https://github.com/contao/contao/pull/4807
+[#4794]: https://github.com/contao/contao/pull/4794
+[#4786]: https://github.com/contao/contao/pull/4786
+[#4782]: https://github.com/contao/contao/pull/4782
+[#4799]: https://github.com/contao/contao/pull/4799
+[#3924]: https://github.com/contao/contao/pull/3924
+[#4665]: https://github.com/contao/contao/pull/4665
+[#4672]: https://github.com/contao/contao/pull/4672
+[#4785]: https://github.com/contao/contao/pull/4785
+[#4784]: https://github.com/contao/contao/pull/4784
+[#4757]: https://github.com/contao/contao/pull/4757
+[#4763]: https://github.com/contao/contao/pull/4763
+[#4774]: https://github.com/contao/contao/pull/4774
+[#4767]: https://github.com/contao/contao/pull/4767
+[#4679]: https://github.com/contao/contao/pull/4679
+[#4752]: https://github.com/contao/contao/pull/4752
+[#4732]: https://github.com/contao/contao/pull/4732
+[#4747]: https://github.com/contao/contao/pull/4747
+[#4728]: https://github.com/contao/contao/pull/4728
+[#4733]: https://github.com/contao/contao/pull/4733
+[#4739]: https://github.com/contao/contao/pull/4739
+[#4720]: https://github.com/contao/contao/pull/4720
+[#4719]: https://github.com/contao/contao/pull/4719
+[#4713]: https://github.com/contao/contao/pull/4713
+[#4717]: https://github.com/contao/contao/pull/4717
+[#4692]: https://github.com/contao/contao/pull/4692
+[#4691]: https://github.com/contao/contao/pull/4691
+[#4683]: https://github.com/contao/contao/pull/4683
+[#4673]: https://github.com/contao/contao/pull/4673
+[#4662]: https://github.com/contao/contao/pull/4662
+[#4443]: https://github.com/contao/contao/pull/4443
+[#4681]: https://github.com/contao/contao/pull/4681
+[#4669]: https://github.com/contao/contao/pull/4669
+[#4668]: https://github.com/contao/contao/pull/4668
+[#4667]: https://github.com/contao/contao/pull/4667
+[#4656]: https://github.com/contao/contao/pull/4656
+[#4643]: https://github.com/contao/contao/pull/4643
+[#4632]: https://github.com/contao/contao/pull/4632
+[#4641]: https://github.com/contao/contao/pull/4641
+[#4623]: https://github.com/contao/contao/pull/4623
+[#4617]: https://github.com/contao/contao/pull/4617
+[#4592]: https://github.com/contao/contao/pull/4592
+[#4631]: https://github.com/contao/contao/pull/4631
+[#4627]: https://github.com/contao/contao/pull/4627
+[#4608]: https://github.com/contao/contao/pull/4608
 [#4329]: https://github.com/contao/contao/pull/4329
 [#4506]: https://github.com/contao/contao/pull/4506
 [#4504]: https://github.com/contao/contao/pull/4504

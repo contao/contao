@@ -43,6 +43,13 @@ class InsertTagsController
             $response->headers->addCacheControlDirective('no-store');
         }
 
+        // Special handling for the very common {{date::Y}} (e.g. in the website footer) case until
+        // we have a new way to register insert tags and add that caching information to the tag itself
+        if ('{{date::Y}}' === $insertTag) {
+            $response->setPublic();
+            $response->setExpires(new \DateTimeImmutable(date('Y').'-12-31 23:59:59'));
+        }
+
         return $response;
     }
 }

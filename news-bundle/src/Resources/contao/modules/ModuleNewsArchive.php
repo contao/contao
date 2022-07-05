@@ -93,9 +93,9 @@ class ModuleNewsArchive extends ModuleNews
 		$intBegin = 0;
 		$intEnd = 0;
 
-		$intYear = Input::get('year');
-		$intMonth = Input::get('month');
-		$intDay = Input::get('day');
+		$intYear = (int) Input::get('year');
+		$intMonth = (int) Input::get('month');
+		$intDay = (int) Input::get('day');
 
 		// Jump to the current period
 		if (!isset($_GET['year']) && !isset($_GET['month']) && !isset($_GET['day']) && $this->news_jumpToCurrent != 'all_items')

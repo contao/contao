@@ -35,9 +35,11 @@
       </trans-unit>
       <trans-unit id="tl_content.showPreview.0">
         <source>Show preview images</source>
+        <target>Zobrazit náhledy obrázků</target>
       </trans-unit>
       <trans-unit id="tl_content.showPreview.1">
         <source>Show preview images of the selected files.</source>
+        <target>Zobrazit náhledy vybraných obrázků</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
@@ -665,6 +667,7 @@
       </trans-unit>
       <trans-unit id="tl_content.preview_legend">
         <source>Preview settings</source>
+        <target>Nastavení náhledu</target>
       </trans-unit>
       <trans-unit id="tl_content.slider_legend">
         <source>Slider settings</source>
@@ -844,6 +847,7 @@
       </trans-unit>
       <trans-unit id="tl_content.youtube_loop">
         <source>Loop video</source>
+        <target>Odehrát video ve smyčce</target>
       </trans-unit>
       <trans-unit id="tl_content.vimeo_autoplay">
         <source>Autoplay</source>

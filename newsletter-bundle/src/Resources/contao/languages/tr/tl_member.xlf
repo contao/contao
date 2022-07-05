@@ -3,11 +3,11 @@
     <body>
       <trans-unit id="tl_member.newsletter.0">
         <source>Newsletters</source>
-        <target>Haberler abonelikleri</target>
+        <target>Haber bültenleri</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter.1">
         <source>Here you can manage the member's subscriptions.</source>
-        <target>Burada üye aboneliklerini denetleyebilirsiniz.</target>
+        <target>Buradan üyenin aboneliklerini yönetebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_member.newsletter_legend">
         <source>Subscriptions</source>

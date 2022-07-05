@@ -29,18 +29,18 @@ var AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
-		el.blur();
-
 		var item = $(id),
 			parent = $(el).getParent('li');
 
 		if (item) {
 			if (parent.hasClass('collapsed')) {
 				parent.removeClass('collapsed');
+				$(el).setAttribute('aria-expanded', 'true');
 				$(el).store('tip:title', Contao.lang.collapse);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				parent.addClass('collapsed');
+				$(el).setAttribute('aria-expanded', 'false');
 				$(el).store('tip:title', Contao.lang.expand);
 				new Request.Contao({ url: url }).post({'action':'toggleNavigation', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
@@ -1561,6 +1561,13 @@ var Backend =
 				i;
 			for (i=0; i<lis.length; i++) {
 				els.push(lis[i].get('data-id'));
+			}
+			if (oid === val) {
+				$(val).value.split(',').forEach(function(j) {
+					if (els.indexOf(j) === -1) {
+						els.push(j);
+					}
+				});
 			}
 			$(oid).value = els.join(',');
 		});

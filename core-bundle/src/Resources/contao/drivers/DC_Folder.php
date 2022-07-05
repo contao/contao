@@ -363,7 +363,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$for = preg_quote($for);
+				$for = preg_quote($for, null);
 			}
 
 			$strPattern = "CAST(name AS CHAR) REGEXP ?";
@@ -2783,7 +2783,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$thumbnail .= ')</span>';
 
 			// Generate the thumbnail
-			if ($objFile->isImage && (!$objFile->isSvgImage || $objFile->viewHeight > 0) && Config::get('thumbnails'))
+			if ($objFile->isImage && (!$objFile->isSvgImage || $objFile->viewHeight > 0) && Config::get('thumbnails') && \in_array($objFile->extension, System::getContainer()->getParameter('contao.image.valid_extensions')))
 			{
 				$blnCanResize = true;
 
@@ -2888,7 +2888,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			catch (DriverException $exception)
 			{
 				// Quote search string if it is not a valid regular expression
-				$searchValue = preg_quote($searchValue);
+				$searchValue = preg_quote($searchValue, null);
 			}
 
 			$strPattern = "CAST(name AS CHAR) REGEXP ?";

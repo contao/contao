@@ -519,7 +519,7 @@ abstract class System
 				$GLOBALS['TL_LANG']['CNT'][$strLocale] = null;
 			}
 
-			foreach (self::getContainer()->get('contao.intl.countries')->getCountries($strLanguage) as $strCountryCode => $strLabel)
+			foreach (self::getContainer()->get('contao.intl.countries')->getCountries($strCacheKey) as $strCountryCode => $strLabel)
 			{
 				$GLOBALS['TL_LANG']['CNT'][strtolower($strCountryCode)] = $strLabel;
 			}

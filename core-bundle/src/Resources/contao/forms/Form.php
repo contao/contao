@@ -393,8 +393,8 @@ class Form extends Hybrid
 			// Get subject and message
 			if ($this->format == 'email')
 			{
-				$message = $arrSubmitted['message'];
-				$email->subject = $arrSubmitted['subject'];
+				$message = $arrSubmitted['message'] ?? '';
+				$email->subject = $arrSubmitted['subject'] ?? '';
 			}
 
 			// Set the admin e-mail as "from" address
@@ -460,7 +460,7 @@ class Form extends Hybrid
 				foreach ($_SESSION['FILES'] as $file)
 				{
 					// Add a link to the uploaded file
-					if ($file['uploaded'])
+					if ($file['uploaded'] ?? null)
 					{
 						$uploaded .= "\n" . Environment::get('base') . StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
 						continue;

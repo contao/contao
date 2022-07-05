@@ -311,9 +311,22 @@ class Versions extends Controller
 			}
 		}
 
-		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
-					   ->set($data)
-					   ->execute($this->intPid);
+		try
+		{
+			$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
+						   ->set($data)
+						   ->execute($this->intPid);
+		}
+		catch (\Exception $e)
+		{
+			System::getContainer()
+				->get('monolog.logger.contao.error')
+				->error(sprintf('Could not restore version %d of %s.%d: %s.', $intVersion, $this->strTable, $this->intPid, $e->getMessage()))
+			;
+
+			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['versionNotRestored'], $intVersion));
+			Controller::reload();
+		}
 
 		$this->Database->prepare("UPDATE tl_version SET active='' WHERE fromTable=? AND pid=?")
 					   ->execute($this->strTable, $this->intPid);
@@ -459,14 +472,19 @@ class Versions extends Controller
 							continue;
 						}
 
-						if (\is_array($arrFields[$k]))
+						$blnIsBinary = false;
+
+						if (isset($arrFields[$k]))
 						{
-							// Detect binary fields using Doctrine's built-in types or Contao's BinaryStringType (see #3665)
-							$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB, BinaryStringType::NAME), true);
-						}
-						else
-						{
-							$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+							if (\is_array($arrFields[$k]))
+							{
+								// Detect binary fields using Doctrine's built-in types or Contao's BinaryStringType (see #3665)
+								$blnIsBinary = \in_array($arrFields[$k]['type'] ?? null, array(BinaryType::class, BlobType::class, Types::BINARY, Types::BLOB, BinaryStringType::NAME), true);
+							}
+							else
+							{
+								$blnIsBinary = strncmp($arrFields[$k], 'binary(', 7) === 0 || strncmp($arrFields[$k], 'blob ', 5) === 0;
+							}
 						}
 
 						// Decrypt the values

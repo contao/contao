@@ -17,6 +17,7 @@ use Contao\CoreBundle\Search\Document;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 /**
@@ -43,54 +44,20 @@ class SearchIndexListener
      */
     public function __invoke(TerminateEvent $event): void
     {
-        $request = $event->getRequest();
-
-        // Only handle GET requests (see #1194)
-        if (!$request->isMethod(Request::METHOD_GET)) {
-            return;
-        }
-
-        // Do not index if called by crawler
-        if (Factory::USER_AGENT === $request->headers->get('User-Agent')) {
-            return;
-        }
-
-        // Do not handle fragments
-        if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $request->getPathInfo())) {
-            return;
-        }
-
         $response = $event->getResponse();
 
-        // Do not index if the X-Robots-Tag header contains "noindex"
-        if (false !== strpos($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
+        if ($response->isRedirection()) {
             return;
         }
 
+        $request = $event->getRequest();
         $document = Document::createFromRequestResponse($request, $response);
-
-        try {
-            $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
-
-            // Do not index if the meta robots tag contains "noindex"
-            if (false !== strpos($robots, 'noindex')) {
-                return;
-            }
-        } catch (\Exception $e) {
-            // No meta robots tag found
-        }
-
-        $lds = $document->extractJsonLdScripts();
-
-        // If there are no json ld scripts at all, this should not be handled by our indexer
-        if (0 === \count($lds)) {
-            return;
-        }
+        $needsIndex = $this->needsIndex($request, $response, $document);
 
         try {
             $success = $event->getResponse()->isSuccessful();
 
-            if ($success && $this->enabledFeatures & self::FEATURE_INDEX) {
+            if ($needsIndex && $success && $this->enabledFeatures & self::FEATURE_INDEX) {
                 $this->indexer->index($document);
             }
 
@@ -100,5 +67,44 @@ class SearchIndexListener
         } catch (IndexerException $e) {
             // ignore
         }
+    }
+
+    private function needsIndex(Request $request, Response $response, Document $document): bool
+    {
+        // Only handle GET requests (see #1194)
+        if (!$request->isMethod(Request::METHOD_GET)) {
+            return false;
+        }
+
+        // Do not index if called by crawler
+        if (Factory::USER_AGENT === $request->headers->get('User-Agent')) {
+            return false;
+        }
+
+        // Do not handle fragments
+        if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $request->getPathInfo())) {
+            return false;
+        }
+
+        // Do not index if the X-Robots-Tag header contains "noindex"
+        if (false !== strpos($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
+            return false;
+        }
+
+        try {
+            $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
+
+            // Do not index if the meta robots tag contains "noindex"
+            if (false !== strpos($robots, 'noindex')) {
+                return false;
+            }
+        } catch (\Exception $e) {
+            // No meta robots tag found
+        }
+
+        $lds = $document->extractJsonLdScripts();
+
+        // If there are no json ld scripts at all, this should not be handled by our indexer
+        return 0 !== \count($lds);
     }
 }

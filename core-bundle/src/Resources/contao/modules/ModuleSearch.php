@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * Front end module "search".
@@ -73,6 +74,12 @@ class ModuleSearch extends Module
 
 		$blnFuzzy = $this->fuzzy;
 		$strQueryType = Input::get('query_type') ?: $this->queryType;
+
+		if (\is_array(Input::get('keywords')))
+		{
+			throw new BadRequestHttpException('Expected string, got array');
+		}
+
 		$strKeywords = trim(Input::get('keywords'));
 
 		$this->Template->uniqueId = $this->id;

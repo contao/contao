@@ -12,30 +12,28 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Migration\Version413;
 
+use Contao\Controller;
+use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * @internal
  */
 class RelLightboxMigration extends AbstractMigration
 {
-    private static array $targets = [
-        'tl_article.teaser',
-        'tl_calendar_events.teaser',
-        'tl_comments.comment',
-        'tl_content.text',
-        'tl_faq.answer',
-        'tl_form_field.text',
-        'tl_news.teaser',
-    ];
-
     private Connection $connection;
+    private ContaoFramework $framework;
+    private ResourceFinder $resourceFinder;
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, ContaoFramework $framework, ResourceFinder $resourceFinder)
     {
         $this->connection = $connection;
+        $this->framework = $framework;
+        $this->resourceFinder = $resourceFinder;
     }
 
     public function shouldRun(): bool
@@ -86,6 +84,34 @@ class RelLightboxMigration extends AbstractMigration
 
     private function getTargets(): array
     {
-        return array_map(static fn (string $target) => explode('.', $target), self::$targets);
+        $this->framework->initialize();
+
+        $targets = [];
+        $processed = [];
+
+        /** @var array<SplFileInfo> $files */
+        $files = $this->resourceFinder->findIn('dca')->depth(0)->files()->name('*.php');
+
+        foreach ($files as $file) {
+            $tableName = $file->getBasename('.php');
+
+            if (\in_array($tableName, $processed, true)) {
+                continue;
+            }
+
+            $processed[] = $tableName;
+
+            Controller::loadDataContainer($tableName);
+
+            foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
+                $rte = $fieldConfig['eval']['rte'] ?? null;
+
+                if (\is_string($rte) && 0 === strpos($rte, 'tiny')) {
+                    $targets[] = [$tableName, strtolower($fieldName)];
+                }
+            }
+        }
+
+        return $targets;
     }
 }

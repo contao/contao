@@ -1,0 +1,138 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_style_sheet.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_style_sheet.name.0">
+        <source>Name</source>
+        <target>Ad</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.name.1">
+        <source>Please enter the style sheet name.</source>
+        <target>Lütfen biçem sayfasının adını yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.embedImages.0">
+        <source>Embed images up to</source>
+        <target>Gömülebilecek en büyük görsel boyutu</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.embedImages.1">
+        <source>Here you can enter the file size in bytes up to which images will be embedded in the style sheet as data: string. Set to 0 to disable the feature.</source>
+        <target>Buraya biçem sayfasına veri:dizge biçiminde veri olarak gömülebilecek en büyük görsel dosyası boyutunu yazabilirsiniz. Bu özelliği devre dışı bırakmak için 0 yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.cc.0">
+        <source>Conditional comment</source>
+        <target>Koşullu yorum</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.cc.1">
+        <source>Conditional comments allow you to create Internet Explorer specific style sheets (e.g. &lt;em&gt;if lt IE 9&lt;/em&gt;).</source>
+        <target>Koşullu yorumlar Internet Explorer tarayıcısına özel biçem sayfaları oluşturabilmenizi sağlar (&lt;em&gt;IE9 ise&lt;/em&gt; gibi).</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.media.0">
+        <source>Media types</source>
+        <target>Ortam türleri</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.media.1">
+        <source>Here you can choose the media types the style sheet applies to.</source>
+        <target>Buradan biçem sayfasının uygulanacağı ortam türlerini seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.mediaQuery.0">
+        <source>Media query</source>
+        <target>Ortam kuyruğu</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.mediaQuery.1">
+        <source>Here you can define the media type using a media query like &lt;em&gt;screen and (min-width: 800px)&lt;/em&gt;. The media types defined above will then be overwritten.</source>
+        <target>Buradan ortam türünü &lt;em&gt;screen ve (min-width: 800px)&lt;/em&gt; gibi bir ortam sorgusu kullanarak tanımlayabilirsiniz. Ardından yukarıda tanımlanan ortam türleri değiştirilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.vars.0">
+        <source>Global variables</source>
+        <target>Genel değişkenler</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.vars.1">
+        <source>Here you can define global variables for the style sheet (e.g. &lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; or &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt;).</source>
+        <target>Buradan biçem sayfası için genel değişkenler tanımlayabilirsiniz (&lt;em&gt;$red&lt;/em&gt; -&gt; &lt;em&gt;c00&lt;/em&gt; ya da &lt;em&gt;$margin&lt;/em&gt; -&gt; &lt;em&gt;12px&lt;/em&gt; gibi).</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.source.0">
+        <source>Source files</source>
+        <target>Kaynak dosyalar</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.source.1">
+        <source>Here you can upload one or more .css files to be imported.</source>
+        <target>Buradan içe aktarılacak bir ya da birkaç .css dosyası yükleyebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.tstamp.0">
+        <source>Revision date</source>
+        <target>Düzenleme tarihi</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>En son düzenlemenin tarihi ve saati</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.title_legend">
+        <source>Name</source>
+        <target>Ad</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.expert_legend">
+        <source>Expert settings</source>
+        <target>Uzman ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.media_legend">
+        <source>Media settings</source>
+        <target>Ortam ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.vars_legend">
+        <source>Global variables</source>
+        <target>Genel değişkenler</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.css_imported">
+        <source>Style sheet &quot;%s&quot; has been imported.</source>
+        <target>&quot;%s&quot; biçem sayfası içe aktarıldı.</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.css_renamed">
+        <source>Style sheet &quot;%s&quot; has been imported as &quot;%s&quot;.</source>
+        <target>&quot;%s&quot; biçem sayfası &quot;%s&quot; olarak içe aktarıldı.</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.import.0">
+        <source>Import</source>
+        <target>İçe aktar</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.import.1">
+        <source>Import a style sheet</source>
+        <target>İçe bir biçem sayfası aktar</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.new.0">
+        <source>New</source>
+        <target>Yeni</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.new.1">
+        <source>Create a new style sheet</source>
+        <target>Yeni bir biçem sayfası ekle</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.show">
+        <source>Show the details of style sheet ID %s</source>
+        <target>%s kodlu biçem sayfasının ayrıntılarını görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.edit">
+        <source>Edit style sheet ID %s</source>
+        <target>%s kodlu biçem sayfasını düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.editheader">
+        <source>Edit the settings of style sheet ID %s</source>
+        <target>%s kodlu biçem sayfasının ayarlarını düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.copy">
+        <source>Duplicate style sheet ID %s</source>
+        <target>%s kodlu biçem sayfasını kopyala</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.cut">
+        <source>Move style sheet ID %s</source>
+        <target>%s kodlu biçem sayfasını taşı</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.delete">
+        <source>Delete style sheet ID %s</source>
+        <target>%s kodlu biçem sayfasını sil</target>
+      </trans-unit>
+      <trans-unit id="tl_style_sheet.export">
+        <source>Export style sheet ID %s</source>
+        <target>%s kodlu biçem sayfasını dışa aktar</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

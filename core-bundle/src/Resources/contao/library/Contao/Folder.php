@@ -274,7 +274,7 @@ class Folder extends System
 		}
 
 		// Reset the object AFTER the database has been updated
-		if ($return != false)
+		if ($return)
 		{
 			$this->strFolder = $strNewName;
 		}

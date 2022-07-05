@@ -88,6 +88,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 
@@ -128,6 +129,7 @@ class ContaoDataCollectorTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->id = 2;
+        $page->layoutId = 2;
 
         $GLOBALS['objPage'] = $page;
 
@@ -222,6 +224,46 @@ class ContaoDataCollectorTest extends TestCase
         );
 
         unset($GLOBALS['TL_HOOKS']);
+    }
+
+    public function testHandlesMissingLayoutIdGracefully(): void
+    {
+        $layout = $this->mockClassWithProperties(LayoutModel::class);
+        $layout->name = 'Default';
+        $layout->id = 2;
+        $layout->template = 'fe_page';
+
+        $adapter = $this->mockConfiguredAdapter(['findByPk' => $layout]);
+        $framework = $this->mockContaoFramework([LayoutModel::class => $adapter]);
+
+        $page = $this->mockClassWithProperties(PageModel::class);
+        $page->id = 2;
+
+        $GLOBALS['objPage'] = $page;
+
+        $collector = $this->getDataCollector();
+        $collector->setFramework($framework);
+        $collector->collect(new Request(), new Response());
+
+        $this->assertSame(
+            [
+                'version' => ContaoCoreBundle::getVersion(),
+                'framework' => false,
+                'models' => 0,
+                'frontend' => true,
+                'preview' => false,
+                'layout' => '',
+                'template' => '',
+                'legacy_routing' => false,
+            ],
+            $collector->getSummary()
+        );
+
+        $collector->reset();
+
+        $this->assertSame([], $collector->getSummary());
+
+        unset($GLOBALS['objPage']);
     }
 
     public function testReturnsAnEmptyArrayIfTheKeyIsUnknown(): void
