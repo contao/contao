@@ -3734,7 +3734,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$_buttons = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard);
 			}
-			elseif (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, ['pid'=>0])))
+			elseif (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>0))))
 			{
 				$imagePasteInto = Image::getHtml('pasteinto_.svg', $labelPasteInto[0]) . ' ';
 			}
@@ -4099,7 +4099,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$security = System::getContainer()->get('security.helper');
 
-						if ((!$this->rootPaste && \in_array($id, $this->root)) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, ['pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1])))
+						if ((!$this->rootPaste && \in_array($id, $this->root)) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 						{
 							$_buttons .= Image::getHtml('pasteafter_.svg') . ' ';
 						}
@@ -4108,7 +4108,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
 						}
 
-						if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, ['pid' => $id])))
+						if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $id))))
 						{
 							$_buttons .= Image::getHtml('pasteinto_.svg') . ' ';
 						}
@@ -4125,7 +4125,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Paste after the selected record (e.g. paste article after article X)
 					if ($this->strTable == $table)
 					{
-						if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, ['pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1])))
+						if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 						{
 							$_buttons .= Image::getHtml('pasteafter_.svg') . ' ';
 						}
@@ -4138,7 +4138,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Paste into the selected record (e.g. paste article into page X)
 					else
 					{
-						if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, ['pid'=>$id])))
+						if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>$id))))
 						{
 							$_buttons .= Image::getHtml('pasteinto_.svg') . ' ';
 						}
