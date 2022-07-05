@@ -205,7 +205,8 @@ class DefaultOperationsListener
         $subject = match ($actionClass) {
             CreateAction::class => new CreateAction($table),
             UpdateAction::class => new UpdateAction($table, $operation->getRecord()),
-            DeleteAction::class => new DeleteAction($table, $operation->getRecord())
+            DeleteAction::class => new DeleteAction($table, $operation->getRecord()),
+            default => throw new \InvalidArgumentException(sprinf('Invalid action class "%s".', $actionClass)),
         };
 
         return $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject);
