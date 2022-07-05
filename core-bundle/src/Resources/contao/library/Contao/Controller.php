@@ -1857,14 +1857,13 @@ abstract class Controller extends System
 
 		$arrEnclosures = array();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add download links
 		while ($objFiles->next())
 		{
 			if ($objFiles->type == 'file')
 			{
-				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
 				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($projectDir . '/' . $objFiles->path))
 				{
 					continue;
