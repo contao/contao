@@ -23,6 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.template.1">
         <source>Here you can select an e-mail template.</source>
+        <target>Hier kunt u een e-mailsjabloon selecteren.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.mailerTransport.0">
         <source>Mailer transport</source>
@@ -30,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.mailerTransport.1">
         <source>Here you can override the mailer transport used to send newsletters in this channel.</source>
+        <target>Hier kunt u het mailer -transport overschrijven dat wordt gebruikt om nieuwsbrieven in dit kanaal te verzenden.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.sender.0">
         <source>Sender e-mail address</source>

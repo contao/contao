@@ -1,0 +1,98 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/explain.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="XPT.error">
+        <source>An error occurred</source>
+        <target>Bir sorun çıktı!</target>
+      </trans-unit>
+      <trans-unit id="XPT.matter">
+        <source>What's the matter?</source>
+        <target>Sorun nedir?</target>
+      </trans-unit>
+      <trans-unit id="XPT.howToFix">
+        <source>How can I fix the issue?</source>
+        <target>Sorunu nasıl çözebilirim?</target>
+      </trans-unit>
+      <trans-unit id="XPT.more">
+        <source>Tell me more, please</source>
+        <target>Lütfen ayrıntılı bilgi verin</target>
+      </trans-unit>
+      <trans-unit id="XPT.hint">
+        <source>To customize this notice, create a custom Twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
+        <target>Bu bildirimi özelleştirmek için &lt;em&gt;%s&lt;/em&gt; yerine kullanılacak özel bir Twig kalıbı oluşturun.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorOccurred">
+        <source>An error occurred while executing this script. Something does not work properly.</source>
+        <target>Bu betik yürütülürken bir sorun çıktı. Bir şeyler düzgün çalışmıyor.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorFixOne">
+        <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
+        <target>&lt;code&gt;var/logs&lt;/code&gt; klasöründeki geçerli günlük dosyasını açın ve ilgili hata iletisini bulun (genellikle sonuncusu).</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorExplain">
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Bir şey düzgün çalışmadığından betiğin yürütülmesi durduruldu, Asıl hata iletisi, güvenlik nedeniyle bu bildirim tarafından gizlenmiştir ve geçerli günlük dosyasında bulunabilir (yukarıya bakın). Hata iletisini anlamıyorsanız ya da sorunu nasıl çözeceğinizi bilmiyorsanız, &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao destek sayfasına&lt;/a&gt; bakabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="XPT.requestToken">
+        <source>Invalid request token</source>
+        <target>İstek kodu geçersiz</target>
+      </trans-unit>
+      <trans-unit id="XPT.invalidToken">
+        <source>The request token could not be verified.</source>
+        <target>İstek kodu doğrulanamadı.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenRetry">
+        <source>Please &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;click here&lt;/a&gt; and try again. Do not use the back button of your browser.</source>
+        <target>Lütfen &lt;a href=&quot;javascript:window.location.href=window.location.href&quot;&gt;buraya tıklayın&lt;/a&gt; ve yeniden deneyin. Web tarayıcınızın geri düğmesini kullanmayın.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainOne">
+        <source>This error occurs if there is a POST request without a valid authentication token. In Contao 2.10, the referer check has been replaced with a request token system. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
+        <target>Bu hata, geçerli bir kimlik doğrulama kodu olmayan bir POST isteği yapıldığında ortaya çıkar. Contao 2.10 sürümünde, referans denetimi, bir istek kodu sistemi ile değiştirildi. Sorun sürerse, uyumsuz bir üçüncü taraf eklentisi kullanıyor ya da Contao kurulumunuzu doğru şekilde güncellememiş olabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainTwo">
+        <source>For more information, visit the &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Ayrıntılı bilgi almak için &lt;a href=&quot;https://to.contao.org/support&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao destek sayfasına&lt;/a&gt; bakabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="XPT.unavailable">
+        <source>Service unavailable</source>
+        <target>Hizmet kullanılamıyor</target>
+      </trans-unit>
+      <trans-unit id="XPT.maintenance">
+        <source>The website is currently not available. Please come back later.</source>
+        <target>Web sitesi şu anda kullanılamıyor. Lütfen bir süre sonra yeniden bakın.</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.title">
+        <source>Unable to generate front end URL</source>
+        <target>Ön yüz adresi oluşturulamadı</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.matter">
+        <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
+        <target>Yolda belirtilmemiş zorunlu parametreler bulunduğundan adres oluşturulamadı. Ek bilgiler (bir haber kısaltması gibi) belirtilmelidir.</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.explain">
+        <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
+        <target>Symfony yollarında, normal ifadeler kullanılarak doğrulanan değişken parametreler bulunabilir. Aşağıdaki yapılandırma çözümlenemedi:</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.path">
+        <source>Route path</source>
+        <target>Yol</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterName">
+        <source>Name</source>
+        <target>Ad</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterRequirement">
+        <source>Requirement (Regex)</source>
+        <target>Gereksinim (kurallı ifade)</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterDefault">
+        <source>Default value</source>
+        <target>Varsayılan değer</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterEmpty">
+        <source>empty</source>
+        <target>boş</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

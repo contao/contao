@@ -79,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.robots.1">
         <source>Here you can overwrite how search engines handle the event.</source>
+        <target>Hier kunt u overschrijven hoe zoekmachines het evenement afhandelen.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.description.0">
         <source>Meta description</source>
@@ -246,9 +247,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
+        <target>Beveel evenement aan</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
+        <target>Toon het evenement in een lijst met aanbevolen evenementen.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
@@ -376,6 +379,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.feature">
         <source>Feature/unfeature event ID %s</source>
+        <target>Aanbevelen/afraden evenement ID %s</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.editheader">
         <source>Edit the settings of event ID %s</source>
