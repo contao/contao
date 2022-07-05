@@ -113,7 +113,7 @@ class ContentMedia extends ContentElement
 			$this->Template->isVideo = true;
 			$this->Template->containerClass = 'video_container';
 
-			$arrFiles = array('mp4'=>null, 'm4v'=>null, 'mov'=>null, 'wmv'=>null, 'webm'=>null, 'ogv'=>null);
+			$arrFiles = array('webm'=>null, 'mp4'=>null, 'm4v'=>null, 'mov'=>null, 'wmv'=>null, 'ogv'=>null);
 		}
 		else
 		{
