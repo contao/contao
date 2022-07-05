@@ -1,0 +1,54 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_undo.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_undo.pid.0">
+        <source>User</source>
+        <target>Kullanıcı</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.pid.1">
+        <source>Name of the associated user</source>
+        <target>İlgili kullanıcının adı</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.fromTable.0">
+        <source>Source</source>
+        <target>Kaynak</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.fromTable.1">
+        <source>Name of the original table</source>
+        <target>Özgün tablonun adı</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.affectedRows.0">
+        <source>Affected rows</source>
+        <target>Etkilenen satır sayısı</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.affectedRows.1">
+        <source>Number of records included in the undo step</source>
+        <target>Kaydı tutulacak geri alma adımı sayısı</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.query.0">
+        <source>Details</source>
+        <target>Ayrıntılar</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.query.1">
+        <source>Details of the undo step</source>
+        <target>Geri alma adımı ile ilgili ayrıntılar</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.data.0">
+        <source>Data</source>
+        <target>Veriler</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.data.1">
+        <source>Raw data of the undo step</source>
+        <target>Geri alma adımı ile ilgili ham veriler</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.undo">
+        <source>Restore element ID %s</source>
+        <target>%s kodlu bileşeni geri yükle</target>
+      </trans-unit>
+      <trans-unit id="tl_undo.parent_modal">
+        <source>Show origin of %s ID %s</source>
+        <target>%s ögesinin %s kodlu kaynağını görüntüle</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

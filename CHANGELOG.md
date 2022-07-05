@@ -2,6 +2,38 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.6] (2022-07-05)
+
+**Fixed issues:**
+
+- [#4941] Reduce System::getContainer and $container->getParameter calls ([fritzmg])
+- [#4932] Deprecate insert tag flag uncached ([ausi])
+- [#4808] Various PHP 8 fixes ([aschempp])
+- [#4945] Hard-code timezone to avoid time deviation ([bezin])
+- [#4926] Allow to exclude all tl_page fields ([aschempp])
+- [#4870] Disable widgets for configured settings ([aschempp])
+- [#4878] Make sure `eval.rte` is a string ([fritzmg])
+- [#4891] Fix the query string being lost during the preview script redirect ([qzminski])
+- [#4889] Fix a potential PHP 8 warning in tl_article callback ([qzminski])
+- [#4881] Use the resource finder in the lightbox migration ([leofeyer])
+- [#4883] Hide the "icon" table header in the user and member module ([leofeyer])
+- [#4886] Always unlock search tables to prevent deadlocks ([ausi])
+- [#4877] Fix a potential PHP 8 warning in the Search class ([qzminski])
+- [#4848] Fix a few potential PHP 8 warnings ([qzminski])
+- [#4850] Show array keys als fallback for sorting dropdowns ([Tastaturberuf])
+- [#4861] Fix a potential version comparison if the field definitions are missing ([qzminski])
+- [#4857] Correctly add the preview script ([leofeyer])
+- [#4849] Show array keys instead of nothing in show column mode ([Tastaturberuf])
+- [#4833] Order the languages in the meta wizard ([leofeyer])
+- [#4778] Fix undefined array key while button generation ([rabauss])
+- [#4838] Improve DropSearchMigration ([fritzmg])
+- [#4836] Fix infinite loop while loading of countries ([rabauss])
+- [#4807] Fix date filtering in DC_Table ([fritzmg])
+- [#4794] Deprecate Controller::generateMargin ([bezin])
+- [#4786] Do not allow empty values for the badge title and custom CSS/JS scripts ([leofeyer])
+- [#4782] Add a cache timeout for the `{{date::Y}}` insert tag ([Toflar])
+- [#4799] Always set both collate and collation to the same value ([fritzmg])
+
 ## [4.13.5] (2022-06-03)
 
 **New features:**
@@ -388,6 +420,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.6]: https://github.com/contao/contao/releases/tag/4.13.6
 [4.13.5]: https://github.com/contao/contao/releases/tag/4.13.5
 [4.13.4]: https://github.com/contao/contao/releases/tag/4.13.4
 [4.13.3]: https://github.com/contao/contao/releases/tag/4.13.3
@@ -419,9 +452,37 @@ This project adheres to [Semantic Versioning].
 [richardhj]: https://github.com/richardhj
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
 [sheeep]: https://github.com/sheeep
+[Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [Wusch]: https://github.com/Wusch
 [xprojects-de]: https://github.com/xprojects-de
+[#4941]: https://github.com/contao/contao/pull/4941
+[#4932]: https://github.com/contao/contao/pull/4932
+[#4808]: https://github.com/contao/contao/pull/4808
+[#4945]: https://github.com/contao/contao/pull/4945
+[#4926]: https://github.com/contao/contao/pull/4926
+[#4870]: https://github.com/contao/contao/pull/4870
+[#4878]: https://github.com/contao/contao/pull/4878
+[#4891]: https://github.com/contao/contao/pull/4891
+[#4889]: https://github.com/contao/contao/pull/4889
+[#4881]: https://github.com/contao/contao/pull/4881
+[#4883]: https://github.com/contao/contao/pull/4883
+[#4886]: https://github.com/contao/contao/pull/4886
+[#4877]: https://github.com/contao/contao/pull/4877
+[#4848]: https://github.com/contao/contao/pull/4848
+[#4850]: https://github.com/contao/contao/pull/4850
+[#4861]: https://github.com/contao/contao/pull/4861
+[#4857]: https://github.com/contao/contao/pull/4857
+[#4849]: https://github.com/contao/contao/pull/4849
+[#4833]: https://github.com/contao/contao/pull/4833
+[#4778]: https://github.com/contao/contao/pull/4778
+[#4838]: https://github.com/contao/contao/pull/4838
+[#4836]: https://github.com/contao/contao/pull/4836
+[#4807]: https://github.com/contao/contao/pull/4807
+[#4794]: https://github.com/contao/contao/pull/4794
+[#4786]: https://github.com/contao/contao/pull/4786
+[#4782]: https://github.com/contao/contao/pull/4782
+[#4799]: https://github.com/contao/contao/pull/4799
 [#3924]: https://github.com/contao/contao/pull/3924
 [#4665]: https://github.com/contao/contao/pull/4665
 [#4672]: https://github.com/contao/contao/pull/4672

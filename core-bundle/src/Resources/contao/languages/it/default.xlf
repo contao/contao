@@ -195,6 +195,7 @@
       </trans-unit>
       <trans-unit id="ERR.pageUrlNameExists">
         <source>This alias leads to a conflict with page &quot;%s&quot; (ID %s)!</source>
+        <target>Questo alias è in conflitto con la pagina &quot;%s&quot; (ID %s)!</target>
       </trans-unit>
       <trans-unit id="ERR.pageUrlSuffix">
         <source>This URL suffix will lead to duplicate URLs (e.g. %s)!</source>
@@ -354,6 +355,10 @@
       </trans-unit>
       <trans-unit id="ERR.previewSwitchInvalidUsername">
         <source>Unknown username: %s</source>
+        <target>Nome utente sconosciuto: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1325,6 +1330,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_license">
         <source>License URL</source>
+        <target>License URL</target>
       </trans-unit>
       <trans-unit id="MSC.sw_title">
         <source>Title</source>
@@ -2971,8 +2977,7 @@
         <target>inidizzati %d url con successo. %d falliti.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d Gli URI sono stati ignorati (se ne manca uno, consulta il registro di debug).</target>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

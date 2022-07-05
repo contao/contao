@@ -1,0 +1,70 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_log.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_log.tstamp.0">
+        <source>Date</source>
+        <target>Tarih</target>
+      </trans-unit>
+      <trans-unit id="tl_log.tstamp.1">
+        <source>Date and time of the log entry</source>
+        <target>Günlük kaydının tarihi ve saati</target>
+      </trans-unit>
+      <trans-unit id="tl_log.source.0">
+        <source>Origin</source>
+        <target>Kaynak</target>
+      </trans-unit>
+      <trans-unit id="tl_log.source.1">
+        <source>Back end or front end</source>
+        <target>Yönetim bölümü ya da ön yüz</target>
+      </trans-unit>
+      <trans-unit id="tl_log.action.0">
+        <source>Category</source>
+        <target>Kategori</target>
+      </trans-unit>
+      <trans-unit id="tl_log.action.1">
+        <source>Category of the action</source>
+        <target>İşlem kategorisi</target>
+      </trans-unit>
+      <trans-unit id="tl_log.username.0">
+        <source>User</source>
+        <target>Kullanıcı</target>
+      </trans-unit>
+      <trans-unit id="tl_log.username.1">
+        <source>Name of the authenticated user</source>
+        <target>Kimliği doğrulanmış kullanıcının adı</target>
+      </trans-unit>
+      <trans-unit id="tl_log.text.0">
+        <source>Details</source>
+        <target>Ayrıntılar</target>
+      </trans-unit>
+      <trans-unit id="tl_log.text.1">
+        <source>Details of the log entry</source>
+        <target>Günlük kaydının ayrıntıları</target>
+      </trans-unit>
+      <trans-unit id="tl_log.func.0">
+        <source>Function</source>
+        <target>İşlev</target>
+      </trans-unit>
+      <trans-unit id="tl_log.func.1">
+        <source>Name of the initiating function</source>
+        <target>Başlatan işlevin adı</target>
+      </trans-unit>
+      <trans-unit id="tl_log.browser.0">
+        <source>Browser</source>
+        <target>Web tarayıcı</target>
+      </trans-unit>
+      <trans-unit id="tl_log.browser.1">
+        <source>Name of the user agent</source>
+        <target>Kullanıcı uygulamasının adı</target>
+      </trans-unit>
+      <trans-unit id="tl_log.BE">
+        <source>Back end</source>
+        <target>Yönetim bölümü</target>
+      </trans-unit>
+      <trans-unit id="tl_log.FE">
+        <source>Front end</source>
+        <target>Ön yüz</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

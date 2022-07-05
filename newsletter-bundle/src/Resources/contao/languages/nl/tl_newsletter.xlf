@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the e-mail template of the channel.</source>
+        <target>Hier kunt u de e-mailsjabloon van het kanaal overschrijven.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>
@@ -78,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.mailerTransport.1">
         <source>Here you can override the default mailer transport of the channel.</source>
+        <target>Hier kunt u het standaardmailtransport van het kanaal overschrijven.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sender.0">
         <source>Custom sender e-mail address</source>
@@ -181,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
         <source>%s e-mail address(es) has/have been skipped.</source>
+        <target>%s e-mailadres(sen) is/zijn overgeslagen.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.error">
         <source>There are no active subscribers to the channel.</source>

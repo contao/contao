@@ -110,8 +110,7 @@
         <target>Ponovno ustvari datoteke XML</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files (sitemaps and feeds) and then purges the shared cache, so there are no links to deleted resources.</source>
-        <target>Ponovno ustvari datoteke XML (kazalo strani in vire RSS) in nato sprazni deljeni predpomnilnik, s čimer se odstranijo vse povezave do izbrisanih datotek.</target>
+        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -147,13 +146,14 @@
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
         <target>Pajek je trenutno na delu. Prosimo, počakajte, da zaključi, nato pa si oglejte rezultate.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
-        <source>Download the debug log</source>
-        <target>Prenesite dnevnik debug</target>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
-        <source>Download the log</source>
-        <target>Prenesi dnevnik</target>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>
