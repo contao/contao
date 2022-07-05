@@ -1756,7 +1756,7 @@ class DC_Table extends DataContainer implements \listable, \editable
 
 			$row = $objRow->fetchAllAssoc();
 
-			if ($row[0]['pid'] == $row[1]['pid'])
+			if ($row[0]['pid'] == $row[1]['pid'] && (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) || $row[0]['ptable'] == $row[1]['ptable']))
 			{
 				$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
 							   ->execute($row[0]['sorting'], $row[1]['id']);
