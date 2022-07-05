@@ -519,10 +519,10 @@ class MigrateCommand extends Command
                 return $errors;
             }
 
-            $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'");
+            $largePrefixSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'");
 
             // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-            if (false === $row || '' === $row['Value']) {
+            if (false === $largePrefixSetting || '' === $largePrefixSetting['Value']) {
                 return $errors;
             }
 
@@ -537,7 +537,7 @@ class MigrateCommand extends Command
             }
 
             // The innodb_large_prefix option is disabled
-            if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
+            if (!\in_array(strtolower((string) $largePrefixSetting['Value']), ['1', 'on'], true)) {
                 $errors[] =
                     <<<'EOF'
                         The "innodb_large_prefix" option is not enabled!
@@ -550,14 +550,17 @@ class MigrateCommand extends Command
                                         charset: utf8
                                         collation: utf8_unicode_ci
                         EOF;
-
-                return $errors;
             }
 
-            $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
+            $fileFormatSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
+            $filePerTableSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
 
-            // The innodb_file_per_table option is disabled
-            if (!\in_array(strtolower((string) $row['Value']), ['1', 'on'], true)) {
+            if (
+                // The InnoDB file format is not Barracuda
+                ($fileFormatSetting && '' !== $fileFormatSetting['Value'] && 'barracuda' !== strtolower((string) $fileFormatSetting['Value'])) ||
+                // The innodb_file_per_table option is disabled
+                ($filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting['Value']), ['1', 'on'], true))
+            ) {
                 $errors[] =
                     <<<'EOF'
                         InnoDB is not configured properly!
@@ -567,25 +570,6 @@ class MigrateCommand extends Command
                             innodb_file_format = Barracuda
                             innodb_file_per_table = 1
                         EOF;
-
-                return $errors;
-            }
-
-            $row = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
-
-            // The InnoDB file format is not Barracuda
-            if ('' !== $row['Value'] && 'barracuda' !== strtolower((string) $row['Value'])) {
-                $errors[] =
-                    <<<'EOF'
-                        InnoDB is not configured properly!
-                        Using large prefixes in MySQL versions prior to 5.7.7 and MariaDB versions prior to 10.2 requires the "Barracuda" file format and the "innodb_file_per_table" option.
-
-                            innodb_large_prefix = 1
-                            innodb_file_format = Barracuda
-                            innodb_file_per_table = 1
-                        EOF;
-
-                return $errors;
             }
         }
 

@@ -427,6 +427,190 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
+     * @dataProvider provideBadConfigurations
+     */
+    public function testOutputsConfigurationErrors(array $configuration, string|array $expectedMessages): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->with('SELECT @@version')
+            ->willReturn($configuration['version'] ?? '10.10.0-MariaDB-foo-bar')
+        ;
+
+        $connection
+            ->method('getParams')
+            ->willReturn([
+                'defaultTableOptions' => $configuration['defaultTableOptions'] ?? [],
+            ])
+        ;
+
+        $connection
+            ->method('fetchAssociative')
+            ->willReturnCallback(
+                static fn (string $query): array|false => match ($query) {
+                    sprintf('SHOW COLLATION LIKE \'%s\'', $configuration['defaultTableOptions']['collate'] ?? '') => $configuration['collation'] ?? false,
+                    'SHOW VARIABLES LIKE \'innodb_large_prefix\'' => $configuration['innodb_large_prefix'] ?? false,
+                    'SHOW VARIABLES LIKE \'innodb_file_per_table\'' => $configuration['innodb_file_per_table'] ?? false,
+                    'SHOW VARIABLES LIKE \'innodb_file_format\'' => $configuration['innodb_file_format'] ?? false,
+                    default => false,
+                }
+            )
+        ;
+
+        $connection
+            ->method('fetchAllAssociative')
+            ->with('SHOW ENGINES')
+            ->willReturn($configuration['engines'] ?? [])
+        ;
+
+        $command = $this->getCommand(connection: $connection);
+
+        $tester = new CommandTester($command);
+        $tester->execute(['--no-backup' => true]);
+
+        $display = $tester->getDisplay();
+
+        foreach ((array) $expectedMessages as $expectedMessage) {
+            $this->assertStringContainsString($expectedMessage, $display);
+        }
+    }
+
+    public function provideBadConfigurations(): \Generator
+    {
+        yield 'database version too old' => [
+            [
+                'version' => '5.0.10',
+            ],
+            'Your database version is not supported!',
+        ];
+
+        yield 'unsupported collation' => [
+            [
+                'defaultTableOptions' => [
+                    'collate' => 'foo',
+                ],
+            ],
+            'The configured collation is not supported!',
+        ];
+
+        yield 'unsupported engine' => [
+            [
+                'defaultTableOptions' => [
+                    'engine' => 'MyISAM',
+                ],
+                'engines' => [
+                    ['Engine' => 'MEMORY', 'Comment' => 'Hash based, stored in memory, useful for temporary tables'],
+                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
+                ],
+            ],
+            'The configured database engine is not supported!',
+        ];
+
+        yield 'invalid combination of engine and collation' => [
+            [
+                'defaultTableOptions' => [
+                    'collate' => 'utf8mb4_general_ci',
+                    'engine' => 'MyISAM',
+                ],
+                'collation' => [
+                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                ],
+                'engines' => [
+                    ['Engine' => 'MyISAM', 'Comment' => 'Non-transactional engine with good performance and small data footprint'],
+                ],
+            ],
+            'Invalid combination of database engine and collation!',
+        ];
+
+        yield 'not using innodb_large_prefix' => [
+            [
+                'version' => '5.7.0',
+                'defaultTableOptions' => [
+                    'collate' => 'utf8mb4_general_ci',
+                    'engine' => 'InnoDB',
+                ],
+                'collation' => [
+                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                ],
+                'engines' => [
+                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
+                ],
+                'innodb_large_prefix' => [
+                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'OFF',
+                ],
+            ],
+            'The "innodb_large_prefix" option is not enabled!',
+        ];
+
+        yield 'bad file format setting' => [
+            [
+                'version' => '5.7.0',
+                'defaultTableOptions' => [
+                    'collate' => 'utf8mb4_general_ci',
+                    'engine' => 'InnoDB',
+                ],
+                'collation' => [
+                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                ],
+                'engines' => [
+                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
+                ],
+                'innodb_large_prefix' => [
+                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'ON',
+                ],
+                'innodb_file_format' => [
+                    'Variable_name' => 'innodb_file_format', 'Value' => 'snapper',
+                ],
+            ],
+            'InnoDB is not configured properly!',
+        ];
+
+        yield 'bad file per table setting' => [
+            [
+                'version' => '5.7.0',
+                'defaultTableOptions' => [
+                    'collate' => 'utf8mb4_general_ci',
+                    'engine' => 'InnoDB',
+                ],
+                'collation' => [
+                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                ],
+                'engines' => [
+                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
+                ],
+                'innodb_large_prefix' => [
+                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'ON',
+                ],
+                'innodb_file_format' => [
+                    'Variable_name' => 'innodb_file_format', 'Value' => 'barracuda',
+                ],
+                'innodb_file_per_table' => [
+                    'Variable_name' => 'innodb_file_per_table', 'Value' => '2',
+                ],
+            ],
+            'InnoDB is not configured properly!',
+        ];
+
+        yield 'multiple' => [
+            [
+                'defaultTableOptions' => [
+                    'collate' => 'foo',
+                    'engine' => 'MyISAM',
+                ],
+                'engines' => [
+                    ['Engine' => 'MEMORY', 'Comment' => 'Hash based, stored in memory, useful for temporary tables'],
+                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
+                ],
+            ],
+            [
+                'The configured collation is not supported!',
+                'The configured database engine is not supported!',
+            ],
+        ];
+    }
+
+    /**
      * @dataProvider provideInvalidSqlModes
      */
     public function testEmitsWarningMessageIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
