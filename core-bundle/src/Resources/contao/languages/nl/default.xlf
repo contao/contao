@@ -319,6 +319,10 @@
       </trans-unit>
       <trans-unit id="ERR.previewSwitchInvalidUsername">
         <source>Unknown username: %s</source>
+        <target>Onbekende gebruikersnaam: %s</target>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2885,8 +2889,7 @@
         <target>%d geïndexeerde URI('s) succesvol. %d mislukt.</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.warning">
-        <source>%d URI(s) were skipped (if you are missing one, checkout the debug log).</source>
-        <target>%d URI('s) zijn overgeslagen (als u er een mist, bekijk dan het foutopsporingslogboek).</target>
+        <source>%d URI(s) were skipped.</source>
       </trans-unit>
       <trans-unit id="CRAWL.brokenLinkChecker.summary">
         <source>Checked %d link(s) successfully. %d were broken.</source>

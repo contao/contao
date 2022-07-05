@@ -149,13 +149,14 @@
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
         <target>Pārmeklētājs pašlaik darbojas. Lūdzu, pagaidiet, kamēr tas pabeigs, lai redzētu rezultātus.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
-        <source>Download the debug log</source>
-        <target>Lejupielādēt atkļūdošanas žurnālu</target>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
-        <source>Download the log</source>
-        <target>Lejupielādēt žurnālu</target>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
         <source>Update the search index</source>

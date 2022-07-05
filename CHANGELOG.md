@@ -2,6 +2,29 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.9.31] (2022-07-05)
+
+**Fixed issues:**
+
+- [#4865] Correctly check ptable when moving records ([aschempp])
+- [#4864] Fix inconsistency when copying child records ([aschempp])
+- [#4906] Improve deprecation warning for DCA FQCN ([aschempp])
+- [#4894] Display an error message if the version cannot be restored ([qzminski])
+- [#4880] Adjust the video file type sorting in the media element ([leofeyer])
+- [#4867] Do not update the search index on redirects ([Toflar])
+- [#4879] Do not call `kernel.terminate` on fresh cache entries ([Toflar])
+- [#4858] Fix 0 to nbsp conversion in the listing module ([bezin])
+- [#4853] Determine the InnoDB index length only once per schema ([ausi])
+- [#4845] Fix the crawl logs view ([leofeyer])
+- [#4828] Correctly clear style sheets on 404 ([aschempp])
+- [#4832] Prevent unlimited recurrences in the event list ([leofeyer])
+- [#4574] Fix the impersonation message ([cliffparnitzky])
+- [#4819] Deprecate CURRENT_ID ([ausi])
+- [#4809] Add a migration for bad playerColor data ([ausi])
+- [#4814] Fix preview toolbar always showing error ([fritzmg])
+- [#4804] Fix SearchIndexSubscriber not respecting noindex hint ([Toflar])
+- [#4802] Ignore website roots with empty language in the meta wizard ([fritzmg])
+
 ## [4.9.30] (2022-06-03)
 
 **Fixed issues:**
@@ -936,6 +959,7 @@ This project adheres to [Semantic Versioning].
 - [#991] Replace mb_strlen() with Utf8::strlen() ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.9.31]: https://github.com/contao/contao/releases/tag/4.9.31
 [4.9.30]: https://github.com/contao/contao/releases/tag/4.9.30
 [4.9.29]: https://github.com/contao/contao/releases/tag/4.9.29
 [4.9.28]: https://github.com/contao/contao/releases/tag/4.9.28
@@ -1006,6 +1030,24 @@ This project adheres to [Semantic Versioning].
 [xchs]: https://github.com/xchs
 [xprojects-de]: https://github.com/xprojects-de
 [zonky2]: https://github.com/zonky2
+[#4865]: https://github.com/contao/contao/pull/4865
+[#4864]: https://github.com/contao/contao/pull/4864
+[#4906]: https://github.com/contao/contao/pull/4906
+[#4894]: https://github.com/contao/contao/pull/4894
+[#4880]: https://github.com/contao/contao/pull/4880
+[#4867]: https://github.com/contao/contao/pull/4867
+[#4879]: https://github.com/contao/contao/pull/4879
+[#4858]: https://github.com/contao/contao/pull/4858
+[#4853]: https://github.com/contao/contao/pull/4853
+[#4845]: https://github.com/contao/contao/pull/4845
+[#4828]: https://github.com/contao/contao/pull/4828
+[#4832]: https://github.com/contao/contao/pull/4832
+[#4574]: https://github.com/contao/contao/pull/4574
+[#4819]: https://github.com/contao/contao/pull/4819
+[#4809]: https://github.com/contao/contao/pull/4809
+[#4814]: https://github.com/contao/contao/pull/4814
+[#4804]: https://github.com/contao/contao/pull/4804
+[#4802]: https://github.com/contao/contao/pull/4802
 [#4766]: https://github.com/contao/contao/pull/4766
 [#4711]: https://github.com/contao/contao/pull/4711
 [#4718]: https://github.com/contao/contao/pull/4718
