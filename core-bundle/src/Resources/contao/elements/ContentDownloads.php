@@ -99,10 +99,11 @@ class ContentDownloads extends ContentDownload
 		$auxDate = array();
 
 		$objFiles = $this->objFiles;
-		$container = System::getContainer();
-		$request = $container->get('request_stack')->getCurrentRequest();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+
+		$container = System::getContainer();
 		$projectDir = $container->getParameter('kernel.project_dir');
+		$request = $container->get('request_stack')->getCurrentRequest();
 		$isBackend = $request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get all files
