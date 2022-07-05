@@ -301,6 +301,12 @@ class FileUpload extends Backend
 
 		$arrImageSize = $objFile->imageSize;
 
+		// Image size could not be determined
+		if (count($arrImageSize) < 2)
+		{
+			return false;
+		}
+
 		// The image is too big to be handled by the GD library
 		if ($objFile->isGdImage && ($arrImageSize[0] > Config::get('gdMaxImgWidth') || $arrImageSize[1] > Config::get('gdMaxImgHeight')))
 		{
