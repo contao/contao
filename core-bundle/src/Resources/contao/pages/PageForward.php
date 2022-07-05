@@ -102,7 +102,7 @@ class PageForward extends Frontend
 				}
 
 				// Ignore arrays (see #4895)
-				if (is_array($_GET[$key]))
+				if (\is_array($_GET[$key]))
 				{
 					continue;
 				}
