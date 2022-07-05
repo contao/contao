@@ -347,7 +347,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		// Get the active front end users
 		if (BackendUser::getInstance()->isAdmin)
 		{
-			$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE login=1 AND disable!=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY username");
+			$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE login=1 AND disable=0 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY username");
 		}
 		else
 		{
@@ -355,7 +355,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 			if (!empty($amg) && \is_array($amg))
 			{
-				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (`groups` LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login=1 AND disable!=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY username");
+				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (`groups` LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login=1 AND disable=0 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY username");
 			}
 		}
 

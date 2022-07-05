@@ -2,6 +2,20 @@
 
 ## Version 4.* to 5.0
 
+### Insert tag flag uncached
+
+The `|uncached` insert tag flag was removed. Use the `{{fragment::*}}` insert tag instead.
+
+### Unknown insert tags
+
+Unknown insert tags are no longer removed from the resulting text. Instead, they are now kept unchanged and are visible
+in the front end.
+
+### Insert tag hooks
+
+The `$cache` parameter is no longer passed to the `replaceInsertTags` and the `insertTagFlags` hooks. An empty array is
+passed instead.
+
 ### Figure
 
 The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an

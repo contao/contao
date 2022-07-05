@@ -62,7 +62,7 @@ abstract class DataContainer extends Backend
 	public const MODE_PARENT = 4;
 
 	/**
-	 * Records are displayed as tree (see site structure)
+	 * Records are displayed as tree (see pages)
 	 */
 	public const MODE_TREE = 5;
 
@@ -217,7 +217,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Active record
-	 * @var \stdClass|null
+	 * @var Model|object|null
 	 * @deprecated Deprecated since Contao 5.0 to be removed in Contao 6. Use $dc->getCurrentRecord() instead.
 	 */
 	protected $objActiveRecord;
@@ -293,7 +293,8 @@ abstract class DataContainer extends Backend
 				break;
 
 			default:
-				$this->$strKey = $varValue; // backwards compatibility
+				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones has been deprecated and will no longer work in Contao 6.');
+				$this->$strKey = $varValue;
 				break;
 		}
 	}

@@ -58,11 +58,6 @@ class Statement
 	private $arrSetParams = array();
 
 	/**
-	 * @var array
-	 */
-	private $arrLastUsedParams = array();
-
-	/**
 	 * Validate the connection resource and store the query string
 	 *
 	 * @param Connection $resConnection The connection resource
@@ -118,7 +113,6 @@ class Statement
 		}
 
 		$this->strQuery = trim($strQuery);
-		$this->arrLastUsedParams = array();
 
 		return $this;
 	}
@@ -269,8 +263,6 @@ class Statement
 			},
 			$arrParams
 		);
-
-		$this->arrLastUsedParams = $arrParams;
 
 		// Execute the query
 		$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams, $arrTypes);

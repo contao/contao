@@ -439,11 +439,6 @@ class tl_article extends Backend
 					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLES;
 					break;
 
-				case 'move':
-					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY;
-					$ids[] = Input::get('sid');
-					break;
-
 				// Do not insert articles into a website root page
 				case 'create':
 				case 'copy':

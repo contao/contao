@@ -49,8 +49,13 @@ class DeprecationsNodeVisitorTest extends TestCase
             new ArrayLoader(['template.html.twig' => $templateContent])
         );
 
-        $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class));
-        $environment->addExtension($contaoExtension);
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoCsrfTokenManager::class)
+            )
+        );
 
         return $environment;
     }
