@@ -27,7 +27,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
 {
     /**
      * @group legacy
-     * 
+     *
      * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.
      */
     public function testAdjustsLengthIfRowFormatIsEngineIsNotInnoDB(): void
@@ -45,7 +45,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
 
     /**
      * @group legacy
-     * 
+     *
      * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.
      */
     public function testAdjustsLengthIfRowFormatIsNotDynamicOrCompressed(): void
@@ -92,7 +92,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
 
     /**
      * @group legacy
-     * 
+     *
      * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.
      */
     public function testAdjustsLengthIfLargePrefixIsDisabled(): void
@@ -113,7 +113,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
 
     /**
      * @group legacy
-     * 
+     *
      * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.
      */
     public function testAdjustsLengthIfCollationIsNotAsciiBin(): void
@@ -134,7 +134,7 @@ class AdjustSearchUrlLengthListenerTest extends TestCase
 
     /**
      * @group legacy
-     * 
+     *
      * @expectedDeprecation Since contao/core-bundle 4.9: The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.
      */
     public function testAdjustsLengthIfCollationIsNotAsciiBinAndLargePrefixIsNotEnabled(): void
