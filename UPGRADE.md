@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+### DataContainer callbacks
+
+DataContainer callbacks registered via service tagging with a priority of `0` (which is the default) are now executed
+after the existing callbacks instead of before.
+
 ### Insert tag hooks
 
 The `$cache` parameter is no longer passed to the `replaceInsertTags` and the `insertTagFlags` hooks. An empty array is
@@ -413,8 +418,3 @@ The back end widgets `pageSelector` and `fileSelector` have been removed. Use th
 ### Public folder
 
 The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
-
-### DataContainer callbacks
-
-DataContainer callbacks registered via service tagging with a priority of `0` (which is the default) will now be
-executed _after_ existing callbacks, instead of before.
