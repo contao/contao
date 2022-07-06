@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.template.1">
         <source>Here you can override the e-mail template of the channel.</source>
+        <target>Hier kunt u de e-mailsjabloon van het kanaal overschrijven.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sendText.0">
         <source>Send as plain text</source>

@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_content.com_template.1">
         <source>Here you can select a comments template.</source>
+        <target>Hier kunt u een opmerkingen template selecteren.</target>
       </trans-unit>
       <trans-unit id="tl_content.comment_legend">
         <source>Comment settings</source>

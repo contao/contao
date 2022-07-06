@@ -15,11 +15,11 @@
       </trans-unit>
       <trans-unit id="tl_user.newsletterp.1">
         <source>Here you can define the channel permissions.</source>
-        <target>Burada kanal izinlerini tanımlanabilirsiniz.</target>
+        <target>Buradan kanal izinlerini tanımlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_user.newsletter_legend">
         <source>Newsletter permissions</source>
-        <target>Haber aboneliği izinleri</target>
+        <target>Haber bülteni izinleri</target>
       </trans-unit>
     </body>
   </file>

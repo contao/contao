@@ -10,12 +10,10 @@
         <target>Favor selecionar os arquivos de notícias que você deseja exibir aos usuários.</target>
       </trans-unit>
       <trans-unit id="tl_user.newp.0">
-        <source>News permissions</source>
-        <target>Permissões de notícias</target>
+        <source>News archive permissions</source>
       </trans-unit>
       <trans-unit id="tl_user.newp.1">
-        <source>Here you can define the news permissions.</source>
-        <target>Aqui você pode definir as permissões de notícias.</target>
+        <source>Here you can define the news archive permissions.</source>
       </trans-unit>
       <trans-unit id="tl_user.newsfeeds.0">
         <source>Allowed news feeds</source>
