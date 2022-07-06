@@ -55,7 +55,6 @@ class MigrateCommand extends Command
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Show pending migrations and schema updates without executing them.')
             ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, ndjson)', 'txt')
             ->addOption('no-backup', null, InputOption::VALUE_NONE, 'Disable the database backup which is created by default before executing the migrations.')
-            ->addOption('no-check', null, InputOption::VALUE_NONE, 'Disable checking for configuration errors.')
             ->addOption('hash', null, InputOption::VALUE_REQUIRED, 'A hash value from a --dry-run result')
         ;
     }
@@ -66,7 +65,7 @@ class MigrateCommand extends Command
 
         $asJson = 'ndjson' === $input->getOption('format');
 
-        if (!$input->getOption('no-check') && $errors = $this->compileConfigurationErrors()) {
+        if ($errors = $this->compileConfigurationErrors()) {
             if ($asJson) {
                 foreach ($errors as $message) {
                     $this->writeNdjson('error', ['message' => $message]);

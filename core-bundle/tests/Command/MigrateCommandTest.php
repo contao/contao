@@ -55,7 +55,7 @@ class MigrateCommandTest extends TestCase
 
         $command = $this->getCommand([], [], null, $backupManager);
         $tester = new CommandTester($command);
-        $code = $tester->execute(['--no-check' => true]);
+        $code = $tester->execute([]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
@@ -69,7 +69,7 @@ class MigrateCommandTest extends TestCase
     {
         $command = $this->getCommand();
         $tester = new CommandTester($command);
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true, '--no-check' => true], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -103,7 +103,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['y']);
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => !$backupsEnabled, '--no-check' => true], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => !$backupsEnabled], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -190,7 +190,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['yes', 'yes']);
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true, '--no-check' => true], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -242,16 +242,10 @@ class MigrateCommandTest extends TestCase
             )
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createDefaultConnection();
         $connection
             ->expects($this->never())
             ->method('executeQuery')
-        ;
-
-        $connection
-            ->method('fetchOne')
-            ->with('SELECT @@sql_mode')
-            ->willReturn('TRADITIONAL')
         ;
 
         $command = $this->getCommand(
@@ -265,7 +259,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
 
         // No --no-backup here because --dry-run should automatically disable backups
-        $code = $tester->execute(['--dry-run' => true, '--format' => $format, '--no-check' => true]);
+        $code = $tester->execute(['--dry-run' => true, '--format' => $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -310,7 +304,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['n']);
 
-        $code = $tester->execute(['--no-backup' => true, '--no-check' => true]);
+        $code = $tester->execute(['--no-backup' => true]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
@@ -334,7 +328,7 @@ class MigrateCommandTest extends TestCase
         $tester = new CommandTester($command);
         $tester->setInputs(['y']);
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true, '--no-check' => true], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(0, $code);
@@ -380,7 +374,7 @@ class MigrateCommandTest extends TestCase
             $this->expectException(\Exception::class);
         }
 
-        $code = $tester->execute(['--format' => $format, '--no-backup' => true, '--no-check' => true], ['interactive' => 'ndjson' !== $format]);
+        $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
         $display = $tester->getDisplay();
 
         $this->assertSame(1, $code);
@@ -396,22 +390,11 @@ class MigrateCommandTest extends TestCase
      */
     public function testOutputsWarningIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('fetchOne')
-            ->with('SELECT @@sql_mode')
-            ->willReturn($sqlMode)
-        ;
-
-        $connection
-            ->method('getDriver')
-            ->willReturn($driver)
-        ;
-
+        $connection = $this->createDefaultConnection($sqlMode, $driver);
         $command = $this->getCommand(connection: $connection);
 
         $tester = new CommandTester($command);
-        $tester->execute(['--no-backup' => true, '--no-check' => true]);
+        $tester->execute(['--no-backup' => true]);
 
         $display = $tester->getDisplay();
 
@@ -615,22 +598,11 @@ class MigrateCommandTest extends TestCase
      */
     public function testEmitsWarningMessageIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('fetchOne')
-            ->with('SELECT @@sql_mode')
-            ->willReturn($sqlMode)
-        ;
-
-        $connection
-            ->method('getDriver')
-            ->willReturn($driver)
-        ;
-
+        $connection = $this->createDefaultConnection($sqlMode, $driver);
         $command = $this->getCommand(connection: $connection);
 
         $tester = new CommandTester($command);
-        $tester->execute(['--format' => 'ndjson', '--no-backup' => true, '--no-check' => true], ['interactive' => false]);
+        $tester->execute(['--format' => 'ndjson', '--no-backup' => true], ['interactive' => false]);
 
         $display = $tester->getDisplay();
 
@@ -715,23 +687,39 @@ class MigrateCommandTest extends TestCase
             ->willReturn(new Schema())
         ;
 
-        if (null === $connection) {
-            $connection = $this->createMock(Connection::class);
-            $connection
-                ->method('fetchOne')
-                ->with('SELECT @@sql_mode')
-                ->willReturn('TRADITIONAL')
-            ;
-        }
-
         return new MigrateCommand(
             $commandCompiler ?? $this->createMock(CommandCompiler::class),
-            $connection,
+            $connection ?? $this->createDefaultConnection(),
             $migrations,
             $backupManager ?? $this->createBackupManager(false),
             $schemaProvider,
             $this->createMock(MysqlInnodbRowSizeCalculator::class)
         );
+    }
+
+    /**
+     * @return Connection&MockObject
+     */
+    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver $driver = null): Connection
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->willReturnCallback(
+                static fn (string $query): string|false => match ($query) {
+                    'SELECT @@sql_mode' => $sqlMode,
+                    'SELECT @@version' => '8.0.0',
+                    default => false,
+                }
+            )
+        ;
+
+        $connection
+            ->method('getDriver')
+            ->willReturn($driver ?? new PdoDriver())
+        ;
+
+        return $connection;
     }
 
     /**
