@@ -13,18 +13,23 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Migration\Version413;
 
 use Contao\Controller;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * @internal
  */
 class RelLightboxMigration extends AbstractMigration
 {
-    public function __construct(private Connection $connection, private ContaoFramework $framework)
-    {
+    public function __construct(
+        private Connection $connection,
+        private ContaoFramework $framework,
+        private ResourceFinder $resourceFinder,
+    ) {
     }
 
     public function shouldRun(): bool
@@ -77,18 +82,27 @@ class RelLightboxMigration extends AbstractMigration
     {
         $this->framework->initialize();
 
-        $schemaManager = $this->connection->createSchemaManager();
         $targets = [];
+        $processed = [];
 
-        foreach ($schemaManager->listTableNames() as $tableName) {
-            try {
-                Controller::loadDataContainer($tableName);
-            } catch (\Throwable) {
+        /** @var array<SplFileInfo> $files */
+        $files = $this->resourceFinder->findIn('dca')->depth(0)->files()->name('*.php');
+
+        foreach ($files as $file) {
+            $tableName = $file->getBasename('.php');
+
+            if (\in_array($tableName, $processed, true)) {
                 continue;
             }
 
+            $processed[] = $tableName;
+
+            Controller::loadDataContainer($tableName);
+
             foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
-                if (str_starts_with($fieldConfig['eval']['rte'] ?? '', 'tiny')) {
+                $rte = $fieldConfig['eval']['rte'] ?? null;
+
+                if (\is_string($rte) && str_starts_with($rte, 'tiny')) {
                     $targets[] = [$tableName, strtolower($fieldName)];
                 }
             }
