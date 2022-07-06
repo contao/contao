@@ -52,7 +52,7 @@ class ContaoLoginFactoryTest extends TestCase
         $this->assertEquals(new Reference('contao.security.frontend_user_provider'), $arguments['index_0']);
         $this->assertEquals(new Reference('contao.security.authentication_success_handler'), $arguments['index_1']);
         $this->assertEquals(new Reference('contao.security.authentication_failure_handler'), $arguments['index_2']);
-        $this->assertEquals(new Reference('security.authenticator.two_factor.contao_frontend'), $arguments['index_10']);
+        $this->assertEquals(new Reference('security.authenticator.two_factor.contao_frontend'), $arguments['index_11']);
 
         $this->assertTrue($container->hasDefinition($twoFactorFirewallConfigId));
 

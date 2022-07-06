@@ -23,6 +23,7 @@ use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFa
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -64,6 +65,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         private TokenStorageInterface $tokenStorage,
         private PageRegistry $pageRegistry,
         private HttpKernelInterface $httpKernel,
+        private RequestStack $requestStack,
         private TwoFactorAuthenticator $twoFactorAuthenticator,
         array $options,
     ) {
@@ -86,32 +88,9 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $this->framework->initialize();
 
-        $page = $request->attributes->get('pageModel');
-
-        if (!$page instanceof PageModel) {
-            throw new \RuntimeException('No PageModel found on request.');
-        }
-
-        $page->loadDetails();
-        $page->protected = false;
-
+        $page = $this->getPageForRequest($request);
         $route = $this->pageRegistry->getRoute($page);
         $subRequest = $request->duplicate(null, null, $route->getDefaults());
-
-        if (null === $this->tokenStorage->getToken()) {
-            $pageAdapter = $this->framework->getAdapter(PageModel::class);
-            $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
-
-            if (null === $errorPage) {
-                throw new PageNotFoundException('No error page found.');
-            }
-
-            $errorPage->loadDetails();
-            $errorPage->protected = false;
-
-            $route = $this->pageRegistry->getRoute($errorPage);
-            $subRequest = $request->duplicate(null, null, $route->getDefaults());
-        }
 
         try {
             return $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
@@ -188,6 +167,18 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function isInteractive(): bool
     {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            return false;
+        }
+
+        $page = $request->attributes->get('pageModel');
+
+        if (!$page instanceof PageModel) {
+            return false;
+        }
+
         return true;
     }
 
@@ -228,5 +219,28 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         );
 
         return new RedirectResponse($this->uriSigner->sign($url));
+    }
+
+    private function getPageForRequest(Request $request): PageModel
+    {
+        $page = $request->attributes->get('pageModel');
+        $page->loadDetails();
+        $page->protected = false;
+
+        if (null === $this->tokenStorage->getToken()) {
+            $pageAdapter = $this->framework->getAdapter(PageModel::class);
+            $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
+
+            if (null === $errorPage) {
+                throw new PageNotFoundException('No error page found.');
+            }
+
+            $errorPage->loadDetails();
+            $errorPage->protected = false;
+
+            return $errorPage;
+        }
+
+        return $page;
     }
 }
