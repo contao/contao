@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### Contao 4 migrations
+
+Contao 5 does not include any Contao 4 migrations, so make sure to upgrade to Contao 4.13 before upgrading to Contao 5!
+
 ### DataContainer callbacks
 
 DataContainer callbacks registered via service tagging with a priority of `0` (which is the default) are now executed
