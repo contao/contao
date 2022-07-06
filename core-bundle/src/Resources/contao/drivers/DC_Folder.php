@@ -2521,8 +2521,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSessionBag = System::getContainer()->get('session')->getBag('contao_backend');
 		$session = $objSessionBag->all();
 
-		$security = System::getContainer()->get('security.helper');
-
 		// Get the session data and toggle the nodes
 		if (Input::get('tg'))
 		{
@@ -2579,6 +2577,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			natcasesort($files);
 			$files = array_values($files);
 		}
+
+		$security = System::getContainer()->get('security.helper');
 
 		// Folders
 		for ($f=0, $c=\count($folders); $f<$c; $f++)

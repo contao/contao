@@ -4090,7 +4090,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Regular tree
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 				{
-					// on cut: disable buttons of the page and all its childs to avoid circular references
+					// Disable buttons of the page and all its children on cut to avoid circular references
 					if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))))
 					{
 						$_buttons .= Image::getHtml('pasteafter_.svg') . ' ' . Image::getHtml('pasteinto_.svg') . ' ';
