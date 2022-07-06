@@ -64,6 +64,14 @@ class TokenChecker
     }
 
     /**
+     * Checks if a front end guest user is "authenticated".
+     */
+    public function hasFrontendGuest(): bool
+    {
+        return $this->session->has(FrontendPreviewAuthenticator::SESSION_NAME);
+    }
+
+    /**
      * Gets the front end username from the session.
      */
     public function getFrontendUsername(): string|null

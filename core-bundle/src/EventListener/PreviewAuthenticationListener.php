@@ -18,8 +18,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
@@ -31,7 +29,6 @@ class PreviewAuthenticationListener
         private TokenChecker $tokenChecker,
         private UrlGeneratorInterface $router,
         private UriSigner $uriSigner,
-        private Security $security,
     ) {
     }
 
@@ -43,7 +40,7 @@ class PreviewAuthenticationListener
             !$request->attributes->get('_preview', false)
             || $this->scopeMatcher->isBackendRequest($request)
             || $this->tokenChecker->hasBackendUser()
-            || $this->security->getToken() instanceof UsernamePasswordToken
+            || $this->tokenChecker->hasFrontendGuest()
         ) {
             return;
         }
