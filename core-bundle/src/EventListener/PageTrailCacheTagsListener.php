@@ -50,7 +50,7 @@ class PageTrailCacheTagsListener
         $tags = [];
 
         foreach ($pageModel->trail as $trail) {
-            $tags[] = 'contao.db.tl_page.' . $trail;
+            $tags[] = 'contao.db.tl_page.'.$trail;
         }
 
         $this->responseTagger->addTags($tags);
