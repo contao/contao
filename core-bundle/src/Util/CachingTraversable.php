@@ -48,6 +48,7 @@ class CachingTraversable implements \IteratorAggregate
             if (isset($this->items[$current])) {
                 yield $this->items[$current][0] => $this->items[$current][1];
                 ++$current;
+
                 continue;
             }
 

@@ -37,10 +37,7 @@ class CachingTraversableTest extends TestCase
         $this->assertGeneratedItems(2, $generatorLog);
 
         // Should continue iterating
-        $this->assertSame(
-            \array_slice($items, 0, 4),
-            $this->consumeItems($cachingTraversable, 4)
-        );
+        $this->assertSame(\array_slice($items, 0, 4), $this->consumeItems($cachingTraversable, 4));
         $this->assertGeneratedItems(4, $generatorLog);
     }
 
@@ -85,6 +82,7 @@ class CachingTraversableTest extends TestCase
             ],
             $consumedItems
         );
+
         $this->assertGeneratedItems(3, $generatorLog);
     }
 
@@ -92,7 +90,6 @@ class CachingTraversableTest extends TestCase
     {
         /** @var list<array{mixed, mixed}> $items */
         $items = [];
-
         $cachingTraversable = new CachingTraversable($this->generateItems($items, $generatorLog));
 
         $this->assertEmpty($this->consumeItems($cachingTraversable));
@@ -117,16 +114,10 @@ class CachingTraversableTest extends TestCase
         $arrayIterator = new \ArrayIterator(['a' => 'foo', 'b' => 'bar']);
         $cachingTraversable = new CachingTraversable($arrayIterator);
 
-        $this->assertSame(
-            $this->consumeItems($arrayIterator),
-            $this->consumeItems($cachingTraversable)
-        );
+        $this->assertSame($this->consumeItems($arrayIterator), $this->consumeItems($cachingTraversable));
 
         // Should behave identical when consumed again
-        $this->assertSame(
-            $this->consumeItems($arrayIterator),
-            $this->consumeItems($cachingTraversable)
-        );
+        $this->assertSame($this->consumeItems($arrayIterator), $this->consumeItems($cachingTraversable));
     }
 
     /**
@@ -142,9 +133,9 @@ class CachingTraversableTest extends TestCase
     {
         $generatorLog = [];
 
-        for ($i = 0; $i < \count($items); ++$i) {
+        foreach ($items as $i => $item) {
             $generatorLog[] = $i;
-            yield $items[$i][0] => $items[$i][1];
+            yield $item[0] => $item[1];
         }
     }
 
