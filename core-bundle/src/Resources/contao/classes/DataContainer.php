@@ -1709,8 +1709,18 @@ abstract class DataContainer extends Backend
 	/**
 	 * @param array<int|string> $ids
 	 */
-	protected function preloadCurrentRecords(array $ids, string $table): void
+	protected function preloadCurrentRecords(array $ids, string $table, bool $noCache = false): void
 	{
+		if (!$noCache)
+		{
+			$ids = array_filter($ids, fn ($id) => !isset($this->arrCurrentRecordCache[$table . '.' . $id]));
+		}
+
+		if (empty($ids))
+		{
+			return;
+		}
+
 		// Clear current cache to make sure records are gone if they cannot be loaded from the database below
 		foreach ($ids as $id)
 		{
@@ -1740,7 +1750,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * @param array<string, mixed>|null $row Pass null to remove a given cache entry
 	 */
-	protected function setCurrentRecordCache(string|int $id, string $table, array|null $row): void
+	public function setCurrentRecordCache(string|int $id, string $table, array|null $row): void
 	{
 		if (null === $row)
 		{
@@ -1764,11 +1774,11 @@ abstract class DataContainer extends Backend
 
 		if ($noCache || !isset($this->arrCurrentRecordCache[$key]))
 		{
-			$this->preloadCurrentRecords(array($id), $table);
+			$this->preloadCurrentRecords(array($id), $table, $noCache);
 		}
 
 		// In case this record was not part of the preloaded result, we don't need to apply any permission checks
-		if (!isset($key, $this->arrCurrentRecordCache))
+		if (!isset($this->arrCurrentRecordCache[$key]))
 		{
 			return null;
 		}

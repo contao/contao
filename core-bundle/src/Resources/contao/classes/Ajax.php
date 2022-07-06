@@ -327,40 +327,24 @@ class Ajax extends Backend
 					{
 						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
 
-						$objVersions = new Versions($dc->table, $this->strAjaxId);
-						$objVersions->initialize();
-
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($this->strAjaxId);
-
-						$objVersions->create();
+						$row = $dc->getCurrentRecord($this->strAjaxId, $dc->table);
+						$row[Input::post('field')] = (Input::post('state') == 1) ? 1 : 0;
+						$dc->setCurrentRecordCache($row['id'], $dc->table, $row);
 
 						if (Input::post('load'))
 						{
 							throw new ResponseException($this->convertToResponse($dc->editAll($this->strAjaxId, Input::post('id'))));
 						}
-
-						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-						{
-							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
-						}
 					}
 					else
 					{
-						$objVersions = new Versions($dc->table, $dc->id);
-						$objVersions->initialize();
-
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($dc->id);
-
-						$objVersions->create();
+						$row = $dc->getCurrentRecord();
+						$row[Input::post('field')] = (Input::post('state') == 1) ? 1 : 0;
+						$dc->setCurrentRecordCache($row['id'], $dc->table, $row);
 
 						if (Input::post('load'))
 						{
 							throw new ResponseException($this->convertToResponse($dc->edit(false, Input::post('id'))));
-						}
-
-						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-						{
-							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 						}
 					}
 				}
