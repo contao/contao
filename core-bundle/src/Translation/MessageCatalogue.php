@@ -171,6 +171,10 @@ final class MessageCatalogue implements MessageCatalogueInterface
             $item = &$item[$part];
         }
 
-        return $item;
+        if (\is_array($item)) {
+            return null;
+        }
+
+        return (string) $item;
     }
 }
