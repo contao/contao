@@ -519,10 +519,10 @@ class MigrateCommand extends Command
                 return $errors;
             }
 
-            $largePrefixSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'");
+            $largePrefixSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_large_prefix'")['Value'] ?? '';
 
             // The variable no longer exists as of MySQL 8 and MariaDB 10.3
-            if (false === $largePrefixSetting || '' === $largePrefixSetting['Value']) {
+            if ('' === $largePrefixSetting) {
                 return $errors;
             }
 
@@ -537,7 +537,7 @@ class MigrateCommand extends Command
             }
 
             // The innodb_large_prefix option is disabled
-            if (!\in_array(strtolower((string) $largePrefixSetting['Value']), ['1', 'on'], true)) {
+            if (!\in_array(strtolower((string) $largePrefixSetting), ['1', 'on'], true)) {
                 $errors[] =
                     <<<'EOF'
                         The "innodb_large_prefix" option is not enabled!
@@ -552,14 +552,14 @@ class MigrateCommand extends Command
                         EOF;
             }
 
-            $fileFormatSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'");
-            $filePerTableSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'");
+            $fileFormatSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_format'")['Value'] ?? '';
+            $filePerTableSetting = $this->connection->fetchAssociative("SHOW VARIABLES LIKE 'innodb_file_per_table'")['Value'] ?? null;
 
             if (
                 // The InnoDB file format is not Barracuda
-                ($fileFormatSetting && '' !== $fileFormatSetting['Value'] && 'barracuda' !== strtolower((string) $fileFormatSetting['Value'])) ||
+                ($fileFormatSetting && 'barracuda' !== strtolower((string) $fileFormatSetting)) ||
                 // The innodb_file_per_table option is disabled
-                ($filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting['Value']), ['1', 'on'], true))
+                (null !== $filePerTableSetting && !\in_array(strtolower((string) $filePerTableSetting), ['1', 'on'], true))
             ) {
                 $errors[] =
                     <<<'EOF'
