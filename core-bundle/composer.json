@@ -165,6 +165,7 @@
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/cache": "<1.10",
         "doctrine/dbal": "3.3.0",
+        "friendsofsymfony/http-cache": "2.14.0",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2"
     },
