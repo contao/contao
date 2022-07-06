@@ -1574,6 +1574,10 @@ abstract class DataContainer extends Backend
 	 */
 	public static function isFieldExcluded(string $table, string $field): bool
 	{
+		if (DC_File::class === self::getDriverForTable($table)) {
+			return false;
+		}
+
 		if (isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['exclude']))
 		{
 			return (bool) $GLOBALS['TL_DCA'][$table]['fields'][$field]['exclude'];
