@@ -378,7 +378,7 @@
         <source>Modules</source>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
-        <source>Please select a module for every root page.</source>
+        <source>Please select a module for every website root page.</source>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for "%s"</source>
