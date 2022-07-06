@@ -188,6 +188,7 @@
         "doctrine/annotations": "<1.9",
         "doctrine/cache": "<1.10",
         "doctrine/dbal": "3.3.0",
+        "friendsofsymfony/http-cache": "2.14.0",
         "nikic/php-parser": "4.7.0",
         "phpunit/phpunit": "<8.0",
         "roave/better-reflection": "<4.12.2 || >=6.0",
