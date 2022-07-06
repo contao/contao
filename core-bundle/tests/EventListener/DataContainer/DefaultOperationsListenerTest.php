@@ -262,8 +262,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        /** @phpstan-ignore-line */
-        $this->assertSame(['edit', 'foo', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'foo', 'delete', 'show'], array_keys($operations)); // @phpstan-ignore-line
     }
 
     public function testManuallySortOperations(): void
@@ -286,8 +285,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        /** @phpstan-ignore-line */
-        $this->assertSame(['delete', 'edit', 'show'], array_keys($operations));
+        $this->assertSame(['delete', 'edit', 'show'], array_keys($operations)); // @phpstan-ignore-line
     }
 
     public function testAppendsCustomOperationsToDefaults(): void
@@ -311,8 +309,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        /** @phpstan-ignore-line */
-        $this->assertSame(['edit', 'copy', 'delete', 'show', 'foo'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'delete', 'show', 'foo'], array_keys($operations)); // @phpstan-ignore-line
     }
 
     public function testKeepsPositionForNamedOperations(): void
@@ -339,8 +336,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        /** @phpstan-ignore-line */
-        $this->assertSame(['edit', 'foo', 'show', 'delete'], array_keys($operations));
+        $this->assertSame(['edit', 'foo', 'show', 'delete'], array_keys($operations)); // @phpstan-ignore-line
     }
 
     public function testDoesNotAppendsIfOneOperationHasADefaultName(): void
