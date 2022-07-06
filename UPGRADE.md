@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+### DataContainer callbacks
+
+DataContainer callbacks registered via service tagging with a priority of `0` (which is the default) are now executed
+after the existing callbacks instead of before.
+
 ### Insert tag flag uncached
 
 The `|uncached` insert tag flag was removed. Use the `{{fragment::*}}` insert tag instead.
