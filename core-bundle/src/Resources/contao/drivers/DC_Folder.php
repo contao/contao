@@ -500,7 +500,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
 <ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left">' . $label . '</div> <div class="tl_right">' . (($blnClipboard && empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false) ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteInto[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
+  <li class="tl_folder_top cf"><div class="tl_left">' . $label . '</div> <div class="tl_right">' . (($blnClipboard && empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteInto[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
 </ul>' . ($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
@@ -2578,6 +2578,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$files = array_values($files);
 		}
 
+		$security = System::getContainer()->get('security.helper');
+
 		// Folders
 		for ($f=0, $c=\count($folders); $f<$c; $f++)
 		{
@@ -2664,7 +2666,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 				$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($labelPasteInto[1], $currentEncoded));
 
-				if (\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote(rawurldecode($arrClipboard['id']), '#') . '(/|$)#i', $currentFolder)))
+				if ((\in_array($arrClipboard['mode'], array('copy', 'cut')) && (($arrClipboard['mode'] == 'cut' && \dirname($arrClipboard['id']) == $currentFolder) || preg_match('#^' . preg_quote(rawurldecode($arrClipboard['id']), '#') . '(/|$)#i', $currentFolder))) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentFolder))))
 				{
 					$return .= Image::getHtml('pasteinto_.svg');
 				}

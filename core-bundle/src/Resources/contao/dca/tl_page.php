@@ -519,6 +519,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'useFolderUrl' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -532,6 +533,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'urlSuffix' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('nospace'=>'true', 'maxlength'=>16, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(16) NOT NULL default ''"
