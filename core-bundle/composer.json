@@ -1,9 +1,8 @@
 {
     "name": "contao/core-bundle",
-    "type": "symfony-bundle",
     "description": "Provides the Contao core functionality",
-    "homepage": "https://contao.org",
     "license": "LGPL-3.0-or-later",
+    "type": "symfony-bundle",
     "authors": [
         {
             "name": "Leo Feyer",
@@ -14,6 +13,13 @@
             "homepage": "https://contao.org/contributors"
         }
     ],
+    "homepage": "https://contao.org",
+    "support": {
+        "issues": "https://github.com/contao/contao/issues",
+        "forum": "https://community.contao.org",
+        "source": "https://github.com/contao/core-bundle",
+        "docs": "https://docs.contao.org"
+    },
     "require": {
         "php": "^7.2 || ^8.0",
         "ext-dom": "*",
@@ -108,14 +114,6 @@
         "webmozart/path-util": "^2.2",
         "wikimedia/less.php": "^1.7"
     },
-    "conflict": {
-        "contao-community-alliance/composer-plugin": "<3.0",
-        "contao/core": "*",
-        "contao/manager-bundle": "4.5.* <4.5.2",
-        "contao/manager-plugin": "<2.0 || >=3.0",
-        "symfony/security-bundle": "4.4.* <4.4.5",
-        "terminal42/contao-ce-access": "<3.0"
-    },
     "require-dev": {
         "ext-fileinfo": "*",
         "composer/composer": "^1.0 || ^2.0",
@@ -127,12 +125,17 @@
         "symfony/http-client": "4.4.*",
         "symfony/phpunit-bridge": "4.4.*"
     },
+    "conflict": {
+        "contao-community-alliance/composer-plugin": "<3.0",
+        "contao/core": "*",
+        "contao/manager-bundle": "4.5.* <4.5.2",
+        "contao/manager-plugin": "<2.0 || >=3.0",
+        "symfony/security-bundle": "4.4.* <4.4.5",
+        "terminal42/contao-ce-access": "<3.0"
+    },
     "suggest": {
         "contao/tcpdf-bundle": "To export articles as PDF files",
         "lexik/maintenance-bundle": "To put the application into maintenance mode"
-    },
-    "extra": {
-        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     },
     "autoload": {
         "psr-4": {
@@ -161,10 +164,13 @@
             "Contao\\TestBundle\\": "tests/Fixtures/vendor/contao/test-bundle/"
         }
     },
-    "support": {
-        "issues": "https://github.com/contao/contao/issues",
-        "forum": "https://community.contao.org",
-        "source": "https://github.com/contao/core-bundle",
-        "docs": "https://docs.contao.org"
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": true,
+            "contao/manager-plugin": true
+        }
+    },
+    "extra": {
+        "contao-manager-plugin": "Contao\\CoreBundle\\ContaoManager\\Plugin"
     }
 }
