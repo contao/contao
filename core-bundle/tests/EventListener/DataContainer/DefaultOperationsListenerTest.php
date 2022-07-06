@@ -381,6 +381,8 @@ class DefaultOperationsListenerTest extends TestCase
             $ref = new \ReflectionFunction($operation['button_callback']);
 
             $this->assertSame(1, $ref->getNumberOfParameters());
+
+            /** @var \ReflectionNamedType $type */
             $type = $ref->getParameters()[0]->getType();
             $this->assertSame(DataContainerOperation::class, $type->getName());
         } else {
