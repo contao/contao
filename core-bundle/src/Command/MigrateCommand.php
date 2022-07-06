@@ -69,9 +69,7 @@ class MigrateCommand extends Command
         if (!$input->getOption('no-check') && $errors = $this->compileConfigurationErrors()) {
             if ($asJson) {
                 foreach ($errors as $message) {
-                    $this->writeNdjson('error', [
-                        'message' => $message,
-                    ]);
+                    $this->writeNdjson('error', ['message' => $message]);
                 }
             } else {
                 foreach ($errors as $error) {
