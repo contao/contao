@@ -2793,7 +2793,7 @@ class DC_Folder extends DataContainer implements \listable, \editable
 			$thumbnail .= ')</span>';
 
 			// Generate the thumbnail
-			if ($objFile->isImage && (!$objFile->isSvgImage || $objFile->viewHeight > 0) && Config::get('thumbnails'))
+			if ($objFile->isImage && (!$objFile->isSvgImage || $objFile->viewHeight > 0) && Config::get('thumbnails') && \in_array($objFile->extension, System::getContainer()->getParameter('contao.image.valid_extensions')))
 			{
 				$blnCanResize = true;
 

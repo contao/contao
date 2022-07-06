@@ -338,15 +338,13 @@ abstract class Backend extends Controller
 
 		$arrTables = (array) $arrModule['tables'];
 		$strTable = Input::get('table') ?: $arrTables[0];
-		$id = (!Input::get('act') && Input::get('id')) ? Input::get('id') : $objSession->get('CURRENT_ID');
 
-		// Store the current ID in the current session
-		if ($id != $objSession->get('CURRENT_ID'))
-		{
-			$objSession->set('CURRENT_ID', $id);
-		}
+		$id = $this->findCurrentId($strTable);
+		$objSession->set('CURRENT_ID', $id);
 
+		// Define the current ID
 		\define('CURRENT_ID', (Input::get('table') ? $id : Input::get('id')));
+
 		$this->Template->headline = $GLOBALS['TL_LANG']['MOD'][$module][0];
 
 		// Add the module style sheet
@@ -642,6 +640,81 @@ abstract class Backend extends Controller
 			}
 
 			return $dc->$act();
+		}
+
+		return null;
+	}
+
+	/**
+	 * With this method, the ID of the current (parent) record can be
+	 * determined stateless based on the current request only.
+	 *
+	 * In older versions, Contao stored the ID of the current (parent) record
+	 * in the user session as "CURRENT_ID" to make it known on subsequent
+	 * requests. This was unreliable and caused several issues, like for
+	 * example if the user used multiple browser tabs at the same time.
+	 */
+	protected function findCurrentId(?string $table): ?string
+	{
+		if (!$table)
+		{
+			return null;
+		}
+
+		$id = Input::get('id');
+		$pid = Input::get('pid');
+		$act = Input::get('act');
+		$mode = Input::get('mode');
+
+		// For these actions the id parameter refers to the parent record
+		if (($act === 'paste' && $mode === 'create') || \in_array($act, array(null, 'select', 'editAll', 'overrideAll', 'deleteAll'), true))
+		{
+			return $id;
+		}
+
+		// For these actions the pid parameter refers to the insert position
+		if (\in_array($act, array('create', 'cut', 'copy', 'cutAll', 'copyAll'), true))
+		{
+			// Mode “paste into”
+			if ($mode === '2')
+			{
+				return $pid;
+			}
+
+			// Mode “paste after”
+			$id = $pid;
+		}
+
+		if (!$id)
+		{
+			return null;
+		}
+
+		$allTables = array_merge(
+			...array_values(
+				array_map(
+					static function ($module)
+					{
+						return (array) ($module['tables'] ?? array());
+					},
+					array_merge(...array_values($GLOBALS['BE_MOD']))
+				)
+			)
+		);
+
+		// Do not run database queries for unknown tables
+		if (!\in_array($table, $allTables, true))
+		{
+			return null;
+		}
+
+		try
+		{
+			return $this->Database->prepare("SELECT pid FROM `$table` WHERE id=?")->limit(1)->execute($id)->pid;
+		}
+		catch (\Throwable $exception)
+		{
+			// Ignore errors
 		}
 
 		return null;

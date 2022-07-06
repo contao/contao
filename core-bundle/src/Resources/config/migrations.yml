@@ -52,3 +52,7 @@ services:
         arguments:
             - '@database_connection'
             - '@contao.framework'
+
+    Contao\CoreBundle\Migration\Version409\PlayerColorMigration:
+        arguments:
+            - '@database_connection'

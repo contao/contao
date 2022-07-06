@@ -285,10 +285,14 @@ class FrontendIndex extends Frontend
 		}
 
 		// Backup some globals (see #7659)
-		$arrHead = $GLOBALS['TL_HEAD'];
-		$arrBody = $GLOBALS['TL_BODY'];
-		$arrMootools = $GLOBALS['TL_MOOTOOLS'];
-		$arrJquery = $GLOBALS['TL_JQUERY'];
+		$arrBackup = array(
+			$GLOBALS['TL_HEAD'] ?? array(),
+			$GLOBALS['TL_BODY'] ?? array(),
+			$GLOBALS['TL_MOOTOOLS'] ?? array(),
+			$GLOBALS['TL_JQUERY'] ?? array(),
+			$GLOBALS['TL_USER_CSS'] ?? array(),
+			$GLOBALS['TL_FRAMEWORK_CSS'] ?? array()
+		);
 
 		try
 		{
@@ -344,10 +348,14 @@ class FrontendIndex extends Frontend
 		catch (\UnusedArgumentsException $e)
 		{
 			// Restore the globals (see #7659)
-			$GLOBALS['TL_HEAD'] = $arrHead;
-			$GLOBALS['TL_BODY'] = $arrBody;
-			$GLOBALS['TL_MOOTOOLS'] = $arrMootools;
-			$GLOBALS['TL_JQUERY'] = $arrJquery;
+			list(
+				$GLOBALS['TL_HEAD'],
+				$GLOBALS['TL_BODY'],
+				$GLOBALS['TL_MOOTOOLS'],
+				$GLOBALS['TL_JQUERY'],
+				$GLOBALS['TL_USER_CSS'],
+				$GLOBALS['TL_FRAMEWORK_CSS']
+			) = $arrBackup;
 
 			/** @var PageError404 $objHandler */
 			$objHandler = new $GLOBALS['TL_PTY']['error_404']();

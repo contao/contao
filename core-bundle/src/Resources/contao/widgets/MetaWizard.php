@@ -116,7 +116,7 @@ class MetaWizard extends Widget
 		$this->import(BackendUser::class, 'User');
 
 		// Only show the root page languages (see #7112, #7667)
-		$objRootLangs = $this->Database->query("SELECT REPLACE(language, '-', '_') AS language FROM tl_page WHERE type='root'");
+		$objRootLangs = $this->Database->query("SELECT REPLACE(language, '-', '_') AS language FROM tl_page WHERE type='root' AND language != ''");
 		$existing = $objRootLangs->fetchEach('language');
 
 		foreach ($existing as $lang)

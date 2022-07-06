@@ -973,6 +973,7 @@ class ContaoCoreExtensionTest extends TestCase
                 new Reference('twig'),
                 new Reference('router'),
                 new Reference(ContaoCsrfTokenManager::class),
+                new Reference('translator'),
                 new Reference('%contao.csrf_token_name%'),
             ],
             $definition->getArguments()
@@ -1671,7 +1672,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertSame(ContaoCsrfTokenManager::class, (string) $alias);
         $this->assertTrue($alias->isPublic());
-        $this->assertTrue($alias->isDeprecated());
+        $this->assertFalse($alias->isDeprecated());
     }
 
     public function testRegistersTheCsrfTokenStorage(): void
