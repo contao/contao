@@ -422,11 +422,6 @@ class Pagination
 		return $arrLinks;
 	}
 
-	public function getContextForTwigComponent(Request $request): ?array
-	{
-		return $this->compile();
-	}
-
 	/**
 	 * Generate a link and return the URL
 	 *
