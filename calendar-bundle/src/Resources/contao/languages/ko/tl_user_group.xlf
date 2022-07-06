@@ -1,0 +1,10 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_user_group.php" source-language="en" target-language="ko">
+    <body>
+      <trans-unit id="tl_user_group.calendars_legend">
+        <source>Events permissions</source>
+        <target>이벤트 권한</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

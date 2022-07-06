@@ -157,12 +157,16 @@
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
         <target>Der Crawler arbeitet gerade. Bitte warten Sie bis er fertig ist, um die Ergebnisse zu sehen.</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadDebugLog">
-        <source>Download the debug log</source>
-        <target>Debug-Log herunterladen</target>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
+        <target>Debug-Log</target>
       </trans-unit>
-      <trans-unit id="tl_maintenance.crawlDownloadSubscriberLog">
-        <source>Download the log</source>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>Wenn Fehler aufgetreten sind oder Seiten übersprungen wurden, überprüfen Sie das Debug-Log.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
         <target>Log herunterladen</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">

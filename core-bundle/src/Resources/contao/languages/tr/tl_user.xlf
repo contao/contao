@@ -1,0 +1,394 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_user.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_user.username.0">
+        <source>Username</source>
+        <target>Kullanıcı adı</target>
+      </trans-unit>
+      <trans-unit id="tl_user.username.1">
+        <source>Please enter a unique username.</source>
+        <target>Lütfen benzersiz bir kullanıcı adı yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.name.0">
+        <source>Name</source>
+        <target>Ad</target>
+      </trans-unit>
+      <trans-unit id="tl_user.name.1">
+        <source>Please enter the first and last name.</source>
+        <target>Lütfen adı ve soyadı yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.email.0">
+        <source>E-mail address</source>
+        <target>E-posta adresi</target>
+      </trans-unit>
+      <trans-unit id="tl_user.email.1">
+        <source>Please enter a valid e-mail address.</source>
+        <target>Lütfen geçerli bir e-posta adresi yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.language.0">
+        <source>Back end language</source>
+        <target>Yönetim bölümü dili</target>
+      </trans-unit>
+      <trans-unit id="tl_user.language.1">
+        <source>Here you can choose the back end language.</source>
+        <target>Buradan yönetim bölümü dilini seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.backendTheme.0">
+        <source>Back end theme</source>
+        <target>Yönetim bölümü teması</target>
+      </trans-unit>
+      <trans-unit id="tl_user.backendTheme.1">
+        <source>Here you can override the global back end theme.</source>
+        <target>Buradan genel yönetim bölümü temasını değiştirebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.fullscreen.0">
+        <source>Fullscreen</source>
+        <target>Tam ekran</target>
+      </trans-unit>
+      <trans-unit id="tl_user.fullscreen.1">
+        <source>Do not limit the width of the back end.</source>
+        <target>Bu seçenek etkinleştirildiğinde, yönetim bölümünün genişliği sınırlanmaz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.uploader.0">
+        <source>File uploader</source>
+        <target>Dosya yükleyici</target>
+      </trans-unit>
+      <trans-unit id="tl_user.uploader.1">
+        <source>Here you can choose a file uploader.</source>
+        <target>Buradan bir dosya yükleyici seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.showHelp.0">
+        <source>Show explanation</source>
+        <target>Açıklama görüntülensin</target>
+      </trans-unit>
+      <trans-unit id="tl_user.showHelp.1">
+        <source>Show a short explanation text below each input field.</source>
+        <target>Bu seçenek etkinleştirildiğinde, her giriş alanının altında kısa bir açıklama metni görüntülenir.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.thumbnails.0">
+        <source>Show thumbnail images</source>
+        <target>Küçük görseller görüntülensin</target>
+      </trans-unit>
+      <trans-unit id="tl_user.thumbnails.1">
+        <source>Show thumbnail images in the file manager.</source>
+        <target>Bu seçenek etkinleştirildiğinde, dosya yöneticisinde küçük görseller görüntülenir.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useRTE.0">
+        <source>Enable the rich text editor</source>
+        <target>Zengin metin düzenleyici kullanılsın</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useRTE.1">
+        <source>Use the rich text editor to format text elements.</source>
+        <target>Bu seçenek etkinleştirildiğinde, metin bileşenlerini biçimlendirmek için zengin metin düzenleyici kullanılır.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useCE.0">
+        <source>Enable the code editor</source>
+        <target>Kod düzenleyici kullanılsın</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useCE.1">
+        <source>Use the code editor to modify code elements.</source>
+        <target>Bu seçenek etkinleştirildiğinde, kod bileşenlerini düzenlemek için kod düzenleyici kullanılır.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.pwChange.0">
+        <source>Password change required</source>
+        <target>Kullanıcı parolasını değiştirsin</target>
+      </trans-unit>
+      <trans-unit id="tl_user.pwChange.1">
+        <source>Make the user change his password upon the next login.</source>
+        <target>Bu seçenek etkinleştirildiğinde, kullanıcıdan sonraki oturum açmasında parolasını değiştirmesi istenir.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.admin.0">
+        <source>Make the user an administrator</source>
+        <target>Kullanıcı yönetici olsun</target>
+      </trans-unit>
+      <trans-unit id="tl_user.admin.1">
+        <source>Administrators have unlimited access to all modules and elements!</source>
+        <target>Yöneticilerin tüm modül ve bileşenlere sınırlamasız erişimi vardır!</target>
+      </trans-unit>
+      <trans-unit id="tl_user.groups.0">
+        <source>User groups</source>
+        <target>Kullanıcı grupları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.groups.1">
+        <source>Here you can assign the user to one or more groups.</source>
+        <target>Buradan kullanıcıyı bir ya da birkaç gruba atayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.inherit.0">
+        <source>Permission inheritance</source>
+        <target>Devralınacak izinler</target>
+      </trans-unit>
+      <trans-unit id="tl_user.inherit.1">
+        <source>Here you can define which group permissions the user inherits.</source>
+        <target>Buradan kullanıcının hangi grup izinlerini devralacağını tanımlayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.group.0">
+        <source>Use group settings only</source>
+        <target>Yalnızca grup ayarları kullanılsın</target>
+      </trans-unit>
+      <trans-unit id="tl_user.group.1">
+        <source>The user inherits only group permissions.</source>
+        <target>Bu seçenek etkinleştirildiğinde, kullanıcı yalnızca grup izinlerini devralır.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.extend.0">
+        <source>Extend group settings</source>
+        <target>Grup ayarları genişletilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_user.extend.1">
+        <source>The group permissions are extended by individual ones.</source>
+        <target>Bu seçenek etkinleştirildiğinde, grup izinleri bireysel olanlar ile genişletilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.custom.0">
+        <source>Use individual settings only</source>
+        <target>Yalnızca bireysel ayarlar kullanılsın</target>
+      </trans-unit>
+      <trans-unit id="tl_user.custom.1">
+        <source>Only individual permissions are applied.</source>
+        <target>Bu seçenek etkinleştirildiğinde, yalnızca bireysel izinler uygulanır.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.modules.0">
+        <source>Back end modules</source>
+        <target>Yönetim bölümü modülleri</target>
+      </trans-unit>
+      <trans-unit id="tl_user.modules.1">
+        <source>Here you can grant access to one or more back end modules.</source>
+        <target>Buradan bir ya da birkaç yönetim bölümü modülüne erişim izni verebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.themes.0">
+        <source>Theme modules</source>
+        <target>Tema modülleri</target>
+      </trans-unit>
+      <trans-unit id="tl_user.themes.1">
+        <source>Here you can grant access to the theme modules.</source>
+        <target>Buradan tema modüllerine erişim izni verebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.elements.0">
+        <source>Content elements</source>
+        <target>İçerik bileşenleri</target>
+      </trans-unit>
+      <trans-unit id="tl_user.elements.1">
+        <source>Here you can select the allowed content element types.</source>
+        <target>Buradan kullanılmasına izin verilecek içerik bileşeni türlerini seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.fields.0">
+        <source>Form fields</source>
+        <target>Form alanları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.fields.1">
+        <source>Here you can select the allowed form field types.</source>
+        <target>Buradan kullanılmasına izin verilecek form alanı türlerini seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.pagemounts.0">
+        <source>Pagemounts</source>
+        <target>Sayfa bağlantıları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.pagemounts.1">
+        <source>Here you can grant access to one or more pages (subpages are included automatically).</source>
+        <target>Buradan bir ya da birkaç sayfaya erişim izni verebilirsiniz (alt sayfalar otomatik olarak katılır).</target>
+      </trans-unit>
+      <trans-unit id="tl_user.alpty.0">
+        <source>Allowed page types</source>
+        <target>İzin verilen sayfa türleri</target>
+      </trans-unit>
+      <trans-unit id="tl_user.alpty.1">
+        <source>Here you can select the page types you want to allow.</source>
+        <target>Buradan izin vermek istediğiniz sayfa türlerini seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.filemounts.0">
+        <source>Filemounts</source>
+        <target>Dosya bağlantıları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.filemounts.1">
+        <source>Here you can grant access to one or more folders (subfolders will be included automatically).</source>
+        <target>Buradan bir ya da birkaç klasöre erişim izni verebilirsiniz (alt klasörler otomatik olarak katılır).</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Görsel boyutları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes.1">
+        <source>Here you can grant access to one or more image sizes.</source>
+        <target>Buradan bir ya da birkaç görsel boyutuna erişim izni verebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.forms.0">
+        <source>Allowed forms</source>
+        <target>İzin verilen formlar</target>
+      </trans-unit>
+      <trans-unit id="tl_user.forms.1">
+        <source>Here you can grant access to one or more forms.</source>
+        <target>Buradan bir ya da birkaç forma izin verebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.formp.0">
+        <source>Form permissions</source>
+        <target>Form izinleri</target>
+      </trans-unit>
+      <trans-unit id="tl_user.formp.1">
+        <source>Here you can define the form permissions.</source>
+        <target>Burada form izinlerini tanımlayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg.0">
+        <source>Allowed member groups</source>
+        <target>Erişebilecek üye grupları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg.1">
+        <source>Members of these groups can be used in the front end preview.</source>
+        <target>Bu grupların üyeleri ön yüz ön izlemesini kullanabilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.disable.0">
+        <source>Deactivate</source>
+        <target>Devre dışı bırak</target>
+      </trans-unit>
+      <trans-unit id="tl_user.disable.1">
+        <source>Temporarily disable the account.</source>
+        <target>Hesabı geçici olarak devre dışı bırakır.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.start.0">
+        <source>Activate on</source>
+        <target>Etkinleştirilme zamanı</target>
+      </trans-unit>
+      <trans-unit id="tl_user.start.1">
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Hesabın belirli bir tarih/saatten önce etkin olmasını engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.stop.0">
+        <source>Deactivate on</source>
+        <target>Devre dışı bırakılma zamanı</target>
+      </trans-unit>
+      <trans-unit id="tl_user.stop.1">
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <target>Hesabın belirli bir tarih/saatten sonra etkin olmasını engellemek isterseniz buraya yazabilirsiniz. Bunun dışında bu alanı boş bırakın.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.session.0">
+        <source>Purge data</source>
+        <target>Verileri sil</target>
+      </trans-unit>
+      <trans-unit id="tl_user.session.1">
+        <source>Please select the data you want to purge.</source>
+        <target>Lütfen silmek istediğiniz verileri seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_user.name_legend">
+        <source>Name and e-mail</source>
+        <target>Ad ve e-posta</target>
+      </trans-unit>
+      <trans-unit id="tl_user.backend_legend">
+        <source>Back end settings</source>
+        <target>Yönetim bölümü ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.theme_legend">
+        <source>Back end theme</source>
+        <target>Yönetim bölümü teması</target>
+      </trans-unit>
+      <trans-unit id="tl_user.password_legend">
+        <source>Password settings</source>
+        <target>Parola ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.admin_legend">
+        <source>Administrator</source>
+        <target>Yönetici</target>
+      </trans-unit>
+      <trans-unit id="tl_user.groups_legend">
+        <source>User groups</source>
+        <target>Kullanıcı grupları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.modules_legend">
+        <source>Allowed modules</source>
+        <target>İzin verilen modüller</target>
+      </trans-unit>
+      <trans-unit id="tl_user.elements_legend">
+        <source>Allowed elements</source>
+        <target>İzin verilen bileşenler</target>
+      </trans-unit>
+      <trans-unit id="tl_user.pagemounts_legend">
+        <source>Pagemounts</source>
+        <target>Sayfa bağlantıları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.filemounts_legend">
+        <source>Filemounts</source>
+        <target>Dosya bağlantıları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.imageSizes_legend">
+        <source>Image sizes</source>
+        <target>Görsel boyutları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.forms_legend">
+        <source>Form permissions</source>
+        <target>Form izinleri</target>
+      </trans-unit>
+      <trans-unit id="tl_user.amg_legend">
+        <source>Allowed member groups</source>
+        <target>Erişebilecek üye grupları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.account_legend">
+        <source>Account settings</source>
+        <target>Hesap ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_user.session_legend">
+        <source>Clear cache</source>
+        <target>Ön belleği temizle</target>
+      </trans-unit>
+      <trans-unit id="tl_user.sessionLabel">
+        <source>Session data</source>
+        <target>Oturum verileri</target>
+      </trans-unit>
+      <trans-unit id="tl_user.htmlLabel">
+        <source>Image cache</source>
+        <target>Görsel ön belleği</target>
+      </trans-unit>
+      <trans-unit id="tl_user.tempLabel">
+        <source>Shared cache</source>
+        <target>Paylaşılmış ön bellek</target>
+      </trans-unit>
+      <trans-unit id="tl_user.sessionPurged">
+        <source>The session data has been purged</source>
+        <target>Oturum verileri silindi</target>
+      </trans-unit>
+      <trans-unit id="tl_user.htmlPurged">
+        <source>The image cache has been purged</source>
+        <target>Görsel ön belleği silindi</target>
+      </trans-unit>
+      <trans-unit id="tl_user.tempPurged">
+        <source>The shared cache has been purged</source>
+        <target>Paylaşılmış ön bellek silindi</target>
+      </trans-unit>
+      <trans-unit id="tl_user.FileUpload">
+        <source>Default uploader</source>
+        <target>Varsayılan yükleyici</target>
+      </trans-unit>
+      <trans-unit id="tl_user.useTwoFactor">
+        <source>Use two-factor authentication</source>
+        <target>İki aşamalı kimlik doğrulama kullanılsın</target>
+      </trans-unit>
+      <trans-unit id="tl_user.new.0">
+        <source>New</source>
+        <target>Yeni</target>
+      </trans-unit>
+      <trans-unit id="tl_user.new.1">
+        <source>Create a new user</source>
+        <target>Yeni bir kullanıcı ekle</target>
+      </trans-unit>
+      <trans-unit id="tl_user.show">
+        <source>Show the details of user ID %s</source>
+        <target>%s kodlu kullanıcının ayrıntılarını görüntüle</target>
+      </trans-unit>
+      <trans-unit id="tl_user.edit">
+        <source>Edit user ID %s</source>
+        <target>%s kodlu kullanıcıyı düzenle</target>
+      </trans-unit>
+      <trans-unit id="tl_user.copy">
+        <source>Duplicate user ID %s</source>
+        <target>%s kodlu kullanıcıyı kopyala</target>
+      </trans-unit>
+      <trans-unit id="tl_user.delete">
+        <source>Delete user ID %s</source>
+        <target>%s kodlu kullanıcıyı sil</target>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle">
+        <source>Activate/deactivate user ID %s</source>
+        <target>%s kodlu kullanıcıyı etkinleştir/devre dışı bırak</target>
+      </trans-unit>
+      <trans-unit id="tl_user.su">
+        <source>Switch to user ID %s</source>
+        <target>%s kodlu kullanıcıya geç</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
