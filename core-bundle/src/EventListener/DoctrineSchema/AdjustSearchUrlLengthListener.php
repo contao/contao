@@ -56,6 +56,8 @@ class AdjustSearchUrlLengthListener
             return;
         }
 
+        trigger_deprecation('contao/core-bundle', '4.9', 'The tl_search.url field length has been automatically reduced. Not using an ascii_bin collation, InnoDB, a DYNAMIC or COMPRESSED row format and not enabling innodb_large_prefix has been deprecated in Contao 4.9 and will no longer work in Contao 5.');
+
         // Set the length
         $column->setLength($maxIndexSize);
     }
