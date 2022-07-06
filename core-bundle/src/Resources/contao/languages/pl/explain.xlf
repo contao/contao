@@ -7,6 +7,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.0.1">
         <source>For more information on TinyMCE, please visit &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.tiny.cloud/tinymce/&lt;/a&gt;.</source>
+        <target>Więcej informacji na temat edytora TinyMCE znajdziesz na &lt;a href=&quot;https://www.tiny.cloud/tinymce/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;1https://www.tiny.cloud/tinymce/&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.0">
         <source>Insert tags</source>
@@ -14,6 +15,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
         <source>For more information on insert tags, please visit &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
+        <target>Więcej informacji na temat insert tagów znajdziesz na &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
@@ -21,6 +23,7 @@
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.1">
         <source>For more information on Ace, please visit &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</source>
+        <target>Więcej informacji na temat edytora Ace znajdziesz na &lt;a href=&quot;https://ace.c9.io&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://ace.c9.io&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>
@@ -92,6 +95,7 @@
       </trans-unit>
       <trans-unit id="XPL.imageSizeDensities.0.1">
         <source>The HTML attribute &lt;code&gt;sizes&lt;/code&gt; defines the intended layout width of the image, optionally combined with a media query. You can use any CSS length value in this attribute.&lt;br&gt;&lt;br&gt;E.g. &lt;code&gt;(max-width: 600px) 100vw, 50vw&lt;/code&gt; means the image‘s width is 100% of the viewport for small screens and 50% of the viewport for larger screens.&lt;br&gt;&lt;br&gt;And &lt;code&gt;(max-width: 600px) calc(100vw - 20px), 500px&lt;/code&gt; means the image‘s width is 20px smaller than the viewport for small screens and 500px for larger screens.&lt;br&gt;&lt;br&gt;The sizes attribute shouldn’t be used for styling, use CSS instead. The sizes attribute does not necessarily have to match up exactly with the actual image width as specified in the CSS.&lt;br&gt;&lt;br&gt;For more information about the sizes attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
+        <target>Atrybut HTML &lt;code&gt;sizes&lt;/code&gt; określa wyświetlaną szerokość obrazka, opcjonalnie połączoną z media query. Możesz użyć dowolnej wartości CSS, aby określić szerokość.&lt;br&gt;&lt;br&gt;Np. &lt;code&gt;(max-width: 600px) 100vw, 50vw&lt;/code&gt; oznacza szerokość obrazka 100% dla urządzeń z małymi ekranami i 50% szerokości dla urządzeń z dużymi ekranami.&lt;br&gt;&lt;br&gt;A &lt;code&gt;(max-width: 600px) calc(100vw - 20px), 500px&lt;/code&gt; oznacza szerokość obrazka mniejszą o 20px dla urządzeń z małymi ekranami i 500px dla urządzeń z dużymi ekranami.&lt;br&gt;&lt;br&gt;Rozmiar nie powinien być używany do stylizacji, użyj zamiast tego CSS. Rozmiar nie musi być dokładnie zgodny z rzeczywistą szerokością obrazu, jak określono w CSS.&lt;br&gt;&lt;br&gt;Po więcej informacji na temat atrybutu sizes odwiedź &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-sizes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.imageSizeDensities.1.0">
         <source>Pixel densities/&lt;br&gt;scale factors</source>
@@ -99,6 +103,7 @@
       </trans-unit>
       <trans-unit id="XPL.imageSizeDensities.1.1">
         <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
+        <target>Jeśli atrybut sizes nie jest określony, to ustawienie po prostu określi gęstość pikseli, którą chcesz wspierać. Rozmiary obrazków są dostosowane automatycznie. Np. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; tworzy następujący kod HTML:&lt;/code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Jeśli atrybut sizes jest określony, te same rozmiary obrazków są wygenerowane, ale deskryptory szerokości są użyte w atrybucie srcset. Np. obrazek o szerokości 200 pikseli z gęstościami &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; tworzy następujący kod HTML:&lt;/code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Po więcej informacji na temat atrybutu srcset odwiedź &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</target>
       </trans-unit>
     </body>
   </file>
