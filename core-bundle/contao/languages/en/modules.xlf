@@ -303,7 +303,7 @@
         <source>Feed reader</source>
       </trans-unit>
       <trans-unit id="FMD.feed_reader.1">
-        <source>Adds an RSS, Aom or JSON feed to the page</source>
+        <source>Adds an RSS, Atom or JSON feed to the page</source>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>

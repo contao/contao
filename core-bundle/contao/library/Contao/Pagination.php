@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Request;
-
 /**
  * Provide methods to render a pagination menu.
  */

@@ -81,7 +81,7 @@ class FeedReaderController extends AbstractFrontendModuleController
 
         if ($model->perPage > 0) {
             $param = 'page_r'.$model->id;
-            $page = (int) $request->query->get($param, 1);
+            $page = $request->query->getInt($param, 1);
             $config = $this->container->get('contao.framework')->getAdapter(Config::class);
 
             // Do not index or cache the page if the page number is outside the range
@@ -97,11 +97,7 @@ class FeedReaderController extends AbstractFrontendModuleController
             $template->set('pagination', $pagination->compile());
         }
 
-        $items = [];
-
-        for ($i = $offset, $c = \count($allItems); $i < $limit && $i < $c; ++$i) {
-            $items[] = $allItems[$i];
-        }
+        $items = \array_slice($allItems, $offset, $limit);
 
         $template->set('feeds', $feeds);
         $template->set('items', $items);
@@ -115,7 +111,7 @@ class FeedReaderController extends AbstractFrontendModuleController
         $bDate = $b->getLastModified();
 
         if ($aDate && $bDate) {
-            return $aDate > $bDate ? -1 : 1;
+            return $aDate <=> $bDate;
         }
 
         // Sort items without dates to the top.
