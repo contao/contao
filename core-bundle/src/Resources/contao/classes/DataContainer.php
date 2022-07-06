@@ -266,7 +266,7 @@ abstract class DataContainer extends Backend
 	 * Current record cache
 	 * @var array<int|string, array<string,mixed>|AccessDeniedException>
 	 */
-	private $arrCurrentRecordCache = array();
+	private static $arrCurrentRecordCache = array();
 
 	/**
 	 * Set an object property
@@ -1709,12 +1709,12 @@ abstract class DataContainer extends Backend
 	/**
 	 * @param array<int|string> $ids
 	 */
-	protected function preloadCurrentRecords(array $ids, string $table): void
+	protected static function preloadCurrentRecords(array $ids, string $table): void
 	{
 		// Clear current cache to make sure records are gone if they cannot be loaded from the database below
 		foreach ($ids as $id)
 		{
-			$this->setCurrentRecordCache($id, $table, null);
+			self::clearCurrentRecordCache($id, $table);
 		}
 
 		/** @var Connection $connection */
@@ -1733,65 +1733,88 @@ abstract class DataContainer extends Backend
 				continue;
 			}
 
-			$this->setCurrentRecordCache($row['id'], $table, $row);
+			static::setCurrentRecordCache($row['id'], $table, $row);
 		}
 	}
 
 	/**
 	 * @param array<string, mixed>|null $row Pass null to remove a given cache entry
 	 */
-	protected function setCurrentRecordCache(string|int $id, string $table, array|null $row): void
+	protected static function setCurrentRecordCache(string|int $id, string $table, array $row): void
 	{
-		if (null === $row)
-		{
-			unset($this->arrCurrentRecordCache[$table . '.' . $id]);
-
-			return;
-		}
-
-		$this->arrCurrentRecordCache[$table . '.' . $id] = $row;
+		self::$arrCurrentRecordCache[$table . '.' . $id] = $row;
 	}
 
 	/**
 	 * @throws AccessDeniedException     if the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
-	public function getCurrentRecord(string|int $id = null, string $table = null, bool $noCache = false): ?array
+	public function getCurrentRecord(string|int $id = null, string $table = null): ?array
 	{
 		$id = $id ?: $this->intId;
 		$table = $table ?: $this->strTable;
 		$key = $table . '.' . $id;
 
-		if ($noCache || !isset($this->arrCurrentRecordCache[$key]))
+		if (!isset(self::$arrCurrentRecordCache[$key]))
 		{
-			$this->preloadCurrentRecords(array($id), $table);
+			static::preloadCurrentRecords(array($id), $table);
 		}
 
 		// In case this record was not part of the preloaded result, we don't need to apply any permission checks
-		if (!isset($key, $this->arrCurrentRecordCache))
+		if (!isset($key, self::$arrCurrentRecordCache))
 		{
 			return null;
 		}
 
 		// In case this record has been checked before, we don't ask the voters again but instead throw the previous
 		// exception
-		if ($this->arrCurrentRecordCache[$key] instanceof AccessDeniedException)
+		if (self::$arrCurrentRecordCache[$key] instanceof AccessDeniedException)
 		{
-			throw $this->arrCurrentRecordCache[$key];
+			throw self::$arrCurrentRecordCache[$key];
 		}
 
 		try
 		{
-			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new ReadAction($table, $this->arrCurrentRecordCache[$key]));
+			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new ReadAction($table, self::$arrCurrentRecordCache[$key]));
 		}
 		catch (AccessDeniedException $e)
 		{
 			// Remember the exception for this key for the next call
-			$this->arrCurrentRecordCache[$key] = $e;
+			self::$arrCurrentRecordCache[$key] = $e;
 
 			throw $e;
 		}
 
-		return $this->arrCurrentRecordCache[$key];
+		return self::$arrCurrentRecordCache[$key];
+	}
+
+	public static function clearCurrentRecordCache(string|int $id = null, string $table = null): void
+	{
+		if (null === $table)
+		{
+			if (null !== $id)
+			{
+				throw new \InvalidArgumentException(sprintf('Missing $table parameter for passed ID "%s".', $id));
+			}
+
+			self::$arrCurrentRecordCache = array();
+
+			return;
+		}
+
+		if (null !== $id)
+		{
+			unset(self::$arrCurrentRecordCache["$table.$id"]);
+
+			return;
+		}
+
+		foreach (array_keys(self::$arrCurrentRecordCache) as $key)
+		{
+			if (str_starts_with($key, "$table."))
+			{
+				unset(self::$arrCurrentRecordCache[$key]);
+			}
+		}
 	}
 }
