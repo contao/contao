@@ -1662,7 +1662,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$rows = $objDelete->fetchAllAssoc();
 
-				$this->preloadCurrentRecords(array_column($rows, 'id'), $v);
+				static::preloadCurrentRecords(array_column($rows, 'id'), $v);
 
 				foreach ($rows as $row)
 				{
@@ -2282,7 +2282,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$blnNoReload = false;
 
-				$this->preloadCurrentRecords($ids, $this->strTable);
+				static::preloadCurrentRecords($ids, $this->strTable);
 
 				// Walk through each record
 				foreach ($ids as $id)
@@ -2727,7 +2727,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				try
 				{
-					$this->preloadCurrentRecords($ids, $this->strTable);
+					static::preloadCurrentRecords($ids, $this->strTable);
 
 					foreach ($ids as $id)
 					{
@@ -3200,7 +3200,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($objUpdateStmt->affectedRows)
 			{
 				// Empty cached data for this record
-				$this->setCurrentRecordCache($this->intId, $this->strTable, null);
+				self::clearCurrentRecordCache($this->intId, $this->strTable);
 				$this->invalidateCacheTags();
 
 				if ($blnVersionize)
@@ -3679,7 +3679,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Call a recursive function that builds the tree
 		if (!empty($topMostRootIds))
 		{
-			$this->preloadCurrentRecords($topMostRootIds, $table);
+			static::preloadCurrentRecords($topMostRootIds, $table);
 
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
@@ -3883,7 +3883,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		while ($objRows->next())
 		{
 			// Improve performance for $dc->getCurrentRecord($id);
-			$this->setCurrentRecordCache($objRows->id, $table, $objRows->row());
+			static::setCurrentRecordCache($objRows->id, $table, $objRows->row());
 
 			$arrIds[] = $objRows->id;
 		}
@@ -4175,7 +4175,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$ids = $objChilds->fetchEach('id');
 
-				$this->preloadCurrentRecords($ids, $this->strTable);
+				static::preloadCurrentRecords($ids, $this->strTable);
 
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
@@ -4197,7 +4197,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Add the records of the parent table
 			if ($blnIsOpen && \is_array($childs))
 			{
-				$this->preloadCurrentRecords($childs, $table);
+				static::preloadCurrentRecords($childs, $table);
 
 				for ($k=0, $c=\count($childs); $k<$c; $k++)
 				{
@@ -4540,7 +4540,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
 			{
 				// Improve performance
-				$this->setCurrentRecordCache($row[$i]['id'], $this->strTable, $row[$i]);
+				static::setCurrentRecordCache($row[$i]['id'], $this->strTable, $row[$i]);
 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row[$i]));
 
@@ -4984,7 +4984,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			foreach ($result as $row)
 			{
 				// Improve performance for $dc->getCurrentRecord($id);
-				$this->setCurrentRecordCache($row['id'], $this->strTable, $row);
+				static::setCurrentRecordCache($row['id'], $this->strTable, $row);
 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row));
 
