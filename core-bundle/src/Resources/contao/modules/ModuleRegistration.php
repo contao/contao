@@ -647,7 +647,7 @@ class ModuleRegistration extends Module
 		// Add user details
 		foreach ($arrData as $k=>$v)
 		{
-			if ($k == 'password' || $k == 'tstamp' || $k == 'dateAdded')
+			if ($k == 'id' || $k == 'password' || $k == 'tstamp' || $k == 'dateAdded')
 			{
 				continue;
 			}
