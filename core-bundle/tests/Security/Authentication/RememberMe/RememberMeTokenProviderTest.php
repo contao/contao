@@ -45,7 +45,7 @@ class RememberMeTokenProviderTest extends TestCase
         $this->assertSame($userIdentifier, $token->getUserIdentifier());
         $this->assertSame($series, $token->getSeries());
         $this->assertSame($value, $token->getTokenValue());
-        $this->assertEquals($lastUsed, $token->getLastUsed());
+        $this->assertSame($lastUsed->getTimestamp(), $token->getLastUsed()->getTimestamp());
     }
 
     public function testTheDeletionOfTokens(): void
@@ -84,7 +84,6 @@ class RememberMeTokenProviderTest extends TestCase
 
         $rememberMeTokenProvider = new RememberMeTokenProvider($rememberMeRepository);
         $rememberMeTokenProvider->updateToken($series, 'new-value', new \DateTime());
-
     }
 
     public function testTheTokenCreation(): void
