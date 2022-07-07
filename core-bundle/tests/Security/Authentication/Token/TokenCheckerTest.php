@@ -313,19 +313,15 @@ class TokenCheckerTest extends TestCase
     /**
      * @dataProvider getFrontendGuestData
      */
-    public function testIfAFrontendGuestIsAvailable($expected, $hasFrontendGuest): void
+    public function testIfAFrontendGuestIsAvailable(bool $expected, bool $hasFrontendGuest): void
     {
-        $session = $this->mockSession();
-
-        if ($hasFrontendGuest) {
-            $session = $this->createMock(SessionInterface::class);
-            $session
-                ->expects($this->once())
-                ->method('has')
-                ->with(FrontendPreviewAuthenticator::SESSION_NAME)
-                ->willReturn(true)
-            ;
-        }
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('has')
+            ->with(FrontendPreviewAuthenticator::SESSION_NAME)
+            ->willReturn($hasFrontendGuest)
+        ;
 
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),
