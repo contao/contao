@@ -282,12 +282,18 @@ class TokenCheckerTest extends TestCase
 
     public function testDoesNotReturnATokenIfTheTokenIsNotAuthenticated(): void
     {
-        $token = new UsernamePasswordToken($this->createMock(FrontendUser::class), 'provider');
+        $token = $this->createMock(TokenInterface::class);
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->method('getToken')
+            ->willReturn(null)
+        ;
 
         $tokenChecker = new TokenChecker(
             $this->mockRequestStack(),
             $this->mockFirewallMapWithConfigContext('contao_frontend'),
-            $this->mockTokenStorage(FrontendUser::class),
+            $tokenStorage,
             $this->mockSessionWithToken($token),
             new AuthenticationTrustResolver(),
             $this->getRoleVoter()
