@@ -6,6 +6,11 @@
 
 Contao 5 does not include any Contao 4 migrations, so make sure to upgrade to Contao 4.13 before upgrading to Contao 5!
 
+### Install tool
+
+The install tool has been removed. Use the `contao:setup`, `contao:migrate` and `contao:user:create` commands or the
+Contao Manager instead.
+
 ### DataContainer callbacks
 
 DataContainer callbacks registered via service tagging with a priority of `0` (which is the default) are now executed
@@ -45,10 +50,7 @@ usages, render the `component/_figure.html.twig` template yourself by including 
 } %}
 ```
 
-### Install tool
-
-The ability to execute migrations in the install tool has been removed. Use the `contao:migrate` command or the Contao
-Manager instead.
+### sqlCompileCommands hook
 
 The `sqlCompileCommands` hook has been removed. Use the Doctrine DBAL `postGenerateSchema` event instead.
 
