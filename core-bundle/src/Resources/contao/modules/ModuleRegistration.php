@@ -659,7 +659,7 @@ class ModuleRegistration extends Module
 				$v = Date::parse(Config::get('dateFormat'), $v);
 			}
 
-			$strData .= ($GLOBALS['TL_LANG']['tl_member'][$k][0] ?? null) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
+			$strData .= ($GLOBALS['TL_LANG']['tl_member'][$k][0] ?? $k) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
 		}
 
 		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
