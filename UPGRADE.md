@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### Contao 4 migrations
+
+Contao 5 does not include any Contao 4 migrations, so make sure to upgrade to Contao 4.13 before upgrading to Contao 5!
+
 ### Install tool
 
 The install tool has been removed. Use the `contao:setup`, `contao:migrate` and `contao:user:create` commands or the
