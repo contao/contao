@@ -358,7 +358,7 @@ class MigrateCommandTest extends TestCase
     /**
      * @dataProvider getOutputFormats
      */
-    public function testDoesAbortOnFatalError(string $format): void
+    public function testAbortsOnFatalError(string $format): void
     {
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
@@ -398,15 +398,8 @@ class MigrateCommandTest extends TestCase
 
         $display = $tester->getDisplay();
 
-        $this->assertStringContainsString(
-            'Running MySQL in non-strict mode can cause corrupt or truncated data.',
-            $display
-        );
-
-        $this->assertStringContainsString(
-            sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey),
-            $display
-        );
+        $this->assertStringContainsString('Running MySQL in non-strict mode can cause corrupt or truncated data.', $display);
+        $this->assertStringContainsString(sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $display);
     }
 
     /**
@@ -423,9 +416,7 @@ class MigrateCommandTest extends TestCase
 
         $connection
             ->method('getParams')
-            ->willReturn([
-                'defaultTableOptions' => $configuration['defaultTableOptions'] ?? [],
-            ])
+            ->willReturn(['defaultTableOptions' => $configuration['defaultTableOptions'] ?? []])
         ;
 
         $connection
@@ -605,20 +596,12 @@ class MigrateCommandTest extends TestCase
         $tester->execute(['--format' => 'ndjson', '--no-backup' => true], ['interactive' => false]);
 
         $display = $tester->getDisplay();
-
         $json = $this->jsonArrayFromNdjson($display)[1];
 
         $this->assertSame('warning', $json['type']);
 
-        $this->assertStringContainsString(
-            'Running MySQL in non-strict mode can cause corrupt or truncated data.',
-            $json['message']
-        );
-
-        $this->assertStringContainsString(
-            sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey),
-            $json['message']
-        );
+        $this->assertStringContainsString('Running MySQL in non-strict mode can cause corrupt or truncated data.', $json['message']);
+        $this->assertStringContainsString(sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $json['message']);
     }
 
     public function getOutputFormats(): \Generator
@@ -637,23 +620,20 @@ class MigrateCommandTest extends TestCase
 
     public function provideInvalidSqlModes(): \Generator
     {
-        $pdoDriver = new PdoDriver();
-        $mysqliDriver = new MysqliDriver();
-
         yield 'empty sql_mode, pdo driver' => [
-            '', $pdoDriver, 1002,
+            '', new PdoDriver(), 1002,
         ];
 
         yield 'empty sql_mode, mysqli driver' => [
-            '', $mysqliDriver, 3,
+            '', new MysqliDriver(), 3,
         ];
 
         yield 'unrelated values, pdo driver' => [
-            'IGNORE_SPACE,ONLY_FULL_GROUP_BY', $pdoDriver, 1002,
+            'IGNORE_SPACE,ONLY_FULL_GROUP_BY', new PdoDriver(), 1002,
         ];
 
         yield 'unrelated values, mysqli driver' => [
-            'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION', $mysqliDriver, 3,
+            'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION', new MysqliDriver(), 3,
         ];
     }
 

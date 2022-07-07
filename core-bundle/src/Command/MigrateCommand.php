@@ -451,7 +451,7 @@ class MigrateCommand extends Command
 
         // Check the collation if the user has configured it
         if (null !== $collate = ($options['collate'] ?? null)) {
-            $row = $this->connection->fetchAssociative("SHOW COLLATION LIKE '".$collate."'");
+            $row = $this->connection->fetchAssociative("SHOW COLLATION LIKE '$collate'");
 
             if (false === $row) {
                 $errors[] =
