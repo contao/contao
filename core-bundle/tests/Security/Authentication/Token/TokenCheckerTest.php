@@ -311,6 +311,41 @@ class TokenCheckerTest extends TestCase
     }
 
     /**
+     * @dataProvider getFrontendGuestData
+     */
+    public function testIfAFrontendGuestIsAvailable($expected, $hasFrontendGuest): void
+    {
+        $session = $this->mockSession();
+
+        if ($hasFrontendGuest) {
+            $session = $this->createMock(SessionInterface::class);
+            $session
+                ->expects($this->once())
+                ->method('has')
+                ->with(FrontendPreviewAuthenticator::SESSION_NAME)
+                ->willReturn(true)
+            ;
+        }
+
+        $tokenChecker = new TokenChecker(
+            $this->mockRequestStack(),
+            $this->mockFirewallMapWithConfigContext('contao_backend'),
+            $this->mockTokenStorage(BackendUser::class),
+            $session,
+            new AuthenticationTrustResolver(),
+            $this->getRoleVoter()
+        );
+
+        $this->assertSame($expected, $tokenChecker->hasFrontendGuest());
+    }
+
+    public function getFrontendGuestData(): \Generator
+    {
+        yield [false, false];
+        yield [true, true];
+    }
+
+    /**
      * @param class-string<User> $class
      *
      * @return User&MockObject
