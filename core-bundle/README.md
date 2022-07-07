@@ -33,7 +33,6 @@ Install Contao and all its dependencies by executing the following command:
 ```
 composer require \
     contao/core-bundle:4.8.* \
-    contao/installation-bundle:^4.8 \
     php-http/guzzle6-adapter:^1.1
 ```
 
@@ -76,10 +75,6 @@ security:
         Contao\User: auto
 
     firewalls:
-        contao_install:
-            pattern: ^%contao.backend.route_prefix%/install$
-            security: false
-
         contao_backend:
             request_matcher: contao.routing.backend_matcher
             provider: contao.security.backend_user_provider
@@ -117,8 +112,8 @@ security:
         - { path: ^/, roles: [PUBLIC_ACCESS] }
 ```
 
-The Contao core-bundle as well as the installation-bundle are now installed and activated. Use the Contao install tool
-to complete the installation by opening the `/contao/install` route in your browser.
+The Contao core-bundle is now installed and activated. Use the `contao:migrate` command to upgrade the database and the
+`contao:user:create` command to create your first back end user.
 
 ## License
 

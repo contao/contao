@@ -10,10 +10,6 @@ security:
         Contao\User: auto
 
     firewalls:
-        contao_install:
-            pattern: ^%contao.backend.route_prefix%/install$
-            security: false
-
         contao_backend:
             request_matcher: contao.routing.backend_matcher
             provider: contao.security.backend_user_provider
