@@ -49,4 +49,14 @@ class LogoutListenerTest extends ContaoTestCase
 
         $this->expectNotToPerformAssertions();
     }
+
+    public function testDoesNothingIfResponseIsNotSet(): void
+    {
+        $event = new LogoutEvent($this->createMock(Request::class), null);
+
+        $listener = new LogoutListener();
+        $listener($event);
+
+        $this->expectNotToPerformAssertions();
+    }
 }
