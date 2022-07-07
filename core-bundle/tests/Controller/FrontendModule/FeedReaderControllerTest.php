@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\Config;
 use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\FrontendModule\FeedReaderController;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Tests\TestCase;
@@ -204,12 +205,15 @@ class FeedReaderControllerTest extends TestCase
 
         $assertTwigContext = function (array $context) {
             $this->assertCount(1, $context['items']);
-            $this->assertCount(2, $context['pagination']['pages']);
+            $this->assertNotEmpty($context['pagination']);
 
             return true;
         };
 
         $container = $this->mockContainer(null, $assertTwigContext);
+
+        $finder = new ResourceFinder(__DIR__.'/../../../src/Resources/contao');
+        $container->set('contao.resource_finder', $finder);
 
         $controller = $this->getController($feedIo, $cache, $requestStack, null, $container);
 

@@ -94,7 +94,7 @@ class FeedReaderController extends AbstractFrontendModuleController
             $limit = $model->perPage + $offset;
 
             $pagination = new Pagination(\count($allItems), $model->perPage, $config->get('maxPaginationLinks'), $param);
-            $template->set('pagination', $pagination->compile());
+            $template->set('pagination', $pagination->generate());
         }
 
         $items = \array_slice($allItems, $offset, $limit);

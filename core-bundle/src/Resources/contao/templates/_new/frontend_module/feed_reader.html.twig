@@ -1,5 +1,4 @@
 {% extends "@Contao/frontend_module/_base.html.twig" %}
-{% use "@Contao/component/_pagination.html.twig" %}
 
 {% block content %}
     {% if feeds|length == 1 %}
@@ -18,5 +17,5 @@
     </div>
     {% endfor %}
 
-    {% if pagination is defined %}{{ block('pagination') }}{% endif %}
+    {% if pagination is defined %}{{ pagination|raw }}{% endif %}
 {% endblock %}
