@@ -17,7 +17,6 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\Environment;
 use Contao\Input;
@@ -57,11 +56,6 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $scopeMatcher;
 
     /**
-     * @var TokenChecker
-     */
-    private $tokenChecker;
-
-    /**
      * @var Filesystem
      */
     private $filesystem;
@@ -96,11 +90,10 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $projectDir, int $errorLevel)
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, Filesystem $filesystem, string $projectDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
-        $this->tokenChecker = $tokenChecker;
         $this->filesystem = $filesystem;
         $this->projectDir = $projectDir;
         $this->errorLevel = $errorLevel;

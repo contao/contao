@@ -1838,7 +1838,6 @@ class ContaoCoreExtensionTest extends TestCase
             [
                 new Reference('request_stack'),
                 new Reference('contao.routing.scope_matcher'),
-                new Reference('contao.security.token_checker'),
                 new Reference('filesystem'),
                 new Reference('%kernel.project_dir%'),
                 new Reference('%contao.error_level%'),
