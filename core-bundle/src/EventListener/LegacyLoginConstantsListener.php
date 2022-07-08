@@ -28,7 +28,7 @@ class LegacyLoginConstantsListener
      */
     private $tokenChecker;
 
-    /** 
+    /**
      * @var ScopeMatcher
      */
     private $scopeMatcher;
@@ -46,7 +46,7 @@ class LegacyLoginConstantsListener
             \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
         } else {
             \define('BE_USER_LOGGED_IN', false);
-            \define('FE_USER_LOGGED_IN', false);   
+            \define('FE_USER_LOGGED_IN', false);
         }
     }
 }
