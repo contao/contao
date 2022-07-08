@@ -193,13 +193,8 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             \define('TL_SCRIPT', $this->getRoute());
         }
 
-        // Define the login status constants (see #4099, #5279)
-        if ('FE' === $this->getMode() && ($session = $this->getSession()) && $this->request->hasPreviousSession()) {
-            $session->start();
-
-            \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
-            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
-        } else {
+        // If there is a request, constants will be set by contao.listener.legacy_login_constants
+        if (null === $this->requestStack->getCurrentRequest()) {
             \define('BE_USER_LOGGED_IN', false);
             \define('FE_USER_LOGGED_IN', false);
         }
