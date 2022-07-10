@@ -67,12 +67,13 @@ class FeedReaderController extends AbstractFrontendModuleController
             }
         }
 
-        $allItems = [];
-
-        foreach ($feeds as $feed) {
-            $feedItems = \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null);
-            $allItems = [...$feedItems, ...$allItems];
-        }
+        // Take the configured amount of items from each feed and merge all into one array
+        $allItems = array_merge(
+            ...array_map(
+                static fn(array $feed) => \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null),
+                $feeds
+            )
+        );
 
         uasort($allItems, [$this, 'sortItems']);
 
