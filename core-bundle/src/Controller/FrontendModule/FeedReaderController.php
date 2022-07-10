@@ -75,7 +75,7 @@ class FeedReaderController extends AbstractFrontendModuleController
             )
         );
 
-        uasort($allItems, [$this, 'sortItems']);
+        usort($allItems, static fn(Item $a, Item $b): int => $a->getLastModified() <=> $b->getLastModified());
 
         $offset = 0;
         $limit = \count($allItems);
@@ -104,26 +104,5 @@ class FeedReaderController extends AbstractFrontendModuleController
         $template->set('items', $items);
 
         return $template->getResponse();
-    }
-
-    private function sortItems(Item $a, Item $b): int
-    {
-        $aDate = $a->getLastModified();
-        $bDate = $b->getLastModified();
-
-        if ($aDate && $bDate) {
-            return $aDate <=> $bDate;
-        }
-
-        // Sort items without dates to the top.
-        if ($aDate) {
-            return 1;
-        }
-
-        if ($bDate) {
-            return -1;
-        }
-
-        return 0;
     }
 }
