@@ -70,12 +70,12 @@ class FeedReaderController extends AbstractFrontendModuleController
         // Take the configured amount of items from each feed and merge all into one array
         $allItems = array_merge(
             ...array_map(
-                static fn(array $feed) => \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null),
+                static fn (FeedInterface $feed) => \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null),
                 $feeds
             )
         );
 
-        usort($allItems, static fn(Item $a, Item $b): int => $a->getLastModified() <=> $b->getLastModified());
+        usort($allItems, static fn (Item $a, Item $b): int => $a->getLastModified() <=> $b->getLastModified());
 
         $offset = 0;
         $limit = \count($allItems);
