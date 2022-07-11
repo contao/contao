@@ -31,7 +31,7 @@ class PageListener
      */
     public function onLoad(DataContainer $dc): void
     {
-        $type = $this->connection->executeQuery('SELECT type FROM tl_page WHERE id = :id', ['id' => $dc->id])->fetchFirstColumn();
+        $type = $dc->getCurrentRecord()['type'];
 
         if (!$type || NewsFeedController::TYPE !== $type[0]) {
             return;
