@@ -331,6 +331,7 @@ class Ajax extends Backend
 						$objVersions->initialize();
 
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($this->strAjaxId);
+						DataContainer::clearCurrentRecordCache($this->strAjaxId, $dc->table);
 
 						$objVersions->create();
 
@@ -350,6 +351,7 @@ class Ajax extends Backend
 						$objVersions->initialize();
 
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($dc->id);
+						DataContainer::clearCurrentRecordCache($dc->id, $dc->table);
 
 						$objVersions->create();
 

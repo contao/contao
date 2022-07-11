@@ -47,8 +47,8 @@ class CommandSchedulerListener
     {
         $pathInfo = $request->getPathInfo();
 
-        // Skip the listener in the install tool and upon fragment URLs
-        if (preg_match('~(?:^|/)(?:contao/install$|'.preg_quote($this->fragmentPath, '~').'/)~', $pathInfo)) {
+        // Skip the listener upon fragment URLs
+        if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $pathInfo)) {
             return false;
         }
 

@@ -24,6 +24,9 @@ use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\AbstractMySQLDriver;
+use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
+use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoDriver;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -239,7 +242,7 @@ class MigrateCommandTest extends TestCase
             )
         ;
 
-        $connection = $this->createMock(Connection::class);
+        $connection = $this->createDefaultConnection();
         $connection
             ->expects($this->never())
             ->method('executeQuery')
@@ -355,7 +358,7 @@ class MigrateCommandTest extends TestCase
     /**
      * @dataProvider getOutputFormats
      */
-    public function testDoesAbortOnFatalError(string $format): void
+    public function testAbortsOnFatalError(string $format): void
     {
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
@@ -382,6 +385,225 @@ class MigrateCommandTest extends TestCase
         $this->assertSame('Fatal', $json['message']);
     }
 
+    /**
+     * @dataProvider provideInvalidSqlModes
+     */
+    public function testOutputsWarningIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
+    {
+        $connection = $this->createDefaultConnection($sqlMode, $driver);
+        $command = $this->getCommand(connection: $connection);
+
+        $tester = new CommandTester($command);
+        $tester->execute(['--no-backup' => true]);
+
+        $display = $tester->getDisplay();
+
+        $this->assertStringContainsString('Running MySQL in non-strict mode can cause corrupt or truncated data.', $display);
+        $this->assertStringContainsString(sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $display);
+    }
+
+    /**
+     * @dataProvider provideBadConfigurations
+     */
+    public function testOutputsConfigurationErrors(array $configuration, string|array $expectedMessages): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->with('SELECT @@version')
+            ->willReturn($configuration['version'] ?? '10.10.0-MariaDB-foo-bar')
+        ;
+
+        $connection
+            ->method('getParams')
+            ->willReturn(['defaultTableOptions' => $configuration['defaultTableOptions'] ?? []])
+        ;
+
+        $connection
+            ->method('fetchAssociative')
+            ->willReturnCallback(
+                static fn (string $query): array|false => match ($query) {
+                    sprintf('SHOW COLLATION LIKE \'%s\'', $configuration['defaultTableOptions']['collate'] ?? '') => $configuration['collation'] ?? false,
+                    'SHOW VARIABLES LIKE \'innodb_large_prefix\'' => $configuration['innodb_large_prefix'] ?? false,
+                    'SHOW VARIABLES LIKE \'innodb_file_per_table\'' => $configuration['innodb_file_per_table'] ?? false,
+                    'SHOW VARIABLES LIKE \'innodb_file_format\'' => $configuration['innodb_file_format'] ?? false,
+                    default => false,
+                }
+            )
+        ;
+
+        $connection
+            ->method('fetchAllAssociative')
+            ->with('SHOW ENGINES')
+            ->willReturn($configuration['engines'] ?? [])
+        ;
+
+        $command = $this->getCommand(connection: $connection);
+
+        $tester = new CommandTester($command);
+        $tester->execute(['--no-backup' => true]);
+
+        $display = $tester->getDisplay();
+
+        foreach ((array) $expectedMessages as $expectedMessage) {
+            $this->assertStringContainsString($expectedMessage, $display);
+        }
+    }
+
+    public function provideBadConfigurations(): \Generator
+    {
+        yield 'database version too old' => [
+            [
+                'version' => '5.0.10',
+            ],
+            'Your database version is not supported!',
+        ];
+
+        yield 'unsupported collation' => [
+            [
+                'defaultTableOptions' => [
+                    'collate' => 'foo',
+                ],
+            ],
+            'The configured collation is not supported!',
+        ];
+
+        yield 'unsupported engine' => [
+            [
+                'defaultTableOptions' => [
+                    'engine' => 'MyISAM',
+                ],
+                'engines' => [
+                    ['Engine' => 'MEMORY', 'Comment' => 'Hash based, stored in memory, useful for temporary tables'],
+                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
+                ],
+            ],
+            'The configured database engine is not supported!',
+        ];
+
+        yield 'invalid combination of engine and collation' => [
+            [
+                'defaultTableOptions' => [
+                    'collate' => 'utf8mb4_general_ci',
+                    'engine' => 'MyISAM',
+                ],
+                'collation' => [
+                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                ],
+                'engines' => [
+                    ['Engine' => 'MyISAM', 'Comment' => 'Non-transactional engine with good performance and small data footprint'],
+                ],
+            ],
+            'Invalid combination of database engine and collation!',
+        ];
+
+        yield 'not using innodb_large_prefix' => [
+            [
+                'version' => '5.7.0',
+                'defaultTableOptions' => [
+                    'collate' => 'utf8mb4_general_ci',
+                    'engine' => 'InnoDB',
+                ],
+                'collation' => [
+                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                ],
+                'engines' => [
+                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
+                ],
+                'innodb_large_prefix' => [
+                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'OFF',
+                ],
+            ],
+            'The "innodb_large_prefix" option is not enabled!',
+        ];
+
+        yield 'bad file format setting' => [
+            [
+                'version' => '5.7.0',
+                'defaultTableOptions' => [
+                    'collate' => 'utf8mb4_general_ci',
+                    'engine' => 'InnoDB',
+                ],
+                'collation' => [
+                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                ],
+                'engines' => [
+                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
+                ],
+                'innodb_large_prefix' => [
+                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'ON',
+                ],
+                'innodb_file_format' => [
+                    'Variable_name' => 'innodb_file_format', 'Value' => 'snapper',
+                ],
+            ],
+            'InnoDB is not configured properly!',
+        ];
+
+        yield 'bad file per table setting' => [
+            [
+                'version' => '5.7.0',
+                'defaultTableOptions' => [
+                    'collate' => 'utf8mb4_general_ci',
+                    'engine' => 'InnoDB',
+                ],
+                'collation' => [
+                    'Collation' => 'utf8mb4_general_ci', 'Charset' => 'utf8mb4',
+                ],
+                'engines' => [
+                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
+                ],
+                'innodb_large_prefix' => [
+                    'Variable_name' => 'innodb_large_prefix', 'Value' => 'ON',
+                ],
+                'innodb_file_format' => [
+                    'Variable_name' => 'innodb_file_format', 'Value' => 'barracuda',
+                ],
+                'innodb_file_per_table' => [
+                    'Variable_name' => 'innodb_file_per_table', 'Value' => '2',
+                ],
+            ],
+            'InnoDB is not configured properly!',
+        ];
+
+        yield 'multiple' => [
+            [
+                'defaultTableOptions' => [
+                    'collate' => 'foo',
+                    'engine' => 'MyISAM',
+                ],
+                'engines' => [
+                    ['Engine' => 'MEMORY', 'Comment' => 'Hash based, stored in memory, useful for temporary tables'],
+                    ['Engine' => 'InnoDB', 'Comment' => 'Supports transactions, row-level locking, foreign keys and encryption for tables'],
+                ],
+            ],
+            [
+                'The configured collation is not supported!',
+                'The configured database engine is not supported!',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider provideInvalidSqlModes
+     */
+    public function testEmitsWarningMessageIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
+    {
+        $connection = $this->createDefaultConnection($sqlMode, $driver);
+        $command = $this->getCommand(connection: $connection);
+
+        $tester = new CommandTester($command);
+        $tester->execute(['--format' => 'ndjson', '--no-backup' => true], ['interactive' => false]);
+
+        $display = $tester->getDisplay();
+        $json = $this->jsonArrayFromNdjson($display)[1];
+
+        $this->assertSame('warning', $json['type']);
+
+        $this->assertStringContainsString('Running MySQL in non-strict mode can cause corrupt or truncated data.', $json['message']);
+        $this->assertStringContainsString(sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $json['message']);
+    }
+
     public function getOutputFormats(): \Generator
     {
         yield ['txt'];
@@ -394,6 +616,25 @@ class MigrateCommandTest extends TestCase
         yield 'txt and backups disabled' => ['txt', false];
         yield 'ndjson and backups enabled' => ['ndjson', true];
         yield 'ndjson and backups disabled' => ['ndjson', false];
+    }
+
+    public function provideInvalidSqlModes(): \Generator
+    {
+        yield 'empty sql_mode, pdo driver' => [
+            '', new PdoDriver(), 1002,
+        ];
+
+        yield 'empty sql_mode, mysqli driver' => [
+            '', new MysqliDriver(), 3,
+        ];
+
+        yield 'unrelated values, pdo driver' => [
+            'IGNORE_SPACE,ONLY_FULL_GROUP_BY', new PdoDriver(), 1002,
+        ];
+
+        yield 'unrelated values, mysqli driver' => [
+            'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION', new MysqliDriver(), 3,
+        ];
     }
 
     /**
@@ -428,12 +669,37 @@ class MigrateCommandTest extends TestCase
 
         return new MigrateCommand(
             $commandCompiler ?? $this->createMock(CommandCompiler::class),
-            $connection ?? $this->createMock(Connection::class),
+            $connection ?? $this->createDefaultConnection(),
             $migrations,
             $backupManager ?? $this->createBackupManager(false),
             $schemaProvider,
             $this->createMock(MysqlInnodbRowSizeCalculator::class)
         );
+    }
+
+    /**
+     * @return Connection&MockObject
+     */
+    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver $driver = null): Connection
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->willReturnCallback(
+                static fn (string $query): string|false => match ($query) {
+                    'SELECT @@sql_mode' => $sqlMode,
+                    'SELECT @@version' => '8.0.0',
+                    default => false,
+                }
+            )
+        ;
+
+        $connection
+            ->method('getDriver')
+            ->willReturn($driver ?? new PdoDriver())
+        ;
+
+        return $connection;
     }
 
     /**

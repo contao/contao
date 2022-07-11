@@ -64,34 +64,6 @@ class CommandSchedulerListenerTest extends TestCase
         $listener($this->getTerminateEvent('contao_backend'));
     }
 
-    public function testDoesNotRunTheCommandSchedulerInTheInstallTool(): void
-    {
-        $cron = $this->createMock(Cron::class);
-        $cron
-            ->expects($this->never())
-            ->method('run')
-        ;
-
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->expects($this->never())
-            ->method('getAdapter')
-        ;
-
-        $ref = new \ReflectionClass(Request::class);
-
-        /** @var Request $request */
-        $request = $ref->newInstance();
-
-        $pathInfo = $ref->getProperty('pathInfo');
-        $pathInfo->setValue($request, '/contao/install');
-
-        $event = new TerminateEvent($this->createMock(KernelInterface::class), $request, new Response());
-
-        $listener = new CommandSchedulerListener($cron, $framework, $this->mockConnection());
-        $listener($event);
-    }
-
     public function testDoesNotRunTheCommandSchedulerUponFragmentRequests(): void
     {
         $cron = $this->createMock(Cron::class);
