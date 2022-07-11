@@ -144,7 +144,7 @@
         <source>Numeric aliases are not supported!</source>
       </trans-unit>
       <trans-unit id="ERR.urlPrefixExists">
-        <source>The URL prefix "%s" is already used by another root page with the same domain name!</source>
+        <source>The URL prefix "%s" is already used by another website root page with the same domain name!</source>
       </trans-unit>
       <trans-unit id="ERR.pageUrlExists">
         <source>A page with the URL "%s" already exists!</source>
@@ -210,7 +210,7 @@
         <source>Top-level pages must be website root pages!</source>
       </trans-unit>
       <trans-unit id="ERR.topLevelRegular">
-        <source>There are top-level pages in the site structure which are not website root pages.</source>
+        <source>There are top-level pages which are not website root pages.</source>
       </trans-unit>
       <trans-unit id="ERR.form">
         <source>The form could not be sent</source>
@@ -268,6 +268,9 @@
       </trans-unit>
       <trans-unit id="ERR.previewSwitchInvalidUsername">
         <source>Unknown username: %s</source>
+      </trans-unit>
+      <trans-unit id="ERR.versionNotRestored">
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -576,13 +579,13 @@
         <source>Internal redirect</source>
       </trans-unit>
       <trans-unit id="PTY.forward.1">
-        <source>This type of page automatically forwards visitors to another page within the site structure.</source>
+        <source>This type of page automatically forwards visitors to another page.</source>
       </trans-unit>
       <trans-unit id="PTY.root.0">
         <source>Website root</source>
       </trans-unit>
       <trans-unit id="PTY.root.1">
-        <source>This type of page marks the starting point of a new website within the site structure.</source>
+        <source>This type of page marks the starting point of a new website.</source>
       </trans-unit>
       <trans-unit id="PTY.logout.0">
         <source>Logout</source>
@@ -612,7 +615,7 @@
         <source>503 Service unavailable</source>
       </trans-unit>
       <trans-unit id="PTY.error_503.1">
-        <source>When a root page is in maintenance mode, a 503 error page is displayed for all requests.</source>
+        <source>When a website root page is in maintenance mode, all requests will show a 503 error page.</source>
       </trans-unit>
       <trans-unit id="FOP.fop.0">
         <source>File operation permissions</source>
@@ -1908,7 +1911,7 @@
         <source>Download %s</source>
       </trans-unit>
       <trans-unit id="MSC.metaNoLanguages">
-        <source>You have to add a root page in the site structure to enter file metadata.</source>
+        <source>You have to add a website root page to enter file metadata.</source>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb menu</source>

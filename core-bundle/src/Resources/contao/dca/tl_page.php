@@ -489,6 +489,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'useFolderUrl' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
@@ -501,6 +502,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'urlSuffix' => array
 		(
+			'exclude'                 => true,
 			'inputType'               => 'text',
 			'eval'                    => array('nospace'=>'true', 'maxlength'=>16, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(16) NOT NULL default ''"
@@ -840,11 +842,6 @@ class tl_page extends Backend
 				case 'edit':
 				case 'toggle':
 					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE;
-					break;
-
-				case 'move':
-					$permission = ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY;
-					$ids[] = Input::get('sid');
 					break;
 
 				case 'create':

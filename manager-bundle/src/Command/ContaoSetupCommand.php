@@ -90,7 +90,7 @@ class ContaoSetupCommand extends Command
             $this->executeCommand(array_merge($php, [$this->consolePath], $command, $commandFlags), $output);
         }
 
-        $output->writeln('<info>Done! Please open the Contao install tool or run contao:migrate on the command line to make sure the database is up-to-date.</info>');
+        $output->writeln('<info>Done! Please run the contao:migrate command to make sure the database is up-to-date.</info>');
 
         return Command::SUCCESS;
     }

@@ -123,11 +123,19 @@ $GLOBALS['BE_MOD'] = array
 	// Content modules
 	'content' => array
 	(
+		'page' => array
+		(
+			'tables'      => array('tl_page')
+		),
 		'article' => array
 		(
 			'tables'      => array('tl_article', 'tl_content'),
 			'table'       => array(BackendCsvImportController::class, 'importTableWizardAction'),
 			'list'        => array(BackendCsvImportController::class, 'importListWizardAction')
+		),
+		'files' => array
+		(
+			'tables'                  => array('tl_files')
 		),
 		'form' => array
 		(
@@ -144,10 +152,6 @@ $GLOBALS['BE_MOD'] = array
 			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item'),
 			'importTheme' => array(Theme::class, 'importTheme'),
 			'exportTheme' => array(Theme::class, 'exportTheme'),
-		),
-		'page' => array
-		(
-			'tables'      => array('tl_page')
 		),
 		'tpl_editor' => array
 		(
@@ -193,10 +197,6 @@ $GLOBALS['BE_MOD'] = array
 	// System modules
 	'system' => array
 	(
-		'files' => array
-		(
-			'tables'                  => array('tl_files')
-		),
 		'settings' => array
 		(
 			'tables'                  => array('tl_settings')

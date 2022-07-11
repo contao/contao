@@ -170,11 +170,11 @@ class Ajax extends Backend
 
 		switch ($this->strAction)
 		{
-			// Load nodes of the page structure tree
+			// Load nodes of the page tree
 			case 'loadStructure':
 				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView($this->strAjaxId, (int) Input::post('level'))));
 
-			// Load nodes of the file manager tree
+			// Load nodes of the file tree
 			case 'loadFileManager':
 				throw new ResponseException($this->convertToResponse($dc->ajaxTreeView(Input::post('folder', true), (int) Input::post('level'))));
 
@@ -331,6 +331,7 @@ class Ajax extends Backend
 						$objVersions->initialize();
 
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($this->strAjaxId);
+						DataContainer::clearCurrentRecordCache($this->strAjaxId, $dc->table);
 
 						$objVersions->create();
 
@@ -350,6 +351,7 @@ class Ajax extends Backend
 						$objVersions->initialize();
 
 						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($dc->id);
+						DataContainer::clearCurrentRecordCache($dc->id, $dc->table);
 
 						$objVersions->create();
 

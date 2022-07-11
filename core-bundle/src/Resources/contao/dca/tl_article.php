@@ -381,7 +381,7 @@ class tl_article extends Backend
 		}
 
 		// Set allowed clipboard IDs
-		if (isset($session['CLIPBOARD']['tl_article']) && is_array($session['CLIPBOARD']['tl_article']['id'] ?? null))
+		if (!empty($session['CLIPBOARD']['tl_article']['id']) && is_array($session['CLIPBOARD']['tl_article']['id']))
 		{
 			$clipboard = array();
 
@@ -426,11 +426,6 @@ class tl_article extends Backend
 				case 'edit':
 				case 'toggle':
 					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLES;
-					break;
-
-				case 'move':
-					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY;
-					$ids[] = Input::get('sid');
 					break;
 
 				// Do not insert articles into a website root page

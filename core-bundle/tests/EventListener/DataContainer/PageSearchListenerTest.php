@@ -135,7 +135,7 @@ class PageSearchListenerTest extends TestCase
             $connection
         );
 
-        $listener->onSaveNoSearch('0', $dc);
+        $listener->onSaveNoSearch('', $dc);
     }
 
     public function testDoesNotPurgeTheSearchIndexWithUnchangedNoSearch(): void

@@ -49,7 +49,6 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Transport\NativeTransportFactory;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 
@@ -152,7 +151,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $collections[] = $collection;
         }
 
-        $collection = array_reduce(
+        return array_reduce(
             $collections,
             static function (RouteCollection $carry, RouteCollection $item): RouteCollection {
                 $carry->addCollection($item);
@@ -161,22 +160,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             },
             new RouteCollection()
         );
-
-        // Redirect the deprecated install.php file
-        $collection->add(
-            'contao_install_redirect',
-            new Route(
-                '/install.php',
-                [
-                    '_scope' => 'backend',
-                    '_controller' => 'Symfony\Bundle\FrameworkBundle\Controller\RedirectController::redirectAction',
-                    'route' => 'contao_install',
-                    'permanent' => true,
-                ]
-            )
-        );
-
-        return $collection;
     }
 
     public function getApiFeatures(): array

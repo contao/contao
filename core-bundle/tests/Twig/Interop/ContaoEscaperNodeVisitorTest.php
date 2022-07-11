@@ -140,7 +140,12 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $environment = new Environment($loader);
 
-        $contaoExtension = new ContaoExtension($environment, $this->createMock(TemplateHierarchyInterface::class), $this->createMock(ContaoCsrfTokenManager::class));
+        $contaoExtension = new ContaoExtension(
+            $environment,
+            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoCsrfTokenManager::class)
+        );
+
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');
 
         $environment->addExtension($contaoExtension);

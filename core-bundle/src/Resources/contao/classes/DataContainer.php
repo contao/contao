@@ -61,7 +61,7 @@ abstract class DataContainer extends Backend
 	public const MODE_PARENT = 4;
 
 	/**
-	 * Records are displayed as tree (see site structure)
+	 * Records are displayed as tree (see pages)
 	 */
 	public const MODE_TREE = 5;
 
@@ -216,7 +216,7 @@ abstract class DataContainer extends Backend
 
 	/**
 	 * Active record
-	 * @var \stdClass|null
+	 * @var Model|object|null
 	 * @deprecated Deprecated since Contao 5.0 to be removed in Contao 6. Use $dc->getCurrentRecord() instead.
 	 */
 	protected $objActiveRecord;
@@ -266,7 +266,7 @@ abstract class DataContainer extends Backend
 	 * Current record cache
 	 * @var array<int|string, array<string,mixed>|AccessDeniedException>
 	 */
-	private $arrCurrentRecordCache = array();
+	private static $arrCurrentRecordCache = array();
 
 	/**
 	 * Set an object property
@@ -292,7 +292,8 @@ abstract class DataContainer extends Backend
 				break;
 
 			default:
-				$this->$strKey = $varValue; // backwards compatibility
+				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones has been deprecated and will no longer work in Contao 6.');
+				$this->$strKey = $varValue;
 				break;
 		}
 	}
@@ -894,72 +895,66 @@ abstract class DataContainer extends Backend
 				continue;
 			}
 
-			// Generate all buttons except "move up" and "move down" buttons
-			if ($k != 'move' && $v != 'move')
+			if ($k == 'show')
 			{
-				if ($k == 'show')
+				if (!empty($v['route']))
 				{
-					if (!empty($v['route']))
-					{
-						$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id'], 'popup' => '1'));
-					}
-					else
-					{
-						$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
-					}
-
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $label)) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+					$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id'], 'popup' => '1'));
 				}
 				else
 				{
-					if (!empty($v['route']))
-					{
-						$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
-					}
-					else
-					{
-						$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
-					}
-
-					parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
-
-					if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
-					{
-						// Hide the toggle icon if the user does not have access to the field
-						if (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field']))
-						{
-							continue;
-						}
-
-						$icon = $v['icon'];
-						$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
-
-						if (false !== strpos($v['icon'], '/'))
-						{
-							$_icon = \dirname($v['icon']) . '/' . $_icon;
-						}
-
-						if ($icon == 'visible.svg')
-						{
-							$_icon = 'invisible.svg';
-						}
-
-						$state = $arrRow[$params['field']] ? 1 : 0;
-
-						if ($v['reverse'] ?? false)
-						{
-							$state = $arrRow[$params['field']] ? 0 : 1;
-						}
-
-						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
-					}
-					else
-					{
-						$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
-					}
+					$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . '&amp;popup=1');
 				}
 
-				continue;
+				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $label)) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+			}
+			else
+			{
+				if (!empty($v['route']))
+				{
+					$href = System::getContainer()->get('router')->generate($v['route'], array('id' => $arrRow['id']));
+				}
+				else
+				{
+					$href = $this->addToUrl(($v['href'] ?? '') . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : ''));
+				}
+
+				parse_str(StringUtil::decodeEntities($v['href'] ?? ''), $params);
+
+				if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
+				{
+					// Hide the toggle icon if the user does not have access to the field
+					if (($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field']))
+					{
+						continue;
+					}
+
+					$icon = $v['icon'];
+					$_icon = pathinfo($v['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($v['icon'], PATHINFO_EXTENSION);
+
+					if (false !== strpos($v['icon'], '/'))
+					{
+						$_icon = \dirname($v['icon']) . '/' . $_icon;
+					}
+
+					if ($icon == 'visible.svg')
+					{
+						$_icon = 'invisible.svg';
+					}
+
+					$state = $arrRow[$params['field']] ? 1 : 0;
+
+					if ($v['reverse'] ?? false)
+					{
+						$state = $arrRow[$params['field']] ? 0 : 1;
+					}
+
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $label, 'data-icon="' . Image::getPath($icon) . '" data-icon-disabled="' . Image::getPath($_icon) . '" data-state="' . $state . '"') . '</a> ';
+				}
+				else
+				{
+					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($v['icon'], $label) . '</a> ';
+				}
 			}
 		}
 
@@ -1737,12 +1732,12 @@ abstract class DataContainer extends Backend
 	/**
 	 * @param array<int|string> $ids
 	 */
-	protected function preloadCurrentRecords(array $ids, string $table): void
+	protected static function preloadCurrentRecords(array $ids, string $table): void
 	{
 		// Clear current cache to make sure records are gone if they cannot be loaded from the database below
 		foreach ($ids as $id)
 		{
-			$this->setCurrentRecordCache($id, $table, null);
+			self::clearCurrentRecordCache($id, $table);
 		}
 
 		/** @var Connection $connection */
@@ -1761,65 +1756,88 @@ abstract class DataContainer extends Backend
 				continue;
 			}
 
-			$this->setCurrentRecordCache($row['id'], $table, $row);
+			static::setCurrentRecordCache($row['id'], $table, $row);
 		}
 	}
 
 	/**
 	 * @param array<string, mixed>|null $row Pass null to remove a given cache entry
 	 */
-	protected function setCurrentRecordCache(string|int $id, string $table, array|null $row): void
+	protected static function setCurrentRecordCache(string|int $id, string $table, array $row): void
 	{
-		if (null === $row)
-		{
-			unset($this->arrCurrentRecordCache[$table . '.' . $id]);
-
-			return;
-		}
-
-		$this->arrCurrentRecordCache[$table . '.' . $id] = $row;
+		self::$arrCurrentRecordCache[$table . '.' . $id] = $row;
 	}
 
 	/**
 	 * @throws AccessDeniedException     if the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
-	public function getCurrentRecord(string|int $id = null, string $table = null, bool $noCache = false): ?array
+	public function getCurrentRecord(string|int $id = null, string $table = null): ?array
 	{
 		$id = $id ?: $this->intId;
 		$table = $table ?: $this->strTable;
 		$key = $table . '.' . $id;
 
-		if ($noCache || !isset($this->arrCurrentRecordCache[$key]))
+		if (!isset(self::$arrCurrentRecordCache[$key]))
 		{
-			$this->preloadCurrentRecords(array($id), $table);
+			static::preloadCurrentRecords(array($id), $table);
 		}
 
 		// In case this record was not part of the preloaded result, we don't need to apply any permission checks
-		if (!isset($key, $this->arrCurrentRecordCache))
+		if (!isset($key, self::$arrCurrentRecordCache))
 		{
 			return null;
 		}
 
 		// In case this record has been checked before, we don't ask the voters again but instead throw the previous
 		// exception
-		if ($this->arrCurrentRecordCache[$key] instanceof AccessDeniedException)
+		if (self::$arrCurrentRecordCache[$key] instanceof AccessDeniedException)
 		{
-			throw $this->arrCurrentRecordCache[$key];
+			throw self::$arrCurrentRecordCache[$key];
 		}
 
 		try
 		{
-			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new ReadAction($table, $this->arrCurrentRecordCache[$key]));
+			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new ReadAction($table, self::$arrCurrentRecordCache[$key]));
 		}
 		catch (AccessDeniedException $e)
 		{
 			// Remember the exception for this key for the next call
-			$this->arrCurrentRecordCache[$key] = $e;
+			self::$arrCurrentRecordCache[$key] = $e;
 
 			throw $e;
 		}
 
-		return $this->arrCurrentRecordCache[$key];
+		return self::$arrCurrentRecordCache[$key];
+	}
+
+	public static function clearCurrentRecordCache(string|int $id = null, string $table = null): void
+	{
+		if (null === $table)
+		{
+			if (null !== $id)
+			{
+				throw new \InvalidArgumentException(sprintf('Missing $table parameter for passed ID "%s".', $id));
+			}
+
+			self::$arrCurrentRecordCache = array();
+
+			return;
+		}
+
+		if (null !== $id)
+		{
+			unset(self::$arrCurrentRecordCache["$table.$id"]);
+
+			return;
+		}
+
+		foreach (array_keys(self::$arrCurrentRecordCache) as $key)
+		{
+			if (str_starts_with($key, "$table."))
+			{
+				unset(self::$arrCurrentRecordCache[$key]);
+			}
+		}
 	}
 }
