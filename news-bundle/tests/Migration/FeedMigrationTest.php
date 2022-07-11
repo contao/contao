@@ -16,7 +16,6 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Contao\NewsBundle\Migration\FeedMigration;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Psr\Log\NullLogger;
 
@@ -61,17 +60,10 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn($schemaManager)
         ;
 
-        $result = $this->createMock(Result::class);
-        $result
-            ->expects($this->once())
-            ->method('fetchFirstColumn')
-            ->willReturn([0])
-        ;
-
         $connection
             ->expects($this->once())
-            ->method('executeQuery')
-            ->willReturn($result)
+            ->method('fetchOne')
+            ->willReturn(0)
         ;
 
         $migration = new FeedMigration($connection, new NullLogger());
@@ -96,17 +88,9 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn($schemaManager)
         ;
 
-        $countResult = $this->createMock(Result::class);
-        $countResult
-            ->expects($this->once())
-            ->method('fetchFirstColumn')
-            ->willReturn([1])
-        ;
-
-        $feedResult = $this->createMock(Result::class);
-        $feedResult
-            ->expects($this->once())
+        $connection
             ->method('fetchAllAssociative')
+            ->with('SELECT * FROM tl_news_feed')
             ->willReturn([[
                 'id' => 1,
                 'tstamp' => 16000000,
@@ -123,21 +107,12 @@ class FeedMigrationTest extends ContaoTestCase
             ]])
         ;
 
-        $rootPageResult = $this->createMock(Result::class);
-        $rootPageResult
-            ->expects($this->once())
-            ->method('fetchFirstColumn')
-            ->willReturn([1])
-        ;
-
         $connection
-            ->method('executeQuery')
-            ->withConsecutive(
-                ['SELECT COUNT(id) AS count FROM tl_news_feed'],
-                ['SELECT * FROM tl_news_feed'],
-                ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en']],
-            )
-            ->willReturnOnConsecutiveCalls($countResult, $feedResult, $rootPageResult)
+            ->method('fetchOne')
+            ->willReturnMap([
+                ["SELECT COUNT(id) FROM tl_news_feed", [], [], 1],
+                ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], 1],
+            ])
         ;
 
         $connection
@@ -188,17 +163,9 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn($schemaManager)
         ;
 
-        $countResult = $this->createMock(Result::class);
-        $countResult
-            ->expects($this->once())
-            ->method('fetchFirstColumn')
-            ->willReturn([1])
-        ;
-
-        $feedResult = $this->createMock(Result::class);
-        $feedResult
-            ->expects($this->once())
+        $connection
             ->method('fetchAllAssociative')
+            ->with("SELECT * FROM tl_news_feed")
             ->willReturn([[
                 'id' => 1,
                 'tstamp' => 16000000,
@@ -215,29 +182,13 @@ class FeedMigrationTest extends ContaoTestCase
             ]])
         ;
 
-        $rootPageResultA = $this->createMock(Result::class);
-        $rootPageResultA
-            ->expects($this->once())
-            ->method('fetchFirstColumn')
-            ->willReturn([])
-        ;
-
-        $rootPageResultB = $this->createMock(Result::class);
-        $rootPageResultB
-            ->expects($this->once())
-            ->method('fetchFirstColumn')
-            ->willReturn([2])
-        ;
-
         $connection
-            ->method('executeQuery')
-            ->withConsecutive(
-                ['SELECT COUNT(id) AS count FROM tl_news_feed'],
-                ['SELECT * FROM tl_news_feed'],
-                ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en']],
-                ["SELECT id FROM tl_page WHERE type = 'root' ORDER BY sorting ASC LIMIT 1"]
-            )
-            ->willReturnOnConsecutiveCalls($countResult, $feedResult, $rootPageResultA, $rootPageResultB)
+            ->method('fetchOne')
+            ->willReturnMap([
+                ['SELECT COUNT(id) FROM tl_news_feed', [], [], 1],
+                ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], []],
+                ["SELECT id FROM tl_page WHERE type = 'root' ORDER BY sorting ASC LIMIT 1", [], [], 2]
+            ])
         ;
 
         $connection
