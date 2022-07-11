@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\ScopeMatcher;
-use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
@@ -40,6 +38,7 @@ class LegacyLoginConstantsListener
         // Otherwise allow the framework to set them itself during initialize.
         if (!$this->framework->isInitialized()) {
             $this->framework->setLoginConstantsOnInit(true);
+
             return;
         }
 

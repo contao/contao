@@ -183,7 +183,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
 
     /**
      * Allows the login constants to be set during initialize.
-     * 
+     *
      * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
      */
     public function setLoginConstantsOnInit(bool $setLoginConstants = true): void
@@ -194,7 +194,7 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     /**
      * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
      */
-    public function setLoginConstants(Request $request = null)
+    public function setLoginConstants(Request $request = null): void
     {
         if (null !== $request && $this->scopeMatcher->isFrontendRequest($request)) {
             \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
