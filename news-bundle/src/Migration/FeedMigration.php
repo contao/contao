@@ -16,7 +16,6 @@ use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\VarDumper\VarDumper;
 
 class FeedMigration extends AbstractMigration
 {
@@ -48,7 +47,7 @@ class FeedMigration extends AbstractMigration
         ];
 
         foreach ($newFields as $field => $definition) {
-            if (array_key_exists($field, $columns)) {
+            if (\array_key_exists($field, $columns)) {
                 continue;
             }
 

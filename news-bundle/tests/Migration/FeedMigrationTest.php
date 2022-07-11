@@ -116,7 +116,7 @@ class FeedMigrationTest extends ContaoTestCase
         $connection
             ->method('fetchOne')
             ->willReturnMap([
-                ["SELECT COUNT(id) FROM tl_news_feed", [], [], 1],
+                ['SELECT COUNT(id) FROM tl_news_feed', [], [], 1],
                 ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], 1],
             ])
         ;
@@ -177,7 +177,7 @@ class FeedMigrationTest extends ContaoTestCase
 
         $connection
             ->method('fetchAllAssociative')
-            ->with("SELECT * FROM tl_news_feed")
+            ->with('SELECT * FROM tl_news_feed')
             ->willReturn([[
                 'id' => 1,
                 'tstamp' => 16000000,
@@ -199,7 +199,7 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturnMap([
                 ['SELECT COUNT(id) FROM tl_news_feed', [], [], 1],
                 ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], []],
-                ["SELECT id FROM tl_page WHERE type = 'root' AND fallback = '1' ORDER BY sorting ASC LIMIT 1", [], [], 2]
+                ["SELECT id FROM tl_page WHERE type = 'root' AND fallback = '1' ORDER BY sorting ASC LIMIT 1", [], [], 2],
             ])
         ;
 
