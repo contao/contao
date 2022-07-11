@@ -92,35 +92,6 @@ class CommandSchedulerListenerTest extends TestCase
         $listener($event);
     }
 
-    public function testDoesNotRunTheCommandSchedulerIfTheInstallationIsIncomplete(): void
-    {
-        $cron = $this->createMock(Cron::class);
-        $cron
-            ->expects($this->never())
-            ->method('run')
-        ;
-
-        $adapter = $this->mockAdapter(['isComplete', 'get']);
-        $adapter
-            ->method('isComplete')
-            ->willReturn(false)
-        ;
-
-        $adapter
-            ->expects($this->never())
-            ->method('get')
-        ;
-
-        $framework = $this->mockContaoFramework([Config::class => $adapter]);
-        $framework
-            ->expects($this->never())
-            ->method('createInstance')
-        ;
-
-        $listener = new CommandSchedulerListener($cron, $framework, $this->mockConnection());
-        $listener($this->getTerminateEvent('contao_backend'));
-    }
-
     public function testDoesNotRunTheCommandSchedulerIfCronjobsAreDisabled(): void
     {
         $cron = $this->createMock(Cron::class);

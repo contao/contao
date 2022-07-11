@@ -54,7 +54,7 @@ class CommandSchedulerListener
 
         $config = $this->framework->getAdapter(Config::class);
 
-        return $config->isComplete() && !$config->get('disableCron') && $this->canRunDbQuery();
+        return !$config->get('disableCron') && $this->canRunDbQuery();
     }
 
     /**
