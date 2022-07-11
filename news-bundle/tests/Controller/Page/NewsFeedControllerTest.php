@@ -106,7 +106,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         $controller = $this->getController();
         $controller->setContainer($container);
         $response = $controller($request, $pageModel);
-        $this->assertSame(204, $response->getStatusCode());
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     /**
