@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -24,29 +25,24 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class LegacyLoginConstantsListener
 {
     /**
-     * @var TokenChecker
+     * @var ContaoFramework
      */
-    private $tokenChecker;
+    private $framework;
 
-    /**
-     * @var ScopeMatcher
-     */
-    private $scopeMatcher;
-
-    public function __construct(TokenChecker $tokenChecker, ScopeMatcher $scopeMatcher)
+    public function __construct(ContaoFramework $framework)
     {
-        $this->tokenChecker = $tokenChecker;
-        $this->scopeMatcher = $scopeMatcher;
+        $this->framework = $framework;
     }
 
     public function __invoke(RequestEvent $event): void
     {
-        if ($this->scopeMatcher->isFrontendRequest($event->getRequest())) {
-            \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
-            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
-        } else {
-            \define('BE_USER_LOGGED_IN', false);
-            \define('FE_USER_LOGGED_IN', false);
+        // Set the legacy login constants, if the legacy framework was initialized before.
+        // Otherwise allow the framework to set them itself during initialize.
+        if (!$this->framework->isInitialized()) {
+            $this->framework->setLoginConstantsOnInit(true);
+            return;
         }
+
+        $this->framework->setLoginConstants($event->getRequest());
     }
 }

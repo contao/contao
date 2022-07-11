@@ -17,6 +17,7 @@ use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\LazySessionAccess;
 use Contao\Environment;
 use Contao\Input;
@@ -56,6 +57,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     private $scopeMatcher;
 
     /**
+     * @var TokenChecker
+     */
+    private $tokenChecker;
+
+    /**
      * @var Filesystem
      */
     private $filesystem;
@@ -90,10 +96,16 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
      */
     private $hookListeners = [];
 
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, Filesystem $filesystem, string $projectDir, int $errorLevel)
+    /**
+     * @var bool
+     */
+    private $setLoginConstants = false;
+
+    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher, TokenChecker $tokenChecker, Filesystem $filesystem, string $projectDir, int $errorLevel)
     {
         $this->requestStack = $requestStack;
         $this->scopeMatcher = $scopeMatcher;
+        $this->tokenChecker = $tokenChecker;
         $this->filesystem = $filesystem;
         $this->projectDir = $projectDir;
         $this->errorLevel = $errorLevel;
@@ -170,6 +182,30 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
     }
 
     /**
+     * Allows the login constants to be set during initialize.
+     * 
+     * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
+     */
+    public function setLoginConstantsOnInit(bool $setLoginConstants = true): void
+    {
+        $this->setLoginConstants = $setLoginConstants;
+    }
+
+    /**
+     * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
+     */
+    public function setLoginConstants(Request $request = null)
+    {
+        if (null !== $request && $this->scopeMatcher->isFrontendRequest($request)) {
+            \define('BE_USER_LOGGED_IN', $this->tokenChecker->hasBackendUser() && $this->tokenChecker->isPreviewMode());
+            \define('FE_USER_LOGGED_IN', $this->tokenChecker->hasFrontendUser());
+        } else {
+            \define('BE_USER_LOGGED_IN', false);
+            \define('FE_USER_LOGGED_IN', false);
+        }
+    }
+
+    /**
      * @deprecated Deprecated since Contao 4.0, to be removed in Contao 5.0
      */
     private function setConstants(): void
@@ -186,10 +222,11 @@ class ContaoFramework implements ContaoFrameworkInterface, ContainerAwareInterfa
             \define('TL_SCRIPT', $this->getRoute());
         }
 
-        // If there is a request, constants will be set by contao.listener.legacy_login_constants
-        if (null === $this->requestStack->getCurrentRequest()) {
-            \define('BE_USER_LOGGED_IN', false);
-            \define('FE_USER_LOGGED_IN', false);
+        $request = $this->requestStack->getCurrentRequest();
+
+        // Define the login status constants (see #4099, #5279)
+        if ($this->setLoginConstants || null === $request) {
+            $this->setLoginConstants($request);
         }
 
         // Define the relative path to the installation (see #5339)
