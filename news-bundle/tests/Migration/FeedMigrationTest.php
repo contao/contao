@@ -81,9 +81,15 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn(true)
         ;
 
+        $schemaManager
+            ->expects($this->once())
+            ->method('listTableColumns')
+            ->with('tl_page')
+            ->willReturn(['newsArchives', 'feedFormat', 'feedSource', 'maxFeedItems', 'feedFeatured', 'imgSize'])
+        ;
+
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->once())
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
@@ -156,9 +162,15 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturn(true)
         ;
 
+        $schemaManager
+            ->expects($this->once())
+            ->method('listTableColumns')
+            ->with('tl_page')
+            ->willReturn(['newsArchives', 'feedFormat', 'feedSource', 'maxFeedItems', 'feedFeatured', 'imgSize'])
+        ;
+
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->once())
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
         ;
@@ -187,7 +199,7 @@ class FeedMigrationTest extends ContaoTestCase
             ->willReturnMap([
                 ['SELECT COUNT(id) FROM tl_news_feed', [], [], 1],
                 ["SELECT id FROM tl_page WHERE type = 'root' AND dns = :dns AND language = :language LIMIT 1", ['dns' => 'example.org', 'language' => 'en'], [], []],
-                ["SELECT id FROM tl_page WHERE type = 'root' ORDER BY sorting ASC LIMIT 1", [], [], 2]
+                ["SELECT id FROM tl_page WHERE type = 'root' AND fallback = '1' ORDER BY sorting ASC LIMIT 1", [], [], 2]
             ])
         ;
 

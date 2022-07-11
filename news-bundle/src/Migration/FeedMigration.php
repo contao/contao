@@ -35,7 +35,9 @@ class FeedMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        // Add new columns to `tl_page`
+        $schemaManager = $this->connection->createSchemaManager();
+        $columns = array_values($schemaManager->listTableColumns('tl_page'));
+
         $newFields = [
             'newsArchives' => 'blob NULL',
             'feedFormat' => "varchar(32) NOT NULL default 'rss'",
@@ -46,6 +48,10 @@ class FeedMigration extends AbstractMigration
         ];
 
         foreach ($newFields as $field => $definition) {
+            if (array_key_exists($field, $columns)) {
+                continue;
+            }
+
             $this->connection->executeStatement("
                 ALTER TABLE
                     tl_page
@@ -93,7 +99,7 @@ class FeedMigration extends AbstractMigration
 
         // Find first root page, if none matches by dns and language
         if (!$page) {
-            $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' ORDER BY sorting ASC LIMIT 1")
+            $page = $this->connection->fetchOne("SELECT id FROM tl_page WHERE type = 'root' AND fallback = '1' ORDER BY sorting ASC LIMIT 1")
             ;
         }
 
