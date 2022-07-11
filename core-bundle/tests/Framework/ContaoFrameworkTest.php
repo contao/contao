@@ -294,6 +294,8 @@ class ContaoFrameworkTest extends TestCase
     /**
      * @runInSeparateProcess
      * @preserveGlobalState disabled
+     * @group legacy
+     * @expectedDeprecation Using $_SESSION has been deprecated and will no longer work in Contao 5.0. Use the Symfony session instead.
      */
     public function testInitializesTheFrameworkInPreviewMode(): void
     {
