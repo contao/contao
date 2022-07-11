@@ -145,7 +145,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
         $twoFactorToken = $credentialsBadge->getTwoFactorToken();
 
-        if ($this->isTwoFactorAuthenticationComplete($twoFactorToken)) {
+        if ($twoFactorToken->allTwoFactorProvidersAuthenticated()) {
             $authenticatedToken = $twoFactorToken->getAuthenticatedToken(); // Authentication complete, unwrap the token
             $authenticatedToken->setAttribute(TwoFactorAuthenticator::FLAG_2FA_COMPLETE, true);
 
@@ -180,11 +180,6 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         }
 
         return true;
-    }
-
-    private function isTwoFactorAuthenticationComplete(TwoFactorTokenInterface $token): bool
-    {
-        return $token->allTwoFactorProvidersAuthenticated();
     }
 
     private function getCredentials(Request $request): array
