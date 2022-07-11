@@ -2,6 +2,11 @@
 
 ## Version 4.* to 5.0
 
+### DCA "exclude" fields
+
+The `exclude` property on DCA fields is no longer initialized when loading a back end module. Make sure to check for
+`ContaoCorePermission::CAN_EDIT_FIELD_OF_TABLE` to know if a field should be available to a user.
+
 ### Figure
 
 The `Contao\CoreBundle\Image\Studio\Figure::getLinkAttributes()` method will now return an
@@ -408,8 +413,3 @@ The back end widgets `pageSelector` and `fileSelector` have been removed. Use th
 ### Public folder
 
 The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
-
-### DCA "exclude" fields
-
-The "exclude" property on DCA fields is no longer initialized when loading a back end module. Make sure to
-check for ContaoCorePermission::CAN_EDIT_FIELD_OF_TABLE to know if a field should be available to a user.

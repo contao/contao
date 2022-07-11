@@ -2281,8 +2281,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
-		$security = System::getContainer()->get('security.helper');
-
 		// Get current IDs from session
 		$session = $objSession->all();
 		$ids = $session['CURRENT']['IDS'] ?? array();
@@ -2298,6 +2296,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$session['CURRENT'][$this->strTable] = Input::post('all_fields');
 			$objSession->replace($session);
 		}
+
+		$security = System::getContainer()->get('security.helper');
 
 		// Add fields
 		$fields = $session['CURRENT'][$this->strTable] ?? array();
@@ -2735,8 +2735,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return = '';
 		$this->import(BackendUser::class, 'User');
 
-		$security = System::getContainer()->get('security.helper');
-
 		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('session');
 
@@ -2750,6 +2748,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$session['CURRENT'][$this->strTable] = Input::post('all_fields');
 			$objSession->replace($session);
 		}
+
+		$security = System::getContainer()->get('security.helper');
 
 		// Add fields
 		$fields = $session['CURRENT'][$this->strTable] ?? array();
