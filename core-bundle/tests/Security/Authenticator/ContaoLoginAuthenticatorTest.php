@@ -139,62 +139,65 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator->onAuthenticationSuccess($request, $token, 'firewall');
     }
 
-    /**
-     * @dataProvider getTokenData
-     */
-    public function testTokenCreation(string $expected, Passport $passport): void
+    public function testTokenCreation(): void
     {
         $authenticator = $this->mockContaoLoginAuthenticator();
 
-        $this->assertInstanceOf($expected, $authenticator->createToken($passport, 'firewall'));
-    }
+        $this->assertInstanceOf(
+            PostAuthenticationToken::class,
+            $authenticator->createToken($this->createMock(Passport::class), 'firewall')
+        );
 
-    public function getTokenData(): \Generator
-    {
-        $badge1 = $this->createMock(TwoFactorCodeCredentials::class);
-        $badge1
+        $badge = $this->createMock(TwoFactorCodeCredentials::class);
+        $badge
             ->expects($this->once())
             ->method('getTwoFactorToken')
             ->willReturn($this->createMock(TwoFactorToken::class))
         ;
 
-        $passport1 = $this->createMock(Passport::class);
-        $passport1
+        $passport = $this->createMock(Passport::class);
+        $passport
             ->expects($this->once())
             ->method('getBadge')
-            ->willReturn($badge1)
+            ->willReturn($badge)
         ;
 
-        $twoFactorToken1 = $this->createMock(TwoFactorToken::class);
-        $twoFactorToken1
+        $this->assertInstanceOf(
+            TwoFactorToken::class,
+            $authenticator->createToken($passport, 'firewall')
+        );
+
+        $twoFactorToken = $this->createMock(TwoFactorToken::class);
+        $twoFactorToken
             ->expects($this->once())
             ->method('allTwoFactorProvidersAuthenticated')
             ->willReturn(true)
         ;
 
-        $twoFactorToken1
+        $twoFactorToken
             ->expects($this->once())
             ->method('getAuthenticatedToken')
             ->willReturn($this->createMock(PostAuthenticationToken::class))
         ;
 
-        $badge2 = $this->createMock(TwoFactorCodeCredentials::class);
-        $badge2
+        $badge = $this->createMock(TwoFactorCodeCredentials::class);
+        $badge
             ->expects($this->once())
             ->method('getTwoFactorToken')
-            ->willReturn($twoFactorToken1)
+            ->willReturn($twoFactorToken)
         ;
 
-        $passport2 = $this->createMock(Passport::class);
-        $passport2
+        $passport = $this->createMock(Passport::class);
+        $passport
             ->expects($this->once())
             ->method('getBadge')
-            ->willReturn($badge2)
+            ->willReturn($badge)
         ;
 
-        yield [PostAuthenticationToken::class, $this->createMock(Passport::class)];
-        yield [TwoFactorToken::class, $passport1];
-        yield [PostAuthenticationToken::class, $passport2];
+        $this->assertInstanceOf(
+            PostAuthenticationToken::class,
+            $authenticator->createToken($passport, 'firewall')
+        );
     }
 
     public function testExecutesTheTwoFactorAuthenticator(): void
