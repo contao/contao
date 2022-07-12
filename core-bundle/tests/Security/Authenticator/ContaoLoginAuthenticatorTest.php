@@ -332,8 +332,10 @@ class ContaoLoginAuthenticatorTest extends TestCase
 
     public function getAuthenticationData(): \Generator
     {
+        $veryLongUsername = str_repeat('k.jones', (int) ceil(Security::MAX_USERNAME_LENGTH / \strlen('k.jones')));
+
         yield [null, BadRequestHttpException::class];
-        yield [str_repeat('k.jones', 586), BadCredentialsException::class];
+        yield [$veryLongUsername, BadCredentialsException::class];
         yield ['k.jones', null];
     }
 
