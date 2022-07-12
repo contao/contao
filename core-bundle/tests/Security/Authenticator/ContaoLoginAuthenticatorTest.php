@@ -49,64 +49,58 @@ use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 
 class ContaoLoginAuthenticatorTest extends TestCase
 {
-    /**
-     * @dataProvider getRequestSupportsData
-     */
-    public function testSupportsTheRequest(bool $expected, Request $request): void
+    public function testSupportsTheRequest(): void
     {
         $authenticator = $this->mockContaoLoginAuthenticator();
 
-        $this->assertSame($expected, $authenticator->supports($request));
+        $this->assertFalse($authenticator->supports(new Request()));
+
+        $request = new Request();
+        $request->setMethod('POST');
+
+        $this->assertFalse($authenticator->supports($request));
+
+        $request = new Request();
+        $request->setMethod('POST');
+        $request->request->set('FORM_SUBMIT', 'foobar');
+
+        $this->assertFalse($authenticator->supports($request));
+
+        $request = new Request();
+        $request->setMethod('POST');
+        $request->request->set('FORM_SUBMIT', 'tl_login');
+
+        $this->assertTrue($authenticator->supports($request));
+
+        $request = new Request();
+        $request->setMethod('POST');
+        $request->request->set('FORM_SUBMIT', 'tl_login_1');
+
+        $this->assertTrue($authenticator->supports($request));
     }
 
-    public function getRequestSupportsData(): \Generator
+    public function testIfAuthenticationIsInteractive(): void
     {
-        $request1 = new Request();
-        $request1->setMethod('POST');
+        $authenticator = $this->mockContaoLoginAuthenticator();
 
-        $request2 = new Request();
-        $request2->setMethod('POST');
-        $request2->request->set('FORM_SUBMIT', 'foobar');
+        $this->assertFalse($authenticator->isInteractive());
 
-        $request3 = new Request();
-        $request3->setMethod('POST');
-        $request3->request->set('FORM_SUBMIT', 'tl_login');
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request());
 
-        $request4 = new Request();
-        $request4->setMethod('POST');
-        $request4->request->set('FORM_SUBMIT', 'tl_login_1');
-
-        yield [false, new Request()];
-        yield [false, $request1];
-        yield [false, $request2];
-        yield [true, $request3];
-        yield [true, $request4];
-    }
-
-    /**
-     * @dataProvider getRequestInteractiveData
-     */
-    public function testIfAuthenticationIsInteractive(bool $expected, RequestStack|null $requestStack): void
-    {
         $authenticator = $this->mockContaoLoginAuthenticator(requestStack: $requestStack);
 
-        $this->assertSame($expected, $authenticator->isInteractive());
-    }
-
-    public function getRequestInteractiveData(): \Generator
-    {
-        $requestStack1 = new RequestStack();
-        $requestStack1->push(new Request());
+        $this->assertFalse($authenticator->isInteractive());
 
         $request = new Request();
         $request->attributes->set('pageModel', $this->createMock(PageModel::class));
 
-        $requestStack2 = new RequestStack();
-        $requestStack2->push($request);
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
 
-        yield [false, null];
-        yield [false, $requestStack1];
-        yield [true, $requestStack2];
+        $authenticator = $this->mockContaoLoginAuthenticator(requestStack: $requestStack);
+
+        $this->assertTrue($authenticator->isInteractive());
     }
 
     public function testCallsTheSuccessAndFailureHandlers(): void
