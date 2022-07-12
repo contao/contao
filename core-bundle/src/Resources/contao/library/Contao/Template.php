@@ -413,6 +413,19 @@ abstract class Template extends Controller
 	}
 
 	/**
+	 * Returns an asset version
+	 *
+	 * @param string      $path
+	 * @param string|null $packageName
+	 *
+	 * @return string
+	 */
+	public function assetVersion($path, $packageName = null)
+	{
+		return System::getContainer()->get('assets.packages')->getVersion($path, $packageName);
+	}
+
+	/**
 	 * Returns a container parameter
 	 *
 	 * @param string $strKey
