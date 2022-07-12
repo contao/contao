@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -334,10 +333,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	public static function loadUserByIdentifier(string $identifier): self|null
 	{
-		/** @var Request $request */
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request === null)
+		if (!System::getContainer()->get('request_stack')->getCurrentRequest())
 		{
 			return null;
 		}

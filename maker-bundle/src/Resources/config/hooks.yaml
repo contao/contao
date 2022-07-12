@@ -389,22 +389,12 @@ hooks:
             buffer: string
             widget: Contao\Widget
 
-    postAuthenticate:
-        return_type: void
-        arguments:
-            user: Contao\User
-
     postDownload:
         return_type: void
         arguments:
             file: string
 
     postLogin:
-        return_type: void
-        arguments:
-            user: Contao\User
-
-    postLogout:
         return_type: void
         arguments:
             user: Contao\User

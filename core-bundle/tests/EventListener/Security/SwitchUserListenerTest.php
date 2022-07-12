@@ -20,7 +20,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 
 class SwitchUserListenerTest extends TestCase
@@ -100,7 +99,6 @@ class SwitchUserListenerTest extends TestCase
 
     private function mockSwitchUserEvent(string $username = null): SwitchUserEvent
     {
-        /** @var UserInterface&MockObject $user */
         $user = $this->createPartialMock(BackendUser::class, ['getUserIdentifier']);
 
         if (null !== $username) {

@@ -89,8 +89,8 @@ class RememberMeTokenProviderTest extends TestCase
     public function testTheTokenCreation(): void
     {
         $token = new PersistentToken(FrontendUser::class, 'foobar', 'series', 'value', new \DateTime());
-        $rememberMeRepository = $this->createMock(RememberMeRepository::class);
 
+        $rememberMeRepository = $this->createMock(RememberMeRepository::class);
         $rememberMeRepository
             ->expects($this->once())
             ->method('persist')

@@ -27,6 +27,7 @@ class ContaoLoginFactory extends AbstractFactory
             'require_previous_session' => false,
             'auth_code_parameter_name' => 'verify',
         ];
+
         $this->defaultSuccessHandlerOptions = [];
         $this->defaultFailureHandlerOptions = [];
     }
@@ -96,6 +97,7 @@ class ContaoLoginFactory extends AbstractFactory
     private function createTwoFactorPreparationListener(ContainerBuilder $container, string $firewallName): void
     {
         $firewallConfigId = TwoFactorFactory::PROVIDER_PREPARATION_LISTENER_ID_PREFIX.$firewallName;
+
         $container
             ->setDefinition($firewallConfigId, new ChildDefinition(TwoFactorFactory::PROVIDER_PREPARATION_LISTENER_DEFINITION_ID))
             ->replaceArgument(3, $firewallName)
@@ -108,6 +110,7 @@ class ContaoLoginFactory extends AbstractFactory
     private function createTwoFactorAuthenticationTokenCreatedListener(ContainerBuilder $container, string $firewallName): void
     {
         $listenerId = TwoFactorFactory::AUTHENTICATION_TOKEN_CREATED_LISTENER_ID_PREFIX.$firewallName;
+
         $container
             ->setDefinition($listenerId, new ChildDefinition(TwoFactorFactory::AUTHENTICATION_TOKEN_CREATED_LISTENER_DEFINITION_ID))
             ->replaceArgument(0, $firewallName)

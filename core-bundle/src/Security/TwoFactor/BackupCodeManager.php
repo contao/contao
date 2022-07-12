@@ -88,10 +88,13 @@ class BackupCodeManager implements BackupCodeManagerInterface
             $backupCodes[] = $this->generateCode();
         }
 
-        $user->backupCodes = json_encode(array_map(
-            static fn ($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
-            $backupCodes
-        ), JSON_THROW_ON_ERROR);
+        $user->backupCodes = json_encode(
+            array_map(
+                static fn ($backupCode) => password_hash($backupCode, PASSWORD_DEFAULT),
+                $backupCodes
+            ),
+            JSON_THROW_ON_ERROR
+        );
 
         $user->save();
 

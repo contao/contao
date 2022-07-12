@@ -166,7 +166,6 @@ class TokenCheckerTest extends TestCase
     public function testChecksIfThePreviewModeIsActive(bool $isPreview, bool $expect): void
     {
         $request = new Request();
-
         $session = $this->mockSessionWithPreview($isPreview);
 
         if ($isPreview) {
@@ -426,7 +425,6 @@ class TokenCheckerTest extends TestCase
     private function mockSessionWithPreview(bool $isPreview): SessionInterface
     {
         $session = $this->createMock(SessionInterface::class);
-
         $session
             ->expects($isPreview ? $this->once() : $this->never())
             ->method('has')

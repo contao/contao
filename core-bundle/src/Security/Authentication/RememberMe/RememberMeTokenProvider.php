@@ -20,9 +20,8 @@ use Symfony\Component\Security\Core\Authentication\RememberMe\TokenProviderInter
 
 class RememberMeTokenProvider implements TokenProviderInterface
 {
-    public function __construct(
-        private RememberMeRepository $repository,
-    ) {
+    public function __construct(private RememberMeRepository $repository)
+    {
     }
 
     public function loadTokenBySeries(string $series): PersistentToken
@@ -46,7 +45,6 @@ class RememberMeTokenProvider implements TokenProviderInterface
     public function updateToken(string $series, string $tokenValue, \DateTime $lastUsed): void
     {
         $rememberMe = $this->repository->findBySeries($series);
-
         $rememberMe->setValue($tokenValue);
         $rememberMe->setLastUsed($lastUsed);
 

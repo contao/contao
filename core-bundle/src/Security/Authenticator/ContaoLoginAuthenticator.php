@@ -69,15 +69,18 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         private TwoFactorAuthenticator $twoFactorAuthenticator,
         array $options,
     ) {
-        $this->options = array_merge([
-            'username_parameter' => 'username',
-            'password_parameter' => 'password',
-            'check_path' => '/login_check',
-            'post_only' => true,
-            'enable_csrf' => false,
-            'csrf_parameter' => '_csrf_token',
-            'csrf_token_id' => 'authenticate',
-        ], $options);
+        $this->options = array_merge(
+            [
+                'username_parameter' => 'username',
+                'password_parameter' => 'password',
+                'check_path' => '/login_check',
+                'post_only' => true,
+                'enable_csrf' => false,
+                'csrf_parameter' => '_csrf_token',
+                'csrf_token_id' => 'authenticate',
+            ],
+            $options
+        );
     }
 
     public function start(Request $request, AuthenticationException $authException = null): RedirectResponse|Response
@@ -184,11 +187,11 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     private function getCredentials(Request $request): array
     {
-        $credentials = [];
-        $credentials['csrf_token'] = ParameterBagUtils::getRequestParameterValue($request, $this->options['csrf_parameter']);
-
-        $credentials['username'] = ParameterBagUtils::getParameterBagValue($request->request, $this->options['username_parameter']);
-        $credentials['password'] = ParameterBagUtils::getParameterBagValue($request->request, $this->options['password_parameter']) ?? '';
+        $credentials = [
+            'csrf_token' => ParameterBagUtils::getRequestParameterValue($request, $this->options['csrf_parameter']),
+            'username' => ParameterBagUtils::getParameterBagValue($request->request, $this->options['username_parameter']),
+            'password' => ParameterBagUtils::getParameterBagValue($request->request, $this->options['password_parameter']) ?? '',
+        ];
 
         if (!\is_string($credentials['username']) && (!\is_object($credentials['username']) || !method_exists($credentials['username'], '__toString'))) {
             throw new BadRequestHttpException(sprintf('The key "%s" must be a string, "%s" given.', $this->options['username_parameter'], \gettype($credentials['username'])));

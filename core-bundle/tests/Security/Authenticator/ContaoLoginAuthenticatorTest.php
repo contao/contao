@@ -88,19 +88,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
      */
     public function testIfAuthenticationIsInteractive(bool $expected, RequestStack|null $requestStack): void
     {
-        $authenticator = $this->mockContaoLoginAuthenticator(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $requestStack,
-        );
+        $authenticator = $this->mockContaoLoginAuthenticator(requestStack: $requestStack);
 
         $this->assertSame($expected, $authenticator->isInteractive());
     }
@@ -229,18 +217,8 @@ class ContaoLoginAuthenticatorTest extends TestCase
         ;
 
         $authenticator = $this->mockContaoLoginAuthenticator(
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $tokenStorage,
-            null,
-            null,
-            null,
-            $twoFactorAuthenticator,
+            tokenStorage: $tokenStorage,
+            twoFactorAuthenticator: $twoFactorAuthenticator
         );
 
         $authenticator->authenticate($request);
@@ -273,19 +251,9 @@ class ContaoLoginAuthenticatorTest extends TestCase
         ;
 
         $authenticator = $this->mockContaoLoginAuthenticator(
-            $this->createMock(ContaoUserProvider::class),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $tokenStorage,
-            null,
-            null,
-            null,
-            null,
-            ['enable_csrf' => true]
+            userProvider: $this->createMock(ContaoUserProvider::class),
+            tokenStorage: $tokenStorage,
+            options: ['enable_csrf' => true]
         );
 
         if (null !== $exception) {
@@ -328,12 +296,9 @@ class ContaoLoginAuthenticatorTest extends TestCase
         ;
 
         $authenticator = $this->mockContaoLoginAuthenticator(
-            null,
-            null,
-            null,
-            $scopeMatcher,
-            $router,
-            $uriSigner
+            scopeMatcher: $scopeMatcher,
+            router: $router,
+            uriSigner: $uriSigner
         );
 
         $response = $authenticator->start(new Request());
@@ -394,19 +359,11 @@ class ContaoLoginAuthenticatorTest extends TestCase
         }
 
         $authenticator = $this->mockContaoLoginAuthenticator(
-            $this->createMock(ContaoUserProvider::class),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            $tokenStorage,
-            $pageRegistry,
-            $httpKernel,
-            null,
-            null,
-            ['enable_csrf' => true]
+            userProvider: $this->createMock(ContaoUserProvider::class),
+            tokenStorage: $tokenStorage,
+            pageRegistry: $pageRegistry,
+            httpKernel: $httpKernel,
+            options: ['enable_csrf' => true]
         );
 
         $authenticator->start($request);
@@ -484,19 +441,12 @@ class ContaoLoginAuthenticatorTest extends TestCase
         ;
 
         $authenticator = $this->mockContaoLoginAuthenticator(
-            $this->createMock(ContaoUserProvider::class),
-            null,
-            null,
-            null,
-            null,
-            null,
-            $framework,
-            $tokenStorage,
-            $pageRegistry,
-            $httpKernel,
-            null,
-            null,
-            ['enable_csrf' => true]
+            userProvider: $this->createMock(ContaoUserProvider::class),
+            framework: $framework,
+            tokenStorage: $tokenStorage,
+            pageRegistry: $pageRegistry,
+            httpKernel: $httpKernel,
+            options: ['enable_csrf' => true]
         );
 
         $authenticator->start($request);

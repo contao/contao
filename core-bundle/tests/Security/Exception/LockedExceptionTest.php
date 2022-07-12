@@ -28,11 +28,12 @@ class LockedExceptionTest extends TestCase
     public function testSerializesItself(): void
     {
         $user = $this->createMock(BackendUser::class);
+
         $exception = new LockedException(300, 'foobar');
         $exception->setUser($user);
 
         $serialized = $exception->__serialize();
-        $expected = [300, [$user, [null, 0, 'foobar', __FILE__, 31]]];
+        $expected = [300, [$user, [null, 0, 'foobar', __FILE__, 32]]];
 
         $this->assertSame($expected, $serialized);
 

@@ -64,6 +64,9 @@ sections:
 
 ```yml
 security:
+    password_hashers:
+        Contao\User: auto
+
     providers:
         contao.security.backend_user_provider:
             id: contao.security.backend_user_provider
@@ -71,15 +74,11 @@ security:
         contao.security.frontend_user_provider:
             id: contao.security.frontend_user_provider
 
-    password_hashers:
-        Contao\User: auto
-
     firewalls:
         contao_backend:
             request_matcher: contao.routing.backend_matcher
             provider: contao.security.backend_user_provider
             user_checker: contao.security.user_checker
-            anonymous: ~
             switch_user: true
 
             contao_login:
@@ -92,7 +91,6 @@ security:
             request_matcher: contao.routing.frontend_matcher
             provider: contao.security.frontend_user_provider
             user_checker: contao.security.user_checker
-            anonymous: ~
             switch_user: false
 
             contao_login:
@@ -101,6 +99,7 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 remember_me_parameter: autologin
+                service: contao.security.persistent_remember_me_handler
 
             logout:
                 path: contao_frontend_logout
