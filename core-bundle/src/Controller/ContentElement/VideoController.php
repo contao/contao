@@ -54,7 +54,6 @@ class VideoController extends AbstractContentElementController
 
         $template->set('width', $size[0] ?? 640);
         $template->set('height', $size[1] ?? 360);
-
         $template->set('aspect_ratio', $model->playerAspect);
 
         // Meta data
@@ -97,7 +96,7 @@ class VideoController extends AbstractContentElementController
 
         $query = http_build_query($options);
 
-        if (($start = (int) $model->playerStart) > 0) {
+        if (($start = $model->playerStart) > 0) {
             $options['start'] = $start;
             $query .= "#t={$start}s";
         }
@@ -139,11 +138,11 @@ class VideoController extends AbstractContentElementController
             $options[$option] = $value;
         }
 
-        if (($start = (int) $model->playerStart) > 0) {
+        if (($start = $model->playerStart) > 0) {
             $options['start'] = $start;
         }
 
-        if (($end = (int) $model->playerStop) > 0) {
+        if (($end = $model->playerStop) > 0) {
             $options['end'] = $end;
         }
 
