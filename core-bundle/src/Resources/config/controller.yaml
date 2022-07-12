@@ -90,6 +90,10 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\VideoController:
+        arguments:
+            - '@contao.image.studio'
+
     Contao\CoreBundle\Controller\FaviconController:
         arguments:
             - '@contao.framework'
