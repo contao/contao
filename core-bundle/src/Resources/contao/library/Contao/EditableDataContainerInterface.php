@@ -18,7 +18,5 @@ interface EditableDataContainerInterface
 
 	public function copy();
 
-	public function move();
-
 	public function edit();
 }

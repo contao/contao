@@ -29,7 +29,7 @@ use Symfony\Component\Filesystem\Path;
  * @property string            $path
  * @property string            $extension
  * @property string            $hash
- * @property string|boolean    $found
+ * @property boolean           $found
  * @property string            $name
  * @property float             $importantPartX
  * @property float             $importantPartY

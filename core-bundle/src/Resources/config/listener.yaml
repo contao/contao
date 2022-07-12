@@ -180,7 +180,8 @@ services:
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
         tags:
-            - { name: contao.hook, hook: loadDataContainer }
+            # The priority must be lower than 0 (see #3255)
+            - { name: contao.hook, hook: loadDataContainer, priority: -16 }
 
     contao.listener.dbafs_metadata:
         class: Contao\CoreBundle\EventListener\DbafsMetadataSubscriber

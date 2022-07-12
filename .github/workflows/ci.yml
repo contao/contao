@@ -406,17 +406,13 @@ jobs:
                               $data["repositories"][0]["type"] = "path";
                               $data["repositories"][0]["url"] = "../core-bundle";
                           }
-                          if ("contao/installation-bundle" !== $data["name"]) {
-                              $data["repositories"][1]["type"] = "path";
-                              $data["repositories"][1]["url"] = "../installation-bundle";
-                          }
                           if ("contao/news-bundle" !== $data["name"]) {
-                              $data["repositories"][2]["type"] = "path";
-                              $data["repositories"][2]["url"] = "../news-bundle";
+                              $data["repositories"][1]["type"] = "path";
+                              $data["repositories"][1]["url"] = "../news-bundle";
                           }
                           if ("contao/test-case" !== $data["name"]) {
-                              $data["repositories"][3]["type"] = "path";
-                              $data["repositories"][3]["url"] = "../test-case";
+                              $data["repositories"][2]["type"] = "path";
+                              $data["repositories"][2]["url"] = "../test-case";
                           }
                           file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                       '

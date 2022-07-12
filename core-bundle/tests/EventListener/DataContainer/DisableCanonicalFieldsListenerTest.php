@@ -33,7 +33,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_page']['fields']['canonicalLink']['eval'] = [];
 
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->enableCanonical = '';
+        $page->enableCanonical = false;
 
         $pageModelAdapter = $this->mockAdapter(['findWithDetails']);
         $pageModelAdapter
@@ -79,7 +79,7 @@ class DisableCanonicalFieldsListenerTest extends TestCase
     public function testDoesNotDisableTheFieldIfCanonicalUrlsAreEnabled(): void
     {
         $page = $this->mockClassWithProperties(PageModel::class);
-        $page->enableCanonical = '1';
+        $page->enableCanonical = true;
 
         $pageModelAdapter = $this->mockAdapter(['findWithDetails']);
         $pageModelAdapter

@@ -408,7 +408,7 @@ abstract class Backend extends Controller
 				case 'cutAll':
 				case 'copy':
 				case 'copyAll':
-				case 'move':
+				case 'move': // upload a file in DC_Folder
 				case 'edit':
 				case 'editAll':
 				case 'toggle':
@@ -697,7 +697,7 @@ abstract class Backend extends Controller
 		}
 
 		$image = Controller::getPageStatusIcon((object) $row);
-		$imageAttribute = trim($imageAttribute . ' data-icon="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'1')))) . '" data-icon-disabled="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'')))) . '"');
+		$imageAttribute = trim($imageAttribute . ' data-icon="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>1)))) . '" data-icon-disabled="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>0)))) . '"');
 
 		// Return the image only
 		if ($blnReturnImage)

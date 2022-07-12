@@ -222,7 +222,7 @@ class Versions extends Controller
 								->execute($this->intPid, time(), $this->intPid, $this->strTable, $this->strTable, $blnHideUser ? null : $this->getUsername(), $blnHideUser ? 0 : $this->getUserId(), $strDescription, $this->getEditUrl(), serialize($data))
 								->insertId;
 
-		$this->Database->prepare("UPDATE tl_version SET active='' WHERE pid=? AND fromTable=? AND id!=?")
+		$this->Database->prepare("UPDATE tl_version SET active=0 WHERE pid=? AND fromTable=? AND id!=?")
 					   ->execute($this->intPid, $this->strTable, $intId);
 
 		$intVersion = $this->Database->prepare("SELECT version FROM tl_version WHERE id=?")
@@ -311,11 +311,24 @@ class Versions extends Controller
 			}
 		}
 
-		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
-					   ->set($data)
-					   ->execute($this->intPid);
+		try
+		{
+			$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
+						   ->set($data)
+						   ->execute($this->intPid);
+		}
+		catch (\Exception $e)
+		{
+			System::getContainer()
+				->get('monolog.logger.contao.error')
+				->error(sprintf('Could not restore version %d of %s.%d: %s.', $intVersion, $this->strTable, $this->intPid, $e->getMessage()))
+			;
 
-		$this->Database->prepare("UPDATE tl_version SET active='' WHERE fromTable=? AND pid=?")
+			Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['versionNotRestored'], $intVersion));
+			Controller::reload();
+		}
+
+		$this->Database->prepare("UPDATE tl_version SET active=0 WHERE fromTable=? AND pid=?")
 					   ->execute($this->strTable, $this->intPid);
 
 		$this->Database->prepare("UPDATE tl_version SET active=1 WHERE fromTable=? AND pid=? AND version=?")

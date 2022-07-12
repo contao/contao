@@ -44,14 +44,6 @@ repositories:
             8120fbc973349136e0aed77b304e3bf0f5be8881: de61497e7d75418dfa93a1c12eb5b413f0fbd837
             38ad45e0c1243a2b67f48e69aa14de660f8f3dcb: 1bda612914a2c246367ee7a83e73656bb0d22676
 
-    installation-bundle:
-        url: https://github.com/contao/installation-bundle.git
-        mapping:
-            e3984a42db89d16cf82267edd297216d266b41aa: ee040b843c06bcadc1a8cc0eed684d62a3c8f7fc
-            734c8772eaef1a4e451779a81c2bfef030ad52f0: 259660c6a152de84f9dce60d3d9d4bff8f259b02
-            82902713c34908ed78d9b24990190932130c909a: 88a4146e7b2792089a99a04470dce7647f48e4d8
-            b73ed89cccda9377838d303cb7b0833a3b1b90e9: 28a2a56e599d52c9b803b8e1a89015714bf2b21c
-
     listing-bundle:
         url: https://github.com/contao/listing-bundle.git
         mapping:

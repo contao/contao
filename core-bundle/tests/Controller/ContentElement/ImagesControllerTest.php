@@ -30,10 +30,10 @@ class ImagesControllerTest extends ContentElementTestCase
                 'sortBy' => '',
                 'numberOfItems' => '0',
                 'size' => '',
-                'fullsize' => '1',
+                'fullsize' => true,
                 'perPage' => '4',
                 'perRow' => '2',
-                'overwriteMeta' => '1',
+                'overwriteMeta' => true,
                 'alt' => 'alt text',
             ],
         );
@@ -63,11 +63,11 @@ class ImagesControllerTest extends ContentElementTestCase
                     StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE3),
                 ]),
                 'sortBy' => 'name_desc',
-                'numberOfItems' => '2',
+                'numberOfItems' => 2,
                 'size' => '',
-                'fullsize' => '1',
-                'perPage' => '4',
-                'perRow' => '2',
+                'fullsize' => true,
+                'perPage' => 4,
+                'perRow' => 2,
             ],
         );
 

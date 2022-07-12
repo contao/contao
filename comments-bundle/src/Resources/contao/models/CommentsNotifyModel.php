@@ -15,16 +15,16 @@ use Contao\Model\Collection;
 /**
  * Reads and writes comments subscriptions
  *
- * @property integer        $id
- * @property integer        $tstamp
- * @property string         $source
- * @property integer        $parent
- * @property string         $name
- * @property string         $email
- * @property string         $url
- * @property integer        $addedOn
- * @property string|boolean $active
- * @property string         $tokenRemove
+ * @property integer $id
+ * @property integer $tstamp
+ * @property string  $source
+ * @property integer $parent
+ * @property string  $name
+ * @property string  $email
+ * @property string  $url
+ * @property integer $addedOn
+ * @property boolean $active
+ * @property string  $tokenRemove
  *
  * @method static CommentsNotifyModel|null findById($id, array $opt=array())
  * @method static CommentsNotifyModel|null findByPk($id, array $opt=array())
@@ -102,7 +102,7 @@ class CommentsNotifyModel extends Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.source=? AND $t.parent=? AND $t.active='1'"), array($strSource, $intParent), $arrOptions);
+		return static::findBy(array("$t.source=? AND $t.parent=? AND $t.active=1"), array($strSource, $intParent), $arrOptions);
 	}
 
 	/**
@@ -117,7 +117,7 @@ class CommentsNotifyModel extends Model
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE active='' AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE active=0 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0)")
 								 ->execute(strtotime('-24 hours'));
 
 		if ($objResult->numRows < 1)

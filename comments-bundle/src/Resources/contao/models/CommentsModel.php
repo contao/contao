@@ -15,23 +15,23 @@ use Contao\Model\Collection;
 /**
  * Reads and writes comments
  *
- * @property integer        $id
- * @property integer        $tstamp
- * @property string         $source
- * @property integer        $parent
- * @property string         $date
- * @property string         $name
- * @property string         $email
- * @property string         $website
- * @property integer        $member
- * @property string|null    $comment
- * @property string|boolean $addReply
- * @property integer        $author
- * @property string|null    $reply
- * @property string|boolean $published
- * @property string         $ip
- * @property string|boolean $notified
- * @property string|boolean $notifiedReply
+ * @property integer     $id
+ * @property integer     $tstamp
+ * @property string      $source
+ * @property integer     $parent
+ * @property string      $date
+ * @property string      $name
+ * @property string      $email
+ * @property string      $website
+ * @property integer     $member
+ * @property string|null $comment
+ * @property boolean     $addReply
+ * @property integer     $author
+ * @property string|null $reply
+ * @property boolean     $published
+ * @property string      $ip
+ * @property boolean     $notified
+ * @property boolean     $notifiedReply
  *
  * @method static CommentsModel|null findById($id, array $opt=array())
  * @method static CommentsModel|null findByPk($id, array $opt=array())
@@ -119,7 +119,7 @@ class CommentsModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.published='1'";
+			$arrColumns[] = "$t.published=1";
 		}
 
 		$arrOptions['limit']  = $intLimit;
@@ -149,7 +149,7 @@ class CommentsModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.published='1'";
+			$arrColumns[] = "$t.published=1";
 		}
 
 		return static::countBy($arrColumns, array($strSource, (int) $intParent));

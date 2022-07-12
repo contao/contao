@@ -25,7 +25,7 @@ use Contao\Model\Collection;
  * @property string|null       $text
  * @property string|null       $html
  * @property string|array|null $options
- * @property string|boolean    $mandatory
+ * @property boolean           $mandatory
  * @property string            $rgxp
  * @property string            $placeholder
  * @property string            $customRgxp
@@ -36,22 +36,22 @@ use Contao\Model\Collection;
  * @property integer           $maxval
  * @property integer           $step
  * @property string|array      $size
- * @property string|boolean    $multiple
+ * @property boolean           $multiple
  * @property integer           $mSize
  * @property string            $extensions
- * @property string|boolean    $storeFile
+ * @property boolean           $storeFile
  * @property string|null       $uploadFolder
- * @property string|boolean    $useHomeDir
- * @property string|boolean    $doNotOverwrite
+ * @property boolean           $useHomeDir
+ * @property boolean           $doNotOverwrite
  * @property string            $class
  * @property string            $value
- * @property string|boolean    $accesskey
+ * @property boolean           $accesskey
  * @property integer           $fSize
  * @property string            $customTpl
  * @property string            $slabel
- * @property string|boolean    $imageSubmit
+ * @property boolean           $imageSubmit
  * @property string|null       $singleSRC
- * @property string|boolean    $invisible
+ * @property boolean           $invisible
  *
  * @method static FormFieldModel|null findById($id, array $opt=array())
  * @method static FormFieldModel|null findByPk($id, array $opt=array())
@@ -198,7 +198,7 @@ class FormFieldModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.invisible=''";
+			$arrColumns[] = "$t.invisible=0";
 		}
 
 		// Skip unsaved elements (see #2708)

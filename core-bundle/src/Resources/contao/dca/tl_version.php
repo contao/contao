@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_version'] = array
 		),
 		'active' => array
 		(
-			'sql'                     => "char(1) NOT NULL default ''"
+			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'data' => array
 		(

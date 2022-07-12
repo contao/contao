@@ -46,7 +46,7 @@ class ContaoContext implements ContextInterface
         $page = $this->getPageModel();
 
         if (null !== $page) {
-            return (bool) $page->loadDetails()->rootUseSSL;
+            return $page->loadDetails()->rootUseSSL;
         }
 
         $request = $this->requestStack->getMainRequest();
