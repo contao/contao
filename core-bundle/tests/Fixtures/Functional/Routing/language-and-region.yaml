@@ -10,10 +10,10 @@ tl_page:
       type: root
       language: de_CH
       dns: example.com
-      fallback: ''
-      includeLayout: '1'
+      fallback: 0
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 2
       pid: 1
@@ -22,7 +22,7 @@ tl_page:
       title: Index-de
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 3
       pid: 0
@@ -35,10 +35,10 @@ tl_page:
       type: root
       language: fr_CH
       dns: example.com
-      fallback: ''
-      includeLayout: '1'
+      fallback: 0
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 4
       pid: 3
@@ -47,7 +47,7 @@ tl_page:
       title: Index-fr
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 5
       pid: 0
@@ -60,10 +60,10 @@ tl_page:
       type: root
       language: it_CH
       dns: example.com
-      fallback: ''
-      includeLayout: '1'
+      fallback: 0
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 6
       pid: 5
@@ -72,7 +72,7 @@ tl_page:
       title: Index-fr
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 7
       pid: 0
@@ -85,10 +85,10 @@ tl_page:
       type: root
       language: de_DE
       dns: example.com
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 8
       pid: 7
@@ -97,4 +97,4 @@ tl_page:
       title: Index-de-DE
       alias: index
       type: regular
-      published: '1'
+      published: 1

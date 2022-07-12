@@ -10,11 +10,11 @@ tl_page:
       type: root
       language: en
       dns: protected-root.local
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
-      protected: '1'
+      published: 1
+      protected: 1
       groups: ''
 
     - id: 2
@@ -24,7 +24,7 @@ tl_page:
       title: Home
       alias: index
       type: regular
-      published: '1'
+      published: 1
 
     - id: 3
       pid: 1
@@ -33,4 +33,4 @@ tl_page:
       title: Error 401 Page
       alias: error401
       type: error_401
-      published: '1'
+      published: 1

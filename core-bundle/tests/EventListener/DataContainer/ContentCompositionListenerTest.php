@@ -84,7 +84,7 @@ class ContentCompositionListenerTest extends TestCase
         'alias' => 'foo/bar',
         'type' => 'foo',
         'title' => 'foo',
-        'published' => '1',
+        'published' => 1,
     ];
 
     private array $articleRecord = [
@@ -92,7 +92,7 @@ class ContentCompositionListenerTest extends TestCase
         'pid' => 17,
         'alias' => 'foo-bar',
         'title' => 'foo',
-        'published' => '1',
+        'published' => 1,
     ];
 
     protected function setUp(): void
@@ -565,7 +565,7 @@ class ContentCompositionListenerTest extends TestCase
             'inColumn' => 'main',
             'title' => 'foo',
             'alias' => 'foo-bar', // Expect folder alias conversion
-            'published' => '1',
+            'published' => 1,
         ];
 
         $this->connection
@@ -615,7 +615,7 @@ class ContentCompositionListenerTest extends TestCase
             'inColumn' => $expectedColumn,
             'title' => 'foo',
             'alias' => 'foo-bar', // Expect folder alias conversion
-            'published' => '1',
+            'published' => 1,
         ];
 
         $this->connection

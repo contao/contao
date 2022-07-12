@@ -10,10 +10,10 @@ tl_page:
       type: root
       language: en
       dns: root-with-home.local
-      fallback: '1'
-      includeLayout: '1'
+      fallback: 1
+      includeLayout: 1
       layout: 1
-      published: '1'
+      published: 1
 
     - id: 2
       pid: 1
@@ -22,7 +22,7 @@ tl_page:
       title: Home
       alias: home
       type: regular
-      published: '1'
+      published: 1
 
     - id: 3
       pid: 1
@@ -31,4 +31,4 @@ tl_page:
       title: Error 404 Page
       alias: error404
       type: error_404
-      published: '1'
+      published: 1

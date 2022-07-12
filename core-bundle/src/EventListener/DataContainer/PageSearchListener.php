@@ -46,7 +46,7 @@ class PageSearchListener
      */
     public function onSaveNoSearch(string $value, DataContainer $dc): string
     {
-        if (!$value || $value === ($dc->getCurrentRecord()['noSearch'] ?? null)) {
+        if (!$value || (bool) $value === (bool) ($dc->getCurrentRecord()['noSearch'] ?? false)) {
             return $value;
         }
 

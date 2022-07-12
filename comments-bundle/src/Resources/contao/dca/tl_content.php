@@ -37,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_moderate'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_bbcode'] = array
@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_bbcode'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_disableCaptcha'] = array
@@ -53,7 +53,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_disableCaptcha'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_requireLogin'] = array
@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['com_requireLogin'] = array
 	'exclude'                 => true,
 	'inputType'               => 'checkbox',
 	'eval'                    => array('tl_class'=>'w50'),
-	'sql'                     => "char(1) COLLATE ascii_bin NOT NULL default ''"
+	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['com_template'] = array

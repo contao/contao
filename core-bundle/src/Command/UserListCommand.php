@@ -89,7 +89,7 @@ class UserListCommand extends Command
         $userModel = $this->framework->getAdapter(UserModel::class);
 
         if ($onlyAdmins) {
-            return $userModel->findBy('admin', '1');
+            return $userModel->findBy('admin', true);
         }
 
         return $userModel->findAll();

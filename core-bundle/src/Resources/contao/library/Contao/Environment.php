@@ -107,7 +107,7 @@ class Environment
 	 *
 	 * @return string The relative path to the script
 	 */
-	protected static function scriptName($request)
+	protected static function scriptName(Request $request)
 	{
 		return $request->getScriptName();
 	}
@@ -117,9 +117,9 @@ class Environment
 	 *
 	 * @return string The script name
 	 */
-	protected static function phpSelf()
+	protected static function phpSelf(Request $request)
 	{
-		return static::scriptName();
+		return static::scriptName($request);
 	}
 
 	/**

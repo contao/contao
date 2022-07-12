@@ -121,11 +121,14 @@ class CoreResponseContextFactoryTest extends TestCase
 
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->id = 0;
         $pageModel->title = 'My title';
         $pageModel->description = 'My description';
         $pageModel->robots = 'noindex,nofollow';
-        $pageModel->enableCanonical = '1';
+        $pageModel->enableCanonical = true;
         $pageModel->canonicalLink = '{{link_url::42}}';
+        $pageModel->noSearch = false;
+        $pageModel->protected = false;
 
         $factory = new CoreResponseContextFactory(
             $responseAccessor,
@@ -174,8 +177,11 @@ class CoreResponseContextFactoryTest extends TestCase
 
         /** @var PageModel $pageModel */
         $pageModel = $this->mockClassWithProperties(PageModel::class);
+        $pageModel->id = 0;
         $pageModel->title = 'We went from Alpha &#62; Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
+        $pageModel->noSearch = false;
+        $pageModel->protected = false;
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser

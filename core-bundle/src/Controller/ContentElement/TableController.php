@@ -34,7 +34,7 @@ class TableController extends AbstractContentElementController
         $template->set('header', $header);
         $template->set('footer', $footer);
         $template->set('rows', $rows);
-        $template->set('use_row_headers', (bool) $model->tleft);
+        $template->set('use_row_headers', $model->tleft);
         $template->set('caption', $model->summary ?: null);
 
         // Client side sorting

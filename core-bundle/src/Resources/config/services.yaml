@@ -258,7 +258,6 @@ services:
         public: true
         arguments:
             - '@request_stack'
-            - '@router'
             - '%kernel.project_dir%'
             - '%contao.error_level%'
         tags:
@@ -1030,6 +1029,11 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime
         arguments:
             - '@contao.routing.response_context_accessor'
+
+    contao.twig.url_runtime:
+        class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
+        arguments:
+            - '@request_stack'
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'

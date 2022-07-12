@@ -461,6 +461,23 @@ abstract class Template extends Controller
 	}
 
 	/**
+	 * Prefixes a relative URL
+	 *
+	 * @param string $url
+	 *
+	 * @return string
+	 */
+	public function prefixUrl($url)
+	{
+		if (!Validator::isRelativeUrl($url))
+		{
+			return $url;
+		}
+
+		return Environment::get('path') . '/' . $url;
+	}
+
+	/**
 	 * Minify the HTML markup preserving pre, script, style and textarea tags
 	 *
 	 * @param string $strHtml The HTML markup

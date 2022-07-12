@@ -51,7 +51,7 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle the site structure tree
+	 * Toggle the page tree
 	 *
 	 * @param {object} el    The DOM element
 	 * @param {string} id    The ID of the target element
@@ -140,7 +140,7 @@ var AjaxRequest =
 	},
 
 	/**
-	 * Toggle the file manager tree
+	 * Toggle the file tree
 	 *
 	 * @param {object} el     The DOM element
 	 * @param {string} id     The ID of the target element
@@ -289,10 +289,13 @@ var AjaxRequest =
 		}).post({'action':'toggleSubpalette', 'id':id, 'field':field, 'load':1, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 
 		function updateVersionNumber(html) {
-			if (!el.form.elements.VERSION_NUMBER) {
-				return;
+			var fields = el.form.elements.VERSION_NUMBER || [];
+			if (!fields.forEach) {
+				fields = [fields];
 			}
-			el.form.elements.VERSION_NUMBER.value = /<input\s+[^>]*?name="VERSION_NUMBER"\s+[^>]*?value="([^"]*)"/i.exec(html)[1];
+			fields.forEach(function(field) {
+				field.value = /<input\s+[^>]*?name="VERSION_NUMBER"\s+[^>]*?value="([^"]*)"/i.exec(html)[1];
+			});
 		}
 	},
 

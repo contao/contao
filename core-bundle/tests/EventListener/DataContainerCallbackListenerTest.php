@@ -274,7 +274,7 @@ class DataContainerCallbackListenerTest extends TestCase
         );
     }
 
-    public function testAddsCallbackWithPriorityZeroBeforeExistingOnes(): void
+    public function testAddsCallbackWithPriorityZeroAfterExistingOnes(): void
     {
         $GLOBALS['TL_DCA']['tl_page'] = [
             'config' => [
@@ -306,10 +306,10 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'config' => [
                     'onload_callback' => [
-                        ['Test\CallbackListener', 'newCallback'],
                         ['Test\CallbackListener', 'existingCallback'],
                         'key' => ['Test\CallbackListener', 'existingCallback2'],
                         ['Test\CallbackListener', 'existingCallback3'],
+                        ['Test\CallbackListener', 'newCallback'],
                     ],
                 ],
             ],

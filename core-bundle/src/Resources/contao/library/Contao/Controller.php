@@ -47,11 +47,6 @@ abstract class Controller extends System
 	protected static $arrQueryCache = array();
 
 	/**
-	 * @var array
-	 */
-	private static $arrOldBePathCache = array();
-
-	/**
 	 * Find a particular template file and return its path
 	 *
 	 * @param string $strTemplate The name of the template
@@ -189,7 +184,7 @@ abstract class Controller extends System
 					}
 				}
 
-				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'];
+				$arrTemplates[$strTemplate][] = $GLOBALS['TL_LANG']['MSC']['global'] ?? 'global';
 			}
 		}
 
@@ -1190,7 +1185,6 @@ abstract class Controller extends System
 	public static function resetControllerCache()
 	{
 		self::$arrQueryCache = array();
-		self::$arrOldBePathCache = array();
 	}
 
 	/**
@@ -1388,14 +1382,13 @@ abstract class Controller extends System
 
 		$arrEnclosures = array();
 		$allowedDownload = StringUtil::trimsplit(',', strtolower(Config::get('allowedDownload')));
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Add download links
 		while ($objFiles->next())
 		{
 			if ($objFiles->type == 'file')
 			{
-				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
-
 				if (!\in_array($objFiles->extension, $allowedDownload) || !is_file($projectDir . '/' . $objFiles->path))
 				{
 					continue;

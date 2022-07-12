@@ -15,18 +15,18 @@ use Contao\Model\Collection;
 /**
  * Reads and writes image size items
  *
- * @property integer        $id
- * @property integer        $pid
- * @property integer        $sorting
- * @property integer        $tstamp
- * @property string         $media
- * @property string         $sizes
- * @property string         $densities
- * @property integer|null   $width
- * @property integer|null   $height
- * @property string         $resizeMode
- * @property integer|null   $zoom
- * @property string|boolean $invisible
+ * @property integer      $id
+ * @property integer      $pid
+ * @property integer      $sorting
+ * @property integer      $tstamp
+ * @property string       $media
+ * @property string       $sizes
+ * @property string       $densities
+ * @property integer|null $width
+ * @property integer|null $height
+ * @property string       $resizeMode
+ * @property integer|null $zoom
+ * @property boolean      $invisible
  *
  * @method static ImageSizeItemModel|null findById($id, array $opt=array())
  * @method static ImageSizeItemModel|null findByPk($id, array $opt=array())
@@ -92,6 +92,6 @@ class ImageSizeItemModel extends Model
 	{
 		$t = static::$strTable;
 
-		return static::findBy(array("$t.pid=? AND $t.invisible=''"), (int) $intPid, $arrOptions);
+		return static::findBy(array("$t.pid=? AND $t.invisible=0"), (int) $intPid, $arrOptions);
 	}
 }

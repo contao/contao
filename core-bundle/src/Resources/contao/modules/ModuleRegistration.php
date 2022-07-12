@@ -528,7 +528,7 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		$objMember->disable = '';
+		$objMember->disable = false;
 		$objMember->save();
 
 		$optInToken->confirm();

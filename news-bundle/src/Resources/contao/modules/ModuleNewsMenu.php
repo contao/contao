@@ -48,16 +48,17 @@ class ModuleNewsMenu extends ModuleNews
 	 */
 	public function generate()
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$container = System::getContainer();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
-		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
+		if ($request && $container->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 			$objTemplate->wildcard = '### ' . $GLOBALS['TL_LANG']['FMD']['newsmenu'][0] . ' ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
-			$objTemplate->href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
+			$objTemplate->href = StringUtil::specialcharsUrl($container->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$this->id)));
 
 			return $objTemplate->parse();
 		}
@@ -116,7 +117,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY year ORDER BY year DESC");
+		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY year ORDER BY year DESC");
 
 		while ($objDates->next())
 		{
@@ -161,7 +162,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, FROM_UNIXTIME(date, '%m') AS month, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY year, month ORDER BY year DESC, month DESC");
+		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y') AS year, FROM_UNIXTIME(date, '%m') AS month, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY year, month ORDER BY year DESC, month DESC");
 
 		while ($objDates->next())
 		{
@@ -218,7 +219,7 @@ class ModuleNewsMenu extends ModuleNews
 		$isBackend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
 
 		// Get the dates
-		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y%m%d') AS day, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published='1' AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY day ORDER BY day DESC");
+		$objDates = $this->Database->query("SELECT FROM_UNIXTIME(date, '%Y%m%d') AS day, COUNT(*) AS count FROM tl_news WHERE pid IN(" . implode(',', array_map('\intval', $this->news_archives)) . ")" . ((!$blnShowUnpublished || $isBackend) ? " AND published=1 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time')" : "") . " GROUP BY day ORDER BY day DESC");
 
 		while ($objDates->next())
 		{

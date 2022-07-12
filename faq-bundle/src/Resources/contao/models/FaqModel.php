@@ -27,20 +27,20 @@ use Contao\Model\Collection;
  * @property string         $pageTitle
  * @property string         $robots
  * @property string|null    $description
- * @property string|boolean $addImage
- * @property string|boolean $overwriteMeta
+ * @property boolean        $addImage
+ * @property boolean        $overwriteMeta
  * @property string|null    $singleSRC
  * @property string         $alt
  * @property string         $imageTitle
  * @property string|integer $size
  * @property string         $imageUrl
- * @property string|boolean $fullsize
+ * @property boolean        $fullsize
  * @property string         $caption
  * @property string         $floating
- * @property string|boolean $addEnclosure
+ * @property boolean        $addEnclosure
  * @property string|null    $enclosure
- * @property string|boolean $noComments
- * @property string|boolean $published
+ * @property boolean        $noComments
+ * @property boolean        $published
  *
  * @method static FaqModel|null findById($id, $opt=array())
  * @method static FaqModel|null findByPk($id, array $opt=array())
@@ -157,7 +157,7 @@ class FaqModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.published='1'";
+			$arrColumns[] = "$t.published=1";
 		}
 
 		return static::findOneBy($arrColumns, $varId, $arrOptions);
@@ -178,7 +178,7 @@ class FaqModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.published='1'";
+			$arrColumns[] = "$t.published=1";
 		}
 
 		if (!isset($arrOptions['order']))
@@ -209,7 +209,7 @@ class FaqModel extends Model
 
 		if (!static::isPreviewMode($arrOptions))
 		{
-			$arrColumns[] = "$t.published='1'";
+			$arrColumns[] = "$t.published=1";
 		}
 
 		if (!isset($arrOptions['order']))

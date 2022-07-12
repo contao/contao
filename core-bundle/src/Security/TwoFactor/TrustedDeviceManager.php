@@ -89,7 +89,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             ->andWhere('td.userClass = :userClass')
             ->andWhere('td.userId = :userId')
             ->setParameter('userClass', $user::class)
-            ->setParameter('userId', (int) $user->id)
+            ->setParameter('userId', $user->id)
             ->getQuery()
             ->execute()
         ;

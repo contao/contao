@@ -153,7 +153,10 @@ class InsertTags extends Controller
 				break;
 			}
 
-			$tags[$_rit+1] = (string) $this->replaceInternal($tags[$_rit+1], $blnCache);
+			if (!$blnCache || !str_starts_with(strtolower($tags[$_rit+1]), 'fragment::'))
+			{
+				$tags[$_rit+1] = (string) $this->replaceInternal($tags[$_rit+1], $blnCache);
+			}
 
 			$strTag = $tags[$_rit+1];
 			$flags = explode('|', $strTag);
@@ -161,7 +164,7 @@ class InsertTags extends Controller
 			$elements = explode('::', $tag);
 
 			// Load the value from cache
-			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && !\in_array('refresh', $flags))
+			if (isset($arrCache[$strTag]) && $elements[0] != 'page' && $elements[0] != 'fragment' && !\in_array('refresh', $flags))
 			{
 				$arrBuffer[$_rit+1] = (string) $arrCache[$strTag];
 				continue;
@@ -169,14 +172,15 @@ class InsertTags extends Controller
 
 			if (preg_match(static::$strAllowedTagsRegex, $elements[0]) !== 1)
 			{
-				$arrBuffer[$_rit+1] = '{{' . $strTag . '}}';
+				$arrBuffer[$_rit] .= '{{' . $strTag . '}}';
+				$arrBuffer[$_rit+1] = '';
 				continue;
 			}
 
 			// Skip certain elements if the output will be cached
 			if ($blnCache)
 			{
-				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || ($elements[1] ?? null) == 'referer' || \in_array('uncached', $flags) || strncmp($elements[0], 'cache_', 6) === 0)
+				if ($elements[0] == 'date' || $elements[0] == 'form_session_data' || $elements[0] == 'fragment' || ($elements[1] ?? null) == 'referer' || strncmp($elements[0], 'cache_', 6) === 0)
 				{
 					/** @var FragmentHandler $fragmentHandler */
 					$fragmentHandler = $container->get('fragment.handler');
@@ -204,9 +208,19 @@ class InsertTags extends Controller
 
 			$arrCache[$strTag] = '';
 
+			if (strtolower($elements[0]) !== $elements[0])
+			{
+				trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.0. Use "%s" instead.', $elements[0], strtolower($elements[0]));
+			}
+
 			// Replace the tag
 			switch (strtolower($elements[0]))
 			{
+				// Uncached (ESI) fragments
+				case 'fragment':
+					$arrCache[$strTag] = substr($strTag, 10);
+					break;
+
 				// Date
 				case 'date':
 					$flags[] = 'attr';
@@ -1075,7 +1089,7 @@ class InsertTags extends Controller
 						foreach ($GLOBALS['TL_HOOKS']['replaceInsertTags'] as $callback)
 						{
 							$this->import($callback[0]);
-							$varValue = $this->{$callback[0]}->{$callback[1]}($tag, $blnCache, $arrCache[$strTag], $flags, $tags, $arrCache, $_rit, $_cnt); // see #6672
+							$varValue = $this->{$callback[0]}->{$callback[1]}($tag, $blnCache, '', $flags, $tags, array(), $_rit, $_cnt); // see #6672
 
 							// Replace the tag and stop the loop
 							if ($varValue !== false)
@@ -1087,7 +1101,14 @@ class InsertTags extends Controller
 					}
 
 					$container->get('monolog.logger.contao.error')->error('Unknown insert tag {{' . $strTag . '}} on page ' . Environment::get('uri'));
-					break;
+
+					// Do not use the cache
+					unset($arrCache[$strTag]);
+
+					// Output the insert tag as plain string
+					$arrBuffer[$_rit] .= '{{' . $strTag . '}}';
+					$arrBuffer[$_rit+1] = '';
+					continue 2;
 			}
 
 			// Handle the flags
@@ -1170,7 +1191,6 @@ class InsertTags extends Controller
 							break;
 
 						case 'refresh':
-						case 'uncached':
 							// ignore
 							break;
 
@@ -1181,7 +1201,7 @@ class InsertTags extends Controller
 								foreach ($GLOBALS['TL_HOOKS']['insertTagFlags'] as $callback)
 								{
 									$this->import($callback[0]);
-									$varValue = $this->{$callback[0]}->{$callback[1]}($flag, $tag, $arrCache[$strTag], $flags, $blnCache, $tags, $arrCache, $_rit, $_cnt); // see #5806
+									$varValue = $this->{$callback[0]}->{$callback[1]}($flag, $tag, $arrCache[$strTag], $flags, $blnCache, $tags, array(), $_rit, $_cnt); // see #5806
 
 									// Replace the tag and stop the loop
 									if ($varValue !== false)

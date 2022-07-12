@@ -49,10 +49,10 @@ class TextControllerTest extends ContentElementTestCase
             [
                 'type' => 'text',
                 'text' => '<p>Text</p>',
-                'addImage' => '1',
+                'addImage' => true,
                 'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
                 'size' => '',
-                'fullsize' => '',
+                'fullsize' => false,
                 'floating' => $floatingProperty,
             ]
         );
