@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.0
 
+### importUser hook
+
+The `importUser` hook has been removed. Implement a custom `UserProvider` service instead.
+
 ### postAuthenticate hook
 
 The `postAuthenticate` hook has been removed. Use the `LoginSuccessEvent` instead.

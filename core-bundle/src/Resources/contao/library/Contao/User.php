@@ -343,28 +343,11 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		}
 
 		$user = new static();
-		$isLogin = $request->request->has('password') && $request->isMethod(Request::METHOD_POST);
 
 		// Load the user object
 		if ($user->findBy('username', $identifier) === false)
 		{
-			// Return if its not a real login attempt
-			if (!$isLogin)
-			{
-				return null;
-			}
-
-			$password = $request->request->get('password');
-
-			if (self::triggerImportUserHook($identifier, $password, $user->strTable) === false)
-			{
-				return null;
-			}
-
-			if ($user->findBy('username', Input::post('username')) === false)
-			{
-				return null;
-			}
+			return null;
 		}
 
 		$user->setUserFromDb();
@@ -471,42 +454,5 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		}
 
 		return true;
-	}
-
-	/**
-	 * Trigger the importUser hook
-	 *
-	 * @param string $username
-	 * @param string $password
-	 * @param string $strTable
-	 *
-	 * @return bool|static
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 */
-	public static function triggerImportUserHook($username, $password, $strTable)
-	{
-		$self = new static();
-
-		if (empty($GLOBALS['TL_HOOKS']['importUser']) || !\is_array($GLOBALS['TL_HOOKS']['importUser']))
-		{
-			return false;
-		}
-
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using the "importUser" hook has been deprecated and will no longer work in Contao 5.0.');
-
-		foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
-		{
-			$self->import($callback[0], 'objImport', true);
-			$blnLoaded = $self->objImport->{$callback[1]}($username, $password, $strTable);
-
-			// Load successfull
-			if ($blnLoaded === true)
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

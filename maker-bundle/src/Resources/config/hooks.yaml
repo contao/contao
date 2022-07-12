@@ -256,13 +256,6 @@ hooks:
             modules: array
             showAll: bool
 
-    importUser:
-        return_type: bool
-        arguments:
-            username: string
-            password: string
-            table: string
-
     indexPage:
         return_type: void
         arguments:
