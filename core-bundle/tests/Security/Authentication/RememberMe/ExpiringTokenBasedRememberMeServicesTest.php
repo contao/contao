@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Authentication\RememberMe;
 
 use Contao\CoreBundle\Entity\RememberMe;
-use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserInterface;
-use Contao\CoreBundle\Fixtures\Security\User\ForwardCompatibilityUserProviderInterface;
 use Contao\CoreBundle\Repository\RememberMeRepository;
 use Contao\CoreBundle\Security\Authentication\RememberMe\ExpiringTokenBasedRememberMeServices;
 use Contao\CoreBundle\Tests\TestCase;
@@ -27,6 +25,7 @@ use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\CookieTheftException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface;
 
 class ExpiringTokenBasedRememberMeServicesTest extends TestCase
@@ -66,7 +65,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
             ->willReturn([])
         ;
 
-        $userProvider = $this->createMock(ForwardCompatibilityUserProviderInterface::class);
+        $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
             ->method('supportsClass')
             ->willReturn(true)
@@ -206,7 +205,7 @@ class ExpiringTokenBasedRememberMeServicesTest extends TestCase
 
         $response = new Response();
 
-        $user = $this->createMock(ForwardCompatibilityUserInterface::class);
+        $user = $this->createMock(UserInterface::class);
         $user
             ->expects($this->once())
             ->method('getUserIdentifier')
