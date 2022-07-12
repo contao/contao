@@ -19,6 +19,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -47,6 +48,7 @@ use Contao\InsertTags;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use Nyholm\Psr7\Uri;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Asset\Packages;
@@ -64,6 +66,8 @@ class ContentElementTestCase extends TestCase
     final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
     final public const FILE_IMAGE2 = '7ebca224-553f-4f36-b853-e6f3af3eff42';
     final public const FILE_IMAGE3 = '3045209c-b73d-4a69-b30b-cda8c8008099';
+    final public const FILE_VIDEO_MP4 = 'e802b519-8e08-4075-913c-7603ec6f2376';
+    final public const FILE_VIDEO_OGV = 'd950e33a-dacc-42ad-ba97-6387d05348c4';
 
     protected function tearDown(): void
     {
@@ -286,12 +290,43 @@ class ContentElementTestCase extends TestCase
             ->willReturnCallback(
                 static function (Uuid $uuid): FilesystemItem|null {
                     $storageMap = [
-                        self::FILE_IMAGE1 => new FilesystemItem(true, 'image1.jpg'),
+                        self::FILE_IMAGE1 => new FilesystemItem(
+                            true,
+                            'image1.jpg',
+                            123456,
+                            1024,
+                            'image/jpg',
+                            [
+                                'metadata' => new MetadataBag(
+                                    ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
+                                    ['en']
+                                ),
+                            ],
+                        ),
                         self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg'),
                         self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg'),
+                        self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4'),
+                        self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv'),
                     ];
 
                     return $storageMap[$uuid->toRfc4122()] ?? null;
+                }
+            )
+        ;
+
+        $storage
+            ->method('generatePublicUri')
+            ->willReturnCallback(
+                static function (string $path): Uri|null {
+                    $publicUriMap = [
+                        'image1.jpg' => new Uri('https://example.com/files/image1.jpg'),
+                        'image2.jpg' => new Uri('https://example.com/files/image2.jpg'),
+                        'image3.jpg' => new Uri('https://example.com/files/image3.jpg'),
+                        'video.mp4' => new Uri('https://example.com/files/video.mp4'),
+                        'video.ogv' => new Uri('https://example.com/files/video.ogv'),
+                    ];
+
+                    return $publicUriMap[$path] ?? null;
                 }
             )
         ;
