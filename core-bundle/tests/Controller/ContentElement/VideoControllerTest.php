@@ -89,7 +89,7 @@ class VideoControllerTest extends ContentElementTestCase
                 <figure>
                 <button data-splash-screen>
                     <img src="files/image1.jpg" alt>
-                    <p>translated(contao_default:MSC.splashScreen)</p>
+                    <p>translated(contao_default:MSC.splashScreen) translated(contao_default:MSC.dataTransmission[Vimeo])</p>
                     <template>
                         <iframe
                             width="1600"
