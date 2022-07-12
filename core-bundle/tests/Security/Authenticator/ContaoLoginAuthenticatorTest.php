@@ -12,8 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Security\Authenticator;
 
+use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
@@ -116,44 +119,6 @@ class ContaoLoginAuthenticatorTest extends TestCase
         yield [false, null];
         yield [false, $requestStack1];
         yield [true, $requestStack2];
-    }
-
-    public function testRedirectsToBackend(): void
-    {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isBackendRequest')
-            ->willReturn(true)
-        ;
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->once())
-            ->method('generate')
-            ->willReturn('url')
-        ;
-
-        $uriSigner = $this->createMock(UriSigner::class);
-        $uriSigner
-            ->expects($this->once())
-            ->method('sign')
-            ->willReturn('url')
-        ;
-
-        $authenticator = $this->mockContaoLoginAuthenticator(
-            null,
-            null,
-            null,
-            $scopeMatcher,
-            $router,
-            $uriSigner
-        );
-
-        $response = $authenticator->start(new Request());
-
-        $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('url', $response->getTargetUrl());
     }
 
     public function testCallsTheSuccessAndFailureHandlers(): void
@@ -282,7 +247,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
     }
 
     /**
-     * @dataProvider getAuthenticationData
+     * @dataProvider getUserData
      */
     public function testCreatesThePassportOnAuthentication(string|null $username, string|null $exception): void
     {
@@ -330,13 +295,223 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator->authenticate($request);
     }
 
-    public function getAuthenticationData(): \Generator
+    public function getUserData(): \Generator
     {
         $veryLongUsername = str_repeat('k.jones', (int) ceil(Security::MAX_USERNAME_LENGTH / \strlen('k.jones')));
 
         yield [null, BadRequestHttpException::class];
         yield [$veryLongUsername, BadCredentialsException::class];
         yield ['k.jones', null];
+    }
+
+    public function testRedirectsToBackend(): void
+    {
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isBackendRequest')
+            ->willReturn(true)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->willReturn('url')
+        ;
+
+        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner
+            ->expects($this->once())
+            ->method('sign')
+            ->willReturn('url')
+        ;
+
+        $authenticator = $this->mockContaoLoginAuthenticator(
+            null,
+            null,
+            null,
+            $scopeMatcher,
+            $router,
+            $uriSigner
+        );
+
+        $response = $authenticator->start(new Request());
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('url', $response->getTargetUrl());
+    }
+
+    /**
+     * @dataProvider getAuthenticationData
+     */
+    public function testStartsTheAuthenticationProcessOnCurrentPage(TokenInterface|null $token, ResponseException|null $exception): void
+    {
+        $pageModel = $this->createMock(PageModel::class);
+        $pageModel
+            ->expects($this->once())
+            ->method('loadDetails')
+        ;
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->expects($this->once())
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        $route = $this->createMock(PageRoute::class);
+        $route
+            ->expects($this->once())
+            ->method('getDefaults')
+            ->willReturn([])
+        ;
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($this->once())
+            ->method('getRoute')
+            ->willReturn($route)
+        ;
+
+        $httpKernel = $this->createMock(HttpKernelInterface::class);
+
+        if (!$exception instanceof ResponseException) {
+            $httpKernel
+                ->expects($this->once())
+                ->method('handle')
+                ->willReturn($this->createMock(RedirectResponse::class))
+            ;
+        } else {
+            $httpKernel
+                ->expects($this->once())
+                ->method('handle')
+                ->willThrowException($exception)
+            ;
+        }
+
+        $authenticator = $this->mockContaoLoginAuthenticator(
+            $this->createMock(ContaoUserProvider::class),
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            $tokenStorage,
+            $pageRegistry,
+            $httpKernel,
+            null,
+            null,
+            ['enable_csrf' => true]
+        );
+
+        $authenticator->start($request);
+    }
+
+    public function getAuthenticationData(): \Generator
+    {
+        $token = $this->createMock(UsernamePasswordToken::class);
+
+        $responseException = $this->createMock(ResponseException::class);
+        $responseException
+            ->expects($this->once())
+            ->method('getResponse')
+            ->willReturn($this->createMock(RedirectResponse::class))
+        ;
+
+        yield [$token, null];
+        yield [$token, $responseException];
+    }
+
+    /**
+     * @dataProvider getErrorPageData
+     */
+    public function testRedirectsToErrorPageIfThereIsNoToken(PageModel|null $errorPage): void
+    {
+        $pageModel = $this->createMock(PageModel::class);
+        $pageModel
+            ->expects($this->once())
+            ->method('loadDetails')
+        ;
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $pageModel);
+
+        $pageModelAdapter = $this->mockAdapter(['findFirstPublishedByTypeAndPid']);
+        $pageModelAdapter
+            ->expects($this->once())
+            ->method('findFirstPublishedByTypeAndPid')
+            ->with('error_401', 0)
+            ->willReturn($errorPage)
+        ;
+
+        if (null === $errorPage) {
+            $this->expectException(PageNotFoundException::class);
+        }
+
+        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->expects($this->once())
+            ->method('getToken')
+            ->willReturn(null)
+        ;
+
+        $route = $this->createMock(PageRoute::class);
+        $route
+            ->expects($errorPage ? $this->once() : $this->never())
+            ->method('getDefaults')
+            ->willReturn([])
+        ;
+
+        $pageRegistry = $this->createMock(PageRegistry::class);
+        $pageRegistry
+            ->expects($errorPage ? $this->once() : $this->never())
+            ->method('getRoute')
+            ->willReturn($route)
+        ;
+
+        $httpKernel = $this->createMock(HttpKernelInterface::class);
+        $httpKernel
+            ->expects($errorPage ? $this->once() : $this->never())
+            ->method('handle')
+            ->willReturn($this->createMock(RedirectResponse::class))
+        ;
+
+        $authenticator = $this->mockContaoLoginAuthenticator(
+            $this->createMock(ContaoUserProvider::class),
+            null,
+            null,
+            null,
+            null,
+            null,
+            $framework,
+            $tokenStorage,
+            $pageRegistry,
+            $httpKernel,
+            null,
+            null,
+            ['enable_csrf' => true]
+        );
+
+        $authenticator->start($request);
+    }
+
+    public function getErrorPageData(): \Generator
+    {
+        $errorPage = $this->createMock(PageModel::class);
+        $errorPage
+            ->expects($this->once())
+            ->method('loadDetails')
+        ;
+
+        yield [null];
+        yield [$errorPage];
     }
 
     private function mockContaoLoginAuthenticator(UserProviderInterface $userProvider = null, AuthenticationSuccessHandlerInterface $successHandler = null, AuthenticationFailureHandlerInterface $failureHandler = null, ScopeMatcher $scopeMatcher = null, RouterInterface $router = null, UriSigner $uriSigner = null, ContaoFramework $framework = null, TokenStorageInterface $tokenStorage = null, PageRegistry $pageRegistry = null, HttpKernelInterface $httpKernel = null, RequestStack $requestStack = null, TwoFactorAuthenticator $twoFactorAuthenticator = null, array $options = []): ContaoLoginAuthenticator
