@@ -662,6 +662,8 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 * @param $strTable
 	 *
 	 * @return bool|static
+	 *
+	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
 	 */
 	public static function triggerImportUserHook($username, $password, $strTable)
 	{
