@@ -143,7 +143,7 @@ class FileDownloadHelper
 
         try {
             $file = $storage->get($path, VirtualFilesystemInterface::BYPASS_DBAFS);
-        } catch (VirtualFilesystemException $e) {
+        } catch (VirtualFilesystemException) {
             return null;
         }
 
