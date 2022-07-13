@@ -98,11 +98,11 @@ class LegacyMatcher implements RequestMatcherInterface
         }
 
         if ('' === $parameters) {
-            return [$page->alias];
+            return [$page->alias ?: $page->id];
         }
 
         $config = $this->framework->getAdapter(Config::class);
-        $fragments = [...[$page->alias], ...explode('/', substr($parameters, 1))];
+        $fragments = [...[$page->alias ?: $page->id], ...explode('/', substr($parameters, 1))];
 
         // Add the second fragment as auto_item if the number of fragments is even
         if ($config->get('useAutoItem') && 0 === \count($fragments) % 2) {
