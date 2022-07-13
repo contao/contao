@@ -101,8 +101,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
             ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, $this->user->username)]
         );
 
-        $this->triggerPostLoginHook();
-
         if ($request->hasSession() && method_exists($token, 'getFirewallName')) {
             $this->removeTargetPath($request->getSession(), $token->getFirewallName());
         }
@@ -125,23 +123,6 @@ class AuthenticationSuccessHandler implements AuthenticationSuccessHandlerInterf
         }
 
         return $this->decodeTargetPath($request);
-    }
-
-    private function triggerPostLoginHook(): void
-    {
-        $this->framework->initialize();
-
-        if (empty($GLOBALS['TL_HOOKS']['postLogin']) || !\is_array($GLOBALS['TL_HOOKS']['postLogin'])) {
-            return;
-        }
-
-        trigger_deprecation('contao/core-bundle', '4.5', 'Using the "postLogin" hook has been deprecated and will no longer work in Contao 5.0.');
-
-        $system = $this->framework->getAdapter(System::class);
-
-        foreach ($GLOBALS['TL_HOOKS']['postLogin'] as $callback) {
-            $system->importStatic($callback[0])->{$callback[1]}($this->user);
-        }
     }
 
     private function decodeTargetPath(Request $request): string

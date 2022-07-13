@@ -394,11 +394,6 @@ hooks:
         arguments:
             file: string
 
-    postLogin:
-        return_type: void
-        arguments:
-            user: Contao\User
-
     postUpload:
         return_type: void
         arguments:

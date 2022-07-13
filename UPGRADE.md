@@ -1,6 +1,10 @@
 # API changes
 
-## Version 4.* to 5.0
+## Version 4.* to 5.04
+
+### postLogin hook
+
+The `postLogin` hook has been removed. Use the `LoginSuccessEvent` instead.
 
 ### importUser hook
 
