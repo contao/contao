@@ -238,8 +238,11 @@ class ModuleBreadcrumb extends Module
 			}
 		}
 
-		$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-		$responseTagger->addTags($tags);
+		if (!empty($tags))
+		{
+			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger->addTags($tags);
+		}
 	}
 }
 

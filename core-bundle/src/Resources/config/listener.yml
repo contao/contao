@@ -195,7 +195,7 @@ services:
             - { name: kernel.event_listener, priority: 256 }
             - { name: kernel.reset, method: reset }
 
-    contao.listener.page_trail_cache_tags_listener:
+    contao.listener.page_trail_cache_tags:
         class: Contao\CoreBundle\EventListener\PageTrailCacheTagsListener
         arguments:
             - '@contao.routing.scope_matcher'

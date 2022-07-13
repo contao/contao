@@ -1364,13 +1364,16 @@ abstract class DataContainer extends Backend
 		// Do not call recursively (see #4777)
 	}
 
+	/**
+	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0
+	 */
 	public function addCtableTags($strTable, $intId, &$tags)
 	{
 		trigger_deprecation('contao/core-bundle', '4.9', 'Calling "%s()" has been deprecated and will no longer work in Contao 5.0.', __METHOD__);
 
 		$ctables = $GLOBALS['TL_DCA'][$strTable]['config']['ctable'] ?? array();
 
-		if ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] == 5)
+		if (($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? null) == 5)
 		{
 			$ctables[] = $strTable;
 		}
