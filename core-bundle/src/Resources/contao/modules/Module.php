@@ -435,7 +435,7 @@ abstract class Module extends Frontend
 		$row['href'] = $href;
 		$row['rel'] = '';
 		$row['target'] = '';
-		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
+		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), (string) $objSubpage->description);
 
 		$arrRel = array();
 

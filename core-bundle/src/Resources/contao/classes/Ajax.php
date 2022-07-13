@@ -158,8 +158,6 @@ class Ajax extends Backend
 	 */
 	public function executePostActions(DataContainer $dc)
 	{
-		header('Content-Type: text/html; charset=' . System::getContainer()->getParameter('kernel.charset'));
-
 		// Bypass any core logic for non-core drivers (see #5957)
 		if (!$dc instanceof DC_File && !$dc instanceof DC_Folder && !$dc instanceof DC_Table)
 		{

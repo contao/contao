@@ -157,7 +157,7 @@ class ModuleCustomnav extends Module
 					$row['href'] = $href;
 					$row['rel'] = '';
 					$row['target'] = '';
-					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
+					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), (string) $objModel->description);
 
 					$arrRel = array();
 
@@ -194,7 +194,7 @@ class ModuleCustomnav extends Module
 					$row['href'] = $href;
 					$row['rel'] = '';
 					$row['target'] = '';
-					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objModel->description);
+					$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), (string) $objModel->description);
 
 					$arrRel = array();
 
