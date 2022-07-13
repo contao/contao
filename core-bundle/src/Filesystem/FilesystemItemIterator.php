@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
+use Contao\CoreBundle\Util\CachingTraversable;
+
 /**
  * @implements \IteratorAggregate<int, FilesystemItem>
  */
@@ -22,6 +24,9 @@ class FilesystemItemIterator implements \IteratorAggregate
      */
     public function __construct(private iterable $listing)
     {
+        if (!\is_array($listing)) {
+            $this->listing = new CachingTraversable($listing);
+        }
     }
 
     /**

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Authentication\Token;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\FrontendUser;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
@@ -63,6 +64,14 @@ class TokenChecker
     }
 
     /**
+     * Checks if a front end guest user is "authenticated".
+     */
+    public function hasFrontendGuest(): bool
+    {
+        return $this->session->has(FrontendPreviewAuthenticator::SESSION_NAME);
+    }
+
+    /**
      * Gets the front end username from the session.
      */
     public function getFrontendUsername(): string|null
@@ -101,9 +110,19 @@ class TokenChecker
             return false;
         }
 
-        $token = $this->getToken(self::FRONTEND_FIREWALL);
+        if (!$request->hasPreviousSession()) {
+            return false;
+        }
 
-        return $token instanceof FrontendPreviewToken && $token->showUnpublished();
+        $session = $request->getSession();
+
+        if (!$session->has(FrontendPreviewAuthenticator::SESSION_NAME)) {
+            return false;
+        }
+
+        $preview = $session->get(FrontendPreviewAuthenticator::SESSION_NAME);
+
+        return (bool) $preview['showUnpublished'];
     }
 
     private function getToken(string $context): TokenInterface|null
@@ -114,11 +133,11 @@ class TokenChecker
             $token = $this->getTokenFromSession('_security_'.$context);
         }
 
-        if (!$token instanceof TokenInterface || !$token->isAuthenticated()) {
+        if (!$token instanceof TokenInterface) {
             return null;
         }
 
-        if ($this->trustResolver->isAnonymous($token)) {
+        if (!$this->trustResolver->isAuthenticated($token) && !$this->trustResolver->isFullFledged($token) && !$this->trustResolver->isRememberMe($token)) {
             return null;
         }
 

@@ -29,7 +29,6 @@ use Contao\CoreBundle\DependencyInjection\Compiler\PickerProviderPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterFragmentsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterHookListenersPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RegisterPagesPass;
-use Contao\CoreBundle\DependencyInjection\Compiler\RemembermeServicesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\RewireTwigPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\SearchIndexerPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\TaggedMigrationsPass;
@@ -64,7 +63,6 @@ class ContaoCoreBundleTest extends TestCase
             RegisterPagesPass::class,
             RegisterFragmentsPass::class,
             RegisterFragmentsPass::class,
-            RemembermeServicesPass::class,
             DataContainerCallbackPass::class,
             TranslationDataCollectorPass::class,
             RegisterHookListenersPass::class,
@@ -83,7 +81,7 @@ class ContaoCoreBundleTest extends TestCase
         $security = $this->createMock(SecurityExtension::class);
         $security
             ->expects($this->once())
-            ->method('addSecurityListenerFactory')
+            ->method('addAuthenticatorFactory')
             ->with($this->callback(static fn ($param) => $param instanceof ContaoLoginFactory))
         ;
 

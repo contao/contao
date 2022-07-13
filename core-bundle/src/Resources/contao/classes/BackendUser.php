@@ -396,7 +396,7 @@ class BackendUser extends User
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getRoles()
+	public function getRoles(): array
 	{
 		if ($this->isAdmin)
 		{
@@ -411,37 +411,9 @@ class BackendUser extends User
 		return $this->roles;
 	}
 
-	/**
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
-	 */
-	public function serialize()
-	{
-		$data = $this->__serialize();
-		$data['parent'] = serialize($data['parent']);
-
-		return serialize($data);
-	}
-
 	public function __serialize(): array
 	{
 		return array('admin' => $this->admin, 'amg' => $this->amg, 'parent' => parent::__serialize());
-	}
-
-	/**
-	 * @deprecated Deprecated since Contao 4.9 to be removed in Contao 5.0.
-	 */
-	public function unserialize($data)
-	{
-		$unserialized = unserialize($data, array('allowed_classes'=>false));
-
-		if (!isset($unserialized['parent']))
-		{
-			return;
-		}
-
-		$unserialized['parent'] = unserialize($unserialized['parent'], array('allowed_classes'=>false));
-
-		$this->__unserialize($unserialized);
 	}
 
 	public function __unserialize(array $data): void
@@ -459,7 +431,7 @@ class BackendUser extends User
 	/**
 	 * {@inheritdoc}
 	 */
-	public function isEqualTo(UserInterface $user)
+	public function isEqualTo(UserInterface $user): bool
 	{
 		if (!$user instanceof self)
 		{

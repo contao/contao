@@ -2,6 +2,26 @@
 
 ## Version 4.* to 5.0
 
+### checkCredentials hook
+
+The `checkCredentials` hook has been removed. Use the `CheckPassportEvent` instead.
+
+### postLogin hook
+
+The `postLogin` hook has been removed. Use the `LoginSuccessEvent` instead.
+
+### importUser hook
+
+The `importUser` hook has been removed. Implement a custom `UserProvider` service instead.
+
+### postAuthenticate hook
+
+The `postAuthenticate` hook has been removed. Use the `LoginSuccessEvent` instead.
+
+### postLogout hook
+
+The `postLogout` hook has been removed. Use the `LogoutEvent` instead.
+
 ### Contao 4 migrations
 
 Contao 5 does not include any Contao 4 migrations, so make sure to upgrade to Contao 4.13 before upgrading to Contao 5!
