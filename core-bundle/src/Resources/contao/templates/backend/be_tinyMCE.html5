@@ -64,6 +64,10 @@ window.tinymce && tinymce.init({
     contextmenu: false,
   <?php $this->endblock(); ?>
 
+  <?php $this->block('cache_suffix'); ?>
+    cache_suffix: '?v=<?= $this->assetVersion('js/tinymce.min.js', 'contao-components/tinymce4') ?>',
+  <?php $this->endblock(); ?>
+
   <?php $this->block('custom'); ?>
   <?php $this->endblock(); ?>
 
