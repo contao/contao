@@ -105,3 +105,4 @@ scheb_two_factor:
         enabled: true
     backup_codes:
         enabled: true
+        manager: contao.security.two_factor.backup_code_manager
