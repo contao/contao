@@ -67,18 +67,17 @@ class FeedReaderController extends AbstractFrontendModuleController
             }
         }
 
+        $template->set('feeds', $feeds);
+
         // Take the configured amount of items from each feed and merge all into one array
-        $allItems = array_merge(
+        $items = array_merge(
             ...array_map(
                 static fn (FeedInterface $feed) => \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null),
                 $feeds
             )
         );
 
-        usort($allItems, static fn (Item $a, Item $b): int => $a->getLastModified() <=> $b->getLastModified());
-
-        $offset = 0;
-        $limit = \count($allItems);
+        usort($items, static fn (Item $a, Item $b): int => $a->getLastModified() <=> $b->getLastModified());
 
         if ($model->perPage > 0) {
             $param = 'page_r'.$model->id;
@@ -86,7 +85,7 @@ class FeedReaderController extends AbstractFrontendModuleController
             $config = $this->container->get('contao.framework')->getAdapter(Config::class);
 
             // Do not index or cache the page if the page number is outside the range
-            if ($page < 1 || $page > max(ceil(\count($allItems) / $model->perPage), 1)) {
+            if ($page < 1 || $page > max(ceil(\count($items) / $model->perPage), 1)) {
                 throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
             }
 
@@ -94,14 +93,14 @@ class FeedReaderController extends AbstractFrontendModuleController
             $offset = ($page - 1) * $model->perPage;
             $limit = $model->perPage + $offset;
 
-            $pagination = new Pagination(\count($allItems), $model->perPage, $config->get('maxPaginationLinks'), $param);
+            $pagination = new Pagination(\count($items), $model->perPage, $config->get('maxPaginationLinks'), $param);
+
             $template->set('pagination', $pagination->generate());
+            $template->set('items', \array_slice($items, $offset, $limit));
+        } else {
+            $template->set('pagination', null);
+            $template->set('items', $items);
         }
-
-        $items = \array_slice($allItems, $offset, $limit);
-
-        $template->set('feeds', $feeds);
-        $template->set('items', $items);
 
         return $template->getResponse();
     }
