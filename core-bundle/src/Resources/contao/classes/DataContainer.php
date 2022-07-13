@@ -1749,7 +1749,7 @@ abstract class DataContainer extends Backend
 	 * @throws AccessDeniedException     if the current user has no read permission
 	 * @return array<string, mixed>|null
 	 */
-	public function getCurrentRecord(string|int $id = null, string $table = null): ?array
+	public function getCurrentRecord(string|int $id = null, string $table = null, bool $throw = true): ?array
 	{
 		$id = $id ?: $this->intId;
 		$table = $table ?: $this->strTable;
@@ -1770,6 +1770,11 @@ abstract class DataContainer extends Backend
 		// exception
 		if (self::$arrCurrentRecordCache[$key] instanceof AccessDeniedException)
 		{
+			if (!$throw)
+			{
+				return null;
+			}
+
 			throw self::$arrCurrentRecordCache[$key];
 		}
 
@@ -1781,6 +1786,11 @@ abstract class DataContainer extends Backend
 		{
 			// Remember the exception for this key for the next call
 			self::$arrCurrentRecordCache[$key] = $e;
+
+			if (!$throw)
+			{
+				return null;
+			}
 
 			throw $e;
 		}

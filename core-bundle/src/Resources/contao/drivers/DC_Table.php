@@ -280,7 +280,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return null;
 		}
 
-		$currentRecord = $this->getCurrentRecord($id);
+		$currentRecord = $this->getCurrentRecord($id, null, false);
 
 		if (!empty($currentRecord['pid']))
 		{
@@ -742,6 +742,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Load current record before calculating new position etc. in case the user does not have read access
 		$currentRecord = $this->getCurrentRecord();
+
+		if ($currentRecord === null)
+		{
+			if (!$blnDoNotRedirect)
+			{
+				$this->redirect($this->getReferer());
+			}
+
+			return;
+		}
 
 		// Get the new position
 		$this->getNewPosition('cut', Input::get('pid'), Input::get('mode') == '2');
@@ -1388,7 +1398,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// ID is set (insert after the current record)
 			if ($this->intId)
 			{
-				$currentRecord = $this->getCurrentRecord();
+				$currentRecord = $this->getCurrentRecord(null, null, false);
 
 				// Select current record
 				if (null !== $currentRecord)
@@ -1666,9 +1676,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				foreach ($rows as $row)
 				{
-					$currentRecord = $this->getCurrentRecord($row['id'], $v);
+					$currentRecord = $this->getCurrentRecord($row['id'], $v, false);
 
-					$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new DeleteAction($v, $currentRecord));
+					if ($currentRecord === null)
+					{
+						continue;
+					}
+
+					try
+					{
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX.$v, new DeleteAction($v, $currentRecord));
+					}
+					catch (AccessDeniedException)
+					{
+						continue;
+					}
 
 					$delete[$v][] = $row['id'];
 
@@ -1799,6 +1821,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			throw new AccessDeniedException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
+
+		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord));
 
 		// Store the active record (backwards compatibility)
 		$this->objActiveRecord = (object) $currentRecord;
@@ -2287,6 +2311,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Walk through each record
 				foreach ($ids as $id)
 				{
+					$currentRecord = $this->getCurrentRecord($id, null, false);
+
+					if (null === $currentRecord)
+					{
+						continue;
+					}
+
+					try
+					{
+						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX.$this->strTable, new UpdateAction($this->strTable, $currentRecord));
+					}
+					catch (AccessDeniedException)
+					{
+						continue;
+					}
+
 					$this->intId = $id;
 					$this->procedure = array('id=?');
 					$this->values = array($this->intId);
@@ -2343,8 +2383,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$strAjax = '';
 					$blnAjax = false;
 					$box = '';
-
-					$currentRecord = $this->getCurrentRecord($id);
 
 					// Store the active record (backwards compatibility)
 					$this->objActiveRecord = (object) $currentRecord;
@@ -2731,6 +2769,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					foreach ($ids as $id)
 					{
+						$currentRecord = $this->getCurrentRecord(null, null, false);
+
+						if ($currentRecord === null)
+						{
+							continue;
+						}
+
 						$this->intId = $id;
 						$this->procedure = array('id=?');
 						$this->values = array($this->intId);
@@ -2738,7 +2783,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->blnCreateNewVersion = false;
 
 						// Store the active record (backwards compatibility)
-						$this->objActiveRecord = (object) $this->getCurrentRecord();
+						$this->objActiveRecord = (object) $currentRecord;
 
 						$objVersions = new Versions($this->strTable, $this->intId);
 						$objVersions->initialize();
@@ -3250,7 +3295,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$sValues = array();
 			$subpalettes = array();
 
-			$currentRow = $this->getCurrentRecord();
+			$currentRow = $this->getCurrentRecord(null, null, false);
 
 			// Get selector values from DB
 			if (null !== $currentRow)
@@ -3405,7 +3450,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				foreach ($ids as $id)
 				{
 					// Get the current record
-					$currentRecord = $this->getCurrentRecord($id);
+					$currentRecord = $this->getCurrentRecord($id, null, false);
+
+					if ($currentRecord === null)
+					{
+						continue;
+					}
 
 					$this->id = $id;
 					$this->activeRecord = (object) $currentRecord;
@@ -3955,7 +4005,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
-		$currentRecord = $this->getCurrentRecord($id, $table);
+		$currentRecord = $this->getCurrentRecord($id, $table, false);
 
 		// Return if there is no result
 		if (null === $currentRecord)
