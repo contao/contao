@@ -674,7 +674,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			return false;
 		}
 
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using the "importUser" hook  has been deprecated and will no longer work in Contao 5.0.');
+		trigger_deprecation('contao/core-bundle', '4.13', 'Using the "importUser" hook has been deprecated and will no longer work in Contao 5.0.');
 
 		foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
 		{
