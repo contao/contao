@@ -1,6 +1,6 @@
 # API changes
 
-## Version 4.* to 5.04
+## Version 4.* to 5.0
 
 ### checkCredentials hook
 
