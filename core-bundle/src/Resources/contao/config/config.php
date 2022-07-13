@@ -26,8 +26,6 @@ use Contao\ContentPlayer;
 use Contao\ContentSliderStart;
 use Contao\ContentSliderStop;
 use Contao\ContentTeaser;
-use Contao\ContentVimeo;
-use Contao\ContentYouTube;
 use Contao\CoreBundle\Controller\BackendCsvImportController;
 use Contao\Crawl;
 use Contao\FilesModel;
@@ -280,8 +278,6 @@ $GLOBALS['TL_CTE'] = array
 	'media' => array
 	(
 		'player'          => ContentPlayer::class,
-		'youtube'         => ContentYouTube::class,
-		'vimeo'           => ContentVimeo::class
 	),
 	'files' => array
 	(

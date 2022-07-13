@@ -65,7 +65,6 @@
     </listener>
   </listeners>
   <extensions>
-    <extension class="Contao\CoreBundle\Tests\PhpunitExtension\DeprecatedClasses"/>
     <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>
   </extensions>
 </phpunit>

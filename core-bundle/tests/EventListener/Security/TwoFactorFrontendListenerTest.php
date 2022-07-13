@@ -28,7 +28,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -70,7 +70,7 @@ class TwoFactorFrontendListenerTest extends TestCase
 
     public function testReturnsIfTheTokenIsNotSupported(): void
     {
-        $token = $this->createMock(AnonymousToken::class);
+        $token = $this->createMock(NullToken::class);
         $event = $this->getRequestEvent($this->getRequest());
 
         $listener = new TwoFactorFrontendListener(

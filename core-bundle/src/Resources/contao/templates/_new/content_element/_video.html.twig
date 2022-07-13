@@ -1,0 +1,44 @@
+{% trans_default_domain "contao_default" %}
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_splash_screen.html.twig" %}
+{% use "@Contao/component/_picture.html.twig" %}
+
+{% block content %}
+    {% set video_attributes = attrs(video_attributes|default)
+        .addClass('aspect aspect--' ~ aspect_ratio, aspect_ratio)
+    %}
+    <figure{{ video_attributes }}>
+        {% if splash_image %}
+            {{ block('splash_screen_component') }}
+        {% else %}
+            {% block iframe %}
+                {% set iframe_attrs = attrs({width, height, src: source.url, allowfullscreen: true})
+                    .mergeWith(iframe_attrs|default)
+                %}
+                <iframe{{ iframe_attrs }}></iframe>
+            {% endblock %}
+        {% endif %}
+
+        {% block video_caption %}
+            {% if caption %}
+                <figcaption{{ attrs(video_caption_attributes|default) }}>
+                    {{- caption|insert_tag_raw -}}
+                </figcaption>
+            {% endif %}
+        {% endblock %}
+    </figure>
+{% endblock %}
+
+{% block splash_screen_button_content %}
+    {# Preview image #}
+    {% with {figure: splash_image} %}{{ block('picture_component') }}{% endwith %}
+
+    {# Textual note #}
+    {% block splash_screen_text %}
+        <p>{{ ('MSC.splashScreen')|trans }}</p>
+    {% endblock %}
+{% endblock %}
+
+{% block splash_screen_content %}
+    {{ block('iframe') }}
+{% endblock %}
