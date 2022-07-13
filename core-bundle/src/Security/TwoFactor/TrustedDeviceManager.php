@@ -28,6 +28,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
     {
     }
 
+    /**
+     * @param mixed $user
+     */
     public function addTrustedDevice($user, string $firewallName): void
     {
         if (!$user instanceof User) {
@@ -54,6 +57,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $this->entityManager->flush();
     }
 
+    /**
+     * @param mixed $user
+     */
     public function isTrustedDevice($user, string $firewallName): bool
     {
         if (!($user instanceof User)) {
@@ -95,6 +101,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         ;
     }
 
+    /**
+     * @param mixed $user
+     */
     public function canSetTrustedDevice($user, Request $request, string $firewallName): bool
     {
         return true;

@@ -26,13 +26,6 @@ hooks:
             input: ''
             widget: Contao\Widget
 
-    checkCredentials:
-        return_type: bool
-        arguments:
-            username: string
-            credentials: string
-            user: Contao\User
-
     closeAccount:
         return_type: void
         arguments:
@@ -256,13 +249,6 @@ hooks:
             modules: array
             showAll: bool
 
-    importUser:
-        return_type: bool
-        arguments:
-            username: string
-            password: string
-            table: string
-
     indexPage:
         return_type: void
         arguments:
@@ -396,25 +382,10 @@ hooks:
             buffer: string
             widget: Contao\Widget
 
-    postAuthenticate:
-        return_type: void
-        arguments:
-            user: Contao\User
-
     postDownload:
         return_type: void
         arguments:
             file: string
-
-    postLogin:
-        return_type: void
-        arguments:
-            user: Contao\User
-
-    postLogout:
-        return_type: void
-        arguments:
-            user: Contao\User
 
     postUpload:
         return_type: void

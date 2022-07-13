@@ -17,6 +17,7 @@ use Contao\CoreBundle\Security\TwoFactor\Provider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class ProviderTest extends TestCase
 {
@@ -28,7 +29,7 @@ class ProviderTest extends TestCase
         $context
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn(null)
+            ->willReturn($this->createMock(UserInterface::class))
         ;
 
         $provider = new Provider($authenticator);
@@ -79,7 +80,7 @@ class ProviderTest extends TestCase
         $authenticator = $this->createMock(Authenticator::class);
         $provider = new Provider($authenticator);
 
-        $this->assertFalse($provider->validateAuthenticationCode(null, ''));
+        $this->assertFalse($provider->validateAuthenticationCode(new \stdClass(), ''));
     }
 
     public function testDoesNotValidateTheAuthenticationCodeIfTheCodeIsInvalid(): void

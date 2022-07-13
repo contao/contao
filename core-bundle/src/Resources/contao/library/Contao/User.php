@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -97,7 +96,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property object $objLogin
  * @property object $objLogout
  */
-abstract class User extends System implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface, \Serializable
+abstract class User extends System implements UserInterface, EquatableInterface, PasswordAuthenticatedUserInterface
 {
 	/**
 	 * Object instance (Singleton)
@@ -146,12 +145,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 * @var array
 	 */
 	protected $roles = array();
-
-	/**
-	 * Salt
-	 * @var string
-	 */
-	protected $salt;
 
 	/**
 	 * Import the database object
@@ -333,81 +326,29 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getRoles()
+	public function getRoles(): array
 	{
 		return array();
 	}
 
-	/**
-	 * @return User
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 *             Use Contao\User::loadUserByIdentifier() instead.
-	 */
-	public static function loadUserByUsername($username)
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::loadUserByUsername()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\User::loadUserByIdentifier()" instead.');
-
-		return self::loadUserByIdentifier($username);
-	}
-
 	public static function loadUserByIdentifier(string $identifier): self|null
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request === null)
+		if (!System::getContainer()->get('request_stack')->getCurrentRequest())
 		{
 			return null;
 		}
 
 		$user = new static();
-		$isLogin = $request->request->has('password') && $request->isMethod(Request::METHOD_POST);
 
 		// Load the user object
 		if ($user->findBy('username', $identifier) === false)
 		{
-			// Return if its not a real login attempt
-			if (!$isLogin)
-			{
-				return null;
-			}
-
-			$password = $request->request->get('password');
-
-			if (self::triggerImportUserHook($identifier, $password, $user->strTable) === false)
-			{
-				return null;
-			}
-
-			if ($user->findBy('username', Input::post('username')) === false)
-			{
-				return null;
-			}
+			return null;
 		}
 
 		$user->setUserFromDb();
 
 		return $user;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 *             Use Contao\User::getUserIdentifier() instead.
-	 */
-	public function getUsername()
-	{
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using "Contao\User::getUsername()" has been deprecated and will no longer work in Contao 5.0. Use "Contao\User::getUserIdentifier()" instead.');
-
-		return $this->getUserIdentifier();
-	}
-
-	public function setUsername($username)
-	{
-		$this->username = $username;
-
-		return $this;
 	}
 
 	/**
@@ -429,41 +370,18 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @see PasswordAuthenticatedUserInterface
 	 */
 	public function getPassword(): string|null
 	{
 		return $this->password;
 	}
 
-	public function setPassword($password)
+	public function setPassword(?string $password): self
 	{
 		$this->password = $password;
 
 		return $this;
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getSalt()
-	{
-		return $this->salt;
-	}
-
-	public function setSalt($salt)
-	{
-		$this->salt = $salt;
-
-		return $this;
-	}
-
-	/**
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
-	 */
-	public function serialize()
-	{
-		return serialize($this->__serialize());
 	}
 
 	public function __serialize(): array
@@ -477,14 +395,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 			'start' => $this->start,
 			'stop' => $this->stop
 		);
-	}
-
-	/**
-	 * @deprecated Deprecated since Contao 4.9, to be removed in Contao 5.0.
-	 */
-	public function unserialize($data)
-	{
-		$this->__unserialize(unserialize($data, array('allowed_classes'=>false)));
 	}
 
 	public function __unserialize(array $data): void
@@ -507,7 +417,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function isEqualTo(UserInterface $user)
+	public function isEqualTo(UserInterface $user): bool
 	{
 		if (!$user instanceof self)
 		{
@@ -540,42 +450,5 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		}
 
 		return true;
-	}
-
-	/**
-	 * Trigger the importUser hook
-	 *
-	 * @param string $username
-	 * @param string $password
-	 * @param string $strTable
-	 *
-	 * @return bool|static
-	 *
-	 * @deprecated Deprecated since Contao 4.13, to be removed in Contao 5.0.
-	 */
-	public static function triggerImportUserHook($username, $password, $strTable)
-	{
-		$self = new static();
-
-		if (empty($GLOBALS['TL_HOOKS']['importUser']) || !\is_array($GLOBALS['TL_HOOKS']['importUser']))
-		{
-			return false;
-		}
-
-		trigger_deprecation('contao/core-bundle', '4.13', 'Using the "importUser" hook has been deprecated and will no longer work in Contao 5.0.');
-
-		foreach ($GLOBALS['TL_HOOKS']['importUser'] as $callback)
-		{
-			$self->import($callback[0], 'objImport', true);
-			$blnLoaded = $self->objImport->{$callback[1]}($username, $password, $strTable);
-
-			// Load successfull
-			if ($blnLoaded === true)
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 }
