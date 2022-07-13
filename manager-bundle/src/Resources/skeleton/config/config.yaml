@@ -103,6 +103,7 @@ fos_http_cache:
 scheb_two_factor:
     trusted_device:
         enabled: true
+        manager: contao.security.two_factor.trusted_device_manager
     backup_codes:
         enabled: true
         manager: contao.security.two_factor.backup_code_manager
