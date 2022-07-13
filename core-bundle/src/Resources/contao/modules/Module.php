@@ -458,7 +458,7 @@ abstract class Module extends Frontend
 		$row['rel'] = '';
 		$row['nofollow'] = false; // backwards compatibility
 		$row['target'] = '';
-		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), $objSubpage->description);
+		$row['description'] = str_replace(array("\n", "\r"), array(' ', ''), (string) $objSubpage->description);
 
 		$arrRel = array();
 
