@@ -26,13 +26,6 @@ hooks:
             input: ''
             widget: Contao\Widget
 
-    checkCredentials:
-        return_type: bool
-        arguments:
-            username: string
-            credentials: string
-            user: Contao\User
-
     closeAccount:
         return_type: void
         arguments:

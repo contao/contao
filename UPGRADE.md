@@ -2,6 +2,10 @@
 
 ## Version 4.* to 5.04
 
+### checkCredentials hook
+
+The `checkCredentials` hook has been removed. Use the `CheckPassportEvent` instead.
+
 ### postLogin hook
 
 The `postLogin` hook has been removed. Use the `LoginSuccessEvent` instead.
