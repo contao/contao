@@ -1014,6 +1014,7 @@ table.tl_listing {
 .tl_content.draft > *,
 .tl_folder.draft > *,
 .tl_file.draft > *,
+.hover-row.draft > td,
 .hover-row.draft > td > * {
 	opacity:0.5;
 }
