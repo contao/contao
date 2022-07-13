@@ -1,21 +1,65 @@
 {% extends "@Contao/frontend_module/_base.html.twig" %}
 
-{% block content %}
-    {% if feeds|length == 1 %}
-    <div class="rss_default_header">
-        {% set feed = feeds.0 %}
-        <h1><a href="{{ feed.link }}" target="_blank" rel="noreferrer noopener">{{ feed.title }}</a></h1>
-        {% if feed.description %}
-            <div class="description">{{ feed.description }}</div>
-        {% endif %}
-    </div>
-    {% endif %}
-    {% for item in items %}
-    <div class="rss_default">
-        <h2><a href="{{ item.link }}" target="_blank" rel="noreferrer noopener">{{ item.title }}</a></h2>
-        <div class="description">{{ item.content }}</div>
-    </div>
-    {% endfor %}
+{% block wrapper_tag %}article{% endblock %}
 
-    {% if pagination is defined %}{{ pagination|raw }}{% endif %}
+{% block content %}
+    {% set single_feed = feeds|length == 1 %}
+
+    {% block items %}
+        {% for element in elements %}
+            {# @var \FeedIo\Feed\Item item #}
+            {% set item = element['item'] %}
+            {# @var \FeedIo\Feed feed #}
+            {% set feed = element['feed'] %}
+
+            {% block feed_header %}
+                {% if single_feed and loop.first %}
+                    <header{{ feed_header_attributes|default }}>
+                        <h1>
+                            {%- with {href: feed.link, text: feed.title} %}
+                                {%- block external_link %}
+                                    {%- set link_attributes = attrs(link_attributes|default)
+                                        .set('href', href)
+                                        .set('target', '_blank')
+                                        .set('rel', 'noreferrer noopener')
+                                    -%}
+                                    <a{% block link_attributes %}{{ link_attributes }}{% endblock %}>
+                                        {{- text -}}
+                                    </a>
+                                {% endblock -%}
+                            {% endwith -%}
+                        </h1>
+                        {% block feed_header_description %}
+                            {% if feed.description %}
+                                <div class="description">
+                                    {# todo: We probably need sanitizing here + can then allow |raw; maybe even as a filter |sanitize|raw? #}
+                                    {{ feed.description }}
+                                </div>
+                            {% endif %}
+                        {% endblock %}
+                    </header>
+                {% endif %}
+            {% endblock %}
+
+            {% block feed_item %}
+                <section{{ feed_item_attributes|default }}>
+                    {% block feed_item_headline %}
+                        <h2>
+                            {%- with {href: item.link, text: item.title} %}{{ block('external_link') }}{% endwith -%}
+                        </h2>
+                    {% endblock %}
+                    {% block feed_item_content %}
+                        <div class="content">
+                            {# todo: We probably need sanitizing here + can then allow |raw; maybe even as a filter |sanitize|raw? #}
+                            {{ item.content }}
+                        </div>
+                    {% endblock %}
+                </section>
+            {% endblock %}
+        {% endfor %}
+    {% endblock %}
+
+    {% block pagination %}
+        {{ pagination|default|raw }}
+    {% endblock %}
 {% endblock %}

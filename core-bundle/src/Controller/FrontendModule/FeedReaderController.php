@@ -69,15 +69,22 @@ class FeedReaderController extends AbstractFrontendModuleController
 
         $template->set('feeds', $feeds);
 
-        // Take the configured amount of items from each feed and merge all into one array
-        $items = array_merge(
+        // Take the configured amount of items from each feed and merge them into one list
+        /** @var list<array{feed: Feed, item: Item}> $elements */
+        $elements = array_merge(
             ...array_map(
-                static fn (FeedInterface $feed) => \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null),
+                static fn (FeedInterface $feed): array => array_map(
+                    static fn (Item $item) => [
+                        'feed' => $feed,
+                        'item' => $item,
+                    ],
+                    \array_slice([...$feed], $model->skipFirst, $model->numberOfItems ?: null)
+                ),
                 $feeds
             )
         );
 
-        usort($items, static fn (Item $a, Item $b): int => $a->getLastModified() <=> $b->getLastModified());
+        usort($elements, static fn (array $a, array $b): int => $a['item']->getLastModified() <=> $b['item']->getLastModified());
 
         if ($model->perPage > 0) {
             $param = 'page_r'.$model->id;
@@ -85,7 +92,7 @@ class FeedReaderController extends AbstractFrontendModuleController
             $config = $this->container->get('contao.framework')->getAdapter(Config::class);
 
             // Do not index or cache the page if the page number is outside the range
-            if ($page < 1 || $page > max(ceil(\count($items) / $model->perPage), 1)) {
+            if ($page < 1 || $page > max(ceil(\count($elements) / $model->perPage), 1)) {
                 throw new PageNotFoundException('Page not found: '.Environment::get('uri'));
             }
 
@@ -93,13 +100,13 @@ class FeedReaderController extends AbstractFrontendModuleController
             $offset = ($page - 1) * $model->perPage;
             $limit = $model->perPage + $offset;
 
-            $pagination = new Pagination(\count($items), $model->perPage, $config->get('maxPaginationLinks'), $param);
+            $pagination = new Pagination(\count($elements), $model->perPage, $config->get('maxPaginationLinks'), $param);
 
             $template->set('pagination', $pagination->generate());
-            $template->set('items', \array_slice($items, $offset, $limit));
+            $template->set('elements', \array_slice($elements, $offset, $limit));
         } else {
             $template->set('pagination', null);
-            $template->set('items', $items);
+            $template->set('elements', $elements);
         }
 
         return $template->getResponse();
