@@ -3736,7 +3736,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			elseif (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>0))))
 			{
-				$imagePasteInto = Image::getHtml('pasteinto_.svg', $labelPasteInto[0]) . ' ';
+				$_buttons = Image::getHtml('pasteinto_.svg') . ' ';
 			}
 			else
 			{
