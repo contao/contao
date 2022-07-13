@@ -130,7 +130,7 @@ class BackendPreviewSwitchController
             $frontendUsername = $request->request->get('user');
 
             // Logout the current logged-in user if an empty user is submitted
-            if ('' === $frontendUsername && nulL !== $this->tokenChecker->getFrontendUsername()) {
+            if ('' === $frontendUsername && null !== $this->tokenChecker->getFrontendUsername()) {
                 $this->previewAuthenticator->removeFrontendAuthentication();
                 $frontendUsername = null;
             }
