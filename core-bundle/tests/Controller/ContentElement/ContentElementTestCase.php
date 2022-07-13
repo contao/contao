@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\ArticleModel;
-use Contao\ArticleModel;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\CoreBundle\Cache\EntityCacheTags;
@@ -431,8 +430,8 @@ class ContentElementTestCase extends TestCase
             ->method('findPublishedById')
             ->willReturnCallback(
                 static fn (int $id) => [
-                        self::PAGE1 => $page1,
-                    ][$id] ?? null
+                    self::PAGE1 => $page1,
+                ][$id] ?? null
             )
         ;
 
@@ -447,8 +446,8 @@ class ContentElementTestCase extends TestCase
             ->method('findPublishedById')
             ->willReturnCallback(
                 static fn (int $id) => [
-                        self::ARTICLE1 => $article1,
-                    ][$id] ?? null
+                    self::ARTICLE1 => $article1,
+                ][$id] ?? null
             )
         ;
 
