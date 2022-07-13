@@ -55,10 +55,6 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
     {
         $attributes = ['fieldType' => 'radio'];
 
-        if ($source = $config->getExtra('source')) {
-            $attributes['preserveRecord'] = $source;
-        }
-
         if ($this->supportsValue($config)) {
             $attributes['value'] = $this->getInsertTagValue($config);
 
