@@ -47,7 +47,7 @@ class FrontendPreviewAuthenticator
 
         $token = new UsernamePasswordToken($user, 'contao_frontend');
 
-        if (!$request = $this->requestStack->getMainRequest()) {
+        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
             return false;
         }
 
@@ -60,7 +60,7 @@ class FrontendPreviewAuthenticator
 
     public function authenticateFrontendGuest(bool $showUnpublished): bool
     {
-        if (!$request = $this->requestStack->getMainRequest()) {
+        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
             return false;
         }
 
@@ -74,7 +74,7 @@ class FrontendPreviewAuthenticator
      */
     public function removeFrontendAuthentication(): bool
     {
-        if (!$request = $this->requestStack->getMainRequest()) {
+        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
             return false;
         }
 

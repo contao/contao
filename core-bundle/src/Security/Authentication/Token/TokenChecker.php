@@ -66,7 +66,7 @@ class TokenChecker
      */
     public function hasFrontendGuest(): bool
     {
-        if (!$request = $this->requestStack->getMainRequest()) {
+        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
             return false;
         }
 
@@ -165,18 +165,14 @@ class TokenChecker
 
     private function getTokenFromSession(string $sessionKey): TokenInterface|null
     {
-        if (!$request = $this->requestStack->getMainRequest()) {
+        if ((!$request = $this->requestStack->getMainRequest()) || !$request->hasSession()) {
             return null;
         }
 
         $session = $request->getSession();
 
-        if (!$session->isStarted()) {
-            $request = $this->requestStack->getMainRequest();
-
-            if (!$request || !$request->hasPreviousSession()) {
-                return null;
-            }
+        if (!$session->isStarted() && !$request->hasPreviousSession()) {
+            return null;
         }
 
         // This will start the session if Request::hasPreviousSession() was true
