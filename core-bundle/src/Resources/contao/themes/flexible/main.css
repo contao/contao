@@ -1095,9 +1095,10 @@ table.tl_listing {
 	background:none;
 }
 .cte_type {
-	margin:2px 0 6px;
+	margin:0 0 4px;
 	font-size:.75rem;
 	color:#808080;
+	line-height:16px;
 }
 .cte_type.published,.cte_type.published a {
 	color:#589b0e;
@@ -1106,8 +1107,7 @@ table.tl_listing {
 	color:#c33;
 }
 .cte_type .visibility {
-	color: #ccc;
-	margin-left: 0.5rem;
+	color:#999;
 }
 .limit_height {
 	overflow:hidden;
@@ -2230,11 +2230,6 @@ fieldset.collapsed > legend {
 	}
 	#tmenu .burger {
 		display:inline;
-	}
-	.cte_type .visibility {
-		display: block;
-		margin-left: 0;
-		clear: right;
 	}
 }
 

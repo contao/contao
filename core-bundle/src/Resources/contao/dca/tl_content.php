@@ -1246,17 +1246,17 @@ class tl_content extends Backend
 			$class .=  ' h40';
 		}
 
-		if ($arrRow['start'] || $arrRow['stop'])
+		if ($arrRow['start'] && $arrRow['stop'])
 		{
-			if ($arrRow['start'])
-			{
-				$type .= '<span class="visibility">' . $GLOBALS['TL_LANG']['tl_content']['start'][0] . ' ' . Date::parse(Config::get('datimFormat'), $arrRow['start']) . '</span>';
-			}
-
-			if ($arrRow['stop'])
-			{
-				$type .= '<span class="visibility">' . $GLOBALS['TL_LANG']['tl_content']['stop'][0] . ' ' . Date::parse(Config::get('datimFormat'), $arrRow['stop']) . '</span>';
-			}
+			$type .= ' <span class="visibility">(' . sprintf($GLOBALS['TL_LANG']['MSC']['showFromTo'], Date::parse(Config::get('datimFormat'), $arrRow['start']), Date::parse(Config::get('datimFormat'), $arrRow['stop'])) . ')</span>';
+		}
+		elseif ($arrRow['start'])
+		{
+			$type .= ' <span class="visibility">(' . sprintf($GLOBALS['TL_LANG']['MSC']['showFrom'], Date::parse(Config::get('datimFormat'), $arrRow['start'])) . ')</span>';
+		}
+		elseif ($arrRow['stop'])
+		{
+			$type .= ' <span class="visibility">(' . sprintf($GLOBALS['TL_LANG']['MSC']['showTo'], Date::parse(Config::get('datimFormat'), $arrRow['stop'])) . ')</span>';
 		}
 
 		$objModel = new ContentModel();
