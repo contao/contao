@@ -358,6 +358,8 @@ class Search
 			) si ON si.pid = tl_search.id
 			SET tl_search.vectorLength = si.vectorLength
 		");
+
+		return true;
 	}
 
 	/**

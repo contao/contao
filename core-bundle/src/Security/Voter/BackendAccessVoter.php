@@ -43,20 +43,12 @@ class BackendAccessVoter extends Voter implements ResetInterface
         $this->pagePermissionsCache = [];
     }
 
-    /**
-     * @param mixed $attribute
-     * @param mixed $subject
-     */
-    protected function supports($attribute, $subject): bool
+    protected function supports(string $attribute, mixed $subject): bool
     {
-        return \is_string($attribute) && str_starts_with($attribute, 'contao_user.');
+        return str_starts_with($attribute, 'contao_user.');
     }
 
-    /**
-     * @param mixed $attribute
-     * @param mixed $subject
-     */
-    protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
 
@@ -64,7 +56,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             return false;
         }
 
-        $permission = explode('.', (string) $attribute, 3);
+        $permission = explode('.', $attribute, 3);
 
         if ('contao_user' !== $permission[0] || !isset($permission[1])) {
             return false;

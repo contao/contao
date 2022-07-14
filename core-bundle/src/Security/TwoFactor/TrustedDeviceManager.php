@@ -42,7 +42,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
-        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
+        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, $user->trustedTokenVersion);
 
         $trustedDevice = new TrustedDevice($user);
         $trustedDevice
@@ -66,7 +66,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
             return false;
         }
 
-        return $this->trustedTokenStorage->hasTrustedToken((string) $user->id, $firewallName, (int) $user->trustedTokenVersion);
+        return $this->trustedTokenStorage->hasTrustedToken((string) $user->id, $firewallName, $user->trustedTokenVersion);
     }
 
     public function clearTrustedDevices(User $user): void
